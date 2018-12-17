@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="color_ff3a6c99">#ff3a6c99</color>
+    <color name="color_00ffffff">#00ffffff</color>
+    <color name="color_9CB3C2">#a1bbca</color>
+    <color name="color_70f4f9f9">#70f4f9f9</color>
+    <color name="color_action_bar">#092E49</color>
+    <color name="color_zendesk">#65B1BB</color>
+    <color name="color_ffee5153">#FFEE5153</color>
+    <color name="color_red">#ff003b</color>
+    <color name="color_ff3e7893">#FF3E7893</color>
+    <color name="color_ff1F9877">#FF1F9877</color>
+    <color name="color_ffEb8436">#FFEB8436</color>
+    <color name="color_cadfe5">#cadfe5</color>
+    <color name="color_56CAB3">#56CAB3</color>
+    <color name="color_1A000000">#1A000000</color>
+    <color name="color_18476A">#4018476A</color>
+    <color name="color_979797">#979797</color>
+    <color name="color_f2f2f2">#F2F2F2</color>
+
+    <color name="color_default_button_disabled">#803a6c99</color>
+    <color name="color_default_button_pressed">#CC3a6c99</color>
+</resources>

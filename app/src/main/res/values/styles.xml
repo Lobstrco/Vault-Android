@@ -1,0 +1,56 @@
+<resources>
+    <style name="BaseTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimaryDark">@color/color_ff3a6c99</item>
+        <item name="colorPrimary">@color/color_ff3a6c99</item>
+        <item name="colorAccent">@color/color_ff3a6c99</item>
+        <item name="colorControlNormal">@color/color_ff3a6c99</item>
+        <item name="colorControlActivated">@color/color_ff3a6c99</item>
+        <item name="alertDialogTheme">@style/AlertDialog</item>
+    </style>
+
+    <style name="AppTheme" parent="BaseTheme">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="SplashTheme" parent="BaseTheme">
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowActionBar">false</item>
+        <item name="android:windowFullscreen">true</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowBackground">@drawable/bg_splash</item>
+    </style>
+
+    <style name="Toolbar" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimary">@color/color_ff3a6c99</item>
+        <item name="colorPrimaryDark">@color/color_ff3a6c99</item>
+        <item name="colorControlNormal">@android:color/white</item>
+    </style>
+
+    <style name="AlertDialog" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <item name="colorPrimaryDark">@color/color_ff3a6c99</item>
+        <item name="colorPrimary">@color/color_ff3a6c99</item>
+        <item name="colorAccent">@color/color_ff3a6c99</item>
+        <item name="colorControlNormal">@color/color_ff3a6c99</item>
+    </style>
+
+    <style name="Widget.AppTheme.Toolbar" parent="Theme.AppCompat.Light.NoActionBar">
+
+        <!--&lt;!&ndash; colorPrimaryDark is used for the tool bar &ndash;&gt;-->
+        <!--<item name="colorPrimary">@color/custom_grey</item>-->
+
+        <!--&lt;!&ndash; colorPrimaryDark is used for the status bar &ndash;&gt;-->
+        <!--<item name="colorPrimaryDark">@color/custom_orange</item>-->
+
+        <!-- colorControlNormal is used for the toggle btn color -->
+        <item name="colorControlNormal">@android:color/white</item>
+
+        <item name="actionMenuTextColor">@android:color/white</item>
+        <!-- textColor is used for the text color in toolbar-->
+        <!--<item name="android:textColor">@android:color/white</item>-->
+
+    </style>
+
+    <style name="Widget.AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>
+
+</resources>

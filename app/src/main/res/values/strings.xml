@@ -1,0 +1,63 @@
+<resources>
+    <!-- main -->
+    <string name="app_name">LOBSTR Vault</string>
+
+    <!-- notification -->
+
+    <!-- errors and other UI messages -->
+    <string name="msg_invalid_email">Please, enter a valid email</string>
+    <string name="msg_invalid_password">Please, enter a valid password</string>
+    <string name="msg_invalid_secret_seed">Please, enter a valid secret seed</string>
+    <string name="msg_field_required">Field required</string>
+    <string name="msg_invalid_number">Invalid number</string>
+    <string name="msg_confirmation_error">Don\'t match</string>
+    <string name="msg_network_connection_error">No Internet connection</string>
+    <string name="msg_network_connection_timeout">Timeout</string>
+    <string name="msg_unknown_error">Unknown error</string>
+    <string name="msg_successfully_copied">"Successfully copied"</string>
+    <string name="msg_camera_permission_scan_explanation">Please, allow Camera permission to decode QR code</string>
+    <string name="msg_not_all_words_entered">Not all words entered</string>
+    <string name="msg_phrase_dont_fit">Your phrase doesn\'t fit</string>
+    <string name="msg_success">Success</string>
+
+    <!--Errors-->
+    <string name="text_error_incorrect_mnemonic">Incorrect mnemonic phrases.</string>
+    <string name="text_error_incorrect_pin">Incorrect PIN</string>
+
+    <!-- dialog -->
+    <string name="text_btn_cancel">Cancel</string>
+    <string name="text_btn_reset">Reset</string>
+    <string name="text_btn_ok">OK</string>
+    <string name="text_btn_edit">Edit</string>
+    <string name="text_btn_add">Add</string>
+    <string name="text_btn_retry">Retry</string>
+
+    <!-- bottom Navigation View items-->
+    <string name="dashboard">Home</string>
+    <string name="transactions">Transactions</string>
+    <string name="settings">Settings</string>
+
+    <string name="transaction_details">Transaction Details</string>
+
+    <string name="text_tv_recovery_phrase_title">Sign in with a recovery phrase</string>
+    <string name="text_tv_recovery_phrase_description">This is 24 word phrase you were given when you created your
+        previous wallet
+    </string>
+    <string name="text_next_button">Next</string>
+    <string name="text_tv_create_mnemonics_title">Secret Phrase</string>
+    <string name="text_tv_confirm_mnemonics_title">Confirm Phrase</string>
+    <string name="text_tv_confirm_mnemonics_description">Please make your phrase from the words below</string>
+    <string name="text_tv_confirm_mnemonics_empty_state">Please select words in the bottom part</string>
+    <string name="text_tv_select_mnemonics_empty_state">Try to confirm it!</string>
+    <string name="text_btn_confirm_mnemonics">Confirm</string>
+    <string name="text_btn_create_mnemonics">Proceed</string>
+    <string name="text_tv_create_mnemonics_description">Please store this phrase</string>
+
+    <!--Pin screen-->
+    <string name="text_enter_pin">Please enter your PIN code</string>
+    <string name="text_reenter_pin">Please re-enter your PIN code</string>
+    <string name="text_create_pin">Please create a PIN code. Do not reuse your phone PIN</string>
+
+    <string name="text_action_info">info</string>
+
+</resources>

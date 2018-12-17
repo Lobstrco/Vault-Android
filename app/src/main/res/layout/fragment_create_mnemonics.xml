@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:layout_width="match_parent" android:layout_height="match_parent"
+              android:orientation="vertical"
+              tools:context=".presentation.auth.mnemonic.create_mnemonic.CreateMnemonicsFragment">
+
+    <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textAppearance="?android:textAppearanceLarge"
+            android:textStyle="bold"
+            android:paddingTop="20dp"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:paddingBottom="5dp"
+            android:textColor="@android:color/black"
+            android:text="@string/text_tv_create_mnemonics_title"/>
+
+    <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textAppearance="?android:textAppearanceSmall"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:paddingBottom="5dp"
+            android:textColor="@android:color/black"
+            android:text="@string/text_tv_create_mnemonics_description"/>
+
+    <com.lobstr.stellar.vault.presentation.auth.mnemonic.MnemonicsContainerView
+            android:id="@+id/mnemonicContainerView"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            app:isCounterEnabled="true"/>
+
+    <Button android:id="@+id/btnProceed"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="@style/Base.Widget.AppCompat.Button.Borderless.Colored"
+            android:background="@drawable/selector_default_button"
+            android:textColor="@android:color/white"
+            android:textAppearance="?android:textAppearanceMedium"
+            android:textAllCaps="true"
+            android:text="@string/text_btn_create_mnemonics"/>
+
+</LinearLayout>

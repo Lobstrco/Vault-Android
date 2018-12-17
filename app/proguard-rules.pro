@@ -1,0 +1,173 @@
+# Add project specific ProGuard rules here.
+# You can control the set of applied configuration files using the
+# proguardFiles setting in build.gradle.
+#
+# For more details, see
+#   http://developer.android.com/guide/developing/tools/proguard.html
+
+-optimizations !code/simplification/arithmetic,!code/simplification/cast,!field/*,!class/merging/*
+-optimizationpasses 5
+-useuniqueclassmembernames
+-keepattributes SourceFile,LineNumberTable
+-allowaccessmodification
+
+-dontwarn android.support.**
+-dontwarn com.futurice.project.models.pojo.**
+-dontwarn sun.misc.Unsafe
+-dontwarn com.google.gson.**
+-dontwarn com.google.**
+-dontwarn com.facebook.**
+-dontwarn com.hudomju.**
+-dontwarn com.google.j2objc.annotations.Weak
+-dontwarn com.theartofdev.**
+-dontwarn com.directions.**
+-dontwarn com.google.guava.**
+-dontwarn net.hockeyapp.android.**
+-dontwarn android.webkit.**
+-dontwarn java.lang.invoke**
+-dontwarn rx.internal.util.**
+-dontwarn org.codehaus.mojo.animal_sniffer.IgnoreJRERequirement
+-dontwarn okio.**
+-dontwarn okhttp3.**
+-dontwarn retrofit2.**
+-dontwarn org.codehaus.mojo.**
+-dontwarn com.squareup.picasso.**
+-dontwarn io.realm.**
+
+-dontwarn afu.org.checkerframework.**
+-dontwarn org.checkerframework.**
+
+-dontwarn com.fasterxml.jackson.databind.**
+-dontwarn org.springframework.**
+
+-dontwarn java.lang.ClassValue
+-dontwarn com.google.j2objc.annotations.Weak
+-dontwarn org.codehaus.mojo.animal_sniffer.IgnoreJRERequirement
+
+-keepattributes Signature
+-keepattributes *Annotation*
+-keepattributes EnclosingMethod
+
+# Platform calls Class.forName on types which do not exist on Android to determine platform.
+-dontnote retrofit2.Platform
+# Platform used when running on RoboVM on iOS. Will not be used at runtime.
+-dontnote retrofit2.Platform$IOS$MainThreadExecutor
+# Platform used when running on Java 8 VMs. Will not be used at runtime.
+-dontwarn retrofit2.Platform$Java8
+# Retain declared checked exceptions for use by a Proxy instance.
+-keepattributes Exceptions
+
+-keepclassmembers class ** {
+    @com.google.common.eventbus.Subscribe public *;
+}
+
+-keep class com.futurice.project.models.pojo.** { *; }
+-keep class sun.misc.Unsafe { *; }
+-keep class com.google.gson.** { *; }
+-keep class com.google.** { *; }
+-keep class com.facebook.** { *; }
+-keep class com.theartofdev.** { *; }
+-keep class com.directions.** { *; }
+-keep class com.google.guava.** { *; }
+-keep class com.theartofdev.** { *; }
+-keep class com.fasterxml.jackson.annotation.** { *; }
+-keep class okhttp3.** { *; }
+-keep interface okhttp3.** { *; }
+-keep class retrofit2.** { *; }
+-keep class io.realm.** { *; }
+
+-keep public enum com.bumptech.glide.load.resource.bitmap.ImageHeaderParser$** {
+  **[] $VALUES;
+  public *;
+}
+
+-keep class android.support.** { *; }
+-keep class android.support.v4.** { *; }
+-keep class android.support.v7.** { *; }
+-keep interface android.support.v7.** { *; }
+-keep interface android.support.v4.** { *; }
+
+-keep public class * extends android.app.Activity
+-keep public class * extends android.app.Application
+-keep public class * extends android.app.Service
+-keep public class * extends android.content.BroadcastReceiver
+-keep public class * extends android.content.ContentProvider
+-keep public class * extends android.app.backup.BackupAgent
+-keep public class * extends android.preference.Preference
+-keep public class * extends android.support.v4.app.Fragment
+-keep public class * extends android.support.v4.app.DialogFragment
+-keep public class * extends com.actionbarsherlock.app.SherlockListFragment
+-keep public class * extends com.actionbarsherlock.app.SherlockFragment
+-keep public class * extends com.actionbarsherlock.app.SherlockFragmentActivity
+-keep public class * extends android.app.Fragment
+-keep public class com.android.vending.licensing.ILicensingService
+
+-keepclasseswithmembernames class * {
+ native <methods>;
+}
+
+-keep public class * extends android.view.View {
+ public <init>(android.content.Context);
+ public <init>(android.content.Context, android.util.AttributeSet);
+ public <init>(android.content.Context, android.util.AttributeSet, int);
+ public void set*(...);
+}
+
+-keepclasseswithmembers class * {
+ public <init>(android.content.Context, android.util.AttributeSet);
+}
+
+-keepclasseswithmembers class * {
+ public <init>(android.content.Context, android.util.AttributeSet, int);
+}
+
+-keepclassmembers class * extends android.app.Activity {
+ public void *(android.view.View);
+}
+
+-keepclassmembers enum * {
+ public static **[] values();
+ public static ** valueOf(java.lang.String);
+}
+
+-keep class * implements android.os.Parcelable {
+ public static final android.os.Parcelable$Creator *;
+}
+
+-keepclassmembers class **.R$* {
+ public static <fields>;
+}
+
+-keepclassmembers class ** {
+   @com.google.common.eventbus.Subscribe public *;
+}
+
+-keepclassmembers class rx.internal.util.unsafe.*ArrayQueue*Field* {
+    long producerIndex;
+    long consumerIndex;
+}
+
+-keepclassmembers class rx.internal.util.unsafe.BaseLinkedQueueProducerNodeRef {
+    rx.internal.util.atomic.LinkedQueueNode producerNode;
+}
+
+-keepclassmembers class rx.internal.util.unsafe.BaseLinkedQueueConsumerNodeRef {
+    rx.internal.util.atomic.LinkedQueueNode consumerNode;
+}
+
+-keepclassmembers class com.myapp.models.** { *; }
+
+-keepclasseswithmembers class * {
+    @retrofit2.* <methods>;
+}
+
+-keepclasseswithmembers interface * {
+    @retrofit2.* <methods>;
+}
+
+-keep public class * implements com.bumptech.glide.module.GlideModule
+-keep public class * extends com.bumptech.glide.module.AppGlideModule
+-keep public enum com.bumptech.glide.load.ImageHeaderParser$** {
+  **[] $VALUES;
+  public *;
+}
