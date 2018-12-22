@@ -30,4 +30,16 @@ class StellarRepositoryImpl(private val context: Context, private val server: Se
             return@Callable server.submitTransaction(transaction)
         })
     }
+
+    override fun signTransaction(signer: KeyPair, envelopXdr: String): Single<String> {
+        return fromCallable(Callable<String> {
+            val transaction: Transaction = Transaction.fromEnvelopeXdr(envelopXdr)
+
+            // Sign the transaction to prove you are actually the person sending it.
+            transaction.sign(signer)
+
+            // And finally, send it off to Stellar!
+            return@Callable transaction.toEnvelopeXdrBase64()
+        })
+    }
 }

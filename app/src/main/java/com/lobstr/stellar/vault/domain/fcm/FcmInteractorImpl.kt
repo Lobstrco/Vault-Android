@@ -1,10 +1,11 @@
 package com.lobstr.stellar.vault.domain.fcm
 
-import com.lobstr.stellar.vault.presentation.fcm.entities.FcmResult
+import com.lobstr.stellar.vault.presentation.entities.account.Account
+import com.lobstr.stellar.vault.presentation.entities.fcm.FcmResult
+import com.lobstr.stellar.vault.presentation.entities.transaction.TransactionItem
 import com.lobstr.stellar.vault.presentation.util.AppUtil
 import com.lobstr.stellar.vault.presentation.util.PrefsUtil
 import io.reactivex.Single
-
 
 class FcmInteractorImpl(private val fcmRepository: FcmRepository, private val prefsUtil: PrefsUtil) : FcmInteractor {
 
@@ -41,4 +42,28 @@ class FcmInteractorImpl(private val fcmRepository: FcmRepository, private val pr
         return prefsUtil.isFcmRegisteredSuccessfully
     }
 
+    override fun confirmIsUserSignerForLobstr(jsonStr: String?): Account? {
+        prefsUtil.isUserSignerForLobstr = true
+
+        if (jsonStr.isNullOrEmpty()) {
+            return null
+        }
+
+        val account = fcmRepository.transformApiAccountResponse(jsonStr)
+        prefsUtil.signedAccount = account.address
+
+        return account
+    }
+
+    override fun transformNewTransactionResponse(jsonStr: String?): TransactionItem? {
+        if (jsonStr.isNullOrEmpty()) {
+            return null
+        }
+
+        return fcmRepository.transformApiTransactionResponse(jsonStr)
+    }
+
+    override fun isUserAuthorized(): Boolean {
+        return !prefsUtil.authToken.isNullOrEmpty()
+    }
 }

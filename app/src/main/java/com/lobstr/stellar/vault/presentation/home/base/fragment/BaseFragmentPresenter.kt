@@ -7,18 +7,18 @@ import com.arellomobile.mvp.MvpPresenter
 @InjectViewState
 class BaseFragmentPresenter : MvpPresenter<BaseFragmentView>() {
 
-    private var mToolbarTitle: Int = 0
+    private var toolbarTitle: Int = 0
 
     fun setToolbarTitle() {
-        if (mToolbarTitle == 0) {
+        if (toolbarTitle == 0) {
             return
         }
 
-        viewState.setActionBarTitle(mToolbarTitle)
+        viewState.setActionBarTitle(toolbarTitle)
     }
 
     fun setToolbarTitle(@StringRes titleRes: Int) {
-        mToolbarTitle = titleRes
+        toolbarTitle = titleRes
         viewState.setActionBarTitle(titleRes)
     }
 }

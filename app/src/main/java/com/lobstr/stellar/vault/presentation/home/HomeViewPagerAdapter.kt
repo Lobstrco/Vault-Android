@@ -1,25 +1,24 @@
 package com.lobstr.stellar.vault.presentation.home
 
 import android.content.Context
+import android.os.Bundle
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentStatePagerAdapter
-import com.lobstr.stellar.vault.presentation.home.dashboard.container.DashBoardContainerFragment
-import com.lobstr.stellar.vault.presentation.home.settings.container.SettingsContainerFragment
-import com.lobstr.stellar.vault.presentation.home.transactions.container.TransactionsContainerFragment
+import com.lobstr.stellar.vault.presentation.home.container.fragment.ContainerFragment
+import com.lobstr.stellar.vault.presentation.util.Constant.Bundle.BUNDLE_NAVIGATION_FR
+import com.lobstr.stellar.vault.presentation.util.Constant.Navigation.DASHBOARD
+import com.lobstr.stellar.vault.presentation.util.Constant.Navigation.SETTINGS
+import com.lobstr.stellar.vault.presentation.util.Constant.Navigation.TRANSACTIONS
 
 
-class HomeViewPagerAdapter(private val mContext: Context, fm: FragmentManager) : FragmentStatePagerAdapter(fm) {
+class HomeViewPagerAdapter(private val context: Context, fm: FragmentManager) : FragmentStatePagerAdapter(fm) {
 
     // ===========================================================
     // Constants
     // ===========================================================
 
     companion object {
-        const val DASHBOARD = 0
-        const val TRANSACTIONS = 1
-        const val SETTINGS = 2
-
         const val VIEW_PAGER_COUNT = 3
     }
 
@@ -40,16 +39,26 @@ class HomeViewPagerAdapter(private val mContext: Context, fm: FragmentManager) :
     // Methods for/from SuperClass/Interfaces
     // ===========================================================
 
-    override fun getItem(position: Int) =
-            when (position) {
-                DASHBOARD -> Fragment.instantiate(mContext, DashBoardContainerFragment::class.java.name)
+    override fun getItem(position: Int): Fragment? {
+        val bundle = Bundle()
 
-                TRANSACTIONS -> Fragment.instantiate(mContext, TransactionsContainerFragment::class.java.name)
-
-                SETTINGS -> Fragment.instantiate(mContext, SettingsContainerFragment::class.java.name)
-
-                else -> null
+        when (position) {
+            DASHBOARD -> {
+                bundle.putInt(BUNDLE_NAVIGATION_FR, DASHBOARD)
             }
+
+            TRANSACTIONS -> {
+                bundle.putInt(BUNDLE_NAVIGATION_FR, TRANSACTIONS)
+            }
+
+            SETTINGS -> {
+                bundle.putInt(BUNDLE_NAVIGATION_FR, SETTINGS)
+            }
+        }
+
+        return Fragment.instantiate(context, ContainerFragment::class.java.name, bundle)
+    }
+
 
     override fun getCount() = VIEW_PAGER_COUNT
 

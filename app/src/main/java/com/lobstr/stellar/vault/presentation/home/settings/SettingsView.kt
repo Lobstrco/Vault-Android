@@ -13,7 +13,7 @@ interface SettingsView : MvpView {
     fun setupToolbarTitle(@StringRes titleRes: Int)
 
     @StateStrategyType(AddToEndSingleStrategy::class)
-    fun setupUserPublicKey(userPublicKey: String?)
+    fun setupAccountData(userPublicKey: String?, signedAccount: String?)
 
     @StateStrategyType(SkipStrategy::class)
     fun copyToClipBoard(text: String)

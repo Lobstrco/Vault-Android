@@ -10,7 +10,9 @@ object Constant {
     object Extra {
         const val EXTRA_ID = "EXTRA_ID"
         const val EXTRA_QR_CODE_RESULT = "EXTRA_QR_CODE_RESULT"
-        const val EXTRA_SECRET_KEY = "EXTRA_SECRET_KEY"
+        const val EXTRA_CREATE_PIN = "EXTRA_CREATE_PIN"
+        const val EXTRA_NAVIGATION_FR = "EXTRA_NAVIGATION_FR"
+        const val EXTRA_TRANSACTION_ITEM = "EXTRA_TRANSACTION_ITEM"
     }
 
     object Bundle {
@@ -18,6 +20,22 @@ object Constant {
         const val BUNDLE_TRANSACTION_HASH = "BUNDLE_TRANSACTION_HASH"
         const val BUNDLE_MNEMONICS_ARRAY = "BUNDLE_MNEMONICS_ARRAY"
         const val BUNDLE_SECRET_KEY = "BUNDLE_SECRET_KEY"
+        const val BUNDLE_PUBLIC_KEY = "BUNDLE_PUBLIC_KEY"
+        const val BUNDLE_NAVIGATION_FR = "BUNDLE_NAVIGATION_FR"
+        const val BUNDLE_TRANSACTION_ITEM = "BUNDLE_TRANSACTION_ITEM"
+    }
+
+    object Navigation {
+        const val DASHBOARD = 0
+        const val TRANSACTIONS = 1
+        const val SETTINGS = 2
+        const val TRANSACTION_DETAILS = 3
+    }
+
+    object Transaction {
+        const val PENDING = 1
+        const val CANCELLED = 2
+        const val SIGNED = 3
     }
 
     object Symbol {
@@ -51,6 +69,7 @@ object Constant {
 
     object Code {
         const val DETECT_QR_CODE = 101
+        const val TRANSACTION_DETAILS_FRAGMENT = 102
     }
 
     object ResultCode {
@@ -65,5 +84,11 @@ object Constant {
 
     object Util {
         const val COUNT_MNEMONIC_WORDS = 12
+    }
+
+    object ApiRequestTag {
+        const val DEFAULT = 0
+        const val REFRESH_TOKEN = 1
+        const val REFRESH_AUTH = 2
     }
 }

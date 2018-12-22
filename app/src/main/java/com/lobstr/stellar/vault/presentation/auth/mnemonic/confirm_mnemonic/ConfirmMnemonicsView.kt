@@ -8,6 +8,7 @@ import com.arellomobile.mvp.viewstate.strategy.StateStrategyType
 
 
 interface ConfirmMnemonicsView : MvpView {
+
     @StateStrategyType(AddToEndSingleStrategy::class)
     fun setupMnemonicsToSelect(mnemonics: List<String>)
 
@@ -21,7 +22,7 @@ interface ConfirmMnemonicsView : MvpView {
     fun showMessage(@StringRes message: Int)
 
     @StateStrategyType(SkipStrategy::class)
-    fun showPinScreen(secretKey: String)
+    fun showPinScreen()
 
     @StateStrategyType(AddToEndSingleStrategy::class)
     fun showProgressDialog()

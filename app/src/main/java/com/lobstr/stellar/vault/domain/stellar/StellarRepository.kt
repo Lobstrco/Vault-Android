@@ -9,4 +9,6 @@ interface StellarRepository {
     fun createKeyPair(mnemonics: CharArray, index: Int): Single<KeyPair>
 
     fun submitTransaction(signer: KeyPair, envelopXdr: String): Single<SubmitTransactionResponse>
+
+    fun signTransaction(signer: KeyPair, envelopXdr: String): Single<String>
 }

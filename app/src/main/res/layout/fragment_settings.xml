@@ -65,12 +65,15 @@
                     android:text="You are Signer for:"/>
 
             <TextView
-                    android:id="@+id/tvSignerPublicKey"
+                    android:id="@+id/tvSignedAccount"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:textAppearance="?android:textAppearanceLarge"
-                    android:layout_margin="18dp"
+                    android:padding="16dp"
+                    android:textAllCaps="true"
+                    android:ellipsize="middle"
+                    android:singleLine="true"
                     android:textColor="@android:color/black"
                     android:text="-"/>
 

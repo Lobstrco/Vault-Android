@@ -5,10 +5,17 @@ import android.view.MenuItem
 import android.view.View
 import com.lobstr.stellar.vault.R
 import com.lobstr.stellar.vault.presentation.BaseMvpAppCompatFragment
+import com.lobstr.stellar.vault.presentation.home.HomeActivity
 import com.lobstr.stellar.vault.presentation.home.base.activity.BaseActivity
+import com.lobstr.stellar.vault.presentation.home.container.activity.ContainerActivity
 
 
 abstract class BaseContainerFragment : BaseMvpAppCompatFragment() {
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setHasOptionsMenu(true)
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -18,7 +25,12 @@ abstract class BaseContainerFragment : BaseMvpAppCompatFragment() {
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         when (item?.itemId) {
-            android.R.id.home -> childFragmentManager.popBackStack()
+            android.R.id.home -> {
+                when {
+                    childFragmentManager.backStackEntryCount == 1 -> activity?.finish()
+                    else -> childFragmentManager.popBackStack()
+                }
+            }
         }
 
         return super.onOptionsItemSelected(item)
@@ -57,7 +69,10 @@ abstract class BaseContainerFragment : BaseMvpAppCompatFragment() {
         }
 
         if (childFragmentManager.backStackEntryCount == 1) {
-            (activity as? BaseActivity)?.mPresenter?.changeHomeBtnVisibility(false)
+            when (activity) {
+                is HomeActivity -> (activity as? BaseActivity)?.mPresenter?.changeHomeBtnVisibility(false)
+                is ContainerActivity -> (activity as? BaseActivity)?.mPresenter?.changeHomeBtnVisibility(true)
+            }
         } else {
             (activity as? BaseActivity)?.mPresenter?.changeHomeBtnVisibility(true)
         }

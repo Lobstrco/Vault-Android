@@ -8,8 +8,12 @@ import android.content.Intent
 import android.graphics.Color
 import android.media.RingtoneManager
 import androidx.core.app.NotificationCompat
+import androidx.core.app.TaskStackBuilder
 import com.lobstr.stellar.vault.R
+import com.lobstr.stellar.vault.presentation.entities.transaction.TransactionItem
 import com.lobstr.stellar.vault.presentation.home.HomeActivity
+import com.lobstr.stellar.vault.presentation.util.Constant
+import com.lobstr.stellar.vault.presentation.util.Constant.Navigation.TRANSACTION_DETAILS
 
 
 class NotificationsManager(private val context: Context) {
@@ -28,7 +32,7 @@ class NotificationsManager(private val context: Context) {
 
     fun sendNotification(
         channelId: String, channelName: String,
-        notificationTitle: String, notificationMessage: String
+        notificationTitle: String, notificationMessage: String?
     ) {
         val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
@@ -49,6 +53,63 @@ class NotificationsManager(private val context: Context) {
         mBuilder.setContentIntent(contentIntent)
 
         notificationManager.notify(NOTIFICATION_ID, mBuilder.build())
+    }
+
+    fun sendAddedNewTransactionNotification(
+        channelId: String,
+        channelName: String,
+        notificationTitle: String,
+        notificationMessage: String?,
+        transactionItem: TransactionItem?,
+        aClass: Class<*>
+    ) {
+        val notificationManager =
+            context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+
+        val mBuilder = NotificationCompat.Builder(
+            context,
+            createNotificationChannel(notificationManager, channelId, channelName)
+        )
+            .setSmallIcon(R.mipmap.ic_launcher)
+            .setLights(Color.BLUE, 500, 500)
+            .setContentTitle(notificationTitle)
+            .setStyle(NotificationCompat.BigTextStyle().bigText(notificationMessage))
+            .setContentText(notificationMessage)
+            .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
+            .setAutoCancel(true)
+
+        // data (image url or something else) - some data that we must pass to activity from fcm
+        // and refresh this data when we will open activity
+        // in KitKat and Lollipop PendingIntent.FLAG_UPDATE_CURRENT not working correct
+        // (after first time) and this trick helps to solve the problem
+        getAddedNewTransactionPendingIntent(transactionItem, aClass)?.cancel()
+        mBuilder.setContentIntent(getAddedNewTransactionPendingIntent(transactionItem, aClass))
+        notificationManager.notify(NOTIFICATION_ID, mBuilder.build())
+    }
+
+    // data - some data that we must pass to activity from fcm
+    // and refresh this data when we will open activity
+    private fun getAddedNewTransactionPendingIntent(
+        transactionItem: TransactionItem?,
+        targetClassName: Class<*>
+    ): PendingIntent? {
+        // Creates an explicit intent for an Activity in your app
+        val notificationIntent = Intent(context, targetClassName)
+        notificationIntent.putExtra(Constant.Extra.EXTRA_NAVIGATION_FR, TRANSACTION_DETAILS)
+        notificationIntent.putExtra(Constant.Extra.EXTRA_TRANSACTION_ITEM, transactionItem)
+        notificationIntent.action = java.lang.Long.toString(System.currentTimeMillis())
+
+        // The stack builder object will contain an artificial back stack for the started Activity.
+        // This ensures that navigating backward from the Activity leads out of your application to the Home screen.
+        val stackBuilder = TaskStackBuilder.create(context)
+
+        // Adds the back stack for the Intent (but not the Intent itself)
+        stackBuilder.addParentStack(targetClassName)
+
+        // Adds the Intent that starts the Activity to the top of the stack
+        stackBuilder.addNextIntent(notificationIntent)
+
+        return stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT)
     }
 
     private fun createNotificationChannel(

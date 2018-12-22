@@ -5,4 +5,6 @@ interface SettingsInteractor {
     fun clearUserData()
 
     fun getUserPublicKey(): String?
+
+    fun getSignedAccount(): String?
 }

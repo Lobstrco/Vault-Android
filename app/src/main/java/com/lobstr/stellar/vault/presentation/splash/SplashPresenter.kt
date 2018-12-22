@@ -17,7 +17,7 @@ class SplashPresenter : BasePresenter<SplashView>() {
     }
 
     @Inject
-    lateinit var mInteractor: SplashInteractor
+    lateinit var interactor: SplashInteractor
 
     init {
         LVApplication.sAppComponent.plusSplashComponent(SplashModule()).inject(this)
@@ -30,7 +30,7 @@ class SplashPresenter : BasePresenter<SplashView>() {
             Completable.complete()
                 .delay(SPLASH_TIMEOUT.toLong(), TimeUnit.MILLISECONDS)
                 .doOnComplete {
-                    if (mInteractor.isUserAuthorized()) {
+                    if (interactor.isUserAuthorized()) {
                         viewState.showPinScreen()
                     } else {
                         viewState.showAuthScreen()

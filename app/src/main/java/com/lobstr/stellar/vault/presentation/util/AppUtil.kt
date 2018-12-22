@@ -11,7 +11,12 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.browser.customtabs.CustomTabsIntent
 import androidx.core.content.ContextCompat
+import com.google.gson.Gson
+import com.google.gson.JsonIOException
+import com.google.gson.JsonSyntaxException
+import com.google.gson.internal.Primitives
 import com.lobstr.stellar.vault.R
+import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -94,4 +99,23 @@ object AppUtil {
     }
 
     fun getJwtToken(token: String?) = "JWT $token"
+
+    fun <T> convertJsonToPojo(jsonStr: String?, classOfT: Class<T>): T? {
+        if (jsonStr == null) {
+            return null
+        }
+
+        try {
+            val result = Gson().fromJson(jsonStr, classOfT)
+            return Primitives.wrap(classOfT).cast(result)
+        } catch (exc: JsonSyntaxException) {
+            exc.printStackTrace()
+        } catch (exc: JsonIOException) {
+            exc.printStackTrace()
+        } catch (exc: IOException) {
+            exc.printStackTrace()
+        }
+
+        return null
+    }
 }

@@ -4,11 +4,21 @@ import com.lobstr.stellar.vault.data.net.entities.transaction.ApiSubmitTransacti
 import com.lobstr.stellar.vault.data.net.entities.transaction.ApiTransactionItem
 import com.lobstr.stellar.vault.data.net.entities.transaction.ApiTransactionResult
 import io.reactivex.Single
-import retrofit2.Response
 import retrofit2.http.*
 
 
 interface TransactionApi {
+
+    @GET("transactions/")
+    fun getTransactionList(
+        @Header("Authorization") token: String
+    ): Single<ApiTransactionResult>
+
+    @GET
+    fun getTransactionListByUrl(
+        @Url url: String,
+        @Header("Authorization") token: String
+    ): Single<ApiTransactionResult>
 
     /**
      * Add some transaction type
@@ -16,10 +26,9 @@ interface TransactionApi {
      */
     @GET("transactions/{type}")
     fun getTransactionList(
-        @Path("type") type: String?,
-        @Header("Authorization") token: String,
-        @Query("page") page: String?
-    ): Single<Response<ApiTransactionResult>>
+        @Path("type") type: String,
+        @Header("Authorization") token: String
+    ): Single<ApiTransactionResult>
 
     @FormUrlEncoded
     @POST("transactions/")
@@ -27,11 +36,11 @@ interface TransactionApi {
         @Header("Authorization") token: String,
         @Field("submit") submit: Boolean?,
         @Field("xdr") transaction: String
-    ): Single<Response<ApiSubmitTransaction>>
+    ): Single<ApiSubmitTransaction>
 
     @POST("transactions/{hash}/cancel/")
     fun markTransactionAsCancelled(
         @Path("hash") hash: String,
         @Header("Authorization") token: String
-    ): Single<Response<ApiTransactionItem>>
+    ): Single<ApiTransactionItem>
 }

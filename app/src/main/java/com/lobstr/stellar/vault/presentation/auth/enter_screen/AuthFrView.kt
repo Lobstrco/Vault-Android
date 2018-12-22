@@ -6,6 +6,8 @@ import com.arellomobile.mvp.viewstate.strategy.StateStrategyType
 
 @StateStrategyType(SkipStrategy::class)
 interface AuthFrView : MvpView {
+
     fun showCreateMnemonicsScreen()
+
     fun showRestoreScreen()
 }

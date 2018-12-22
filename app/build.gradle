@@ -11,7 +11,7 @@ android {
     compileSdkVersion 28
     defaultConfig {
         applicationId "com.lobstr.stellar.vault"
-        minSdkVersion 18
+        minSdkVersion 19
         targetSdkVersion 28
         versionCode 1
         versionName "0.0.1"
@@ -27,6 +27,8 @@ android {
         exclude 'META-INF/LICENSE'
         exclude 'META-INF/NOTICE'
         exclude 'META-INF/MANIFEST.MF'
+        exclude 'META-INF/rxjava.properties'
+        exclude 'META-INF/proguard/okhttp3.pro'
     }
 
     lintOptions {
@@ -70,10 +72,6 @@ android {
             buildConfigField "boolean", "isDEBUG", "false"
         }
     }
-
-    packagingOptions {
-        exclude 'META-INF/rxjava.properties'
-    }
 }
 
 ext {
@@ -81,15 +79,13 @@ ext {
     rx_java = "2.1.10"
     rx_android = "2.0.2"
     rx_kotlin = "2.2.0"
-    retrofit = "2.3.0"
+    retrofit = "2.5.0"
     okhttp = "3.9.1"
     moxy = "1.5.5"
     leakcanary = "1.5.4"
     joda_time = "2.9.9"
     guava = "23.0-android"
-    qr_gen = "2.4.0"
     circleimageview = "2.2.0"
-    barcodescanner = "1.9.8"
     glide = "4.7.1"
     stellar_sdk = "0.3.3"
     flexbox = "1.0.0"
@@ -98,7 +94,6 @@ ext {
     firebase_messaging = "17.3.4"
     firebase_core = "16.0.6"
     firebase_crash = "16.2.1"
-    eventbus = "3.1.1"
     javax_annotation = "10.0-b28"
     androidx_appcompat = "1.0.2"
     androidx_constraintlayout = "2.0.0-alpha2"
@@ -106,11 +101,8 @@ ext {
     junit = "4.12"
     runner = "1.1.1"
     espresso_core = "3.1.1"
-}
-
-configurations {
-    all*.exclude group: 'com.squareup.okhttp3', module: 'okhttp'
-    all*.exclude group: 'com.google.code.gson'
+    stellar_sdk = "0.4.0"
+    work_manager = "1.0.0-beta01"
 }
 
 dependencies {
@@ -121,6 +113,9 @@ dependencies {
     androidTestImplementation "androidx.test:runner:$runner"
     androidTestImplementation "androidx.test.espresso:espresso-core:$espresso_core"
 
+    // Stellar
+    implementation "com.github.stellar:java-stellar-sdk:$stellar_sdk"
+
     // Android
     implementation "androidx.appcompat:appcompat:$androidx_appcompat"
     implementation "androidx.constraintlayout:constraintlayout:$androidx_constraintlayout"
@@ -128,6 +123,7 @@ dependencies {
     implementation "com.google.android:flexbox:$flexbox"
     implementation "com.android.support:design:$support"
     implementation "com.android.support:customtabs:$support"
+    implementation "android.arch.work:work-runtime:$work_manager"
 
     //Dagger 2 dependencies
     implementation "com.google.dagger:dagger:$dagger"
@@ -167,10 +163,7 @@ dependencies {
 
     //Other
     implementation "de.hdodenhof:circleimageview:$circleimageview"
-    implementation "com.github.kenglxn.QRGen:android:$qr_gen"
-    implementation "me.dm7.barcodescanner:zxing:$barcodescanner"
     implementation "com.andrognito.pinlockview:pinlockview:$pin"
-    implementation "org.greenrobot:eventbus:$eventbus"
 }
 
 kapt {

@@ -4,38 +4,49 @@ import com.lobstr.stellar.vault.domain.key_store.KeyStoreRepository
 import com.lobstr.stellar.vault.presentation.util.PrefsUtil
 import io.reactivex.Completable
 import io.reactivex.Single
-import java.security.KeyPair
 
 class PinInteractorImpl(
     private val keyStoreRepository: KeyStoreRepository,
-    private val prefUtil: PrefsUtil
+    private val prefsUtil: PrefsUtil
 ) : PinInteractor {
 
-    override fun checkPinValidation(pin: String): Single<KeyPair> {
+    override fun checkPinValidation(pin: String): Single<Boolean> {
         return Single.fromCallable {
-            var keyPair = keyStoreRepository.getAsymmetricKeyPair(pin)
-            if (keyPair == null) {
-                keyPair = KeyPair(null, null)
-            }
-            return@fromCallable keyPair
+            val savedPin = keyStoreRepository.decryptData(PrefsUtil.PREF_ENCRYPTED_PIN, PrefsUtil.PREF_PIN_IV)
+            return@fromCallable !(savedPin.isNullOrEmpty() || !savedPin.equals(pin))
         }
     }
 
-    override fun saveSecretKey(pin: String, secretKey: String): Completable {
+    override fun savePhrases(phrases: String): Completable {
         return Completable.fromCallable {
-            val encryptedString = keyStoreRepository.encryptSecretKey(pin, secretKey)
-            prefUtil.encryptedKey = encryptedString
-            return@fromCallable encryptedString
+            return@fromCallable keyStoreRepository.encryptData(
+                phrases, PrefsUtil.PREF_ENCRYPTED_PHRASES, PrefsUtil.PREF_PHRASES_IV
+            )
         }
     }
 
-    override fun getSecretKey(pin: String): Single<String> {
+    override fun savePin(pin: String): Completable {
+        return Completable.fromCallable {
+            return@fromCallable keyStoreRepository.encryptData(
+                pin, PrefsUtil.PREF_ENCRYPTED_PIN, PrefsUtil.PREF_PIN_IV
+            )
+        }
+    }
+
+    override fun getPhrases(): Single<String> {
         return Single.fromCallable {
-            return@fromCallable keyStoreRepository.decryptSecretKey(pin, prefUtil.encryptedKey!!)
+            return@fromCallable keyStoreRepository.decryptData(
+                PrefsUtil.PREF_ENCRYPTED_PHRASES,
+                PrefsUtil.PREF_PHRASES_IV
+            )
         }
     }
 
     override fun clear() {
         keyStoreRepository.clear()
+    }
+
+    override fun isUserSignerForLobstr(): Boolean {
+        return prefsUtil.isUserSignerForLobstr
     }
 }

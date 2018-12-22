@@ -34,14 +34,11 @@ abstract class BaseFragment : BaseMvpAppCompatFragment(), BaseFragmentView {
             return
         }
 
-        // smart check for has menu options in case when backstack is empty
-        if (parentFragment?.childFragmentManager?.backStackEntryCount == 0 &&
-            (parentFragment as BaseContainerFragment).userVisibleHint
-        ) {
+        // Check: has menu options or don't
+        if ((parentFragment as BaseContainerFragment).userVisibleHint) {
             setHasOptionsMenu(true)
         }
     }
-
 
     override fun setActionBarTitle(@StringRes titleRes: Int) {
         if (parentFragment is BaseContainerFragment && !(parentFragment as BaseContainerFragment).userVisibleHint) {

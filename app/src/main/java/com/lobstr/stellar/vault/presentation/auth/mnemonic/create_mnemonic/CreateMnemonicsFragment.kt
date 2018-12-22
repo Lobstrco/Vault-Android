@@ -79,7 +79,7 @@ class CreateMnemonicsFragment : BaseMvpAppCompatFragment(),
     }
 
     override fun setupMnemonics(mnemonics: List<String>) {
-        mnemonicContainerView.mnemonicList = mnemonics
+        mnemonicContainerView.mMnemonicList = mnemonics
         mnemonicContainerView.setupMnemonics()
     }
 

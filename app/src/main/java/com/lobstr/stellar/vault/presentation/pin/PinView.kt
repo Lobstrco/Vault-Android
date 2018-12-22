@@ -8,6 +8,7 @@ import com.arellomobile.mvp.viewstate.strategy.StateStrategyType
 
 
 interface PinView : MvpView {
+
     @StateStrategyType(AddToEndSingleStrategy::class)
     fun attachIndicatorDots()
 
@@ -16,6 +17,9 @@ interface PinView : MvpView {
 
     @StateStrategyType(SkipStrategy::class)
     fun showHomeScreen()
+
+    @StateStrategyType(SkipStrategy::class)
+    fun showVaultAuthScreen()
 
     @StateStrategyType(SkipStrategy::class)
     fun showErrorMessage(@StringRes message: Int)

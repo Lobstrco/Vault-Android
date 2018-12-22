@@ -14,6 +14,7 @@ import com.lobstr.stellar.vault.presentation.dialog.alert.base.AlertDialogFragme
 import com.lobstr.stellar.vault.presentation.home.HomeActivity
 import com.lobstr.stellar.vault.presentation.util.Constant
 import com.lobstr.stellar.vault.presentation.util.manager.ProgressManager
+import com.lobstr.stellar.vault.presentation.vault_auth.VaultAuthActivity
 import kotlinx.android.synthetic.main.activity_pin.*
 
 class PinActivity : BaseMvpAppCompatActivity(), PinView, PinLockListener {
@@ -40,7 +41,7 @@ class PinActivity : BaseMvpAppCompatActivity(), PinView, PinLockListener {
     // ===========================================================
 
     @ProvidePresenter
-    fun providePinPresenter() = PinPresenter(intent?.getStringExtra(Constant.Extra.EXTRA_SECRET_KEY))
+    fun providePinPresenter() = PinPresenter(intent?.getBooleanExtra(Constant.Extra.EXTRA_CREATE_PIN, false))
 
     // ===========================================================
     // Getter & Setter
@@ -65,6 +66,8 @@ class PinActivity : BaseMvpAppCompatActivity(), PinView, PinLockListener {
     // ===========================================================
 
     override fun attachIndicatorDots() {
+        pinLockView.pinLength = 6
+        indicatorDots.pinLength = 6
         pinLockView.attachIndicatorDots(indicatorDots)
     }
 
@@ -74,6 +77,12 @@ class PinActivity : BaseMvpAppCompatActivity(), PinView, PinLockListener {
 
     override fun showHomeScreen() {
         val intent = Intent(this, HomeActivity::class.java)
+        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        startActivity(intent)
+    }
+
+    override fun showVaultAuthScreen() {
+        val intent = Intent(this, VaultAuthActivity::class.java)
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         startActivity(intent)
     }

@@ -142,15 +142,9 @@ class RecoveryKeyFragment : BaseMvpAppCompatFragment(), RecoveryKeyFrView, View.
         btnRecoveryKey.isEnabled = enable
     }
 
-    override fun showPinScreen(secretKey: String) {
-//        val bundle = Bundle()
-//        bundle.putString(Constant.Bundle.BUNDLE_SECRET_KEY, secretKey)
-//        // TODO show next screen
-//        Toast.makeText(context, secretKey, Toast.LENGTH_LONG).show()
-
-        // Pass created mnemonics to pin screen
+    override fun showPinScreen() {
         val intent = Intent(activity, PinActivity::class.java)
-        intent.putExtra(Constant.Extra.EXTRA_SECRET_KEY, secretKey)
+        intent.putExtra(Constant.Extra.EXTRA_CREATE_PIN, true)
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         startActivity(intent)
     }

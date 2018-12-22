@@ -11,6 +11,10 @@ class SettingsInteractorImpl(private val prefsUtil: PrefsUtil, private val keySt
         return prefsUtil.publicKey
     }
 
+    override fun getSignedAccount(): String? {
+        return prefsUtil.signedAccount
+    }
+
     override fun clearUserData() {
         prefsUtil.clearUserPrefs()
         keyStoreRepository.clear()

@@ -6,11 +6,13 @@ import android.util.Log
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.GoogleApiAvailability
 import com.google.firebase.iid.FirebaseInstanceId
+import com.lobstr.stellar.vault.data.error.exeption.DefaultException
+import com.lobstr.stellar.vault.data.error.exeption.UserNotAuthorizedException
 import com.lobstr.stellar.vault.domain.fcm.FcmInteractor
-import com.lobstr.stellar.vault.presentation.fcm.entities.FcmResult
+import com.lobstr.stellar.vault.presentation.entities.account.Account
+import com.lobstr.stellar.vault.presentation.entities.transaction.TransactionItem
 import com.lobstr.stellar.vault.presentation.util.AppUtil
 import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.observers.DisposableSingleObserver
 import io.reactivex.schedulers.Schedulers
 
 
@@ -85,18 +87,21 @@ class FcmHelper(private val context: Context, private val fcmInteractor: FcmInte
             fcmInteractor.fcmDeviceRegistration(OS_TYPE, token)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribeWith(object : DisposableSingleObserver<FcmResult>() {
-                    override fun onSuccess(t: FcmResult) {
-                        fcmInteractor.setFcmRegistered(true)
+                .subscribe({
+                    fcmInteractor.setFcmRegistered(true)
+                }, {
+                    when (it) {
+                        is UserNotAuthorizedException -> {
+                            sendFcmToken(token)
+                        }
+                        is DefaultException -> {
+                            Log.e(LOG_TAG, it.details)
+                        }
+                        else -> {
+                            Log.e(LOG_TAG, it.message ?: "")
+                        }
                     }
-
-                    override fun onError(e: Throwable) {
-                        Log.e(LOG_TAG, e.message)
-                    }
-
                 })
-
-            Log.i(LOG_TAG, token)
         }
     }
 
@@ -145,5 +150,17 @@ class FcmHelper(private val context: Context, private val fcmInteractor: FcmInte
         }
 
         return true
+    }
+
+    fun isUserAuthorized(): Boolean {
+        return fcmInteractor.isUserAuthorized()
+    }
+
+    fun signedNewAccount(jsonStr: String?): Account? {
+        return fcmInteractor.confirmIsUserSignerForLobstr(jsonStr)
+    }
+
+    fun addedNewTransaction(jsonStr: String?): TransactionItem? {
+        return fcmInteractor.transformNewTransactionResponse(jsonStr)
     }
 }

@@ -1,7 +1,7 @@
 package com.lobstr.stellar.vault.data.fcm
 
 import com.lobstr.stellar.vault.data.net.entities.fcm.ApiFcmResult
-import com.lobstr.stellar.vault.presentation.fcm.entities.FcmResult
+import com.lobstr.stellar.vault.presentation.entities.fcm.FcmResult
 
 
 class FcmEntityMapper {
@@ -15,6 +15,14 @@ class FcmEntityMapper {
         val dateCreated = apiFcmResult.dateCreated
         val type = apiFcmResult.type
 
-        return FcmResult(id, name, token, deviceId, isActive, dateCreated, type)
+        return FcmResult(
+            id,
+            name,
+            token,
+            deviceId,
+            isActive,
+            dateCreated,
+            type
+        )
     }
 }

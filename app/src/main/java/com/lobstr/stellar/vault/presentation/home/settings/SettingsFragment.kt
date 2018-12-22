@@ -8,7 +8,7 @@ import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.lobstr.stellar.vault.R
 import com.lobstr.stellar.vault.presentation.auth.AuthActivity
 import com.lobstr.stellar.vault.presentation.home.base.fragment.BaseFragment
-import com.lobstr.stellar.vault.presentation.home.settings.container.SettingsContainerFragment
+import com.lobstr.stellar.vault.presentation.home.container.fragment.ContainerFragment
 import com.lobstr.stellar.vault.presentation.util.AppUtil
 import kotlinx.android.synthetic.main.fragment_settings.*
 
@@ -85,7 +85,7 @@ class SettingsFragment : BaseFragment(), SettingsView, View.OnClickListener {
         when (v!!.id) {
             R.id.btnLogOut -> mPresenter.logOutClicked()
 
-            R.id.btnCopyUserPk -> mPresenter.copyUserPiblicKey(tvUserPublicKey.text.toString())
+            R.id.btnCopyUserPk -> mPresenter.copyUserPublicKey(tvUserPublicKey.text.toString())
         }
     }
 
@@ -93,8 +93,9 @@ class SettingsFragment : BaseFragment(), SettingsView, View.OnClickListener {
         saveActionBarTitle(titleRes)
     }
 
-    override fun setupUserPublicKey(userPublicKey: String?) {
+    override fun setupAccountData(userPublicKey: String?, signedAccount: String?) {
         tvUserPublicKey.text = userPublicKey
+        tvSignedAccount.text = signedAccount
     }
 
     override fun copyToClipBoard(text: String) {
@@ -102,7 +103,7 @@ class SettingsFragment : BaseFragment(), SettingsView, View.OnClickListener {
     }
 
     override fun showInfoFr() {
-        (parentFragment as? SettingsContainerFragment)?.showInfoFr()
+        (parentFragment as? ContainerFragment)?.showInfoFr()
     }
 
     override fun showAuthScreen() {

@@ -19,9 +19,9 @@ class MnemonicsContainerView(context: Context?, attrs: AttributeSet?) : ScrollVi
 
     private var isCounterEnabled: Boolean = true
 
-    var mnemonicList: List<String>? = null
+    var mMnemonicList: List<String>? = null
 
-    private var mnemonicItemClickListener: WeakReference<MnemonicItemClickListener>? = null
+    private var mMnemonicItemClickListener: WeakReference<MnemonicItemClickListener>? = null
 
     init {
         val typedArray = context!!.obtainStyledAttributes(attrs, R.styleable.MnemonicsContainerView)
@@ -36,13 +36,13 @@ class MnemonicsContainerView(context: Context?, attrs: AttributeSet?) : ScrollVi
     }
 
     fun setupMnemonics() {
-        if (mnemonicList != null) {
+        if (mMnemonicList != null) {
             fblMnemonicItemContainer.removeAllViews()
-            for (i in mnemonicList!!.indices) {
+            for (i in mMnemonicList!!.indices) {
                 val itemMnemonic = (context as Activity).layoutInflater.inflate(R.layout.item_mnemonic, null)
                 val number = itemMnemonic!!.findViewById<TextView>(R.id.tvMnemonicNumber)
                 val word = itemMnemonic.findViewById<TextView>(R.id.tvMnemonicWord)
-                val mnemonicStr = mnemonicList!![i]
+                val mnemonicStr = mMnemonicList!![i]
                 number.visibility = if (isCounterEnabled) View.VISIBLE else View.GONE
                 number.text = (i + 1).toString()
                 word.text = mnemonicStr
@@ -59,7 +59,7 @@ class MnemonicsContainerView(context: Context?, attrs: AttributeSet?) : ScrollVi
                 )
 
                 itemMnemonic.setOnClickListener {
-                    mnemonicItemClickListener?.get()?.onMnemonicItemClick(this, i, mnemonicStr)
+                    mMnemonicItemClickListener?.get()?.onMnemonicItemClick(this, i, mnemonicStr)
                 }
 
                 fblMnemonicItemContainer.addView(itemMnemonic, i, layoutParams)
@@ -68,7 +68,7 @@ class MnemonicsContainerView(context: Context?, attrs: AttributeSet?) : ScrollVi
     }
 
     fun setMnemonicItemClickListener(listener: MnemonicItemClickListener) {
-        mnemonicItemClickListener = WeakReference(listener)
+        mMnemonicItemClickListener = WeakReference(listener)
     }
 
     interface MnemonicItemClickListener {

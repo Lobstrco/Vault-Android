@@ -1,14 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             xmlns:tools="http://schemas.android.com/tools"
-             android:layout_width="match_parent"
-             android:layout_height="match_parent"
-             tools:context=".presentation.home.transactions.TransactionsFragment">
+<FrameLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".presentation.home.transactions.TransactionsFragment">
 
     <TextView
+            android:id="@+id/tvTransactionEmptyState"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:text="Transactions"
-            android:gravity="center"/>
+            android:text="@string/text_empty_state_transactions_list"
+            android:gravity="center"
+            android:visibility="gone"/>
 
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+            android:id="@+id/srlTransactions"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+        <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvTransactions"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:splitMotionEvents="false"/>
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 </FrameLayout>

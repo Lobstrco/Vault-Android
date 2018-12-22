@@ -11,6 +11,9 @@ import com.google.android.material.bottomnavigation.LabelVisibilityMode
 import com.lobstr.stellar.vault.R
 import com.lobstr.stellar.vault.presentation.auth.AuthActivity
 import com.lobstr.stellar.vault.presentation.home.base.activity.BaseActivity
+import com.lobstr.stellar.vault.presentation.util.Constant.Navigation.DASHBOARD
+import com.lobstr.stellar.vault.presentation.util.Constant.Navigation.SETTINGS
+import com.lobstr.stellar.vault.presentation.util.Constant.Navigation.TRANSACTIONS
 import kotlinx.android.synthetic.main.activity_home.*
 
 class HomeActivity : BaseActivity(), HomeActivityView,
@@ -72,11 +75,11 @@ class HomeActivity : BaseActivity(), HomeActivityView,
         }
 
         when (item.itemId) {
-            R.id.action_dashboard -> vpHome.currentItem = HomeViewPagerAdapter.DASHBOARD
+            R.id.action_dashboard -> vpHome.currentItem = DASHBOARD
 
-            R.id.action_transactions -> vpHome.currentItem = HomeViewPagerAdapter.TRANSACTIONS
+            R.id.action_transactions -> vpHome.currentItem = TRANSACTIONS
 
-            R.id.action_settings -> vpHome.currentItem = HomeViewPagerAdapter.SETTINGS
+            R.id.action_settings -> vpHome.currentItem = SETTINGS
         }
 
         return true
@@ -129,7 +132,10 @@ class HomeActivity : BaseActivity(), HomeActivityView,
                 if (backStackCount > 1) {
                     val childFragmentManager = currentContainer.childFragmentManager
 
-                    childFragmentManager.popBackStack(childFragmentManager.getBackStackEntryAt(1).id, POP_BACK_STACK_INCLUSIVE)
+                    childFragmentManager.popBackStack(
+                        childFragmentManager.getBackStackEntryAt(1).id,
+                        POP_BACK_STACK_INCLUSIVE
+                    )
                 }
             }
         } catch (exc: IndexOutOfBoundsException) {

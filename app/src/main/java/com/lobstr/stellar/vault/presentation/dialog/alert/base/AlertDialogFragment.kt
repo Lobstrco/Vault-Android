@@ -29,15 +29,15 @@ open class AlertDialogFragment : BaseMvpAppCompatDialogFragment() {
     private var cancelableOf: Boolean = false
 
     @LayoutRes
-    private var view: Int = 0
+    private var mView: Int = 0
 
-    private var title: CharSequence? = null
-    private var message: CharSequence? = null
+    private var mTitle: CharSequence? = null
+    private var mMessage: CharSequence? = null
 
-    private var negativeBtnText: CharSequence? = null
-    private var positiveBtnText: CharSequence? = null
+    private var mNegativeBtnText: CharSequence? = null
+    private var mPositiveBtnText: CharSequence? = null
 
-    protected var contentView: View? = null
+    protected var mContentView: View? = null
 
     object DialogFragmentIdentifier {
         const val PROGRESS_DIALOG = "PROGRESS_DIALOG"
@@ -108,16 +108,16 @@ open class AlertDialogFragment : BaseMvpAppCompatDialogFragment() {
         isCancelable = cancelableOf
 
         return AlertDialog.Builder(activity!!)
-                .setTitle(title)
-                .setMessage(message)
-                .setView(contentView)
+                .setTitle(mTitle)
+                .setMessage(mMessage)
+                .setView(mContentView)
 
-                .setNegativeButton(negativeBtnText, if (mOnBaseAlertDialogListener == null)
+                .setNegativeButton(mNegativeBtnText, if (mOnBaseAlertDialogListener == null)
                     null
                 else
                     DialogInterface.OnClickListener { dialogInterface, _ -> this@AlertDialogFragment.onNegativeBtnClick(dialogInterface) })
 
-                .setPositiveButton(positiveBtnText, if (mOnBaseAlertDialogListener == null)
+                .setPositiveButton(mPositiveBtnText, if (mOnBaseAlertDialogListener == null)
                     null
                 else
                     DialogInterface.OnClickListener { dialogInterface, _ -> this@AlertDialogFragment.onPositiveBtnClick(dialogInterface) })
@@ -144,11 +144,11 @@ open class AlertDialogFragment : BaseMvpAppCompatDialogFragment() {
 
         isCalledInFragment = arguments!!.getBoolean(ARGUMENT_DIALOG_IS_CALLED_IN_FRAGMENT)
         cancelableOf = arguments!!.getBoolean(ARGUMENT_DIALOG_IS_CANCELABLE)
-        view = arguments!!.getInt(ARGUMENT_DIALOG_VIEW)
-        title = arguments!!.getCharSequence(ARGUMENT_DIALOG_TITLE)
-        message = arguments!!.getCharSequence(ARGUMENT_DIALOG_MESSAGE)
-        negativeBtnText = arguments!!.getCharSequence(ARGUMENT_DIALOG_NEGATIVE_BTN_TEXT)
-        positiveBtnText = arguments!!.getCharSequence(ARGUMENT_DIALOG_POSITIVE_BTN_TEXT)
+        mView = arguments!!.getInt(ARGUMENT_DIALOG_VIEW)
+        mTitle = arguments!!.getCharSequence(ARGUMENT_DIALOG_TITLE)
+        mMessage = arguments!!.getCharSequence(ARGUMENT_DIALOG_MESSAGE)
+        mNegativeBtnText = arguments!!.getCharSequence(ARGUMENT_DIALOG_NEGATIVE_BTN_TEXT)
+        mPositiveBtnText = arguments!!.getCharSequence(ARGUMENT_DIALOG_POSITIVE_BTN_TEXT)
 
         mOnBaseAlertDialogListener = if (isCalledInFragment)
             if (parentFragment is OnBaseAlertDialogListener) parentFragment as OnBaseAlertDialogListener? else null
@@ -156,14 +156,14 @@ open class AlertDialogFragment : BaseMvpAppCompatDialogFragment() {
     }
 
     private fun initView() {
-        contentView = if (getContentView() == 0)
+        mContentView = if (getContentView() == 0)
             null
         else
             activity!!.layoutInflater.inflate(getContentView(), null)
     }
 
     protected fun getContentView(): Int {
-        return view
+        return mView
     }
 
     protected fun onPositiveBtnClick(dialogInterface: DialogInterface) {

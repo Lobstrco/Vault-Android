@@ -11,8 +11,6 @@
     <string name="msg_field_required">Field required</string>
     <string name="msg_invalid_number">Invalid number</string>
     <string name="msg_confirmation_error">Don\'t match</string>
-    <string name="msg_network_connection_error">No Internet connection</string>
-    <string name="msg_network_connection_timeout">Timeout</string>
     <string name="msg_unknown_error">Unknown error</string>
     <string name="msg_successfully_copied">"Successfully copied"</string>
     <string name="msg_camera_permission_scan_explanation">Please, allow Camera permission to decode QR code</string>
@@ -59,5 +57,16 @@
     <string name="text_create_pin">Please create a PIN code. Do not reuse your phone PIN</string>
 
     <string name="text_action_info">info</string>
+
+    <!--Api errors-->
+    <string name="api_error_not_found">Not Found</string>
+    <string name="api_error_connection_timeout">Timeout</string>
+    <string name="api_error_connection_error">No Internet connection</string>
+    <string name="api_error_something_went_wrong">Something went wrong, please try again later</string>
+    <string name="api_error_user_not_authorized">User Not Authorized</string>
+
+    <string name="text_invalid_token">Invalid token.</string>
+    <string name="text_empty_state_transactions_list">Transactions not found</string>
+    <string name="text_dashboard_transactions">Transactions\nTo\nSign</string>
 
 </resources>

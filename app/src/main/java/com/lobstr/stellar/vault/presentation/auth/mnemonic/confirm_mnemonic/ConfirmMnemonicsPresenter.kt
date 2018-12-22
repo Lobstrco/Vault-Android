@@ -15,7 +15,7 @@ import javax.inject.Inject
 class ConfirmMnemonicsPresenter(private val mnemonicsArray: CharArray) : BasePresenter<ConfirmMnemonicsView>() {
 
     @Inject
-    lateinit var mInteractor: ConfirmMnemonicsInteractor
+    lateinit var interactor: ConfirmMnemonicsInteractor
 
     init {
         LVApplication.sAppComponent.plusConfirmMnemonicsComponent(ConfirmMnemonicsModule()).inject(this)
@@ -59,7 +59,7 @@ class ConfirmMnemonicsPresenter(private val mnemonicsArray: CharArray) : BasePre
 //        }
 
         unsubscribeOnDestroy(
-            mInteractor.createSecretKey(mnemonicsArray)
+            interactor.createAndSaveSecretKey(mnemonicsArray)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe {
@@ -68,8 +68,8 @@ class ConfirmMnemonicsPresenter(private val mnemonicsArray: CharArray) : BasePre
                 .doOnEvent { _: String?, _: Throwable? ->
                     viewState.dismissProgressDialog()
                 }
-                .subscribe({ secretKey ->
-                    viewState.showPinScreen(secretKey)
+                .subscribe({
+                    viewState.showPinScreen()
                 }, { throwable ->
                     if (throwable is MnemonicException) {
                         viewState.showMessage(R.string.text_error_incorrect_mnemonic)

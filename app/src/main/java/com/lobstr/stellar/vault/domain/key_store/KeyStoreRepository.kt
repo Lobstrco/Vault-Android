@@ -1,14 +1,10 @@
 package com.lobstr.stellar.vault.domain.key_store
 
-import java.security.KeyPair
-
 interface KeyStoreRepository {
 
-    fun encryptSecretKey(pin: String, secretKey: String): String
+    fun encryptData(data: String, alias: String, aliasIV: String)
 
-    fun getAsymmetricKeyPair(pin: String): KeyPair?
-
-    fun decryptSecretKey(pin: String, secretKey: String): String
+    fun decryptData(alias: String, aliasIV: String): String?
 
     fun clear()
 }

@@ -10,6 +10,7 @@ import dagger.Module
 import dagger.Provides
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
+import org.stellar.sdk.Network
 import org.stellar.sdk.Server
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
@@ -64,6 +65,7 @@ class ApiModule {
     @Provides
     @Singleton
     internal fun provideHorizonServer(): Server {
+        Network.usePublicNetwork()
         return Server(if (BuildConfig.BUILD_TYPE == Constant.BuildType.RELEASE) HOST_HORIZON_PRODUCTION else HOST_HORIZON_STAGING)
     }
 

@@ -1,8 +1,9 @@
 package com.lobstr.stellar.vault.domain.fcm
 
-import com.lobstr.stellar.vault.presentation.fcm.entities.FcmResult
+import com.lobstr.stellar.vault.presentation.entities.account.Account
+import com.lobstr.stellar.vault.presentation.entities.fcm.FcmResult
+import com.lobstr.stellar.vault.presentation.entities.transaction.TransactionItem
 import io.reactivex.Single
-
 
 interface FcmInteractor {
 
@@ -19,4 +20,10 @@ interface FcmInteractor {
     fun setFcmRegistered(registered: Boolean)
 
     fun isFcmRegistered(): Boolean
+
+    fun confirmIsUserSignerForLobstr(jsonStr: String?): Account?
+
+    fun isUserAuthorized(): Boolean
+
+    fun transformNewTransactionResponse(jsonStr: String?): TransactionItem?
 }

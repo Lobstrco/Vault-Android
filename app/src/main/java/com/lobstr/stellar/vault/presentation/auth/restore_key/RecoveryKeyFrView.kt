@@ -20,7 +20,7 @@ interface RecoveryKeyFrView : MvpView {
     fun changeTextBackground(isError: Boolean)
 
     @StateStrategyType(SkipStrategy::class)
-    fun showPinScreen(secretKey: String)
+    fun showPinScreen()
 
     @StateStrategyType(SkipStrategy::class)
     fun showErrorMessage(@StringRes message: Int)

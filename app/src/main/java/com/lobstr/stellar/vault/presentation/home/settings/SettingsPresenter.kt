@@ -12,7 +12,7 @@ import javax.inject.Inject
 class SettingsPresenter : BasePresenter<SettingsView>() {
 
     @Inject
-    lateinit var mInteractor: SettingsInteractor
+    lateinit var interactor: SettingsInteractor
 
     init {
         LVApplication.sAppComponent.plusSettingsComponent(SettingsModule()).inject(this)
@@ -21,7 +21,10 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
         viewState.setupToolbarTitle(R.string.settings)
-        viewState.setupUserPublicKey(mInteractor.getUserPublicKey())
+        viewState.setupAccountData(
+            interactor.getUserPublicKey(),
+            interactor.getSignedAccount()
+        )
     }
 
     fun infoClicked() {
@@ -29,11 +32,11 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
     }
 
     fun logOutClicked() {
-        mInteractor.clearUserData()
+        interactor.clearUserData()
         viewState.showAuthScreen()
     }
 
-    fun copyUserPiblicKey(userPublicKey: String?) {
+    fun copyUserPublicKey(userPublicKey: String?) {
         if (userPublicKey.isNullOrEmpty()) {
             return
         }

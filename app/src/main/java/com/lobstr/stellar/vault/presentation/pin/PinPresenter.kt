@@ -9,29 +9,31 @@ import com.lobstr.stellar.vault.presentation.application.LVApplication
 import com.lobstr.stellar.vault.presentation.dager.module.pin.PinModule
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
-import java.security.KeyPair
 import javax.inject.Inject
 
 /**
  * Main IDEA - when secretKey was empty - confirmation action, else - save secret key
  */
 @InjectViewState
-class PinPresenter(private val secretKey: String?) : BasePresenter<PinView>() {
+class PinPresenter(private var needCreatePin: Boolean?) : BasePresenter<PinView>() {
 
     @Inject
-    lateinit var mInteractor: PinInteractor
+    lateinit var interactor: PinInteractor
 
-    private var mNewPin: String? = null
+    private var newPin: String? = null
 
     init {
         LVApplication.sAppComponent.plusPinComponent(PinModule()).inject(this)
+        if (needCreatePin == null) {
+            needCreatePin = false
+        }
     }
 
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
 
         viewState.attachIndicatorDots()
-        if (secretKey.isNullOrEmpty()) {
+        if (!needCreatePin!!) {
             viewState.showDescriptionMessage(R.string.text_enter_pin)
         } else {
             viewState.showDescriptionMessage(R.string.text_create_pin)
@@ -43,7 +45,7 @@ class PinPresenter(private val secretKey: String?) : BasePresenter<PinView>() {
      */
     fun onPinComplete(pin: String?) {
         if (pin != null) {
-            if (!secretKey.isNullOrEmpty()) {
+            if (needCreatePin!!) {
                 createPin(pin)
             } else {
                 confirmPin(pin)
@@ -56,14 +58,14 @@ class PinPresenter(private val secretKey: String?) : BasePresenter<PinView>() {
 
     private fun createPin(pin: String) {
         when {
-            mNewPin.isNullOrEmpty() -> {
-                mNewPin = pin
+            newPin.isNullOrEmpty() -> {
+                newPin = pin
                 viewState.showDescriptionMessage(R.string.text_reenter_pin)
                 viewState.resetPin()
             }
-            mNewPin.equals(pin) -> {
+            newPin.equals(pin) -> {
                 unsubscribeOnDestroy(
-                    mInteractor.saveSecretKey(pin, secretKey!!)
+                    interactor.savePin(pin)
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .doOnSubscribe {
@@ -73,7 +75,7 @@ class PinPresenter(private val secretKey: String?) : BasePresenter<PinView>() {
                             viewState.hideProgressDialog()
                         }
                         .doOnComplete {
-                            viewState.showHomeScreen()
+                            checkAuthState()
                         }
                         .subscribe()
                 )
@@ -87,19 +89,19 @@ class PinPresenter(private val secretKey: String?) : BasePresenter<PinView>() {
 
     private fun confirmPin(pin: String) {
         unsubscribeOnDestroy(
-            mInteractor.checkPinValidation(pin)
+            interactor.checkPinValidation(pin)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe {
                     viewState.showProgressDialog()
                 }
-                .doOnEvent { _: KeyPair, _: Throwable? ->
+                .doOnEvent { _: Boolean, _: Throwable? ->
                     viewState.hideProgressDialog()
                 }
-                .doOnSuccess { keyPair ->
-                    if (keyPair.public != null && keyPair.private != null) {
-                        if (secretKey.isNullOrEmpty()) {
-                            viewState.showHomeScreen()
+                .doOnSuccess { success ->
+                    if (success) {
+                        if (!needCreatePin!!) {
+                            checkAuthState()
                         } else {
                             viewState.finishScreenWithResult(Activity.RESULT_OK)
                         }
@@ -110,5 +112,12 @@ class PinPresenter(private val secretKey: String?) : BasePresenter<PinView>() {
                 }
                 .subscribe()
         )
+    }
+
+    private fun checkAuthState() {
+        when {
+            interactor.isUserSignerForLobstr() -> viewState.showHomeScreen()
+            else -> viewState.showVaultAuthScreen()
+        }
     }
 }

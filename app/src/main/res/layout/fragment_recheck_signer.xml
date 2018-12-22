@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_margin="16dp"
+        tools:context=".presentation.vault_auth.recheck_signer.RecheckSignerFragment">
+
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:orientation="vertical"
+            android:layout_weight="1">
+
+        <TextView
+                android:id="@+id/tvUserPublicKey"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:textAppearance="?android:textAppearanceLarge"
+                android:padding="16dp"
+                android:textAllCaps="true"
+                android:ellipsize="middle"
+                android:singleLine="true"
+                android:textColor="@android:color/black"/>
+
+        <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:layout_gravity="center"
+                android:text="You are \nnot a signer"
+                android:textAppearance="?android:textAppearanceLarge"
+                android:padding="16dp"
+                android:textAllCaps="true"
+                android:textColor="@android:color/black"/>
+
+    </LinearLayout>
+
+    <Button
+            android:text="Re-check"
+            android:layout_height="wrap_content"
+            android:id="@+id/btnRecheck"
+            android:layout_width="match_parent"
+            style="@style/Base.Widget.AppCompat.Button.Borderless.Colored"
+            android:background="@drawable/selector_default_button"
+            android:textColor="@android:color/white"
+            android:textAppearance="?android:textAppearanceMedium"
+            android:textAllCaps="false"
+            android:layout_gravity="center"
+            android:layout_marginLeft="42dp"
+            android:layout_marginRight="42dp"/>
+</LinearLayout>

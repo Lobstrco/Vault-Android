@@ -19,9 +19,9 @@ import javax.inject.Inject
 class RecoveryKeyFrPresenter : BasePresenter<RecoveryKeyFrView>() {
 
     @Inject
-    lateinit var mInteractor: RecoveryKeyInteractor
+    lateinit var interactor: RecoveryKeyInteractor
 
-    private lateinit var mPhrases: String
+    private lateinit var phrases: String
 
     init {
         LVApplication.sAppComponent.plusRecoveryKeyComponent(RecoveryKeyModule()).inject(this)
@@ -34,7 +34,7 @@ class RecoveryKeyFrPresenter : BasePresenter<RecoveryKeyFrView>() {
     }
 
     fun phrasesChanged(phrases: String) {
-        mPhrases = phrases
+        this.phrases = phrases
         val phraseArray = phrases.split(" ")
         val incorrectWords: MutableList<PhraseErrorInfo> = mutableListOf()
 
@@ -127,13 +127,13 @@ class RecoveryKeyFrPresenter : BasePresenter<RecoveryKeyFrView>() {
     }
 
     fun btnRecoveryClicked() {
-        mPhrases = mPhrases.trim()
-        while (mPhrases.contains("  ")) {
-            mPhrases = mPhrases.replace("  ", " ")
+        phrases = phrases.trim()
+        while (phrases.contains("  ")) {
+            phrases = phrases.replace("  ", " ")
         }
 
         unsubscribeOnDestroy(
-            mInteractor.createSecretKey(mPhrases.toCharArray())
+            interactor.createAndSaveSecretKey(phrases.toCharArray())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe {
@@ -142,8 +142,8 @@ class RecoveryKeyFrPresenter : BasePresenter<RecoveryKeyFrView>() {
                 .doOnEvent { _: String?, _: Throwable? ->
                     viewState.dismissProgressDialog()
                 }
-                .subscribe({ secretKey ->
-                    viewState.showPinScreen(secretKey)
+                .subscribe({
+                    viewState.showPinScreen()
                 }, { throwable ->
                     if (throwable is MnemonicException) {
                         viewState.showErrorMessage(R.string.text_error_incorrect_mnemonic)

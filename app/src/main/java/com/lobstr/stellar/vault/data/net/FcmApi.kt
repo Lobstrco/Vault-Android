@@ -2,7 +2,6 @@ package com.lobstr.stellar.vault.data.net
 
 import com.lobstr.stellar.vault.data.net.entities.fcm.ApiFcmResult
 import io.reactivex.Single
-import retrofit2.Response
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
 import retrofit2.http.Header
@@ -17,5 +16,5 @@ interface FcmApi {
         @Header("Authorization") token: String,
         @Field("type") type: String,
         @Field("registration_id") registrationId: String
-    ): Single<Response<ApiFcmResult>>
+    ): Single<ApiFcmResult>
 }
