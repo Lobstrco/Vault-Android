@@ -1,94 +1,259 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-            xmlns:tools="http://schemas.android.com/tools"
+<ScrollView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true"
+        android:background="@color/gray_background"
+        tools:context=".presentation.home.settings.SettingsFragment">
+
+    <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:fillViewport="true"
-            tools:context=".presentation.home.settings.SettingsFragment">
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
-    <LinearLayout android:layout_width="match_parent"
-                  android:layout_height="match_parent"
-                  android:orientation="vertical"
-                  android:layout_margin="16dp">
+        <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/title_settings_wallet"
+                android:padding="10dp"
+                android:textAppearance="?android:textAppearanceMedium"
+                android:textStyle="bold"/>
 
-        <LinearLayout android:layout_width="match_parent"
-                      android:layout_height="match_parent"
-                      android:orientation="vertical"
-                      android:layout_weight="1">
+        <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:background="@android:color/darker_gray"/>
+
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:background="@android:color/white">
 
             <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:textAppearance="?android:textAppearanceLarge"
-                    android:textStyle="bold"
-                    android:paddingTop="20dp"
-                    android:paddingLeft="16dp"
-                    android:paddingRight="16dp"
-                    android:paddingBottom="5dp"
-                    android:textColor="@android:color/black"
-                    android:text="Your Public Key:"/>
+                    android:textAppearance="?android:textAppearanceMedium"
+                    android:layout_weight="1"
+                    android:text="@string/text_settings_public_key"/>
+
+            <ImageView
+                    android:id="@+id/ivCopyUserPk"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0"
+                    android:padding="10dp"
+                    android:src="@drawable/ic_copy"
+                    tools:ignore="ContentDescription"/>
 
             <TextView
                     android:id="@+id/tvUserPublicKey"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:textAppearance="?android:textAppearanceLarge"
-                    android:padding="16dp"
-                    android:textAllCaps="true"
-                    android:ellipsize="middle"
-                    android:singleLine="true"
-                    android:textColor="@android:color/black"/>
-
-            <Button
-                    android:text="Copy"
-                    android:layout_height="32dp"
-                    android:id="@+id/btnCopyUserPk"
                     android:layout_width="wrap_content"
-                    style="@style/Base.Widget.AppCompat.Button.Borderless.Colored"
-                    android:background="@drawable/selector_default_button"
-                    android:textColor="@android:color/white"
+                    android:layout_height="wrap_content"
+                    android:maxWidth="150dp"
+                    android:gravity="center"
                     android:textAppearance="?android:textAppearanceMedium"
-                    android:textAllCaps="false"
-                    android:layout_gravity="center"/>
-
-            <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:textAppearance="?android:textAppearanceLarge"
-                    android:textStyle="bold"
-                    android:layout_marginTop="38dp"
-                    android:layout_marginBottom="5dp"
-                    android:textColor="@android:color/black"
-                    android:text="You are Signer for:"/>
-
-            <TextView
-                    android:id="@+id/tvSignedAccount"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:textAppearance="?android:textAppearanceLarge"
-                    android:padding="16dp"
                     android:textAllCaps="true"
                     android:ellipsize="middle"
-                    android:singleLine="true"
-                    android:textColor="@android:color/black"
-                    android:text="-"/>
-
+                    android:layout_weight="0"
+                    android:singleLine="true"/>
         </LinearLayout>
 
-        <Button
-                android:text="Log Out"
-                android:layout_height="wrap_content"
-                android:id="@+id/btnLogOut"
+        <View
                 android:layout_width="match_parent"
-                style="@style/Base.Widget.AppCompat.Button.Borderless.Colored"
-                android:background="@drawable/selector_default_button"
-                android:textColor="@android:color/white"
+                android:layout_height="0.5dp"
+                android:background="@android:color/darker_gray"/>
+
+        <LinearLayout
+                android:id="@+id/llSettingsSigners"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:paddingStart="10dp"
+                android:paddingEnd="0dp"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:background="@android:color/white">
+
+            <TextView
+                    android:id="@+id/tvSettingsSigners"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:textAppearanceMedium"
+                    android:layout_weight="1"
+                    android:text="@string/text_settings_signers"/>
+
+            <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0"
+                    android:src="@drawable/ic_arrow_right"
+                    tools:ignore="ContentDescription"/>
+        </LinearLayout>
+
+        <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:background="@android:color/darker_gray"/>
+
+        <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/title_settings_security"
+                android:padding="10dp"
                 android:textAppearance="?android:textAppearanceMedium"
-                android:textAllCaps="true"
-                android:layout_gravity="center"/>
+                android:textStyle="bold"/>
+
+        <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:background="@android:color/darker_gray"/>
+
+        <LinearLayout
+                android:id="@+id/llSettingsMnemonics"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:paddingStart="10dp"
+                android:paddingEnd="0dp"
+                android:background="@android:color/white">
+
+            <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:textAppearanceMedium"
+                    android:layout_weight="1"
+                    android:text="@string/text_settings_mnemonic_code"/>
+
+            <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0"
+                    android:src="@drawable/ic_arrow_right"
+                    tools:ignore="ContentDescription"/>
+        </LinearLayout>
+
+        <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:background="@android:color/darker_gray"/>
+
+        <LinearLayout
+                android:id="@+id/llSettingsDeviceLock"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:paddingStart="10dp"
+                android:paddingEnd="0dp"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:background="@android:color/white">
+
+            <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:textAppearanceMedium"
+                    android:layout_weight="1"
+                    android:text="@string/text_settings_device_lock"/>
+
+            <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0"
+                    android:src="@drawable/ic_arrow_right"
+                    tools:ignore="ContentDescription"/>
+        </LinearLayout>
+
+        <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:background="@android:color/darker_gray"/>
+
+        <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/title_settings_about"
+                android:padding="10dp"
+                android:textAppearance="?android:textAppearanceMedium"
+                android:textStyle="bold"/>
+
+        <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:background="@android:color/darker_gray"/>
+
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:orientation="horizontal"
+                android:paddingStart="10dp"
+                android:paddingEnd="10dp"
+                android:gravity="center_vertical"
+                android:background="@android:color/white">
+
+            <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:textAppearanceMedium"
+                    android:layout_weight="1"
+                    android:text="@string/text_settings_version"/>
+
+            <TextView
+                    android:id="@+id/tvSettingsVersion"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:textAppearanceMedium"
+                    android:padding="10dp"
+                    android:layout_weight="0"/>
+        </LinearLayout>
+
+        <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:background="@android:color/darker_gray"/>
+
+        <LinearLayout
+                android:id="@+id/llSettingsHelp"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:paddingStart="10dp"
+                android:paddingEnd="0dp"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:background="@android:color/white">
+
+            <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:textAppearanceMedium"
+                    android:layout_weight="1"
+                    android:text="@string/text_settings_help"/>
+
+            <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0"
+                    android:src="@drawable/ic_arrow_right"
+                    tools:ignore="ContentDescription"/>
+        </LinearLayout>
+
+        <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:background="@android:color/darker_gray"/>
+
+        <TextView
+                android:id="@+id/tvLogOut"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:gravity="center_vertical"
+                android:background="@android:color/white"
+                android:text="Log Out"
+                android:padding="10dp"
+                android:textAppearance="?android:textAppearanceMedium"/>
     </LinearLayout>
 </ScrollView>

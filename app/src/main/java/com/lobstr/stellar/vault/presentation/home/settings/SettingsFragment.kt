@@ -3,13 +3,17 @@ package com.lobstr.stellar.vault.presentation.home.settings
 import android.content.Intent
 import android.os.Bundle
 import android.view.*
+import androidx.fragment.app.Fragment
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
+import com.fusechain.digitalbits.util.manager.FragmentTransactionManager
 import com.lobstr.stellar.vault.R
 import com.lobstr.stellar.vault.presentation.auth.AuthActivity
-import com.lobstr.stellar.vault.presentation.home.base.fragment.BaseFragment
-import com.lobstr.stellar.vault.presentation.home.container.fragment.ContainerFragment
+import com.lobstr.stellar.vault.presentation.base.fragment.BaseFragment
+import com.lobstr.stellar.vault.presentation.container.activity.ContainerActivity
+import com.lobstr.stellar.vault.presentation.faq.FaqFragment
 import com.lobstr.stellar.vault.presentation.util.AppUtil
+import com.lobstr.stellar.vault.presentation.util.Constant
 import kotlinx.android.synthetic.main.fragment_settings.*
 
 class SettingsFragment : BaseFragment(), SettingsView, View.OnClickListener {
@@ -60,8 +64,12 @@ class SettingsFragment : BaseFragment(), SettingsView, View.OnClickListener {
     }
 
     private fun setListeners() {
-        btnLogOut.setOnClickListener(this)
-        btnCopyUserPk.setOnClickListener(this)
+        tvLogOut.setOnClickListener(this)
+        ivCopyUserPk.setOnClickListener(this)
+        llSettingsSigners.setOnClickListener(this)
+        llSettingsMnemonics.setOnClickListener(this)
+        llSettingsDeviceLock.setOnClickListener(this)
+        llSettingsHelp.setOnClickListener(this)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
@@ -83,9 +91,12 @@ class SettingsFragment : BaseFragment(), SettingsView, View.OnClickListener {
 
     override fun onClick(v: View?) {
         when (v!!.id) {
-            R.id.btnLogOut -> mPresenter.logOutClicked()
-
-            R.id.btnCopyUserPk -> mPresenter.copyUserPublicKey(tvUserPublicKey.text.toString())
+            R.id.tvLogOut -> mPresenter.logOutClicked()
+            R.id.ivCopyUserPk -> mPresenter.copyUserPublicKey(tvUserPublicKey.text.toString())
+            R.id.llSettingsSigners -> mPresenter.signersClicked()
+            R.id.llSettingsMnemonics -> mPresenter.mnemonicsClicked()
+            R.id.llSettingsDeviceLock -> mPresenter.deviceLockClicked()
+            R.id.llSettingsHelp -> mPresenter.helpClicked()
         }
     }
 
@@ -93,9 +104,10 @@ class SettingsFragment : BaseFragment(), SettingsView, View.OnClickListener {
         saveActionBarTitle(titleRes)
     }
 
-    override fun setupAccountData(userPublicKey: String?, signedAccount: String?) {
+    override fun setupSettingsData(userPublicKey: String?, signedAccount: String, buildVersion: String) {
         tvUserPublicKey.text = userPublicKey
-        tvSignedAccount.text = signedAccount
+        tvSettingsVersion.text = buildVersion
+        tvSettingsSigners.text = String.format(getString(R.string.text_settings_signers), signedAccount)
     }
 
     override fun copyToClipBoard(text: String) {
@@ -103,13 +115,36 @@ class SettingsFragment : BaseFragment(), SettingsView, View.OnClickListener {
     }
 
     override fun showInfoFr() {
-        (parentFragment as? ContainerFragment)?.showInfoFr()
+        FragmentTransactionManager.displayFragment(
+            parentFragment!!.childFragmentManager,
+            Fragment.instantiate(context, FaqFragment::class.java.name),
+            R.id.fl_container,
+            true
+        )
     }
 
     override fun showAuthScreen() {
         val intent = Intent(context, AuthActivity::class.java)
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         startActivity(intent)
+    }
+
+    override fun showSignersScreen() {
+        // TODO
+    }
+
+    override fun showMnemonicsScreen() {
+        val intent = Intent(context, ContainerActivity::class.java)
+        intent.putExtra(Constant.Extra.EXTRA_NAVIGATION_FR, Constant.Navigation.MNEMONICS)
+        startActivity(intent)
+    }
+
+    override fun showDeviceLockScreen() {
+        // TODO
+    }
+
+    override fun showHelpScreen() {
+        // TODO
     }
 
     // ===========================================================

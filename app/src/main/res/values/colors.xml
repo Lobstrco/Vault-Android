@@ -20,4 +20,5 @@
 
     <color name="color_default_button_disabled">#803a6c99</color>
     <color name="color_default_button_pressed">#CC3a6c99</color>
+    <color name="gray_background">#EEEEEE</color>
 </resources>

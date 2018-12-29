@@ -9,13 +9,13 @@
 
     <item
         android:id="@+id/action_transactions"
-        android:icon="@drawable/selector_item_dashboard"
+        android:icon="@drawable/selector_item_transactions"
         android:title="@string/transactions"
         app:showAsAction="ifRoom"/>
 
     <item
         android:id="@+id/action_settings"
-        android:icon="@drawable/selector_item_dashboard"
+        android:icon="@drawable/selector_item_settings"
         android:title="@string/settings"
         app:showAsAction="ifRoom"/>
 </menu>

@@ -5,7 +5,7 @@ import android.os.Bundle
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentStatePagerAdapter
-import com.lobstr.stellar.vault.presentation.home.container.fragment.ContainerFragment
+import com.lobstr.stellar.vault.presentation.container.fragment.ContainerFragment
 import com.lobstr.stellar.vault.presentation.util.Constant.Bundle.BUNDLE_NAVIGATION_FR
 import com.lobstr.stellar.vault.presentation.util.Constant.Navigation.DASHBOARD
 import com.lobstr.stellar.vault.presentation.util.Constant.Navigation.SETTINGS
@@ -20,6 +20,12 @@ class HomeViewPagerAdapter(private val context: Context, fm: FragmentManager) : 
 
     companion object {
         const val VIEW_PAGER_COUNT = 3
+    }
+
+    object Position {
+        const val DASHBOARD = 0
+        const val TRANSACTIONS = 1
+        const val SETTINGS = 2
     }
 
     // ===========================================================
@@ -43,15 +49,15 @@ class HomeViewPagerAdapter(private val context: Context, fm: FragmentManager) : 
         val bundle = Bundle()
 
         when (position) {
-            DASHBOARD -> {
+            Position.DASHBOARD -> {
                 bundle.putInt(BUNDLE_NAVIGATION_FR, DASHBOARD)
             }
 
-            TRANSACTIONS -> {
+            Position.TRANSACTIONS -> {
                 bundle.putInt(BUNDLE_NAVIGATION_FR, TRANSACTIONS)
             }
 
-            SETTINGS -> {
+            Position.SETTINGS -> {
                 bundle.putInt(BUNDLE_NAVIGATION_FR, SETTINGS)
             }
         }

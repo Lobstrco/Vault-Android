@@ -7,25 +7,27 @@ import com.lobstr.stellar.vault.data.error.exeption.UserNotAuthorizedException
 import com.lobstr.stellar.vault.domain.transaction_details.TransactionDetailsInteractor
 import com.lobstr.stellar.vault.presentation.BasePresenter
 import com.lobstr.stellar.vault.presentation.application.LVApplication
-import com.lobstr.stellar.vault.presentation.dager.module.transaction_details.TransactionDetailsModule
+import com.lobstr.stellar.vault.presentation.dagger.module.transaction_details.TransactionDetailsModule
 import com.lobstr.stellar.vault.presentation.entities.transaction.TransactionItem
+import com.lobstr.stellar.vault.presentation.util.AppUtil
 import com.lobstr.stellar.vault.presentation.util.Constant.Transaction.CANCELLED
 import com.lobstr.stellar.vault.presentation.util.Constant.Transaction.PENDING
 import com.lobstr.stellar.vault.presentation.util.Constant.Transaction.SIGNED
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
+import org.stellar.sdk.Transaction
 import javax.inject.Inject
 
 @InjectViewState
-class TransactionDetailsPresenter(private var transactionItem: TransactionItem) :
+class TransactionDetailsPresenter(private var mTransactionItem: TransactionItem) :
     BasePresenter<TransactionDetailsView>() {
 
     @Inject
     lateinit var mInteractor: TransactionDetailsInteractor
 
     private var confirmationInProcess = false
-
     private var cancellationInProcess = false
+    private var operationList: MutableList<Int> = mutableListOf()
 
     init {
         LVApplication.sAppComponent.plusTransactionDetailsComponent(TransactionDetailsModule()).inject(this)
@@ -33,12 +35,22 @@ class TransactionDetailsPresenter(private var transactionItem: TransactionItem) 
 
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
+
         viewState.setupToolbarTitle(R.string.transaction_details)
+        viewState.initRecycledView()
         prepareUI()
+        val transactionInfo = Transaction.fromEnvelopeXdr(mTransactionItem.xdr)
+        for (operation in transactionInfo.operations) {
+            val resId: Int = AppUtil.getTransactionOperationName(operation)
+            if (resId != -1) {
+                operationList.add(resId)
+            }
+        }
+        viewState.setOperationsToList(operationList)
     }
 
     private fun prepareUI() {
-        when (transactionItem.status) {
+        when (mTransactionItem.status) {
             PENDING -> viewState.setActionBtnVisibility(true, true)
             CANCELLED -> viewState.setActionBtnVisibility(false, false)
             SIGNED -> viewState.setActionBtnVisibility(false, false)
@@ -61,7 +73,7 @@ class TransactionDetailsPresenter(private var transactionItem: TransactionItem) 
         var needAdditionalSignatures = false
 
         unsubscribeOnDestroy(
-            mInteractor.confirmTransactionOnHorizon(transactionItem.xdr!!)
+            mInteractor.confirmTransactionOnHorizon(mTransactionItem.xdr!!)
                 .subscribeOn(Schedulers.io())
                 .flatMap {
                     val envelopXdr = it.envelopeXdr
@@ -94,7 +106,7 @@ class TransactionDetailsPresenter(private var transactionItem: TransactionItem) 
                     if (needAdditionalSignatures) {
                         viewState.notifyAboutNeedAdditionalSignatures(it)
                     } else {
-                        viewState.succesConfirmTransaction(it)
+                        viewState.successConfirmTransaction(it)
                     }
                     prepareUI()
                 }, {
@@ -118,7 +130,7 @@ class TransactionDetailsPresenter(private var transactionItem: TransactionItem) 
             return
         }
         unsubscribeOnDestroy(
-            mInteractor.cancelTransaction(transactionItem.hash)
+            mInteractor.cancelTransaction(mTransactionItem.hash)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe {
@@ -129,9 +141,9 @@ class TransactionDetailsPresenter(private var transactionItem: TransactionItem) 
                     cancellationInProcess = false
                 }
                 .subscribe({
-                    transactionItem = it
+                    mTransactionItem = it
                     prepareUI()
-                    viewState.succesDenyTransaction(it)
+                    viewState.successDenyTransaction(it)
                 }, {
                     when (it) {
                         is UserNotAuthorizedException -> {
@@ -146,5 +158,9 @@ class TransactionDetailsPresenter(private var transactionItem: TransactionItem) 
                     }
                 })
         )
+    }
+
+    fun operationItemClicked(position: Int) {
+        viewState.showOperationDetailsScreen(mTransactionItem, position)
     }
 }

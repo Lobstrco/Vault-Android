@@ -11,7 +11,7 @@ import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.fusechain.digitalbits.util.manager.FragmentTransactionManager
 import com.lobstr.stellar.vault.R
 import com.lobstr.stellar.vault.presentation.BaseMvpAppCompatFragment
-import com.lobstr.stellar.vault.presentation.auth.mnemonic.create_mnemonic.CreateMnemonicsFragment
+import com.lobstr.stellar.vault.presentation.auth.backup.BackUpFragment
 import com.lobstr.stellar.vault.presentation.auth.restore_key.RecoveryKeyFragment
 import kotlinx.android.synthetic.main.fragment_auth.*
 
@@ -62,6 +62,11 @@ class AuthFragment : BaseMvpAppCompatFragment(), AuthFrView, View.OnClickListene
         setListeners()
     }
 
+    private fun setListeners() {
+        btnAuthNew.setOnClickListener(this)
+        btnAuthRestore.setOnClickListener(this)
+    }
+
     // ===========================================================
     // Listeners, methods for/from Interfaces
     // ===========================================================
@@ -73,20 +78,20 @@ class AuthFragment : BaseMvpAppCompatFragment(), AuthFrView, View.OnClickListene
         }
     }
 
-    override fun showCreateMnemonicsScreen() {
+    override fun showBackUpScreen() {
         FragmentTransactionManager.displayFragment(
-            activity!!.supportFragmentManager,
-            Fragment.instantiate(context, CreateMnemonicsFragment::class.java.name),
-            R.id.fl_auth_content,
+            parentFragment!!.childFragmentManager,
+            Fragment.instantiate(context, BackUpFragment::class.java.name),
+            R.id.fl_container,
             true
         )
     }
 
     override fun showRestoreScreen() {
         FragmentTransactionManager.displayFragment(
-            activity!!.supportFragmentManager,
+            parentFragment!!.childFragmentManager,
             Fragment.instantiate(context, RecoveryKeyFragment::class.java.name),
-            R.id.fl_auth_content,
+            R.id.fl_container,
             true
         )
     }
@@ -94,11 +99,6 @@ class AuthFragment : BaseMvpAppCompatFragment(), AuthFrView, View.OnClickListene
     // ===========================================================
     // Methods
     // ===========================================================
-
-    private fun setListeners() {
-        btnAuthNew.setOnClickListener(this)
-        btnAuthRestore.setOnClickListener(this)
-    }
 
     // ===========================================================
     // Inner and Anonymous Classes

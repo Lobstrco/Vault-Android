@@ -6,7 +6,7 @@ import com.lobstr.stellar.vault.R
 import com.lobstr.stellar.vault.domain.pin.PinInteractor
 import com.lobstr.stellar.vault.presentation.BasePresenter
 import com.lobstr.stellar.vault.presentation.application.LVApplication
-import com.lobstr.stellar.vault.presentation.dager.module.pin.PinModule
+import com.lobstr.stellar.vault.presentation.dagger.module.pin.PinModule
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject

@@ -16,6 +16,7 @@ import com.google.gson.JsonIOException
 import com.google.gson.JsonSyntaxException
 import com.google.gson.internal.Primitives
 import com.lobstr.stellar.vault.R
+import org.stellar.sdk.*
 import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.*
@@ -45,6 +46,19 @@ object AppUtil {
         return null
     }
 
+    fun formatDate(date: Long, datePattern: String): String {
+        val calendar = Calendar.getInstance()
+        calendar.timeInMillis = date
+        try {
+            val format = SimpleDateFormat(datePattern, Locale.ENGLISH)
+            return format.format(date)
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+
+        return "Unknown"
+    }
+
     fun copyToClipboard(context: Context?, extractedString: String) {
         val clipboard = context?.getSystemService(Context.CLIPBOARD_SERVICE) as? ClipboardManager
         val clip = ClipData.newPlainText("Copied Text", extractedString)
@@ -55,7 +69,7 @@ object AppUtil {
     fun pasteFromClipboard(context: Context): String? {
         val clipboard = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
 
-        val item = clipboard.primaryClip.getItemAt(0)
+        val item = clipboard.primaryClip?.getItemAt(0)
 
         return if (item == null || item.text == null) {
             null
@@ -117,5 +131,23 @@ object AppUtil {
         }
 
         return null
+    }
+
+    fun getTransactionOperationName(operation: Operation): Int {
+        return when (operation) {
+            is PaymentOperation -> R.string.text_operation_name_payment
+            is CreateAccountOperation -> R.string.text_operation_name_create_account
+            is PathPaymentOperation -> R.string.text_operation_name_path_payment
+            is ManageOfferOperation -> R.string.text_operation_name_manage_offer
+            is CreatePassiveOfferOperation -> R.string.text_operation_name_create_passive_offer
+            is SetOptionsOperation -> R.string.text_operation_name_set_options
+            is ChangeTrustOperation -> R.string.text_operation_name_change_trust
+            is AllowTrustOperation -> R.string.text_operation_name_allow_trust
+            is AccountMergeOperation -> R.string.text_operation_name_account_merge
+            is InflationOperation -> R.string.text_operation_name_inflation
+            is ManageDataOperation -> R.string.text_operation_name_manage_data
+            is BumpSequenceOperation -> R.string.text_operation_name_bump_sequence
+            else -> -1
+        }
     }
 }

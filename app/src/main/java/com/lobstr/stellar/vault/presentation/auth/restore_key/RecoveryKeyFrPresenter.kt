@@ -7,7 +7,7 @@ import com.lobstr.stellar.vault.domain.recovery_key.RecoveryKeyInteractor
 import com.lobstr.stellar.vault.presentation.BasePresenter
 import com.lobstr.stellar.vault.presentation.application.LVApplication
 import com.lobstr.stellar.vault.presentation.auth.restore_key.entities.PhraseErrorInfo
-import com.lobstr.stellar.vault.presentation.dager.module.recovery_key.RecoveryKeyModule
+import com.lobstr.stellar.vault.presentation.dagger.module.recovery_key.RecoveryKeyModule
 import com.lobstr.stellar.vault.presentation.util.Constant
 import com.soneso.stellarmnemonics.mnemonic.MnemonicException
 import com.soneso.stellarmnemonics.mnemonic.WordList

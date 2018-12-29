@@ -13,7 +13,7 @@ interface SettingsView : MvpView {
     fun setupToolbarTitle(@StringRes titleRes: Int)
 
     @StateStrategyType(AddToEndSingleStrategy::class)
-    fun setupAccountData(userPublicKey: String?, signedAccount: String?)
+    fun setupSettingsData(userPublicKey: String?, signedAccount: String, buildVersion: String)
 
     @StateStrategyType(SkipStrategy::class)
     fun copyToClipBoard(text: String)
@@ -23,4 +23,16 @@ interface SettingsView : MvpView {
 
     @StateStrategyType(SkipStrategy::class)
     fun showAuthScreen()
+
+    @StateStrategyType(SkipStrategy::class)
+    fun showSignersScreen()
+
+    @StateStrategyType(SkipStrategy::class)
+    fun showMnemonicsScreen()
+
+    @StateStrategyType(SkipStrategy::class)
+    fun showDeviceLockScreen()
+
+    @StateStrategyType(SkipStrategy::class)
+    fun showHelpScreen()
 }

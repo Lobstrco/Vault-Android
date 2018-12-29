@@ -4,7 +4,7 @@ import com.lobstr.stellar.vault.domain.key_store.KeyStoreRepository
 import com.lobstr.stellar.vault.domain.stellar.StellarRepository
 import com.lobstr.stellar.vault.domain.vault_auth.VaultAuthRepository
 import com.lobstr.stellar.vault.presentation.application.LVApplication
-import com.lobstr.stellar.vault.presentation.dager.module.fcm.FcmInternalModule
+import com.lobstr.stellar.vault.presentation.dagger.module.fcm.FcmInternalModule
 import com.lobstr.stellar.vault.presentation.fcm.FcmHelper
 import com.lobstr.stellar.vault.presentation.util.PrefsUtil
 import io.reactivex.Single

@@ -5,7 +5,7 @@ import com.lobstr.stellar.vault.R
 import com.lobstr.stellar.vault.domain.confirm_mnemonics.ConfirmMnemonicsInteractor
 import com.lobstr.stellar.vault.presentation.BasePresenter
 import com.lobstr.stellar.vault.presentation.application.LVApplication
-import com.lobstr.stellar.vault.presentation.dager.module.confirm_mnemonics.ConfirmMnemonicsModule
+import com.lobstr.stellar.vault.presentation.dagger.module.confirm_mnemonics.ConfirmMnemonicsModule
 import com.soneso.stellarmnemonics.mnemonic.MnemonicException
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers

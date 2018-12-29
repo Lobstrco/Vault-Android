@@ -4,7 +4,7 @@ import com.arellomobile.mvp.InjectViewState
 import com.lobstr.stellar.vault.domain.splash.SplashInteractor
 import com.lobstr.stellar.vault.presentation.BasePresenter
 import com.lobstr.stellar.vault.presentation.application.LVApplication
-import com.lobstr.stellar.vault.presentation.dager.module.splash.SplashModule
+import com.lobstr.stellar.vault.presentation.dagger.module.splash.SplashModule
 import io.reactivex.Completable
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject

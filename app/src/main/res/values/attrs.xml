@@ -2,6 +2,7 @@
 <resources>
     <declare-styleable name="MnemonicsContainerView">
         <attr name="isCounterEnabled" format="boolean" />
+        <attr name="isDraggable" format="boolean" />
     </declare-styleable>
 
     <declare-styleable name="SwipeDisablingViewPager">

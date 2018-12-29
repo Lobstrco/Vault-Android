@@ -10,10 +10,10 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.bottomnavigation.LabelVisibilityMode
 import com.lobstr.stellar.vault.R
 import com.lobstr.stellar.vault.presentation.auth.AuthActivity
-import com.lobstr.stellar.vault.presentation.home.base.activity.BaseActivity
-import com.lobstr.stellar.vault.presentation.util.Constant.Navigation.DASHBOARD
-import com.lobstr.stellar.vault.presentation.util.Constant.Navigation.SETTINGS
-import com.lobstr.stellar.vault.presentation.util.Constant.Navigation.TRANSACTIONS
+import com.lobstr.stellar.vault.presentation.base.activity.BaseActivity
+import com.lobstr.stellar.vault.presentation.home.HomeViewPagerAdapter.Position.DASHBOARD
+import com.lobstr.stellar.vault.presentation.home.HomeViewPagerAdapter.Position.SETTINGS
+import com.lobstr.stellar.vault.presentation.home.HomeViewPagerAdapter.Position.TRANSACTIONS
 import kotlinx.android.synthetic.main.activity_home.*
 
 class HomeActivity : BaseActivity(), HomeActivityView,
@@ -102,21 +102,9 @@ class HomeActivity : BaseActivity(), HomeActivityView,
 
     override fun onBackPressed() {
         try {
-            val currentContainer = supportFragmentManager.fragments[vpHome.currentItem]
-
-            if (currentContainer == null) {
-                super.onBackPressed()
-            } else {
-                val backStackCount = currentContainer.childFragmentManager.backStackEntryCount
-
-                if (backStackCount > 1) {
-                    currentContainer.childFragmentManager.popBackStack()
-                } else {
-                    finish()
-                }
-            }
+            checkBackPress(supportFragmentManager.fragments[vpHome.currentItem])
         } catch (exc: IndexOutOfBoundsException) {
-            super.onBackPressed()
+            finish()
         }
     }
 

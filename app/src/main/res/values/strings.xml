@@ -35,6 +35,9 @@
     <string name="transactions">Transactions</string>
     <string name="settings">Settings</string>
 
+    <!-- toolbar titles-->
+    <string name="faq">FAQ</string>
+
     <string name="transaction_details">Transaction Details</string>
 
     <string name="text_tv_recovery_phrase_title">Sign in with a recovery phrase</string>
@@ -42,14 +45,14 @@
         previous wallet
     </string>
     <string name="text_next_button">Next</string>
-    <string name="text_tv_create_mnemonics_title">Secret Phrase</string>
+    <string name="text_tv_mnemonics_title">Secret Phrase</string>
     <string name="text_tv_confirm_mnemonics_title">Confirm Phrase</string>
     <string name="text_tv_confirm_mnemonics_description">Please make your phrase from the words below</string>
     <string name="text_tv_confirm_mnemonics_empty_state">Please select words in the bottom part</string>
     <string name="text_tv_select_mnemonics_empty_state">Try to confirm it!</string>
     <string name="text_btn_confirm_mnemonics">Confirm</string>
     <string name="text_btn_create_mnemonics">Proceed</string>
-    <string name="text_tv_create_mnemonics_description">Please store this phrase</string>
+    <string name="text_tv_mnemonics_description">Please store this phrase</string>
 
     <!--Pin screen-->
     <string name="text_enter_pin">Please enter your PIN code</string>
@@ -58,6 +61,17 @@
 
     <string name="text_action_info">info</string>
 
+    <!--Settings-->
+    <string name="title_settings_wallet">Wallet</string>
+    <string name="title_settings_security">Security</string>
+    <string name="title_settings_about">About</string>
+    <string name="text_settings_public_key">Public Key</string>
+    <string name="text_settings_signers">Signers for %s account</string>
+    <string name="text_settings_mnemonic_code">Mnemonic Code</string>
+    <string name="text_settings_device_lock">Device Lock</string>
+    <string name="text_settings_version">Version</string>
+    <string name="text_settings_help">Help</string>
+
     <!--Api errors-->
     <string name="api_error_not_found">Not Found</string>
     <string name="api_error_connection_timeout">Timeout</string>
@@ -65,8 +79,32 @@
     <string name="api_error_something_went_wrong">Something went wrong, please try again later</string>
     <string name="api_error_user_not_authorized">User Not Authorized</string>
 
+    <!--Stellar Operations-->
+    <string name="text_operation_name_payment">Payment</string>
+    <string name="text_operation_name_create_account">Create Account</string>
+    <string name="text_operation_name_path_payment">Path Payment</string>
+    <string name="text_operation_name_manage_offer">Manage Offer</string>
+    <string name="text_operation_name_create_passive_offer">Create Passive Offer</string>
+    <string name="text_operation_name_set_options">Set Options</string>
+    <string name="text_operation_name_change_trust">Change Trust</string>
+    <string name="text_operation_name_allow_trust">Allow Trust</string>
+    <string name="text_operation_name_account_merge">Account Merge</string>
+    <string name="text_operation_name_inflation">Inflation</string>
+    <string name="text_operation_name_manage_data">Manage Data</string>
+    <string name="text_operation_name_bump_sequence">Bump Sequence</string>
+    <string name="text_operation_name_several_operation">%s Operations</string>
+    <string name="text_operation_name_unknown">Unknown</string>
+
     <string name="text_invalid_token">Invalid token.</string>
     <string name="text_empty_state_transactions_list">Transactions not found</string>
     <string name="text_dashboard_transactions">Transactions\nTo\nSign</string>
+    <string name="text_tv_backup_title">Back up account</string>
+    <string name="text_tv_backup_description">In this step you will be shown a secret mnemonic codes. It will allow you
+        to recover access to your wallet if your phone is lost or stolen
+    </string>
+    <string name="text_chb_backup_confirm">I understand</string>
+    <string name="text_btn_next">Next</string>
+    <string name="text_btn_clip_to_board">Clip to board</string>
+    <string name="mnemonics_title">Your Phrase</string>
 
 </resources>

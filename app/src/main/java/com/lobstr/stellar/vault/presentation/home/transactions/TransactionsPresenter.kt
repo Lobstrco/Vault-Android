@@ -13,7 +13,7 @@ import com.lobstr.stellar.vault.domain.util.event.Network
 import com.lobstr.stellar.vault.domain.util.event.Notification
 import com.lobstr.stellar.vault.presentation.BasePresenter
 import com.lobstr.stellar.vault.presentation.application.LVApplication
-import com.lobstr.stellar.vault.presentation.dager.module.transaction.TransactionModule
+import com.lobstr.stellar.vault.presentation.dagger.module.transaction.TransactionModule
 import com.lobstr.stellar.vault.presentation.entities.transaction.TransactionItem
 import com.lobstr.stellar.vault.presentation.util.Constant
 import com.lobstr.stellar.vault.presentation.util.manager.network.WorkerManager
@@ -104,24 +104,32 @@ class TransactionsPresenter : BasePresenter<TransactionsView>() {
                     transactions.addAll(result.results)
                     ///////////////////////////////////
                     //FIXME remove hardcode
-                    transactions.add(
-                        TransactionItem(
-                            null,
-                            "2018-12-07T12:41:10.455329Z",
-                            "AAAAAGMkBij/SmvwL5FVqc/Z5xoWE4RXNsCnfA3aMDfjuGniAAAAZAAMbpEAAAADAAAAAAAAAAAAAAABAAAAAAAAAAEAAAAAfrEVEPumZ5dXDqY3LkPQkuJ/oaksXQ1Ux8OPmng8bdQAAAAAAAAAAACYloAAAAAAAAAAAoqOT8UAAABAwj8HBmW/qAIM0JSr8pAznd0rzbJMGYfuyekoSlCLlX7QUdiZvJRIZRkI+AZ598l3Uwtjkg+WNICsDH1mRU0RCOO4aeIAAABAJxvnH8DDNfIhxaMiH6zlO3Wr1aG4ChxvJzy18JWI8JHwyhLDLpOB2oZ2ePYeIAwOHuzmr93PCH2y3RNngKATDA==",
-                            "2018-12-07T12:41:10.966250Z",
-                            "f0bbccc72180a272790e8d6092c5d90ca487dac2935924fbdca1e7fc24bed934",
-                            "Signed",
-                            3
+                    if (transactions.isEmpty()) {
+                        transactions.add(
+                            TransactionItem(
+                                null,
+                                "2018-12-07T12:41:10.455329Z",
+                                "AAAAAGMkBij/SmvwL5FVqc/Z5xoWE4RXNsCnfA3aMDfjuGniAAAAZAAMbpEAAAADAAAAAAAAAAAAAAABAAAAAAAAAAEAAAAAfrEVEPumZ5dXDqY3LkPQkuJ/oaksXQ1Ux8OPmng8bdQAAAAAAAAAAACYloAAAAAAAAAAAoqOT8UAAABAwj8HBmW/qAIM0JSr8pAznd0rzbJMGYfuyekoSlCLlX7QUdiZvJRIZRkI+AZ598l3Uwtjkg+WNICsDH1mRU0RCOO4aeIAAABAJxvnH8DDNfIhxaMiH6zlO3Wr1aG4ChxvJzy18JWI8JHwyhLDLpOB2oZ2ePYeIAwOHuzmr93PCH2y3RNngKATDA==",
+                                "2018-12-07T12:41:10.966250Z",
+                                "f0bbccc72180a272790e8d6092c5d90ca487dac2935924fbdca1e7fc24bed934",
+                                "Signed",
+                                1,
+                                R.string.text_operation_name_payment
+                            )
                         )
-                    )
-                    transactions.add(
-                        TransactionItem(
-                            null, "10.11.2018",
-                            "AAAAAL6Qe0ushP7lzogR2y3vyb8LKiorvD1U2KIlfs1wRBliAAAAZAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAEAAAAABEz4bSpWmsmrXcIVAkY2hM3VdeCBJse56M18LaGzHQUAAAAAAAAAAACadvgAAAAAAAAAAA",
-                            null, "f0bbccc72180a272790e8d6092c5d90ca487dac2935924fbdca1e7fc24bed934", null, 1
+                        transactions.add(
+                            TransactionItem(
+                                null,
+                                "2018-11-23T14:10:09.000087Z",
+                                "AAAAAL6Qe0ushP7lzogR2y3vyb8LKiorvD1U2KIlfs1wRBliAAAAZAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAEAAAAABEz4bSpWmsmrXcIVAkY2hM3VdeCBJse56M18LaGzHQUAAAAAAAAAAACadvgAAAAAAAAAAA",
+                                null,
+                                "f0bbccc72180a272790e8d6092c5d90ca487dac2935924fbdca1e7fc24bed934",
+                                null,
+                                1,
+                                R.string.text_operation_name_payment
+                            )
                         )
-                    )
+                    }
                     ///////////////////////////////////
                     if (transactions.isEmpty()) {
                         viewState.showEmptyState()

@@ -7,7 +7,7 @@ import com.arellomobile.mvp.MvpPresenter
 class AuthFrPresenter : MvpPresenter<AuthFrView>() {
 
     fun newClicked() {
-        viewState.showCreateMnemonicsScreen()
+        viewState.showBackUpScreen()
     }
 
     fun restoreClicked() {

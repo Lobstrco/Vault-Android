@@ -65,7 +65,7 @@ class SignerInfoFragment : BaseMvpAppCompatFragment(),
     }
 
     private fun setListeners() {
-        btnCopyUserPk.setOnClickListener(this)
+        ivCopyUserPk.setOnClickListener(this)
         btnNext.setOnClickListener(this)
     }
 
@@ -76,7 +76,7 @@ class SignerInfoFragment : BaseMvpAppCompatFragment(),
     override fun onClick(v: View?) {
         when (v!!.id) {
 
-            R.id.btnCopyUserPk -> mPresenter.copyUserPiblicKey(tvUserPublicKey.text.toString())
+            R.id.ivCopyUserPk -> mPresenter.copyUserPiblicKey(tvUserPublicKey.text.toString())
 
             R.id.btnNext -> mPresenter.btnNextClicked()
         }

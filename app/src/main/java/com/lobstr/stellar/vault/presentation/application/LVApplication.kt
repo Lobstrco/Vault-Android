@@ -4,9 +4,9 @@ import android.os.StrictMode
 import androidx.multidex.MultiDexApplication
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.lobstr.stellar.vault.BuildConfig
-import com.lobstr.stellar.vault.presentation.dager.component.AppComponent
-import com.lobstr.stellar.vault.presentation.dager.component.DaggerAppComponent
-import com.lobstr.stellar.vault.presentation.dager.module.AppModule
+import com.lobstr.stellar.vault.presentation.dagger.component.AppComponent
+import com.lobstr.stellar.vault.presentation.dagger.component.DaggerAppComponent
+import com.lobstr.stellar.vault.presentation.dagger.module.AppModule
 import com.lobstr.stellar.vault.presentation.util.Constant
 import org.bouncycastle.jce.provider.BouncyCastleProvider
 import java.security.Provider

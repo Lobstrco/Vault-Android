@@ -18,15 +18,15 @@ import androidx.core.content.ContextCompat
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.lobstr.stellar.vault.R
-import com.lobstr.stellar.vault.presentation.BaseMvpAppCompatFragment
 import com.lobstr.stellar.vault.presentation.auth.restore_key.entities.PhraseErrorInfo
+import com.lobstr.stellar.vault.presentation.base.fragment.BaseFragment
 import com.lobstr.stellar.vault.presentation.dialog.alert.base.AlertDialogFragment
 import com.lobstr.stellar.vault.presentation.pin.PinActivity
 import com.lobstr.stellar.vault.presentation.util.Constant
 import com.lobstr.stellar.vault.presentation.util.manager.ProgressManager
 import kotlinx.android.synthetic.main.fragment_recovery_key.*
 
-class RecoveryKeyFragment : BaseMvpAppCompatFragment(), RecoveryKeyFrView, View.OnClickListener {
+class RecoveryKeyFragment : BaseFragment(), RecoveryKeyFrView, View.OnClickListener {
 
     // ===========================================================
     // Constants

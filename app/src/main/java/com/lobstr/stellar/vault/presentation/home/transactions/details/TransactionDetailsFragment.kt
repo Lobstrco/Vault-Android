@@ -1,24 +1,30 @@
 package com.lobstr.stellar.vault.presentation.home.transactions.details
 
-
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
+import com.fusechain.digitalbits.util.manager.FragmentTransactionManager
 import com.lobstr.stellar.vault.R
+import com.lobstr.stellar.vault.presentation.base.fragment.BaseFragment
 import com.lobstr.stellar.vault.presentation.dialog.alert.base.AlertDialogFragment
 import com.lobstr.stellar.vault.presentation.entities.transaction.TransactionItem
-import com.lobstr.stellar.vault.presentation.home.base.fragment.BaseFragment
+import com.lobstr.stellar.vault.presentation.home.transactions.details.adapter.OnOperationClicked
+import com.lobstr.stellar.vault.presentation.home.transactions.details.adapter.TransactionOperationAdapter
+import com.lobstr.stellar.vault.presentation.home.transactions.operation.OperationDetailsFragment
 import com.lobstr.stellar.vault.presentation.util.AppUtil
+import com.lobstr.stellar.vault.presentation.util.Constant
 import com.lobstr.stellar.vault.presentation.util.Constant.Bundle.BUNDLE_TRANSACTION_ITEM
 import com.lobstr.stellar.vault.presentation.util.manager.ProgressManager
 import kotlinx.android.synthetic.main.fragment_transaction_details.*
 
-class TransactionDetailsFragment : BaseFragment(), TransactionDetailsView, View.OnClickListener {
+class TransactionDetailsFragment : BaseFragment(), TransactionDetailsView, View.OnClickListener, OnOperationClicked {
 
     // ===========================================================
     // Constants
@@ -66,6 +72,7 @@ class TransactionDetailsFragment : BaseFragment(), TransactionDetailsView, View.
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         setListeners()
     }
 
@@ -85,8 +92,22 @@ class TransactionDetailsFragment : BaseFragment(), TransactionDetailsView, View.
         }
     }
 
+    override fun onOperationItemClick(position: Int) {
+        mPresenter.operationItemClicked(position)
+    }
+
     override fun setupToolbarTitle(titleRes: Int) {
         saveActionBarTitle(titleRes)
+    }
+
+    override fun initRecycledView() {
+        rvTransactionOperations.layoutManager = LinearLayoutManager(context)
+        rvTransactionOperations.itemAnimator = null
+        rvTransactionOperations.adapter = TransactionOperationAdapter(this)
+    }
+
+    override fun setOperationsToList(operationList: MutableList<Int>) {
+        (rvTransactionOperations.adapter as TransactionOperationAdapter).setOperationList(operationList)
     }
 
     override fun setActionBtnVisibility(isConfirmVisible: Boolean, isDenyVisible: Boolean) {
@@ -106,12 +127,12 @@ class TransactionDetailsFragment : BaseFragment(), TransactionDetailsView, View.
         ProgressManager.dismiss(mProgressDialog)
     }
 
-    override fun succesDenyTransaction(transactionItem: TransactionItem) {
+    override fun successDenyTransaction(transactionItem: TransactionItem) {
         //TODO
         showMessage("Transaction denied")
     }
 
-    override fun succesConfirmTransaction(xdr: String) {
+    override fun successConfirmTransaction(xdr: String) {
         //TODO
         showMessage("Transaction Confirmed")
     }
@@ -122,6 +143,21 @@ class TransactionDetailsFragment : BaseFragment(), TransactionDetailsView, View.
         showMessage("Transaction need additional signature")
     }
 
+    override fun showOperationDetailsScreen(transactionItem: TransactionItem, position: Int) {
+        val bundle = Bundle()
+        bundle.putParcelable(Constant.Bundle.BUNDLE_TRANSACTION_ITEM, transactionItem)
+        bundle.putInt(Constant.Bundle.BUNDLE_OPERATION_POSITION, position)
+
+        val fragment = Fragment.instantiate(context, OperationDetailsFragment::class.java.name, bundle)
+        fragment.setTargetFragment(this, Constant.Code.OPERATION_DETAILS_FRAGMENT)
+
+        FragmentTransactionManager.displayFragment(
+            parentFragment!!.childFragmentManager,
+            fragment,
+            R.id.fl_container,
+            true
+        )
+    }
 
     // ===========================================================
     // Methods

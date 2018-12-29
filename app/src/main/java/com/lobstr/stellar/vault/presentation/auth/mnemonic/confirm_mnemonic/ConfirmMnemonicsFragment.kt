@@ -12,16 +12,16 @@ import androidx.appcompat.app.AppCompatActivity
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.lobstr.stellar.vault.R
-import com.lobstr.stellar.vault.presentation.BaseMvpAppCompatFragment
 import com.lobstr.stellar.vault.presentation.auth.mnemonic.MnemonicsContainerView
+import com.lobstr.stellar.vault.presentation.base.fragment.BaseFragment
 import com.lobstr.stellar.vault.presentation.dialog.alert.base.AlertDialogFragment
 import com.lobstr.stellar.vault.presentation.pin.PinActivity
 import com.lobstr.stellar.vault.presentation.util.Constant
 import com.lobstr.stellar.vault.presentation.util.manager.ProgressManager
 import kotlinx.android.synthetic.main.fragment_confirm_mnemonics.*
 
-class ConfirmMnemonicsFragment : BaseMvpAppCompatFragment(), ConfirmMnemonicsView, View.OnClickListener,
-    MnemonicsContainerView.MnemonicItemClickListener {
+class ConfirmMnemonicsFragment : BaseFragment(), ConfirmMnemonicsView, View.OnClickListener,
+    MnemonicsContainerView.MnemonicItemActionListener {
 
     // ===========================================================
     // Constants
@@ -74,12 +74,19 @@ class ConfirmMnemonicsFragment : BaseMvpAppCompatFragment(), ConfirmMnemonicsVie
 
     private fun setListeners() {
         btnConfirm.setOnClickListener(this)
-        mnemonicContainerToSelectView.setMnemonicItemClickListener(this)
-        mnemonicContainerToConfirmView.setMnemonicItemClickListener(this)
+        mnemonicContainerToSelectView.setMnemonicItemActionListener(this)
+        mnemonicContainerToConfirmView.setMnemonicItemActionListener(this)
     }
 
     override fun onMnemonicItemClick(v: View, position: Int, value: String) {
         when (v.id) {
+            R.id.mnemonicContainerToConfirmView -> mPresenter.mnemonicItemToConfirmClicked(position, value)
+            R.id.mnemonicContainerToSelectView -> mPresenter.mnemonicItemToSelectClicked(position, value)
+        }
+    }
+
+    override fun onMnemonicItemDragged(from: Int, position: Int, value: String) {
+        when (from) {
             R.id.mnemonicContainerToConfirmView -> mPresenter.mnemonicItemToConfirmClicked(position, value)
             R.id.mnemonicContainerToSelectView -> mPresenter.mnemonicItemToSelectClicked(position, value)
         }

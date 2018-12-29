@@ -7,16 +7,19 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
+import com.fusechain.digitalbits.util.manager.FragmentTransactionManager
 import com.lobstr.stellar.vault.R
+import com.lobstr.stellar.vault.presentation.base.fragment.BaseFragment
 import com.lobstr.stellar.vault.presentation.entities.transaction.TransactionItem
-import com.lobstr.stellar.vault.presentation.home.base.fragment.BaseFragment
-import com.lobstr.stellar.vault.presentation.home.container.fragment.ContainerFragment
 import com.lobstr.stellar.vault.presentation.home.transactions.adapter.OnTransactionItemClicked
 import com.lobstr.stellar.vault.presentation.home.transactions.adapter.TransactionAdapter
+import com.lobstr.stellar.vault.presentation.home.transactions.details.TransactionDetailsFragment
+import com.lobstr.stellar.vault.presentation.util.Constant
 import kotlinx.android.synthetic.main.fragment_transactions.*
 
 class TransactionsFragment : BaseFragment(), TransactionsView, SwipeRefreshLayout.OnRefreshListener,
@@ -101,7 +104,18 @@ class TransactionsFragment : BaseFragment(), TransactionsView, SwipeRefreshLayou
     }
 
     override fun showTransactionDetails(transactionItem: TransactionItem) {
-        (parentFragment as? ContainerFragment)?.showTransactionDetails(this, transactionItem)
+        val bundle = Bundle()
+        bundle.putParcelable(Constant.Bundle.BUNDLE_TRANSACTION_ITEM, transactionItem)
+
+        val fragment = Fragment.instantiate(context, TransactionDetailsFragment::class.java.name, bundle)
+        fragment.setTargetFragment(this, Constant.Code.TRANSACTION_DETAILS_FRAGMENT)
+
+        FragmentTransactionManager.displayFragment(
+            parentFragment!!.childFragmentManager,
+            fragment,
+            R.id.fl_container,
+            true
+        )
     }
 
     override fun showErrorMessage(message: String) {

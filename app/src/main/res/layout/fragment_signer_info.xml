@@ -57,7 +57,7 @@
         <Button
                 android:text="Copy"
                 android:layout_height="wrap_content"
-                android:id="@+id/btnCopyUserPk"
+                android:id="@+id/ivCopyUserPk"
                 android:layout_width="match_parent"
                 style="@style/Base.Widget.AppCompat.Button.Borderless.Colored"
                 android:background="@drawable/selector_default_button"

@@ -10,7 +10,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.lobstr.stellar.vault.R
-import com.lobstr.stellar.vault.presentation.home.base.fragment.BaseFragment
+import com.lobstr.stellar.vault.presentation.base.fragment.BaseFragment
 import kotlinx.android.synthetic.main.fragment_dash_board.*
 
 class DashboardFragment : BaseFragment(), DashboardView, SwipeRefreshLayout.OnRefreshListener {

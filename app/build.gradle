@@ -76,9 +76,9 @@ android {
 
 ext {
     dagger = "2.14.1"
-    rx_java = "2.1.10"
-    rx_android = "2.0.2"
-    rx_kotlin = "2.2.0"
+    rx_java = "2.2.4"
+    rx_android = "2.1.0"
+    rx_kotlin = "2.3.0"
     retrofit = "2.5.0"
     okhttp = "3.9.1"
     moxy = "1.5.5"
@@ -109,6 +109,7 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0-alpha1'
     testImplementation "junit:junit:$junit"
     androidTestImplementation "androidx.test:runner:$runner"
     androidTestImplementation "androidx.test.espresso:espresso-core:$espresso_core"

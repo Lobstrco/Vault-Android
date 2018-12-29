@@ -9,8 +9,15 @@ import com.lobstr.stellar.vault.presentation.entities.transaction.TransactionIte
 
 
 interface TransactionDetailsView : MvpView {
+
     @StateStrategyType(AddToEndSingleStrategy::class)
     fun setupToolbarTitle(@StringRes titleRes: Int)
+
+    @StateStrategyType(AddToEndSingleStrategy::class)
+    fun initRecycledView()
+
+    @StateStrategyType(AddToEndSingleStrategy::class)
+    fun setOperationsToList(operationList: MutableList<Int>)
 
     @StateStrategyType(SkipStrategy::class)
     fun showMessage(message: String?)
@@ -25,11 +32,14 @@ interface TransactionDetailsView : MvpView {
     fun setActionBtnVisibility(isConfirmVisible: Boolean, isDenyVisible: Boolean)
 
     @StateStrategyType(AddToEndSingleStrategy::class)
-    fun succesDenyTransaction(transactionItem: TransactionItem)
+    fun successDenyTransaction(transactionItem: TransactionItem)
 
     @StateStrategyType(AddToEndSingleStrategy::class)
-    fun succesConfirmTransaction(xdr: String)
+    fun successConfirmTransaction(xdr: String)
 
     @StateStrategyType(AddToEndSingleStrategy::class)
     fun notifyAboutNeedAdditionalSignatures(xdr: String)
+
+    @StateStrategyType(SkipStrategy::class)
+    fun showOperationDetailsScreen(transactionItem: TransactionItem, position: Int)
 }

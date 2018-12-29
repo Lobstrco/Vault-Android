@@ -10,7 +10,7 @@ import com.lobstr.stellar.vault.domain.util.event.Notification
 import com.lobstr.stellar.vault.domain.vault_auth_screen.VaultAuthInteractor
 import com.lobstr.stellar.vault.presentation.BasePresenter
 import com.lobstr.stellar.vault.presentation.application.LVApplication
-import com.lobstr.stellar.vault.presentation.dager.module.vault_auth.VaultAuthModule
+import com.lobstr.stellar.vault.presentation.dagger.module.vault_auth.VaultAuthModule
 import com.lobstr.stellar.vault.presentation.entities.account.Account
 import com.lobstr.stellar.vault.presentation.util.Constant
 import com.lobstr.stellar.vault.presentation.util.manager.network.WorkerManager

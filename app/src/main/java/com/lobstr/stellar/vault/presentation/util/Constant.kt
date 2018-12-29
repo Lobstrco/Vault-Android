@@ -19,17 +19,22 @@ object Constant {
         const val BUNDLE_SAVED_TOOLBAR_TITLE = "BUNDLE_SAVED_TOOLBAR_TITLE"
         const val BUNDLE_TRANSACTION_HASH = "BUNDLE_TRANSACTION_HASH"
         const val BUNDLE_MNEMONICS_ARRAY = "BUNDLE_MNEMONICS_ARRAY"
+        const val BUNDLE_GENERATE_MNEMONICS = "BUNDLE_GENERATE_MNEMONICS"
         const val BUNDLE_SECRET_KEY = "BUNDLE_SECRET_KEY"
         const val BUNDLE_PUBLIC_KEY = "BUNDLE_PUBLIC_KEY"
         const val BUNDLE_NAVIGATION_FR = "BUNDLE_NAVIGATION_FR"
         const val BUNDLE_TRANSACTION_ITEM = "BUNDLE_TRANSACTION_ITEM"
+        const val BUNDLE_OPERATION_POSITION = "BUNDLE_OPERATION_POSITION"
     }
 
     object Navigation {
-        const val DASHBOARD = 0
-        const val TRANSACTIONS = 1
-        const val SETTINGS = 2
-        const val TRANSACTION_DETAILS = 3
+        const val AUTH = 0
+        const val DASHBOARD = 1
+        const val TRANSACTIONS = 2
+        const val SETTINGS = 3
+        const val TRANSACTION_DETAILS = 4
+        const val MNEMONICS = 5
+        const val OPERATION_DETAILS = 6
     }
 
     object Transaction {
@@ -70,6 +75,7 @@ object Constant {
     object Code {
         const val DETECT_QR_CODE = 101
         const val TRANSACTION_DETAILS_FRAGMENT = 102
+        const val OPERATION_DETAILS_FRAGMENT = 103
     }
 
     object ResultCode {

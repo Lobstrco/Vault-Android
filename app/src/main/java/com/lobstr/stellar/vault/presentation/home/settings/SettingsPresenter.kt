@@ -1,11 +1,12 @@
 package com.lobstr.stellar.vault.presentation.home.settings
 
 import com.arellomobile.mvp.InjectViewState
+import com.lobstr.stellar.vault.BuildConfig
 import com.lobstr.stellar.vault.R
 import com.lobstr.stellar.vault.domain.settings.SettingsInteractor
 import com.lobstr.stellar.vault.presentation.BasePresenter
 import com.lobstr.stellar.vault.presentation.application.LVApplication
-import com.lobstr.stellar.vault.presentation.dager.module.settings.SettingsModule
+import com.lobstr.stellar.vault.presentation.dagger.module.settings.SettingsModule
 import javax.inject.Inject
 
 @InjectViewState
@@ -21,9 +22,10 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
         viewState.setupToolbarTitle(R.string.settings)
-        viewState.setupAccountData(
+        viewState.setupSettingsData(
             interactor.getUserPublicKey(),
-            interactor.getSignedAccount()
+            interactor.getSignedAccount() ?: "0",
+            BuildConfig.VERSION_NAME
         )
     }
 
@@ -42,5 +44,21 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
         }
 
         viewState.copyToClipBoard(userPublicKey)
+    }
+
+    fun signersClicked() {
+        viewState.showSignersScreen()
+    }
+
+    fun mnemonicsClicked() {
+        viewState.showMnemonicsScreen()
+    }
+
+    fun deviceLockClicked() {
+        viewState.showDeviceLockScreen()
+    }
+
+    fun helpClicked() {
+        viewState.showHelpScreen()
     }
 }
