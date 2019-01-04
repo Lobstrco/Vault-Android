@@ -13,7 +13,5 @@ interface PinInteractor {
 
     fun getPhrases(): Single<String>
 
-    fun clear()
-
     fun isUserSignerForLobstr(): Boolean
 }

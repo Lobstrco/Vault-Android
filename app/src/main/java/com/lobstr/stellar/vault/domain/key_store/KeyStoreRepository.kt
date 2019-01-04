@@ -6,5 +6,7 @@ interface KeyStoreRepository {
 
     fun decryptData(alias: String, aliasIV: String): String?
 
-    fun clear()
+    fun clearAll()
+
+    fun clear(alias: String)
 }

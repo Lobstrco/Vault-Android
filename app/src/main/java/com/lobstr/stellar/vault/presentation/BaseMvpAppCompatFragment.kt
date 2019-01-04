@@ -74,4 +74,8 @@ open class BaseMvpAppCompatFragment : Fragment() {
 
         }
     }
+
+    fun attachMvpDelegate() {
+        this.mvpDelegate.onAttach()
+    }
 }

@@ -3,6 +3,8 @@ package com.lobstr.stellar.vault.presentation.home.settings
 import android.content.Intent
 import android.os.Bundle
 import android.view.*
+import android.widget.Toast
+import androidx.annotation.StringRes
 import androidx.fragment.app.Fragment
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
@@ -12,6 +14,7 @@ import com.lobstr.stellar.vault.presentation.auth.AuthActivity
 import com.lobstr.stellar.vault.presentation.base.fragment.BaseFragment
 import com.lobstr.stellar.vault.presentation.container.activity.ContainerActivity
 import com.lobstr.stellar.vault.presentation.faq.FaqFragment
+import com.lobstr.stellar.vault.presentation.pin.PinActivity
 import com.lobstr.stellar.vault.presentation.util.AppUtil
 import com.lobstr.stellar.vault.presentation.util.Constant
 import kotlinx.android.synthetic.main.fragment_settings.*
@@ -68,7 +71,8 @@ class SettingsFragment : BaseFragment(), SettingsView, View.OnClickListener {
         ivCopyUserPk.setOnClickListener(this)
         llSettingsSigners.setOnClickListener(this)
         llSettingsMnemonics.setOnClickListener(this)
-        llSettingsDeviceLock.setOnClickListener(this)
+        llSettingsChangePin.setOnClickListener(this)
+        llSettingsTouchId.setOnClickListener(this)
         llSettingsHelp.setOnClickListener(this)
     }
 
@@ -85,6 +89,11 @@ class SettingsFragment : BaseFragment(), SettingsView, View.OnClickListener {
         return super.onOptionsItemSelected(item)
     }
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        attachMvpDelegate()
+        mPresenter.onActivityResult(requestCode, resultCode, data)
+    }
+
     // ===========================================================
     // Listeners, methods for/from Interfaces
     // ===========================================================
@@ -95,7 +104,8 @@ class SettingsFragment : BaseFragment(), SettingsView, View.OnClickListener {
             R.id.ivCopyUserPk -> mPresenter.copyUserPublicKey(tvUserPublicKey.text.toString())
             R.id.llSettingsSigners -> mPresenter.signersClicked()
             R.id.llSettingsMnemonics -> mPresenter.mnemonicsClicked()
-            R.id.llSettingsDeviceLock -> mPresenter.deviceLockClicked()
+            R.id.llSettingsChangePin -> mPresenter.changePinClicked()
+            R.id.llSettingsTouchId -> mPresenter.touchIdClicked()
             R.id.llSettingsHelp -> mPresenter.helpClicked()
         }
     }
@@ -112,6 +122,10 @@ class SettingsFragment : BaseFragment(), SettingsView, View.OnClickListener {
 
     override fun copyToClipBoard(text: String) {
         AppUtil.copyToClipboard(context, text)
+    }
+
+    override fun showSuccessMessage(@StringRes message: Int) {
+        Toast.makeText(context, getString(message), Toast.LENGTH_SHORT).show()
     }
 
     override fun showInfoFr() {
@@ -139,8 +153,14 @@ class SettingsFragment : BaseFragment(), SettingsView, View.OnClickListener {
         startActivity(intent)
     }
 
-    override fun showDeviceLockScreen() {
-        // TODO
+    override fun showChangePinScreen() {
+        val intent = Intent(context, PinActivity::class.java)
+        intent.putExtra(Constant.Extra.EXTRA_CHANGE_PIN, true)
+        startActivityForResult(intent, Constant.Code.CHANGE_PIN)
+    }
+
+    override fun showTouchIdScreen() {
+
     }
 
     override fun showHelpScreen() {

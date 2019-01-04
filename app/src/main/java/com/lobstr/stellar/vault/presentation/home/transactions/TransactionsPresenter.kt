@@ -7,6 +7,7 @@ import com.lobstr.stellar.vault.R
 import com.lobstr.stellar.vault.data.error.exeption.DefaultException
 import com.lobstr.stellar.vault.data.error.exeption.NoInternetConnectionException
 import com.lobstr.stellar.vault.data.error.exeption.UserNotAuthorizedException
+import com.lobstr.stellar.vault.data.transaction.TransactionEntityMapper
 import com.lobstr.stellar.vault.domain.transaction.TransactionInteractor
 import com.lobstr.stellar.vault.domain.util.EventProviderModule
 import com.lobstr.stellar.vault.domain.util.event.Network
@@ -105,6 +106,9 @@ class TransactionsPresenter : BasePresenter<TransactionsView>() {
                     ///////////////////////////////////
                     //FIXME remove hardcode
                     if (transactions.isEmpty()) {
+                        val transactionEntityMapper = TransactionEntityMapper()
+                        val transaction1: org.stellar.sdk.Transaction =
+                            org.stellar.sdk.Transaction.fromEnvelopeXdr("AAAAAGMkBij/SmvwL5FVqc/Z5xoWE4RXNsCnfA3aMDfjuGniAAAAZAAMbpEAAAADAAAAAAAAAAAAAAABAAAAAAAAAAEAAAAAfrEVEPumZ5dXDqY3LkPQkuJ/oaksXQ1Ux8OPmng8bdQAAAAAAAAAAACYloAAAAAAAAAAAoqOT8UAAABAwj8HBmW/qAIM0JSr8pAznd0rzbJMGYfuyekoSlCLlX7QUdiZvJRIZRkI+AZ598l3Uwtjkg+WNICsDH1mRU0RCOO4aeIAAABAJxvnH8DDNfIhxaMiH6zlO3Wr1aG4ChxvJzy18JWI8JHwyhLDLpOB2oZ2ePYeIAwOHuzmr93PCH2y3RNngKATDA==")
                         transactions.add(
                             TransactionItem(
                                 null,
@@ -114,9 +118,12 @@ class TransactionsPresenter : BasePresenter<TransactionsView>() {
                                 "f0bbccc72180a272790e8d6092c5d90ca487dac2935924fbdca1e7fc24bed934",
                                 "Signed",
                                 1,
-                                R.string.text_operation_name_payment
+                                transactionEntityMapper.getTransaction(transaction1)
                             )
                         )
+
+                        val transaction2: org.stellar.sdk.Transaction =
+                            org.stellar.sdk.Transaction.fromEnvelopeXdr("AAAAAL6Qe0ushP7lzogR2y3vyb8LKiorvD1U2KIlfs1wRBliAAAAZAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAEAAAAABEz4bSpWmsmrXcIVAkY2hM3VdeCBJse56M18LaGzHQUAAAAAAAAAAACadvgAAAAAAAAAAA")
                         transactions.add(
                             TransactionItem(
                                 null,
@@ -126,7 +133,7 @@ class TransactionsPresenter : BasePresenter<TransactionsView>() {
                                 "f0bbccc72180a272790e8d6092c5d90ca487dac2935924fbdca1e7fc24bed934",
                                 null,
                                 1,
-                                R.string.text_operation_name_payment
+                                transactionEntityMapper.getTransaction(transaction2)
                             )
                         )
                     }

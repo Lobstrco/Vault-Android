@@ -15,7 +15,6 @@ import com.lobstr.stellar.vault.presentation.util.Constant.Transaction.PENDING
 import com.lobstr.stellar.vault.presentation.util.Constant.Transaction.SIGNED
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
-import org.stellar.sdk.Transaction
 import javax.inject.Inject
 
 @InjectViewState
@@ -39,8 +38,7 @@ class TransactionDetailsPresenter(private var mTransactionItem: TransactionItem)
         viewState.setupToolbarTitle(R.string.transaction_details)
         viewState.initRecycledView()
         prepareUI()
-        val transactionInfo = Transaction.fromEnvelopeXdr(mTransactionItem.xdr)
-        for (operation in transactionInfo.operations) {
+        for (operation in mTransactionItem.transaction.operations) {
             val resId: Int = AppUtil.getTransactionOperationName(operation)
             if (resId != -1) {
                 operationList.add(resId)

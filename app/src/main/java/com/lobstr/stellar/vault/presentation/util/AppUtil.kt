@@ -16,11 +16,10 @@ import com.google.gson.JsonIOException
 import com.google.gson.JsonSyntaxException
 import com.google.gson.internal.Primitives
 import com.lobstr.stellar.vault.R
-import org.stellar.sdk.*
+import com.lobstr.stellar.vault.presentation.entities.transaction.operation.*
 import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.*
-
 
 object AppUtil {
 

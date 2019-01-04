@@ -144,7 +144,7 @@
                 android:background="@android:color/darker_gray"/>
 
         <LinearLayout
-                android:id="@+id/llSettingsDeviceLock"
+                android:id="@+id/llSettingsChangePin"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:paddingStart="10dp"
@@ -158,7 +158,37 @@
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:textAppearanceMedium"
                     android:layout_weight="1"
-                    android:text="@string/text_settings_device_lock"/>
+                    android:text="@string/text_settings_change_pin"/>
+
+            <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0"
+                    android:src="@drawable/ic_arrow_right"
+                    tools:ignore="ContentDescription"/>
+        </LinearLayout>
+
+        <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:background="@android:color/darker_gray"/>
+
+        <LinearLayout
+                android:id="@+id/llSettingsTouchId"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:paddingStart="10dp"
+                android:paddingEnd="0dp"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:background="@android:color/white">
+
+            <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:textAppearanceMedium"
+                    android:layout_weight="1"
+                    android:text="@string/text_settings_touch_id"/>
 
             <ImageView
                     android:layout_width="wrap_content"

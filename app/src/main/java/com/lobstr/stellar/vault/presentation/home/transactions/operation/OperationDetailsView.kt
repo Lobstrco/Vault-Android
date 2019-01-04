@@ -9,4 +9,7 @@ import com.arellomobile.mvp.viewstate.strategy.StateStrategyType
 interface OperationDetailsView : MvpView {
     @StateStrategyType(AddToEndSingleStrategy::class)
     fun setupToolbarTitle(@StringRes titleRes: Int)
+
+    @StateStrategyType(AddToEndSingleStrategy::class)
+    fun initRecycledView(map: Map<String, String?>)
 }

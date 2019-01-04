@@ -19,6 +19,9 @@ interface SettingsView : MvpView {
     fun copyToClipBoard(text: String)
 
     @StateStrategyType(SkipStrategy::class)
+    fun showSuccessMessage(@StringRes message: Int)
+
+    @StateStrategyType(SkipStrategy::class)
     fun showInfoFr()
 
     @StateStrategyType(SkipStrategy::class)
@@ -31,7 +34,10 @@ interface SettingsView : MvpView {
     fun showMnemonicsScreen()
 
     @StateStrategyType(SkipStrategy::class)
-    fun showDeviceLockScreen()
+    fun showChangePinScreen()
+
+    @StateStrategyType(SkipStrategy::class)
+    fun showTouchIdScreen()
 
     @StateStrategyType(SkipStrategy::class)
     fun showHelpScreen()

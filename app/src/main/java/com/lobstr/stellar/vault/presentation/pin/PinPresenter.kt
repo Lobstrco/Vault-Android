@@ -15,7 +15,8 @@ import javax.inject.Inject
  * Main IDEA - when secretKey was empty - confirmation action, else - save secret key
  */
 @InjectViewState
-class PinPresenter(private var needCreatePin: Boolean?) : BasePresenter<PinView>() {
+class PinPresenter(private var needCreatePin: Boolean?, private var needChangePin: Boolean?) :
+    BasePresenter<PinView>() {
 
     @Inject
     lateinit var interactor: PinInteractor
@@ -33,10 +34,10 @@ class PinPresenter(private var needCreatePin: Boolean?) : BasePresenter<PinView>
         super.onFirstViewAttach()
 
         viewState.attachIndicatorDots()
-        if (!needCreatePin!!) {
-            viewState.showDescriptionMessage(R.string.text_enter_pin)
-        } else {
-            viewState.showDescriptionMessage(R.string.text_create_pin)
+        when {
+            needCreatePin!! -> viewState.showDescriptionMessage(R.string.text_create_pin)
+            needChangePin!! -> viewState.showDescriptionMessage(R.string.text_enter_old_pin)
+            else -> viewState.showDescriptionMessage(R.string.text_enter_pin)
         }
     }
 
@@ -45,10 +46,10 @@ class PinPresenter(private var needCreatePin: Boolean?) : BasePresenter<PinView>
      */
     fun onPinComplete(pin: String?) {
         if (pin != null) {
-            if (needCreatePin!!) {
-                createPin(pin)
-            } else {
-                confirmPin(pin)
+            when {
+                needCreatePin!! -> createPin(pin)
+                needChangePin!! -> confirmPin(pin)
+                else -> confirmPin(pin)
             }
         } else {
             viewState.showErrorMessage(R.string.text_error_incorrect_pin)
@@ -75,7 +76,11 @@ class PinPresenter(private var needCreatePin: Boolean?) : BasePresenter<PinView>
                             viewState.hideProgressDialog()
                         }
                         .doOnComplete {
-                            checkAuthState()
+                            if (needChangePin!!) {
+                                viewState.finishScreenWithResult(Activity.RESULT_OK)
+                            } else {
+                                checkAuthState()
+                            }
                         }
                         .subscribe()
                 )
@@ -100,10 +105,10 @@ class PinPresenter(private var needCreatePin: Boolean?) : BasePresenter<PinView>
                 }
                 .doOnSuccess { success ->
                     if (success) {
-                        if (!needCreatePin!!) {
-                            checkAuthState()
-                        } else {
-                            viewState.finishScreenWithResult(Activity.RESULT_OK)
+                        when {
+                            needCreatePin!! -> viewState.finishScreenWithResult(Activity.RESULT_OK)
+                            needChangePin!! -> showCreatePinState()
+                            else -> checkAuthState()
                         }
                     } else {
                         viewState.showErrorMessage(R.string.text_error_incorrect_pin)
@@ -112,6 +117,12 @@ class PinPresenter(private var needCreatePin: Boolean?) : BasePresenter<PinView>
                 }
                 .subscribe()
         )
+    }
+
+    private fun showCreatePinState() {
+        needCreatePin = true
+        viewState.resetPin()
+        viewState.showDescriptionMessage(R.string.text_create_pin)
     }
 
     private fun checkAuthState() {

@@ -41,7 +41,10 @@ class PinActivity : BaseMvpAppCompatActivity(), PinView, PinLockListener {
     // ===========================================================
 
     @ProvidePresenter
-    fun providePinPresenter() = PinPresenter(intent?.getBooleanExtra(Constant.Extra.EXTRA_CREATE_PIN, false))
+    fun providePinPresenter() = PinPresenter(
+        intent?.getBooleanExtra(Constant.Extra.EXTRA_CREATE_PIN, false),
+        intent?.getBooleanExtra(Constant.Extra.EXTRA_CHANGE_PIN, false)
+    )
 
     // ===========================================================
     // Getter & Setter

@@ -117,10 +117,14 @@ class KeyStoreRepositoryImpl(val context: Context, val prefsUtil: PrefsUtil) : K
     /**
      * Clears all aliases in the Android Key Store
      */
-    override fun clear() {
+    override fun clearAll() {
         val aliases = keyStore.aliases()
         aliases.iterator().forEach {
             keyStore.deleteEntry(it)
         }
+    }
+
+    override fun clear(alias: String) {
+        keyStore.deleteEntry(alias)
     }
 }

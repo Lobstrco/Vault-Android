@@ -11,6 +11,7 @@ object Constant {
         const val EXTRA_ID = "EXTRA_ID"
         const val EXTRA_QR_CODE_RESULT = "EXTRA_QR_CODE_RESULT"
         const val EXTRA_CREATE_PIN = "EXTRA_CREATE_PIN"
+        const val EXTRA_CHANGE_PIN = "EXTRA_CHANGE_PIN"
         const val EXTRA_NAVIGATION_FR = "EXTRA_NAVIGATION_FR"
         const val EXTRA_TRANSACTION_ITEM = "EXTRA_TRANSACTION_ITEM"
     }
@@ -76,6 +77,7 @@ object Constant {
         const val DETECT_QR_CODE = 101
         const val TRANSACTION_DETAILS_FRAGMENT = 102
         const val OPERATION_DETAILS_FRAGMENT = 103
+        const val CHANGE_PIN = 104
     }
 
     object ResultCode {

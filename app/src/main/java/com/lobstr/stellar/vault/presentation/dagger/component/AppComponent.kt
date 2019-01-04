@@ -6,6 +6,7 @@ import com.lobstr.stellar.vault.presentation.dagger.component.dashboard.Dashboar
 import com.lobstr.stellar.vault.presentation.dagger.component.fcm.FcmInternalComponent
 import com.lobstr.stellar.vault.presentation.dagger.component.fcm.FcmServiceComponent
 import com.lobstr.stellar.vault.presentation.dagger.component.mnemonics.MnemonicsComponent
+import com.lobstr.stellar.vault.presentation.dagger.component.operation_details.OperationDetailsComponent
 import com.lobstr.stellar.vault.presentation.dagger.component.pin.PinComponent
 import com.lobstr.stellar.vault.presentation.dagger.component.recovery_key.RecoveryKeyComponent
 import com.lobstr.stellar.vault.presentation.dagger.component.settings.SettingsComponent
@@ -21,6 +22,7 @@ import com.lobstr.stellar.vault.presentation.dagger.module.dashboard.DashboardMo
 import com.lobstr.stellar.vault.presentation.dagger.module.fcm.FcmInternalModule
 import com.lobstr.stellar.vault.presentation.dagger.module.fcm.FcmServiceModule
 import com.lobstr.stellar.vault.presentation.dagger.module.mnemonics.MnemonicsModule
+import com.lobstr.stellar.vault.presentation.dagger.module.operation_details.OperationDetailsModule
 import com.lobstr.stellar.vault.presentation.dagger.module.pin.PinModule
 import com.lobstr.stellar.vault.presentation.dagger.module.recovery_key.RecoveryKeyModule
 import com.lobstr.stellar.vault.presentation.dagger.module.settings.SettingsModule
@@ -61,6 +63,8 @@ interface AppComponent {
     fun plusTransactionComponent(module: TransactionModule): TransactionComponent
 
     fun plusDashboardComponent(module: DashboardModule): DashboardComponent
+
+    fun plusOperationDetailsModule(module: OperationDetailsModule): OperationDetailsComponent
 
     fun inject(networkWorker: NetworkWorker)
 }

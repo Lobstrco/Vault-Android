@@ -5,11 +5,14 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.lobstr.stellar.vault.R
 import com.lobstr.stellar.vault.presentation.base.fragment.BaseFragment
+import com.lobstr.stellar.vault.presentation.home.transactions.operation.adapter.OperationDetailsAdapter
 import com.lobstr.stellar.vault.presentation.util.Constant
+import kotlinx.android.synthetic.main.fragment_operation_details.*
 
 class OperationDetailsFragment : BaseFragment(), OperationDetailsView {
 
@@ -52,7 +55,7 @@ class OperationDetailsFragment : BaseFragment(), OperationDetailsView {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        mView = if (mView == null) inflater.inflate(R.layout.fragment_transactions, container, false) else mView
+        mView = if (mView == null) inflater.inflate(R.layout.fragment_operation_details, container, false) else mView
         return mView
     }
 
@@ -62,6 +65,12 @@ class OperationDetailsFragment : BaseFragment(), OperationDetailsView {
 
     override fun setupToolbarTitle(titleRes: Int) {
         saveActionBarTitle(titleRes)
+    }
+
+    override fun initRecycledView(map: Map<String, String?>) {
+        rvOperationDetails.layoutManager = LinearLayoutManager(activity)
+        rvOperationDetails.itemAnimator = null
+        rvOperationDetails.adapter = OperationDetailsAdapter(map)
     }
 
     // ===========================================================

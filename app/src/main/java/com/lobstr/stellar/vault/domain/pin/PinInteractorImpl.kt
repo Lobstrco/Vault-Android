@@ -27,6 +27,7 @@ class PinInteractorImpl(
 
     override fun savePin(pin: String): Completable {
         return Completable.fromCallable {
+            keyStoreRepository.clear(PrefsUtil.PREF_ENCRYPTED_PIN)
             return@fromCallable keyStoreRepository.encryptData(
                 pin, PrefsUtil.PREF_ENCRYPTED_PIN, PrefsUtil.PREF_PIN_IV
             )
@@ -40,10 +41,6 @@ class PinInteractorImpl(
                 PrefsUtil.PREF_PHRASES_IV
             )
         }
-    }
-
-    override fun clear() {
-        keyStoreRepository.clear()
     }
 
     override fun isUserSignerForLobstr(): Boolean {

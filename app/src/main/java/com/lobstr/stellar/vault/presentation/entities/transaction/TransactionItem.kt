@@ -2,26 +2,16 @@ package com.lobstr.stellar.vault.presentation.entities.transaction
 
 import android.os.Parcel
 import android.os.Parcelable
-import androidx.annotation.StringRes
-
 
 data class TransactionItem(
-
     val cancelledAt: String?,
-
     val addedAt: String?,
-
     val xdr: String?,
-
     val signedAt: String?,
-
     val hash: String,
-
     val getStatusDisplay: String?,
-
     val status: Int?,
-
-    @StringRes val operationName: Int
+    val transaction: Transaction
 ) : Parcelable {
     constructor(parcel: Parcel) : this(
         parcel.readString(),
@@ -31,7 +21,7 @@ data class TransactionItem(
         parcel.readString(),
         parcel.readString(),
         parcel.readValue(Int::class.java.classLoader) as? Int,
-        parcel.readInt()
+        parcel.readParcelable(Transaction::class.java.classLoader)
     )
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
@@ -42,7 +32,7 @@ data class TransactionItem(
         parcel.writeString(hash)
         parcel.writeString(getStatusDisplay)
         parcel.writeValue(status)
-        parcel.writeInt(operationName)
+        parcel.writeParcelable(transaction, flags)
     }
 
     override fun describeContents(): Int {

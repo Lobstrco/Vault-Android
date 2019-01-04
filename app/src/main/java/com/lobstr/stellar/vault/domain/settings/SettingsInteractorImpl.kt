@@ -17,6 +17,6 @@ class SettingsInteractorImpl(private val prefsUtil: PrefsUtil, private val keySt
 
     override fun clearUserData() {
         prefsUtil.clearUserPrefs()
-        keyStoreRepository.clear()
+        keyStoreRepository.clearAll()
     }
 }
