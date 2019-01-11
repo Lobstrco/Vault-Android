@@ -13,6 +13,9 @@ interface AuthView : MvpView {
     @StateStrategyType(SkipStrategy::class)
     fun showAuthFragment()
 
+    @StateStrategyType(SkipStrategy::class)
+    fun showFingerprintSetUpFragment()
+
     @StateStrategyType(AddToEndSingleStrategy::class)
     fun setupToolbar(@ColorRes toolbarColor: Int, @DrawableRes upArrow: Int, @ColorRes upArrowColor: Int)
 }

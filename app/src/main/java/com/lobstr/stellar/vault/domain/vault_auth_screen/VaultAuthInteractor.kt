@@ -1,5 +1,6 @@
 package com.lobstr.stellar.vault.domain.vault_auth_screen
 
+import com.lobstr.stellar.vault.presentation.entities.account.Account
 import io.reactivex.Single
 
 
@@ -7,7 +8,7 @@ interface VaultAuthInteractor {
 
     fun isUserAuthorized(): Boolean
 
-    fun authorizeVault(): Single<String>
+    fun authorizeVault(): Single<List<Account>>
 
     fun registerFcm()
 
@@ -19,5 +20,7 @@ interface VaultAuthInteractor {
 
     fun getPhrases(): Single<String>
 
-    fun confirmIsUserSignerForLobstr()
+    fun confirmAccountHasSigners()
+
+    fun getSignedAccounts(token: String): Single<List<Account>>
 }

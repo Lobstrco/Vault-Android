@@ -9,10 +9,10 @@ import com.arellomobile.mvp.viewstate.strategy.StateStrategyType
 interface SignerInfoView : MvpView {
 
     @StateStrategyType(SkipStrategy::class)
-    fun showRecheckSingerScreen(userPublicKey: String)
+    fun showRecheckSingerScreen()
 
     @StateStrategyType(AddToEndSingleStrategy::class)
-    fun setupUserPublicKey(userPublicKey: String)
+    fun setupUserPublicKey(userPublicKey: String?)
 
     @StateStrategyType(SkipStrategy::class)
     fun copyToClipBoard(text: String)

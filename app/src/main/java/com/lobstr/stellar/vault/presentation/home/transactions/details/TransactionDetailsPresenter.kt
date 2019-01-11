@@ -5,6 +5,8 @@ import com.lobstr.stellar.vault.R
 import com.lobstr.stellar.vault.data.error.exeption.DefaultException
 import com.lobstr.stellar.vault.data.error.exeption.UserNotAuthorizedException
 import com.lobstr.stellar.vault.domain.transaction_details.TransactionDetailsInteractor
+import com.lobstr.stellar.vault.domain.util.EventProviderModule
+import com.lobstr.stellar.vault.domain.util.event.Notification
 import com.lobstr.stellar.vault.presentation.BasePresenter
 import com.lobstr.stellar.vault.presentation.application.LVApplication
 import com.lobstr.stellar.vault.presentation.dagger.module.transaction_details.TransactionDetailsModule
@@ -24,6 +26,9 @@ class TransactionDetailsPresenter(private var mTransactionItem: TransactionItem)
     @Inject
     lateinit var mInteractor: TransactionDetailsInteractor
 
+    @Inject
+    lateinit var mEventProviderModule: EventProviderModule
+
     private var confirmationInProcess = false
     private var cancellationInProcess = false
     private var operationList: MutableList<Int> = mutableListOf()
@@ -37,7 +42,19 @@ class TransactionDetailsPresenter(private var mTransactionItem: TransactionItem)
 
         viewState.setupToolbarTitle(R.string.transaction_details)
         viewState.initRecycledView()
-        prepareUI()
+        prepareUiAndOperationsList()
+    }
+
+    private fun prepareUiAndOperationsList() {
+        // handle transaction status
+        when (mTransactionItem.status) {
+            PENDING -> viewState.setActionBtnVisibility(true, true)
+            CANCELLED -> viewState.setActionBtnVisibility(false, false)
+            SIGNED -> viewState.setActionBtnVisibility(false, false)
+        }
+
+        // prepare operations list for show it
+        operationList.clear()
         for (operation in mTransactionItem.transaction.operations) {
             val resId: Int = AppUtil.getTransactionOperationName(operation)
             if (resId != -1) {
@@ -45,14 +62,6 @@ class TransactionDetailsPresenter(private var mTransactionItem: TransactionItem)
             }
         }
         viewState.setOperationsToList(operationList)
-    }
-
-    private fun prepareUI() {
-        when (mTransactionItem.status) {
-            PENDING -> viewState.setActionBtnVisibility(true, true)
-            CANCELLED -> viewState.setActionBtnVisibility(false, false)
-            SIGNED -> viewState.setActionBtnVisibility(false, false)
-        }
     }
 
     fun btnConfirmClicked() {
@@ -88,12 +97,13 @@ class TransactionDetailsPresenter(private var mTransactionItem: TransactionItem)
                     }
 
                     mInteractor.confirmTransactionOnServer(
-                        needAdditionalSignatures,
+                        if (needAdditionalSignatures) null else true,
                         it.envelopeXdr
                     )
                 }
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe {
+                    confirmationInProcess = true
                     viewState.showProgressDialog()
                 }
                 .doOnEvent { _, _ ->
@@ -101,12 +111,29 @@ class TransactionDetailsPresenter(private var mTransactionItem: TransactionItem)
                     confirmationInProcess = false
                 }
                 .subscribe({
+                    // update transaction status
+                    mTransactionItem = TransactionItem(
+                        mTransactionItem.cancelledAt,
+                        mTransactionItem.addedAt,
+                        mTransactionItem.xdr,
+                        mTransactionItem.signedAt,
+                        mTransactionItem.hash,
+                        mTransactionItem.getStatusDisplay,
+                        SIGNED,
+                        mTransactionItem.transaction
+                    )
+
                     if (needAdditionalSignatures) {
                         viewState.notifyAboutNeedAdditionalSignatures(it)
                     } else {
-                        viewState.successConfirmTransaction(it)
+                        viewState.successConfirmTransaction(it, mTransactionItem)
                     }
-                    prepareUI()
+                    prepareUiAndOperationsList()
+
+                    // Notify about transaction changed
+                    mEventProviderModule.notificationEventSubject.onNext(
+                        Notification(Notification.Type.TRANSACTION_COUNT_CHANGED, null)
+                    )
                 }, {
                     when (it) {
                         is UserNotAuthorizedException -> {
@@ -132,6 +159,7 @@ class TransactionDetailsPresenter(private var mTransactionItem: TransactionItem)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe {
+                    cancellationInProcess = true
                     viewState.showProgressDialog()
                 }
                 .doOnEvent { _, _ ->
@@ -140,8 +168,13 @@ class TransactionDetailsPresenter(private var mTransactionItem: TransactionItem)
                 }
                 .subscribe({
                     mTransactionItem = it
-                    prepareUI()
+                    prepareUiAndOperationsList()
                     viewState.successDenyTransaction(it)
+
+                    // Notify about transaction changed
+                    mEventProviderModule.notificationEventSubject.onNext(
+                        Notification(Notification.Type.TRANSACTION_COUNT_CHANGED, null)
+                    )
                 }, {
                     when (it) {
                         is UserNotAuthorizedException -> {

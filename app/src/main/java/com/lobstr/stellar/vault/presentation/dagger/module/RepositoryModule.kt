@@ -46,11 +46,13 @@ class RepositoryModule {
 
     @Singleton
     @Provides
-    fun provideRxErrorRepository(exceptionMapper: ExceptionMapper,
-                                 apiVaultAuthApi: VaultAuthApi,
-                                 stellarRepository: StellarRepository,
-                                 keyStoreRepository: KeyStoreRepository,
-                                 prefsUtil: PrefsUtil): RxErrorUtils {
+    fun provideRxErrorRepository(
+        exceptionMapper: ExceptionMapper,
+        apiVaultAuthApi: VaultAuthApi,
+        stellarRepository: StellarRepository,
+        keyStoreRepository: KeyStoreRepository,
+        prefsUtil: PrefsUtil
+    ): RxErrorUtils {
         return RxErrorUtilsImpl(exceptionMapper, apiVaultAuthApi, stellarRepository, keyStoreRepository, prefsUtil)
     }
 
@@ -87,6 +89,6 @@ class RepositoryModule {
     @Singleton
     @Provides
     fun provideAccountRepository(accountApi: AccountApi, rxErrorUtils: RxErrorUtils): AccountRepository {
-        return AccountRepositoryImpl(accountApi, rxErrorUtils)
+        return AccountRepositoryImpl(accountApi, AccountEntityMapper(), rxErrorUtils)
     }
 }

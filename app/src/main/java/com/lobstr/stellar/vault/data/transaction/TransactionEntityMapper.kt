@@ -54,7 +54,7 @@ class TransactionEntityMapper {
     }
 
     // TODO change to private after delete hardcode
-    public fun getTransaction(transaction: org.stellar.sdk.Transaction): Transaction {
+    fun getTransaction(transaction: org.stellar.sdk.Transaction): Transaction {
         val operations: MutableList<Operation> = mutableListOf()
         if (transaction.operations.isNotEmpty()) {
             transaction.operations.forEach {
@@ -138,7 +138,7 @@ class TransactionEntityMapper {
     private fun mapSetOptionsOperation(operation: org.stellar.sdk.SetOptionsOperation): SetOptionsOperation {
         return SetOptionsOperation(
             (operation as org.stellar.sdk.Operation).sourceAccount?.accountId,
-            operation.inflationDestination.accountId,
+            operation.inflationDestination?.accountId,
             operation.clearFlags,
             operation.setFlags,
             operation.masterKeyWeight,

@@ -3,6 +3,7 @@ package com.lobstr.stellar.vault.presentation.home.settings
 import android.content.Intent
 import android.os.Bundle
 import android.view.*
+import android.widget.CompoundButton
 import android.widget.Toast
 import androidx.annotation.StringRes
 import androidx.fragment.app.Fragment
@@ -13,13 +14,16 @@ import com.lobstr.stellar.vault.R
 import com.lobstr.stellar.vault.presentation.auth.AuthActivity
 import com.lobstr.stellar.vault.presentation.base.fragment.BaseFragment
 import com.lobstr.stellar.vault.presentation.container.activity.ContainerActivity
+import com.lobstr.stellar.vault.presentation.dialog.alert.base.AlertDialogFragment
+import com.lobstr.stellar.vault.presentation.dialog.alert.base.AlertDialogFragment.DialogFragmentIdentifier.FINGERPRINT_INFO_DIALOG
 import com.lobstr.stellar.vault.presentation.faq.FaqFragment
 import com.lobstr.stellar.vault.presentation.pin.PinActivity
+import com.lobstr.stellar.vault.presentation.signed_accounts.SignedAccountsFragment
 import com.lobstr.stellar.vault.presentation.util.AppUtil
 import com.lobstr.stellar.vault.presentation.util.Constant
 import kotlinx.android.synthetic.main.fragment_settings.*
 
-class SettingsFragment : BaseFragment(), SettingsView, View.OnClickListener {
+class SettingsFragment : BaseFragment(), SettingsView, View.OnClickListener, CompoundButton.OnCheckedChangeListener {
 
     // ===========================================================
     // Constants
@@ -72,8 +76,8 @@ class SettingsFragment : BaseFragment(), SettingsView, View.OnClickListener {
         llSettingsSigners.setOnClickListener(this)
         llSettingsMnemonics.setOnClickListener(this)
         llSettingsChangePin.setOnClickListener(this)
-        llSettingsTouchId.setOnClickListener(this)
         llSettingsHelp.setOnClickListener(this)
+        swSettingsTouchId.setOnCheckedChangeListener(this)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
@@ -105,8 +109,13 @@ class SettingsFragment : BaseFragment(), SettingsView, View.OnClickListener {
             R.id.llSettingsSigners -> mPresenter.signersClicked()
             R.id.llSettingsMnemonics -> mPresenter.mnemonicsClicked()
             R.id.llSettingsChangePin -> mPresenter.changePinClicked()
-            R.id.llSettingsTouchId -> mPresenter.touchIdClicked()
             R.id.llSettingsHelp -> mPresenter.helpClicked()
+        }
+    }
+
+    override fun onCheckedChanged(buttonView: CompoundButton?, isChecked: Boolean) {
+        when (buttonView!!.id) {
+            R.id.swSettingsTouchId -> mPresenter.touchIdSwitched(isChecked)
         }
     }
 
@@ -114,10 +123,18 @@ class SettingsFragment : BaseFragment(), SettingsView, View.OnClickListener {
         saveActionBarTitle(titleRes)
     }
 
-    override fun setupSettingsData(userPublicKey: String?, signedAccount: String, buildVersion: String) {
+    override fun setupSettingsData(
+        userPublicKey: String?,
+        buildVersion: String,
+        isBiometricSupported: Boolean
+    ) {
+        llSettingsTouchId.visibility = if (isBiometricSupported) View.VISIBLE else View.GONE
         tvUserPublicKey.text = userPublicKey
         tvSettingsVersion.text = buildVersion
-        tvSettingsSigners.text = String.format(getString(R.string.text_settings_signers), signedAccount)
+    }
+
+    override fun setupSignersCount(signersCount: String) {
+        tvSettingsSigners.text = String.format(getString(R.string.text_settings_signers), signersCount)
     }
 
     override fun copyToClipBoard(text: String) {
@@ -139,12 +156,18 @@ class SettingsFragment : BaseFragment(), SettingsView, View.OnClickListener {
 
     override fun showAuthScreen() {
         val intent = Intent(context, AuthActivity::class.java)
+        intent.putExtra(Constant.Extra.EXTRA_NAVIGATION_FR, Constant.Navigation.AUTH)
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         startActivity(intent)
     }
 
     override fun showSignersScreen() {
-        // TODO
+        FragmentTransactionManager.displayFragment(
+            parentFragment!!.childFragmentManager,
+            Fragment.instantiate(context, SignedAccountsFragment::class.java.name),
+            R.id.fl_container,
+            true
+        )
     }
 
     override fun showMnemonicsScreen() {
@@ -159,12 +182,29 @@ class SettingsFragment : BaseFragment(), SettingsView, View.OnClickListener {
         startActivityForResult(intent, Constant.Code.CHANGE_PIN)
     }
 
-    override fun showTouchIdScreen() {
-
+    override fun showHelpScreen() {
+        FragmentTransactionManager.displayFragment(
+            parentFragment!!.childFragmentManager,
+            Fragment.instantiate(context, FaqFragment::class.java.name),
+            R.id.fl_container,
+            true
+        )
     }
 
-    override fun showHelpScreen() {
-        // TODO
+    override fun setTouchIdChecked(checked: Boolean) {
+        swSettingsTouchId.setOnCheckedChangeListener(null)
+        swSettingsTouchId.isChecked = checked
+        swSettingsTouchId.setOnCheckedChangeListener(this)
+    }
+
+    override fun showFingerprintInfoDialog(titleRes: Int, messageRes: Int) {
+        AlertDialogFragment.Builder(true)
+            .setCancelable(true)
+            .setTitle(getString(titleRes))
+            .setMessage(getString(messageRes))
+            .setPositiveBtnText(getString(R.string.text_btn_ok))
+            .create()
+            .show(childFragmentManager, FINGERPRINT_INFO_DIALOG)
     }
 
     // ===========================================================

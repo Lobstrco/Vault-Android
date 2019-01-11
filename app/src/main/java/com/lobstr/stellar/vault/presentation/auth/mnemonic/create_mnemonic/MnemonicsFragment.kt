@@ -71,7 +71,7 @@ class MnemonicsFragment : BaseFragment(),
     }
 
     private fun setListeners() {
-        btnProceed.setOnClickListener(this)
+        btnNext.setOnClickListener(this)
         btnClipToBoard.setOnClickListener(this)
     }
 
@@ -81,7 +81,7 @@ class MnemonicsFragment : BaseFragment(),
 
     override fun onClick(v: View?) {
         when (v!!.id) {
-            R.id.btnProceed -> mPresenter.proceedClicked()
+            R.id.btnNext -> mPresenter.nextClicked()
             R.id.btnClipToBoard -> mPresenter.clipToBordClicked()
         }
     }
@@ -91,7 +91,7 @@ class MnemonicsFragment : BaseFragment(),
     }
 
     override fun setActionBtnVisibility(isVisible: Boolean) {
-        btnProceed.visibility = if (isVisible) View.VISIBLE else View.GONE
+        btnNext.visibility = if (isVisible) View.VISIBLE else View.GONE
     }
 
     override fun setupMnemonics(mnemonics: List<String>) {

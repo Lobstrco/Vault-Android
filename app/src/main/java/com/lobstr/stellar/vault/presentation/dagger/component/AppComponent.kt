@@ -8,9 +8,13 @@ import com.lobstr.stellar.vault.presentation.dagger.component.fcm.FcmServiceComp
 import com.lobstr.stellar.vault.presentation.dagger.component.mnemonics.MnemonicsComponent
 import com.lobstr.stellar.vault.presentation.dagger.component.operation_details.OperationDetailsComponent
 import com.lobstr.stellar.vault.presentation.dagger.component.pin.PinComponent
+import com.lobstr.stellar.vault.presentation.dagger.component.re_check_signer.RecheckSignerComponent
 import com.lobstr.stellar.vault.presentation.dagger.component.recovery_key.RecoveryKeyComponent
 import com.lobstr.stellar.vault.presentation.dagger.component.settings.SettingsComponent
+import com.lobstr.stellar.vault.presentation.dagger.component.signed_account.SignedAccountComponent
+import com.lobstr.stellar.vault.presentation.dagger.component.signer_info.SignerInfoComponent
 import com.lobstr.stellar.vault.presentation.dagger.component.splash.SplashComponent
+import com.lobstr.stellar.vault.presentation.dagger.component.touch_id.FingerprintSetUpComponent
 import com.lobstr.stellar.vault.presentation.dagger.component.transaction.TransactionComponent
 import com.lobstr.stellar.vault.presentation.dagger.component.transaction_details.TransactionDetailsComponent
 import com.lobstr.stellar.vault.presentation.dagger.component.vault_auth.VaultAuthComponent
@@ -24,9 +28,13 @@ import com.lobstr.stellar.vault.presentation.dagger.module.fcm.FcmServiceModule
 import com.lobstr.stellar.vault.presentation.dagger.module.mnemonics.MnemonicsModule
 import com.lobstr.stellar.vault.presentation.dagger.module.operation_details.OperationDetailsModule
 import com.lobstr.stellar.vault.presentation.dagger.module.pin.PinModule
+import com.lobstr.stellar.vault.presentation.dagger.module.re_check_signer.RecheckSignerModule
 import com.lobstr.stellar.vault.presentation.dagger.module.recovery_key.RecoveryKeyModule
 import com.lobstr.stellar.vault.presentation.dagger.module.settings.SettingsModule
+import com.lobstr.stellar.vault.presentation.dagger.module.signed_account.SignedAccountModule
+import com.lobstr.stellar.vault.presentation.dagger.module.signer_info.SignerInfoModule
 import com.lobstr.stellar.vault.presentation.dagger.module.splash.SplashModule
+import com.lobstr.stellar.vault.presentation.dagger.module.touch_id.FingerprintSetUpModule
 import com.lobstr.stellar.vault.presentation.dagger.module.transaction.TransactionModule
 import com.lobstr.stellar.vault.presentation.dagger.module.transaction_details.TransactionDetailsModule
 import com.lobstr.stellar.vault.presentation.dagger.module.vault_auth.VaultAuthModule
@@ -50,7 +58,13 @@ interface AppComponent {
 
     fun plusPinComponent(module: PinModule): PinComponent
 
+    fun plusFingerprintSetUpComponent(module: FingerprintSetUpModule): FingerprintSetUpComponent
+
     fun plusVaultAuthComponent(module: VaultAuthModule): VaultAuthComponent
+
+    fun plusSignerInfoComponent(module: SignerInfoModule): SignerInfoComponent
+
+    fun plusRecheckSignerComponent(module: RecheckSignerModule): RecheckSignerComponent
 
     fun plusSettingsComponent(module: SettingsModule): SettingsComponent
 
@@ -64,7 +78,9 @@ interface AppComponent {
 
     fun plusDashboardComponent(module: DashboardModule): DashboardComponent
 
-    fun plusOperationDetailsModule(module: OperationDetailsModule): OperationDetailsComponent
+    fun plusOperationDetailsComponent(module: OperationDetailsModule): OperationDetailsComponent
+
+    fun plusSignedAccountComponent(module: SignedAccountModule): SignedAccountComponent
 
     fun inject(networkWorker: NetworkWorker)
 }

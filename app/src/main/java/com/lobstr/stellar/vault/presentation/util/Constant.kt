@@ -36,6 +36,8 @@ object Constant {
         const val TRANSACTION_DETAILS = 4
         const val MNEMONICS = 5
         const val OPERATION_DETAILS = 6
+        const val FINGERPRINT_SET_UP = 7
+        const val SIGNER_INFO = 8
     }
 
     object Transaction {
@@ -91,7 +93,8 @@ object Constant {
     }
 
     object Util {
-        const val COUNT_MNEMONIC_WORDS = 12
+        const val COUNT_MNEMONIC_WORDS_12 = 12
+        const val COUNT_MNEMONIC_WORDS_24 = 24
     }
 
     object ApiRequestTag {

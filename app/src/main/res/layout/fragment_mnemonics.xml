@@ -9,7 +9,7 @@
     <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center"
+            android:gravity="start"
             android:textAppearance="?android:textAppearanceLarge"
             android:textStyle="bold"
             android:paddingLeft="16dp"
@@ -21,7 +21,7 @@
     <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center"
+            android:gravity="start"
             android:textAppearance="?android:textAppearanceSmall"
             android:paddingLeft="16dp"
             android:paddingRight="16dp"
@@ -29,26 +29,32 @@
             android:textColor="@android:color/black"
             android:text="@string/text_tv_mnemonics_description"/>
 
-    <com.lobstr.stellar.vault.presentation.auth.mnemonic.MnemonicsContainerView
-            android:id="@+id/mnemonicContainerView"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            app:isCounterEnabled="true"
-            app:isDraggable="false"/>
+    <LinearLayout android:layout_width="match_parent"
+                  android:layout_height="0dp"
+                  android:orientation="vertical"
+                  android:layout_weight="1">
 
-    <Button
-            android:id="@+id/btnClipToBoard"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/text_btn_clip_to_board"
-            android:textColor="@color/color_ff3a6c99"
-            android:layout_gravity="center"
-            style="@style/Base.Widget.AppCompat.Button.Borderless.Colored"
-            android:textAppearance="?android:textAppearanceMedium"
-            android:textAllCaps="false"/>
+        <com.lobstr.stellar.vault.presentation.auth.mnemonic.MnemonicsContainerView
+                android:id="@+id/mnemonicContainerView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:isCounterEnabled="true"
+                app:isDraggable="false"/>
 
-    <Button android:id="@+id/btnProceed"
+        <Button
+                android:id="@+id/btnClipToBoard"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/text_btn_clip_to_board"
+                android:textColor="@color/color_ff3a6c99"
+                android:layout_gravity="center"
+                style="@style/Base.Widget.AppCompat.Button.Borderless.Colored"
+                android:textAppearance="?android:textAppearanceMedium"
+                android:textAllCaps="false"/>
+
+    </LinearLayout>
+
+    <Button android:id="@+id/btnNext"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             style="@style/Base.Widget.AppCompat.Button.Borderless.Colored"
@@ -56,6 +62,6 @@
             android:textColor="@android:color/white"
             android:textAppearance="?android:textAppearanceMedium"
             android:textAllCaps="true"
-            android:text="@string/text_btn_create_mnemonics"/>
+            android:text="@string/text_btn_create_mnemonics_next"/>
 
 </LinearLayout>

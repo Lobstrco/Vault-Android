@@ -8,7 +8,8 @@ import com.lobstr.stellar.vault.presentation.BasePresenter
 import com.lobstr.stellar.vault.presentation.application.LVApplication
 import com.lobstr.stellar.vault.presentation.auth.restore_key.entities.PhraseErrorInfo
 import com.lobstr.stellar.vault.presentation.dagger.module.recovery_key.RecoveryKeyModule
-import com.lobstr.stellar.vault.presentation.util.Constant
+import com.lobstr.stellar.vault.presentation.util.Constant.Util.COUNT_MNEMONIC_WORDS_12
+import com.lobstr.stellar.vault.presentation.util.Constant.Util.COUNT_MNEMONIC_WORDS_24
 import com.soneso.stellarmnemonics.mnemonic.MnemonicException
 import com.soneso.stellarmnemonics.mnemonic.WordList
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -54,8 +55,8 @@ class RecoveryKeyFrPresenter : BasePresenter<RecoveryKeyFrView>() {
                 viewState.enableNextButton(false)
                 viewState.changeTextBackground(incorrectWords.isEmpty())
             }
-            words.size == Constant.Util.COUNT_MNEMONIC_WORDS && words[words.size - 1].length > 2 ->
-                viewState.enableNextButton(true)
+            (words.size == COUNT_MNEMONIC_WORDS_12) || (words.size == COUNT_MNEMONIC_WORDS_24)
+                    && words[words.size - 1].length > 2 -> viewState.enableNextButton(true)
             else -> viewState.enableNextButton(false)
         }
     }

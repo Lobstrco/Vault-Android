@@ -6,11 +6,12 @@ import androidx.recyclerview.widget.RecyclerView
 import com.lobstr.stellar.vault.R
 import com.lobstr.stellar.vault.presentation.entities.transaction.TransactionItem
 
-class TransactionAdapter(private val listener: OnTransactionItemClicked) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class TransactionAdapter(private val listener: OnTransactionItemClicked) :
+    RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private var transactionItems: MutableList<TransactionItem> = mutableListOf()
 
-    fun setOrderBookList(orderBookList: MutableList<TransactionItem>) {
+    fun setTransactionList(orderBookList: MutableList<TransactionItem>) {
         transactionItems = orderBookList
         notifyDataSetChanged()
     }

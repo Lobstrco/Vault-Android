@@ -22,6 +22,9 @@ interface PinView : MvpView {
     fun showVaultAuthScreen()
 
     @StateStrategyType(SkipStrategy::class)
+    fun showFingerprintSetUpScreen()
+
+    @StateStrategyType(SkipStrategy::class)
     fun showErrorMessage(@StringRes message: Int)
 
     @StateStrategyType(SkipStrategy::class)
@@ -35,4 +38,7 @@ interface PinView : MvpView {
 
     @StateStrategyType(AddToEndSingleStrategy::class)
     fun showDescriptionMessage(@StringRes message: Int)
+
+    @StateStrategyType(SkipStrategy::class)
+    fun showBiometricDialog()
 }

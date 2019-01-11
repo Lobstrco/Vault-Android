@@ -11,6 +11,7 @@ import com.fusechain.digitalbits.util.manager.FragmentTransactionManager
 import com.lobstr.stellar.vault.R
 import com.lobstr.stellar.vault.presentation.auth.enter_screen.AuthFragment
 import com.lobstr.stellar.vault.presentation.auth.mnemonic.create_mnemonic.MnemonicsFragment
+import com.lobstr.stellar.vault.presentation.auth.touch_id.FingerprintSetUpFragment
 import com.lobstr.stellar.vault.presentation.base.fragment.BaseContainerFragment
 import com.lobstr.stellar.vault.presentation.entities.transaction.TransactionItem
 import com.lobstr.stellar.vault.presentation.home.dashboard.DashboardFragment
@@ -19,6 +20,7 @@ import com.lobstr.stellar.vault.presentation.home.transactions.TransactionsFragm
 import com.lobstr.stellar.vault.presentation.home.transactions.details.TransactionDetailsFragment
 import com.lobstr.stellar.vault.presentation.util.Constant
 import com.lobstr.stellar.vault.presentation.util.Constant.Bundle.BUNDLE_NAVIGATION_FR
+import com.lobstr.stellar.vault.presentation.vault_auth.signer_info.SignerInfoFragment
 
 /**
  * Used for containing all main fragments in the app
@@ -80,6 +82,24 @@ class ContainerFragment : BaseContainerFragment(),
         FragmentTransactionManager.displayFragment(
             childFragmentManager,
             Fragment.instantiate(context, AuthFragment::class.java.name),
+            R.id.fl_container,
+            true
+        )
+    }
+
+    override fun showSignerInfoFr() {
+        FragmentTransactionManager.displayFragment(
+            childFragmentManager,
+            Fragment.instantiate(context, SignerInfoFragment::class.java.name),
+            R.id.fl_container,
+            true
+        )
+    }
+
+    override fun showFingerprintSetUpFr() {
+        FragmentTransactionManager.displayFragment(
+            childFragmentManager,
+            Fragment.instantiate(context, FingerprintSetUpFragment::class.java.name),
             R.id.fl_container,
             true
         )

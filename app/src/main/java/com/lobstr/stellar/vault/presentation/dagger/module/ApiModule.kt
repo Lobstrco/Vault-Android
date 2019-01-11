@@ -26,7 +26,6 @@ class ApiModule {
 
     // Horizon server
     private val HOST_HORIZON_PRODUCTION = "https://horizon.stellar.org/"
-    private val HOST_HORIZON_STAGING = "https://horizon-testnet.stellar.org/"
 
     @Provides
     @Singleton
@@ -66,7 +65,7 @@ class ApiModule {
     @Singleton
     internal fun provideHorizonServer(): Server {
         Network.usePublicNetwork()
-        return Server(if (BuildConfig.BUILD_TYPE == Constant.BuildType.RELEASE) HOST_HORIZON_PRODUCTION else HOST_HORIZON_STAGING)
+        return Server(HOST_HORIZON_PRODUCTION)
     }
 
     @Provides

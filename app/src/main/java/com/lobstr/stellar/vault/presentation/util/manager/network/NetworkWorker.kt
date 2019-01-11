@@ -19,7 +19,7 @@ class NetworkWorker(context: Context, workerParams: WorkerParameters) : Worker(c
     lateinit var mEventProviderModule: EventProviderModule
 
     override fun doWork(): Result {
-        mEventProviderModule.networkEventSubject.onNext(Network(Network.Type.CONNECTED))
+        mEventProviderModule.networkEventSubject.onNext(Network(Network.Type.CONNECTED, id))
         return Result.success()
     }
 }

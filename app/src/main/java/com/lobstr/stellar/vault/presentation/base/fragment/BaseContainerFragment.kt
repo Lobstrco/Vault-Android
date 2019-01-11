@@ -9,6 +9,7 @@ import com.lobstr.stellar.vault.presentation.auth.AuthActivity
 import com.lobstr.stellar.vault.presentation.base.activity.BaseActivity
 import com.lobstr.stellar.vault.presentation.container.activity.ContainerActivity
 import com.lobstr.stellar.vault.presentation.home.HomeActivity
+import com.lobstr.stellar.vault.presentation.vault_auth.VaultAuthActivity
 
 
 abstract class BaseContainerFragment : BaseMvpAppCompatFragment() {
@@ -28,6 +29,7 @@ abstract class BaseContainerFragment : BaseMvpAppCompatFragment() {
         when (item?.itemId) {
             android.R.id.home -> {
                 activity?.onBackPressed()
+                return true
             }
         }
 
@@ -69,6 +71,7 @@ abstract class BaseContainerFragment : BaseMvpAppCompatFragment() {
         if (childFragmentManager.backStackEntryCount == 1) {
             when (activity) {
                 is AuthActivity -> (activity as? BaseActivity)?.mPresenter?.changeHomeBtnVisibility(false)
+                is VaultAuthActivity -> (activity as? BaseActivity)?.mPresenter?.changeHomeBtnVisibility(false)
                 is HomeActivity -> (activity as? BaseActivity)?.mPresenter?.changeHomeBtnVisibility(false)
                 is ContainerActivity -> (activity as? BaseActivity)?.mPresenter?.changeHomeBtnVisibility(true)
             }

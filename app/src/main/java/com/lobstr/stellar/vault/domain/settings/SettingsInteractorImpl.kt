@@ -11,12 +11,20 @@ class SettingsInteractorImpl(private val prefsUtil: PrefsUtil, private val keySt
         return prefsUtil.publicKey
     }
 
-    override fun getSignedAccount(): String? {
-        return prefsUtil.signedAccount
+    override fun getSignersCount(): Int {
+        return prefsUtil.accountSignersCount
     }
 
     override fun clearUserData() {
         prefsUtil.clearUserPrefs()
         keyStoreRepository.clearAll()
+    }
+
+    override fun isTouchIdEnabled(): Boolean {
+        return prefsUtil.isTouchIdEnabled
+    }
+
+    override fun setTouchIdEnabled(enabled: Boolean) {
+        prefsUtil.isTouchIdEnabled = enabled
     }
 }

@@ -4,29 +4,29 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
+import androidx.annotation.ColorRes
+import androidx.annotation.DrawableRes
 import androidx.fragment.app.Fragment
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.fusechain.digitalbits.util.manager.FragmentTransactionManager
 import com.lobstr.stellar.vault.R
-import com.lobstr.stellar.vault.presentation.BaseMvpAppCompatActivity
-import com.lobstr.stellar.vault.presentation.auth.AuthActivity
+import com.lobstr.stellar.vault.presentation.base.activity.BaseActivity
+import com.lobstr.stellar.vault.presentation.container.fragment.ContainerFragment
 import com.lobstr.stellar.vault.presentation.dialog.alert.base.AlertDialogFragment
 import com.lobstr.stellar.vault.presentation.home.HomeActivity
 import com.lobstr.stellar.vault.presentation.util.Constant
 import com.lobstr.stellar.vault.presentation.util.manager.ProgressManager
-import com.lobstr.stellar.vault.presentation.vault_auth.recheck_signer.RecheckSignerFragment
-import com.lobstr.stellar.vault.presentation.vault_auth.signer_info.SignerInfoFragment
 import kotlinx.android.synthetic.main.activity_vault_auth.*
 
-class VaultAuthActivity : BaseMvpAppCompatActivity(), VaultAuthView, View.OnClickListener {
+class VaultAuthActivity : BaseActivity(), VaultAuthView, View.OnClickListener {
 
     // ===========================================================
     // Constants
     // ===========================================================
 
     companion object {
-        val LOG_TAG = AuthActivity::class.simpleName
+        val LOG_TAG = VaultAuthActivity::class.simpleName
     }
 
     // ===========================================================
@@ -34,7 +34,7 @@ class VaultAuthActivity : BaseMvpAppCompatActivity(), VaultAuthView, View.OnClic
     // ===========================================================
 
     @InjectPresenter
-    lateinit var mPresenter: VaultAuthPresenter
+    lateinit var mVaultAuthPresenter: VaultAuthPresenter
 
     private var mProgressDialog: AlertDialogFragment? = null
 
@@ -55,8 +55,11 @@ class VaultAuthActivity : BaseMvpAppCompatActivity(), VaultAuthView, View.OnClic
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_vault_auth)
         setListeners()
+    }
+
+    override fun getLayoutResource(): Int {
+        return R.layout.activity_vault_auth
     }
 
     private fun setListeners() {
@@ -69,8 +72,15 @@ class VaultAuthActivity : BaseMvpAppCompatActivity(), VaultAuthView, View.OnClic
 
     override fun onClick(v: View?) {
         when (v!!.id) {
-            R.id.btnRetry -> mPresenter.tryAuthorizeVault()
+            R.id.btnRetry -> mVaultAuthPresenter.tryAuthorizeVault()
         }
+    }
+
+    override fun setupToolbar(@ColorRes toolbarColor: Int, @DrawableRes upArrow: Int, @ColorRes upArrowColor: Int) {
+        setActionBarBackground(toolbarColor)
+        setHomeAsUpIndicator(upArrow, upArrowColor)
+        setActionBarTitleColor(upArrowColor)
+        changeActionBarIconVisibility(false)
     }
 
     override fun showProgressDialog() {
@@ -81,29 +91,16 @@ class VaultAuthActivity : BaseMvpAppCompatActivity(), VaultAuthView, View.OnClic
         ProgressManager.dismiss(mProgressDialog)
     }
 
-    override fun showSignerInfoFragment(userPublicKey: String) {
+    override fun showSignerInfoFragment() {
         btnRetry.visibility = View.GONE
         val bundle = Bundle()
-        bundle.putString(Constant.Bundle.BUNDLE_PUBLIC_KEY, userPublicKey)
+        bundle.putInt(Constant.Bundle.BUNDLE_NAVIGATION_FR, Constant.Navigation.SIGNER_INFO)
 
         FragmentTransactionManager.displayFragment(
             supportFragmentManager,
-            Fragment.instantiate(this, SignerInfoFragment::class.java.name, bundle),
-            R.id.fl_vault_auth_content,
-            false
-        )
-    }
-
-    override fun showRecheckSignerFragment(userPublicKey: String) {
-        btnRetry.visibility = View.GONE
-        val bundle = Bundle()
-        bundle.putString(Constant.Bundle.BUNDLE_PUBLIC_KEY, userPublicKey)
-
-        FragmentTransactionManager.displayFragment(
-            supportFragmentManager,
-            Fragment.instantiate(this, RecheckSignerFragment::class.java.name, bundle),
-            R.id.fl_vault_auth_content,
-            false
+            Fragment.instantiate(this, ContainerFragment::class.java.name, bundle),
+            R.id.fl_container,
+            true
         )
     }
 

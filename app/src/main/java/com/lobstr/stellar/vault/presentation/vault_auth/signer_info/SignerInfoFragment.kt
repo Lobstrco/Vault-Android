@@ -5,16 +5,17 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
+import com.fusechain.digitalbits.util.manager.FragmentTransactionManager
 import com.lobstr.stellar.vault.R
-import com.lobstr.stellar.vault.presentation.BaseMvpAppCompatFragment
+import com.lobstr.stellar.vault.presentation.base.fragment.BaseFragment
 import com.lobstr.stellar.vault.presentation.util.AppUtil
-import com.lobstr.stellar.vault.presentation.util.Constant
-import com.lobstr.stellar.vault.presentation.vault_auth.VaultAuthActivity
+import com.lobstr.stellar.vault.presentation.vault_auth.recheck_signer.RecheckSignerFragment
 import kotlinx.android.synthetic.main.fragment_signer_info.*
 
-class SignerInfoFragment : BaseMvpAppCompatFragment(),
+class SignerInfoFragment : BaseFragment(),
     SignerInfoView, View.OnClickListener {
 
     // ===========================================================
@@ -39,9 +40,7 @@ class SignerInfoFragment : BaseMvpAppCompatFragment(),
     // ===========================================================
 
     @ProvidePresenter
-    fun provideSignerInfoPresenter() = SignerInfoPresenter(
-        arguments?.getString(Constant.Bundle.BUNDLE_PUBLIC_KEY)!!
-    )
+    fun provideSignerInfoPresenter() = SignerInfoPresenter()
 
     // ===========================================================
     // Getter & Setter
@@ -76,13 +75,13 @@ class SignerInfoFragment : BaseMvpAppCompatFragment(),
     override fun onClick(v: View?) {
         when (v!!.id) {
 
-            R.id.ivCopyUserPk -> mPresenter.copyUserPiblicKey(tvUserPublicKey.text.toString())
+            R.id.ivCopyUserPk -> mPresenter.copyUserPublicKey(tvUserPublicKey.text.toString())
 
             R.id.btnNext -> mPresenter.btnNextClicked()
         }
     }
 
-    override fun setupUserPublicKey(userPublicKey: String) {
+    override fun setupUserPublicKey(userPublicKey: String?) {
         tvUserPublicKey.text = userPublicKey
     }
 
@@ -90,8 +89,13 @@ class SignerInfoFragment : BaseMvpAppCompatFragment(),
         AppUtil.copyToClipboard(context, text)
     }
 
-    override fun showRecheckSingerScreen(userPublicKey: String) {
-        (activity as? VaultAuthActivity)?.showRecheckSignerFragment(userPublicKey)
+    override fun showRecheckSingerScreen() {
+        FragmentTransactionManager.displayFragment(
+            parentFragment!!.childFragmentManager,
+            Fragment.instantiate(context, RecheckSignerFragment::class.java.name),
+            R.id.fl_container,
+            true
+        )
     }
 
     // ===========================================================

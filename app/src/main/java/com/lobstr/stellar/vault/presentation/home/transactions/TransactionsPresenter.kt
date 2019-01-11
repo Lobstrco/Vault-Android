@@ -7,7 +7,6 @@ import com.lobstr.stellar.vault.R
 import com.lobstr.stellar.vault.data.error.exeption.DefaultException
 import com.lobstr.stellar.vault.data.error.exeption.NoInternetConnectionException
 import com.lobstr.stellar.vault.data.error.exeption.UserNotAuthorizedException
-import com.lobstr.stellar.vault.data.transaction.TransactionEntityMapper
 import com.lobstr.stellar.vault.domain.transaction.TransactionInteractor
 import com.lobstr.stellar.vault.domain.util.EventProviderModule
 import com.lobstr.stellar.vault.domain.util.event.Network
@@ -17,7 +16,6 @@ import com.lobstr.stellar.vault.presentation.application.LVApplication
 import com.lobstr.stellar.vault.presentation.dagger.module.transaction.TransactionModule
 import com.lobstr.stellar.vault.presentation.entities.transaction.TransactionItem
 import com.lobstr.stellar.vault.presentation.util.Constant
-import com.lobstr.stellar.vault.presentation.util.manager.network.WorkerManager
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
@@ -59,7 +57,7 @@ class TransactionsPresenter : BasePresenter<TransactionsView>() {
                                 loadTransactions()
                             }
                             needCheckConnectionState = false
-                            WorkerManager.cancelWorkById(networkWorkerId)
+                            cancelNetworkWorker()
                         }
                     }
                 }, {
@@ -103,41 +101,6 @@ class TransactionsPresenter : BasePresenter<TransactionsView>() {
                     }
 
                     transactions.addAll(result.results)
-                    ///////////////////////////////////
-                    //FIXME remove hardcode
-                    if (transactions.isEmpty()) {
-                        val transactionEntityMapper = TransactionEntityMapper()
-                        val transaction1: org.stellar.sdk.Transaction =
-                            org.stellar.sdk.Transaction.fromEnvelopeXdr("AAAAAGMkBij/SmvwL5FVqc/Z5xoWE4RXNsCnfA3aMDfjuGniAAAAZAAMbpEAAAADAAAAAAAAAAAAAAABAAAAAAAAAAEAAAAAfrEVEPumZ5dXDqY3LkPQkuJ/oaksXQ1Ux8OPmng8bdQAAAAAAAAAAACYloAAAAAAAAAAAoqOT8UAAABAwj8HBmW/qAIM0JSr8pAznd0rzbJMGYfuyekoSlCLlX7QUdiZvJRIZRkI+AZ598l3Uwtjkg+WNICsDH1mRU0RCOO4aeIAAABAJxvnH8DDNfIhxaMiH6zlO3Wr1aG4ChxvJzy18JWI8JHwyhLDLpOB2oZ2ePYeIAwOHuzmr93PCH2y3RNngKATDA==")
-                        transactions.add(
-                            TransactionItem(
-                                null,
-                                "2018-12-07T12:41:10.455329Z",
-                                "AAAAAGMkBij/SmvwL5FVqc/Z5xoWE4RXNsCnfA3aMDfjuGniAAAAZAAMbpEAAAADAAAAAAAAAAAAAAABAAAAAAAAAAEAAAAAfrEVEPumZ5dXDqY3LkPQkuJ/oaksXQ1Ux8OPmng8bdQAAAAAAAAAAACYloAAAAAAAAAAAoqOT8UAAABAwj8HBmW/qAIM0JSr8pAznd0rzbJMGYfuyekoSlCLlX7QUdiZvJRIZRkI+AZ598l3Uwtjkg+WNICsDH1mRU0RCOO4aeIAAABAJxvnH8DDNfIhxaMiH6zlO3Wr1aG4ChxvJzy18JWI8JHwyhLDLpOB2oZ2ePYeIAwOHuzmr93PCH2y3RNngKATDA==",
-                                "2018-12-07T12:41:10.966250Z",
-                                "f0bbccc72180a272790e8d6092c5d90ca487dac2935924fbdca1e7fc24bed934",
-                                "Signed",
-                                1,
-                                transactionEntityMapper.getTransaction(transaction1)
-                            )
-                        )
-
-                        val transaction2: org.stellar.sdk.Transaction =
-                            org.stellar.sdk.Transaction.fromEnvelopeXdr("AAAAAL6Qe0ushP7lzogR2y3vyb8LKiorvD1U2KIlfs1wRBliAAAAZAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAEAAAAABEz4bSpWmsmrXcIVAkY2hM3VdeCBJse56M18LaGzHQUAAAAAAAAAAACadvgAAAAAAAAAAA")
-                        transactions.add(
-                            TransactionItem(
-                                null,
-                                "2018-11-23T14:10:09.000087Z",
-                                "AAAAAL6Qe0ushP7lzogR2y3vyb8LKiorvD1U2KIlfs1wRBliAAAAZAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAEAAAAABEz4bSpWmsmrXcIVAkY2hM3VdeCBJse56M18LaGzHQUAAAAAAAAAAACadvgAAAAAAAAAAA",
-                                null,
-                                "f0bbccc72180a272790e8d6092c5d90ca487dac2935924fbdca1e7fc24bed934",
-                                null,
-                                1,
-                                transactionEntityMapper.getTransaction(transaction2)
-                            )
-                        )
-                    }
-                    ///////////////////////////////////
                     if (transactions.isEmpty()) {
                         viewState.showEmptyState()
                     } else {
@@ -178,7 +141,10 @@ class TransactionsPresenter : BasePresenter<TransactionsView>() {
 
         when (requestCode) {
             Constant.Code.TRANSACTION_DETAILS_FRAGMENT -> {
-                // TODO handle Details changes
+                //TODO handle it if needed
+                val transactionItem: TransactionItem? =
+                    data?.getParcelableExtra(Constant.Extra.EXTRA_TRANSACTION_ITEM)
+                refreshCalled()
             }
         }
     }

@@ -8,7 +8,6 @@ class PrefsUtil(private val sharedPreferences: SharedPreferences) {
 
     internal companion object {
         const val PREF_AUTH_TOKEN = "PREF_AUTH_TOKEN"
-        const val PREF_SIGNED_ACCOUNT = "PREF_SIGNED_ACCOUNT"
         const val PREF_PUBLIC_KEY = "PREF_PUBLIC_KEY"
         const val PREF_ENCRYPTED_PHRASES = "PREF_ENCRYPTED_PHRASES"
         const val PREF_ENCRYPTED_PIN = "PREF_ENCRYPTED_PIN"
@@ -17,16 +16,14 @@ class PrefsUtil(private val sharedPreferences: SharedPreferences) {
         const val PREF_FCM_TOKEN = "PREF_FCM_TOKEN"
         const val PREF_APP_VERSION = "PREF_APP_VERSION"
         const val PREF_IS_FCM_REGISTERED_SUCCESSFULLY = "PREF_IS_FCM_REGISTERED_SUCCESSFULLY"
-        const val PREF_IS_USER_SIGNER_FOR_LOBSTR = "PREF_IS_USER_SIGNER_FOR_LOBSTR"
+        const val PREF_ACCOUNT_HAS_SIGNERS = "PREF_ACCOUNT_HAS_SIGNERS"
+        const val PREF_IS_TOUCH_ID_ENABLED = "PREF_IS_TOUCH_ID_ENABLED"
+        const val PREF_ACCOUNT_SIGNERS_COUNT = "PREF_ACCOUNT_SIGNERS_COUNT"
     }
 
     var authToken: String?
         get() = getString(PREF_AUTH_TOKEN)
         set(authToken) = set(PREF_AUTH_TOKEN, authToken)
-
-    var signedAccount: String?
-        get() = getString(PREF_SIGNED_ACCOUNT)
-        set(accountId) = set(PREF_SIGNED_ACCOUNT, accountId)
 
     var publicKey: String?
         get() = getString(PREF_PUBLIC_KEY)
@@ -60,9 +57,17 @@ class PrefsUtil(private val sharedPreferences: SharedPreferences) {
         get() = getBoolean(PREF_IS_FCM_REGISTERED_SUCCESSFULLY)
         set(isRegistered) = set(PREF_IS_FCM_REGISTERED_SUCCESSFULLY, isRegistered)
 
-    var isUserSignerForLobstr: Boolean
-        get() = getBoolean(PREF_IS_USER_SIGNER_FOR_LOBSTR)
-        set(isUserSigner) = set(PREF_IS_USER_SIGNER_FOR_LOBSTR, isUserSigner)
+    var accountHasSigners: Boolean
+        get() = getBoolean(PREF_ACCOUNT_HAS_SIGNERS)
+        set(hasSigners) = set(PREF_ACCOUNT_HAS_SIGNERS, hasSigners)
+
+    var isTouchIdEnabled: Boolean
+        get() = getBoolean(PREF_IS_TOUCH_ID_ENABLED)
+        set(enabled) = set(PREF_IS_TOUCH_ID_ENABLED, enabled)
+
+    var accountSignersCount: Int
+        get() = getInt(PREF_ACCOUNT_SIGNERS_COUNT)
+        set(count) = set(PREF_ACCOUNT_SIGNERS_COUNT, count)
 
     operator fun set(key: String, value: String?) {
         sharedPreferences.edit().putString(key, value).apply()
@@ -90,19 +95,23 @@ class PrefsUtil(private val sharedPreferences: SharedPreferences) {
     }
 
     fun getInt(key: String): Int {
-        return sharedPreferences.getInt(key, Int.MIN_VALUE)
+        return sharedPreferences.getInt(key, 0)
     }
 
     fun clearUserPrefs(): Boolean {
         val editor = sharedPreferences.edit()
         editor.remove(PREF_AUTH_TOKEN)
-        editor.remove(PREF_SIGNED_ACCOUNT)
         editor.remove(PREF_PUBLIC_KEY)
         editor.remove(PREF_ENCRYPTED_PHRASES)
+        editor.remove(PREF_ENCRYPTED_PIN)
+        editor.remove(PREF_PHRASES_IV)
+        editor.remove(PREF_PIN_IV)
         editor.remove(PREF_FCM_TOKEN)
         editor.remove(PREF_APP_VERSION)
         editor.remove(PREF_IS_FCM_REGISTERED_SUCCESSFULLY)
-        editor.remove(PREF_IS_USER_SIGNER_FOR_LOBSTR)
+        editor.remove(PREF_ACCOUNT_HAS_SIGNERS)
+        editor.remove(PREF_IS_TOUCH_ID_ENABLED)
+        editor.remove(PREF_ACCOUNT_SIGNERS_COUNT)
         return editor.commit()
     }
 }

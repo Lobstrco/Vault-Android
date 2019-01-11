@@ -1,87 +1,96 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-            xmlns:tools="http://schemas.android.com/tools"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:fillViewport="true"
-            tools:context=".presentation.home.settings.SettingsFragment">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical"
+              android:layout_marginLeft="16dp"
+              android:layout_marginRight="16dp"
+              android:layout_marginBottom="16dp"
+              android:splitMotionEvents="false">
 
     <LinearLayout android:layout_width="match_parent"
-                  android:layout_height="match_parent"
+                  android:layout_height="0dp"
                   android:orientation="vertical"
-                  android:layout_margin="16dp"
-                  android:splitMotionEvents="false">
+                  android:layout_weight="1">
+
+        <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:textAppearance="?android:textAppearanceLarge"
+                android:textStyle="bold"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp"
+                android:paddingBottom="5dp"
+                android:textColor="@android:color/black"
+                android:text="@string/text_tv_signer_info_title"/>
+
+        <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:textAppearance="?android:textAppearanceSmall"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp"
+                android:paddingBottom="5dp"
+                android:textColor="@android:color/black"
+                android:text="@string/text_tv_signer_info_description"/>
+
 
         <LinearLayout android:layout_width="match_parent"
                       android:layout_height="match_parent"
                       android:orientation="vertical"
-                      android:layout_weight="1">
-
-            <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:textAppearance="?android:textAppearanceLarge"
-                    android:textStyle="bold"
-                    android:paddingTop="20dp"
-                    android:paddingLeft="16dp"
-                    android:paddingRight="16dp"
-                    android:paddingBottom="5dp"
-                    android:textColor="@android:color/black"
-                    android:text="Your Public Key:"/>
-
+                      android:gravity="center">
             <TextView
                     android:id="@+id/tvUserPublicKey"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:textAppearance="?android:textAppearanceLarge"
+                    android:textAppearance="?android:textAppearanceMedium"
                     android:padding="16dp"
                     android:textAllCaps="true"
                     android:ellipsize="middle"
                     android:singleLine="true"
                     android:textColor="@android:color/black"/>
 
-            <TextView
+            <Button
+                    android:text="@string/text_btn_signer_info_copy_key"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/ivCopyUserPk"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:gravity="center"
+                    style="@style/Base.Widget.AppCompat.Button.Borderless.Colored"
+                    android:background="@drawable/selector_default_button"
+                    android:textColor="@android:color/white"
                     android:textAppearance="?android:textAppearanceMedium"
-                    android:paddingLeft="16dp"
-                    android:paddingRight="16dp"
-                    android:textColor="@android:color/black"
-                    android:text="Follow the instructions:\nCopy your Public Key to the Lobstr App.\nAnd Follow provided steps."/>
+                    android:textAllCaps="false"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="42dp"
+                    android:layout_marginRight="42dp"
+                    android:layout_marginBottom="22dp"/>
 
         </LinearLayout>
 
-        <Button
-                android:text="Copy"
-                android:layout_height="wrap_content"
-                android:id="@+id/ivCopyUserPk"
-                android:layout_width="match_parent"
-                style="@style/Base.Widget.AppCompat.Button.Borderless.Colored"
-                android:background="@drawable/selector_default_button"
-                android:textColor="@android:color/white"
-                android:textAppearance="?android:textAppearanceMedium"
-                android:textAllCaps="false"
-                android:layout_gravity="center"
-                android:layout_marginLeft="42dp"
-                android:layout_marginRight="42dp"
-                android:layout_marginBottom="22dp"/>
-
-        <Button
-                android:text="Next"
-                android:layout_height="wrap_content"
-                android:id="@+id/btnNext"
-                android:layout_width="match_parent"
-                style="@style/Base.Widget.AppCompat.Button.Borderless.Colored"
-                android:background="@drawable/selector_default_button"
-                android:textColor="@android:color/white"
-                android:textAppearance="?android:textAppearanceMedium"
-                android:textAllCaps="false"
-                android:layout_gravity="center"
-                android:layout_marginLeft="42dp"
-                android:layout_marginRight="42dp"/>
-
     </LinearLayout>
-</ScrollView>
+
+    <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="start"
+            android:textAppearance="?android:textAppearanceSmall"
+            android:textColor="@android:color/black"
+            android:layout_marginBottom="16dp"
+            android:text="@string/text_tv_signer_info_note"/>
+
+    <Button
+            android:text="@string/text_btn_signer_info_next"
+            android:layout_height="wrap_content"
+            android:id="@+id/btnNext"
+            android:layout_width="match_parent"
+            style="@style/Base.Widget.AppCompat.Button.Borderless.Colored"
+            android:background="@drawable/selector_default_button"
+            android:textColor="@android:color/white"
+            android:textAppearance="?android:textAppearanceMedium"
+            android:textAllCaps="false"
+            android:layout_gravity="center"/>
+
+</LinearLayout>

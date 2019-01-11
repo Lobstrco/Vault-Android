@@ -1,8 +1,9 @@
 package com.lobstr.stellar.vault.presentation.entities.transaction
 
-import android.os.Parcel
 import android.os.Parcelable
+import kotlinx.android.parcel.Parcelize
 
+@Parcelize
 data class TransactionItem(
     val cancelledAt: String?,
     val addedAt: String?,
@@ -12,40 +13,4 @@ data class TransactionItem(
     val getStatusDisplay: String?,
     val status: Int?,
     val transaction: Transaction
-) : Parcelable {
-    constructor(parcel: Parcel) : this(
-        parcel.readString(),
-        parcel.readString(),
-        parcel.readString(),
-        parcel.readString(),
-        parcel.readString(),
-        parcel.readString(),
-        parcel.readValue(Int::class.java.classLoader) as? Int,
-        parcel.readParcelable(Transaction::class.java.classLoader)
-    )
-
-    override fun writeToParcel(parcel: Parcel, flags: Int) {
-        parcel.writeString(cancelledAt)
-        parcel.writeString(addedAt)
-        parcel.writeString(xdr)
-        parcel.writeString(signedAt)
-        parcel.writeString(hash)
-        parcel.writeString(getStatusDisplay)
-        parcel.writeValue(status)
-        parcel.writeParcelable(transaction, flags)
-    }
-
-    override fun describeContents(): Int {
-        return 0
-    }
-
-    companion object CREATOR : Parcelable.Creator<TransactionItem> {
-        override fun createFromParcel(parcel: Parcel): TransactionItem {
-            return TransactionItem(parcel)
-        }
-
-        override fun newArray(size: Int): Array<TransactionItem?> {
-            return arrayOfNulls(size)
-        }
-    }
-}
+) : Parcelable

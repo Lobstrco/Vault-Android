@@ -73,7 +73,7 @@ class ConfirmMnemonicsFragment : BaseFragment(), ConfirmMnemonicsView, View.OnCl
     }
 
     private fun setListeners() {
-        btnConfirm.setOnClickListener(this)
+        btnNext.setOnClickListener(this)
         mnemonicContainerToSelectView.setMnemonicItemActionListener(this)
         mnemonicContainerToConfirmView.setMnemonicItemActionListener(this)
     }
@@ -98,19 +98,17 @@ class ConfirmMnemonicsFragment : BaseFragment(), ConfirmMnemonicsView, View.OnCl
 
     override fun onClick(v: View?) {
         when (v!!.id) {
-            R.id.btnConfirm -> mPresenter.confirmClicked()
+            R.id.btnNext -> mPresenter.nextClicked()
         }
     }
 
     override fun setupMnemonicsToSelect(mnemonics: List<String>) {
-        btnConfirm.isEnabled = mnemonics.isEmpty()
-        tvSelectToEmptyState.visibility = if (mnemonics.isEmpty()) View.VISIBLE else View.GONE
+        btnNext.isEnabled = mnemonics.isEmpty()
         mnemonicContainerToSelectView.mMnemonicList = mnemonics
         mnemonicContainerToSelectView.setupMnemonics()
     }
 
     override fun setupMnemonicsToConfirm(mnemonics: List<String>) {
-        tvConfirmToEmptyState.visibility = if (mnemonics.isEmpty()) View.VISIBLE else View.GONE
         mnemonicContainerToConfirmView.mMnemonicList = mnemonics
         mnemonicContainerToConfirmView.setupMnemonics()
     }

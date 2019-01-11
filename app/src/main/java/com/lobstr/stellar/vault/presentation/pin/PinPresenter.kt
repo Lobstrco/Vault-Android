@@ -7,6 +7,7 @@ import com.lobstr.stellar.vault.domain.pin.PinInteractor
 import com.lobstr.stellar.vault.presentation.BasePresenter
 import com.lobstr.stellar.vault.presentation.application.LVApplication
 import com.lobstr.stellar.vault.presentation.dagger.module.pin.PinModule
+import com.lobstr.stellar.vault.presentation.util.biometric.BiometricUtils
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
@@ -38,6 +39,17 @@ class PinPresenter(private var needCreatePin: Boolean?, private var needChangePi
             needCreatePin!! -> viewState.showDescriptionMessage(R.string.text_create_pin)
             needChangePin!! -> viewState.showDescriptionMessage(R.string.text_enter_old_pin)
             else -> viewState.showDescriptionMessage(R.string.text_enter_pin)
+        }
+    }
+
+    override fun attachView(view: PinView?) {
+        super.attachView(view)
+
+        // logic for show fingerprint
+        if (!needChangePin!! && !needCreatePin!! && interactor.isTouchIdEnabled() &&
+            BiometricUtils.isFingerprintAvailable(LVApplication.sAppComponent.context)
+        ) {
+            viewState.showBiometricDialog()
         }
     }
 
@@ -125,10 +137,19 @@ class PinPresenter(private var needCreatePin: Boolean?, private var needChangePi
         viewState.showDescriptionMessage(R.string.text_create_pin)
     }
 
+    fun biometricAuthenticationSuccessful() {
+        checkAuthState()
+    }
+
     private fun checkAuthState() {
         when {
-            interactor.isUserSignerForLobstr() -> viewState.showHomeScreen()
-            else -> viewState.showVaultAuthScreen()
+            interactor.accountHasSigners() -> viewState.showHomeScreen()
+            else -> {
+                when {
+                    BiometricUtils.isBiometricSupported(LVApplication.sAppComponent.context) -> viewState.showFingerprintSetUpScreen()
+                    else -> viewState.showVaultAuthScreen()
+                }
+            }
         }
     }
 }

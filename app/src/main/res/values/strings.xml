@@ -29,6 +29,8 @@
     <string name="text_btn_edit">Edit</string>
     <string name="text_btn_add">Add</string>
     <string name="text_btn_retry">Retry</string>
+    <string name="title_finger_print_dialog">Fingerprint not set up</string>
+    <string name="msg_finger_print_dialog">Please set up your fingerprint in the device settings first</string>
 
     <!-- bottom Navigation View items-->
     <string name="dashboard">Home</string>
@@ -37,22 +39,23 @@
 
     <!-- toolbar titles-->
     <string name="faq">FAQ</string>
+    <string name="signed_accounts">Signed Accounts</string>
 
     <string name="transaction_details">Transaction Details</string>
 
     <string name="text_tv_recovery_phrase_title">Sign in with a recovery phrase</string>
-    <string name="text_tv_recovery_phrase_description">This is 24 word phrase you were given when you created your
+    <string name="text_tv_recovery_phrase_description">This is 12 or 24 word phrase you were given when you created your
         previous wallet
     </string>
     <string name="text_next_button">Next</string>
-    <string name="text_tv_mnemonics_title">Secret Phrase</string>
-    <string name="text_tv_confirm_mnemonics_title">Confirm Phrase</string>
-    <string name="text_tv_confirm_mnemonics_description">Please make your phrase from the words below</string>
+    <string name="text_tv_mnemonics_title">Mnemonic Codes</string>
+    <string name="text_tv_confirm_mnemonics_title">Verify Codes</string>
+    <string name="text_tv_confirm_mnemonics_description">Tap the words in correct order</string>
     <string name="text_tv_confirm_mnemonics_empty_state">Please select words in the bottom part</string>
     <string name="text_tv_select_mnemonics_empty_state">Try to confirm it!</string>
-    <string name="text_btn_confirm_mnemonics">Confirm</string>
-    <string name="text_btn_create_mnemonics">Proceed</string>
-    <string name="text_tv_mnemonics_description">Please store this phrase</string>
+    <string name="text_btn_confirm_mnemonics_next">Next</string>
+    <string name="text_btn_create_mnemonics_next">Next</string>
+    <string name="text_tv_mnemonics_description">Write down each word in order and store it in a safe place</string>
 
     <!--Pin screen-->
     <string name="text_enter_pin">Please enter your PIN code</string>
@@ -107,8 +110,37 @@
     </string>
     <string name="text_chb_backup_confirm">I understand</string>
     <string name="text_btn_next">Next</string>
-    <string name="text_btn_clip_to_board">Clip to board</string>
+    <string name="text_btn_clip_to_board">Clip to clipboard</string>
     <string name="mnemonics_title">Your Phrase</string>
     <string name="text_details_none">none</string>
+    <string name="biometric_failed">Fingerprint not recognized</string>
+    <string name="biometric_error_sdk_not_supported">Sdk version not supported</string>
+    <string name="biometric_error_hardware_not_supported">Device does not support biometric authentication</string>
+    <string name="biometric_error_fingerprint_not_available">Fingerprint is not registered in device</string>
+    <string name="biometric_error_permission_not_granted">Permission is not granted by user</string>
+    <string name="biometric_failure">Login not successful!</string>
+    <string name="biometric_cancelled">Authentication cancelled by user</string>
+    <string name="biometric_success">Successful</string>
+    <string name="biometric_title">Verification</string>
+    <string name="biometric_subtitle">Confirm your account</string>
+    <string name="biometric_description">Place your finger on the device home button to verify your identity</string>
+
+    <string name="text_btn_turn_on">Turn On</string>
+    <string name="text_btn_skip">Skip</string>
+    <string name="text_tv_fingerprint_set_up_title">Protect your wallet</string>
+    <string name="text_tv_fingerprint_set_up_description">Add an extra layer of security to keep your Stellars save
+    </string>
+    <string name="text_tv_signer_info_title">Your Public Key</string>
+    <string name="text_tv_signer_info_description">
+        <![CDATA[This key will be use for transactions confirmation. To protect your Lobstr Wallet, copy and paste the code to Lobstr (Settings -> Multisign -> Enable)]]></string>
+    <string name="text_btn_signer_info_copy_key">Copy Key</string>
+    <string name="text_tv_signer_info_note">*Please note, if you forget mnemonic codes, you won\'t be able to access
+        your transactions
+    </string>
+    <string name="text_btn_signer_info_next">Next</string>
+    <string name="text_signed_account_empty_state">You have 0 signed accounts</string>
+    <string name="text_tv_re_check_signer_title">Public Key</string>
+    <string name="text_tv_re_check_signer_description">You are not a signer for any Stellar Account</string>
+    <string name="text_btn_re_check_signer">Re-Check</string>
 
 </resources>

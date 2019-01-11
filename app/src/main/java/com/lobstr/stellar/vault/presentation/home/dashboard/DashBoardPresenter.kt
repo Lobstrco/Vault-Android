@@ -12,7 +12,6 @@ import com.lobstr.stellar.vault.domain.util.event.Notification
 import com.lobstr.stellar.vault.presentation.BasePresenter
 import com.lobstr.stellar.vault.presentation.application.LVApplication
 import com.lobstr.stellar.vault.presentation.dagger.module.dashboard.DashboardModule
-import com.lobstr.stellar.vault.presentation.util.manager.network.WorkerManager
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
@@ -49,7 +48,7 @@ class DashboardPresenter : BasePresenter<DashboardView>() {
                                 loadPendingTransactions()
                             }
                             needCheckConnectionState = false
-                            WorkerManager.cancelWorkById(networkWorkerId)
+                            cancelNetworkWorker()
                         }
                     }
                 }, {
@@ -61,9 +60,8 @@ class DashboardPresenter : BasePresenter<DashboardView>() {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
                     when (it.type) {
-                        Notification.Type.ADDED_NEW_TRANSACTION -> {
-                            loadPendingTransactions()
-                        }
+                        Notification.Type.TRANSACTION_COUNT_CHANGED -> loadPendingTransactions()
+                        Notification.Type.ADDED_NEW_TRANSACTION -> loadPendingTransactions()
                     }
                 }, {
                     it.printStackTrace()

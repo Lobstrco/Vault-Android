@@ -10,6 +10,7 @@ import com.lobstr.stellar.vault.presentation.BasePresenter
 import com.lobstr.stellar.vault.presentation.application.LVApplication
 import com.lobstr.stellar.vault.presentation.dagger.module.settings.SettingsModule
 import com.lobstr.stellar.vault.presentation.util.Constant
+import com.lobstr.stellar.vault.presentation.util.biometric.BiometricUtils
 import javax.inject.Inject
 
 @InjectViewState
@@ -27,13 +28,23 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
         viewState.setupToolbarTitle(R.string.settings)
         viewState.setupSettingsData(
             interactor.getUserPublicKey(),
-            interactor.getSignedAccount() ?: "0",
-            BuildConfig.VERSION_NAME
+            BuildConfig.VERSION_NAME,
+            BiometricUtils.isBiometricSupported(LVApplication.sAppComponent.context)
+        )
+        viewState.setTouchIdChecked(
+            interactor.isTouchIdEnabled()
+                    && BiometricUtils.isFingerprintAvailable(LVApplication.sAppComponent.context)
         )
     }
 
+    override fun attachView(view: SettingsView?) {
+        super.attachView(view)
+        // always check signers count
+        viewState.setupSignersCount(interactor.getSignersCount().toString())
+    }
+
     fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if(resultCode == Activity.RESULT_OK) {
+        if (resultCode == Activity.RESULT_OK) {
             when (requestCode) {
                 Constant.Code.CHANGE_PIN -> viewState.showSuccessMessage(R.string.text_success_change_pin)
             }
@@ -69,11 +80,29 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
         viewState.showChangePinScreen()
     }
 
-    fun touchIdClicked() {
-        viewState.showTouchIdScreen()
-    }
-
     fun helpClicked() {
         viewState.showHelpScreen()
+    }
+
+    fun touchIdSwitched(checked: Boolean) {
+        when {
+            checked -> {
+                if (BiometricUtils.isFingerprintAvailable(LVApplication.sAppComponent.context)) {
+                    // TODO add additional logic if needed
+                    interactor.setTouchIdEnabled(true)
+                    viewState.setTouchIdChecked(true)
+                } else {
+                    interactor.setTouchIdEnabled(false)
+                    viewState.setTouchIdChecked(false)
+                    viewState.showFingerprintInfoDialog(
+                        R.string.title_finger_print_dialog,
+                        R.string.msg_finger_print_dialog
+                    )
+                }
+            }
+            else -> {
+                interactor.setTouchIdEnabled(false)
+            }
+        }
     }
 }

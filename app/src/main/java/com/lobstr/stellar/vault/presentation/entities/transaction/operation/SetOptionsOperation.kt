@@ -5,7 +5,7 @@ import android.os.Parcelable
 
 data class SetOptionsOperation(
     override val sourceAccount: String?,
-    val inflationDestination: String,
+    val inflationDestination: String?,
     val clearFlags: Int?,
     val setFlags: Int?,
     val masterKeyWeight: Int?,
@@ -60,14 +60,14 @@ data class SetOptionsOperation(
         val map: MutableMap<String, String?> = mutableMapOf()
         map["sourceAccount"] = sourceAccount
         map["inflationDestination"] = inflationDestination
-        map["clearFlags"] = clearFlags.toString()
-        map["setFlags"] = setFlags.toString()
-        map["masterKeyWeight"] = masterKeyWeight.toString()
-        map["lowThreshold"] = lowThreshold.toString()
-        map["mediumThreshold"] = mediumThreshold.toString()
-        map["highThreshold"] = highThreshold.toString()
-        map["homeDomain"] = homeDomain.toString()
-        map["signerWeight"] = signerWeight.toString()
+        map["clearFlags"] = clearFlags?.toString()
+        map["setFlags"] = setFlags?.toString()
+        map["masterKeyWeight"] = masterKeyWeight?.toString()
+        map["lowThreshold"] = lowThreshold?.toString()
+        map["mediumThreshold"] = mediumThreshold?.toString()
+        map["highThreshold"] = highThreshold?.toString()
+        map["homeDomain"] = homeDomain
+        map["signerWeight"] = signerWeight?.toString()
 
         return map
     }

@@ -14,6 +14,7 @@ import com.lobstr.stellar.vault.presentation.base.activity.BaseActivity
 import com.lobstr.stellar.vault.presentation.home.HomeViewPagerAdapter.Position.DASHBOARD
 import com.lobstr.stellar.vault.presentation.home.HomeViewPagerAdapter.Position.SETTINGS
 import com.lobstr.stellar.vault.presentation.home.HomeViewPagerAdapter.Position.TRANSACTIONS
+import com.lobstr.stellar.vault.presentation.util.Constant
 import kotlinx.android.synthetic.main.activity_home.*
 
 class HomeActivity : BaseActivity(), HomeActivityView,
@@ -96,6 +97,7 @@ class HomeActivity : BaseActivity(), HomeActivityView,
 
     override fun showAuthScreen() {
         val intent = Intent(this, AuthActivity::class.java)
+        intent.putExtra(Constant.Extra.EXTRA_NAVIGATION_FR, Constant.Navigation.AUTH)
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         startActivity(intent)
     }

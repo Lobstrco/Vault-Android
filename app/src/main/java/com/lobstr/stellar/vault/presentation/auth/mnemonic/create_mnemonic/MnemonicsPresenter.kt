@@ -26,7 +26,7 @@ class MnemonicsPresenter(private val generate: Boolean) : BasePresenter<Mnemonic
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
         if (generate) {
-            setupMnemonics(Wallet.generate24WordMnemonic())
+            setupMnemonics(Wallet.generate12WordMnemonic())
         } else {
             viewState.setupToolbarTitle(R.string.mnemonics_title)
             viewState.setActionBtnVisibility(false)
@@ -53,7 +53,7 @@ class MnemonicsPresenter(private val generate: Boolean) : BasePresenter<Mnemonic
         viewState.setupMnemonics(mnemonicsStr.split(" ".toRegex()).dropLastWhile { it.isEmpty() })
     }
 
-    fun proceedClicked() {
+    fun nextClicked() {
         viewState.showConfirmationScreen(mnemonicsArray)
     }
 

@@ -123,7 +123,7 @@ class TransactionsFragment : BaseFragment(), TransactionsView, SwipeRefreshLayou
     }
 
     override fun showTransactionList(items: MutableList<TransactionItem>) {
-        (rvTransactions.adapter as TransactionAdapter).setOrderBookList(items)
+        (rvTransactions.adapter as TransactionAdapter).setTransactionList(items)
     }
 
     override fun showProgress() {

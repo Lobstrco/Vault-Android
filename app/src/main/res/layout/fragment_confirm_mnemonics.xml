@@ -9,7 +9,7 @@
     <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center"
+            android:gravity="start"
             android:textAppearance="?android:textAppearanceLarge"
             android:textStyle="bold"
             android:paddingLeft="16dp"
@@ -21,7 +21,7 @@
     <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center"
+            android:gravity="start"
             android:textAppearance="?android:textAppearanceSmall"
             android:paddingLeft="16dp"
             android:paddingRight="16dp"
@@ -29,35 +29,21 @@
             android:textColor="@android:color/black"
             android:text="@string/text_tv_confirm_mnemonics_description"/>
 
-    <FrameLayout android:layout_width="match_parent"
-                 android:layout_height="0dp"
-                 android:layout_weight="1">
+    <LinearLayout android:layout_width="match_parent"
+                  android:layout_height="0dp"
+                  android:orientation="vertical"
+                  android:layout_weight="1"
+                  android:padding="8dp">
 
         <com.lobstr.stellar.vault.presentation.auth.mnemonic.MnemonicsContainerView
                 android:id="@+id/mnemonicContainerToConfirmView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:background="@drawable/shape_recovery_key_edit_text"
                 android:splitMotionEvents="false"
+                android:layout_weight="1"
                 app:isCounterEnabled="true"
                 app:isDraggable="true"/>
-
-        <TextView
-                android:id="@+id/tvConfirmToEmptyState"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="center"
-                android:padding="16dp"
-                android:text="@string/text_tv_confirm_mnemonics_empty_state"/>
-    </FrameLayout>
-
-
-    <View android:layout_width="match_parent"
-          android:layout_height="2dp"
-          android:background="@android:color/darker_gray"/>
-
-    <FrameLayout android:layout_width="match_parent"
-                 android:layout_height="0dp"
-                 android:layout_weight="1">
 
         <com.lobstr.stellar.vault.presentation.auth.mnemonic.MnemonicsContainerView
                 android:id="@+id/mnemonicContainerToSelectView"
@@ -65,18 +51,12 @@
                 android:layout_height="match_parent"
                 android:splitMotionEvents="false"
                 app:isCounterEnabled="false"
+                android:layout_weight="1"
                 app:isDraggable="true"/>
 
-        <TextView
-                android:id="@+id/tvSelectToEmptyState"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="center"
-                android:padding="16dp"
-                android:text="@string/text_tv_select_mnemonics_empty_state"/>
-    </FrameLayout>
+    </LinearLayout>
 
-    <Button android:id="@+id/btnConfirm"
+    <Button android:id="@+id/btnNext"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             style="@style/Base.Widget.AppCompat.Button.Borderless.Colored"
@@ -85,6 +65,6 @@
             android:textAppearance="?android:textAppearanceMedium"
             android:textAllCaps="true"
             android:enabled="false"
-            android:text="@string/text_btn_confirm_mnemonics"/>
+            android:text="@string/text_btn_confirm_mnemonics_next"/>
 
 </LinearLayout>

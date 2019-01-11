@@ -5,7 +5,9 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:layout_margin="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginBottom="16dp"
         tools:context=".presentation.vault_auth.recheck_signer.RecheckSignerFragment">
 
     <LinearLayout
@@ -15,6 +17,17 @@
             android:layout_weight="1">
 
         <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:textAppearance="?android:textAppearanceSmall"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp"
+                android:paddingBottom="5dp"
+                android:textColor="@android:color/black"
+                android:text="@string/text_tv_re_check_signer_title"/>
+
+        <TextView
                 android:id="@+id/tvUserPublicKey"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -22,25 +35,38 @@
                 android:textAppearance="?android:textAppearanceLarge"
                 android:padding="16dp"
                 android:textAllCaps="true"
+                android:textStyle="bold"
                 android:ellipsize="middle"
                 android:singleLine="true"
                 android:textColor="@android:color/black"/>
 
-        <TextView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="center"
-                android:layout_gravity="center"
-                android:text="You are \nnot a signer"
-                android:textAppearance="?android:textAppearanceLarge"
-                android:padding="16dp"
-                android:textAllCaps="true"
-                android:textColor="@android:color/black"/>
+        <LinearLayout android:layout_width="match_parent"
+                      android:layout_height="match_parent"
+                      android:orientation="vertical"
+                      android:gravity="center">
+
+            <ImageView android:layout_width="100dp"
+                       android:layout_height="100dp"
+                       android:layout_gravity="center"
+                       android:src="@drawable/ic_error_outline_red"/>
+
+            <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:layout_gravity="center"
+                    android:textStyle="bold"
+                    android:text="@string/text_tv_re_check_signer_description"
+                    android:textAppearance="?android:textAppearanceLarge"
+                    android:padding="16dp"
+                    android:textColor="@android:color/black"/>
+
+        </LinearLayout>
 
     </LinearLayout>
 
     <Button
-            android:text="Re-check"
+            android:text="@string/text_btn_re_check_signer"
             android:layout_height="wrap_content"
             android:id="@+id/btnRecheck"
             android:layout_width="match_parent"
@@ -49,7 +75,5 @@
             android:textColor="@android:color/white"
             android:textAppearance="?android:textAppearanceMedium"
             android:textAllCaps="false"
-            android:layout_gravity="center"
-            android:layout_marginLeft="42dp"
-            android:layout_marginRight="42dp"/>
+            android:layout_gravity="center"/>
 </LinearLayout>

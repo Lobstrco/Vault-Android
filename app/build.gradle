@@ -96,7 +96,7 @@ ext {
     firebase_crash = "16.2.1"
     javax_annotation = "10.0-b28"
     androidx_appcompat = "1.0.2"
-    androidx_constraintlayout = "2.0.0-alpha2"
+    androidx_constraintlayout = "2.0.0-alpha3"
     androidx_legacy_support_v4 = "1.0.0"
     junit = "4.12"
     runner = "1.1.1"
@@ -109,7 +109,6 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
-    implementation 'androidx.legacy:legacy-support-v4:1.0.0-alpha1'
     testImplementation "junit:junit:$junit"
     androidTestImplementation "androidx.test:runner:$runner"
     androidTestImplementation "androidx.test.espresso:espresso-core:$espresso_core"
@@ -165,6 +164,9 @@ dependencies {
     //Other
     implementation "de.hdodenhof:circleimageview:$circleimageview"
     implementation "com.andrognito.pinlockview:pinlockview:$pin"
+}
+androidExtensions {
+    experimental = true
 }
 
 kapt {

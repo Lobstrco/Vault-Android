@@ -20,13 +20,6 @@ class TransactionDetailsInteractorImpl(
     override fun confirmTransactionOnHorizon(transaction: String): Single<SubmitTransactionResponse> {
         return getPhrases().flatMap { stellarRepository.createKeyPair(it.toCharArray(), 0) }
             .flatMap { stellarRepository.submitTransaction(it, transaction) }
-//            .flatMap {
-//                transactionRepository.submitSignedTransaction(
-//                    AppUtil.getJwtToken(prefsUtil.authToken),
-//                    it.extras?.resultCodes?.transactionResultCode?.equals("tx_bad_auth"),
-//                    it.envelopeXdr
-//                )
-//            }
     }
 
     override fun confirmTransactionOnServer(submit: Boolean?, transaction: String): Single<String> {
@@ -36,18 +29,6 @@ class TransactionDetailsInteractorImpl(
             transaction
         )
     }
-
-    //    fun confirmTransaction(transaction: String){
-//        return getPhrases().flatMap { stellarRepository.createKeyPair(it.toCharArray(), 0) }
-//            .flatMap { stellarRepository.submitTransaction(it, transaction) }
-//            .flatMap {
-//                transactionRepository.submitSignedTransaction(
-//                    AppUtil.getJwtToken(prefsUtil.authToken),
-//                    it.extras?.resultCodes?.transactionResultCode?.equals("tx_bad_auth"),
-//                    it.envelopeXdr
-//                )
-//            }
-//    }
 
     override fun cancelTransaction(hash: String): Single<TransactionItem> {
         return transactionRepository.markTransactionAsCancelled(AppUtil.getJwtToken(prefsUtil.authToken), hash)

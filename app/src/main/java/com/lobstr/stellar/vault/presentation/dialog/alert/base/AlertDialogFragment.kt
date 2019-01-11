@@ -41,6 +41,7 @@ open class AlertDialogFragment : BaseMvpAppCompatDialogFragment() {
 
     object DialogFragmentIdentifier {
         const val PROGRESS_DIALOG = "PROGRESS_DIALOG"
+        const val FINGERPRINT_INFO_DIALOG = "FINGERPRINT_INFO_DIALOG"
     }
 
     object DialogIdentifier {

@@ -3,9 +3,11 @@ package com.lobstr.stellar.vault.presentation.auth
 import com.arellomobile.mvp.InjectViewState
 import com.arellomobile.mvp.MvpPresenter
 import com.lobstr.stellar.vault.R
+import com.lobstr.stellar.vault.presentation.util.Constant
 
 @InjectViewState
-class AuthPresenter : MvpPresenter<AuthView>() {
+class AuthPresenter(private val targetFr: Int) : MvpPresenter<AuthView>() {
+
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
 
@@ -15,6 +17,14 @@ class AuthPresenter : MvpPresenter<AuthView>() {
             R.color.color_ff3a6c99
         )
 
-        viewState.showAuthFragment()
+        navigateTo()
+    }
+
+    private fun navigateTo() {
+        when (targetFr) {
+            Constant.Navigation.AUTH -> viewState.showAuthFragment()
+
+            Constant.Navigation.FINGERPRINT_SET_UP -> viewState.showFingerprintSetUpFragment()
+        }
     }
 }

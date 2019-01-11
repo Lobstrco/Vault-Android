@@ -1,17 +1,81 @@
 package com.lobstr.stellar.vault.presentation.vault_auth.recheck_signer
 
 import com.arellomobile.mvp.InjectViewState
+import com.lobstr.stellar.vault.R
+import com.lobstr.stellar.vault.data.error.exeption.DefaultException
+import com.lobstr.stellar.vault.data.error.exeption.NoInternetConnectionException
+import com.lobstr.stellar.vault.data.error.exeption.UserNotAuthorizedException
+import com.lobstr.stellar.vault.domain.re_check_signer.RecheckSignerInteractor
 import com.lobstr.stellar.vault.presentation.BasePresenter
+import com.lobstr.stellar.vault.presentation.application.LVApplication
+import com.lobstr.stellar.vault.presentation.dagger.module.re_check_signer.RecheckSignerModule
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
+import javax.inject.Inject
 
 @InjectViewState
-class RecheckSignerPresenter(private val userPublicKey: String) : BasePresenter<RecheckSignerView>() {
+class RecheckSignerPresenter : BasePresenter<RecheckSignerView>() {
+
+    @Inject
+    lateinit var interactor: RecheckSignerInteractor
+
+    private var recheckSignersInProcess = false
+
+    init {
+        LVApplication.sAppComponent.plusRecheckSignerComponent(RecheckSignerModule()).inject(this)
+    }
 
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
-        viewState.setupUserPublicKey(userPublicKey)
+        viewState.setupUserPublicKey(interactor.getUserPublicKey())
     }
 
     fun recheckClicked() {
-        //TODO
+        recheckSigners()
+    }
+
+    private fun recheckSigners() {
+        if (recheckSignersInProcess) {
+            return
+        }
+
+        unsubscribeOnDestroy(
+            interactor.getSignedAccounts()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnSubscribe {
+                    recheckSignersInProcess = true
+                    viewState.showProgressDialog()
+                }
+                .doOnEvent { _, _ ->
+                    viewState.dismissProgressDialog()
+                    recheckSignersInProcess = false
+                }
+                .subscribe({
+                    if (it.isEmpty()) {
+                        viewState.showMessage(R.string.text_tv_re_check_signer_description)
+                    } else {
+                        interactor.confirmAccountHasSigners()
+                        viewState.showHomeScreen()
+                    }
+                }, {
+                    when (it) {
+                        is NoInternetConnectionException -> {
+                            viewState.showMessage(it.details)
+                            handleNoInternetConnection()
+                        }
+                        is UserNotAuthorizedException -> {
+                            recheckSigners()
+                        }
+                        is DefaultException -> {
+                            viewState.showMessage(it.details)
+                        }
+                        else -> {
+                            viewState.showMessage(it.message ?: "")
+                        }
+                    }
+                })
+        )
+
     }
 }

@@ -43,7 +43,12 @@ class PinInteractorImpl(
         }
     }
 
-    override fun isUserSignerForLobstr(): Boolean {
-        return prefsUtil.isUserSignerForLobstr
+    override fun accountHasSigners(): Boolean {
+        return prefsUtil.accountHasSigners
+    }
+
+
+    override fun isTouchIdEnabled(): Boolean {
+        return prefsUtil.isTouchIdEnabled
     }
 }

@@ -43,14 +43,16 @@ class FcmInteractorImpl(private val fcmRepository: FcmRepository, private val pr
     }
 
     override fun confirmIsUserSignerForLobstr(jsonStr: String?): Account? {
-        prefsUtil.isUserSignerForLobstr = true
+        prefsUtil.accountHasSigners = true
 
         if (jsonStr.isNullOrEmpty()) {
             return null
         }
 
         val account = fcmRepository.transformApiAccountResponse(jsonStr)
-        prefsUtil.signedAccount = account.address
+
+        // increment signers count
+        prefsUtil.accountSignersCount = ++prefsUtil.accountSignersCount
 
         return account
     }

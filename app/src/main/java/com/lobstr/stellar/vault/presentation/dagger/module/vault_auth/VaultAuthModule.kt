@@ -1,5 +1,6 @@
 package com.lobstr.stellar.vault.presentation.dagger.module.vault_auth
 
+import com.lobstr.stellar.vault.domain.account.AccountRepository
 import com.lobstr.stellar.vault.domain.key_store.KeyStoreRepository
 import com.lobstr.stellar.vault.domain.stellar.StellarRepository
 import com.lobstr.stellar.vault.domain.vault_auth.VaultAuthRepository
@@ -18,8 +19,15 @@ class VaultAuthModule {
         prefsUtil: PrefsUtil,
         vaultAuthRepository: VaultAuthRepository,
         stellarRepository: StellarRepository,
-        keyStoreRepository: KeyStoreRepository
+        keyStoreRepository: KeyStoreRepository,
+        accountRepository: AccountRepository
     ): VaultAuthInteractor {
-        return VaultAuthInteractorImpl(vaultAuthRepository, stellarRepository, keyStoreRepository, prefsUtil)
+        return VaultAuthInteractorImpl(
+            vaultAuthRepository,
+            stellarRepository,
+            keyStoreRepository,
+            accountRepository,
+            prefsUtil
+        )
     }
 }

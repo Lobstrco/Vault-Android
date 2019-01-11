@@ -13,5 +13,7 @@ interface PinInteractor {
 
     fun getPhrases(): Single<String>
 
-    fun isUserSignerForLobstr(): Boolean
+    fun accountHasSigners(): Boolean
+
+    fun isTouchIdEnabled(): Boolean
 }

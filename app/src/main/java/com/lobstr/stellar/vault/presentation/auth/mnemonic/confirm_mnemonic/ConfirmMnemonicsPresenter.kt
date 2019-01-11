@@ -1,11 +1,13 @@
 package com.lobstr.stellar.vault.presentation.auth.mnemonic.confirm_mnemonic
 
 import com.arellomobile.mvp.InjectViewState
+import com.lobstr.stellar.vault.BuildConfig
 import com.lobstr.stellar.vault.R
 import com.lobstr.stellar.vault.domain.confirm_mnemonics.ConfirmMnemonicsInteractor
 import com.lobstr.stellar.vault.presentation.BasePresenter
 import com.lobstr.stellar.vault.presentation.application.LVApplication
 import com.lobstr.stellar.vault.presentation.dagger.module.confirm_mnemonics.ConfirmMnemonicsModule
+import com.lobstr.stellar.vault.presentation.util.Constant
 import com.soneso.stellarmnemonics.mnemonic.MnemonicException
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
@@ -47,16 +49,19 @@ class ConfirmMnemonicsPresenter(private val mnemonicsArray: CharArray) : BasePre
         mnemonicsToSelectList.shuffle()
     }
 
-    fun confirmClicked() {
-//        if (mnemonicsToConfirmList.size < mnemonicsToSelectInitialList.size) {
-//            viewState.showMessage(R.string.msg_not_all_words_entered)
-//            return
-//        }
-//
-//        if (mnemonicsToSelectInitialList.toString() != mnemonicsToConfirmList.toString()) {
-//            viewState.showMessage(R.string.msg_phrase_dont_fit)
-//            return
-//        }
+    fun nextClicked() {
+        // FIXME remove in future for debug
+        if (BuildConfig.BUILD_TYPE == Constant.BuildType.RELEASE) {
+            if (mnemonicsToConfirmList.size < mnemonicsToSelectInitialList.size) {
+                viewState.showMessage(R.string.msg_not_all_words_entered)
+                return
+            }
+
+            if (mnemonicsToSelectInitialList.toString() != mnemonicsToConfirmList.toString()) {
+                viewState.showMessage(R.string.msg_phrase_dont_fit)
+                return
+            }
+        }
 
         unsubscribeOnDestroy(
             interactor.createAndSaveSecretKey(mnemonicsArray)

@@ -32,12 +32,17 @@ open class BasePresenter<View : MvpView> : MvpPresenter<View>() {
      */
     protected fun handleNoInternetConnection() {
         // Prevent creation several NetworkWorkers.
-        if (needCheckConnectionState) {
+        if (networkWorkerId != null) {
             return
         }
 
         needCheckConnectionState = true
         networkWorkerId = WorkerManager.createNetworkStateWorker(NetworkWorker::class.java)
+    }
+
+    protected fun cancelNetworkWorker() {
+        WorkerManager.cancelWorkById(networkWorkerId)
+        networkWorkerId = null
     }
 
     /**
@@ -52,9 +57,9 @@ open class BasePresenter<View : MvpView> : MvpPresenter<View>() {
     /**
      * detach connection receiver
      */
-    override fun destroyView(view: View?) {
-        WorkerManager.cancelWorkById(networkWorkerId)
-        super.destroyView(view)
+    override fun detachView(view: View) {
+        cancelNetworkWorker()
+        super.detachView(view)
     }
 
     override fun onDestroy() {

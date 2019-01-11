@@ -10,12 +10,12 @@ import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.fusechain.digitalbits.util.manager.FragmentTransactionManager
 import com.lobstr.stellar.vault.R
-import com.lobstr.stellar.vault.presentation.BaseMvpAppCompatFragment
 import com.lobstr.stellar.vault.presentation.auth.backup.BackUpFragment
 import com.lobstr.stellar.vault.presentation.auth.restore_key.RecoveryKeyFragment
+import com.lobstr.stellar.vault.presentation.base.fragment.BaseFragment
 import kotlinx.android.synthetic.main.fragment_auth.*
 
-class AuthFragment : BaseMvpAppCompatFragment(), AuthFrView, View.OnClickListener {
+class AuthFragment : BaseFragment(), AuthFrView, View.OnClickListener {
 
     // ===========================================================
     // Constants

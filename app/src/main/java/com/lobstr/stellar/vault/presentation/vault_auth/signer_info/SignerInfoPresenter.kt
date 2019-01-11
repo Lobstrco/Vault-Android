@@ -2,16 +2,27 @@ package com.lobstr.stellar.vault.presentation.vault_auth.signer_info
 
 import com.arellomobile.mvp.InjectViewState
 import com.arellomobile.mvp.MvpPresenter
+import com.lobstr.stellar.vault.domain.signer_info.SignerInfoInteractor
+import com.lobstr.stellar.vault.presentation.application.LVApplication
+import com.lobstr.stellar.vault.presentation.dagger.module.signer_info.SignerInfoModule
+import javax.inject.Inject
 
 @InjectViewState
-class SignerInfoPresenter(private val userPublicKey: String) : MvpPresenter<SignerInfoView>() {
+class SignerInfoPresenter : MvpPresenter<SignerInfoView>() {
+
+    @Inject
+    lateinit var interactor: SignerInfoInteractor
+
+    init {
+        LVApplication.sAppComponent.plusSignerInfoComponent(SignerInfoModule()).inject(this)
+    }
 
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
-        viewState.setupUserPublicKey(userPublicKey)
+        viewState.setupUserPublicKey(interactor.getUserPublicKey())
     }
 
-    fun copyUserPiblicKey(userPublicKey: String?) {
+    fun copyUserPublicKey(userPublicKey: String?) {
         if (userPublicKey.isNullOrEmpty()) {
             return
         }
@@ -20,6 +31,6 @@ class SignerInfoPresenter(private val userPublicKey: String) : MvpPresenter<Sign
     }
 
     fun btnNextClicked() {
-        viewState.showRecheckSingerScreen(userPublicKey)
+        viewState.showRecheckSingerScreen()
     }
 }

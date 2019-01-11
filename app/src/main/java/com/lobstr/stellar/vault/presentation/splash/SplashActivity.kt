@@ -6,6 +6,7 @@ import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.lobstr.stellar.vault.presentation.BaseMvpAppCompatActivity
 import com.lobstr.stellar.vault.presentation.auth.AuthActivity
 import com.lobstr.stellar.vault.presentation.pin.PinActivity
+import com.lobstr.stellar.vault.presentation.util.Constant
 
 class SplashActivity : BaseMvpAppCompatActivity(), SplashView {
 
@@ -45,6 +46,7 @@ class SplashActivity : BaseMvpAppCompatActivity(), SplashView {
 
     override fun showAuthScreen() {
         val intent = Intent(this, AuthActivity::class.java)
+        intent.putExtra(Constant.Extra.EXTRA_NAVIGATION_FR, Constant.Navigation.AUTH)
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         startActivity(intent)
     }

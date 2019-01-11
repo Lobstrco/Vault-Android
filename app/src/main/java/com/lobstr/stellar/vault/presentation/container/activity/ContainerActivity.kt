@@ -52,8 +52,7 @@ class ContainerActivity : BaseActivity(), ContainerView {
     @ProvidePresenter
     fun provideContainerPresenter() = ContainerPresenter(
         intent?.getIntExtra(EXTRA_NAVIGATION_FR, DASHBOARD)!!,
-        intent?.getParcelableExtra(Constant.Bundle.BUNDLE_TRANSACTION_ITEM)
-
+        intent?.getParcelableExtra(Constant.Extra.EXTRA_TRANSACTION_ITEM)
     )
 
     // ===========================================================

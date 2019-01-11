@@ -1,5 +1,7 @@
 package com.lobstr.stellar.vault.presentation.home.transactions.details
 
+import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -21,6 +23,7 @@ import com.lobstr.stellar.vault.presentation.home.transactions.operation.Operati
 import com.lobstr.stellar.vault.presentation.util.AppUtil
 import com.lobstr.stellar.vault.presentation.util.Constant
 import com.lobstr.stellar.vault.presentation.util.Constant.Bundle.BUNDLE_TRANSACTION_ITEM
+import com.lobstr.stellar.vault.presentation.util.Constant.Extra.EXTRA_TRANSACTION_ITEM
 import com.lobstr.stellar.vault.presentation.util.manager.ProgressManager
 import kotlinx.android.synthetic.main.fragment_transaction_details.*
 
@@ -128,13 +131,24 @@ class TransactionDetailsFragment : BaseFragment(), TransactionDetailsView, View.
     }
 
     override fun successDenyTransaction(transactionItem: TransactionItem) {
-        //TODO
         showMessage("Transaction denied")
+
+        // notify target about changes
+        val intent = Intent()
+        intent.putExtra(EXTRA_TRANSACTION_ITEM, transactionItem)
+        activity?.setResult(Activity.RESULT_OK, intent)
+        targetFragment?.onActivityResult(targetRequestCode, Activity.RESULT_OK, intent)
+
     }
 
-    override fun successConfirmTransaction(xdr: String) {
-        //TODO
+    override fun successConfirmTransaction(xdr: String, transactionItem: TransactionItem) {
         showMessage("Transaction Confirmed")
+
+        // notify target about changes
+        val intent = Intent()
+        intent.putExtra(EXTRA_TRANSACTION_ITEM, transactionItem)
+        activity?.setResult(Activity.RESULT_OK, intent)
+        targetFragment?.onActivityResult(targetRequestCode, Activity.RESULT_OK, intent)
     }
 
     override fun notifyAboutNeedAdditionalSignatures(xdr: String) {

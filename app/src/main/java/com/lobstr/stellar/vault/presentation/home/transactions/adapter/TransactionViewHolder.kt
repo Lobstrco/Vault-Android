@@ -20,7 +20,7 @@ class TransactionViewHolder(itemView: View, private val listener: OnTransactionI
             DateTime(item.addedAt).toDate().time,
             "MMM dd, yyyy, hh:mm"
         )
-        itemView.tvTransactionItemOperation.text = context.getString(getOperationName(item.transaction))
+        itemView.tvTransactionItemOperation.text = getOperationName(item.transaction, context)
         itemView.setOnClickListener {
             val position = this@TransactionViewHolder.adapterPosition
             if (position == RecyclerView.NO_POSITION) {
@@ -31,15 +31,18 @@ class TransactionViewHolder(itemView: View, private val listener: OnTransactionI
         }
     }
 
-    private fun getOperationName(transaction: Transaction): Int {
-        if (transaction.operations.isNotEmpty()) {
+    private fun getOperationName(transaction: Transaction, context: Context): String {
+        return if (transaction.operations.isNotEmpty()) {
             if (transaction.operations.size == 1) {
-                return AppUtil.getTransactionOperationName(transaction.operations[0])
+                context.getString(AppUtil.getTransactionOperationName(transaction.operations[0]))
             } else {
-                return R.string.text_operation_name_several_operation
+                String.format(
+                    context.getString(R.string.text_operation_name_several_operation),
+                    transaction.operations.size
+                )
             }
         } else {
-            return R.string.text_operation_name_unknown
+            context.getString(R.string.text_operation_name_unknown)
         }
     }
 }

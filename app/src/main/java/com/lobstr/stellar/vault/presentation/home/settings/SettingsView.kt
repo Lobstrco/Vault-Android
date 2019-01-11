@@ -13,7 +13,16 @@ interface SettingsView : MvpView {
     fun setupToolbarTitle(@StringRes titleRes: Int)
 
     @StateStrategyType(AddToEndSingleStrategy::class)
-    fun setupSettingsData(userPublicKey: String?, signedAccount: String, buildVersion: String)
+    fun setupSettingsData(
+        userPublicKey: String?,
+        buildVersion: String,
+        isBiometricSupported: Boolean
+    )
+
+    @StateStrategyType(AddToEndSingleStrategy::class)
+    fun setupSignersCount(
+        signersCount: String
+    )
 
     @StateStrategyType(SkipStrategy::class)
     fun copyToClipBoard(text: String)
@@ -37,8 +46,11 @@ interface SettingsView : MvpView {
     fun showChangePinScreen()
 
     @StateStrategyType(SkipStrategy::class)
-    fun showTouchIdScreen()
+    fun showHelpScreen()
+
+    @StateStrategyType(AddToEndSingleStrategy::class)
+    fun setTouchIdChecked(checked: Boolean)
 
     @StateStrategyType(SkipStrategy::class)
-    fun showHelpScreen()
+    fun showFingerprintInfoDialog(@StringRes titleRes: Int, @StringRes messageRes: Int)
 }

@@ -1,7 +1,7 @@
 package com.lobstr.stellar.vault.presentation.vault_auth
 
 import com.arellomobile.mvp.InjectViewState
-import com.lobstr.stellar.vault.BuildConfig
+import com.lobstr.stellar.vault.R
 import com.lobstr.stellar.vault.data.error.exeption.DefaultException
 import com.lobstr.stellar.vault.data.error.exeption.NoInternetConnectionException
 import com.lobstr.stellar.vault.domain.util.EventProviderModule
@@ -11,13 +11,8 @@ import com.lobstr.stellar.vault.domain.vault_auth_screen.VaultAuthInteractor
 import com.lobstr.stellar.vault.presentation.BasePresenter
 import com.lobstr.stellar.vault.presentation.application.LVApplication
 import com.lobstr.stellar.vault.presentation.dagger.module.vault_auth.VaultAuthModule
-import com.lobstr.stellar.vault.presentation.entities.account.Account
-import com.lobstr.stellar.vault.presentation.util.Constant
-import com.lobstr.stellar.vault.presentation.util.manager.network.WorkerManager
-import io.reactivex.Completable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
-import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 @InjectViewState
@@ -37,6 +32,13 @@ class VaultAuthPresenter : BasePresenter<VaultAuthView>() {
 
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
+
+        viewState.setupToolbar(
+            android.R.color.white,
+            R.drawable.ic_arrow_back,
+            R.color.color_ff3a6c99
+        )
+
         registerEventProvider()
         checkAuthorization()
     }
@@ -44,9 +46,7 @@ class VaultAuthPresenter : BasePresenter<VaultAuthView>() {
     private fun checkAuthorization() {
         if (interactor.isUserAuthorized()) {
             interactor.registerFcm()
-            viewState.showSignerInfoFragment(interactor.getUserPublicKey()!!)
-            // FIXME remove in future for debug
-            if (BuildConfig.BUILD_TYPE == Constant.BuildType.DEBUG) emulateSignSuccess()
+            viewState.showSignerInfoFragment()
         } else {
             tryAuthorizeVault()
         }
@@ -59,8 +59,6 @@ class VaultAuthPresenter : BasePresenter<VaultAuthView>() {
                 .subscribe({
                     when (it.type) {
                         Notification.Type.SIGNED_NEW_ACCOUNT -> {
-                            //TODO use account data if needed
-                            val account = it.data as? Account
                             viewState.showHomeScreen()
                         }
                     }
@@ -78,7 +76,7 @@ class VaultAuthPresenter : BasePresenter<VaultAuthView>() {
                                 tryAuthorizeVault()
                             }
                             needCheckConnectionState = false
-                            WorkerManager.cancelWorkById(networkWorkerId)
+                            cancelNetworkWorker()
                         }
                     }
                 }, {
@@ -96,6 +94,7 @@ class VaultAuthPresenter : BasePresenter<VaultAuthView>() {
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe {
+                    authorizationInProcess = true
                     viewState.showProgressDialog()
                 }
                 .doOnEvent { _, _ ->
@@ -103,9 +102,12 @@ class VaultAuthPresenter : BasePresenter<VaultAuthView>() {
                     authorizationInProcess = false
                 }
                 .subscribe({
-                    viewState.showSignerInfoFragment(interactor.getUserPublicKey()!!)
-                    // FIXME remove in future for debug
-                    if (BuildConfig.BUILD_TYPE == Constant.BuildType.DEBUG) emulateSignSuccess()
+                    if (it.isEmpty()) {
+                        viewState.showSignerInfoFragment()
+                    } else {
+                        interactor.confirmAccountHasSigners()
+                        viewState.showHomeScreen()
+                    }
                 }, {
                     when (it) {
                         is NoInternetConnectionException -> {
@@ -120,19 +122,6 @@ class VaultAuthPresenter : BasePresenter<VaultAuthView>() {
                         }
                     }
                 })
-        )
-    }
-
-    // FIXME remove after notifications logic
-    private fun emulateSignSuccess() {
-        unsubscribeOnDestroy(
-            Completable.complete()
-                .delay(5000.toLong(), TimeUnit.MILLISECONDS)
-                .doOnComplete {
-                    interactor.confirmIsUserSignerForLobstr()
-                    viewState.showHomeScreen()
-                }
-                .subscribe()
         )
     }
 }

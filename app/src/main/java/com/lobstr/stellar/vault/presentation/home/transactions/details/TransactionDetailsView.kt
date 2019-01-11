@@ -35,7 +35,7 @@ interface TransactionDetailsView : MvpView {
     fun successDenyTransaction(transactionItem: TransactionItem)
 
     @StateStrategyType(AddToEndSingleStrategy::class)
-    fun successConfirmTransaction(xdr: String)
+    fun successConfirmTransaction(xdr: String, transactionItem: TransactionItem)
 
     @StateStrategyType(AddToEndSingleStrategy::class)
     fun notifyAboutNeedAdditionalSignatures(xdr: String)

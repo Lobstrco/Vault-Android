@@ -1,19 +1,24 @@
 package com.lobstr.stellar.vault.presentation.vault_auth.recheck_signer
 
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.lobstr.stellar.vault.R
-import com.lobstr.stellar.vault.presentation.BaseMvpAppCompatFragment
-import com.lobstr.stellar.vault.presentation.util.Constant
+import com.lobstr.stellar.vault.presentation.base.fragment.BaseFragment
+import com.lobstr.stellar.vault.presentation.dialog.alert.base.AlertDialogFragment
+import com.lobstr.stellar.vault.presentation.home.HomeActivity
+import com.lobstr.stellar.vault.presentation.util.manager.ProgressManager
 import kotlinx.android.synthetic.main.fragment_recheck_signer.*
 
 
-class RecheckSignerFragment : BaseMvpAppCompatFragment(),
+class RecheckSignerFragment : BaseFragment(),
     RecheckSignerView, View.OnClickListener {
 
     // ===========================================================
@@ -33,14 +38,14 @@ class RecheckSignerFragment : BaseMvpAppCompatFragment(),
 
     private var mView: View? = null
 
+    private var mProgressDialog: AlertDialogFragment? = null
+
     // ===========================================================
     // Constructors
     // ===========================================================
 
     @ProvidePresenter
-    fun provideRecheckSignerPresenter() = RecheckSignerPresenter(
-        arguments?.getString(Constant.Bundle.BUNDLE_PUBLIC_KEY)!!
-    )
+    fun provideRecheckSignerPresenter() = RecheckSignerPresenter()
 
     // ===========================================================
     // Getter & Setter
@@ -79,6 +84,29 @@ class RecheckSignerFragment : BaseMvpAppCompatFragment(),
 
     override fun setupUserPublicKey(userPublicKey: String?) {
         tvUserPublicKey.text = userPublicKey
+    }
+
+    override fun showProgressDialog() {
+        mProgressDialog = ProgressManager.show(activity as? AppCompatActivity, false)
+    }
+
+    override fun dismissProgressDialog() {
+        ProgressManager.dismiss(mProgressDialog)
+    }
+
+
+    override fun showMessage(message: String?) {
+        Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+    }
+
+    override fun showMessage(messageRes: Int) {
+        Toast.makeText(context, getString(messageRes), Toast.LENGTH_SHORT).show()
+    }
+
+    override fun showHomeScreen() {
+        val intent = Intent(context, HomeActivity::class.java)
+        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        startActivity(intent)
     }
 
     // ===========================================================
