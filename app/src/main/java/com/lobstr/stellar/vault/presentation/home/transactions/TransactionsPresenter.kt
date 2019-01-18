@@ -85,7 +85,7 @@ class TransactionsPresenter : BasePresenter<TransactionsView>() {
 
     private fun loadTransactions() {
         unsubscribeOnDestroy(
-            transactionInteractor.getTransactionList(nextPageUrl)
+            transactionInteractor.getPendingTransactionList(nextPageUrl)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe {
@@ -157,5 +157,9 @@ class TransactionsPresenter : BasePresenter<TransactionsView>() {
 
     fun transactionItemClicked(transactionItem: TransactionItem) {
         viewState.showTransactionDetails(transactionItem)
+    }
+
+    fun addTransactionClicked() {
+        viewState.showImportXdrScreen()
     }
 }

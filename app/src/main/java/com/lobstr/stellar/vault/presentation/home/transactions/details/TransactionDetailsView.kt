@@ -35,11 +35,11 @@ interface TransactionDetailsView : MvpView {
     fun successDenyTransaction(transactionItem: TransactionItem)
 
     @StateStrategyType(AddToEndSingleStrategy::class)
-    fun successConfirmTransaction(xdr: String, transactionItem: TransactionItem)
-
-    @StateStrategyType(AddToEndSingleStrategy::class)
-    fun notifyAboutNeedAdditionalSignatures(xdr: String)
+    fun successConfirmTransaction(envelopeXdr: String, needAdditionalSignatures: Boolean, transactionItem: TransactionItem)
 
     @StateStrategyType(SkipStrategy::class)
     fun showOperationDetailsScreen(transactionItem: TransactionItem, position: Int)
+
+    @StateStrategyType(SkipStrategy::class)
+    fun showDenyTransactionDialog()
 }

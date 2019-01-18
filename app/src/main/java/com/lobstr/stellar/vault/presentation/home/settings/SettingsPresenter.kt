@@ -6,15 +6,21 @@ import com.arellomobile.mvp.InjectViewState
 import com.lobstr.stellar.vault.BuildConfig
 import com.lobstr.stellar.vault.R
 import com.lobstr.stellar.vault.domain.settings.SettingsInteractor
+import com.lobstr.stellar.vault.domain.util.EventProviderModule
+import com.lobstr.stellar.vault.domain.util.event.Notification
 import com.lobstr.stellar.vault.presentation.BasePresenter
 import com.lobstr.stellar.vault.presentation.application.LVApplication
 import com.lobstr.stellar.vault.presentation.dagger.module.settings.SettingsModule
 import com.lobstr.stellar.vault.presentation.util.Constant
 import com.lobstr.stellar.vault.presentation.util.biometric.BiometricUtils
+import io.reactivex.android.schedulers.AndroidSchedulers
 import javax.inject.Inject
 
 @InjectViewState
 class SettingsPresenter : BasePresenter<SettingsView>() {
+
+    @Inject
+    lateinit var eventProviderModule: EventProviderModule
 
     @Inject
     lateinit var interactor: SettingsInteractor
@@ -26,6 +32,7 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
         viewState.setupToolbarTitle(R.string.settings)
+        registerEventProvider()
         viewState.setupSettingsData(
             interactor.getUserPublicKey(),
             BuildConfig.VERSION_NAME,
@@ -34,6 +41,22 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
         viewState.setTouchIdChecked(
             interactor.isTouchIdEnabled()
                     && BiometricUtils.isFingerprintAvailable(LVApplication.sAppComponent.context)
+        )
+    }
+
+    private fun registerEventProvider() {
+        unsubscribeOnDestroy(
+            eventProviderModule.notificationEventSubject
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({
+                    when (it.type) {
+                        Notification.Type.SIGNED_NEW_ACCOUNT -> {
+                            viewState.setupSignersCount(interactor.getSignersCount().toString())
+                        }
+                    }
+                }, {
+                    it.printStackTrace()
+                })
         )
     }
 
@@ -104,5 +127,9 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
                 interactor.setTouchIdEnabled(false)
             }
         }
+    }
+
+    fun publicKeyClicked() {
+        viewState.showPublicKeyDialog(interactor.getUserPublicKey()!!)
     }
 }

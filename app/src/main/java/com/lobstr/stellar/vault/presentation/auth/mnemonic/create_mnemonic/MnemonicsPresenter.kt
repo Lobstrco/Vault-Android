@@ -29,7 +29,7 @@ class MnemonicsPresenter(private val generate: Boolean) : BasePresenter<Mnemonic
             setupMnemonics(Wallet.generate12WordMnemonic())
         } else {
             viewState.setupToolbarTitle(R.string.mnemonics_title)
-            viewState.setActionBtnVisibility(false)
+            viewState.setActionLayerVisibility(false)
             getExistingMnemonics()
         }
     }
@@ -51,6 +51,10 @@ class MnemonicsPresenter(private val generate: Boolean) : BasePresenter<Mnemonic
         mnemonicsArray = mnemonics
         val mnemonicsStr = String(mnemonics)
         viewState.setupMnemonics(mnemonicsStr.split(" ".toRegex()).dropLastWhile { it.isEmpty() })
+    }
+
+    fun infoClicked() {
+        viewState.showHelpScreen()
     }
 
     fun nextClicked() {

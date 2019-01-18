@@ -17,6 +17,7 @@
     <string name="msg_not_all_words_entered">Not all words entered</string>
     <string name="msg_phrase_dont_fit">Your phrase doesn\'t fit</string>
     <string name="msg_success">Success</string>
+    <string name="msg_bad_xdr">Bad XDR</string>
 
     <!--Errors-->
     <string name="text_error_incorrect_mnemonic">Incorrect mnemonic phrases.</string>
@@ -29,8 +30,11 @@
     <string name="text_btn_edit">Edit</string>
     <string name="text_btn_add">Add</string>
     <string name="text_btn_retry">Retry</string>
+    <string name="text_btn_confirm">Confirm</string>
     <string name="title_finger_print_dialog">Fingerprint not set up</string>
     <string name="msg_finger_print_dialog">Please set up your fingerprint in the device settings first</string>
+    <string name="title_deny_transaction_dialog">Are you sure?</string>
+    <string name="msg_deny_transaction_dialog">Are you sure you want to deny operation?</string>
 
     <!-- bottom Navigation View items-->
     <string name="dashboard">Home</string>
@@ -38,7 +42,7 @@
     <string name="settings">Settings</string>
 
     <!-- toolbar titles-->
-    <string name="faq">FAQ</string>
+    <string name="faq">Help</string>
     <string name="signed_accounts">Signed Accounts</string>
 
     <string name="transaction_details">Transaction Details</string>
@@ -58,15 +62,20 @@
     <string name="text_tv_mnemonics_description">Write down each word in order and store it in a safe place</string>
 
     <!--Pin screen-->
+    <string name="text_title_enter_pin">Enter Passcode</string>
+    <string name="text_title_create_pin">Create Passcode</string>
+    <string name="text_title_change_pin">Change Passcode</string>
     <string name="text_enter_pin">Please enter your PIN code</string>
     <string name="text_reenter_pin">Please re-enter your PIN code</string>
-    <string name="text_create_pin">Please create a PIN code. Do not reuse your phone PIN</string>
+    <string name="text_create_pin">Please create a PIN code. Do not reuse your phone PIN. If you forget PIN, you won\'t
+        be able to acces your transactions
+    </string>
     <string name="text_enter_old_pin">Please enter old PIN code</string>
 
     <string name="text_action_info">info</string>
 
     <!--Settings-->
-    <string name="title_settings_wallet">Wallet</string>
+    <string name="title_settings_wallet">Account</string>
     <string name="title_settings_security">Security</string>
     <string name="title_settings_about">About</string>
     <string name="text_settings_public_key">Public Key</string>
@@ -103,14 +112,17 @@
 
     <string name="text_invalid_token">Invalid token.</string>
     <string name="text_empty_state_transactions_list">Transactions not found</string>
-    <string name="text_dashboard_transactions">Transactions\nTo\nSign</string>
+    <string name="text_dashboard_transactions">Transactions to Sign</string>
+    <string name="text_title_dashboard_public_key">Vault Public Key</string>
+    <string name="text_title_dashboard_signers">Signer For</string>
+    <string name="text_dashboard_show_list">View Transaction List</string>
     <string name="text_tv_backup_title">Back up account</string>
     <string name="text_tv_backup_description">In this step you will be shown a secret mnemonic codes. It will allow you
         to recover access to your wallet if your phone is lost or stolen
     </string>
     <string name="text_chb_backup_confirm">I understand</string>
     <string name="text_btn_next">Next</string>
-    <string name="text_btn_clip_to_board">Clip to clipboard</string>
+    <string name="text_btn_clip_to_board">Copy</string>
     <string name="mnemonics_title">Your Phrase</string>
     <string name="text_details_none">none</string>
     <string name="biometric_failed">Fingerprint not recognized</string>
@@ -126,7 +138,7 @@
     <string name="biometric_description">Place your finger on the device home button to verify your identity</string>
 
     <string name="text_btn_turn_on">Turn On</string>
-    <string name="text_btn_skip">Skip</string>
+    <string name="text_btn_skip">Skip for now</string>
     <string name="text_tv_fingerprint_set_up_title">Protect your wallet</string>
     <string name="text_tv_fingerprint_set_up_description">Add an extra layer of security to keep your Stellars save
     </string>
@@ -140,7 +152,46 @@
     <string name="text_btn_signer_info_next">Next</string>
     <string name="text_signed_account_empty_state">You have 0 signed accounts</string>
     <string name="text_tv_re_check_signer_title">Public Key</string>
-    <string name="text_tv_re_check_signer_description">You are not a signer for any Stellar Account</string>
+    <string name="text_tv_re_check_signer_description">You are not a signer for</string>
     <string name="text_btn_re_check_signer">Re-Check</string>
-
+    <string name="text_tv_terms_and_privacy">By registering you agree to our <a href="https://google.com">Terms of
+        Service
+    </a> and
+        <a href="https://google.com">Privacy Policy</a>
+    </string>
+    <string name="text_tv_btn_restore_account">Restore Account</string>
+    <string name="text_tv_btn_create_account">Create New Account</string>
+    <string name="text_tv_auth_title">Secure your Lumens</string>
+    <string name="text_tv_set_up_fingerprint_later">You can do it later in Settings Panel</string>
+    <string name="text_tv_mnemonics_confirmation">You will confirm phrase on the next screen</string>
+    <string name="text_tv_mnemonics_instruction">Write down this words or just copy them</string>
+    <string name="text_btn_back_up_understand">I understand</string>
+    <string name="text_button_copy_key">Copy Key</string>
+    <string name="expandable_card_view_image_content_description">Arrow to expand card</string>
+    <string name="expandable_card_view_icon_content_description">Card icon</string>
+    <string name="text_tv_help_mnemonic_code_description">A mnemonic phrase, mnemonic recovery phrase, mnemonic seed,
+        seed key, and seed words are all different names of the same thing. If you break \'mnemonic phrase\' you will
+        understand \'mnemonic\' stands for \'a system such as a pattern of letters, ideas, or associations which assists
+        in remembering something, while \' phrase\' stands for \'a small group of words\'.A mnemonic phrase, mnemonic
+        recovery phrase, mnemonic seed, seed key, and seed words are all different names of the same thing. If you break
+        \'mnemonic phrase\' you will understand \'mnemonic\' stands for \'a system such as a pattern of letters, ideas,
+        or associations which assists in remembering something, while \' phrase\' stands for \'a small group of words\'.
+    </string>
+    <string name="text_tv_help_mnemonic_code_subtitle">1. What is Mnemonics code?</string>
+    <string name="text_tv_help_public_key_description">Where I can find Public Key.</string>
+    <string name="text_tv_help_public_key_subtitle">2. Where I can find Public Key?</string>
+    <string name="text_tv_help_add_transaction_description">How to add a Transaction.</string>
+    <string name="text_tv_help_add_transaction_subtitle">3. How to add a Transaction?</string>
+    <string name="text_tv_help_change_passcode_description">How to add a Change Passcode.</string>
+    <string name="text_tv_help_change_passcode_subtitle">4. How to add a Change Passcode?</string>
+    <string name="text_tv_help_how_to_title">How To</string>
+    <string name="text_tv_help_get_started_title">Get Started</string>
+    <string name="text_all_rights_reserved">©2019. All rights reserved</string>
+    <string name="text_deny">Deny</string>
+    <string name="text_confirm">Confirm</string>
+    <string name="text_accounts">accounts</string>
+    <string name="text_btn_copy_xdr">Copy XDR</string>
+    <string name="text_tv_need_additional_signatures">Transaction need additional signatures. Copy your XDR and continue
+        confirmation.
+    </string>
 </resources>

@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             xmlns:tools="http://schemas.android.com/tools"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent"
+             android:layout_margin="16dp"
+             tools:context=".presentation.home.transactions.submit_success.SuccessFragment">
+
+    <LinearLayout android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:orientation="vertical"
+                  android:layout_gravity="center">
+
+        <ImageView android:layout_width="120dp"
+                   android:layout_height="120dp"
+                   android:layout_gravity="center"
+                   android:src="@drawable/ic_check_purple"/>
+
+        <TextView android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:textColor="@android:color/black"
+                  android:textStyle="bold"
+                  android:text="Success"
+                  android:layout_gravity="center"
+                  android:textAppearance="?android:textAppearanceLarge"/>
+
+        <TextView
+                android:id="@+id/tvAdditionalSignaturesDescription"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:visibility="gone"
+                android:textAppearance="?android:textAppearanceMedium"
+                android:layout_gravity="center"
+                android:textColor="@color/color_d9534f"
+                android:text="@string/text_tv_need_additional_signatures"/>
+
+        <Button
+                android:text="@string/text_btn_copy_xdr"
+                android:layout_height="wrap_content"
+                android:id="@+id/btnCopyXdr"
+                android:layout_width="wrap_content"
+                android:visibility="gone"
+                android:textColor="@android:color/black"
+                android:layout_gravity="center"
+                android:drawableLeft="@drawable/ic_content_copy_black"
+                style="@style/Base.Widget.AppCompat.Button.Borderless.Colored"
+                android:textAppearance="?android:textAppearanceSmall"
+                android:textAllCaps="false"/>
+    </LinearLayout>
+
+
+    <Button android:id="@+id/btnBack"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="@style/Base.Widget.AppCompat.Button.Borderless.Colored"
+            android:background="@drawable/selector_default_button_with_round"
+            android:textColor="@android:color/white"
+            android:textAppearance="?android:textAppearanceMedium"
+            android:textAllCaps="false"
+            android:layout_gravity="bottom"
+            android:text="Back"/>
+</FrameLayout>

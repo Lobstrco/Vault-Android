@@ -40,6 +40,7 @@
                 android:name=".presentation.home.HomeActivity"
                 android:launchMode="singleTop"
                 android:screenOrientation="portrait"
+                android:theme="@style/HomeTheme"
                 android:windowSoftInputMode="adjustPan|stateAlwaysHidden"/>
         <activity
                 android:name=".presentation.auth.AuthActivity"

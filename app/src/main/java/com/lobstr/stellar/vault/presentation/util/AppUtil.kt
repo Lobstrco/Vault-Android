@@ -6,8 +6,12 @@ import android.content.ClipboardManager
 import android.content.Context
 import android.content.pm.PackageManager
 import android.net.Uri
+import android.util.DisplayMetrics
 import android.util.Log
+import android.view.View
+import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
+import android.widget.TextView
 import android.widget.Toast
 import androidx.browser.customtabs.CustomTabsIntent
 import androidx.core.content.ContextCompat
@@ -21,6 +25,8 @@ import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.*
 
+
+
 object AppUtil {
 
     fun launchGoogleCustomTabs(context: Context?, url: String) {
@@ -30,7 +36,7 @@ object AppUtil {
 
         val builder = CustomTabsIntent.Builder()
         val customTabsIntent = builder.build()
-        builder.setToolbarColor(ContextCompat.getColor(context!!, R.color.color_ff3a6c99))
+        builder.setToolbarColor(ContextCompat.getColor(context!!, R.color.color_primary))
         customTabsIntent.launchUrl(context, Uri.parse(url))
     }
 
@@ -50,7 +56,9 @@ object AppUtil {
         calendar.timeInMillis = date
         try {
             val format = SimpleDateFormat(datePattern, Locale.ENGLISH)
-            return format.format(date)
+            var formattedString = format.format(date)
+            formattedString = formattedString.replace("am", "AM").replace("pm", "PM")
+            return formattedString
         } catch (e: Exception) {
             e.printStackTrace()
         }
@@ -148,5 +156,28 @@ object AppUtil {
             is BumpSequenceOperation -> R.string.text_operation_name_bump_sequence
             else -> -1
         }
+    }
+
+    fun convertPixelsToDp(px: Float, context: Context): Float {
+        val resources = context.resources
+        val metrics = resources.displayMetrics
+        return px / (metrics.densityDpi.toFloat() / DisplayMetrics.DENSITY_DEFAULT)
+    }
+
+    fun convertDpToPixels(context: Context, dp: Float): Float {
+        return dp * context.resources.displayMetrics.density
+    }
+
+    fun getTextHeight(t: TextView): Int {
+        val widthMeasureSpec = View.MeasureSpec.makeMeasureSpec(screenWidth(t.context), View.MeasureSpec.AT_MOST)
+        val heightMeasureSpec = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED)
+        t.measure(widthMeasureSpec, heightMeasureSpec)
+        return t.measuredHeight
+    }
+
+    fun screenWidth(context: Context): Int {
+        val wm = context.getSystemService(Context.WINDOW_SERVICE) as WindowManager
+        val display = wm.defaultDisplay
+        return display.width
     }
 }

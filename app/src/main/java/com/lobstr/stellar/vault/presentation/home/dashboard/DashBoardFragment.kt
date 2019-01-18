@@ -10,10 +10,13 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.lobstr.stellar.vault.R
+import com.lobstr.stellar.vault.R.id.*
 import com.lobstr.stellar.vault.presentation.base.fragment.BaseFragment
+import com.lobstr.stellar.vault.presentation.home.HomeActivity
+import com.lobstr.stellar.vault.presentation.util.AppUtil
 import kotlinx.android.synthetic.main.fragment_dash_board.*
 
-class DashboardFragment : BaseFragment(), DashboardView, SwipeRefreshLayout.OnRefreshListener {
+class DashboardFragment : BaseFragment(), DashboardView, View.OnClickListener {
 
     // ===========================================================
     // Constants
@@ -63,31 +66,45 @@ class DashboardFragment : BaseFragment(), DashboardView, SwipeRefreshLayout.OnRe
     }
 
     private fun setListeners() {
-        srlDashboardUpdate.setOnRefreshListener(this)
+        tvDashboardShowList.setOnClickListener(this)
+        tvDashboardCopy.setOnClickListener(this)
     }
 
     // ===========================================================
     // Listeners, methods for/from Interfaces
     // ===========================================================
 
-    override fun onRefresh() {
-        mPresenter.refreshCalled()
+    override fun onClick(v: View?) {
+        when (v?.id) {
+            tvDashboardShowList.id -> mPresenter.showTransactionListClicked()
+            tvDashboardCopy.id -> mPresenter.copyKeyClicked()
+        }
     }
 
-    override fun setupToolbarTitle(titleRes: Int) {
-        saveActionBarTitle(titleRes)
+    override fun setupToolbarTitle() {
+        saveActionBarTitle(0)
+    }
+
+    override fun showPublicKey(publicKey: String) {
+        tvDashboardPublicKey.text = publicKey
+    }
+
+    override fun showSignersPublickKey(info: String) {
+        tvDashboardSigners.text = info
+        tvDashboardSigners.visibility = View.VISIBLE
+        tvDashboardSignersCount.visibility = View.GONE
+        tvDashboardSignerDescription.visibility = View.GONE
+    }
+
+    override fun showSignersCount(count: Int) {
+        tvDashboardSignersCount.text = count.toString()
+        tvDashboardSigners.visibility = View.GONE
+        tvDashboardSignersCount.visibility = View.VISIBLE
+        tvDashboardSignerDescription.visibility = View.VISIBLE
     }
 
     override fun showDashboardInfo(count: Int) {
         tvDashboardTransactionCount.text = count.toString()
-    }
-
-    override fun showProgress() {
-        srlDashboardUpdate.isRefreshing = true
-    }
-
-    override fun hideProgress() {
-        srlDashboardUpdate.isRefreshing = false
     }
 
     override fun showErrorMessage(message: String) {
@@ -96,6 +113,14 @@ class DashboardFragment : BaseFragment(), DashboardView, SwipeRefreshLayout.OnRe
         }
 
         Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+    }
+
+    override fun navigateToTransactionList() {
+        (activity as? HomeActivity)?.setSelectedBottomNavigationItem(R.id.action_transactions)
+    }
+
+    override fun copyKey(publicKey: String) {
+        AppUtil.copyToClipboard(context, publicKey)
     }
 
     // ===========================================================

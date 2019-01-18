@@ -1,6 +1,5 @@
 package com.lobstr.stellar.vault.presentation.auth.restore_key
 
-
 import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
@@ -8,19 +7,20 @@ import android.text.Spannable
 import android.text.SpannableString
 import android.text.TextWatcher
 import android.text.style.ForegroundColorSpan
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.Toast
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.Fragment
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
+import com.fusechain.digitalbits.util.manager.FragmentTransactionManager
 import com.lobstr.stellar.vault.R
 import com.lobstr.stellar.vault.presentation.auth.restore_key.entities.PhraseErrorInfo
 import com.lobstr.stellar.vault.presentation.base.fragment.BaseFragment
 import com.lobstr.stellar.vault.presentation.dialog.alert.base.AlertDialogFragment
+import com.lobstr.stellar.vault.presentation.faq.FaqFragment
 import com.lobstr.stellar.vault.presentation.pin.PinActivity
 import com.lobstr.stellar.vault.presentation.util.Constant
 import com.lobstr.stellar.vault.presentation.util.manager.ProgressManager
@@ -81,6 +81,19 @@ class RecoveryKeyFragment : BaseFragment(), RecoveryKeyFrView, View.OnClickListe
         btnRecoveryKey.setOnClickListener(this)
     }
 
+    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
+        inflater?.inflate(R.menu.recovery_key, menu)
+        super.onCreateOptionsMenu(menu, inflater)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        when (item?.itemId) {
+            R.id.action_info -> mPresenter.infoClicked()
+        }
+
+        return super.onOptionsItemSelected(item)
+    }
+
     private var mTextWatcher: TextWatcher = object : TextWatcher {
 
         override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
@@ -93,9 +106,15 @@ class RecoveryKeyFragment : BaseFragment(), RecoveryKeyFrView, View.OnClickListe
 
         override fun afterTextChanged(s: Editable) {
             etRecoveryPhrase.post {
-                mPresenter.phrasesChanged(etRecoveryPhrase.text.toString())
+                mPresenter.phrasesChanged(etRecoveryPhrase?.text.toString())
             }
         }
+    }
+
+    override fun onStop() {
+        super.onStop()
+
+        etRecoveryPhrase.removeTextChangedListener(mTextWatcher)
     }
 
     // ===========================================================
@@ -132,9 +151,9 @@ class RecoveryKeyFragment : BaseFragment(), RecoveryKeyFrView, View.OnClickListe
 
     override fun changeTextBackground(isError: Boolean) {
         if (isError) {
-            etRecoveryPhrase.setBackgroundResource(R.drawable.shape_recovery_key_error_edit_text)
+            etRecoveryPhrase.setBackgroundResource(R.drawable.bg_mnemonics_error)
         } else {
-            etRecoveryPhrase.setBackgroundResource(R.drawable.shape_recovery_key_edit_text)
+            etRecoveryPhrase.setBackgroundResource(R.drawable.bg_mnemonics)
         }
     }
 
@@ -159,6 +178,15 @@ class RecoveryKeyFragment : BaseFragment(), RecoveryKeyFrView, View.OnClickListe
 
     override fun dismissProgressDialog() {
         ProgressManager.dismiss(mProgressDialog)
+    }
+
+    override fun showHelpScreen() {
+        FragmentTransactionManager.displayFragment(
+            parentFragment!!.childFragmentManager,
+            Fragment.instantiate(context, FaqFragment::class.java.name),
+            R.id.fl_container,
+            true
+        )
     }
 
     // ===========================================================

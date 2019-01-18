@@ -2,5 +2,5 @@
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:drawable="@color/color_default_button_pressed" android:state_pressed="true"/>
     <item android:drawable="@color/color_default_button_disabled" android:state_enabled="false"/>
-    <item android:drawable="@color/color_ff3a6c99"/>
+    <item android:drawable="@color/color_primary"/>
 </selector>

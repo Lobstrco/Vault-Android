@@ -1,45 +1,79 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                                                   xmlns:app="http://schemas.android.com/apk/res-auto"
-                                                   xmlns:tools="http://schemas.android.com/tools"
-                                                   android:layout_width="match_parent"
-                                                   android:layout_height="match_parent"
-                                                   android:splitMotionEvents="false"
-                                                   tools:context=".presentation.auth.enter_screen.AuthFragment">
+<LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_margin="16dp">
 
-    <Button
-            android:text="New"
-            android:layout_height="wrap_content"
-            android:id="@+id/btnAuthNew"
-            android:layout_width="0dp"
-            style="@style/Base.Widget.AppCompat.Button.Borderless.Colored"
-            android:background="@drawable/selector_default_button"
-            android:textColor="@android:color/white"
-            android:textAppearance="?android:textAppearanceMedium"
-            android:textAllCaps="true"
-            app:layout_constraintBottom_toTopOf="@+id/guideline" android:layout_marginTop="8dp"
-            app:layout_constraintTop_toTopOf="parent" app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginEnd="32dp" app:layout_constraintStart_toStartOf="parent"
-            android:layout_marginStart="32dp" app:layout_constraintVertical_bias="1.0"
-            android:layout_marginBottom="32dp"/>
-    <Button
-            android:text="Restore"
-            android:layout_height="wrap_content"
-            android:id="@+id/btnAuthRestore"
-            android:layout_width="0dp"
-            android:layout_marginTop="32dp"
-            android:textAppearance="?android:textAppearanceMedium"
-            android:textAllCaps="true"
-            android:textColor="@android:color/white"
-            android:background="@drawable/selector_default_button"
-            style="@style/Base.Widget.AppCompat.Button.Borderless.Colored"
-            app:layout_constraintTop_toTopOf="@+id/guideline" app:layout_constraintStart_toStartOf="parent"
-            android:layout_marginStart="32dp" app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="32dp"
-            android:layout_marginBottom="8dp" app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintVertical_bias="0.0"/>
+    <!-- logo stub -->
+    <LinearLayout android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:orientation="horizontal"
+                  android:gravity="center">
+        <ImageView android:layout_width="wrap_content"
+                   android:layout_height="wrap_content"
+                   android:src="@drawable/ic_gray_logo"
+                   android:layout_gravity="center"/>
 
-    <androidx.constraintlayout.widget.Guideline android:layout_width="wrap_content" android:layout_height="wrap_content"
-                                                android:id="@+id/guideline"
-                                                android:orientation="horizontal"
-                                                app:layout_constraintGuide_percent="0.5"/>
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <ImageView android:layout_width="1dp" android:layout_height="match_parent"
+                   android:background="@color/color_757575"
+                   android:layout_marginLeft="8dp"
+                   android:layout_marginRight="8dp"/>
+
+        <TextView android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:textColor="@android:color/black"
+                  android:textSize="20dp"
+                  android:textAllCaps="true"
+                  android:text="Vault"/>
+
+    </LinearLayout>
+
+    <TextView android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:textColor="@color/color_757575"
+              android:textAppearance="?android:textAppearanceMedium"
+              android:textSize="17sp"
+              android:text="@string/text_tv_auth_title"
+              android:padding="8dp"
+              android:layout_gravity="center"/>
+
+    <LinearLayout android:layout_width="match_parent"
+                  android:layout_height="0dp"
+                  android:layout_weight="1"
+                  android:orientation="vertical"
+                  android:gravity="center">
+        <Button
+                android:text="@string/text_tv_btn_create_account"
+                android:layout_height="wrap_content"
+                android:id="@+id/btnAuthNew"
+                android:layout_width="match_parent"
+                style="@style/Base.Widget.AppCompat.Button.Borderless.Colored"
+                android:background="@drawable/selector_default_button_with_round"
+                android:textColor="@android:color/white"
+                android:textAppearance="?android:textAppearanceMedium"
+                android:textAllCaps="false"/>
+        <Button
+                android:text="@string/text_tv_btn_restore_account"
+                android:layout_height="wrap_content"
+                android:id="@+id/btnAuthRestore"
+                android:layout_width="match_parent"
+                android:layout_marginTop="8dp"
+                android:textAppearance="?android:textAppearanceMedium"
+                android:textAllCaps="false"
+                android:textColor="@color/color_primary"
+                android:background="@drawable/selector_default_button_with_round_stroked"
+                style="@style/Base.Widget.AppCompat.Button.Borderless.Colored"/>
+
+    </LinearLayout>
+
+    <TextView
+            android:id="@+id/tvTermsAndPrivacyPolicy"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@android:color/black"
+            android:gravity="center"
+            android:textColorLink="@color/color_primary"
+            android:text="@string/text_tv_terms_and_privacy"/>
+</LinearLayout>

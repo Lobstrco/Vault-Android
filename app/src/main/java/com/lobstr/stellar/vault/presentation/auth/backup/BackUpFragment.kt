@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.CompoundButton
 import androidx.fragment.app.Fragment
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
@@ -17,7 +16,7 @@ import com.lobstr.stellar.vault.presentation.faq.FaqFragment
 import com.lobstr.stellar.vault.presentation.util.Constant
 import kotlinx.android.synthetic.main.fragment_back_up.*
 
-class BackUpFragment : BaseFragment(), BackUpView, View.OnClickListener, CompoundButton.OnCheckedChangeListener {
+class BackUpFragment : BaseFragment(), BackUpView, View.OnClickListener {
 
     // ===========================================================
     // Constants
@@ -65,9 +64,7 @@ class BackUpFragment : BaseFragment(), BackUpView, View.OnClickListener, Compoun
     }
 
     private fun setListeners() {
-        ivHelp.setOnClickListener(this)
         btnNext.setOnClickListener(this)
-        chbConfirm.setOnCheckedChangeListener(this)
     }
 
     // ===========================================================
@@ -76,14 +73,7 @@ class BackUpFragment : BaseFragment(), BackUpView, View.OnClickListener, Compoun
 
     override fun onClick(v: View?) {
         when (v!!.id) {
-            R.id.ivHelp -> mPresenter.helpClicked()
             R.id.btnNext -> mPresenter.nextClicked()
-        }
-    }
-
-    override fun onCheckedChanged(buttonView: CompoundButton?, isChecked: Boolean) {
-        when (buttonView!!.id) {
-            R.id.chbConfirm -> mPresenter.confirmClicked(isChecked)
         }
     }
 
@@ -106,10 +96,6 @@ class BackUpFragment : BaseFragment(), BackUpView, View.OnClickListener, Compoun
             R.id.fl_container,
             true
         )
-    }
-
-    override fun setNextBtnEnabled(isEnabled: Boolean) {
-        btnNext.isEnabled = isEnabled
     }
 
     // ===========================================================

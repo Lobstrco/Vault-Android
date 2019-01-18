@@ -14,6 +14,8 @@ object Constant {
         const val EXTRA_CHANGE_PIN = "EXTRA_CHANGE_PIN"
         const val EXTRA_NAVIGATION_FR = "EXTRA_NAVIGATION_FR"
         const val EXTRA_TRANSACTION_ITEM = "EXTRA_TRANSACTION_ITEM"
+        const val EXTRA_ENVELOPE_XDR = "EXTRA_ENVELOPE_XDR"
+        const val EXTRA_NEED_ADDITIONAL_SIGNATURES = "EXTRA_NEED_ADDITIONAL_SIGNATURES"
     }
 
     object Bundle {
@@ -26,6 +28,8 @@ object Constant {
         const val BUNDLE_NAVIGATION_FR = "BUNDLE_NAVIGATION_FR"
         const val BUNDLE_TRANSACTION_ITEM = "BUNDLE_TRANSACTION_ITEM"
         const val BUNDLE_OPERATION_POSITION = "BUNDLE_OPERATION_POSITION"
+        const val BUNDLE_ENVELOPE_XDR = "BUNDLE_ENVELOPE_XDR"
+        const val BUNDLE_NEED_ADDITIONAL_SIGNATURES = "BUNDLE_NEED_ADDITIONAL_SIGNATURES"
     }
 
     object Navigation {
@@ -38,6 +42,7 @@ object Constant {
         const val OPERATION_DETAILS = 6
         const val FINGERPRINT_SET_UP = 7
         const val SIGNER_INFO = 8
+        const val SUCCESS = 9
     }
 
     object Transaction {

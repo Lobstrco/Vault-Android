@@ -6,6 +6,11 @@ import com.arellomobile.mvp.MvpPresenter
 @InjectViewState
 class AuthFrPresenter : MvpPresenter<AuthFrView>() {
 
+    override fun onFirstViewAttach() {
+        super.onFirstViewAttach()
+        viewState.setMovementMethods()
+    }
+
     fun newClicked() {
         viewState.showBackUpScreen()
     }

@@ -9,13 +9,16 @@ import com.lobstr.stellar.vault.presentation.util.Constant.Navigation.FINGERPRIN
 import com.lobstr.stellar.vault.presentation.util.Constant.Navigation.MNEMONICS
 import com.lobstr.stellar.vault.presentation.util.Constant.Navigation.SETTINGS
 import com.lobstr.stellar.vault.presentation.util.Constant.Navigation.SIGNER_INFO
+import com.lobstr.stellar.vault.presentation.util.Constant.Navigation.SUCCESS
 import com.lobstr.stellar.vault.presentation.util.Constant.Navigation.TRANSACTIONS
 import com.lobstr.stellar.vault.presentation.util.Constant.Navigation.TRANSACTION_DETAILS
 
 @InjectViewState
 class ContainerPresenter(
     private val targetFr: Int,
-    private val transactionItem: TransactionItem?
+    private val transactionItem: TransactionItem?,
+    private val envelopeXdr: String?,
+    private val needAdditionalSignatures: Boolean?
 ) : MvpPresenter<ContainerView>() {
 
     override fun onFirstViewAttach() {
@@ -37,12 +40,11 @@ class ContainerPresenter(
 
             SETTINGS -> viewState.showSettingsFr()
 
-            TRANSACTION_DETAILS -> {
-                if (transactionItem != null)
-                    viewState.showTransactionDetails(null, transactionItem)
-            }
+            TRANSACTION_DETAILS -> viewState.showTransactionDetails(null, transactionItem!!)
 
             MNEMONICS -> viewState.showMnemonicsFr()
+
+            SUCCESS -> viewState.showSuccessFr(envelopeXdr!!, needAdditionalSignatures!!)
         }
     }
 }

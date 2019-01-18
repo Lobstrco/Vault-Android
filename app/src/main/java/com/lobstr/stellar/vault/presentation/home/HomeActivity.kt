@@ -3,6 +3,7 @@ package com.lobstr.stellar.vault.presentation.home
 import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
+import androidx.annotation.IdRes
 import androidx.fragment.app.FragmentManager.POP_BACK_STACK_INCLUSIVE
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
@@ -100,6 +101,10 @@ class HomeActivity : BaseActivity(), HomeActivityView,
         intent.putExtra(Constant.Extra.EXTRA_NAVIGATION_FR, Constant.Navigation.AUTH)
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         startActivity(intent)
+    }
+
+    override fun setSelectedBottomNavigationItem(@IdRes itemId: Int) {
+        bnvHomeTabs.selectedItemId = itemId
     }
 
     override fun onBackPressed() {

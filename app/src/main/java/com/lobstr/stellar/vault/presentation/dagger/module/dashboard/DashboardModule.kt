@@ -1,5 +1,6 @@
 package com.lobstr.stellar.vault.presentation.dagger.module.dashboard
 
+import com.lobstr.stellar.vault.domain.account.AccountRepository
 import com.lobstr.stellar.vault.domain.dashboard.DashboardInteractor
 import com.lobstr.stellar.vault.domain.dashboard.DashboardInteractorImpl
 import com.lobstr.stellar.vault.domain.transaction.TransactionRepository
@@ -15,8 +16,9 @@ class DashboardModule {
     @HomeScope
     internal fun provideDashboardInteractor(
         transactionRepository: TransactionRepository,
+        accountRepository: AccountRepository,
         prefsUtil: PrefsUtil
     ): DashboardInteractor {
-        return DashboardInteractorImpl(transactionRepository, prefsUtil)
+        return DashboardInteractorImpl(transactionRepository, accountRepository, prefsUtil)
     }
 }

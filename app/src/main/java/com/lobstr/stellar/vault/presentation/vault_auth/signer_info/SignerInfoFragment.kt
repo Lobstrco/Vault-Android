@@ -64,7 +64,7 @@ class SignerInfoFragment : BaseFragment(),
     }
 
     private fun setListeners() {
-        ivCopyUserPk.setOnClickListener(this)
+        btnCopyUserPk.setOnClickListener(this)
         btnNext.setOnClickListener(this)
     }
 
@@ -75,7 +75,7 @@ class SignerInfoFragment : BaseFragment(),
     override fun onClick(v: View?) {
         when (v!!.id) {
 
-            R.id.ivCopyUserPk -> mPresenter.copyUserPublicKey(tvUserPublicKey.text.toString())
+            R.id.btnCopyUserPk -> mPresenter.copyUserPublicKey(tvUserPublicKey.text.toString())
 
             R.id.btnNext -> mPresenter.btnNextClicked()
         }

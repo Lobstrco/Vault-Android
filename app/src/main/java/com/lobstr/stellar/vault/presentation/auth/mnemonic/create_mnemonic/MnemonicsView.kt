@@ -13,7 +13,7 @@ interface MnemonicsView : MvpView {
     fun setupToolbarTitle(@StringRes titleRes: Int)
 
     @StateStrategyType(AddToEndSingleStrategy::class)
-    fun setActionBtnVisibility(isVisible: Boolean)
+    fun setActionLayerVisibility(isVisible: Boolean)
 
     @StateStrategyType(AddToEndSingleStrategy::class)
     fun setupMnemonics(mnemonics: List<String>)
@@ -23,4 +23,7 @@ interface MnemonicsView : MvpView {
 
     @StateStrategyType(SkipStrategy::class)
     fun copyToClipBoard(text: String)
+
+    @StateStrategyType(SkipStrategy::class)
+    fun showHelpScreen()
 }

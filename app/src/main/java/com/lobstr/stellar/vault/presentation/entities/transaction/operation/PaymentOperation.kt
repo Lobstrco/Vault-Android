@@ -13,7 +13,6 @@ data class PaymentOperation(
 
     fun getFieldsMap(): Map<String, String?> {
         val map: MutableMap<String, String?> = mutableMapOf()
-        map["sourceAccount"] = sourceAccount
         map["destination"] = destination
         map["asset"] = asset.assetCode
         map["amount"] = amount

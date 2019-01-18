@@ -1,14 +1,91 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             xmlns:tools="http://schemas.android.com/tools"
-             android:layout_width="match_parent"
-             android:layout_height="match_parent"
-             tools:context=".presentation.faq.FaqFragment">
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+                                       xmlns:tools="http://schemas.android.com/tools"
+                                       xmlns:app="http://schemas.android.com/apk/res-auto"
+                                       android:layout_width="match_parent"
+                                       android:layout_height="match_parent"
+                                       tools:context=".presentation.faq.FaqFragment"
+                                       android:fillViewport="true">
 
-    <TextView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:text="FAQ data"/>
+    <LinearLayout android:layout_width="match_parent" android:layout_height="match_parent"
+                  android:orientation="vertical"
+                  android:background="@color/color_f9f9ff">
 
-</FrameLayout>
+        <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/text_tv_help_get_started_title"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:paddingBottom="5dp"
+                android:paddingTop="20dp"
+                android:textAllCaps="true"
+                android:textColor="@color/color_757575"
+                android:textAppearance="?android:textAppearanceSmall"/>
+
+        <View android:layout_width="match_parent" android:layout_height="1dp"
+              android:background="@android:color/darker_gray"/>
+
+        <com.lobstr.stellar.vault.presentation.util.expandable_card_view.ExpandableCardView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:title="@string/text_tv_help_mnemonic_code_subtitle"
+                app:inner_view="@layout/layout_expandable_content"
+                app:contentText="@string/text_tv_help_mnemonic_code_description"
+                app:expandOnClick="true"
+        />
+        <View android:layout_width="match_parent" android:layout_height="1dp"
+              android:background="@android:color/darker_gray"
+              android:layout_marginLeft="10dp"/>
+        <com.lobstr.stellar.vault.presentation.util.expandable_card_view.ExpandableCardView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:title="@string/text_tv_help_public_key_subtitle"
+                app:inner_view="@layout/layout_expandable_content"
+                app:contentText="@string/text_tv_help_public_key_description"
+                app:expandOnClick="true"
+        />
+
+        <View android:layout_width="match_parent" android:layout_height="1dp"
+              android:background="@android:color/darker_gray"/>
+
+        <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/text_tv_help_how_to_title"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:paddingBottom="5dp"
+                android:paddingTop="20dp"
+                android:textAllCaps="true"
+                android:textColor="@color/color_757575"
+                android:textAppearance="?android:textAppearanceSmall"/>
+
+        <View android:layout_width="match_parent" android:layout_height="1dp"
+              android:background="@android:color/darker_gray"/>
+
+        <com.lobstr.stellar.vault.presentation.util.expandable_card_view.ExpandableCardView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:title="@string/text_tv_help_add_transaction_subtitle"
+                app:inner_view="@layout/layout_expandable_content"
+                app:contentText="@string/text_tv_help_add_transaction_description"
+                app:expandOnClick="true"
+        />
+
+        <View android:layout_width="match_parent" android:layout_height="1dp"
+              android:background="@android:color/darker_gray"
+              android:layout_marginLeft="10dp"/>
+
+        <com.lobstr.stellar.vault.presentation.util.expandable_card_view.ExpandableCardView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:title="@string/text_tv_help_change_passcode_subtitle"
+                app:inner_view="@layout/layout_expandable_content"
+                app:contentText="@string/text_tv_help_change_passcode_description"
+                app:expandOnClick="true"
+        />
+        <View android:layout_width="match_parent" android:layout_height="1dp"
+              android:background="@android:color/darker_gray"/>
+    </LinearLayout>
+</androidx.core.widget.NestedScrollView>

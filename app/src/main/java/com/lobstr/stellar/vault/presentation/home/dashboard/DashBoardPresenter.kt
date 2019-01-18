@@ -1,7 +1,6 @@
 package com.lobstr.stellar.vault.presentation.home.dashboard
 
 import com.arellomobile.mvp.InjectViewState
-import com.lobstr.stellar.vault.R
 import com.lobstr.stellar.vault.data.error.exeption.DefaultException
 import com.lobstr.stellar.vault.data.error.exeption.NoInternetConnectionException
 import com.lobstr.stellar.vault.data.error.exeption.UserNotAuthorizedException
@@ -23,7 +22,7 @@ class DashboardPresenter : BasePresenter<DashboardView>() {
     lateinit var eventProviderModule: EventProviderModule
 
     @Inject
-    lateinit var dashboardInteractor: DashboardInteractor
+    lateinit var mInteractor: DashboardInteractor
 
     init {
         LVApplication.sAppComponent.plusDashboardComponent(DashboardModule()).inject(this)
@@ -32,9 +31,11 @@ class DashboardPresenter : BasePresenter<DashboardView>() {
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
 
-        viewState.setupToolbarTitle(R.string.dashboard)
+        viewState.setupToolbarTitle()
+        viewState.showPublicKey(mInteractor.getUserPublicKey())
         registerEventProvider()
         loadPendingTransactions()
+        loadSignedAccountsList()
     }
 
     private fun registerEventProvider() {
@@ -46,6 +47,7 @@ class DashboardPresenter : BasePresenter<DashboardView>() {
                         Network.Type.CONNECTED -> {
                             if (needCheckConnectionState) {
                                 loadPendingTransactions()
+                                loadSignedAccountsList()
                             }
                             needCheckConnectionState = false
                             cancelNetworkWorker()
@@ -62,6 +64,7 @@ class DashboardPresenter : BasePresenter<DashboardView>() {
                     when (it.type) {
                         Notification.Type.TRANSACTION_COUNT_CHANGED -> loadPendingTransactions()
                         Notification.Type.ADDED_NEW_TRANSACTION -> loadPendingTransactions()
+                        Notification.Type.SIGNED_NEW_ACCOUNT -> loadSignedAccountsList()
                     }
                 }, {
                     it.printStackTrace()
@@ -71,11 +74,9 @@ class DashboardPresenter : BasePresenter<DashboardView>() {
 
     private fun loadPendingTransactions() {
         unsubscribeOnDestroy(
-            dashboardInteractor.getPendingTransactionList(null)
+            mInteractor.getPendingTransactionList(null)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .doOnSubscribe { viewState.showProgress() }
-                .doOnEvent { _, _ -> viewState.hideProgress() }
                 .subscribe({
                     viewState.showDashboardInfo(it.count)
                 }, {
@@ -99,7 +100,44 @@ class DashboardPresenter : BasePresenter<DashboardView>() {
         )
     }
 
-    fun refreshCalled() {
-        loadPendingTransactions()
+    private fun loadSignedAccountsList() {
+        unsubscribeOnDestroy(
+            mInteractor.getSignedAccounts()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({
+                    if (it.size == 1) {
+                        viewState.showSignersPublickKey(it[0].address)
+                    } else {
+                        viewState.showSignersCount(mInteractor.getSignersCount())
+                    }
+                }, {
+                    viewState.showSignersCount(mInteractor.getSignersCount())
+
+                    when (it) {
+                        is NoInternetConnectionException -> {
+                            viewState.showErrorMessage(it.details)
+                            handleNoInternetConnection()
+                        }
+                        is UserNotAuthorizedException -> {
+                            loadSignedAccountsList()
+                        }
+                        is DefaultException -> {
+                            viewState.showErrorMessage(it.details)
+                        }
+                        else -> {
+                            viewState.showErrorMessage(it.message ?: "")
+                        }
+                    }
+                })
+        )
+    }
+
+    fun showTransactionListClicked() {
+        viewState.navigateToTransactionList()
+    }
+
+    fun copyKeyClicked() {
+        viewState.copyKey(mInteractor.getUserPublicKey())
     }
 }

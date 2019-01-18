@@ -52,7 +52,9 @@ class ContainerActivity : BaseActivity(), ContainerView {
     @ProvidePresenter
     fun provideContainerPresenter() = ContainerPresenter(
         intent?.getIntExtra(EXTRA_NAVIGATION_FR, DASHBOARD)!!,
-        intent?.getParcelableExtra(Constant.Extra.EXTRA_TRANSACTION_ITEM)
+        intent?.getParcelableExtra(Constant.Extra.EXTRA_TRANSACTION_ITEM),
+        intent?.getStringExtra(Constant.Extra.EXTRA_ENVELOPE_XDR),
+        intent?.getBooleanExtra(Constant.Extra.EXTRA_NEED_ADDITIONAL_SIGNATURES, false)
     )
 
     // ===========================================================
@@ -121,6 +123,20 @@ class ContainerActivity : BaseActivity(), ContainerView {
     override fun showMnemonicsFr() {
         val bundle = Bundle()
         bundle.putInt(Constant.Bundle.BUNDLE_NAVIGATION_FR, Constant.Navigation.MNEMONICS)
+
+        FragmentTransactionManager.displayFragment(
+            supportFragmentManager,
+            Fragment.instantiate(this, ContainerFragment::class.java.name, bundle),
+            R.id.fl_container,
+            true
+        )
+    }
+
+    override fun showSuccessFr(envelopeXdr: String, needAdditionalSignatures: Boolean) {
+        val bundle = Bundle()
+        bundle.putInt(Constant.Bundle.BUNDLE_NAVIGATION_FR, Constant.Navigation.SUCCESS)
+        bundle.putString(Constant.Bundle.BUNDLE_ENVELOPE_XDR, envelopeXdr)
+        bundle.putBoolean(Constant.Bundle.BUNDLE_NEED_ADDITIONAL_SIGNATURES, needAdditionalSignatures)
 
         FragmentTransactionManager.displayFragment(
             supportFragmentManager,

@@ -36,9 +36,18 @@ class PinPresenter(private var needCreatePin: Boolean?, private var needChangePi
 
         viewState.attachIndicatorDots()
         when {
-            needCreatePin!! -> viewState.showDescriptionMessage(R.string.text_create_pin)
-            needChangePin!! -> viewState.showDescriptionMessage(R.string.text_enter_old_pin)
-            else -> viewState.showDescriptionMessage(R.string.text_enter_pin)
+            needCreatePin!! -> {
+                viewState.showDescriptionMessage(R.string.text_create_pin)
+                viewState.showTitle(R.string.text_title_create_pin)
+            }
+            needChangePin!! -> {
+                viewState.showDescriptionMessage(R.string.text_enter_old_pin)
+                viewState.showTitle(R.string.text_title_change_pin)
+            }
+            else -> {
+                viewState.showDescriptionMessage(R.string.text_enter_pin)
+                viewState.showTitle(R.string.text_title_enter_pin)
+            }
         }
     }
 

@@ -3,7 +3,6 @@
         android:id="@+id/itemMnemonicContainer"
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:padding="8dp"
-        android:background="@drawable/bg_mnemonic_item"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
@@ -21,7 +20,6 @@
             android:id="@+id/tvMnemonicWord"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="16sp"
-            android:textColor="@color/color_ff3a6c99"/>
+            android:textSize="16sp"/>
 
 </LinearLayout>

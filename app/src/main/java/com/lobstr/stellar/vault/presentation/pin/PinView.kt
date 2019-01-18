@@ -12,6 +12,9 @@ interface PinView : MvpView {
     @StateStrategyType(AddToEndSingleStrategy::class)
     fun attachIndicatorDots()
 
+    @StateStrategyType(AddToEndSingleStrategy::class)
+    fun showTitle(@StringRes title: Int)
+
     @StateStrategyType(SkipStrategy::class)
     fun resetPin()
 

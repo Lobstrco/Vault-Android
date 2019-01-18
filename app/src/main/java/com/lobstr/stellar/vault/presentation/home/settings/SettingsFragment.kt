@@ -2,10 +2,14 @@ package com.lobstr.stellar.vault.presentation.home.settings
 
 import android.content.Intent
 import android.os.Bundle
+import android.text.SpannableString
+import android.text.Spanned
+import android.text.style.ForegroundColorSpan
 import android.view.*
 import android.widget.CompoundButton
 import android.widget.Toast
 import androidx.annotation.StringRes
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
@@ -16,7 +20,9 @@ import com.lobstr.stellar.vault.presentation.base.fragment.BaseFragment
 import com.lobstr.stellar.vault.presentation.container.activity.ContainerActivity
 import com.lobstr.stellar.vault.presentation.dialog.alert.base.AlertDialogFragment
 import com.lobstr.stellar.vault.presentation.dialog.alert.base.AlertDialogFragment.DialogFragmentIdentifier.FINGERPRINT_INFO_DIALOG
+import com.lobstr.stellar.vault.presentation.dialog.alert.base.AlertDialogFragment.DialogFragmentIdentifier.PUBLIC_KEY
 import com.lobstr.stellar.vault.presentation.faq.FaqFragment
+import com.lobstr.stellar.vault.presentation.home.settings.show_public_key.ShowPublicKeyDialogFragment
 import com.lobstr.stellar.vault.presentation.pin.PinActivity
 import com.lobstr.stellar.vault.presentation.signed_accounts.SignedAccountsFragment
 import com.lobstr.stellar.vault.presentation.util.AppUtil
@@ -73,6 +79,7 @@ class SettingsFragment : BaseFragment(), SettingsView, View.OnClickListener, Com
     private fun setListeners() {
         tvLogOut.setOnClickListener(this)
         ivCopyUserPk.setOnClickListener(this)
+        llPublicKey.setOnClickListener(this)
         llSettingsSigners.setOnClickListener(this)
         llSettingsMnemonics.setOnClickListener(this)
         llSettingsChangePin.setOnClickListener(this)
@@ -105,6 +112,7 @@ class SettingsFragment : BaseFragment(), SettingsView, View.OnClickListener, Com
     override fun onClick(v: View?) {
         when (v!!.id) {
             R.id.tvLogOut -> mPresenter.logOutClicked()
+            R.id.llPublicKey -> mPresenter.publicKeyClicked()
             R.id.ivCopyUserPk -> mPresenter.copyUserPublicKey(tvUserPublicKey.text.toString())
             R.id.llSettingsSigners -> mPresenter.signersClicked()
             R.id.llSettingsMnemonics -> mPresenter.mnemonicsClicked()
@@ -134,7 +142,18 @@ class SettingsFragment : BaseFragment(), SettingsView, View.OnClickListener, Com
     }
 
     override fun setupSignersCount(signersCount: String) {
-        tvSettingsSigners.text = String.format(getString(R.string.text_settings_signers), signersCount)
+        val message = String.format(getString(R.string.text_settings_signers), signersCount)
+        val spannedText = SpannableString(message)
+        val startPosition = 12
+        val endPosition = message.lastIndexOf(" ")
+
+        spannedText.setSpan(
+            ForegroundColorSpan(ContextCompat.getColor(this.context!!, R.color.color_primary)),
+            startPosition,
+            endPosition,
+            Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+        )
+        tvSettingsSigners.text = spannedText
     }
 
     override fun copyToClipBoard(text: String) {
@@ -205,6 +224,15 @@ class SettingsFragment : BaseFragment(), SettingsView, View.OnClickListener, Com
             .setPositiveBtnText(getString(R.string.text_btn_ok))
             .create()
             .show(childFragmentManager, FINGERPRINT_INFO_DIALOG)
+    }
+
+    override fun showPublicKeyDialog(publicKey: String) {
+        val bundle = Bundle()
+        bundle.putString(Constant.Bundle.BUNDLE_PUBLIC_KEY, publicKey)
+
+        val dialog = ShowPublicKeyDialogFragment()
+        dialog.arguments = bundle
+        dialog.show(childFragmentManager, PUBLIC_KEY)
     }
 
     // ===========================================================

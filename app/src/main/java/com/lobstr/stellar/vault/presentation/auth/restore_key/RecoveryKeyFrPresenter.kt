@@ -34,6 +34,10 @@ class RecoveryKeyFrPresenter : BasePresenter<RecoveryKeyFrView>() {
         viewState.enableNextButton(false)
     }
 
+    fun infoClicked() {
+        viewState.showHelpScreen()
+    }
+
     fun phrasesChanged(phrases: String) {
         this.phrases = phrases
         val phraseArray = phrases.split(" ")

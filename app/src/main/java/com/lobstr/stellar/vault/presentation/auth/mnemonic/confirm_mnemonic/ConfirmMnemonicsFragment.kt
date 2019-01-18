@@ -3,18 +3,19 @@ package com.lobstr.stellar.vault.presentation.auth.mnemonic.confirm_mnemonic
 
 import android.content.Intent
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.Toast
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
+import com.fusechain.digitalbits.util.manager.FragmentTransactionManager
 import com.lobstr.stellar.vault.R
 import com.lobstr.stellar.vault.presentation.auth.mnemonic.MnemonicsContainerView
 import com.lobstr.stellar.vault.presentation.base.fragment.BaseFragment
 import com.lobstr.stellar.vault.presentation.dialog.alert.base.AlertDialogFragment
+import com.lobstr.stellar.vault.presentation.faq.FaqFragment
 import com.lobstr.stellar.vault.presentation.pin.PinActivity
 import com.lobstr.stellar.vault.presentation.util.Constant
 import com.lobstr.stellar.vault.presentation.util.manager.ProgressManager
@@ -78,6 +79,23 @@ class ConfirmMnemonicsFragment : BaseFragment(), ConfirmMnemonicsView, View.OnCl
         mnemonicContainerToConfirmView.setMnemonicItemActionListener(this)
     }
 
+    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
+        inflater?.inflate(R.menu.confirm_mnemonics, menu)
+        super.onCreateOptionsMenu(menu, inflater)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        when (item?.itemId) {
+            R.id.action_info -> mPresenter.infoClicked()
+        }
+
+        return super.onOptionsItemSelected(item)
+    }
+
+    // ===========================================================
+    // Listeners, methods for/from Interfaces
+    // ===========================================================
+
     override fun onMnemonicItemClick(v: View, position: Int, value: String) {
         when (v.id) {
             R.id.mnemonicContainerToConfirmView -> mPresenter.mnemonicItemToConfirmClicked(position, value)
@@ -91,10 +109,6 @@ class ConfirmMnemonicsFragment : BaseFragment(), ConfirmMnemonicsView, View.OnCl
             R.id.mnemonicContainerToSelectView -> mPresenter.mnemonicItemToSelectClicked(position, value)
         }
     }
-
-    // ===========================================================
-    // Listeners, methods for/from Interfaces
-    // ===========================================================
 
     override fun onClick(v: View?) {
         when (v!!.id) {
@@ -134,6 +148,15 @@ class ConfirmMnemonicsFragment : BaseFragment(), ConfirmMnemonicsView, View.OnCl
 
     override fun dismissProgressDialog() {
         ProgressManager.dismiss(mProgressDialog)
+    }
+
+    override fun showHelpScreen() {
+        FragmentTransactionManager.displayFragment(
+            parentFragment!!.childFragmentManager,
+            Fragment.instantiate(context, FaqFragment::class.java.name),
+            R.id.fl_container,
+            true
+        )
     }
 
     // ===========================================================

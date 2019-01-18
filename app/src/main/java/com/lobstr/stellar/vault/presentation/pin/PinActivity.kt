@@ -79,6 +79,10 @@ class PinActivity : BaseMvpAppCompatActivity(), PinView, PinLockListener, Biomet
         pinLockView.attachIndicatorDots(indicatorDots)
     }
 
+    override fun showTitle(@StringRes title: Int) {
+        pinTitle.text = getString(title)
+    }
+
     override fun resetPin() {
         pinLockView.resetPinLockView()
     }

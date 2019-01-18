@@ -1,6 +1,7 @@
 package com.lobstr.stellar.vault.presentation.home.transactions.details
 
 import android.app.Activity
+import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -16,18 +17,21 @@ import com.fusechain.digitalbits.util.manager.FragmentTransactionManager
 import com.lobstr.stellar.vault.R
 import com.lobstr.stellar.vault.presentation.base.fragment.BaseFragment
 import com.lobstr.stellar.vault.presentation.dialog.alert.base.AlertDialogFragment
+import com.lobstr.stellar.vault.presentation.dialog.alert.base.AlertDialogFragment.DialogFragmentIdentifier.DENY_TRANSACTION
 import com.lobstr.stellar.vault.presentation.entities.transaction.TransactionItem
 import com.lobstr.stellar.vault.presentation.home.transactions.details.adapter.OnOperationClicked
 import com.lobstr.stellar.vault.presentation.home.transactions.details.adapter.TransactionOperationAdapter
 import com.lobstr.stellar.vault.presentation.home.transactions.operation.OperationDetailsFragment
-import com.lobstr.stellar.vault.presentation.util.AppUtil
+import com.lobstr.stellar.vault.presentation.home.transactions.submit_success.SuccessFragment
 import com.lobstr.stellar.vault.presentation.util.Constant
 import com.lobstr.stellar.vault.presentation.util.Constant.Bundle.BUNDLE_TRANSACTION_ITEM
 import com.lobstr.stellar.vault.presentation.util.Constant.Extra.EXTRA_TRANSACTION_ITEM
 import com.lobstr.stellar.vault.presentation.util.manager.ProgressManager
 import kotlinx.android.synthetic.main.fragment_transaction_details.*
 
-class TransactionDetailsFragment : BaseFragment(), TransactionDetailsView, View.OnClickListener, OnOperationClicked {
+
+class TransactionDetailsFragment : BaseFragment(), TransactionDetailsView, View.OnClickListener,
+    OnOperationClicked, AlertDialogFragment.OnDefaultAlertDialogListener {
 
     // ===========================================================
     // Constants
@@ -141,7 +145,11 @@ class TransactionDetailsFragment : BaseFragment(), TransactionDetailsView, View.
 
     }
 
-    override fun successConfirmTransaction(xdr: String, transactionItem: TransactionItem) {
+    override fun successConfirmTransaction(
+        envelopeXdr: String,
+        needAdditionalSignatures: Boolean,
+        transactionItem: TransactionItem
+    ) {
         showMessage("Transaction Confirmed")
 
         // notify target about changes
@@ -149,12 +157,19 @@ class TransactionDetailsFragment : BaseFragment(), TransactionDetailsView, View.
         intent.putExtra(EXTRA_TRANSACTION_ITEM, transactionItem)
         activity?.setResult(Activity.RESULT_OK, intent)
         targetFragment?.onActivityResult(targetRequestCode, Activity.RESULT_OK, intent)
-    }
 
-    override fun notifyAboutNeedAdditionalSignatures(xdr: String) {
-        // TODO
-        AppUtil.copyToClipboard(context, xdr)
-        showMessage("Transaction need additional signature")
+        parentFragment?.childFragmentManager?.popBackStack()
+
+        val bundle = Bundle()
+        bundle.putString(Constant.Bundle.BUNDLE_ENVELOPE_XDR, envelopeXdr)
+        bundle.putBoolean(Constant.Bundle.BUNDLE_NEED_ADDITIONAL_SIGNATURES, needAdditionalSignatures)
+
+        FragmentTransactionManager.displayFragment(
+            parentFragment!!.childFragmentManager,
+            Fragment.instantiate(context, SuccessFragment::class.java.name, bundle),
+            R.id.fl_container,
+            true
+        )
     }
 
     override fun showOperationDetailsScreen(transactionItem: TransactionItem, position: Int) {
@@ -171,6 +186,29 @@ class TransactionDetailsFragment : BaseFragment(), TransactionDetailsView, View.
             R.id.fl_container,
             true
         )
+    }
+
+    override fun showDenyTransactionDialog() {
+        AlertDialogFragment.Builder(true)
+            .setCancelable(true)
+            .setTitle(getString(R.string.title_deny_transaction_dialog))
+            .setMessage(getString(R.string.msg_deny_transaction_dialog))
+            .setNegativeBtnText(getString(R.string.text_btn_cancel))
+            .setPositiveBtnText(getString(R.string.text_btn_confirm))
+            .create()
+            .show(childFragmentManager, DENY_TRANSACTION)
+    }
+
+    override fun onPositiveBtnClick(tag: String?, dialogInterface: DialogInterface) {
+        mPresenter.onAlertDialogPositiveButtonClick(tag)
+    }
+
+    override fun onNegativeBtnClick(tag: String?, dialogInterface: DialogInterface) {
+        // add logic if needed
+    }
+
+    override fun onCancel(tag: String?, dialogInterface: DialogInterface) {
+        // add logic if needed
     }
 
     // ===========================================================

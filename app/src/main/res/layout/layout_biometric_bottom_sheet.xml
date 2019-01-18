@@ -58,7 +58,7 @@
             android:layout_marginTop="@dimen/margin_large"
             android:background="@drawable/bg_fingerprint"
             android:padding="14dp"
-            android:src="@drawable/ic_fingerprint"/>
+            android:src="@drawable/ic_fingerprint_white"/>
 
 
     <TextView

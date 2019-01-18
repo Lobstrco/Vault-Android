@@ -18,7 +18,7 @@ class TransactionViewHolder(itemView: View, private val listener: OnTransactionI
 
         itemView.tvTransactionItemDate.text = AppUtil.formatDate(
             DateTime(item.addedAt).toDate().time,
-            "MMM dd, yyyy, hh:mm"
+            "MMM dd yyyy hh:mm a"
         )
         itemView.tvTransactionItemOperation.text = getOperationName(item.transaction, context)
         itemView.setOnClickListener {

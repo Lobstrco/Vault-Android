@@ -53,4 +53,7 @@ interface SettingsView : MvpView {
 
     @StateStrategyType(SkipStrategy::class)
     fun showFingerprintInfoDialog(@StringRes titleRes: Int, @StringRes messageRes: Int)
+
+    @StateStrategyType(SkipStrategy::class)
+    fun showPublicKeyDialog(publicKey: String)
 }

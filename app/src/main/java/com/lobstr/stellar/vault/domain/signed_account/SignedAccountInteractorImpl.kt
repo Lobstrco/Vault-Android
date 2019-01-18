@@ -8,11 +8,11 @@ import io.reactivex.Single
 
 class SignedAccountInteractorImpl(
     private val accountRepository: AccountRepository,
-    private val presfUtil: PrefsUtil
+    private val prefUtil: PrefsUtil
 ) : SignedAccountInteractor {
 
     override fun getSignedAccounts(): Single<List<Account>> {
-        return accountRepository.getSignedAccounts(AppUtil.getJwtToken(presfUtil.authToken))
-            .doOnSuccess { presfUtil.accountSignersCount = it.size }
+        return accountRepository.getSignedAccounts(AppUtil.getJwtToken(prefUtil.authToken))
+            .doOnSuccess { prefUtil.accountSignersCount = it.size }
     }
 }

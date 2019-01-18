@@ -14,7 +14,7 @@ class AuthPresenter(private val targetFr: Int) : MvpPresenter<AuthView>() {
         viewState.setupToolbar(
             android.R.color.white,
             R.drawable.ic_arrow_back,
-            R.color.color_ff3a6c99
+            R.color.color_primary
         )
 
         navigateTo()

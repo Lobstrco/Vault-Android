@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.ClipData
 import android.content.Context
 import android.content.Intent
+import android.graphics.drawable.Drawable
 import android.util.AttributeSet
 import android.view.DragEvent
 import android.view.MotionEvent
@@ -13,6 +14,7 @@ import android.widget.LinearLayout
 import android.widget.ScrollView
 import android.widget.TextView
 import androidx.annotation.IdRes
+import androidx.core.content.ContextCompat
 import com.lobstr.stellar.vault.R
 import com.lobstr.stellar.vault.presentation.auth.mnemonic.MnemonicsContainerView.Extra.EXTRA_ITEM_POSITION
 import com.lobstr.stellar.vault.presentation.auth.mnemonic.MnemonicsContainerView.Extra.EXTRA_ITEM_VALUE
@@ -38,6 +40,10 @@ class MnemonicsContainerView(context: Context?, attrs: AttributeSet?) : ScrollVi
 
     private var isDraggable: Boolean = false
 
+    private var itemBackground: Drawable? = null
+
+    private var itemTextColor: Int = 0
+
     var mMnemonicList: List<String>? = null
 
     private var mMnemonicItemActionListener: WeakReference<MnemonicItemActionListener>? = null
@@ -48,6 +54,11 @@ class MnemonicsContainerView(context: Context?, attrs: AttributeSet?) : ScrollVi
         if (typedArray.hasValue(R.styleable.MnemonicsContainerView_isCounterEnabled)) {
             isCounterEnabled = typedArray.getBoolean(R.styleable.MnemonicsContainerView_isCounterEnabled, true)
             isDraggable = typedArray.getBoolean(R.styleable.MnemonicsContainerView_isDraggable, false)
+            itemBackground = typedArray.getDrawable(R.styleable.MnemonicsContainerView_itemBackground)
+            itemTextColor = typedArray.getColor(
+                R.styleable.MnemonicsContainerView_itemTextColor,
+                ContextCompat.getColor(context, R.color.color_primary)
+            )
         }
 
         typedArray.recycle()
@@ -62,8 +73,10 @@ class MnemonicsContainerView(context: Context?, attrs: AttributeSet?) : ScrollVi
             fblMnemonicItemContainer.removeAllViews()
             for (i in mMnemonicList!!.indices) {
                 val itemMnemonic = (context as Activity).layoutInflater.inflate(R.layout.item_mnemonic, null)
+                itemMnemonic.background = itemBackground
                 val number = itemMnemonic!!.findViewById<TextView>(R.id.tvMnemonicNumber)
                 val word = itemMnemonic.findViewById<TextView>(R.id.tvMnemonicWord)
+                word.setTextColor(itemTextColor)
                 val mnemonicStr = mMnemonicList!![i]
                 number.visibility = if (isCounterEnabled) View.VISIBLE else View.GONE
                 number.text = (i + 1).toString()

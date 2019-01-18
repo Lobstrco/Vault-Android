@@ -2,16 +2,16 @@ package com.lobstr.stellar.vault.presentation.auth.mnemonic.create_mnemonic
 
 
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import androidx.fragment.app.Fragment
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.fusechain.digitalbits.util.manager.FragmentTransactionManager
 import com.lobstr.stellar.vault.R
+import com.lobstr.stellar.vault.presentation.auth.AuthActivity
 import com.lobstr.stellar.vault.presentation.auth.mnemonic.confirm_mnemonic.ConfirmMnemonicsFragment
 import com.lobstr.stellar.vault.presentation.base.fragment.BaseFragment
+import com.lobstr.stellar.vault.presentation.faq.FaqFragment
 import com.lobstr.stellar.vault.presentation.util.AppUtil
 import com.lobstr.stellar.vault.presentation.util.Constant
 import kotlinx.android.synthetic.main.fragment_mnemonics.*
@@ -75,6 +75,21 @@ class MnemonicsFragment : BaseFragment(),
         btnClipToBoard.setOnClickListener(this)
     }
 
+    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
+        if (activity is AuthActivity) {
+            inflater?.inflate(R.menu.mnemonics, menu)
+        }
+        super.onCreateOptionsMenu(menu, inflater)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        when (item?.itemId) {
+            R.id.action_info -> mPresenter.infoClicked()
+        }
+
+        return super.onOptionsItemSelected(item)
+    }
+
     // ===========================================================
     // Listeners, methods for/from Interfaces
     // ===========================================================
@@ -90,7 +105,8 @@ class MnemonicsFragment : BaseFragment(),
         saveActionBarTitle(titleRes)
     }
 
-    override fun setActionBtnVisibility(isVisible: Boolean) {
+    override fun setActionLayerVisibility(isVisible: Boolean) {
+        tvNextScreenInfo.visibility = if (isVisible) View.VISIBLE else View.GONE
         btnNext.visibility = if (isVisible) View.VISIBLE else View.GONE
     }
 
@@ -114,6 +130,15 @@ class MnemonicsFragment : BaseFragment(),
 
     override fun copyToClipBoard(text: String) {
         AppUtil.copyToClipboard(context, text)
+    }
+
+    override fun showHelpScreen() {
+        FragmentTransactionManager.displayFragment(
+            parentFragment!!.childFragmentManager,
+            Fragment.instantiate(context, FaqFragment::class.java.name),
+            R.id.fl_container,
+            true
+        )
     }
 
     // ===========================================================

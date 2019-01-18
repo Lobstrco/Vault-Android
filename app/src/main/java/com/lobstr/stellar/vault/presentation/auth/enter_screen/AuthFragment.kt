@@ -2,6 +2,7 @@ package com.lobstr.stellar.vault.presentation.auth.enter_screen
 
 
 import android.os.Bundle
+import android.text.method.LinkMovementMethod
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -76,6 +77,10 @@ class AuthFragment : BaseFragment(), AuthFrView, View.OnClickListener {
             R.id.btnAuthNew -> mPresenter.newClicked()
             R.id.btnAuthRestore -> mPresenter.restoreClicked()
         }
+    }
+
+    override fun setMovementMethods() {
+        tvTermsAndPrivacyPolicy.movementMethod = LinkMovementMethod.getInstance()
     }
 
     override fun showBackUpScreen() {

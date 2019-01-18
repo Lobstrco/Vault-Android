@@ -18,6 +18,7 @@ import com.lobstr.stellar.vault.presentation.home.dashboard.DashboardFragment
 import com.lobstr.stellar.vault.presentation.home.settings.SettingsFragment
 import com.lobstr.stellar.vault.presentation.home.transactions.TransactionsFragment
 import com.lobstr.stellar.vault.presentation.home.transactions.details.TransactionDetailsFragment
+import com.lobstr.stellar.vault.presentation.home.transactions.submit_success.SuccessFragment
 import com.lobstr.stellar.vault.presentation.util.Constant
 import com.lobstr.stellar.vault.presentation.util.Constant.Bundle.BUNDLE_NAVIGATION_FR
 import com.lobstr.stellar.vault.presentation.vault_auth.signer_info.SignerInfoFragment
@@ -56,7 +57,9 @@ class ContainerFragment : BaseContainerFragment(),
     fun provideContainerPresenter() =
         ContainerPresenter(
             arguments?.getInt(BUNDLE_NAVIGATION_FR)!!,
-            arguments?.getParcelable(Constant.Bundle.BUNDLE_TRANSACTION_ITEM)
+            arguments?.getParcelable(Constant.Bundle.BUNDLE_TRANSACTION_ITEM),
+            arguments?.getString(Constant.Bundle.BUNDLE_ENVELOPE_XDR),
+            arguments?.getBoolean(Constant.Bundle.BUNDLE_NEED_ADDITIONAL_SIGNATURES, false)
         )
 
     // ===========================================================
@@ -154,6 +157,19 @@ class ContainerFragment : BaseContainerFragment(),
         FragmentTransactionManager.displayFragment(
             childFragmentManager,
             Fragment.instantiate(context, MnemonicsFragment::class.java.name),
+            R.id.fl_container,
+            true
+        )
+    }
+
+    override fun showSuccessFr(envelopeXdr: String, needAdditionalSignatures: Boolean) {
+        val bundle = Bundle()
+        bundle.putString(Constant.Bundle.BUNDLE_ENVELOPE_XDR, envelopeXdr)
+        bundle.putBoolean(Constant.Bundle.BUNDLE_NEED_ADDITIONAL_SIGNATURES, needAdditionalSignatures)
+
+        FragmentTransactionManager.displayFragment(
+            childFragmentManager,
+            Fragment.instantiate(context, SuccessFragment::class.java.name, bundle),
             R.id.fl_container,
             true
         )

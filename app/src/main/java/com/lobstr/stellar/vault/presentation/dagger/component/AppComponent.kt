@@ -5,6 +5,7 @@ import com.lobstr.stellar.vault.presentation.dagger.component.confirm_mnemonics.
 import com.lobstr.stellar.vault.presentation.dagger.component.dashboard.DashboardComponent
 import com.lobstr.stellar.vault.presentation.dagger.component.fcm.FcmInternalComponent
 import com.lobstr.stellar.vault.presentation.dagger.component.fcm.FcmServiceComponent
+import com.lobstr.stellar.vault.presentation.dagger.component.import_xdr.ImportXdrComponent
 import com.lobstr.stellar.vault.presentation.dagger.component.mnemonics.MnemonicsComponent
 import com.lobstr.stellar.vault.presentation.dagger.component.operation_details.OperationDetailsComponent
 import com.lobstr.stellar.vault.presentation.dagger.component.pin.PinComponent
@@ -25,6 +26,7 @@ import com.lobstr.stellar.vault.presentation.dagger.module.confirm_mnemonics.Con
 import com.lobstr.stellar.vault.presentation.dagger.module.dashboard.DashboardModule
 import com.lobstr.stellar.vault.presentation.dagger.module.fcm.FcmInternalModule
 import com.lobstr.stellar.vault.presentation.dagger.module.fcm.FcmServiceModule
+import com.lobstr.stellar.vault.presentation.dagger.module.import_xdr.ImportXdrModule
 import com.lobstr.stellar.vault.presentation.dagger.module.mnemonics.MnemonicsModule
 import com.lobstr.stellar.vault.presentation.dagger.module.operation_details.OperationDetailsModule
 import com.lobstr.stellar.vault.presentation.dagger.module.pin.PinModule
@@ -81,6 +83,8 @@ interface AppComponent {
     fun plusOperationDetailsComponent(module: OperationDetailsModule): OperationDetailsComponent
 
     fun plusSignedAccountComponent(module: SignedAccountModule): SignedAccountComponent
+
+    fun plusImportXdrComponent(module: ImportXdrModule): ImportXdrComponent
 
     fun inject(networkWorker: NetworkWorker)
 }

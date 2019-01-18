@@ -1,5 +1,6 @@
 package com.lobstr.stellar.vault.presentation.home
 
+import androidx.annotation.IdRes
 import androidx.annotation.StringRes
 import com.arellomobile.mvp.MvpView
 import com.arellomobile.mvp.viewstate.strategy.AddToEndSingleStrategy
@@ -23,4 +24,7 @@ interface HomeActivityView : MvpView {
 
     @StateStrategyType(SkipStrategy::class)
     fun resetBackStack()
+
+    @StateStrategyType(SkipStrategy::class)
+    fun setSelectedBottomNavigationItem(@IdRes itemId: Int)
 }

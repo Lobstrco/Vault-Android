@@ -5,28 +5,32 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fillViewport="true"
-        android:background="@color/gray_background"
         tools:context=".presentation.home.settings.SettingsFragment">
 
     <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:layout_marginBottom="70dp"
+            android:background="@android:color/white">
 
         <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/title_settings_wallet"
                 android:padding="10dp"
-                android:textAppearance="?android:textAppearanceMedium"
-                android:textStyle="bold"/>
+                android:textAllCaps="true"
+                android:background="@color/gray_background"
+                android:textColor="@color/settings_title_color"
+                android:textSize="13sp"/>
 
         <View
                 android:layout_width="match_parent"
                 android:layout_height="0.5dp"
-                android:background="@android:color/darker_gray"/>
+                android:background="@color/gray_divider"/>
 
         <LinearLayout
+                android:id="@+id/llPublicKey"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:orientation="horizontal"
@@ -38,8 +42,9 @@
             <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textAppearance="?android:textAppearanceMedium"
                     android:layout_weight="1"
+                    android:textSize="17sp"
+                    android:textColor="@android:color/black"
                     android:text="@string/text_settings_public_key"/>
 
             <ImageView
@@ -48,7 +53,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="0"
                     android:padding="10dp"
-                    android:src="@drawable/ic_copy"
+                    android:src="@drawable/ic_content_copy_black"
                     tools:ignore="ContentDescription"/>
 
             <TextView
@@ -57,7 +62,8 @@
                     android:layout_height="wrap_content"
                     android:maxWidth="150dp"
                     android:gravity="center"
-                    android:textAppearance="?android:textAppearanceMedium"
+                    android:textColor="@color/gray_text_color"
+                    android:textSize="13sp"
                     android:textAllCaps="true"
                     android:ellipsize="middle"
                     android:layout_weight="0"
@@ -67,7 +73,9 @@
         <View
                 android:layout_width="match_parent"
                 android:layout_height="0.5dp"
-                android:background="@android:color/darker_gray"/>
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="0dp"
+                android:background="@color/gray_divider"/>
 
         <LinearLayout
                 android:id="@+id/llSettingsSigners"
@@ -83,8 +91,9 @@
                     android:id="@+id/tvSettingsSigners"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textAppearance="?android:textAppearanceMedium"
                     android:layout_weight="1"
+                    android:textSize="17sp"
+                    android:textColor="@android:color/black"
                     android:text="@string/text_settings_signers"/>
 
             <ImageView
@@ -98,20 +107,23 @@
         <View
                 android:layout_width="match_parent"
                 android:layout_height="0.5dp"
-                android:background="@android:color/darker_gray"/>
+                android:background="@color/gray_divider"/>
 
         <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/title_settings_security"
                 android:padding="10dp"
-                android:textAppearance="?android:textAppearanceMedium"
-                android:textStyle="bold"/>
+                android:textAllCaps="true"
+                android:textSize="13sp"
+                android:background="@color/gray_background"
+                android:textColor="@color/settings_title_color"
+                android:textAppearance="?android:textAppearanceMedium"/>
 
         <View
                 android:layout_width="match_parent"
                 android:layout_height="0.5dp"
-                android:background="@android:color/darker_gray"/>
+                android:background="@color/gray_divider"/>
 
         <LinearLayout
                 android:id="@+id/llSettingsMnemonics"
@@ -126,8 +138,9 @@
             <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textAppearance="?android:textAppearanceMedium"
                     android:layout_weight="1"
+                    android:textSize="17sp"
+                    android:textColor="@android:color/black"
                     android:text="@string/text_settings_mnemonic_code"/>
 
             <ImageView
@@ -141,7 +154,9 @@
         <View
                 android:layout_width="match_parent"
                 android:layout_height="0.5dp"
-                android:background="@android:color/darker_gray"/>
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="0dp"
+                android:background="@color/gray_divider"/>
 
         <LinearLayout
                 android:id="@+id/llSettingsChangePin"
@@ -156,8 +171,9 @@
             <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textAppearance="?android:textAppearanceMedium"
                     android:layout_weight="1"
+                    android:textSize="17sp"
+                    android:textColor="@android:color/black"
                     android:text="@string/text_settings_change_pin"/>
 
             <ImageView
@@ -171,7 +187,9 @@
         <View
                 android:layout_width="match_parent"
                 android:layout_height="0.5dp"
-                android:background="@android:color/darker_gray"/>
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="0dp"
+                android:background="@color/gray_divider"/>
 
         <LinearLayout
                 android:id="@+id/llSettingsTouchId"
@@ -186,11 +204,13 @@
             <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textAppearance="?android:textAppearanceMedium"
                     android:layout_weight="1"
+                    android:textSize="17sp"
+                    android:textColor="@android:color/black"
                     android:text="@string/text_settings_touch_id"/>
 
             <androidx.appcompat.widget.SwitchCompat
+                    android:layout_weight="0"
                     android:id="@+id/swSettingsTouchId"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
@@ -199,20 +219,23 @@
         <View
                 android:layout_width="match_parent"
                 android:layout_height="0.5dp"
-                android:background="@android:color/darker_gray"/>
+                android:background="@color/gray_divider"/>
 
         <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/title_settings_about"
+                android:textAllCaps="true"
+                android:textSize="13sp"
                 android:padding="10dp"
-                android:textAppearance="?android:textAppearanceMedium"
-                android:textStyle="bold"/>
+                android:background="@color/gray_background"
+                android:textColor="@color/settings_title_color"
+                android:textAppearance="?android:textAppearanceMedium"/>
 
         <View
                 android:layout_width="match_parent"
                 android:layout_height="0.5dp"
-                android:background="@android:color/darker_gray"/>
+                android:background="@color/gray_divider"/>
 
         <LinearLayout
                 android:layout_width="match_parent"
@@ -226,15 +249,16 @@
             <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textAppearance="?android:textAppearanceMedium"
                     android:layout_weight="1"
+                    android:textSize="17sp"
+                    android:textColor="@android:color/black"
                     android:text="@string/text_settings_version"/>
 
             <TextView
                     android:id="@+id/tvSettingsVersion"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textAppearance="?android:textAppearanceMedium"
+                    android:textSize="15sp"
                     android:padding="10dp"
                     android:layout_weight="0"/>
         </LinearLayout>
@@ -242,7 +266,9 @@
         <View
                 android:layout_width="match_parent"
                 android:layout_height="0.5dp"
-                android:background="@android:color/darker_gray"/>
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="0dp"
+                android:background="@color/gray_divider"/>
 
         <LinearLayout
                 android:id="@+id/llSettingsHelp"
@@ -257,8 +283,9 @@
             <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textAppearance="?android:textAppearanceMedium"
                     android:layout_weight="1"
+                    android:textSize="17sp"
+                    android:textColor="@android:color/black"
                     android:text="@string/text_settings_help"/>
 
             <ImageView
@@ -272,7 +299,7 @@
         <View
                 android:layout_width="match_parent"
                 android:layout_height="0.5dp"
-                android:background="@android:color/darker_gray"/>
+                android:background="@color/gray_divider"/>
 
         <TextView
                 android:id="@+id/tvLogOut"
@@ -280,8 +307,23 @@
                 android:layout_height="50dp"
                 android:gravity="center_vertical"
                 android:background="@android:color/white"
+                android:textSize="17sp"
+                android:textColor="@android:color/black"
                 android:text="Log Out"
-                android:padding="10dp"
-                android:textAppearance="?android:textAppearanceMedium"/>
+                android:padding="10dp"/>
+
+        <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="16dp"
+                android:paddingBottom="16dp"
+                android:gravity="center"
+                android:drawablePadding="8dp"
+                android:background="@color/gray_background"
+                android:layout_gravity="bottom"
+                android:textSize="10sp"
+                android:drawableTop="@drawable/ic_gray_logo"
+                android:textColor="@color/settings_text_privacy"
+                android:text="@string/text_all_rights_reserved"/>
     </LinearLayout>
 </ScrollView>

@@ -49,6 +49,10 @@ class ConfirmMnemonicsPresenter(private val mnemonicsArray: CharArray) : BasePre
         mnemonicsToSelectList.shuffle()
     }
 
+    fun infoClicked() {
+        viewState.showHelpScreen()
+    }
+
     fun nextClicked() {
         // FIXME remove in future for debug
         if (BuildConfig.BUILD_TYPE == Constant.BuildType.RELEASE) {

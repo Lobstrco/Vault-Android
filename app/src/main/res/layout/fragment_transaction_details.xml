@@ -6,6 +6,7 @@
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:splitMotionEvents="false"
+        android:background="@color/gray_background"
         tools:context=".presentation.home.transactions.details.TransactionDetailsFragment">
 
     <androidx.recyclerview.widget.RecyclerView
@@ -15,35 +16,30 @@
             android:layout_weight="1"/>
 
     <Button
-            android:text="Confirm"
-            android:layout_height="wrap_content"
             android:id="@+id/btnConfirm"
-            android:layout_marginTop="10dp"
+            android:layout_height="wrap_content"
             android:layout_width="match_parent"
-            style="@style/Base.Widget.AppCompat.Button.Borderless.Colored"
-            android:background="@drawable/selector_default_button"
+            android:background="@drawable/selector_default_button_with_round"
+            android:text="@string/text_confirm"
             android:textColor="@android:color/white"
             android:textAppearance="?android:textAppearanceMedium"
-            android:textAllCaps="false"
             android:layout_weight="0"
-            android:layout_gravity="center"
-            android:layout_marginLeft="42dp"
-            android:layout_marginRight="42dp"
-            android:layout_marginBottom="16dp"/>
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginBottom="5dp"
+            style="@style/Base.Widget.AppCompat.Button.Borderless.Colored"/>
 
     <Button
-            android:text="Deny"
-            android:layout_height="wrap_content"
             android:id="@+id/btnDeny"
+            android:layout_height="wrap_content"
             android:layout_width="match_parent"
-            style="@style/Base.Widget.AppCompat.Button.Borderless.Colored"
-            android:background="@drawable/selector_default_button"
-            android:textColor="@android:color/white"
+            android:background="@android:color/transparent"
+            android:text="@string/text_deny"
+            android:textColor="@color/color_d9534f"
             android:textAppearance="?android:textAppearanceMedium"
-            android:textAllCaps="false"
             android:layout_weight="0"
-            android:layout_gravity="center"
-            android:layout_marginLeft="42dp"
-            android:layout_marginRight="42dp"
-            android:layout_marginBottom="16dp"/>
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            style="@style/Base.Widget.AppCompat.Button.Borderless.Colored"/>
 </LinearLayout>

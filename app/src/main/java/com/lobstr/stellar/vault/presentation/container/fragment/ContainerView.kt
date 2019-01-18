@@ -24,4 +24,6 @@ interface ContainerView : MvpView {
     fun showTransactionDetails(target: Fragment?, transactionItem: TransactionItem)
 
     fun showMnemonicsFr()
+
+    fun showSuccessFr(envelopeXdr: String, needAdditionalSignatures: Boolean)
 }

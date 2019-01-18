@@ -35,4 +35,10 @@ interface TransactionsView : MvpView {
 
     @StateStrategyType(AddToEndSingleStrategy::class)
     fun hideEmptyState()
+
+    @StateStrategyType(SkipStrategy::class)
+    fun showImportXdrScreen()
+
+    @StateStrategyType(SkipStrategy::class)
+    fun showSuccessScreen(envelopeXdr: String, needAdditionalSignatures: Boolean)
 }

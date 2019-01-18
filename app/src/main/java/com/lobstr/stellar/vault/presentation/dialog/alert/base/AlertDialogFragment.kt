@@ -42,6 +42,9 @@ open class AlertDialogFragment : BaseMvpAppCompatDialogFragment() {
     object DialogFragmentIdentifier {
         const val PROGRESS_DIALOG = "PROGRESS_DIALOG"
         const val FINGERPRINT_INFO_DIALOG = "FINGERPRINT_INFO_DIALOG"
+        const val DENY_TRANSACTION = "DENY_TRANSACTION"
+        const val IMPORT_XDR = "IMPORT_XDR"
+        const val PUBLIC_KEY = "PUBLIC_KEY"
     }
 
     object DialogIdentifier {
@@ -109,25 +112,37 @@ open class AlertDialogFragment : BaseMvpAppCompatDialogFragment() {
         isCancelable = cancelableOf
 
         return AlertDialog.Builder(activity!!)
-                .setTitle(mTitle)
-                .setMessage(mMessage)
-                .setView(mContentView)
+            .setTitle(mTitle)
+            .setMessage(mMessage)
+            .setView(mContentView)
 
-                .setNegativeButton(mNegativeBtnText, if (mOnBaseAlertDialogListener == null)
-                    null
-                else
-                    DialogInterface.OnClickListener { dialogInterface, _ -> this@AlertDialogFragment.onNegativeBtnClick(dialogInterface) })
+            .setNegativeButton(mNegativeBtnText, if (mOnBaseAlertDialogListener == null)
+                null
+            else
+                DialogInterface.OnClickListener { dialogInterface, _ ->
+                    this@AlertDialogFragment.onNegativeBtnClick(
+                        dialogInterface
+                    )
+                })
 
-                .setPositiveButton(mPositiveBtnText, if (mOnBaseAlertDialogListener == null)
-                    null
-                else
-                    DialogInterface.OnClickListener { dialogInterface, _ -> this@AlertDialogFragment.onPositiveBtnClick(dialogInterface) })
+            .setPositiveButton(mPositiveBtnText, if (mOnBaseAlertDialogListener == null)
+                null
+            else
+                DialogInterface.OnClickListener { dialogInterface, _ ->
+                    this@AlertDialogFragment.onPositiveBtnClick(
+                        dialogInterface
+                    )
+                })
 
-                .setOnCancelListener(if (mOnBaseAlertDialogListener == null)
-                    null
-                else
-                    DialogInterface.OnCancelListener { dialogInterface -> this@AlertDialogFragment.onCanceled(dialogInterface) })
-                .create()
+            .setOnCancelListener(if (mOnBaseAlertDialogListener == null)
+                null
+            else
+                DialogInterface.OnCancelListener { dialogInterface ->
+                    this@AlertDialogFragment.onCanceled(
+                        dialogInterface
+                    )
+                })
+            .create()
     }
 
     // ===========================================================
@@ -170,21 +185,21 @@ open class AlertDialogFragment : BaseMvpAppCompatDialogFragment() {
     protected fun onPositiveBtnClick(dialogInterface: DialogInterface) {
         if (mOnBaseAlertDialogListener is OnDefaultAlertDialogListener) {
             (mOnBaseAlertDialogListener as OnDefaultAlertDialogListener)
-                    .onPositiveBtnClick(this@AlertDialogFragment.tag, dialogInterface)
+                .onPositiveBtnClick(this@AlertDialogFragment.tag, dialogInterface)
         }
     }
 
     protected fun onNegativeBtnClick(dialogInterface: DialogInterface) {
         if (mOnBaseAlertDialogListener is OnDefaultAlertDialogListener) {
             (mOnBaseAlertDialogListener as OnDefaultAlertDialogListener)
-                    .onNegativeBtnClick(this@AlertDialogFragment.tag, dialogInterface)
+                .onNegativeBtnClick(this@AlertDialogFragment.tag, dialogInterface)
         }
     }
 
     protected fun onCanceled(dialogInterface: DialogInterface) {
         if (mOnBaseAlertDialogListener is OnDefaultAlertDialogListener) {
             (mOnBaseAlertDialogListener as OnDefaultAlertDialogListener)
-                    .onCancel(this@AlertDialogFragment.tag, dialogInterface)
+                .onCancel(this@AlertDialogFragment.tag, dialogInterface)
         }
     }
 

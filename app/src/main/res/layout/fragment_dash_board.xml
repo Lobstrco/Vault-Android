@@ -1,27 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+<FrameLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
-        android:id="@+id/srlDashboardUpdate"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@android:color/white"
         tools:context=".presentation.home.dashboard.DashboardFragment">
 
     <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="190dp"
             android:orientation="vertical"
-            android:layout_gravity="center"
-            android:gravity="center">
+            android:gravity="center_horizontal"
+            android:background="@color/color_primary">
 
         <TextView
                 android:id="@+id/tvDashboardTransactionCount"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:textColor="@android:color/holo_red_light"
-                android:textSize="32sp"
-                android:text="-"
+                android:layout_marginTop="-25dp"
+                android:layout_marginBottom="-25dp"
+                android:textColor="@android:color/white"
+                android:textSize="80sp"
+                android:text="0"
                 android:textStyle="bold"/>
 
         <TextView
@@ -29,7 +31,143 @@
                 android:layout_height="wrap_content"
                 android:text="@string/text_dashboard_transactions"
                 android:gravity="center"
-                android:textColor="@android:color/black"
-                android:textSize="22sp"/>
+                android:layout_marginTop="15dp"
+                android:layout_marginBottom="15dp"
+                android:textColor="@android:color/white"
+                android:textSize="17sp"/>
+
+        <TextView
+                android:id="@+id/tvDashboardShowList"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/text_dashboard_show_list"
+                android:gravity="center"
+                android:paddingTop="5dp"
+                android:paddingBottom="5dp"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:background="@drawable/shape_dashboard_text_view"
+                android:textColor="@color/white_with_alpha_50"
+                android:textSize="13sp"/>
     </LinearLayout>
-</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+    <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="150dp"
+            android:layout_marginLeft="16dp"
+            android:background="@android:color/white"
+            android:layout_marginRight="16dp">
+
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp">
+
+            <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:paddingLeft="16dp"
+                    android:paddingRight="16dp"
+                    android:layout_weight="1"
+                    android:gravity="center">
+
+                <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/text_title_dashboard_public_key"
+                        android:gravity="center_horizontal"
+                        android:textStyle="bold"
+                        android:layout_marginBottom="7dp"
+                        android:textColor="@android:color/black"
+                        android:textSize="20sp"/>
+
+                <TextView
+                        android:id="@+id/tvDashboardPublicKey"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textSize="15sp"
+                        android:textAllCaps="true"
+                        android:minLines="2"
+                        android:textColor="@color/gray_text_color"
+                        android:gravity="center_horizontal"
+                        android:lineSpacingExtra="10dp"/>
+
+                <TextView
+                        android:id="@+id/tvDashboardCopy"
+                        android:layout_width="wrap_content"
+                        android:layout_height="32dp"
+                        android:text="@string/text_button_copy_key"
+                        android:gravity="center"
+                        android:textStyle="bold"
+                        android:paddingLeft="20dp"
+                        android:paddingRight="20dp"
+                        android:layout_marginTop="10dp"
+                        android:textSize="13sp"
+                        android:background="@drawable/selector_default_button_with_round"
+                        android:layout_gravity="center_horizontal"
+                        android:textColor="@android:color/white"/>
+            </LinearLayout>
+
+            <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_weight="0"
+                    android:background="@color/gray_divider"/>
+
+            <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:paddingLeft="16dp"
+                    android:layout_weight="1.2"
+                    android:gravity="center"
+                    android:paddingRight="16dp">
+
+                <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/text_title_dashboard_signers"
+                        android:gravity="center_horizontal"
+                        android:textStyle="bold"
+                        android:textColor="@android:color/black"
+                        android:textSize="20sp"/>
+
+                <TextView
+                        android:id="@+id/tvDashboardSigners"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textSize="15sp"
+                        android:minLines="2"
+                        android:layout_marginTop="10dp"
+                        android:visibility="gone"
+                        android:textColor="@color/gray_text_color"
+                        android:gravity="center_horizontal"
+                        android:lineSpacingExtra="10dp"/>
+
+                <TextView
+                        android:id="@+id/tvDashboardSignersCount"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textSize="40sp"
+                        android:textStyle="bold"
+                        android:text="1"
+                        android:layout_marginBottom="-10dp"
+                        android:textColor="@color/color_primary"
+                        android:gravity="center_horizontal"/>
+
+                <TextView
+                        android:id="@+id/tvDashboardSignerDescription"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textSize="15sp"
+                        android:text="@string/text_accounts"
+                        android:textColor="@color/gray_text_color"
+                        android:gravity="center_horizontal"/>
+            </LinearLayout>
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+</FrameLayout>

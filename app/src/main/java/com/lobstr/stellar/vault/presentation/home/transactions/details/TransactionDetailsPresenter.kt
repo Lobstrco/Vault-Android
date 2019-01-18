@@ -10,6 +10,7 @@ import com.lobstr.stellar.vault.domain.util.event.Notification
 import com.lobstr.stellar.vault.presentation.BasePresenter
 import com.lobstr.stellar.vault.presentation.application.LVApplication
 import com.lobstr.stellar.vault.presentation.dagger.module.transaction_details.TransactionDetailsModule
+import com.lobstr.stellar.vault.presentation.dialog.alert.base.AlertDialogFragment.DialogFragmentIdentifier.DENY_TRANSACTION
 import com.lobstr.stellar.vault.presentation.entities.transaction.TransactionItem
 import com.lobstr.stellar.vault.presentation.util.AppUtil
 import com.lobstr.stellar.vault.presentation.util.Constant.Transaction.CANCELLED
@@ -69,7 +70,7 @@ class TransactionDetailsPresenter(private var mTransactionItem: TransactionItem)
     }
 
     fun btnDenyClicked() {
-        denyTransaction()
+        viewState.showDenyTransactionDialog()
     }
 
     private fun confirmTransaction() {
@@ -123,11 +124,7 @@ class TransactionDetailsPresenter(private var mTransactionItem: TransactionItem)
                         mTransactionItem.transaction
                     )
 
-                    if (needAdditionalSignatures) {
-                        viewState.notifyAboutNeedAdditionalSignatures(it)
-                    } else {
-                        viewState.successConfirmTransaction(it, mTransactionItem)
-                    }
+                    viewState.successConfirmTransaction(it, needAdditionalSignatures, mTransactionItem)
                     prepareUiAndOperationsList()
 
                     // Notify about transaction changed
@@ -143,7 +140,12 @@ class TransactionDetailsPresenter(private var mTransactionItem: TransactionItem)
                             viewState.showMessage(it.details)
                         }
                         else -> {
-                            viewState.showMessage(it.message ?: "")
+                            if (it.message == "tx_bad_seq") {
+                                // TODO handle "tx_bad_seq"
+                                viewState.showMessage(it.message ?: "")
+                            } else {
+                                viewState.showMessage(it.message ?: "")
+                            }
                         }
                     }
                 })
@@ -193,5 +195,15 @@ class TransactionDetailsPresenter(private var mTransactionItem: TransactionItem)
 
     fun operationItemClicked(position: Int) {
         viewState.showOperationDetailsScreen(mTransactionItem, position)
+    }
+
+    fun onAlertDialogPositiveButtonClick(tag: String?) {
+        if (tag.isNullOrEmpty()) {
+            return
+        }
+
+        when (tag) {
+            DENY_TRANSACTION -> denyTransaction()
+        }
     }
 }
