@@ -1,12 +1,11 @@
 package com.lobstr.stellar.vault.presentation.auth.mnemonic.create_mnemonic
 
 import com.arellomobile.mvp.InjectViewState
-import com.lobstr.stellar.vault.R
 import com.lobstr.stellar.vault.domain.mnemonics.MnemonicsInteractor
 import com.lobstr.stellar.vault.presentation.BasePresenter
 import com.lobstr.stellar.vault.presentation.application.LVApplication
 import com.lobstr.stellar.vault.presentation.dagger.module.mnemonics.MnemonicsModule
-import com.soneso.stellarmnemonics.Wallet
+import com.lobstr.stellar.vault.presentation.entities.mnemonic.MnemonicItem
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
@@ -21,14 +20,16 @@ class MnemonicsPresenter(private val generate: Boolean) : BasePresenter<Mnemonic
         LVApplication.sAppComponent.plusMnemonicsComponent(MnemonicsModule()).inject(this)
     }
 
-    private lateinit var mnemonicsArray: CharArray
+    private var mnemonicItemList: ArrayList<MnemonicItem>? = null
+
+    private var mnemonicsStr: String? = null
 
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
         if (generate) {
-            setupMnemonics(Wallet.generate12WordMnemonic())
+            setupMnemonics(interactor.generate12WordMnemonics())
         } else {
-            viewState.setupToolbarTitle(R.string.mnemonics_title)
+//            viewState.setupToolbarTitle(R.string.mnemonics_title)
             viewState.setActionLayerVisibility(false)
             getExistingMnemonics()
         }
@@ -36,21 +37,22 @@ class MnemonicsPresenter(private val generate: Boolean) : BasePresenter<Mnemonic
 
     private fun getExistingMnemonics() {
         unsubscribeOnDestroy(
-            interactor.getPhrases()
+            interactor.getExistingMnemonics()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
-                    setupMnemonics(it.toCharArray())
+                    setupMnemonics(it)
                 }, {
                     it.printStackTrace()
                 })
         )
     }
 
-    private fun setupMnemonics(mnemonics: CharArray) {
-        mnemonicsArray = mnemonics
-        val mnemonicsStr = String(mnemonics)
-        viewState.setupMnemonics(mnemonicsStr.split(" ".toRegex()).dropLastWhile { it.isEmpty() })
+    private fun setupMnemonics(mnemonicItems: ArrayList<MnemonicItem>) {
+        mnemonicsStr = mnemonicItems.joinToString(" ") { it -> it.value }
+
+        mnemonicItemList = mnemonicItems
+        viewState.setupMnemonics(mnemonicItems)
     }
 
     fun infoClicked() {
@@ -58,14 +60,14 @@ class MnemonicsPresenter(private val generate: Boolean) : BasePresenter<Mnemonic
     }
 
     fun nextClicked() {
-        viewState.showConfirmationScreen(mnemonicsArray)
+        viewState.showConfirmationScreen(mnemonicItemList!!)
     }
 
     fun clipToBordClicked() {
-        if (mnemonicsArray.isEmpty()) {
+        if (mnemonicsStr.isNullOrEmpty()) {
             return
         }
 
-        viewState.copyToClipBoard(String(mnemonicsArray))
+        viewState.copyToClipBoard(mnemonicsStr!!)
     }
 }

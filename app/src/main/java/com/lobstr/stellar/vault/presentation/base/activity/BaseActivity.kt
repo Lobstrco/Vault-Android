@@ -14,7 +14,6 @@ import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.lobstr.stellar.vault.R
 import com.lobstr.stellar.vault.presentation.BaseMvpAppCompatActivity
-import com.lobstr.stellar.vault.presentation.util.AppUtil
 
 abstract class BaseActivity : BaseMvpAppCompatActivity(),
     BaseActivityView {
@@ -69,7 +68,6 @@ abstract class BaseActivity : BaseMvpAppCompatActivity(),
     }
 
     protected fun checkBackPress(container: Fragment?) {
-        AppUtil.closeKeyboard(this)
         val fragmentManager = container?.childFragmentManager ?: supportFragmentManager
         val backStackCount = fragmentManager.backStackEntryCount
 

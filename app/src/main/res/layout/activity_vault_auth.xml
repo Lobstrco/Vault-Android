@@ -33,6 +33,7 @@
                 android:background="@drawable/selector_default_button_with_round"
                 android:textColor="@android:color/white"
                 android:textAppearance="?android:textAppearanceMedium"
+                android:textSize="14sp"
                 android:textAllCaps="false"
                 android:layout_gravity="center"
                 android:layout_marginLeft="42dp"

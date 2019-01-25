@@ -2,8 +2,10 @@ package com.lobstr.stellar.vault.presentation.container.activity
 
 import com.arellomobile.mvp.InjectViewState
 import com.arellomobile.mvp.MvpPresenter
+import com.lobstr.stellar.vault.R
 import com.lobstr.stellar.vault.presentation.entities.transaction.TransactionItem
 import com.lobstr.stellar.vault.presentation.util.Constant.Navigation.DASHBOARD
+import com.lobstr.stellar.vault.presentation.util.Constant.Navigation.ERROR
 import com.lobstr.stellar.vault.presentation.util.Constant.Navigation.MNEMONICS
 import com.lobstr.stellar.vault.presentation.util.Constant.Navigation.SETTINGS
 import com.lobstr.stellar.vault.presentation.util.Constant.Navigation.SUCCESS
@@ -15,11 +17,20 @@ class ContainerPresenter(
     private val targetFr: Int,
     private val transactionItem: TransactionItem?,
     private val envelopeXdr: String?,
-    private val needAdditionalSignatures: Boolean?
+    private val needAdditionalSignatures: Boolean?,
+    private val errorMessage: String?
 ) : MvpPresenter<ContainerView>() {
 
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
+
+        viewState.setupToolbar(
+            android.R.color.white,
+            R.drawable.ic_arrow_back,
+            R.color.color_primary,
+            android.R.color.black
+        )
+
         navigateTo()
     }
 
@@ -36,6 +47,8 @@ class ContainerPresenter(
             MNEMONICS -> viewState.showMnemonicsFr()
 
             SUCCESS -> viewState.showSuccessFr(envelopeXdr!!, needAdditionalSignatures!!)
+
+            ERROR -> viewState.showErrorFr(errorMessage!!)
         }
     }
 

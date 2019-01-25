@@ -3,6 +3,7 @@ package com.lobstr.stellar.vault.presentation.home.transactions.details
 import com.arellomobile.mvp.InjectViewState
 import com.lobstr.stellar.vault.R
 import com.lobstr.stellar.vault.data.error.exeption.DefaultException
+import com.lobstr.stellar.vault.data.error.exeption.HorizonException
 import com.lobstr.stellar.vault.data.error.exeption.UserNotAuthorizedException
 import com.lobstr.stellar.vault.domain.transaction_details.TransactionDetailsInteractor
 import com.lobstr.stellar.vault.domain.util.EventProviderModule
@@ -41,7 +42,7 @@ class TransactionDetailsPresenter(private var mTransactionItem: TransactionItem)
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
 
-        viewState.setupToolbarTitle(R.string.transaction_details)
+        viewState.setupToolbarTitle(R.string.title_toolbar_transaction_details)
         viewState.initRecycledView()
         prepareUiAndOperationsList()
     }
@@ -89,8 +90,10 @@ class TransactionDetailsPresenter(private var mTransactionItem: TransactionItem)
                     val transactionResultCode = extras?.resultCodes?.transactionResultCode
 
                     when {
-                        envelopXdr == null -> throw Throwable(transactionResultCode)
-                        transactionResultCode != null && transactionResultCode != "tx_bad_auth" -> throw Throwable(
+                        envelopXdr == null -> throw HorizonException(
+                            transactionResultCode!!
+                        )
+                        transactionResultCode != null && transactionResultCode != "tx_bad_auth" -> throw HorizonException(
                             transactionResultCode
                         )
                         transactionResultCode != null && transactionResultCode == "tx_bad_auth" -> needAdditionalSignatures =
@@ -133,6 +136,10 @@ class TransactionDetailsPresenter(private var mTransactionItem: TransactionItem)
                     )
                 }, {
                     when (it) {
+                        is HorizonException -> {
+                            // TODO handle "tx_bad_seq"
+                            viewState.errorConfirmTransaction(it.details)
+                        }
                         is UserNotAuthorizedException -> {
                             confirmTransaction()
                         }
@@ -140,12 +147,7 @@ class TransactionDetailsPresenter(private var mTransactionItem: TransactionItem)
                             viewState.showMessage(it.details)
                         }
                         else -> {
-                            if (it.message == "tx_bad_seq") {
-                                // TODO handle "tx_bad_seq"
-                                viewState.showMessage(it.message ?: "")
-                            } else {
-                                viewState.showMessage(it.message ?: "")
-                            }
+                            viewState.showMessage(it.message ?: "")
                         }
                     }
                 })

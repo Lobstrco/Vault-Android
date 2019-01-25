@@ -14,9 +14,8 @@
     <dimen name="font_subtitle">13sp</dimen>
     <dimen name="biometric_bg_size">20dp</dimen>
     <dimen name="biometric_logo_size">48dp</dimen>
-    <dimen name="biometric_bottom_sheet_padding">16dp</dimen>
     <dimen name="biometric_fingerprint_image_size">60dp</dimen>
 
-    <dimen name="default_card_height">50dp</dimen>
+    <dimen name="default_card_height">60dp</dimen>
     <dimen name="default_vertical_padding">12dp</dimen>
 </resources>

@@ -31,10 +31,9 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
 
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
-        viewState.setupToolbarTitle(R.string.settings)
+        viewState.setupToolbarTitle(R.string.title_toolbar_settings)
         registerEventProvider()
         viewState.setupSettingsData(
-            interactor.getUserPublicKey(),
             BuildConfig.VERSION_NAME,
             BiometricUtils.isBiometricSupported(LVApplication.sAppComponent.context)
         )
@@ -74,21 +73,9 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
         }
     }
 
-    fun infoClicked() {
-        viewState.showInfoFr()
-    }
-
     fun logOutClicked() {
         interactor.clearUserData()
         viewState.showAuthScreen()
-    }
-
-    fun copyUserPublicKey(userPublicKey: String?) {
-        if (userPublicKey.isNullOrEmpty()) {
-            return
-        }
-
-        viewState.copyToClipBoard(userPublicKey)
     }
 
     fun signersClicked() {

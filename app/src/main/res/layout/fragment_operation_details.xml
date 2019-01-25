@@ -5,5 +5,5 @@
         android:id="@+id/rvOperationDetails"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/gray_background"
+        android:background="@color/color_f9f9ff"
         tools:context=".presentation.home.transactions.TransactionsFragment"/>

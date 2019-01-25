@@ -51,7 +51,6 @@ class BiometricDialogV23 : BottomSheetDialog, View.OnClickListener {
         btnCancel = findViewById(R.id.btn_cancel)
         btnCancel!!.setOnClickListener(this)
 
-        imgLogo = findViewById(R.id.img_logo)
         itemTitle = findViewById(R.id.item_title)
         itemStatus = findViewById(R.id.item_status)
         itemSubtitle = findViewById(R.id.item_subtitle)

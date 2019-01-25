@@ -88,7 +88,7 @@ ext {
     circleimageview = "2.2.0"
     glide = "4.7.1"
     stellar_sdk = "0.3.3"
-    flexbox = "1.0.0"
+    flexbox = "1.1.0"
     pin = "2.1.0"
     support = "28.0.0"
     firebase_messaging = "17.3.4"
@@ -102,7 +102,8 @@ ext {
     runner = "1.1.1"
     espresso_core = "3.1.1"
     stellar_sdk = "0.4.0"
-    work_manager = "1.0.0-beta01"
+    work_manager = "1.0.0-beta02"
+    lottieVersion = "3.0.0-beta1"
 }
 
 dependencies {
@@ -164,6 +165,7 @@ dependencies {
     //Other
     implementation "de.hdodenhof:circleimageview:$circleimageview"
     implementation "com.andrognito.pinlockview:pinlockview:$pin"
+    implementation "com.airbnb.android:lottie:$lottieVersion"
 }
 androidExtensions {
     experimental = true

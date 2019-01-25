@@ -34,19 +34,21 @@ class PinPresenter(private var needCreatePin: Boolean?, private var needChangePi
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
 
-        viewState.attachIndicatorDots()
         when {
             needCreatePin!! -> {
                 viewState.showDescriptionMessage(R.string.text_create_pin)
                 viewState.showTitle(R.string.text_title_create_pin)
+                viewState.setScreenStyle(PinActivity.STYLE_CREATE_PIN)
             }
             needChangePin!! -> {
-                viewState.showDescriptionMessage(R.string.text_enter_old_pin)
+                viewState.showDescriptionMessage(R.string.text_enter_pin)
                 viewState.showTitle(R.string.text_title_change_pin)
+                viewState.setScreenStyle(PinActivity.STYLE_CREATE_PIN)
             }
             else -> {
-                viewState.showDescriptionMessage(R.string.text_enter_pin)
+                viewState.showDescriptionMessage(0)
                 viewState.showTitle(R.string.text_title_enter_pin)
+                viewState.setScreenStyle(PinActivity.STYLE_ENTER_PIN)
             }
         }
     }
@@ -155,10 +157,15 @@ class PinPresenter(private var needCreatePin: Boolean?, private var needChangePi
             interactor.accountHasSigners() -> viewState.showHomeScreen()
             else -> {
                 when {
-                    BiometricUtils.isBiometricSupported(LVApplication.sAppComponent.context) -> viewState.showFingerprintSetUpScreen()
+                    !interactor.isTouchIdSetUp() && BiometricUtils.isBiometricSupported(LVApplication.sAppComponent.context) -> viewState.showFingerprintSetUpScreen()
                     else -> viewState.showVaultAuthScreen()
                 }
             }
         }
+    }
+
+    fun logoutClicked() {
+        interactor.clearUserData()
+        viewState.showAuthScreen()
     }
 }

@@ -17,7 +17,7 @@ class PrefsUtil(private val sharedPreferences: SharedPreferences) {
         const val PREF_APP_VERSION = "PREF_APP_VERSION"
         const val PREF_IS_FCM_REGISTERED_SUCCESSFULLY = "PREF_IS_FCM_REGISTERED_SUCCESSFULLY"
         const val PREF_ACCOUNT_HAS_SIGNERS = "PREF_ACCOUNT_HAS_SIGNERS"
-        const val PREF_IS_TOUCH_ID_ENABLED = "PREF_IS_TOUCH_ID_ENABLED"
+        const val PREF_BIOMETRIC_STATE = "PREF_BIOMETRIC_STATE"
         const val PREF_ACCOUNT_SIGNERS_COUNT = "PREF_ACCOUNT_SIGNERS_COUNT"
     }
 
@@ -61,9 +61,12 @@ class PrefsUtil(private val sharedPreferences: SharedPreferences) {
         get() = getBoolean(PREF_ACCOUNT_HAS_SIGNERS)
         set(hasSigners) = set(PREF_ACCOUNT_HAS_SIGNERS, hasSigners)
 
-    var isTouchIdEnabled: Boolean
-        get() = getBoolean(PREF_IS_TOUCH_ID_ENABLED)
-        set(enabled) = set(PREF_IS_TOUCH_ID_ENABLED, enabled)
+    /**
+     * @see Constant.BiometricState
+     */
+    var biometricState: Int
+        get() = getInt(PREF_BIOMETRIC_STATE)
+        set(state) = set(PREF_BIOMETRIC_STATE, state)
 
     var accountSignersCount: Int
         get() = getInt(PREF_ACCOUNT_SIGNERS_COUNT)
@@ -110,7 +113,7 @@ class PrefsUtil(private val sharedPreferences: SharedPreferences) {
         editor.remove(PREF_APP_VERSION)
         editor.remove(PREF_IS_FCM_REGISTERED_SUCCESSFULLY)
         editor.remove(PREF_ACCOUNT_HAS_SIGNERS)
-        editor.remove(PREF_IS_TOUCH_ID_ENABLED)
+        editor.remove(PREF_BIOMETRIC_STATE)
         editor.remove(PREF_ACCOUNT_SIGNERS_COUNT)
         return editor.commit()
     }

@@ -3,8 +3,10 @@ package com.lobstr.stellar.vault.presentation.pin
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.Toast
 import androidx.annotation.StringRes
+import androidx.core.content.ContextCompat
 import com.andrognito.pinlockview.PinLockListener
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
@@ -20,7 +22,7 @@ import com.lobstr.stellar.vault.presentation.util.manager.ProgressManager
 import com.lobstr.stellar.vault.presentation.vault_auth.VaultAuthActivity
 import kotlinx.android.synthetic.main.activity_pin.*
 
-class PinActivity : BaseMvpAppCompatActivity(), PinView, PinLockListener, BiometricCallback {
+class PinActivity : BaseMvpAppCompatActivity(), PinView, PinLockListener, BiometricCallback, View.OnClickListener {
 
     // ===========================================================
     // Constants
@@ -28,6 +30,8 @@ class PinActivity : BaseMvpAppCompatActivity(), PinView, PinLockListener, Biomet
 
     companion object {
         val LOG_TAG = PinActivity::class.simpleName
+        const val STYLE_ENTER_PIN = 0
+        const val STYLE_CREATE_PIN = 1
     }
 
     // ===========================================================
@@ -67,20 +71,51 @@ class PinActivity : BaseMvpAppCompatActivity(), PinView, PinLockListener, Biomet
 
     private fun setListeners() {
         pinLockView.setPinLockListener(this)
+        tvPinLogOut.setOnClickListener(this)
+    }
+
+    override fun onClick(v: View?) {
+        when (v?.id) {
+            tvPinLogOut.id -> mPresenter.logoutClicked()
+        }
     }
 
     // ===========================================================
     // Listeners, methods for/from Interfaces
     // ===========================================================
 
-    override fun attachIndicatorDots() {
+    override fun setScreenStyle(style: Int) {
         pinLockView.pinLength = 6
-        indicatorDots.pinLength = 6
-        pinLockView.attachIndicatorDots(indicatorDots)
+
+        if (style == STYLE_ENTER_PIN) {
+            indicatorDotsWhite.pinLength = 6
+            pinLockView.attachIndicatorDots(indicatorDotsWhite)
+            llPinContainer.setBackgroundColor(ContextCompat.getColor(this, R.color.color_primary))
+            pinLockView.textColor = ContextCompat.getColor(this, android.R.color.white)
+
+            tvPinTitle.visibility = View.GONE
+            tvPinDescription.visibility = View.GONE
+            ivPinLogo.visibility = View.VISIBLE
+            indicatorDotsWhite.visibility = View.VISIBLE
+            indicatorDots.visibility = View.GONE
+            tvPinLogOut.visibility = View.VISIBLE
+        } else {
+            indicatorDots.pinLength = 6
+            pinLockView.attachIndicatorDots(indicatorDots)
+            llPinContainer.setBackgroundColor(ContextCompat.getColor(this, android.R.color.white))
+            pinLockView.textColor = ContextCompat.getColor(this, android.R.color.black)
+
+            tvPinTitle.visibility = View.VISIBLE
+            tvPinDescription.visibility = View.VISIBLE
+            ivPinLogo.visibility = View.GONE
+            indicatorDotsWhite.visibility = View.GONE
+            indicatorDots.visibility = View.VISIBLE
+            tvPinLogOut.visibility = View.GONE
+        }
     }
 
     override fun showTitle(@StringRes title: Int) {
-        pinTitle.text = getString(title)
+        tvPinTitle.text = getString(title)
     }
 
     override fun resetPin() {
@@ -124,7 +159,18 @@ class PinActivity : BaseMvpAppCompatActivity(), PinView, PinLockListener, Biomet
     }
 
     override fun showDescriptionMessage(@StringRes message: Int) {
-        pinDescription.text = getString(message)
+        if (message == 0) {
+            return
+        }
+
+        tvPinDescription.text = getString(message)
+    }
+
+    override fun showAuthScreen() {
+        val intent = Intent(this, AuthActivity::class.java)
+        intent.putExtra(Constant.Extra.EXTRA_NAVIGATION_FR, Constant.Navigation.AUTH)
+        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        startActivity(intent)
     }
 
     // Pin Lock listeners callbacks

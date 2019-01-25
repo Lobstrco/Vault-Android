@@ -8,6 +8,6 @@ import com.lobstr.stellar.vault.R
 class FaqPresenter : MvpPresenter<FaqView>() {
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
-        viewState.setupToolbarTitle(R.string.faq)
+        viewState.setupToolbarTitle(R.string.title_toolbar_faq)
     }
 }

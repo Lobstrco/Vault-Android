@@ -155,6 +155,13 @@ class TransactionsFragment : BaseFragment(), TransactionsView, SwipeRefreshLayou
         startActivity(intent)
     }
 
+    override fun showErrorScreen(errorMessage: String) {
+        val intent = Intent(context, ContainerActivity::class.java)
+        intent.putExtra(Constant.Extra.EXTRA_NAVIGATION_FR, Constant.Navigation.ERROR)
+        intent.putExtra(Constant.Extra.EXTRA_ERROR_MESSAGE, errorMessage)
+        startActivity(intent)
+    }
+
     // ===========================================================
     // Methods
     // ===========================================================

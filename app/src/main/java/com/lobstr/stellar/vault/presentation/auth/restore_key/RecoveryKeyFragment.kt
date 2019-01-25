@@ -2,12 +2,10 @@ package com.lobstr.stellar.vault.presentation.auth.restore_key
 
 import android.content.Intent
 import android.os.Bundle
-import android.text.Editable
-import android.text.Spannable
-import android.text.SpannableString
-import android.text.TextWatcher
+import android.text.*
 import android.text.style.ForegroundColorSpan
 import android.view.*
+import android.view.inputmethod.EditorInfo
 import android.widget.Toast
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
@@ -22,6 +20,7 @@ import com.lobstr.stellar.vault.presentation.base.fragment.BaseFragment
 import com.lobstr.stellar.vault.presentation.dialog.alert.base.AlertDialogFragment
 import com.lobstr.stellar.vault.presentation.faq.FaqFragment
 import com.lobstr.stellar.vault.presentation.pin.PinActivity
+import com.lobstr.stellar.vault.presentation.util.AppUtil
 import com.lobstr.stellar.vault.presentation.util.Constant
 import com.lobstr.stellar.vault.presentation.util.manager.ProgressManager
 import kotlinx.android.synthetic.main.fragment_recovery_key.*
@@ -73,12 +72,25 @@ class RecoveryKeyFragment : BaseFragment(), RecoveryKeyFrView, View.OnClickListe
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        etRecoveryPhrase.imeOptions = EditorInfo.IME_ACTION_DONE
+        etRecoveryPhrase.setRawInputType(InputType.TYPE_CLASS_TEXT)
+    }
+
+    override fun onResume() {
+        super.onResume()
+
         setListeners()
     }
 
     private fun setListeners() {
         etRecoveryPhrase.addTextChangedListener(mTextWatcher)
         btnRecoveryKey.setOnClickListener(this)
+    }
+
+    override fun onPause() {
+        super.onPause()
+
+        AppUtil.closeKeyboard(activity)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {

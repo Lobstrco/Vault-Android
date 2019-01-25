@@ -8,6 +8,7 @@ import com.lobstr.stellar.vault.data.error.RxErrorUtilsImpl
 import com.lobstr.stellar.vault.data.fcm.FcmEntityMapper
 import com.lobstr.stellar.vault.data.fcm.FcmRepositoryImpl
 import com.lobstr.stellar.vault.data.key_store.KeyStoreRepositoryImpl
+import com.lobstr.stellar.vault.data.mnemonic.MnemonicsMapper
 import com.lobstr.stellar.vault.data.net.AccountApi
 import com.lobstr.stellar.vault.data.net.FcmApi
 import com.lobstr.stellar.vault.data.net.TransactionApi
@@ -35,13 +36,13 @@ class RepositoryModule {
     @Singleton
     @Provides
     fun provideStellarRepository(context: Context, server: Server): StellarRepository {
-        return StellarRepositoryImpl(context, server)
+        return StellarRepositoryImpl(context, server, MnemonicsMapper())
     }
 
     @Singleton
     @Provides
     fun provideKeyStoreRepository(context: Context, prefsUtil: PrefsUtil): KeyStoreRepository {
-        return KeyStoreRepositoryImpl(context, prefsUtil)
+        return KeyStoreRepositoryImpl(context, prefsUtil, MnemonicsMapper())
     }
 
     @Singleton

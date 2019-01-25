@@ -14,19 +14,19 @@
                   android:gravity="center"
                   android:orientation="vertical">
 
-        <ImageView android:layout_width="60dp"
-                   android:layout_height="60dp"
+        <ImageView android:layout_width="wrap_content"
+                   android:layout_height="wrap_content"
                    android:src="@drawable/ic_fingerprint_purple"
                    android:layout_gravity="center"
-                   android:layout_marginBottom="8dp"/>
+                   android:layout_marginBottom="20dp"/>
 
         <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:textAppearance="?android:textAppearanceMedium"
+                android:textSize="16sp"
+                android:layout_marginBottom="10dp"
                 android:textStyle="bold"
-                android:padding="4dp"
                 android:textColor="@android:color/black"
                 android:text="@string/text_tv_fingerprint_set_up_title"/>
 
@@ -34,11 +34,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:textAppearance="?android:textAppearanceSmall"
-                android:paddingLeft="16dp"
-                android:paddingRight="16dp"
-                android:paddingBottom="5dp"
-                android:textColor="@color/color_757575"
+                android:textSize="14sp"
+                android:textColor="@color/color_071c33"
                 android:text="@string/text_tv_fingerprint_set_up_description"/>
 
     </LinearLayout>
@@ -47,24 +44,20 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:textAppearance="?android:textAppearanceSmall"
-            android:paddingLeft="16dp"
-            android:paddingRight="16dp"
-            android:paddingBottom="5dp"
-            android:textColor="@android:color/darker_gray"
-            android:text="@string/text_tv_set_up_fingerprint_later"
+            android:textSize="12sp"
+            android:textColor="@color/color_994A4A4A"
+            android:text="@string/text_tv_fingerprint_set_up_later"
             android:layout_marginBottom="16dp"/>
 
     <Button
-            android:text="@string/text_btn_turn_on"
+            android:text="@string/text_btn_fingerprint_enable"
             android:layout_height="wrap_content"
             android:id="@+id/btnTurOn"
             android:layout_width="match_parent"
-            style="@style/Base.Widget.AppCompat.Button.Borderless.Colored"
             android:textColor="@android:color/white"
             android:background="@drawable/selector_default_button_with_round"
-            android:textAppearance="?android:textAppearanceMedium"
             android:textAllCaps="false"
+            android:textSize="14sp"
             android:layout_gravity="center"/>
 
     <Button
@@ -74,8 +67,8 @@
             android:layout_width="match_parent"
             style="@style/Base.Widget.AppCompat.Button.Borderless.Colored"
             android:textColor="@color/color_primary"
-            android:textAppearance="?android:textAppearanceMedium"
             android:textAllCaps="false"
+            android:textSize="14sp"
             android:layout_gravity="center"/>
 
 </LinearLayout>

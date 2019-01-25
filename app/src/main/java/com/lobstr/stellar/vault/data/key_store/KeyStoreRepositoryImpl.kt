@@ -7,7 +7,9 @@ import android.security.KeyPairGeneratorSpec
 import android.security.keystore.KeyGenParameterSpec
 import android.security.keystore.KeyProperties
 import android.util.Base64
+import com.lobstr.stellar.vault.data.mnemonic.MnemonicsMapper
 import com.lobstr.stellar.vault.domain.key_store.KeyStoreRepository
+import com.lobstr.stellar.vault.presentation.entities.mnemonic.MnemonicItem
 import com.lobstr.stellar.vault.presentation.util.PrefsUtil
 import java.math.BigInteger
 import java.security.*
@@ -18,7 +20,12 @@ import javax.crypto.SecretKey
 import javax.crypto.spec.GCMParameterSpec
 import javax.security.auth.x500.X500Principal
 
-class KeyStoreRepositoryImpl(val context: Context, val prefsUtil: PrefsUtil) : KeyStoreRepository {
+class KeyStoreRepositoryImpl(
+    val context: Context,
+    val prefsUtil: PrefsUtil,
+    private val mnemonicsMapper: MnemonicsMapper
+) :
+    KeyStoreRepository {
 
     companion object {
         private const val DEFAULT_KEYSTORE_TYPE = "AndroidKeyStore"
@@ -109,12 +116,16 @@ class KeyStoreRepositoryImpl(val context: Context, val prefsUtil: PrefsUtil) : K
         } else {
             val entry = keyStore.getEntry(alias, null)
             val privateKey = (entry as KeyStore.PrivateKeyEntry).privateKey
-            return if(privateKey == null || encryptedString.isNullOrEmpty()) {
+            return if (privateKey == null || encryptedString.isNullOrEmpty()) {
                 null
             } else {
                 decryptRSAData(privateKey, encryptedString)
             }
         }
+    }
+
+    override fun decryptDataToMnemonicItems(alias: String, aliasIV: String): ArrayList<MnemonicItem> {
+        return mnemonicsMapper.transformMnemonicsStr(decryptData(alias, aliasIV))
     }
 
     private fun decryptAESData(masterKey: SecretKey, iv: ByteArray, encryptedString: String): String {

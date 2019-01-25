@@ -5,6 +5,7 @@ import com.arellomobile.mvp.MvpPresenter
 import com.lobstr.stellar.vault.presentation.entities.transaction.TransactionItem
 import com.lobstr.stellar.vault.presentation.util.Constant.Navigation.AUTH
 import com.lobstr.stellar.vault.presentation.util.Constant.Navigation.DASHBOARD
+import com.lobstr.stellar.vault.presentation.util.Constant.Navigation.ERROR
 import com.lobstr.stellar.vault.presentation.util.Constant.Navigation.FINGERPRINT_SET_UP
 import com.lobstr.stellar.vault.presentation.util.Constant.Navigation.MNEMONICS
 import com.lobstr.stellar.vault.presentation.util.Constant.Navigation.SETTINGS
@@ -18,7 +19,8 @@ class ContainerPresenter(
     private val targetFr: Int,
     private val transactionItem: TransactionItem?,
     private val envelopeXdr: String?,
-    private val needAdditionalSignatures: Boolean?
+    private val needAdditionalSignatures: Boolean?,
+    private val errorMessage: String?
 ) : MvpPresenter<ContainerView>() {
 
     override fun onFirstViewAttach() {
@@ -45,6 +47,8 @@ class ContainerPresenter(
             MNEMONICS -> viewState.showMnemonicsFr()
 
             SUCCESS -> viewState.showSuccessFr(envelopeXdr!!, needAdditionalSignatures!!)
+
+            ERROR -> viewState.showErrorFr(errorMessage!!)
         }
     }
 }

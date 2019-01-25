@@ -13,7 +13,7 @@ class OperationDetailsPresenter(private val mTransactionItem: TransactionItem, p
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
 
-        viewState.setupToolbarTitle(R.string.transactions)
+        viewState.setupToolbarTitle(R.string.title_toolbar_transactions)
         val operation: Operation = mTransactionItem.transaction.operations[mPosition]
         when (operation) {
             is PaymentOperation -> viewState.initRecycledView(operation.getFieldsMap())

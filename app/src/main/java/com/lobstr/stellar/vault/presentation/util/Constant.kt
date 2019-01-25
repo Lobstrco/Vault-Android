@@ -16,6 +16,7 @@ object Constant {
         const val EXTRA_TRANSACTION_ITEM = "EXTRA_TRANSACTION_ITEM"
         const val EXTRA_ENVELOPE_XDR = "EXTRA_ENVELOPE_XDR"
         const val EXTRA_NEED_ADDITIONAL_SIGNATURES = "EXTRA_NEED_ADDITIONAL_SIGNATURES"
+        const val EXTRA_ERROR_MESSAGE = "EXTRA_ERROR_MESSAGE"
     }
 
     object Bundle {
@@ -30,6 +31,7 @@ object Constant {
         const val BUNDLE_OPERATION_POSITION = "BUNDLE_OPERATION_POSITION"
         const val BUNDLE_ENVELOPE_XDR = "BUNDLE_ENVELOPE_XDR"
         const val BUNDLE_NEED_ADDITIONAL_SIGNATURES = "BUNDLE_NEED_ADDITIONAL_SIGNATURES"
+        const val BUNDLE_ERROR_MESSAGE = "BUNDLE_ERROR_MESSAGE"
     }
 
     object Navigation {
@@ -43,6 +45,7 @@ object Constant {
         const val FINGERPRINT_SET_UP = 7
         const val SIGNER_INFO = 8
         const val SUCCESS = 9
+        const val ERROR = 10
     }
 
     object Transaction {
@@ -106,5 +109,15 @@ object Constant {
         const val DEFAULT = 0
         const val REFRESH_TOKEN = 1
         const val REFRESH_AUTH = 2
+    }
+
+    /**
+     * UNKNOWN - the user doesn't see Finger Print setup screen
+     * @see com.lobstr.stellar.vault.presentation.auth.touch_id.FingerprintSetUpFragment
+     */
+    object BiometricState {
+        const val UNKNOWN = 0
+        const val ENABLED = 1
+        const val DISABLED = 2
     }
 }

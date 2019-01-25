@@ -41,7 +41,7 @@ class TransactionsPresenter : BasePresenter<TransactionsView>() {
         super.onFirstViewAttach()
 
         registerEventProvider()
-        viewState.setupToolbarTitle(R.string.transactions)
+        viewState.setupToolbarTitle(R.string.title_toolbar_transactions)
         viewState.initRecycledView()
         loadTransactions()
     }

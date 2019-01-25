@@ -123,13 +123,18 @@ class ImportXdrDialogFragment : BaseBottomSheetDialog(), ImportXdrView, View.OnC
         (parentFragment as? TransactionsFragment)?.showSuccessScreen(envelopeXdr, needAdditionalSignatures)
     }
 
+    override fun errorConfirmTransaction(errorMessage: String) {
+        dismiss()
+        (parentFragment as? TransactionsFragment)?.showErrorScreen(errorMessage)
+    }
+
     override fun setSubmitEnabled(enabled: Boolean) {
         btnSubmit.isEnabled = enabled
     }
 
     override fun showFormError(show: Boolean, error: String?) {
         tvError.text = error
-        etImportXdr.setBackgroundResource(if (show) R.drawable.shape_recovery_key_error_edit_text else R.drawable.shape_recovery_key_edit_text)
+        etImportXdr.setBackgroundResource(if (show) R.drawable.shape_input_error_edit_text else R.drawable.shape_input_edit_text)
     }
 
     // ===========================================================

@@ -3,6 +3,7 @@
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/llPinContainer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@android:color/white"
@@ -12,27 +13,46 @@
         tools:context=".presentation.pin.PinActivity">
 
     <TextView
-            android:id="@+id/pinTitle"
+            android:id="@+id/tvPinTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="30dp"
-            android:layout_marginBottom="10dp"
-            android:fontFamily="sans-serif-thin"
             android:gravity="center"
+            android:textAppearance="?android:textAppearanceLarge"
             android:textStyle="bold"
+            android:paddingBottom="5dp"
+            android:layout_marginTop="50dp"
             android:textColor="@android:color/black"
-            android:text="@string/text_title_create_pin"
-            android:textSize="30sp"/>
+            android:text="@string/text_title_create_pin"/>
 
     <TextView
-            android:id="@+id/pinDescription"
+            android:id="@+id/tvPinDescription"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:fontFamily="sans-serif-thin"
             android:gravity="center"
-            android:textColor="@color/color_979797"
-            android:text="@string/text_create_pin"
-            android:textAppearance="?android:textAppearanceMedium"/>
+            android:textAppearance="?android:textAppearanceSmall"
+            android:paddingBottom="16dp"
+            android:textColor="@color/color_757575"
+            android:text="@string/text_create_pin"/>
+
+    <ImageView
+            android:id="@+id/ivPinLogo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_logo_white"
+            android:paddingTop="100dp"/>
+
+    <com.andrognito.pinlockview.IndicatorDots
+            android:id="@+id/indicatorDotsWhite"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:visibility="gone"
+            app:dotDiameter="15dp"
+            app:dotEmptyBackground="@drawable/shape_dot_indicator_empty_white"
+            app:dotFilledBackground="@drawable/shape_dot_indicator_filled_white"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="26dp"/>
 
     <com.andrognito.pinlockview.IndicatorDots
             android:id="@+id/indicatorDots"
@@ -57,4 +77,16 @@
             app:keypadShowDeleteButton="true"
             app:keypadTextColor="@android:color/black"
             app:keypadTextSize="18dp"/>
+
+    <TextView
+            android:id="@+id/tvPinLogOut"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:gravity="center"
+            android:textStyle="bold"
+            android:layout_weight="0"
+            android:textColor="@android:color/white"
+            android:text="@string/text_settings_log_out"
+            android:textAppearance="?android:textAppearanceMedium"/>
 </LinearLayout>

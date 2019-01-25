@@ -31,6 +31,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/text_dashboard_transactions"
                 android:gravity="center"
+                android:textStyle="bold"
                 android:layout_marginTop="15dp"
                 android:layout_marginBottom="15dp"
                 android:textColor="@android:color/white"
@@ -42,19 +43,19 @@
                 android:layout_height="wrap_content"
                 android:text="@string/text_dashboard_show_list"
                 android:gravity="center"
-                android:paddingTop="5dp"
-                android:paddingBottom="5dp"
-                android:paddingLeft="10dp"
-                android:paddingRight="10dp"
+                android:paddingTop="6dp"
+                android:paddingBottom="6dp"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp"
                 android:background="@drawable/shape_dashboard_text_view"
-                android:textColor="@color/white_with_alpha_50"
+                android:textColor="@color/white_with_alpha_60"
                 android:textSize="13sp"/>
     </LinearLayout>
 
     <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="150dp"
+            android:layout_marginTop="155dp"
             android:layout_marginLeft="16dp"
             android:background="@android:color/white"
             android:layout_marginRight="16dp">
@@ -100,7 +101,7 @@
                         android:id="@+id/tvDashboardCopy"
                         android:layout_width="wrap_content"
                         android:layout_height="32dp"
-                        android:text="@string/text_button_copy_key"
+                        android:text="@string/text_btn_copy_key"
                         android:gravity="center"
                         android:textStyle="bold"
                         android:paddingLeft="20dp"
@@ -154,7 +155,7 @@
                         android:layout_height="wrap_content"
                         android:textSize="40sp"
                         android:textStyle="bold"
-                        android:text="1"
+                        android:text="0"
                         android:layout_marginBottom="-10dp"
                         android:textColor="@color/color_primary"
                         android:gravity="center_horizontal"/>
@@ -164,7 +165,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:textSize="15sp"
-                        android:text="@string/text_accounts"
+                        android:text="@string/text_dashboard_accounts"
                         android:textColor="@color/gray_text_color"
                         android:gravity="center_horizontal"/>
             </LinearLayout>

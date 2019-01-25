@@ -6,37 +6,18 @@
         android:orientation="vertical"
         android:layout_margin="16dp">
 
-    <!-- logo stub -->
-    <LinearLayout android:layout_width="match_parent"
-                  android:layout_height="wrap_content"
-                  android:orientation="horizontal"
-                  android:gravity="center">
-        <ImageView android:layout_width="wrap_content"
-                   android:layout_height="wrap_content"
-                   android:src="@drawable/ic_gray_logo"
-                   android:layout_gravity="center"/>
-
-        <ImageView android:layout_width="1dp" android:layout_height="match_parent"
-                   android:background="@color/color_757575"
-                   android:layout_marginLeft="8dp"
-                   android:layout_marginRight="8dp"/>
-
-        <TextView android:layout_width="wrap_content"
-                  android:layout_height="wrap_content"
-                  android:textColor="@android:color/black"
-                  android:textSize="20dp"
-                  android:textAllCaps="true"
-                  android:text="Vault"/>
-
-    </LinearLayout>
+    <ImageView android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               android:src="@drawable/ic_logo_purple"
+               android:layout_gravity="center"
+               android:layout_marginBottom="12dp"/>
 
     <TextView android:layout_width="wrap_content"
               android:layout_height="wrap_content"
-              android:textColor="@color/color_757575"
+              android:textColor="@color/color_071c33"
               android:textAppearance="?android:textAppearanceMedium"
-              android:textSize="17sp"
-              android:text="@string/text_tv_auth_title"
-              android:padding="8dp"
+              android:textSize="16sp"
+              android:text="@string/text_start_screen_tv_title"
               android:layout_gravity="center"/>
 
     <LinearLayout android:layout_width="match_parent"
@@ -45,22 +26,22 @@
                   android:orientation="vertical"
                   android:gravity="center">
         <Button
-                android:text="@string/text_tv_btn_create_account"
+                android:text="@string/text_start_screen_btn_create_account"
                 android:layout_height="wrap_content"
                 android:id="@+id/btnAuthNew"
                 android:layout_width="match_parent"
                 style="@style/Base.Widget.AppCompat.Button.Borderless.Colored"
                 android:background="@drawable/selector_default_button_with_round"
                 android:textColor="@android:color/white"
-                android:textAppearance="?android:textAppearanceMedium"
+                android:textSize="14sp"
                 android:textAllCaps="false"/>
         <Button
-                android:text="@string/text_tv_btn_restore_account"
+                android:text="@string/text_start_screen_btn_restore_account"
                 android:layout_height="wrap_content"
                 android:id="@+id/btnAuthRestore"
                 android:layout_width="match_parent"
                 android:layout_marginTop="8dp"
-                android:textAppearance="?android:textAppearanceMedium"
+                android:textSize="14sp"
                 android:textAllCaps="false"
                 android:textColor="@color/color_primary"
                 android:background="@drawable/selector_default_button_with_round_stroked"
@@ -70,10 +51,11 @@
 
     <TextView
             android:id="@+id/tvTermsAndPrivacyPolicy"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="@android:color/black"
+            android:textColor="@color/color_99000000"
             android:gravity="center"
+            android:textSize="12sp"
             android:textColorLink="@color/color_primary"
-            android:text="@string/text_tv_terms_and_privacy"/>
+            android:text="@string/text_start_screen_terms_and_privacy"/>
 </LinearLayout>

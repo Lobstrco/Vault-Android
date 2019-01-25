@@ -10,10 +10,10 @@ import com.arellomobile.mvp.viewstate.strategy.StateStrategyType
 interface PinView : MvpView {
 
     @StateStrategyType(AddToEndSingleStrategy::class)
-    fun attachIndicatorDots()
+    fun showTitle(@StringRes title: Int)
 
     @StateStrategyType(AddToEndSingleStrategy::class)
-    fun showTitle(@StringRes title: Int)
+    fun setScreenStyle(style: Int)
 
     @StateStrategyType(SkipStrategy::class)
     fun resetPin()
@@ -44,4 +44,7 @@ interface PinView : MvpView {
 
     @StateStrategyType(SkipStrategy::class)
     fun showBiometricDialog()
+
+    @StateStrategyType(SkipStrategy::class)
+    fun showAuthScreen()
 }

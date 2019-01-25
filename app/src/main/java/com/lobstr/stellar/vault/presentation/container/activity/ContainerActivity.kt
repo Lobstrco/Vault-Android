@@ -1,6 +1,8 @@
 package com.lobstr.stellar.vault.presentation.container.activity
 
 import android.os.Bundle
+import androidx.annotation.ColorRes
+import androidx.annotation.DrawableRes
 import androidx.fragment.app.Fragment
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
@@ -54,7 +56,8 @@ class ContainerActivity : BaseActivity(), ContainerView {
         intent?.getIntExtra(EXTRA_NAVIGATION_FR, DASHBOARD)!!,
         intent?.getParcelableExtra(Constant.Extra.EXTRA_TRANSACTION_ITEM),
         intent?.getStringExtra(Constant.Extra.EXTRA_ENVELOPE_XDR),
-        intent?.getBooleanExtra(Constant.Extra.EXTRA_NEED_ADDITIONAL_SIGNATURES, false)
+        intent?.getBooleanExtra(Constant.Extra.EXTRA_NEED_ADDITIONAL_SIGNATURES, false),
+        intent?.getStringExtra(Constant.Extra.EXTRA_ERROR_MESSAGE)
     )
 
     // ===========================================================
@@ -70,6 +73,15 @@ class ContainerActivity : BaseActivity(), ContainerView {
     // ===========================================================
     // Listeners, methods for/from Interfaces
     // ===========================================================
+
+    override fun setupToolbar(
+        @ColorRes toolbarColor: Int, @DrawableRes upArrow: Int,
+        @ColorRes upArrowColor: Int, @ColorRes titleColor: Int
+    ) {
+        setActionBarBackground(toolbarColor)
+        setHomeAsUpIndicator(upArrow, upArrowColor)
+        setActionBarTitleColor(titleColor)
+    }
 
     override fun showTransactionDetails(transactionItem: TransactionItem) {
         val bundle = Bundle()
@@ -137,6 +149,19 @@ class ContainerActivity : BaseActivity(), ContainerView {
         bundle.putInt(Constant.Bundle.BUNDLE_NAVIGATION_FR, Constant.Navigation.SUCCESS)
         bundle.putString(Constant.Bundle.BUNDLE_ENVELOPE_XDR, envelopeXdr)
         bundle.putBoolean(Constant.Bundle.BUNDLE_NEED_ADDITIONAL_SIGNATURES, needAdditionalSignatures)
+
+        FragmentTransactionManager.displayFragment(
+            supportFragmentManager,
+            Fragment.instantiate(this, ContainerFragment::class.java.name, bundle),
+            R.id.fl_container,
+            true
+        )
+    }
+
+    override fun showErrorFr(errorMessage: String) {
+        val bundle = Bundle()
+        bundle.putInt(Constant.Bundle.BUNDLE_NAVIGATION_FR, Constant.Navigation.ERROR)
+        bundle.putString(Constant.Bundle.BUNDLE_ERROR_MESSAGE, errorMessage)
 
         FragmentTransactionManager.displayFragment(
             supportFragmentManager,

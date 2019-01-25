@@ -102,6 +102,15 @@
 -keep public class * extends android.app.Fragment
 -keep public class com.android.vending.licensing.ILicensingService
 
+-keep class org.bouncycastle.** { *; }
+-dontwarn org.bouncycastle.**
+
+-keep class org.joda.** { *; }
+-dontwarn org.joda.**
+
+-keep class shadow.** { *; }
+-dontwarn shadow.**
+
 -keepclasseswithmembernames class * {
  native <methods>;
 }

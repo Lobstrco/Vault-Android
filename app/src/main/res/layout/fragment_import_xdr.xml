@@ -3,42 +3,46 @@
               android:orientation="vertical"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
-              android:padding="16dp">
+              android:paddingTop="24dp"
+              android:paddingBottom="24dp"
+              android:paddingRight="16dp"
+              android:paddingLeft="16dp">
 
     <TextView
             android:id="@+id/tvTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@android:color/black"
-            android:text="Add Transaction XDR"
+            android:text="@string/text_tv_import_xdr_title"
             android:layout_gravity="center"
             android:gravity="center"
-            android:textSize="20sp"
+            android:textSize="16sp"
+            android:layout_marginBottom="10dp"
             android:textStyle="bold"/>
 
     <TextView
             android:id="@+id/tvSubtitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="7dp"
             android:gravity="center"
             android:layout_gravity="center"
-            android:textColor="@color/color_757575"
-            android:textSize="15sp"
-            android:text="To submit transaction add unique code into"
+            android:textColor="@color/color_071c33"
+            android:textSize="14sp"
+            android:layout_marginBottom="16dp"
+            android:text="@string/text_tv_import_xdr_subtitle"
             android:textAppearance="?android:textAppearanceMedium"/>
 
     <EditText
             android:id="@+id/etImportXdr"
             android:layout_width="match_parent"
-            android:layout_height="186dp"
+            android:layout_height="167dp"
             android:gravity="top"
-            android:layout_marginTop="18dp"
             android:layout_marginBottom="8dp"
             android:padding="17dp"
-            android:hint="Transaction XDR"
-            android:background="@drawable/shape_recovery_key_edit_text"
-            android:minLines="5"/>
+            android:textSize="14sp"
+            android:textColorHint="@color/color_4D000000"
+            android:hint="@string/hint_et_import_xdr"
+            android:background="@drawable/shape_input_edit_text"/>
 
     <TextView
             android:id="@+id/tvError"
@@ -47,21 +51,20 @@
             android:gravity="center"
             android:layout_gravity="center"
             android:textColor="@color/color_d9534f"
-            android:textSize="15sp"
+            android:textSize="12sp"
             android:maxLines="1"
             android:ellipsize="end"
-            android:layout_marginBottom="8dp"
-            android:textAppearance="?android:textAppearanceMedium"/>
+            android:layout_marginBottom="19dp"/>
 
     <Button
             android:id="@+id/btnSubmit"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="@android:color/white"
-            style="@style/Base.Widget.AppCompat.Button.Borderless.Colored"
+            android:textSize="14sp"
             android:textAllCaps="false"
             android:enabled="false"
             android:background="@drawable/selector_default_button_with_round"
-            android:text="Submit"/>
+            android:text="@string/text_btn_submit"/>
 
 </LinearLayout>

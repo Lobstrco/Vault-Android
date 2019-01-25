@@ -1,6 +1,8 @@
 package com.lobstr.stellar.vault.domain.settings
 
 import com.lobstr.stellar.vault.domain.key_store.KeyStoreRepository
+import com.lobstr.stellar.vault.presentation.util.Constant.BiometricState.DISABLED
+import com.lobstr.stellar.vault.presentation.util.Constant.BiometricState.ENABLED
 import com.lobstr.stellar.vault.presentation.util.PrefsUtil
 
 
@@ -21,10 +23,10 @@ class SettingsInteractorImpl(private val prefsUtil: PrefsUtil, private val keySt
     }
 
     override fun isTouchIdEnabled(): Boolean {
-        return prefsUtil.isTouchIdEnabled
+        return prefsUtil.biometricState == ENABLED
     }
 
     override fun setTouchIdEnabled(enabled: Boolean) {
-        prefsUtil.isTouchIdEnabled = enabled
+        prefsUtil.biometricState = if (enabled) ENABLED else DISABLED
     }
 }

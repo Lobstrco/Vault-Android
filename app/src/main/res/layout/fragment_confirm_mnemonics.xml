@@ -13,9 +13,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="start"
-            android:textAppearance="?android:textAppearanceLarge"
             android:textStyle="bold"
-            android:paddingBottom="5dp"
+            android:layout_marginBottom="8dp"
+            android:textSize="20sp"
             android:textColor="@android:color/black"
             android:text="@string/text_tv_confirm_mnemonics_title"/>
 
@@ -23,9 +23,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="start"
-            android:textAppearance="?android:textAppearanceSmall"
-            android:paddingBottom="16dp"
-            android:textColor="@color/color_757575"
+            android:textSize="14sp"
+            android:layout_marginBottom="16dp"
+            android:textColor="@color/color_071c33"
             android:text="@string/text_tv_confirm_mnemonics_description"/>
 
     <LinearLayout android:layout_width="match_parent"
@@ -42,8 +42,8 @@
                 android:layout_weight="1"
                 app:isCounterEnabled="false"
                 app:isDraggable="true"
-                app:itemTextColor="@android:color/white"
-                app:itemBackground="@drawable/bg_mnemonic_item_colored"/>
+                app:itemTextColor="@android:color/black"
+                app:itemBackground="@drawable/bg_mnemonic_item_white"/>
 
         <com.lobstr.stellar.vault.presentation.auth.mnemonic.MnemonicsContainerView
                 android:id="@+id/mnemonicContainerToSelectView"
@@ -54,19 +54,19 @@
                 android:layout_weight="1"
                 app:isDraggable="true"
                 app:itemTextColor="@android:color/white"
-                app:itemBackground="@drawable/bg_mnemonic_item_colored"/>
+                app:itemBackground="@drawable/bg_mnemonic_item_purple"
+                app:itemEmptyBackground="@drawable/bg_mnemonic_item_empty"/>
 
     </LinearLayout>
 
     <Button android:id="@+id/btnNext"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            style="@style/Base.Widget.AppCompat.Button.Borderless.Colored"
             android:background="@drawable/selector_default_button_with_round"
             android:textColor="@android:color/white"
-            android:textAppearance="?android:textAppearanceMedium"
             android:textAllCaps="false"
+            android:textSize="14sp"
             android:enabled="false"
-            android:text="@string/text_btn_confirm_mnemonics_next"/>
+            android:text="@string/text_btn_next"/>
 
 </LinearLayout>

@@ -11,78 +11,61 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:layout_marginBottom="70dp"
-            android:background="@android:color/white">
+            android:layout_marginBottom="70dp">
 
         <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/title_settings_wallet"
-                android:padding="10dp"
-                android:textAllCaps="true"
-                android:background="@color/gray_background"
-                android:textColor="@color/settings_title_color"
-                android:textSize="13sp"/>
-
-        <View
-                android:layout_width="match_parent"
-                android:layout_height="0.5dp"
-                android:background="@color/gray_divider"/>
+                android:padding="16dp"
+                android:background="@android:color/white"
+                android:textColor="@color/color_primary"
+                android:textSize="14sp"
+                android:fontFamily="sans-serif-medium"/>
 
         <LinearLayout
                 android:id="@+id/llPublicKey"
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
+                android:layout_height="57dp"
                 android:orientation="horizontal"
                 android:gravity="center_vertical"
-                android:paddingLeft="10dp"
-                android:paddingRight="10dp"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
                 android:background="@android:color/white">
 
             <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:textSize="17sp"
+                    android:textSize="16sp"
                     android:textColor="@android:color/black"
                     android:text="@string/text_settings_public_key"/>
 
-            <ImageView
-                    android:id="@+id/ivCopyUserPk"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0"
-                    android:padding="10dp"
-                    android:src="@drawable/ic_content_copy_black"
-                    tools:ignore="ContentDescription"/>
-
             <TextView
-                    android:id="@+id/tvUserPublicKey"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:maxWidth="150dp"
                     android:gravity="center"
-                    android:textColor="@color/gray_text_color"
-                    android:textSize="13sp"
-                    android:textAllCaps="true"
-                    android:ellipsize="middle"
+                    android:textColor="@color/color_primary"
+                    android:textSize="14sp"
+                    android:text="@string/text_tv_settings_show"
                     android:layout_weight="0"
                     android:singleLine="true"/>
         </LinearLayout>
 
         <View
                 android:layout_width="match_parent"
-                android:layout_height="0.5dp"
-                android:layout_marginStart="10dp"
+                android:layout_height="1dp"
+                android:layout_marginStart="16dp"
                 android:layout_marginEnd="0dp"
-                android:background="@color/gray_divider"/>
+                android:background="@color/color_33979797"/>
 
         <LinearLayout
                 android:id="@+id/llSettingsSigners"
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:paddingStart="10dp"
-                android:paddingEnd="0dp"
+                android:layout_height="57dp"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
                 android:orientation="horizontal"
                 android:gravity="center_vertical"
                 android:background="@android:color/white">
@@ -92,7 +75,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:textSize="17sp"
+                    android:textSize="16sp"
                     android:textColor="@android:color/black"
                     android:text="@string/text_settings_signers"/>
 
@@ -104,42 +87,32 @@
                     tools:ignore="ContentDescription"/>
         </LinearLayout>
 
-        <View
-                android:layout_width="match_parent"
-                android:layout_height="0.5dp"
-                android:background="@color/gray_divider"/>
-
         <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/title_settings_security"
-                android:padding="10dp"
-                android:textAllCaps="true"
-                android:textSize="13sp"
-                android:background="@color/gray_background"
-                android:textColor="@color/settings_title_color"
-                android:textAppearance="?android:textAppearanceMedium"/>
-
-        <View
-                android:layout_width="match_parent"
-                android:layout_height="0.5dp"
-                android:background="@color/gray_divider"/>
+                android:padding="16dp"
+                android:textSize="14sp"
+                android:layout_marginTop="8dp"
+                android:background="@android:color/white"
+                android:textColor="@color/color_primary"
+                android:fontFamily="sans-serif-medium"/>
 
         <LinearLayout
                 android:id="@+id/llSettingsMnemonics"
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
+                android:layout_height="57dp"
                 android:orientation="horizontal"
                 android:gravity="center_vertical"
-                android:paddingStart="10dp"
-                android:paddingEnd="0dp"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
                 android:background="@android:color/white">
 
             <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:textSize="17sp"
+                    android:textSize="16sp"
                     android:textColor="@android:color/black"
                     android:text="@string/text_settings_mnemonic_code"/>
 
@@ -153,17 +126,17 @@
 
         <View
                 android:layout_width="match_parent"
-                android:layout_height="0.5dp"
-                android:layout_marginStart="10dp"
+                android:layout_height="1dp"
+                android:layout_marginStart="16dp"
                 android:layout_marginEnd="0dp"
-                android:background="@color/gray_divider"/>
+                android:background="@color/color_33979797"/>
 
         <LinearLayout
                 android:id="@+id/llSettingsChangePin"
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:paddingStart="10dp"
-                android:paddingEnd="0dp"
+                android:layout_height="57dp"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
                 android:orientation="horizontal"
                 android:gravity="center_vertical"
                 android:background="@android:color/white">
@@ -172,7 +145,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:textSize="17sp"
+                    android:textSize="16sp"
                     android:textColor="@android:color/black"
                     android:text="@string/text_settings_change_pin"/>
 
@@ -184,65 +157,62 @@
                     tools:ignore="ContentDescription"/>
         </LinearLayout>
 
-        <View
-                android:layout_width="match_parent"
-                android:layout_height="0.5dp"
-                android:layout_marginStart="10dp"
-                android:layout_marginEnd="0dp"
-                android:background="@color/gray_divider"/>
-
         <LinearLayout
                 android:id="@+id/llSettingsTouchId"
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:paddingStart="10dp"
-                android:paddingEnd="0dp"
-                android:orientation="horizontal"
-                android:gravity="center_vertical"
-                android:background="@android:color/white">
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
 
-            <TextView
+            <View
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:textSize="17sp"
-                    android:textColor="@android:color/black"
-                    android:text="@string/text_settings_touch_id"/>
+                    android:layout_height="1dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="0dp"
+                    android:background="@color/color_33979797"/>
 
-            <androidx.appcompat.widget.SwitchCompat
-                    android:layout_weight="0"
-                    android:id="@+id/swSettingsTouchId"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
+            <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="57dp"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="16dp"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:background="@android:color/white">
+
+                <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:textSize="16sp"
+                        android:textColor="@android:color/black"
+                        android:text="@string/text_settings_touch_id"/>
+
+                <androidx.appcompat.widget.SwitchCompat
+                        android:layout_weight="0"
+                        android:id="@+id/swSettingsTouchId"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+            </LinearLayout>
+
         </LinearLayout>
-
-        <View
-                android:layout_width="match_parent"
-                android:layout_height="0.5dp"
-                android:background="@color/gray_divider"/>
 
         <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/title_settings_about"
-                android:textAllCaps="true"
-                android:textSize="13sp"
-                android:padding="10dp"
-                android:background="@color/gray_background"
-                android:textColor="@color/settings_title_color"
-                android:textAppearance="?android:textAppearanceMedium"/>
-
-        <View
-                android:layout_width="match_parent"
-                android:layout_height="0.5dp"
-                android:background="@color/gray_divider"/>
+                android:padding="16dp"
+                android:layout_marginTop="8dp"
+                android:background="@android:color/white"
+                android:textColor="@color/color_primary"
+                android:textSize="14sp"
+                android:fontFamily="sans-serif-medium"/>
 
         <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
+                android:layout_height="57dp"
                 android:orientation="horizontal"
-                android:paddingStart="10dp"
-                android:paddingEnd="10dp"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
                 android:gravity="center_vertical"
                 android:background="@android:color/white">
 
@@ -250,7 +220,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:textSize="17sp"
+                    android:textSize="16sp"
                     android:textColor="@android:color/black"
                     android:text="@string/text_settings_version"/>
 
@@ -258,24 +228,25 @@
                     android:id="@+id/tvSettingsVersion"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="15sp"
+                    android:textColor="@color/color_8a000000"
+                    android:textSize="14sp"
                     android:padding="10dp"
                     android:layout_weight="0"/>
         </LinearLayout>
 
         <View
                 android:layout_width="match_parent"
-                android:layout_height="0.5dp"
-                android:layout_marginStart="10dp"
+                android:layout_height="1dp"
+                android:layout_marginStart="16dp"
                 android:layout_marginEnd="0dp"
-                android:background="@color/gray_divider"/>
+                android:background="@color/color_33979797"/>
 
         <LinearLayout
                 android:id="@+id/llSettingsHelp"
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:paddingStart="10dp"
-                android:paddingEnd="0dp"
+                android:layout_height="57dp"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
                 android:orientation="horizontal"
                 android:gravity="center_vertical"
                 android:background="@android:color/white">
@@ -284,7 +255,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:textSize="17sp"
+                    android:textSize="16sp"
                     android:textColor="@android:color/black"
                     android:text="@string/text_settings_help"/>
 
@@ -298,19 +269,22 @@
 
         <View
                 android:layout_width="match_parent"
-                android:layout_height="0.5dp"
-                android:background="@color/gray_divider"/>
+                android:layout_height="1dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="0dp"
+                android:background="@color/color_33979797"/>
 
         <TextView
                 android:id="@+id/tvLogOut"
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
+                android:layout_height="57dp"
                 android:gravity="center_vertical"
                 android:background="@android:color/white"
-                android:textSize="17sp"
+                android:textSize="16sp"
                 android:textColor="@android:color/black"
-                android:text="Log Out"
-                android:padding="10dp"/>
+                android:text="@string/text_settings_log_out"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"/>
 
         <TextView
                 android:layout_width="match_parent"
@@ -319,7 +293,6 @@
                 android:paddingBottom="16dp"
                 android:gravity="center"
                 android:drawablePadding="8dp"
-                android:background="@color/gray_background"
                 android:layout_gravity="bottom"
                 android:textSize="10sp"
                 android:drawableTop="@drawable/ic_gray_logo"

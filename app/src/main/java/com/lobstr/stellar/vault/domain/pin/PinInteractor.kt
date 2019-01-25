@@ -15,5 +15,9 @@ interface PinInteractor {
 
     fun accountHasSigners(): Boolean
 
+    fun isTouchIdSetUp(): Boolean
+
     fun isTouchIdEnabled(): Boolean
+
+    fun clearUserData()
 }

@@ -22,6 +22,7 @@ import com.lobstr.stellar.vault.presentation.entities.transaction.TransactionIte
 import com.lobstr.stellar.vault.presentation.home.transactions.details.adapter.OnOperationClicked
 import com.lobstr.stellar.vault.presentation.home.transactions.details.adapter.TransactionOperationAdapter
 import com.lobstr.stellar.vault.presentation.home.transactions.operation.OperationDetailsFragment
+import com.lobstr.stellar.vault.presentation.home.transactions.submit_error.ErrorFragment
 import com.lobstr.stellar.vault.presentation.home.transactions.submit_success.SuccessFragment
 import com.lobstr.stellar.vault.presentation.util.Constant
 import com.lobstr.stellar.vault.presentation.util.Constant.Bundle.BUNDLE_TRANSACTION_ITEM
@@ -150,8 +151,6 @@ class TransactionDetailsFragment : BaseFragment(), TransactionDetailsView, View.
         needAdditionalSignatures: Boolean,
         transactionItem: TransactionItem
     ) {
-        showMessage("Transaction Confirmed")
-
         // notify target about changes
         val intent = Intent()
         intent.putExtra(EXTRA_TRANSACTION_ITEM, transactionItem)
@@ -167,6 +166,20 @@ class TransactionDetailsFragment : BaseFragment(), TransactionDetailsView, View.
         FragmentTransactionManager.displayFragment(
             parentFragment!!.childFragmentManager,
             Fragment.instantiate(context, SuccessFragment::class.java.name, bundle),
+            R.id.fl_container,
+            true
+        )
+    }
+
+    override fun errorConfirmTransaction(errorMessage: String) {
+        parentFragment?.childFragmentManager?.popBackStack()
+
+        val bundle = Bundle()
+        bundle.putString(Constant.Bundle.BUNDLE_ERROR_MESSAGE, errorMessage)
+
+        FragmentTransactionManager.displayFragment(
+            parentFragment!!.childFragmentManager,
+            Fragment.instantiate(context, ErrorFragment::class.java.name, bundle),
             R.id.fl_container,
             true
         )
@@ -194,7 +207,7 @@ class TransactionDetailsFragment : BaseFragment(), TransactionDetailsView, View.
             .setTitle(getString(R.string.title_deny_transaction_dialog))
             .setMessage(getString(R.string.msg_deny_transaction_dialog))
             .setNegativeBtnText(getString(R.string.text_btn_cancel))
-            .setPositiveBtnText(getString(R.string.text_btn_confirm))
+            .setPositiveBtnText(getString(R.string.text_btn_deny))
             .create()
             .show(childFragmentManager, DENY_TRANSACTION)
     }

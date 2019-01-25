@@ -15,6 +15,7 @@ import com.lobstr.stellar.vault.R
 import com.lobstr.stellar.vault.presentation.auth.mnemonic.MnemonicsContainerView
 import com.lobstr.stellar.vault.presentation.base.fragment.BaseFragment
 import com.lobstr.stellar.vault.presentation.dialog.alert.base.AlertDialogFragment
+import com.lobstr.stellar.vault.presentation.entities.mnemonic.MnemonicItem
 import com.lobstr.stellar.vault.presentation.faq.FaqFragment
 import com.lobstr.stellar.vault.presentation.pin.PinActivity
 import com.lobstr.stellar.vault.presentation.util.Constant
@@ -49,7 +50,7 @@ class ConfirmMnemonicsFragment : BaseFragment(), ConfirmMnemonicsView, View.OnCl
 
     @ProvidePresenter
     fun provideConfirmMnemonicsPresenter() = ConfirmMnemonicsPresenter(
-        arguments?.getCharArray(Constant.Bundle.BUNDLE_MNEMONICS_ARRAY)!!
+        arguments?.getParcelableArrayList(Constant.Bundle.BUNDLE_MNEMONICS_ARRAY)!!
     )
 
     // ===========================================================
@@ -116,13 +117,12 @@ class ConfirmMnemonicsFragment : BaseFragment(), ConfirmMnemonicsView, View.OnCl
         }
     }
 
-    override fun setupMnemonicsToSelect(mnemonics: List<String>) {
-        btnNext.isEnabled = mnemonics.isEmpty()
+    override fun setupMnemonicsToSelect(mnemonics: List<MnemonicItem>) {
         mnemonicContainerToSelectView.mMnemonicList = mnemonics
         mnemonicContainerToSelectView.setupMnemonics()
     }
 
-    override fun setupMnemonicsToConfirm(mnemonics: List<String>) {
+    override fun setupMnemonicsToConfirm(mnemonics: List<MnemonicItem>) {
         mnemonicContainerToConfirmView.mMnemonicList = mnemonics
         mnemonicContainerToConfirmView.setupMnemonics()
     }
@@ -157,6 +157,10 @@ class ConfirmMnemonicsFragment : BaseFragment(), ConfirmMnemonicsView, View.OnCl
             R.id.fl_container,
             true
         )
+    }
+
+    override fun setActionButtonEnabled(enabled: Boolean) {
+        btnNext.isEnabled = enabled
     }
 
     // ===========================================================

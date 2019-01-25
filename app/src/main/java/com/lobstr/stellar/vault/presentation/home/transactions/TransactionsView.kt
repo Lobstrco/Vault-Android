@@ -41,4 +41,7 @@ interface TransactionsView : MvpView {
 
     @StateStrategyType(SkipStrategy::class)
     fun showSuccessScreen(envelopeXdr: String, needAdditionalSignatures: Boolean)
+
+    @StateStrategyType(SkipStrategy::class)
+    fun showErrorScreen(errorMessage: String)
 }

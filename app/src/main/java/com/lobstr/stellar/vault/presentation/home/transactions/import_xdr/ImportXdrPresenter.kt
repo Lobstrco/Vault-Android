@@ -3,6 +3,7 @@ package com.lobstr.stellar.vault.presentation.home.transactions.import_xdr
 import com.arellomobile.mvp.InjectViewState
 import com.lobstr.stellar.vault.R
 import com.lobstr.stellar.vault.data.error.exeption.DefaultException
+import com.lobstr.stellar.vault.data.error.exeption.HorizonException
 import com.lobstr.stellar.vault.data.error.exeption.UserNotAuthorizedException
 import com.lobstr.stellar.vault.domain.import_xdr.ImportXdrInteractor
 import com.lobstr.stellar.vault.domain.util.EventProviderModule
@@ -53,8 +54,8 @@ class ImportXdrPresenter : BasePresenter<ImportXdrView>() {
                     val transactionResultCode = extras?.resultCodes?.transactionResultCode
 
                     when {
-                        envelopXdr == null -> throw Throwable(transactionResultCode)
-                        transactionResultCode != null && transactionResultCode != "tx_bad_auth" -> throw Throwable(
+                        envelopXdr == null -> throw HorizonException(transactionResultCode!!)
+                        transactionResultCode != null && transactionResultCode != "tx_bad_auth" -> throw HorizonException(
                             transactionResultCode
                         )
                         transactionResultCode != null && transactionResultCode == "tx_bad_auth" -> needAdditionalSignatures =
@@ -84,26 +85,21 @@ class ImportXdrPresenter : BasePresenter<ImportXdrView>() {
                     )
                 }, {
                     when (it) {
+                        is HorizonException -> {
+                            // TODO handle "tx_bad_seq"
+                            viewState.errorConfirmTransaction(it.details)
+                        }
                         is UserNotAuthorizedException -> {
                             confirmTransaction(xdr)
                         }
                         is DefaultException -> {
-//                            viewState.showMessage(it.details)
                             viewState.showFormError(true, it.details)
                         }
                         else -> {
-                            if (it.message == "tx_bad_seq") {
-                                // TODO handle "tx_bad_seq"
-                                viewState.showFormError(true, it.message)
-//                                viewState.showMessage(it.message ?: "")
-                            } else {
-                                viewState.showFormError(
-                                    true,
-                                    LVApplication.sAppComponent.context.getString(R.string.msg_bad_xdr)
-                                )
-//                                viewState.showMessage(it.message ?: "")
-                            }
-                        }
+                            viewState.showFormError(
+                                true,
+                                LVApplication.sAppComponent.context.getString(R.string.msg_bad_xdr)
+                            )                        }
                     }
                 })
         )

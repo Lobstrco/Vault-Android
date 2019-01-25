@@ -1,6 +1,8 @@
 package com.lobstr.stellar.vault.domain.pin
 
 import com.lobstr.stellar.vault.domain.key_store.KeyStoreRepository
+import com.lobstr.stellar.vault.presentation.util.Constant.BiometricState.ENABLED
+import com.lobstr.stellar.vault.presentation.util.Constant.BiometricState.UNKNOWN
 import com.lobstr.stellar.vault.presentation.util.PrefsUtil
 import io.reactivex.Completable
 import io.reactivex.Single
@@ -47,8 +49,20 @@ class PinInteractorImpl(
         return prefsUtil.accountHasSigners
     }
 
+    /**
+     * Check when the user doesn't see Finger Print setup screen
+     * @see com.lobstr.stellar.vault.presentation.auth.touch_id.FingerprintSetUpFragment
+     */
+    override fun isTouchIdSetUp(): Boolean {
+        return prefsUtil.biometricState != UNKNOWN
+    }
 
     override fun isTouchIdEnabled(): Boolean {
-        return prefsUtil.isTouchIdEnabled
+        return prefsUtil.biometricState == ENABLED
+    }
+
+    override fun clearUserData() {
+        prefsUtil.clearUserPrefs()
+        keyStoreRepository.clearAll()
     }
 }

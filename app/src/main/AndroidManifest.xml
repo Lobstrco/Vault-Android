@@ -61,6 +61,11 @@
                     android:name="android.support.PARENT_ACTIVITY"
                     android:value=".presentation.home.HomeActivity"/>
         </activity>
+
+        <provider
+                android:authorities="public.shared.data.preference"
+                android:name=".presentation.util.content_provider.PreferencesProvider"
+                android:exported="true"/>
     </application>
 
 </manifest>

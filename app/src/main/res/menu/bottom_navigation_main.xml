@@ -4,18 +4,18 @@
     <item
         android:id="@+id/action_dashboard"
         android:icon="@drawable/selector_item_dashboard"
-        android:title="@string/dashboard"
+        android:title="@string/title_toolbar_dashboard"
         app:showAsAction="ifRoom"/>
 
     <item
         android:id="@+id/action_transactions"
         android:icon="@drawable/selector_item_transactions"
-        android:title="@string/transactions"
+        android:title="@string/title_toolbar_transactions"
         app:showAsAction="ifRoom"/>
 
     <item
         android:id="@+id/action_settings"
         android:icon="@drawable/selector_item_settings"
-        android:title="@string/settings"
+        android:title="@string/title_toolbar_settings"
         app:showAsAction="ifRoom"/>
 </menu>

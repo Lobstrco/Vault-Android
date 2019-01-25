@@ -7,10 +7,10 @@
         </shape>
     </item>
 
-    <!--<item>-->
-    <!--<bitmap-->
-    <!--android:gravity="center"-->
-    <!--android:src="@drawable/img_logo"/>-->
-    <!--</item>-->
+    <item>
+        <bitmap
+                android:gravity="center"
+                android:src="@drawable/ic_app_logo"/>
+    </item>
 
 </layer-list>

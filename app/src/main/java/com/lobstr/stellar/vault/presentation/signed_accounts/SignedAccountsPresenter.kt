@@ -31,7 +31,7 @@ class SignedAccountsPresenter : BasePresenter<SignedAccountsView>() {
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
 
-        viewState.setupToolbarTitle(R.string.signed_accounts)
+        viewState.setupToolbarTitle(R.string.title_toolbar_signed_accounts)
         viewState.initRecycledView()
         registerEventProvider()
         loadSignedAccountsList()

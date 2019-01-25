@@ -65,7 +65,7 @@ class SuccessFragment : BaseFragment(), SuccessView, View.OnClickListener {
 
     private fun setListeners() {
         btnCopyXdr.setOnClickListener(this)
-        btnBack.setOnClickListener(this)
+        btnDone.setOnClickListener(this)
     }
 
     // ===========================================================
@@ -75,8 +75,12 @@ class SuccessFragment : BaseFragment(), SuccessView, View.OnClickListener {
     override fun onClick(v: View?) {
         when (v!!.id) {
             R.id.btnCopyXdr -> mPresenter.copyXdrClicked()
-            R.id.btnBack -> mPresenter.backClicked()
+            R.id.btnDone -> mPresenter.doneClicked()
         }
+    }
+
+    override fun setupXdr(xdr: String) {
+        tvXdr.text = xdr
     }
 
     override fun finishScreen() {
@@ -85,7 +89,6 @@ class SuccessFragment : BaseFragment(), SuccessView, View.OnClickListener {
 
     override fun setAdditionalSignaturesInfoEnabled(enabled: Boolean) {
         tvAdditionalSignaturesDescription.visibility = if (enabled) View.VISIBLE else View.GONE
-        btnCopyXdr.visibility = if (enabled) View.VISIBLE else View.GONE
     }
 
     override fun copyToClipBoard(text: String) {

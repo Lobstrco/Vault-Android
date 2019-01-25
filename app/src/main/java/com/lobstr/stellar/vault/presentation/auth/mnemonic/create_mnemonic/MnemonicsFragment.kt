@@ -11,6 +11,7 @@ import com.lobstr.stellar.vault.R
 import com.lobstr.stellar.vault.presentation.auth.AuthActivity
 import com.lobstr.stellar.vault.presentation.auth.mnemonic.confirm_mnemonic.ConfirmMnemonicsFragment
 import com.lobstr.stellar.vault.presentation.base.fragment.BaseFragment
+import com.lobstr.stellar.vault.presentation.entities.mnemonic.MnemonicItem
 import com.lobstr.stellar.vault.presentation.faq.FaqFragment
 import com.lobstr.stellar.vault.presentation.util.AppUtil
 import com.lobstr.stellar.vault.presentation.util.Constant
@@ -110,15 +111,15 @@ class MnemonicsFragment : BaseFragment(),
         btnNext.visibility = if (isVisible) View.VISIBLE else View.GONE
     }
 
-    override fun setupMnemonics(mnemonics: List<String>) {
-        mnemonicContainerView.mMnemonicList = mnemonics
+    override fun setupMnemonics(mnemonicItems: List<MnemonicItem>) {
+        mnemonicContainerView.mMnemonicList = mnemonicItems
         mnemonicContainerView.setupMnemonics()
     }
 
-    override fun showConfirmationScreen(mnemonics: CharArray) {
+    override fun showConfirmationScreen(mnemonics: ArrayList<MnemonicItem>) {
         // Pass created mnemonics to confirmation screen
         val bundle = Bundle()
-        bundle.putCharArray(Constant.Bundle.BUNDLE_MNEMONICS_ARRAY, mnemonics)
+        bundle.putParcelableArrayList(Constant.Bundle.BUNDLE_MNEMONICS_ARRAY, mnemonics)
 
         FragmentTransactionManager.displayFragment(
             parentFragment!!.childFragmentManager,

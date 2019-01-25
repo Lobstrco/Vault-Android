@@ -9,6 +9,7 @@
             android:layout_height="wrap_content"
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
-            android:textColor="@android:color/darker_gray"/>
+            android:textSize="15sp"
+            android:textColor="@color/color_071c33"/>
 
 </LinearLayout>

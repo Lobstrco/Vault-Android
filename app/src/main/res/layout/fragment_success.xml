@@ -1,28 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             xmlns:tools="http://schemas.android.com/tools"
-             android:layout_width="match_parent"
-             android:layout_height="match_parent"
-             android:layout_margin="16dp"
-             tools:context=".presentation.home.transactions.submit_success.SuccessFragment">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:layout_width="match_parent" android:layout_height="match_parent"
+              android:layout_margin="16dp"
+              android:orientation="vertical"
+              tools:context=".presentation.home.transactions.submit_success.SuccessFragment">
 
     <LinearLayout android:layout_width="match_parent"
-                  android:layout_height="wrap_content"
+                  android:layout_height="0dp"
                   android:orientation="vertical"
-                  android:layout_gravity="center">
+                  android:layout_weight="1"
+                  android:layout_gravity="center"
+                  android:gravity="center">
 
-        <ImageView android:layout_width="120dp"
-                   android:layout_height="120dp"
-                   android:layout_gravity="center"
-                   android:src="@drawable/ic_check_purple"/>
+        <com.airbnb.lottie.LottieAnimationView
+                android:id="@+id/iv_transaction_summary_status"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:lottie_autoPlay="true"
+                app:lottie_loop="false"
+                app:lottie_rawRes="@raw/success"/>
 
         <TextView android:layout_width="wrap_content"
                   android:layout_height="wrap_content"
                   android:textColor="@android:color/black"
                   android:textStyle="bold"
-                  android:text="Success"
+                  android:text="@string/text_tv_success"
                   android:layout_gravity="center"
-                  android:textAppearance="?android:textAppearanceLarge"/>
+                  android:textSize="20sp"
+                  android:layout_marginBottom="8dp"/>
 
         <TextView
                 android:id="@+id/tvAdditionalSignaturesDescription"
@@ -34,30 +41,58 @@
                 android:layout_gravity="center"
                 android:textColor="@color/color_d9534f"
                 android:text="@string/text_tv_need_additional_signatures"/>
-
-        <Button
-                android:text="@string/text_btn_copy_xdr"
-                android:layout_height="wrap_content"
-                android:id="@+id/btnCopyXdr"
-                android:layout_width="wrap_content"
-                android:visibility="gone"
-                android:textColor="@android:color/black"
-                android:layout_gravity="center"
-                android:drawableLeft="@drawable/ic_content_copy_black"
-                style="@style/Base.Widget.AppCompat.Button.Borderless.Colored"
-                android:textAppearance="?android:textAppearanceSmall"
-                android:textAllCaps="false"/>
     </LinearLayout>
 
+    <LinearLayout android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:orientation="vertical">
 
-    <Button android:id="@+id/btnBack"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            style="@style/Base.Widget.AppCompat.Button.Borderless.Colored"
-            android:background="@drawable/selector_default_button_with_round"
-            android:textColor="@android:color/white"
-            android:textAppearance="?android:textAppearanceMedium"
-            android:textAllCaps="false"
-            android:layout_gravity="bottom"
-            android:text="Back"/>
-</FrameLayout>
+        <LinearLayout android:layout_width="match_parent"
+                      android:layout_height="wrap_content"
+                      android:orientation="horizontal"
+                      android:gravity="center">
+
+
+            <TextView android:layout_width="0dp"
+                      android:layout_height="wrap_content"
+                      android:layout_weight="1"
+                      android:textSize="12sp"
+                      android:textColor="@color/color_994A4A4A"
+                      android:text="@string/text_tv_signed_xdr"/>
+
+            <Button
+                    android:text="@string/text_btn_copy_xdr"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/btnCopyXdr"
+                    android:layout_width="wrap_content"
+                    android:layout_gravity="center"
+                    android:textColor="@color/color_primary"
+                    android:drawablePadding="8dp"
+                    android:textSize="12sp"
+                    android:drawableLeft="@drawable/ic_content_copy_purple"
+                    style="@style/Base.Widget.AppCompat.Button.Borderless.Colored"
+                    android:textAllCaps="false"/>
+        </LinearLayout>
+
+        <TextView
+                android:id="@+id/tvXdr"
+                android:layout_width="match_parent"
+                android:layout_height="135dp"
+                android:gravity="center|start"
+                android:layout_marginBottom="16dp"
+                android:padding="16dp"
+                android:textSize="12sp"
+                android:textColorHint="@color/color_4D000000"
+                android:background="@drawable/bg_xdr_success"/>
+
+        <Button android:id="@+id/btnDone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/selector_default_button_with_round"
+                android:textColor="@android:color/white"
+                android:textAllCaps="false"
+                android:textSize="14sp"
+                android:layout_gravity="bottom"
+                android:text="@string/text_btn_done"/>
+    </LinearLayout>
+</LinearLayout>

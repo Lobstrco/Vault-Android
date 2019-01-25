@@ -14,7 +14,6 @@ interface SettingsView : MvpView {
 
     @StateStrategyType(AddToEndSingleStrategy::class)
     fun setupSettingsData(
-        userPublicKey: String?,
         buildVersion: String,
         isBiometricSupported: Boolean
     )
@@ -23,9 +22,6 @@ interface SettingsView : MvpView {
     fun setupSignersCount(
         signersCount: String
     )
-
-    @StateStrategyType(SkipStrategy::class)
-    fun copyToClipBoard(text: String)
 
     @StateStrategyType(SkipStrategy::class)
     fun showSuccessMessage(@StringRes message: Int)

@@ -18,6 +18,7 @@ import com.lobstr.stellar.vault.presentation.home.dashboard.DashboardFragment
 import com.lobstr.stellar.vault.presentation.home.settings.SettingsFragment
 import com.lobstr.stellar.vault.presentation.home.transactions.TransactionsFragment
 import com.lobstr.stellar.vault.presentation.home.transactions.details.TransactionDetailsFragment
+import com.lobstr.stellar.vault.presentation.home.transactions.submit_error.ErrorFragment
 import com.lobstr.stellar.vault.presentation.home.transactions.submit_success.SuccessFragment
 import com.lobstr.stellar.vault.presentation.util.Constant
 import com.lobstr.stellar.vault.presentation.util.Constant.Bundle.BUNDLE_NAVIGATION_FR
@@ -59,7 +60,8 @@ class ContainerFragment : BaseContainerFragment(),
             arguments?.getInt(BUNDLE_NAVIGATION_FR)!!,
             arguments?.getParcelable(Constant.Bundle.BUNDLE_TRANSACTION_ITEM),
             arguments?.getString(Constant.Bundle.BUNDLE_ENVELOPE_XDR),
-            arguments?.getBoolean(Constant.Bundle.BUNDLE_NEED_ADDITIONAL_SIGNATURES, false)
+            arguments?.getBoolean(Constant.Bundle.BUNDLE_NEED_ADDITIONAL_SIGNATURES, false),
+            arguments?.getString(Constant.Bundle.BUNDLE_ERROR_MESSAGE)
         )
 
     // ===========================================================
@@ -170,6 +172,18 @@ class ContainerFragment : BaseContainerFragment(),
         FragmentTransactionManager.displayFragment(
             childFragmentManager,
             Fragment.instantiate(context, SuccessFragment::class.java.name, bundle),
+            R.id.fl_container,
+            true
+        )
+    }
+
+    override fun showErrorFr(errorMessage: String) {
+        val bundle = Bundle()
+        bundle.putString(Constant.Bundle.BUNDLE_ERROR_MESSAGE, errorMessage)
+
+        FragmentTransactionManager.displayFragment(
+            childFragmentManager,
+            Fragment.instantiate(context, ErrorFragment::class.java.name, bundle),
             R.id.fl_container,
             true
         )

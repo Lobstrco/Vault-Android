@@ -24,7 +24,7 @@
 
     <color name="color_default_button_disabled">#80592ebd</color>
     <color name="color_default_button_pressed">#cc592ebd</color>
-    <color name="white_with_alpha_50">#80FFFFFF</color>
+    <color name="white_with_alpha_60">#99FFFFFF</color>
 
     <!-- biometric -->
     <color name="bg_fingerprint">#1A73E8</color>
@@ -36,11 +36,24 @@
     <color name="dialog_cancel_btn">#009689</color>
 
     <color name="gray_text_color">#66000000</color>
-    <color name="light_gray_text_color">#9b9b9b</color>
+    <color name="color_9b9b9b">#9b9b9b</color>
     <color name="transaction_date">#B3000000</color>
     <color name="settings_title_color">#80000000</color>
     <color name="gray_divider">#166b6b6b</color>
+    <color name="color_33979797">#33979797</color>
+
     <color name="gray_background">#F5F5F5</color>
     <color name="settings_text_privacy">#999b9b9b</color>
     <color name="color_d9534f">#d9534f</color>
+    <color name="color_f3f3fb">#f3f3fb</color>
+    <color name="color_d7ccdd">#d7ccdd</color>
+    <color name="color_99000000">#99000000</color>
+    <color name="color_071c33">#99071C33</color>
+    <color name="color_28f3f3fb">#28f3f3fb</color>
+    <color name="color_994A4A4A">#994A4A4A</color>
+    <color name="color_4D000000">#4D000000</color>
+    <color name="color_4D979797">#4D979797</color>
+    <color name="color_26000000">#26000000</color>
+    <color name="color_8a000000">#8a000000</color>
+
 </resources>

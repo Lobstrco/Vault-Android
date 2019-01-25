@@ -1,11 +1,16 @@
 package com.lobstr.stellar.vault.presentation.home.settings
 
 import android.content.Intent
+import android.graphics.Typeface
 import android.os.Bundle
 import android.text.SpannableString
 import android.text.Spanned
 import android.text.style.ForegroundColorSpan
-import android.view.*
+import android.text.style.RelativeSizeSpan
+import android.text.style.StyleSpan
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.widget.CompoundButton
 import android.widget.Toast
 import androidx.annotation.StringRes
@@ -25,7 +30,6 @@ import com.lobstr.stellar.vault.presentation.faq.FaqFragment
 import com.lobstr.stellar.vault.presentation.home.settings.show_public_key.ShowPublicKeyDialogFragment
 import com.lobstr.stellar.vault.presentation.pin.PinActivity
 import com.lobstr.stellar.vault.presentation.signed_accounts.SignedAccountsFragment
-import com.lobstr.stellar.vault.presentation.util.AppUtil
 import com.lobstr.stellar.vault.presentation.util.Constant
 import kotlinx.android.synthetic.main.fragment_settings.*
 
@@ -78,26 +82,12 @@ class SettingsFragment : BaseFragment(), SettingsView, View.OnClickListener, Com
 
     private fun setListeners() {
         tvLogOut.setOnClickListener(this)
-        ivCopyUserPk.setOnClickListener(this)
         llPublicKey.setOnClickListener(this)
         llSettingsSigners.setOnClickListener(this)
         llSettingsMnemonics.setOnClickListener(this)
         llSettingsChangePin.setOnClickListener(this)
         llSettingsHelp.setOnClickListener(this)
         swSettingsTouchId.setOnCheckedChangeListener(this)
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
-        inflater?.inflate(R.menu.settings, menu)
-        super.onCreateOptionsMenu(menu, inflater)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        when (item?.itemId) {
-            R.id.action_info -> mPresenter.infoClicked()
-        }
-
-        return super.onOptionsItemSelected(item)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -113,7 +103,6 @@ class SettingsFragment : BaseFragment(), SettingsView, View.OnClickListener, Com
         when (v!!.id) {
             R.id.tvLogOut -> mPresenter.logOutClicked()
             R.id.llPublicKey -> mPresenter.publicKeyClicked()
-            R.id.ivCopyUserPk -> mPresenter.copyUserPublicKey(tvUserPublicKey.text.toString())
             R.id.llSettingsSigners -> mPresenter.signersClicked()
             R.id.llSettingsMnemonics -> mPresenter.mnemonicsClicked()
             R.id.llSettingsChangePin -> mPresenter.changePinClicked()
@@ -132,19 +121,17 @@ class SettingsFragment : BaseFragment(), SettingsView, View.OnClickListener, Com
     }
 
     override fun setupSettingsData(
-        userPublicKey: String?,
         buildVersion: String,
         isBiometricSupported: Boolean
     ) {
         llSettingsTouchId.visibility = if (isBiometricSupported) View.VISIBLE else View.GONE
-        tvUserPublicKey.text = userPublicKey
         tvSettingsVersion.text = buildVersion
     }
 
     override fun setupSignersCount(signersCount: String) {
         val message = String.format(getString(R.string.text_settings_signers), signersCount)
         val spannedText = SpannableString(message)
-        val startPosition = 12
+        val startPosition = 11
         val endPosition = message.lastIndexOf(" ")
 
         spannedText.setSpan(
@@ -153,11 +140,20 @@ class SettingsFragment : BaseFragment(), SettingsView, View.OnClickListener, Com
             endPosition,
             Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
         )
-        tvSettingsSigners.text = spannedText
-    }
+        spannedText.setSpan(
+            RelativeSizeSpan(1.2f),
+            startPosition,
+            endPosition,
+            Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+        )
+        spannedText.setSpan(
+            StyleSpan(Typeface.BOLD),
+            startPosition,
+            endPosition,
+            Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+        )
 
-    override fun copyToClipBoard(text: String) {
-        AppUtil.copyToClipboard(context, text)
+        tvSettingsSigners.text = spannedText
     }
 
     override fun showSuccessMessage(@StringRes message: Int) {

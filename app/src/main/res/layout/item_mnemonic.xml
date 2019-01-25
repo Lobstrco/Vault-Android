@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
-        android:id="@+id/itemMnemonicContainer"
         xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/itemMnemonicContainer"
         android:padding="8dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -12,7 +12,8 @@
             android:id="@+id/tvMnemonicNumber"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="14sp"
+            android:textSize="10sp"
+            android:visibility="gone"
             android:layout_marginRight="8dp"
             android:textColor="@android:color/darker_gray"/>
 
@@ -20,6 +21,6 @@
             android:id="@+id/tvMnemonicWord"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="16sp"/>
+            android:textSize="12sp"/>
 
 </LinearLayout>

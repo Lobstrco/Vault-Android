@@ -2,28 +2,15 @@
     <!-- main -->
     <string name="app_name">LOBSTR Vault</string>
 
-    <!-- notification -->
+    <!-- toolbar titles-->
+    <string name="title_toolbar_faq">Help</string>
+    <string name="title_toolbar_signed_accounts">Signed Accounts</string>
+    <string name="title_toolbar_transaction_details">Transaction Details</string>
+    <string name="title_toolbar_dashboard">Home</string>
+    <string name="title_toolbar_transactions">Transactions</string>
+    <string name="title_toolbar_settings">Settings</string>
 
-    <!-- errors and other UI messages -->
-    <string name="msg_invalid_email">Please, enter a valid email</string>
-    <string name="msg_invalid_password">Please, enter a valid password</string>
-    <string name="msg_invalid_secret_seed">Please, enter a valid secret seed</string>
-    <string name="msg_field_required">Field required</string>
-    <string name="msg_invalid_number">Invalid number</string>
-    <string name="msg_confirmation_error">Don\'t match</string>
-    <string name="msg_unknown_error">Unknown error</string>
-    <string name="msg_successfully_copied">"Successfully copied"</string>
-    <string name="msg_camera_permission_scan_explanation">Please, allow Camera permission to decode QR code</string>
-    <string name="msg_not_all_words_entered">Not all words entered</string>
-    <string name="msg_phrase_dont_fit">Your phrase doesn\'t fit</string>
-    <string name="msg_success">Success</string>
-    <string name="msg_bad_xdr">Bad XDR</string>
-
-    <!--Errors-->
-    <string name="text_error_incorrect_mnemonic">Incorrect mnemonic phrases.</string>
-    <string name="text_error_incorrect_pin">Incorrect PIN</string>
-
-    <!-- dialog -->
+    <!-- Buttons -->
     <string name="text_btn_cancel">Cancel</string>
     <string name="text_btn_reset">Reset</string>
     <string name="text_btn_ok">OK</string>
@@ -31,144 +18,106 @@
     <string name="text_btn_add">Add</string>
     <string name="text_btn_retry">Retry</string>
     <string name="text_btn_confirm">Confirm</string>
-    <string name="title_finger_print_dialog">Fingerprint not set up</string>
-    <string name="msg_finger_print_dialog">Please set up your fingerprint in the device settings first</string>
-    <string name="title_deny_transaction_dialog">Are you sure?</string>
-    <string name="msg_deny_transaction_dialog">Are you sure you want to deny operation?</string>
+    <string name="text_btn_deny">Deny</string>
+    <string name="text_btn_next">Next</string>
+    <string name="text_btn_clip_to_board">Copy</string>
+    <string name="text_btn_skip">Skip</string>
+    <string name="text_btn_done">Done</string>
+    <string name="text_btn_copy_key">Copy Key</string>
+    <string name="text_btn_submit">Submit</string>
 
-    <!-- bottom Navigation View items-->
-    <string name="dashboard">Home</string>
-    <string name="transactions">Transactions</string>
-    <string name="settings">Settings</string>
-
-    <!-- toolbar titles-->
-    <string name="faq">Help</string>
-    <string name="signed_accounts">Signed Accounts</string>
-
-    <string name="transaction_details">Transaction Details</string>
-
-    <string name="text_tv_recovery_phrase_title">Sign in with a recovery phrase</string>
-    <string name="text_tv_recovery_phrase_description">This is 12 or 24 word phrase you were given when you created your
-        previous wallet
+    <!-- Start screen -->
+    <string name="text_start_screen_tv_title">Multiply your security</string>
+    <string name="text_start_screen_btn_create_account">Create Account</string>
+    <string name="text_start_screen_btn_restore_account">Recovery Account</string>
+    <string name="text_start_screen_terms_and_privacy">By registering you agree to our
+        <a href="https://google.com">Terms of
+            Service and Privacy Policy
+        </a>
     </string>
-    <string name="text_next_button">Next</string>
-    <string name="text_tv_mnemonics_title">Mnemonic Codes</string>
-    <string name="text_tv_confirm_mnemonics_title">Verify Codes</string>
+
+    <!-- Recovery Account -->
+    <string name="text_tv_recovery_phrase_title">Recovery Account</string>
+    <string name="text_tv_recovery_phrase_description">Enter the 12 word recovery phrase you were given when
+        you created your account
+    </string>
+
+    <!-- Backup screen -->
+    <string name="text_tv_backup_title">Backup Your Account</string>
+    <string name="text_tv_backup_description">You will be shown a 12 word recovery phrase.
+        It will allow you to recover access to your account in case your phone is lost or stolen.
+    </string>
+    <string name="text_btn_backup_understand">I Understand</string>
+
+    <!-- Mnemonic Code screen -->
+    <string name="text_tv_mnemonics_title">Recovery Phrase</string>
+    <string name="text_tv_mnemonics_description">Recovery phrase can help you to recover access to your account in case
+        your phone is lost or stolen.
+    </string>
+    <string name="text_tv_mnemonics_instruction">Write down these 12 words and keep them secure. Don’t email them or
+        screenshot them.
+    </string>
+    <string name="text_tv_mnemonics_confirmation">You will need to confirm recovery phrase on the next screen</string>
+
+    <!-- Confirm mnemonics title -->
+    <string name="text_tv_confirm_mnemonics_title">Verify Recovery Phrase</string>
     <string name="text_tv_confirm_mnemonics_description">Tap the words in correct order</string>
-    <string name="text_tv_confirm_mnemonics_empty_state">Please select words in the bottom part</string>
-    <string name="text_tv_select_mnemonics_empty_state">Try to confirm it!</string>
-    <string name="text_btn_confirm_mnemonics_next">Next</string>
-    <string name="text_btn_create_mnemonics_next">Next</string>
-    <string name="text_tv_mnemonics_description">Write down each word in order and store it in a safe place</string>
+
+    <!-- Fingerprint screen -->
+    <string name="text_tv_fingerprint_set_up_title">Protect your account</string>
+    <string name="text_tv_fingerprint_set_up_description">Use fingerprint login instead of your PIN to access your
+        account.
+    </string>
+    <string name="text_tv_fingerprint_set_up_later">You can do it later in Settings</string>
+    <string name="text_btn_fingerprint_enable">Enable Fingerprint</string>
+
+    <!-- Public Key screen -->
+    <string name="text_tv_signer_info_title">Your Vault Public Key</string>
+    <string name="text_tv_signer_info_description">
+        <![CDATA[This key will be used to sign transactions. To protect your LOBSTR account, copy and paste the code to LOBSTR (Settings→Multisig→Enable)]]></string>
+
+    <!-- Re-chek signers screen -->
+    <string name="text_tv_re_check_signer_description">Your Vault account is not a signer for any other Stellar accounts</string>
+    <string name="text_btn_re_check_signer">Re-Check</string>
 
     <!--Pin screen-->
-    <string name="text_title_enter_pin">Enter Passcode</string>
-    <string name="text_title_create_pin">Create Passcode</string>
-    <string name="text_title_change_pin">Change Passcode</string>
-    <string name="text_enter_pin">Please enter your PIN code</string>
-    <string name="text_reenter_pin">Please re-enter your PIN code</string>
-    <string name="text_create_pin">Please create a PIN code. Do not reuse your phone PIN. If you forget PIN, you won\'t
-        be able to acces your transactions
-    </string>
-    <string name="text_enter_old_pin">Please enter old PIN code</string>
+    <string name="text_title_enter_pin">Enter PIN</string>
+    <string name="text_title_create_pin">Create PIN</string>
+    <string name="text_title_change_pin">Change PIN</string>
+    <string name="text_enter_pin">Enter PIN</string>
+    <string name="text_reenter_pin">Confirm PIN</string>
+    <string name="text_create_pin">Create PIN</string>
+    <string name="text_success_change_pin">PIN changed</string>
+    <string name="text_change_the_same_pin">"You can not use old PIN"</string>
 
-    <string name="text_action_info">info</string>
+    <!-- Dashboard screen -->
+    <string name="text_dashboard_transactions">Transactions to Sign</string>
+    <string name="text_dashboard_show_list">View Transaction List</string>
+    <string name="text_title_dashboard_public_key">Vault Public Key</string>
+    <string name="text_title_dashboard_signers">Signer For</string>
+    <string name="text_dashboard_accounts">accounts</string>
+
+    <!-- Transaction screen -->
+    <string name="text_empty_state_transactions_list">Transactions not found</string>
 
     <!--Settings-->
     <string name="title_settings_wallet">Account</string>
     <string name="title_settings_security">Security</string>
     <string name="title_settings_about">About</string>
-    <string name="text_settings_public_key">Public Key</string>
-    <string name="text_settings_signers">Signers for %s account</string>
-    <string name="text_settings_mnemonic_code">Mnemonic Code</string>
+    <string name="text_settings_public_key">Vault Public Key</string>
+    <string name="text_settings_signers">Signer for %s account</string>
+    <string name="text_settings_mnemonic_code">Recovery Phrase</string>
     <string name="text_settings_change_pin">Change PIN</string>
-    <string name="text_settings_touch_id">Touch ID</string>
+    <string name="text_settings_touch_id">Fingerprint Login</string>
     <string name="text_settings_version">Version</string>
     <string name="text_settings_help">Help</string>
-    <string name="text_success_change_pin">PIN changed</string>
+    <string name="text_settings_log_out">Log Out</string>
+    <string name="text_all_rights_reserved">©2019. All rights reserved</string>
 
-    <!--Api errors-->
-    <string name="api_error_not_found">Not Found</string>
-    <string name="api_error_connection_timeout">Timeout</string>
-    <string name="api_error_connection_error">No Internet connection</string>
-    <string name="api_error_something_went_wrong">Something went wrong, please try again later</string>
-    <string name="api_error_user_not_authorized">User Not Authorized</string>
-
-    <!--Stellar Operations-->
-    <string name="text_operation_name_payment">Payment</string>
-    <string name="text_operation_name_create_account">Create Account</string>
-    <string name="text_operation_name_path_payment">Path Payment</string>
-    <string name="text_operation_name_manage_offer">Manage Offer</string>
-    <string name="text_operation_name_create_passive_offer">Create Passive Offer</string>
-    <string name="text_operation_name_set_options">Set Options</string>
-    <string name="text_operation_name_change_trust">Change Trust</string>
-    <string name="text_operation_name_allow_trust">Allow Trust</string>
-    <string name="text_operation_name_account_merge">Account Merge</string>
-    <string name="text_operation_name_inflation">Inflation</string>
-    <string name="text_operation_name_manage_data">Manage Data</string>
-    <string name="text_operation_name_bump_sequence">Bump Sequence</string>
-    <string name="text_operation_name_several_operation">%s Operations</string>
-    <string name="text_operation_name_unknown">Unknown</string>
-
-    <string name="text_invalid_token">Invalid token.</string>
-    <string name="text_empty_state_transactions_list">Transactions not found</string>
-    <string name="text_dashboard_transactions">Transactions to Sign</string>
-    <string name="text_title_dashboard_public_key">Vault Public Key</string>
-    <string name="text_title_dashboard_signers">Signer For</string>
-    <string name="text_dashboard_show_list">View Transaction List</string>
-    <string name="text_tv_backup_title">Back up account</string>
-    <string name="text_tv_backup_description">In this step you will be shown a secret mnemonic codes. It will allow you
-        to recover access to your wallet if your phone is lost or stolen
-    </string>
-    <string name="text_chb_backup_confirm">I understand</string>
-    <string name="text_btn_next">Next</string>
-    <string name="text_btn_clip_to_board">Copy</string>
-    <string name="mnemonics_title">Your Phrase</string>
-    <string name="text_details_none">none</string>
-    <string name="biometric_failed">Fingerprint not recognized</string>
-    <string name="biometric_error_sdk_not_supported">Sdk version not supported</string>
-    <string name="biometric_error_hardware_not_supported">Device does not support biometric authentication</string>
-    <string name="biometric_error_fingerprint_not_available">Fingerprint is not registered in device</string>
-    <string name="biometric_error_permission_not_granted">Permission is not granted by user</string>
-    <string name="biometric_failure">Login not successful!</string>
-    <string name="biometric_cancelled">Authentication cancelled by user</string>
-    <string name="biometric_success">Successful</string>
-    <string name="biometric_title">Verification</string>
-    <string name="biometric_subtitle">Confirm your account</string>
-    <string name="biometric_description">Place your finger on the device home button to verify your identity</string>
-
-    <string name="text_btn_turn_on">Turn On</string>
-    <string name="text_btn_skip">Skip for now</string>
-    <string name="text_tv_fingerprint_set_up_title">Protect your wallet</string>
-    <string name="text_tv_fingerprint_set_up_description">Add an extra layer of security to keep your Stellars save
-    </string>
-    <string name="text_tv_signer_info_title">Your Public Key</string>
-    <string name="text_tv_signer_info_description">
-        <![CDATA[This key will be use for transactions confirmation. To protect your Lobstr Wallet, copy and paste the code to Lobstr (Settings -> Multisign -> Enable)]]></string>
-    <string name="text_btn_signer_info_copy_key">Copy Key</string>
-    <string name="text_tv_signer_info_note">*Please note, if you forget mnemonic codes, you won\'t be able to access
-        your transactions
-    </string>
-    <string name="text_btn_signer_info_next">Next</string>
+    <!--Signed Accounts screen-->
     <string name="text_signed_account_empty_state">You have 0 signed accounts</string>
-    <string name="text_tv_re_check_signer_title">Public Key</string>
-    <string name="text_tv_re_check_signer_description">You are not a signer for</string>
-    <string name="text_btn_re_check_signer">Re-Check</string>
-    <string name="text_tv_terms_and_privacy">By registering you agree to our <a href="https://google.com">Terms of
-        Service
-    </a> and
-        <a href="https://google.com">Privacy Policy</a>
-    </string>
-    <string name="text_tv_btn_restore_account">Restore Account</string>
-    <string name="text_tv_btn_create_account">Create New Account</string>
-    <string name="text_tv_auth_title">Secure your Lumens</string>
-    <string name="text_tv_set_up_fingerprint_later">You can do it later in Settings Panel</string>
-    <string name="text_tv_mnemonics_confirmation">You will confirm phrase on the next screen</string>
-    <string name="text_tv_mnemonics_instruction">Write down this words or just copy them</string>
-    <string name="text_btn_back_up_understand">I understand</string>
-    <string name="text_button_copy_key">Copy Key</string>
-    <string name="expandable_card_view_image_content_description">Arrow to expand card</string>
-    <string name="expandable_card_view_icon_content_description">Card icon</string>
+
+    <!--Help screen-->
     <string name="text_tv_help_mnemonic_code_description">A mnemonic phrase, mnemonic recovery phrase, mnemonic seed,
         seed key, and seed words are all different names of the same thing. If you break \'mnemonic phrase\' you will
         understand \'mnemonic\' stands for \'a system such as a pattern of letters, ideas, or associations which assists
@@ -186,12 +135,86 @@
     <string name="text_tv_help_change_passcode_subtitle">4. How to add a Change Passcode?</string>
     <string name="text_tv_help_how_to_title">How To</string>
     <string name="text_tv_help_get_started_title">Get Started</string>
-    <string name="text_all_rights_reserved">©2019. All rights reserved</string>
-    <string name="text_deny">Deny</string>
-    <string name="text_confirm">Confirm</string>
-    <string name="text_accounts">accounts</string>
+
+    <!-- Stellar Operations -->
+    <string name="text_operation_name_payment">Payment</string>
+    <string name="text_operation_name_create_account">Create Account</string>
+    <string name="text_operation_name_path_payment">Path Payment</string>
+    <string name="text_operation_name_manage_offer">Manage Offer</string>
+    <string name="text_operation_name_create_passive_offer">Create Passive Offer</string>
+    <string name="text_operation_name_set_options">Set Options</string>
+    <string name="text_operation_name_change_trust">Change Trust</string>
+    <string name="text_operation_name_allow_trust">Allow Trust</string>
+    <string name="text_operation_name_account_merge">Account Merge</string>
+    <string name="text_operation_name_inflation">Inflation</string>
+    <string name="text_operation_name_manage_data">Manage Data</string>
+    <string name="text_operation_name_bump_sequence">Bump Sequence</string>
+    <string name="text_operation_name_several_operation">%s Operations</string>
+    <string name="text_operation_name_unknown">Unknown</string>
+
+    <!-- Finger print dialog -->
+    <string name="title_finger_print_dialog">Fingerprint not set up</string>
+    <string name="msg_finger_print_dialog">Please set up your fingerprint in the device settings first</string>
+
+    <!-- Deny transaction dialog -->
+    <string name="title_deny_transaction_dialog">Are you sure?</string>
+    <string name="msg_deny_transaction_dialog">Want to deny the operation?</string>
+
+    <!-- Add XDR dialog -->
+    <string name="text_tv_import_xdr_title">Add Transaction XDR</string>
+    <string name="text_tv_import_xdr_subtitle">To submit transaction enter its XDR below</string>
+    <string name="hint_et_import_xdr">Transaction XDR</string>
+
+    <!-- Public key dialog -->
+    <string name="text_tv_show_public_key_title">Vault Public Key</string>
+
+    <!--Biometric-->
+    <string name="biometric_failed">Fingerprint not recognized</string>
+    <string name="biometric_error_sdk_not_supported">Sdk version not supported</string>
+    <string name="biometric_error_hardware_not_supported">Device does not support biometric authentication</string>
+    <string name="biometric_error_fingerprint_not_available">Fingerprint is not registered in device</string>
+    <string name="biometric_error_permission_not_granted">Permission is not granted by user</string>
+    <string name="biometric_failure">Login not successful!</string>
+    <string name="biometric_cancelled">Authentication cancelled by user</string>
+    <string name="biometric_success">Successful</string>
+    <string name="biometric_title">Confirm To Check out</string>
+    <string name="biometric_subtitle">Need your confirmation</string>
+    <string name="biometric_description">Touch the fingerprint sensor</string>
+
+    <!-- Errors and other UI messages -->
+    <string name="text_error_invalid_token">Invalid token.</string>
+    <string name="msg_field_required">Field required</string>
+    <string name="msg_invalid_number">Invalid number</string>
+    <string name="msg_confirmation_error">Don\'t match</string>
+    <string name="msg_unknown_error">Unknown error</string>
+    <string name="msg_successfully_copied">"Successfully copied"</string>
+    <string name="msg_camera_permission_scan_explanation">Please, allow Camera permission to decode QR code</string>
+    <string name="msg_not_all_words_entered">Not all the words entered</string>
+    <string name="msg_phrase_dont_fit">Wrong order. Please try again.</string>
+    <string name="msg_success">Success</string>
+    <string name="msg_bad_xdr">Transaction is invalid. Please, try again.</string>
+    <string name="text_error_incorrect_mnemonic">Incorrect mnemonic phrases.</string>
+    <string name="text_error_incorrect_pin">Incorrect PIN</string>
+
+    <!-- Api errors -->
+    <string name="api_error_not_found">Not Found</string>
+    <string name="api_error_connection_timeout">Timeout</string>
+    <string name="api_error_connection_error">No Internet connection</string>
+    <string name="api_error_something_went_wrong">Something went wrong, please try again later</string>
+    <string name="api_error_user_not_authorized">User Not Authorized</string>
+
+    <!-- Success screen -->
+    <string name="text_tv_success">Success</string>
+    <string name="text_tv_need_additional_signatures">You need more signatures to submit the operation</string>
+    <string name="text_tv_signed_xdr">Signed XDR</string>
     <string name="text_btn_copy_xdr">Copy XDR</string>
-    <string name="text_tv_need_additional_signatures">Transaction need additional signatures. Copy your XDR and continue
-        confirmation.
-    </string>
+
+    <!-- Error screen -->
+    <string name="text_tv_error">Transaction Failed</string>
+
+    <!-- Other -->
+    <string name="expandable_card_view_image_content_description">Arrow to expand card</string>
+    <string name="expandable_card_view_icon_content_description">Card icon</string>
+    <string name="text_action_info">info</string>
+    <string name="text_tv_settings_show">Show</string>
 </resources>

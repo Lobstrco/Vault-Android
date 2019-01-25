@@ -17,11 +17,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:textAppearance="?android:textAppearanceLarge"
+                android:textSize="16sp"
                 android:textStyle="bold"
-                android:paddingLeft="16dp"
-                android:paddingRight="16dp"
-                android:paddingBottom="5dp"
+                android:layout_marginBottom="12dp"
                 android:textColor="@android:color/black"
                 android:text="@string/text_tv_signer_info_title"/>
 
@@ -30,10 +28,8 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:textAppearance="?android:textAppearanceSmall"
-                android:paddingLeft="16dp"
-                android:paddingRight="16dp"
-                android:paddingBottom="5dp"
-                android:textColor="@color/color_757575"
+                android:textSize="14sp"
+                android:textColor="@color/color_071c33"
                 android:text="@string/text_tv_signer_info_description"/>
 
 
@@ -46,19 +42,21 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:textAppearance="?android:textAppearanceMedium"
+                    android:textSize="14sp"
                     android:textAllCaps="true"
+                    android:layout_marginBottom="4dp"
                     android:textColor="@color/color_757575"/>
 
             <Button
-                    android:text="@string/text_btn_signer_info_copy_key"
+                    android:text="@string/text_btn_copy_key"
                     android:layout_height="wrap_content"
                     android:id="@+id/btnCopyUserPk"
                     android:layout_width="wrap_content"
-                    android:textColor="@android:color/black"
-                    android:drawableLeft="@drawable/ic_content_copy_black"
+                    android:textColor="@color/color_primary"
+                    android:drawablePadding="8dp"
+                    android:drawableLeft="@drawable/ic_content_copy_purple"
                     style="@style/Base.Widget.AppCompat.Button.Borderless.Colored"
-                    android:textAppearance="?android:textAppearanceSmall"
+                    android:textSize="14sp"
                     android:textAllCaps="false"/>
 
         </LinearLayout>
@@ -66,15 +64,14 @@
     </LinearLayout>
 
     <Button
-            android:text="@string/text_btn_signer_info_next"
+            android:text="@string/text_btn_next"
             android:layout_height="wrap_content"
             android:id="@+id/btnNext"
             android:layout_width="match_parent"
-            style="@style/Base.Widget.AppCompat.Button.Borderless.Colored"
             android:background="@drawable/selector_default_button_with_round"
             android:textColor="@android:color/white"
-            android:textAppearance="?android:textAppearanceMedium"
             android:textAllCaps="false"
+            android:textSize="14sp"
             android:layout_gravity="center"/>
 
 </LinearLayout>

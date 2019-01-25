@@ -1,7 +1,6 @@
 package com.lobstr.stellar.vault.presentation.vault_auth.recheck_signer
 
 import com.arellomobile.mvp.InjectViewState
-import com.lobstr.stellar.vault.R
 import com.lobstr.stellar.vault.data.error.exeption.DefaultException
 import com.lobstr.stellar.vault.data.error.exeption.NoInternetConnectionException
 import com.lobstr.stellar.vault.data.error.exeption.UserNotAuthorizedException
@@ -53,7 +52,8 @@ class RecheckSignerPresenter : BasePresenter<RecheckSignerView>() {
                 }
                 .subscribe({
                     if (it.isEmpty()) {
-                        viewState.showMessage(R.string.text_tv_re_check_signer_description)
+                        // Add action if needed
+//                        viewState.showMessage(R.string.text_tv_re_check_signer_description)
                     } else {
                         interactor.confirmAccountHasSigners()
                         viewState.showHomeScreen()

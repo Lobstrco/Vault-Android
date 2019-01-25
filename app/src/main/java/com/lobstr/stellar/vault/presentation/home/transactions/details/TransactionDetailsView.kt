@@ -37,6 +37,9 @@ interface TransactionDetailsView : MvpView {
     @StateStrategyType(AddToEndSingleStrategy::class)
     fun successConfirmTransaction(envelopeXdr: String, needAdditionalSignatures: Boolean, transactionItem: TransactionItem)
 
+    @StateStrategyType(AddToEndSingleStrategy::class)
+    fun errorConfirmTransaction(errorMessage: String)
+
     @StateStrategyType(SkipStrategy::class)
     fun showOperationDetailsScreen(transactionItem: TransactionItem, position: Int)
 

@@ -7,6 +7,9 @@ import com.arellomobile.mvp.viewstate.strategy.StateStrategyType
 
 interface SuccessView : MvpView {
 
+    @StateStrategyType(AddToEndSingleStrategy::class)
+    fun setupXdr(xdr: String)
+
     @StateStrategyType(SkipStrategy::class)
     fun finishScreen()
 

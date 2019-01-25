@@ -5,6 +5,7 @@ import com.arellomobile.mvp.MvpView
 import com.arellomobile.mvp.viewstate.strategy.AddToEndSingleStrategy
 import com.arellomobile.mvp.viewstate.strategy.SkipStrategy
 import com.arellomobile.mvp.viewstate.strategy.StateStrategyType
+import com.lobstr.stellar.vault.presentation.entities.mnemonic.MnemonicItem
 
 
 interface MnemonicsView : MvpView {
@@ -16,10 +17,10 @@ interface MnemonicsView : MvpView {
     fun setActionLayerVisibility(isVisible: Boolean)
 
     @StateStrategyType(AddToEndSingleStrategy::class)
-    fun setupMnemonics(mnemonics: List<String>)
+    fun setupMnemonics(mnemonicItems: List<MnemonicItem>)
 
     @StateStrategyType(SkipStrategy::class)
-    fun showConfirmationScreen(mnemonics: CharArray)
+    fun showConfirmationScreen(mnemonics: ArrayList<MnemonicItem>)
 
     @StateStrategyType(SkipStrategy::class)
     fun copyToClipBoard(text: String)

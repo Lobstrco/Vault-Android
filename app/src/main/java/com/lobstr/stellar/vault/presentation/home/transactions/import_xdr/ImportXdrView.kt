@@ -21,6 +21,9 @@ interface ImportXdrView : MvpView {
     fun successConfirmTransaction(envelopeXdr: String, needAdditionalSignatures: Boolean)
 
     @StateStrategyType(AddToEndSingleStrategy::class)
+    fun errorConfirmTransaction(errorMessage: String)
+
+    @StateStrategyType(AddToEndSingleStrategy::class)
     fun setSubmitEnabled(enabled: Boolean)
 
     @StateStrategyType(AddToEndSingleStrategy::class)

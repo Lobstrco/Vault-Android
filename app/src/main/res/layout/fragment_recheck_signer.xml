@@ -21,11 +21,11 @@
                       android:orientation="vertical"
                       android:gravity="center">
 
-            <ImageView android:layout_width="80dp"
-                       android:layout_height="80dp"
+            <ImageView android:layout_width="wrap_content"
+                       android:layout_height="wrap_content"
                        android:layout_gravity="center"
-                       android:layout_marginBottom="8dp"
-                       android:src="@drawable/ic_error_outline_red"/>
+                       android:layout_marginBottom="16dp"
+                       android:src="@drawable/ic_alert_purple"/>
 
             <TextView
                     android:layout_width="match_parent"
@@ -34,8 +34,8 @@
                     android:layout_gravity="center"
                     android:textStyle="bold"
                     android:text="@string/text_tv_re_check_signer_description"
-                    android:textAppearance="?android:textAppearanceMedium"
-                    android:padding="4dp"
+                    android:textSize="16sp"
+                    android:layout_marginBottom="8dp"
                     android:textColor="@android:color/black"/>
 
             <TextView
@@ -43,9 +43,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:textAppearance="?android:textAppearanceMedium"
                     android:textAllCaps="true"
-                    android:textColor="@color/color_757575"/>
+                    android:textSize="14sp"
+                    android:textColor="@color/color_071c33"/>
 
         </LinearLayout>
 
@@ -59,7 +59,7 @@
             style="@style/Base.Widget.AppCompat.Button.Borderless.Colored"
             android:background="@drawable/selector_default_button_with_round"
             android:textColor="@android:color/white"
-            android:textAppearance="?android:textAppearanceMedium"
+            android:textSize="14sp"
             android:textAllCaps="false"
             android:layout_gravity="center"/>
 </LinearLayout>

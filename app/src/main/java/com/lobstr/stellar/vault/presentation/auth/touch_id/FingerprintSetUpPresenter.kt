@@ -20,6 +20,7 @@ class FingerprintSetUpPresenter : MvpPresenter<FingerprintSetUpView>() {
     }
 
     fun skipClicked() {
+        interactor.setTouchIdEnabled(false)
         viewState.showVaultAuthScreen()
     }
 
