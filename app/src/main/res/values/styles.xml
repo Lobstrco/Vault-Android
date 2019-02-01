@@ -32,10 +32,17 @@
     </style>
 
     <style name="AlertDialog" parent="Theme.AppCompat.Light.Dialog.Alert">
-        <item name="colorPrimaryDark">@color/color_primary</item>
-        <item name="colorPrimary">@color/color_primary</item>
+        <!-- buttons color -->
         <item name="colorAccent">@color/color_primary</item>
-        <item name="colorControlNormal">@color/color_primary</item>
+        <item name="android:windowBackground">@drawable/bg_dialog</item>
+        <!-- message color -->
+        <item name="android:textColorPrimary">@color/color_8a000000</item>
+        <!-- title color -->
+        <item name="android:windowTitleStyle">@style/DialogWindowTitle</item>
+    </style>
+
+    <style name="DialogWindowTitle" parent="@style/Base.DialogWindowTitle.AppCompat">
+        <item name="android:textColor">@android:color/black</item>
     </style>
 
     <style name="Widget.AppTheme.Toolbar" parent="Theme.AppCompat.Light.NoActionBar">

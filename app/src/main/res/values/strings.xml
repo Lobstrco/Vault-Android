@@ -8,6 +8,7 @@
     <string name="title_toolbar_transaction_details">Transaction Details</string>
     <string name="title_toolbar_dashboard">Home</string>
     <string name="title_toolbar_transactions">Transactions</string>
+    <string name="title_toolbar_operation_details">Operation Details</string>
     <string name="title_toolbar_settings">Settings</string>
 
     <!-- Buttons -->
@@ -72,11 +73,12 @@
     <string name="text_btn_fingerprint_enable">Enable Fingerprint</string>
 
     <!-- Public Key screen -->
+    <string name="text_btn_retry_vault_authentication">Retry Authorize</string>
     <string name="text_tv_signer_info_title">Your Vault Public Key</string>
     <string name="text_tv_signer_info_description">
         <![CDATA[This key will be used to sign transactions. To protect your LOBSTR account, copy and paste the code to LOBSTR (Settings→Multisig→Enable)]]></string>
 
-    <!-- Re-chek signers screen -->
+    <!-- Re-check signers screen -->
     <string name="text_tv_re_check_signer_description">Your Vault account is not a signer for any other Stellar accounts</string>
     <string name="text_btn_re_check_signer">Re-Check</string>
 
@@ -113,6 +115,7 @@
     <string name="text_settings_help">Help</string>
     <string name="text_settings_log_out">Log Out</string>
     <string name="text_all_rights_reserved">©2019. All rights reserved</string>
+    <string name="text_tv_settings_show">Show</string>
 
     <!--Signed Accounts screen-->
     <string name="text_signed_account_empty_state">You have 0 signed accounts</string>
@@ -216,5 +219,4 @@
     <string name="expandable_card_view_image_content_description">Arrow to expand card</string>
     <string name="expandable_card_view_icon_content_description">Card icon</string>
     <string name="text_action_info">info</string>
-    <string name="text_tv_settings_show">Show</string>
 </resources>

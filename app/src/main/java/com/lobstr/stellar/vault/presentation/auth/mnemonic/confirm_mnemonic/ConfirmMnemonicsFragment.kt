@@ -104,7 +104,7 @@ class ConfirmMnemonicsFragment : BaseFragment(), ConfirmMnemonicsView, View.OnCl
         }
     }
 
-    override fun onMnemonicItemDragged(from: Int, position: Int, value: String) {
+    override fun onMnemonicItemDrag(from: Int, position: Int, value: String) {
         when (from) {
             R.id.mnemonicContainerToConfirmView -> mPresenter.mnemonicItemToConfirmClicked(position, value)
             R.id.mnemonicContainerToSelectView -> mPresenter.mnemonicItemToSelectClicked(position, value)

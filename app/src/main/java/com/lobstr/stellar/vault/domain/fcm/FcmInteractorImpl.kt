@@ -25,12 +25,12 @@ class FcmInteractorImpl(private val fcmRepository: FcmRepository, private val pr
         return prefsUtil.fcmToken
     }
 
-    override fun saveAppVersion(appVersion: Int) {
+    override fun saveAppVersion(appVersion: Long) {
         prefsUtil.appVersion = appVersion
 
     }
 
-    override fun getAppVersion(): Int {
+    override fun getAppVersion(): Long {
         return prefsUtil.appVersion
     }
 

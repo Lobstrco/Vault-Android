@@ -14,40 +14,35 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:orientation="vertical"
-            android:layout_weight="1">
+            android:layout_weight="1"
+            android:gravity="center">
 
-        <LinearLayout android:layout_width="match_parent"
-                      android:layout_height="match_parent"
-                      android:orientation="vertical"
-                      android:gravity="center">
+        <ImageView android:layout_width="wrap_content"
+                   android:layout_height="wrap_content"
+                   android:layout_gravity="center"
+                   android:layout_marginBottom="16dp"
+                   android:src="@drawable/ic_alert_purple"/>
 
-            <ImageView android:layout_width="wrap_content"
-                       android:layout_height="wrap_content"
-                       android:layout_gravity="center"
-                       android:layout_marginBottom="16dp"
-                       android:src="@drawable/ic_alert_purple"/>
+        <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:layout_gravity="center"
+                android:textStyle="bold"
+                android:text="@string/text_tv_re_check_signer_description"
+                android:textSize="16sp"
+                android:layout_marginBottom="8dp"
+                android:textColor="@android:color/black"/>
 
-            <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:layout_gravity="center"
-                    android:textStyle="bold"
-                    android:text="@string/text_tv_re_check_signer_description"
-                    android:textSize="16sp"
-                    android:layout_marginBottom="8dp"
-                    android:textColor="@android:color/black"/>
-
-            <TextView
-                    android:id="@+id/tvUserPublicKey"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:textAllCaps="true"
-                    android:textSize="14sp"
-                    android:textColor="@color/color_071c33"/>
-
-        </LinearLayout>
+        <TextView
+                android:id="@+id/tvUserPublicKey"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:textAllCaps="true"
+                android:lineSpacingExtra="8sp"
+                android:textSize="14sp"
+                android:textColor="@color/color_071c33"/>
 
     </LinearLayout>
 

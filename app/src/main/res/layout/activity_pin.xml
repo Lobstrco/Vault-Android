@@ -38,7 +38,7 @@
             android:id="@+id/ivPinLogo"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_logo_white"
+            android:src="@drawable/ic_app_logo"
             android:paddingTop="100dp"/>
 
     <com.andrognito.pinlockview.IndicatorDots

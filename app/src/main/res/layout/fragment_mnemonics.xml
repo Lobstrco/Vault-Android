@@ -38,8 +38,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/bg_mnemonics"
-                app:isCounterEnabled="false"
-                app:isDraggable="false"
                 android:layout_marginBottom="12dp"
                 app:itemTextColor="@android:color/black"/>
 
@@ -61,7 +59,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/text_btn_clip_to_board"
                     android:textColor="@color/color_primary"
-                    android:drawableLeft="@drawable/ic_content_copy_purple"
+                    android:drawableStart="@drawable/ic_content_copy_purple"
                     style="@style/Base.Widget.AppCompat.Button.Borderless.Colored"
                     android:textSize="14sp"
                     android:textAllCaps="false"/>

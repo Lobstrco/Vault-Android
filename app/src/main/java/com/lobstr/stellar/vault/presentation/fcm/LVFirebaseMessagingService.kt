@@ -1,5 +1,6 @@
 package com.lobstr.stellar.vault.presentation.fcm
 
+import android.content.Intent
 import android.text.TextUtils
 import android.util.Log
 import com.google.firebase.messaging.FirebaseMessagingService
@@ -16,6 +17,8 @@ import com.lobstr.stellar.vault.presentation.fcm.LVFirebaseMessagingService.Fiel
 import com.lobstr.stellar.vault.presentation.fcm.LVFirebaseMessagingService.Field.MESSAGE_TITLE
 import com.lobstr.stellar.vault.presentation.fcm.LVFirebaseMessagingService.Field.TRANSACTION
 import com.lobstr.stellar.vault.presentation.fcm.NotificationsManager.ChanelId.LV_MAIN
+import com.lobstr.stellar.vault.presentation.splash.SplashActivity
+import com.lobstr.stellar.vault.presentation.util.Constant
 import javax.inject.Inject
 
 
@@ -108,7 +111,13 @@ class LVFirebaseMessagingService : FirebaseMessagingService() {
             Notification(Notification.Type.SIGNED_NEW_ACCOUNT, account)
         )
 
-        sendDefaultMessage(messageTitle, messageBody, notificationsManager)
+        // TODO show by default Splash screen, otherwise - HomeActivity . Fix caused by security reasons (click notification on Pin Screen)
+        sendDefaultMessage(
+            messageTitle,
+            messageBody,
+            notificationsManager/*,
+            HomeActivity::class.java*/
+        )
     }
 
     private fun wrapAddedNewTransactionMessage(
@@ -122,22 +131,26 @@ class LVFirebaseMessagingService : FirebaseMessagingService() {
             Notification(Notification.Type.ADDED_NEW_TRANSACTION, transaction)
         )
 
-        sendDefaultMessage(messageTitle, messageBody, notificationsManager)
+        // show transaction details screen after click on notification
+        val intent = Intent(this, ContainerActivity::class.java)
+        intent.putExtra(Constant.Extra.EXTRA_NAVIGATION_FR, Constant.Navigation.TRANSACTION_DETAILS)
+        intent.putExtra(Constant.Extra.EXTRA_TRANSACTION_ITEM, transaction)
 
-        notificationsManager.sendAddedNewTransactionNotification(
+        // TODO show by default Splash screen, otherwise - send intent. Fix caused by security reasons (click notification on Pin Screen)
+        notificationsManager.sendNotification(
             LV_MAIN,
             getString(R.string.app_name),
             messageTitle ?: getString(R.string.app_name),
             messageBody!!,
-            transaction,
-            ContainerActivity::class.java
+            /*intent*/SplashActivity::class.java
         )
     }
 
     private fun sendDefaultMessage(
         messageTitle: String?,
         messageBody: String?,
-        notificationsManager: NotificationsManager
+        notificationsManager: NotificationsManager,
+        targetClass: Class<*> = SplashActivity::class.java
     ) {
         if (TextUtils.isEmpty(messageBody)) {
             return
@@ -147,7 +160,8 @@ class LVFirebaseMessagingService : FirebaseMessagingService() {
             LV_MAIN,
             messageTitle ?: getString(R.string.app_name),
             getString(R.string.app_name),
-            messageBody!!
+            messageBody!!,
+            targetClass
         )
     }
 }

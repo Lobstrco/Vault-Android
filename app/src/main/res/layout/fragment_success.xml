@@ -69,7 +69,7 @@
                     android:textColor="@color/color_primary"
                     android:drawablePadding="8dp"
                     android:textSize="12sp"
-                    android:drawableLeft="@drawable/ic_content_copy_purple"
+                    android:drawableStart="@drawable/ic_content_copy_purple"
                     style="@style/Base.Widget.AppCompat.Button.Borderless.Colored"
                     android:textAllCaps="false"/>
         </LinearLayout>

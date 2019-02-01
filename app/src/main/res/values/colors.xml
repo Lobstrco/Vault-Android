@@ -3,47 +3,15 @@
     <color name="color_primary">#592ebd</color>
     <color name="color_primary_dark">#452493</color>
 
-    <color name="color_00ffffff">#00ffffff</color>
-    <color name="color_9CB3C2">#a1bbca</color>
-    <color name="color_70f4f9f9">#70f4f9f9</color>
-    <color name="color_action_bar">#092E49</color>
-    <color name="color_zendesk">#65B1BB</color>
-    <color name="color_ffee5153">#FFEE5153</color>
-    <color name="color_red">#ff003b</color>
-    <color name="color_ff3e7893">#FF3E7893</color>
-    <color name="color_ff1F9877">#FF1F9877</color>
-    <color name="color_ffEb8436">#FFEB8436</color>
-    <color name="color_cadfe5">#cadfe5</color>
-    <color name="color_56CAB3">#56CAB3</color>
-    <color name="color_1A000000">#1A000000</color>
-    <color name="color_18476A">#4018476A</color>
-    <color name="color_979797">#979797</color>
-    <color name="color_f2f2f2">#F2F2F2</color>
+    <color name="color_80592ebd">#80592ebd</color>
+    <color name="color_cc592ebd">#cc592ebd</color>
     <color name="color_f9f9ff">#f9f9ff</color>
     <color name="color_757575">#757575</color>
-
-    <color name="color_default_button_disabled">#80592ebd</color>
-    <color name="color_default_button_pressed">#cc592ebd</color>
-    <color name="white_with_alpha_60">#99FFFFFF</color>
-
-    <!-- biometric -->
-    <color name="bg_fingerprint">#1A73E8</color>
-
-    <color name="dialog_title">#4b4b4b</color>
-    <color name="dialog_subtitle">#7b7b7b</color>
-    <color name="dialog_description">#505050</color>
-    <color name="dialog_status">#fb744a</color>
-    <color name="dialog_cancel_btn">#009689</color>
-
-    <color name="gray_text_color">#66000000</color>
+    <color name="color_99ffffff">#99FFFFFF</color>
     <color name="color_9b9b9b">#9b9b9b</color>
-    <color name="transaction_date">#B3000000</color>
-    <color name="settings_title_color">#80000000</color>
-    <color name="gray_divider">#166b6b6b</color>
+    <color name="color_166b6b6b">#166b6b6b</color>
     <color name="color_33979797">#33979797</color>
-
-    <color name="gray_background">#F5F5F5</color>
-    <color name="settings_text_privacy">#999b9b9b</color>
+    <color name="color_999b9b9b">#999b9b9b</color>
     <color name="color_d9534f">#d9534f</color>
     <color name="color_f3f3fb">#f3f3fb</color>
     <color name="color_d7ccdd">#d7ccdd</color>
@@ -52,7 +20,6 @@
     <color name="color_28f3f3fb">#28f3f3fb</color>
     <color name="color_994A4A4A">#994A4A4A</color>
     <color name="color_4D000000">#4D000000</color>
-    <color name="color_4D979797">#4D979797</color>
     <color name="color_26000000">#26000000</color>
     <color name="color_8a000000">#8a000000</color>
 

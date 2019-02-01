@@ -13,9 +13,9 @@
             android:id="@+id/tvOperationFieldName"
             android:layout_width="wrap_content"
             android:textSize="15sp"
-            android:textStyle="bold"
+            android:fontFamily="sans-serif-medium"
             android:textColor="@android:color/black"
-            android:layout_marginRight="4dp"
+            android:layout_marginEnd="4dp"
             android:layout_height="wrap_content"
             android:textAppearance="?android:textAppearanceMedium"/>
 

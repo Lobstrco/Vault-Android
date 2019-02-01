@@ -12,7 +12,7 @@
             android:layout_width="wrap_content"
             android:paddingStart="16dp"
             android:paddingEnd="0dp"
-            android:textStyle="bold"
+            android:fontFamily="sans-serif-medium"
             android:textColor="@android:color/black"
             android:layout_centerVertical="true"
             android:layout_height="wrap_content"

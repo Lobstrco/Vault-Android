@@ -5,7 +5,9 @@ import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
 import android.content.pm.PackageManager
+import android.graphics.Point
 import android.net.Uri
+import android.os.Build
 import android.util.DisplayMetrics
 import android.util.Log
 import android.view.View
@@ -40,17 +42,6 @@ object AppUtil {
         customTabsIntent.launchUrl(context, Uri.parse(url))
     }
 
-    fun formatDate(date: Date, datePattern: String): String? {
-        try {
-            val format = SimpleDateFormat(datePattern)
-            return format.format(date)
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
-
-        return null
-    }
-
     fun formatDate(date: Long, datePattern: String): String {
         val calendar = Calendar.getInstance()
         calendar.timeInMillis = date
@@ -83,10 +74,14 @@ object AppUtil {
         } else item.text.toString()
     }
 
-    fun getAppVersionCode(context: Context?): Int {
+    fun getAppVersionCode(context: Context?): Long {
         return try {
             val packageInfo = context?.packageManager?.getPackageInfo(context.packageName, 0)
-            packageInfo?.versionCode ?: -1
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                packageInfo?.longVersionCode ?: -1
+            } else {
+                packageInfo?.versionCode?.toLong() ?: -1
+            }
         } catch (e: PackageManager.NameNotFoundException) {
             Log.e("NameNotFoundException", "Could not get package name:$e")
             -1
@@ -178,6 +173,8 @@ object AppUtil {
     fun screenWidth(context: Context): Int {
         val wm = context.getSystemService(Context.WINDOW_SERVICE) as WindowManager
         val display = wm.defaultDisplay
-        return display.width
+        val size = Point()
+        display.getSize(size)
+        return size.x
     }
 }

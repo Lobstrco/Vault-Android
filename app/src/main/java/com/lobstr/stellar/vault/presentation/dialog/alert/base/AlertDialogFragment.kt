@@ -8,6 +8,7 @@ import android.view.View
 import androidx.annotation.LayoutRes
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AlertDialog
+import com.lobstr.stellar.vault.R
 import com.lobstr.stellar.vault.presentation.BaseMvpAppCompatDialogFragment
 import com.lobstr.stellar.vault.presentation.application.LVApplication
 import com.lobstr.stellar.vault.presentation.dialog.alert.base.AlertDialogFragment.DialogIdentifier.PROGRESS
@@ -111,7 +112,7 @@ open class AlertDialogFragment : BaseMvpAppCompatDialogFragment() {
 
         isCancelable = cancelableOf
 
-        return AlertDialog.Builder(activity!!)
+        return AlertDialog.Builder(activity!!, R.style.AlertDialog)
             .setTitle(mTitle)
             .setMessage(mMessage)
             .setView(mContentView)

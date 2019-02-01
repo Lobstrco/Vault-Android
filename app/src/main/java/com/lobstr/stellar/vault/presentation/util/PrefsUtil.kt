@@ -49,8 +49,8 @@ class PrefsUtil(private val sharedPreferences: SharedPreferences) {
         get() = getString(PREF_FCM_TOKEN)
         set(fcmToken) = set(PREF_FCM_TOKEN, fcmToken)
 
-    var appVersion: Int
-        get() = getInt(PREF_APP_VERSION)
+    var appVersion: Long
+        get() = getLong(PREF_APP_VERSION)
         set(appVersion) = set(PREF_APP_VERSION, appVersion)
 
     var isFcmRegisteredSuccessfully: Boolean
@@ -89,6 +89,10 @@ class PrefsUtil(private val sharedPreferences: SharedPreferences) {
         sharedPreferences.edit().putInt(key, value).apply()
     }
 
+    operator fun set(key: String, value: Long) {
+        sharedPreferences.edit().putLong(key, value).apply()
+    }
+
     fun getString(key: String): String? {
         return sharedPreferences.getString(key, null)
     }
@@ -99,6 +103,10 @@ class PrefsUtil(private val sharedPreferences: SharedPreferences) {
 
     fun getInt(key: String): Int {
         return sharedPreferences.getInt(key, 0)
+    }
+
+    fun getLong(key: String): Long {
+        return sharedPreferences.getLong(key, 0)
     }
 
     fun clearUserPrefs(): Boolean {

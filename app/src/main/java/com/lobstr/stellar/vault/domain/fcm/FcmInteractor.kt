@@ -13,9 +13,9 @@ interface FcmInteractor {
 
     fun getFcmToken(): String?
 
-    fun saveAppVersion(appVersion: Int)
+    fun saveAppVersion(appVersion: Long)
 
-    fun getAppVersion(): Int
+    fun getAppVersion(): Long
 
     fun setFcmRegistered(registered: Boolean)
 

@@ -5,6 +5,7 @@
         <attr name="isDraggable" format="boolean"/>
         <attr name="itemBackground" format="reference"/>
         <attr name="itemEmptyBackground" format="reference"/>
+        <attr name="itemCounterTextColor" format="color"/>
         <attr name="itemTextColor" format="color"/>
     </declare-styleable>
 

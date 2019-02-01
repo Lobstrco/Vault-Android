@@ -296,7 +296,7 @@
                 android:layout_gravity="bottom"
                 android:textSize="10sp"
                 android:drawableTop="@drawable/ic_gray_logo"
-                android:textColor="@color/settings_text_privacy"
+                android:textColor="@color/color_999b9b9b"
                 android:text="@string/text_all_rights_reserved"/>
     </LinearLayout>
 </ScrollView>

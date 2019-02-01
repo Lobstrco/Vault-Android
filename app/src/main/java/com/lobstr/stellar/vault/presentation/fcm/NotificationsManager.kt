@@ -10,16 +10,19 @@ import android.media.RingtoneManager
 import androidx.core.app.NotificationCompat
 import androidx.core.app.TaskStackBuilder
 import com.lobstr.stellar.vault.R
-import com.lobstr.stellar.vault.presentation.entities.transaction.TransactionItem
-import com.lobstr.stellar.vault.presentation.home.HomeActivity
-import com.lobstr.stellar.vault.presentation.util.Constant
-import com.lobstr.stellar.vault.presentation.util.Constant.Navigation.TRANSACTION_DETAILS
 
 
 class NotificationsManager(private val context: Context) {
 
     companion object {
         val NOTIFICATION_ID = 1
+
+        fun clearNotifications(context: Context) {
+            val notificationManager =
+                context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+
+            notificationManager.cancelAll()
+        }
     }
 
     object ChanelId {
@@ -30,20 +33,24 @@ class NotificationsManager(private val context: Context) {
         val LV = "LV"
     }
 
+    /**
+     * Show only specific activity
+     */
     fun sendNotification(
         channelId: String, channelName: String,
-        notificationTitle: String, notificationMessage: String?
+        notificationTitle: String, notificationMessage: String?,
+        targetClass: Class<*>
     ) {
         val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
-        val intent = Intent(context, HomeActivity::class.java)
+        val intent = Intent(context, targetClass)
         intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_CLEAR_TOP)
         intent.action = java.lang.Long.toString(System.currentTimeMillis())
         val contentIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
 
         val mBuilder =
             NotificationCompat.Builder(context, createNotificationChannel(notificationManager, channelId, channelName))
-                .setSmallIcon(R.mipmap.ic_launcher)
+                .setSmallIcon(R.drawable.ic_stat_notif)
                 .setLights(Color.BLUE, 500, 500)
                 .setContentTitle(notificationTitle)
                 .setStyle(NotificationCompat.BigTextStyle().bigText(notificationMessage))
@@ -55,13 +62,15 @@ class NotificationsManager(private val context: Context) {
         notificationManager.notify(NOTIFICATION_ID, mBuilder.build())
     }
 
-    fun sendAddedNewTransactionNotification(
+    /**
+     * Show specific activity with extra
+     */
+    fun sendNotification(
         channelId: String,
         channelName: String,
         notificationTitle: String,
         notificationMessage: String?,
-        transactionItem: TransactionItem?,
-        aClass: Class<*>
+        intent: Intent
     ) {
         val notificationManager =
             context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
@@ -70,7 +79,7 @@ class NotificationsManager(private val context: Context) {
             context,
             createNotificationChannel(notificationManager, channelId, channelName)
         )
-            .setSmallIcon(R.mipmap.ic_launcher)
+            .setSmallIcon(R.drawable.ic_stat_notif)
             .setLights(Color.BLUE, 500, 500)
             .setContentTitle(notificationTitle)
             .setStyle(NotificationCompat.BigTextStyle().bigText(notificationMessage))
@@ -82,21 +91,17 @@ class NotificationsManager(private val context: Context) {
         // and refresh this data when we will open activity
         // in KitKat and Lollipop PendingIntent.FLAG_UPDATE_CURRENT not working correct
         // (after first time) and this trick helps to solve the problem
-        getAddedNewTransactionPendingIntent(transactionItem, aClass)?.cancel()
-        mBuilder.setContentIntent(getAddedNewTransactionPendingIntent(transactionItem, aClass))
+        getPendingIntent(intent)?.cancel()
+        mBuilder.setContentIntent(getPendingIntent(intent))
         notificationManager.notify(NOTIFICATION_ID, mBuilder.build())
     }
 
-    // data - some data that we must pass to activity from fcm
+    // notificationIntent - some data that we must pass from fcm
     // and refresh this data when we will open activity
-    private fun getAddedNewTransactionPendingIntent(
-        transactionItem: TransactionItem?,
-        targetClassName: Class<*>
+    private fun getPendingIntent(
+        notificationIntent: Intent
     ): PendingIntent? {
         // Creates an explicit intent for an Activity in your app
-        val notificationIntent = Intent(context, targetClassName)
-        notificationIntent.putExtra(Constant.Extra.EXTRA_NAVIGATION_FR, TRANSACTION_DETAILS)
-        notificationIntent.putExtra(Constant.Extra.EXTRA_TRANSACTION_ITEM, transactionItem)
         notificationIntent.action = java.lang.Long.toString(System.currentTimeMillis())
 
         // The stack builder object will contain an artificial back stack for the started Activity.
@@ -104,7 +109,7 @@ class NotificationsManager(private val context: Context) {
         val stackBuilder = TaskStackBuilder.create(context)
 
         // Adds the back stack for the Intent (but not the Intent itself)
-        stackBuilder.addParentStack(targetClassName)
+        stackBuilder.addParentStack(notificationIntent.component)
 
         // Adds the Intent that starts the Activity to the top of the stack
         stackBuilder.addNextIntent(notificationIntent)
@@ -128,12 +133,5 @@ class NotificationsManager(private val context: Context) {
         }
 
         return channelId
-    }
-
-    fun clearNotifications(context: Context) {
-        val notificationManager =
-            context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-
-        notificationManager.cancelAll()
     }
 }

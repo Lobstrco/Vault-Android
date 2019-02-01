@@ -18,7 +18,11 @@
                 android:id="@+id/item_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingLeft="16dp"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:fontFamily="sans-serif-medium"
                 android:textColor="@android:color/black"
                 android:textSize="16sp"/>
 
@@ -28,8 +32,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/margin_xxsmall"
                 android:visibility="gone"
-                android:textColor="@color/dialog_subtitle"
-                android:textSize="13dp"/>
+                android:textColor="@color/color_071c33"
+                android:textSize="13sp"/>
     </LinearLayout>
 
 
@@ -49,9 +53,9 @@
             android:layout_below="@+id/img_fingerprint"
             android:gravity="center"
             android:textColor="@color/color_071c33"
-            android:layout_marginLeft="@dimen/margin_xsmall"
+            android:layout_marginStart="@dimen/margin_xsmall"
             android:layout_marginTop="@dimen/margin_large"
-            android:layout_marginRight="@dimen/margin_large"/>
+            android:layout_marginEnd="@dimen/margin_large"/>
 
     <TextView
             android:id="@+id/item_status"

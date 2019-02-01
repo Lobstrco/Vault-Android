@@ -48,7 +48,7 @@
                 android:paddingLeft="16dp"
                 android:paddingRight="16dp"
                 android:background="@drawable/shape_dashboard_text_view"
-                android:textColor="@color/white_with_alpha_60"
+                android:textColor="@color/color_99ffffff"
                 android:textSize="13sp"/>
     </LinearLayout>
 
@@ -93,9 +93,9 @@
                         android:textSize="15sp"
                         android:textAllCaps="true"
                         android:minLines="2"
-                        android:textColor="@color/gray_text_color"
+                        android:textColor="@color/color_4D000000"
                         android:gravity="center_horizontal"
-                        android:lineSpacingExtra="10dp"/>
+                        android:lineSpacingExtra="10sp"/>
 
                 <TextView
                         android:id="@+id/tvDashboardCopy"
@@ -117,7 +117,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
                     android:layout_weight="0"
-                    android:background="@color/gray_divider"/>
+                    android:background="@color/color_166b6b6b"/>
 
             <LinearLayout
                     android:layout_width="match_parent"
@@ -145,7 +145,7 @@
                         android:minLines="2"
                         android:layout_marginTop="10dp"
                         android:visibility="gone"
-                        android:textColor="@color/gray_text_color"
+                        android:textColor="@color/color_4D000000"
                         android:gravity="center_horizontal"
                         android:lineSpacingExtra="10dp"/>
 
@@ -166,7 +166,7 @@
                         android:layout_height="wrap_content"
                         android:textSize="15sp"
                         android:text="@string/text_dashboard_accounts"
-                        android:textColor="@color/gray_text_color"
+                        android:textColor="@color/color_4D000000"
                         android:gravity="center_horizontal"/>
             </LinearLayout>
         </LinearLayout>

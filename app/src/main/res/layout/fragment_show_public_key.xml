@@ -27,9 +27,10 @@
             android:layout_marginBottom="32dp"
             android:gravity="center"
             android:layout_gravity="center"
-            android:textColor="@color/color_071c33"
+            android:textColor="@color/color_4D000000"
             android:textSize="14sp"
             android:textAllCaps="true"
+            android:lineSpacingExtra="14sp"
             android:textAppearance="?android:textAppearanceMedium"/>
 
     <Button

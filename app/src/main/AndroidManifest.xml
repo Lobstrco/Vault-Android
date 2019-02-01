@@ -27,6 +27,7 @@
 
         <activity
                 android:name=".presentation.splash.SplashActivity"
+                android:launchMode="singleTop"
                 android:screenOrientation="portrait"
                 android:theme="@style/SplashTheme">
             <intent-filter>

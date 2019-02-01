@@ -28,36 +28,39 @@
             android:textColor="@color/color_071c33"
             android:text="@string/text_tv_confirm_mnemonics_description"/>
 
-    <LinearLayout android:layout_width="match_parent"
-                  android:layout_height="0dp"
-                  android:orientation="vertical"
-                  android:layout_weight="1">
+
+    <FrameLayout android:layout_width="match_parent"
+                 android:layout_height="match_parent"
+                 android:layout_weight="1">
 
         <com.lobstr.stellar.vault.presentation.auth.mnemonic.MnemonicsContainerView
                 android:id="@+id/mnemonicContainerToConfirmView"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:background="@drawable/bg_mnemonics"
+                android:minHeight="144dp"
                 android:splitMotionEvents="false"
-                android:layout_weight="1"
-                app:isCounterEnabled="false"
                 app:isDraggable="true"
                 app:itemTextColor="@android:color/black"
                 app:itemBackground="@drawable/bg_mnemonic_item_white"/>
+    </FrameLayout>
+
+    <FrameLayout android:layout_width="match_parent"
+                 android:layout_height="match_parent"
+                 android:layout_weight="1">
 
         <com.lobstr.stellar.vault.presentation.auth.mnemonic.MnemonicsContainerView
                 android:id="@+id/mnemonicContainerToSelectView"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:splitMotionEvents="false"
-                app:isCounterEnabled="false"
-                android:layout_weight="1"
+                android:layout_gravity="bottom"
+                android:layout_marginBottom="6dp"
                 app:isDraggable="true"
                 app:itemTextColor="@android:color/white"
                 app:itemBackground="@drawable/bg_mnemonic_item_purple"
                 app:itemEmptyBackground="@drawable/bg_mnemonic_item_empty"/>
-
-    </LinearLayout>
+    </FrameLayout>
 
     <Button android:id="@+id/btnNext"
             android:layout_width="match_parent"

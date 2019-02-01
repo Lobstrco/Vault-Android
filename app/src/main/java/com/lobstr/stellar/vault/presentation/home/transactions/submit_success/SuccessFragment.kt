@@ -38,7 +38,7 @@ class SuccessFragment : BaseFragment(), SuccessView, View.OnClickListener {
 
     @ProvidePresenter
     fun provideSuccessPresenter() = SuccessPresenter(
-        arguments!!.getString(Constant.Bundle.BUNDLE_ENVELOPE_XDR),
+        arguments!!.getString(Constant.Bundle.BUNDLE_ENVELOPE_XDR)!!,
         arguments!!.getBoolean(Constant.Bundle.BUNDLE_NEED_ADDITIONAL_SIGNATURES, false)
     )
 

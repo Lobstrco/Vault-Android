@@ -44,8 +44,9 @@
                     android:gravity="center"
                     android:textSize="14sp"
                     android:textAllCaps="true"
+                    android:lineSpacingExtra="8sp"
                     android:layout_marginBottom="4dp"
-                    android:textColor="@color/color_757575"/>
+                    android:textColor="@color/color_071c33"/>
 
             <Button
                     android:text="@string/text_btn_copy_key"
@@ -54,7 +55,7 @@
                     android:layout_width="wrap_content"
                     android:textColor="@color/color_primary"
                     android:drawablePadding="8dp"
-                    android:drawableLeft="@drawable/ic_content_copy_purple"
+                    android:drawableStart="@drawable/ic_content_copy_purple"
                     style="@style/Base.Widget.AppCompat.Button.Borderless.Colored"
                     android:textSize="14sp"
                     android:textAllCaps="false"/>

@@ -10,12 +10,8 @@
     <dimen name="margin_xlarge">18dp</dimen>
     <dimen name="margin_xxlarge">22dp</dimen>
     <dimen name="padding_large">14dp</dimen>
-    <dimen name="font_title">18sp</dimen>
-    <dimen name="font_subtitle">13sp</dimen>
-    <dimen name="biometric_bg_size">20dp</dimen>
-    <dimen name="biometric_logo_size">48dp</dimen>
-    <dimen name="biometric_fingerprint_image_size">60dp</dimen>
 
+    <!-- expandable card view -->
     <dimen name="default_card_height">60dp</dimen>
     <dimen name="default_vertical_padding">12dp</dimen>
 </resources>
