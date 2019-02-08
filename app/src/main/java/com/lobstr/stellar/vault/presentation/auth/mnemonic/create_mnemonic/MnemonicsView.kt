@@ -27,4 +27,10 @@ interface MnemonicsView : MvpView {
 
     @StateStrategyType(SkipStrategy::class)
     fun showHelpScreen()
+
+    @StateStrategyType(SkipStrategy::class)
+    fun showDenyAccountCreationDialog()
+
+    @StateStrategyType(AddToEndSingleStrategy::class)
+    fun showAuthFr()
 }

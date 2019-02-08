@@ -136,7 +136,7 @@ class TransactionDetailsFragment : BaseFragment(), TransactionDetailsView, View.
     }
 
     override fun successDenyTransaction(transactionItem: TransactionItem) {
-        showMessage("Transaction denied")
+        showMessage(getString(R.string.msg_transaction_denied))
 
         // notify target about changes
         val intent = Intent()
@@ -144,6 +144,8 @@ class TransactionDetailsFragment : BaseFragment(), TransactionDetailsView, View.
         activity?.setResult(Activity.RESULT_OK, intent)
         targetFragment?.onActivityResult(targetRequestCode, Activity.RESULT_OK, intent)
 
+        // close screen
+        activity?.onBackPressed()
     }
 
     override fun successConfirmTransaction(
@@ -157,8 +159,10 @@ class TransactionDetailsFragment : BaseFragment(), TransactionDetailsView, View.
         activity?.setResult(Activity.RESULT_OK, intent)
         targetFragment?.onActivityResult(targetRequestCode, Activity.RESULT_OK, intent)
 
+        // close screen
         parentFragment?.childFragmentManager?.popBackStack()
 
+        // show success screen
         val bundle = Bundle()
         bundle.putString(Constant.Bundle.BUNDLE_ENVELOPE_XDR, envelopeXdr)
         bundle.putBoolean(Constant.Bundle.BUNDLE_NEED_ADDITIONAL_SIGNATURES, needAdditionalSignatures)
@@ -213,7 +217,7 @@ class TransactionDetailsFragment : BaseFragment(), TransactionDetailsView, View.
     }
 
     override fun onPositiveBtnClick(tag: String?, dialogInterface: DialogInterface) {
-        mPresenter.onAlertDialogPositiveButtonClick(tag)
+        mPresenter.onAlertDialogPositiveButtonClicked(tag)
     }
 
     override fun onNegativeBtnClick(tag: String?, dialogInterface: DialogInterface) {

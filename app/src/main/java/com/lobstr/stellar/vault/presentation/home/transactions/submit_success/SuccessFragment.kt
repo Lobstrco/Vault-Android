@@ -2,6 +2,7 @@ package com.lobstr.stellar.vault.presentation.home.transactions.submit_success
 
 
 import android.os.Bundle
+import android.text.method.ScrollingMovementMethod
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -77,6 +78,10 @@ class SuccessFragment : BaseFragment(), SuccessView, View.OnClickListener {
             R.id.btnCopyXdr -> mPresenter.copyXdrClicked()
             R.id.btnDone -> mPresenter.doneClicked()
         }
+    }
+
+    override fun setMovementMethods() {
+        tvXdr.movementMethod = ScrollingMovementMethod.getInstance()
     }
 
     override fun setupXdr(xdr: String) {

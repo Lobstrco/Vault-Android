@@ -40,9 +40,17 @@ abstract class BaseFragment : BaseMvpAppCompatFragment(), BaseFragmentView {
         }
     }
 
+    /**
+     * @return boolean Return false to allow normal back press processing to
+     * proceed, true to consume it here.
+     * @see BaseActivity.onBackPressed
+     */
+    open fun onBackPressed() = false
+
     override fun setActionBarTitle(@StringRes titleRes: Int) {
         if (parentFragment is BaseContainerFragment
-            && !(parentFragment as BaseContainerFragment).userVisibleHint) {
+            && !(parentFragment as BaseContainerFragment).userVisibleHint
+        ) {
             return
         }
 

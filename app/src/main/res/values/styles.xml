@@ -34,7 +34,7 @@
     <style name="AlertDialog" parent="Theme.AppCompat.Light.Dialog.Alert">
         <!-- buttons color -->
         <item name="colorAccent">@color/color_primary</item>
-        <item name="android:windowBackground">@drawable/bg_dialog</item>
+        <item name="android:windowBackground">@drawable/bg_dialog_inset</item>
         <!-- message color -->
         <item name="android:textColorPrimary">@color/color_8a000000</item>
         <!-- title color -->

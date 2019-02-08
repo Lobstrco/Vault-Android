@@ -1,5 +1,6 @@
 package com.lobstr.stellar.vault.presentation.pin
 
+import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -23,7 +24,8 @@ import com.lobstr.stellar.vault.presentation.util.manager.ProgressManager
 import com.lobstr.stellar.vault.presentation.vault_auth.VaultAuthActivity
 import kotlinx.android.synthetic.main.activity_pin.*
 
-class PinActivity : BaseMvpAppCompatActivity(), PinView, PinLockListener, BiometricCallback, View.OnClickListener {
+class PinActivity : BaseMvpAppCompatActivity(), PinView, PinLockListener,
+    BiometricCallback, View.OnClickListener, AlertDialogFragment.OnDefaultAlertDialogListener {
 
     // ===========================================================
     // Constants
@@ -188,6 +190,30 @@ class PinActivity : BaseMvpAppCompatActivity(), PinView, PinLockListener, Biomet
 
     override fun onPinChange(pinLength: Int, intermediatePin: String?) {
         Log.i(LOG_TAG, "Pin changed, new length $pinLength with intermediate pin $intermediatePin")
+    }
+
+    // Dialogs
+
+    override fun onPositiveBtnClick(tag: String?, dialogInterface: DialogInterface) {
+        mPresenter.onAlertDialogPositiveButtonClicked(tag)
+    }
+
+    override fun onNegativeBtnClick(tag: String?, dialogInterface: DialogInterface) {
+        // add logic if needed
+    }
+
+    override fun onCancel(tag: String?, dialogInterface: DialogInterface) {
+        // add logic if needed
+    }
+
+    override fun showLogOutDialog() {
+        AlertDialogFragment.Builder(false)
+            .setCancelable(true)
+            .setMessage(getString(R.string.msg_log_out_dialog))
+            .setNegativeBtnText(getString(R.string.text_btn_cancel))
+            .setPositiveBtnText(getString(R.string.text_btn_log_out))
+            .create()
+            .show(supportFragmentManager, AlertDialogFragment.DialogFragmentIdentifier.LOG_OUT)
     }
 
     // Biometric

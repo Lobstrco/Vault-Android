@@ -1,9 +1,11 @@
 package com.lobstr.stellar.vault.presentation.auth.mnemonic.create_mnemonic
 
 
+import android.content.DialogInterface
 import android.os.Bundle
 import android.view.*
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.fusechain.digitalbits.util.manager.FragmentTransactionManager
@@ -11,6 +13,7 @@ import com.lobstr.stellar.vault.R
 import com.lobstr.stellar.vault.presentation.auth.AuthActivity
 import com.lobstr.stellar.vault.presentation.auth.mnemonic.confirm_mnemonic.ConfirmMnemonicsFragment
 import com.lobstr.stellar.vault.presentation.base.fragment.BaseFragment
+import com.lobstr.stellar.vault.presentation.dialog.alert.base.AlertDialogFragment
 import com.lobstr.stellar.vault.presentation.entities.mnemonic.MnemonicItem
 import com.lobstr.stellar.vault.presentation.faq.FaqFragment
 import com.lobstr.stellar.vault.presentation.util.AppUtil
@@ -21,7 +24,7 @@ import kotlinx.android.synthetic.main.fragment_mnemonics.*
  * Used for show or generate mnemonics
  */
 class MnemonicsFragment : BaseFragment(),
-    MnemonicsView, View.OnClickListener {
+    MnemonicsView, View.OnClickListener, AlertDialogFragment.OnDefaultAlertDialogListener {
 
     // ===========================================================
     // Constants
@@ -91,6 +94,16 @@ class MnemonicsFragment : BaseFragment(),
         return super.onOptionsItemSelected(item)
     }
 
+    override fun onBackPressed(): Boolean {
+        // handle back press only for mnemonics in authentication container
+        if (activity is AuthActivity) {
+            mPresenter.backPressed()
+            return true
+        }
+
+        return super.onBackPressed()
+    }
+
     // ===========================================================
     // Listeners, methods for/from Interfaces
     // ===========================================================
@@ -139,6 +152,42 @@ class MnemonicsFragment : BaseFragment(),
             Fragment.instantiate(context, FaqFragment::class.java.name),
             R.id.fl_container,
             true
+        )
+    }
+
+    override fun showDenyAccountCreationDialog() {
+        AlertDialogFragment.Builder(true)
+            .setCancelable(true)
+            .setTitle(getString(R.string.title_deny_account_creation_dialog))
+            .setMessage(getString(R.string.msg_deny_account_creation_dialog))
+            .setNegativeBtnText(getString(R.string.text_btn_cancel))
+            .setPositiveBtnText(getString(R.string.text_btn_deny))
+            .create()
+            .show(childFragmentManager, AlertDialogFragment.DialogFragmentIdentifier.DENY_ACCOUNT_CREATION)
+    }
+
+    override fun onPositiveBtnClick(tag: String?, dialogInterface: DialogInterface) {
+        mPresenter.onAlertDialogPositiveButtonClicked(tag)
+    }
+
+    override fun onNegativeBtnClick(tag: String?, dialogInterface: DialogInterface) {
+        // add logic if needed
+    }
+
+    override fun onCancel(tag: String?, dialogInterface: DialogInterface) {
+        // add logic if needed
+    }
+
+    override fun showAuthFr() {
+        // TODO or show previous screen?
+//        (activity as? BaseActivity)?.checkBackPress(parentFragment)
+
+        // show first fragment in container - AuthFragment
+        val containerFragmentManager = parentFragment?.childFragmentManager
+
+        containerFragmentManager?.popBackStack(
+            containerFragmentManager.getBackStackEntryAt(1).id,
+            FragmentManager.POP_BACK_STACK_INCLUSIVE
         )
     }
 

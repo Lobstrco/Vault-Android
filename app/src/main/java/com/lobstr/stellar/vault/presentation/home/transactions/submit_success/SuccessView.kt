@@ -8,6 +8,9 @@ import com.arellomobile.mvp.viewstate.strategy.StateStrategyType
 interface SuccessView : MvpView {
 
     @StateStrategyType(AddToEndSingleStrategy::class)
+    fun setMovementMethods()
+
+    @StateStrategyType(AddToEndSingleStrategy::class)
     fun setupXdr(xdr: String)
 
     @StateStrategyType(SkipStrategy::class)

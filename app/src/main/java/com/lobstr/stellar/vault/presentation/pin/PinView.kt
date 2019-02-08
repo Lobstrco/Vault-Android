@@ -47,4 +47,7 @@ interface PinView : MvpView {
 
     @StateStrategyType(SkipStrategy::class)
     fun showAuthScreen()
+
+    @StateStrategyType(SkipStrategy::class)
+    fun showLogOutDialog()
 }

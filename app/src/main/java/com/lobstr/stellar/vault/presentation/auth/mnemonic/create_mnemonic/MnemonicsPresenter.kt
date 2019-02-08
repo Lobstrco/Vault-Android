@@ -5,6 +5,7 @@ import com.lobstr.stellar.vault.domain.mnemonics.MnemonicsInteractor
 import com.lobstr.stellar.vault.presentation.BasePresenter
 import com.lobstr.stellar.vault.presentation.application.LVApplication
 import com.lobstr.stellar.vault.presentation.dagger.module.mnemonics.MnemonicsModule
+import com.lobstr.stellar.vault.presentation.dialog.alert.base.AlertDialogFragment
 import com.lobstr.stellar.vault.presentation.entities.mnemonic.MnemonicItem
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
@@ -69,5 +70,19 @@ class MnemonicsPresenter(private val generate: Boolean) : BasePresenter<Mnemonic
         }
 
         viewState.copyToClipBoard(mnemonicsStr!!)
+    }
+
+    fun backPressed() {
+        viewState.showDenyAccountCreationDialog()
+    }
+
+    fun onAlertDialogPositiveButtonClicked(tag: String?) {
+        if (tag.isNullOrEmpty()) {
+            return
+        }
+
+        when (tag) {
+            AlertDialogFragment.DialogFragmentIdentifier.DENY_ACCOUNT_CREATION -> viewState.showAuthFr()
+        }
     }
 }

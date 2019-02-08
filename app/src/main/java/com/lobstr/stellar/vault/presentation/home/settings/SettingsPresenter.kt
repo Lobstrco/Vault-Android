@@ -11,6 +11,7 @@ import com.lobstr.stellar.vault.domain.util.event.Notification
 import com.lobstr.stellar.vault.presentation.BasePresenter
 import com.lobstr.stellar.vault.presentation.application.LVApplication
 import com.lobstr.stellar.vault.presentation.dagger.module.settings.SettingsModule
+import com.lobstr.stellar.vault.presentation.dialog.alert.base.AlertDialogFragment
 import com.lobstr.stellar.vault.presentation.util.Constant
 import com.lobstr.stellar.vault.presentation.util.biometric.BiometricUtils
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -41,6 +42,7 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
             interactor.isTouchIdEnabled()
                     && BiometricUtils.isFingerprintAvailable(LVApplication.sAppComponent.context)
         )
+        viewState.setupPolicyYear(R.string.text_all_rights_reserved)
     }
 
     private fun registerEventProvider() {
@@ -74,8 +76,7 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
     }
 
     fun logOutClicked() {
-        interactor.clearUserData()
-        viewState.showAuthScreen()
+        viewState.showLogOutDialog()
     }
 
     fun signersClicked() {
@@ -118,5 +119,18 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
 
     fun publicKeyClicked() {
         viewState.showPublicKeyDialog(interactor.getUserPublicKey()!!)
+    }
+
+    fun onAlertDialogPositiveButtonClicked(tag: String?) {
+        if (tag.isNullOrEmpty()) {
+            return
+        }
+
+        when (tag) {
+            AlertDialogFragment.DialogFragmentIdentifier.LOG_OUT -> {
+                interactor.clearUserData()
+                viewState.showAuthScreen()
+            }
+        }
     }
 }

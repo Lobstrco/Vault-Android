@@ -7,6 +7,7 @@ import com.lobstr.stellar.vault.domain.pin.PinInteractor
 import com.lobstr.stellar.vault.presentation.BasePresenter
 import com.lobstr.stellar.vault.presentation.application.LVApplication
 import com.lobstr.stellar.vault.presentation.dagger.module.pin.PinModule
+import com.lobstr.stellar.vault.presentation.dialog.alert.base.AlertDialogFragment
 import com.lobstr.stellar.vault.presentation.util.biometric.BiometricUtils
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
@@ -165,7 +166,19 @@ class PinPresenter(private var needCreatePin: Boolean?, private var needChangePi
     }
 
     fun logoutClicked() {
-        interactor.clearUserData()
-        viewState.showAuthScreen()
+        viewState.showLogOutDialog()
+    }
+
+    fun onAlertDialogPositiveButtonClicked(tag: String?) {
+        if (tag.isNullOrEmpty()) {
+            return
+        }
+
+        when (tag) {
+            AlertDialogFragment.DialogFragmentIdentifier.LOG_OUT -> {
+                interactor.clearUserData()
+                viewState.showAuthScreen()
+            }
+        }
     }
 }

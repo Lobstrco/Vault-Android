@@ -102,7 +102,7 @@ ext {
     runner = "1.1.1"
     espresso_core = "3.1.1"
     stellar_sdk = "0.4.0"
-    work_manager = "1.0.0-beta02"
+    work_manager = "1.0.0-beta03"
     lottieVersion = "3.0.0-beta1"
 }
 

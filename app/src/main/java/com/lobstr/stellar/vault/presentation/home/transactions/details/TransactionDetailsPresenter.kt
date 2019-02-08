@@ -199,7 +199,7 @@ class TransactionDetailsPresenter(private var mTransactionItem: TransactionItem)
         viewState.showOperationDetailsScreen(mTransactionItem, position)
     }
 
-    fun onAlertDialogPositiveButtonClick(tag: String?) {
+    fun onAlertDialogPositiveButtonClicked(tag: String?) {
         if (tag.isNullOrEmpty()) {
             return
         }

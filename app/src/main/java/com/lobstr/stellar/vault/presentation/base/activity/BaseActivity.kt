@@ -14,6 +14,7 @@ import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.lobstr.stellar.vault.R
 import com.lobstr.stellar.vault.presentation.BaseMvpAppCompatActivity
+import com.lobstr.stellar.vault.presentation.base.fragment.BaseFragment
 
 abstract class BaseActivity : BaseMvpAppCompatActivity(),
     BaseActivityView {
@@ -64,10 +65,16 @@ abstract class BaseActivity : BaseMvpAppCompatActivity(),
     }
 
     override fun onBackPressed() {
-        checkBackPress(supportFragmentManager.findFragmentById(R.id.fl_container))
+        val container = supportFragmentManager.findFragmentById(R.id.fl_container)
+
+        // handle back press in fragment if needed
+        val childFragment = container?.childFragmentManager?.findFragmentById(R.id.fl_container)
+        if ((childFragment as? BaseFragment)?.onBackPressed() == true) return
+
+        checkBackPress(container)
     }
 
-    protected fun checkBackPress(container: Fragment?) {
+    fun checkBackPress(container: Fragment?) {
         val fragmentManager = container?.childFragmentManager ?: supportFragmentManager
         val backStackCount = fragmentManager.backStackEntryCount
 
@@ -87,6 +94,8 @@ abstract class BaseActivity : BaseMvpAppCompatActivity(),
         supportActionBar?.setHomeButtonEnabled(true)
         // remove actionbar title
         supportActionBar?.setDisplayShowTitleEnabled(false)
+        // handle HomeAsUpIndicator click
+        mToolbar?.setNavigationOnClickListener { onBackPressed() }
     }
 
     // ===========================================================

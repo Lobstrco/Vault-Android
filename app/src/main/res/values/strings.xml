@@ -20,6 +20,7 @@
     <string name="text_btn_retry">Retry</string>
     <string name="text_btn_confirm">Confirm</string>
     <string name="text_btn_deny">Deny</string>
+    <string name="text_btn_log_out">Log Out</string>
     <string name="text_btn_next">Next</string>
     <string name="text_btn_clip_to_board">Copy</string>
     <string name="text_btn_skip">Skip</string>
@@ -114,8 +115,8 @@
     <string name="text_settings_version">Version</string>
     <string name="text_settings_help">Help</string>
     <string name="text_settings_log_out">Log Out</string>
-    <string name="text_all_rights_reserved">©2019. All rights reserved</string>
     <string name="text_tv_settings_show">Show</string>
+    <string name="text_all_rights_reserved">©%s. All rights reserved</string>
 
     <!--Signed Accounts screen-->
     <string name="text_signed_account_empty_state">You have 0 signed accounts</string>
@@ -130,11 +131,11 @@
         or associations which assists in remembering something, while \' phrase\' stands for \'a small group of words\'.
     </string>
     <string name="text_tv_help_mnemonic_code_subtitle">1. What is Mnemonics code?</string>
-    <string name="text_tv_help_public_key_description">Where I can find Public Key.</string>
+    <string name="text_tv_help_public_key_description">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed at orci ligula. Curabitur vestibulum, risus quis mollis luctus, ante quam semper sapien, in interdum neque tortor ut nulla. Nulla consectetur, magna a pellentesque elementum, tortor dolor auctor purus, a auctor lorem diam sit amet est. Morbi ultricies interdum diam, quis ullamcorper lorem facilisis iaculis. Sed tristique suscipit nibh. In at erat massa. Donec imperdiet tellus vitae nulla ultrices, aliquam porta mauris tincidunt. Nulla dictum dignissim tellus vel dignissim.</string>
     <string name="text_tv_help_public_key_subtitle">2. Where I can find Public Key?</string>
-    <string name="text_tv_help_add_transaction_description">How to add a Transaction.</string>
+    <string name="text_tv_help_add_transaction_description">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed at orci ligula. Curabitur vestibulum, risus quis mollis luctus, ante quam semper sapien, in interdum neque tortor ut nulla. Nulla consectetur, magna a pellentesque elementum, tortor dolor auctor purus, a auctor lorem diam sit amet est. Morbi ultricies interdum diam, quis ullamcorper lorem facilisis iaculis. Sed tristique suscipit nibh. In at erat massa. Donec imperdiet tellus vitae nulla ultrices, aliquam porta mauris tincidunt. Nulla dictum dignissim tellus vel dignissim.</string>
     <string name="text_tv_help_add_transaction_subtitle">3. How to add a Transaction?</string>
-    <string name="text_tv_help_change_passcode_description">How to add a Change Passcode.</string>
+    <string name="text_tv_help_change_passcode_description">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed at orci ligula. Curabitur vestibulum, risus quis mollis luctus, ante quam semper sapien, in interdum neque tortor ut nulla. Nulla consectetur, magna a pellentesque elementum, tortor dolor auctor purus, a auctor lorem diam sit amet est. Morbi ultricies interdum diam, quis ullamcorper lorem facilisis iaculis. Sed tristique suscipit nibh. In at erat massa. Donec imperdiet tellus vitae nulla ultrices, aliquam porta mauris tincidunt. Nulla dictum dignissim tellus vel dignissim.</string>
     <string name="text_tv_help_change_passcode_subtitle">4. How to add a Change Passcode?</string>
     <string name="text_tv_help_how_to_title">How To</string>
     <string name="text_tv_help_get_started_title">Get Started</string>
@@ -162,6 +163,13 @@
     <!-- Deny transaction dialog -->
     <string name="title_deny_transaction_dialog">Are you sure?</string>
     <string name="msg_deny_transaction_dialog">Want to deny the operation?</string>
+
+    <!-- Deny account creation dialog -->
+    <string name="title_deny_account_creation_dialog">Are you sure?</string>
+    <string name="msg_deny_account_creation_dialog">Want to deny the account creation?</string>
+
+    <!-- Log out dialog -->
+    <string name="msg_log_out_dialog">Log out from this account?</string>
 
     <!-- Add XDR dialog -->
     <string name="text_tv_import_xdr_title">Add Transaction XDR</string>
@@ -198,6 +206,7 @@
     <string name="msg_bad_xdr">Transaction is invalid. Please, try again.</string>
     <string name="text_error_incorrect_mnemonic">Incorrect mnemonic phrases.</string>
     <string name="text_error_incorrect_pin">Incorrect PIN</string>
+    <string name="msg_transaction_denied">Transaction denied</string>
 
     <!-- Api errors -->
     <string name="api_error_not_found">Not Found</string>

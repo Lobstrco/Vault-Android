@@ -1,5 +1,6 @@
 package com.lobstr.stellar.vault.presentation.home.settings
 
+import android.content.DialogInterface
 import android.content.Intent
 import android.graphics.Typeface
 import android.os.Bundle
@@ -33,8 +34,10 @@ import com.lobstr.stellar.vault.presentation.pin.PinActivity
 import com.lobstr.stellar.vault.presentation.signed_accounts.SignedAccountsFragment
 import com.lobstr.stellar.vault.presentation.util.Constant
 import kotlinx.android.synthetic.main.fragment_settings.*
+import java.util.*
 
-class SettingsFragment : BaseFragment(), SettingsView, View.OnClickListener, CompoundButton.OnCheckedChangeListener {
+class SettingsFragment : BaseFragment(), SettingsView, View.OnClickListener,
+    CompoundButton.OnCheckedChangeListener, AlertDialogFragment.OnDefaultAlertDialogListener {
 
     // ===========================================================
     // Constants
@@ -78,6 +81,7 @@ class SettingsFragment : BaseFragment(), SettingsView, View.OnClickListener, Com
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         setListeners()
     }
 
@@ -231,6 +235,32 @@ class SettingsFragment : BaseFragment(), SettingsView, View.OnClickListener, Com
         val dialog = ShowPublicKeyDialogFragment()
         dialog.arguments = bundle
         dialog.show(childFragmentManager, PUBLIC_KEY)
+    }
+
+    override fun setupPolicyYear(id: Int) {
+        tvCurrentPolicyDate.text = String.format(getString(id), Calendar.getInstance().get(Calendar.YEAR))
+    }
+
+    override fun onPositiveBtnClick(tag: String?, dialogInterface: DialogInterface) {
+        mPresenter.onAlertDialogPositiveButtonClicked(tag)
+    }
+
+    override fun onNegativeBtnClick(tag: String?, dialogInterface: DialogInterface) {
+        // add logic if needed
+    }
+
+    override fun onCancel(tag: String?, dialogInterface: DialogInterface) {
+        // add logic if needed
+    }
+
+    override fun showLogOutDialog() {
+        AlertDialogFragment.Builder(true)
+            .setCancelable(true)
+            .setMessage(getString(R.string.msg_log_out_dialog))
+            .setNegativeBtnText(getString(R.string.text_btn_cancel))
+            .setPositiveBtnText(getString(R.string.text_btn_log_out))
+            .create()
+            .show(childFragmentManager, AlertDialogFragment.DialogFragmentIdentifier.LOG_OUT)
     }
 
     // ===========================================================

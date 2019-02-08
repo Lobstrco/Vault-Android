@@ -52,4 +52,10 @@ interface SettingsView : MvpView {
 
     @StateStrategyType(SkipStrategy::class)
     fun showPublicKeyDialog(publicKey: String)
+
+    @StateStrategyType(AddToEndSingleStrategy::class)
+    fun setupPolicyYear(@StringRes id: Int)
+
+    @StateStrategyType(SkipStrategy::class)
+    fun showLogOutDialog()
 }
