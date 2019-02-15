@@ -82,8 +82,12 @@ class TransactionDetailsPresenter(private var mTransactionItem: TransactionItem)
         var needAdditionalSignatures = false
 
         unsubscribeOnDestroy(
-            mInteractor.confirmTransactionOnHorizon(mTransactionItem.xdr!!)
+            mInteractor.retrieveActualTransaction(mTransactionItem.hash)
                 .subscribeOn(Schedulers.io())
+                .flatMap {
+                    mTransactionItem = it
+                    mInteractor.confirmTransactionOnHorizon(it.xdr!!)
+                }
                 .flatMap {
                     val envelopXdr = it.envelopeXdr
                     val extras = it.extras
@@ -97,11 +101,12 @@ class TransactionDetailsPresenter(private var mTransactionItem: TransactionItem)
                             transactionResultCode
                         )
                         transactionResultCode != null && transactionResultCode == "tx_bad_auth" -> needAdditionalSignatures =
-                                true
+                            true
                     }
 
                     mInteractor.confirmTransactionOnServer(
-                        if (needAdditionalSignatures) null else true,
+                        needAdditionalSignatures,
+                        it.hash,
                         it.envelopeXdr
                     )
                 }

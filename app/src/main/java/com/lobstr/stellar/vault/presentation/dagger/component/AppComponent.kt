@@ -1,6 +1,7 @@
 package com.lobstr.stellar.vault.presentation.dagger.component
 
 import android.content.Context
+import com.lobstr.stellar.vault.domain.error.RxErrorUtils
 import com.lobstr.stellar.vault.presentation.dagger.component.confirm_mnemonics.ConfirmMnemonicsComponent
 import com.lobstr.stellar.vault.presentation.dagger.component.dashboard.DashboardComponent
 import com.lobstr.stellar.vault.presentation.dagger.component.fcm.FcmInternalComponent
@@ -49,6 +50,8 @@ import javax.inject.Singleton
 interface AppComponent {
 
     val context: Context
+
+    val rxErrorUtils: RxErrorUtils
 
     fun plusSplashComponent(module: SplashModule): SplashComponent
 

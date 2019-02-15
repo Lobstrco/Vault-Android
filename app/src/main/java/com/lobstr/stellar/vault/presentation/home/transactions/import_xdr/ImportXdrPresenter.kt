@@ -59,11 +59,12 @@ class ImportXdrPresenter : BasePresenter<ImportXdrView>() {
                             transactionResultCode
                         )
                         transactionResultCode != null && transactionResultCode == "tx_bad_auth" -> needAdditionalSignatures =
-                                true
+                            true
                     }
 
                     interactor.confirmTransactionOnServer(
-                        if (needAdditionalSignatures) null else true,
+                        needAdditionalSignatures,
+                        it.hash,
                         it.envelopeXdr
                     )
                 }
@@ -93,13 +94,24 @@ class ImportXdrPresenter : BasePresenter<ImportXdrView>() {
                             confirmTransaction(xdr)
                         }
                         is DefaultException -> {
-                            viewState.showFormError(true, it.details)
+                            // Checking: for handle Internal Stellar SDK exceptions (bad xdr and other): when for this instance
+                            // of DefaultException base class is Default exception - it is SubClass of DefaultException
+                            // like BadRequestException and etc, otherwise - some unknown error from SDK received
+                            if (it.javaClass.superclass == DefaultException::class.java) {
+                                viewState.showFormError(true, it.details)
+                            } else {
+                                viewState.showFormError(
+                                    true,
+                                    LVApplication.sAppComponent.context.getString(R.string.msg_bad_xdr)
+                                )
+                            }
                         }
                         else -> {
                             viewState.showFormError(
                                 true,
-                                LVApplication.sAppComponent.context.getString(R.string.msg_bad_xdr)
-                            )                        }
+                                it.message ?: ""
+                            )
+                        }
                     }
                 })
         )

@@ -1,12 +1,19 @@
 package com.lobstr.stellar.vault.domain.settings
 
+import com.lobstr.stellar.vault.domain.account.AccountRepository
 import com.lobstr.stellar.vault.domain.key_store.KeyStoreRepository
+import com.lobstr.stellar.vault.presentation.entities.account.Account
+import com.lobstr.stellar.vault.presentation.util.AppUtil
 import com.lobstr.stellar.vault.presentation.util.Constant.BiometricState.DISABLED
 import com.lobstr.stellar.vault.presentation.util.Constant.BiometricState.ENABLED
 import com.lobstr.stellar.vault.presentation.util.PrefsUtil
+import io.reactivex.Single
 
-
-class SettingsInteractorImpl(private val prefsUtil: PrefsUtil, private val keyStoreRepository: KeyStoreRepository) :
+class SettingsInteractorImpl(
+    private val prefsUtil: PrefsUtil,
+    private val accountRepository: AccountRepository,
+    private val keyStoreRepository: KeyStoreRepository
+) :
     SettingsInteractor {
 
     override fun getUserPublicKey(): String? {
@@ -28,5 +35,10 @@ class SettingsInteractorImpl(private val prefsUtil: PrefsUtil, private val keySt
 
     override fun setTouchIdEnabled(enabled: Boolean) {
         prefsUtil.biometricState = if (enabled) ENABLED else DISABLED
+    }
+
+    override fun getSignedAccounts(): Single<List<Account>> {
+        return accountRepository.getSignedAccounts(AppUtil.getJwtToken(prefsUtil.authToken))
+            .doOnSuccess { prefsUtil.accountSignersCount = it.size }
     }
 }

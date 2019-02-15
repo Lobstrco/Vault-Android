@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
@@ -14,6 +15,7 @@ import com.lobstr.stellar.vault.presentation.base.fragment.BaseFragment
 import com.lobstr.stellar.vault.presentation.util.AppUtil
 import com.lobstr.stellar.vault.presentation.vault_auth.recheck_signer.RecheckSignerFragment
 import kotlinx.android.synthetic.main.fragment_signer_info.*
+import net.glxn.qrgen.android.QRCode
 
 class SignerInfoFragment : BaseFragment(),
     SignerInfoView, View.OnClickListener {
@@ -82,6 +84,13 @@ class SignerInfoFragment : BaseFragment(),
     }
 
     override fun setupUserPublicKey(userPublicKey: String?) {
+        val qrCodeImage = QRCode.from(userPublicKey).withColor(
+            ContextCompat.getColor(context!!, R.color.color_primary),
+            ContextCompat.getColor(context!!, android.R.color.transparent)
+        ).bitmap()
+
+        ivUserPublicKeyQrCode.setImageBitmap(qrCodeImage)
+
         tvUserPublicKey.text = userPublicKey
     }
 

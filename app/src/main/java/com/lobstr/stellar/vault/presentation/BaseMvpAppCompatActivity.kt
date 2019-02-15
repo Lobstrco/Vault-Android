@@ -1,9 +1,11 @@
 package com.lobstr.stellar.vault.presentation
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.arellomobile.mvp.MvpDelegate
 
+@SuppressLint("Registered")
 open class BaseMvpAppCompatActivity : AppCompatActivity() {
 
     private var mMvpDelegate: MvpDelegate<out BaseMvpAppCompatActivity>? = null

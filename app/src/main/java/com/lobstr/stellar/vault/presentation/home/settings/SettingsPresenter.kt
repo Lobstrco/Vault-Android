@@ -15,6 +15,7 @@ import com.lobstr.stellar.vault.presentation.dialog.alert.base.AlertDialogFragme
 import com.lobstr.stellar.vault.presentation.util.Constant
 import com.lobstr.stellar.vault.presentation.util.biometric.BiometricUtils
 import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
 
 @InjectViewState
@@ -51,7 +52,7 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
                     when (it.type) {
-                        Notification.Type.SIGNED_NEW_ACCOUNT -> {
+                        Notification.Type.SIGNED_NEW_ACCOUNT, Notification.Type.SIGNERS_COUNT_CHANGED -> {
                             viewState.setupSignersCount(interactor.getSignersCount().toString())
                         }
                     }
@@ -131,6 +132,19 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
                 interactor.clearUserData()
                 viewState.showAuthScreen()
             }
+        }
+    }
+
+    fun userVisibleHintCalled(visible: Boolean) {
+        if (visible) {
+            unsubscribeOnDestroy(
+                interactor.getSignedAccounts()
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe({
+                        viewState.setupSignersCount(it.size.toString())
+                    }, {})
+            )
         }
     }
 }

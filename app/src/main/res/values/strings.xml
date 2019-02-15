@@ -33,7 +33,7 @@
     <string name="text_start_screen_btn_create_account">Create Account</string>
     <string name="text_start_screen_btn_restore_account">Recovery Account</string>
     <string name="text_start_screen_terms_and_privacy">By registering you agree to our
-        <a href="https://google.com">Terms of
+        <a href="https://lobstr.co/privacy/">Terms of
             Service and Privacy Policy
         </a>
     </string>
@@ -228,4 +228,5 @@
     <string name="expandable_card_view_image_content_description">Arrow to expand card</string>
     <string name="expandable_card_view_icon_content_description">Card icon</string>
     <string name="text_action_info">info</string>
+    <string name="text_action_log_out">log out</string>
 </resources>

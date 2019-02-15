@@ -3,6 +3,7 @@ package com.lobstr.stellar.vault.data.stellar
 import android.content.Context
 import com.lobstr.stellar.vault.data.mnemonic.MnemonicsMapper
 import com.lobstr.stellar.vault.domain.stellar.StellarRepository
+import com.lobstr.stellar.vault.presentation.application.LVApplication
 import com.lobstr.stellar.vault.presentation.entities.mnemonic.MnemonicItem
 import com.soneso.stellarmnemonics.Wallet
 import io.reactivex.Single
@@ -42,7 +43,9 @@ class StellarRepositoryImpl(
 
             // And finally, send it off to Stellar!
             return@Callable server.submitTransaction(transaction)
-        })
+        }).onErrorResumeNext {
+            LVApplication.sAppComponent.rxErrorUtils.handleSingleRequestHttpError(it)
+        }
     }
 
     override fun signTransaction(signer: KeyPair, envelopXdr: String): Single<String> {

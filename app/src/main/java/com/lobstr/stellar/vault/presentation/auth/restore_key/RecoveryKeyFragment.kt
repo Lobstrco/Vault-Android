@@ -2,7 +2,10 @@ package com.lobstr.stellar.vault.presentation.auth.restore_key
 
 import android.content.Intent
 import android.os.Bundle
-import android.text.*
+import android.text.Editable
+import android.text.InputType
+import android.text.Spannable
+import android.text.TextWatcher
 import android.text.style.ForegroundColorSpan
 import android.view.*
 import android.view.inputmethod.EditorInfo
@@ -15,7 +18,7 @@ import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.fusechain.digitalbits.util.manager.FragmentTransactionManager
 import com.lobstr.stellar.vault.R
-import com.lobstr.stellar.vault.presentation.auth.restore_key.entities.PhraseErrorInfo
+import com.lobstr.stellar.vault.presentation.auth.restore_key.entities.RecoveryPhraseInfo
 import com.lobstr.stellar.vault.presentation.base.fragment.BaseFragment
 import com.lobstr.stellar.vault.presentation.dialog.alert.base.AlertDialogFragment
 import com.lobstr.stellar.vault.presentation.faq.FaqFragment
@@ -117,9 +120,7 @@ class RecoveryKeyFragment : BaseFragment(), RecoveryKeyFrView, View.OnClickListe
         }
 
         override fun afterTextChanged(s: Editable) {
-            etRecoveryPhrase.post {
-                mPresenter.phrasesChanged(etRecoveryPhrase?.text.toString())
-            }
+            mPresenter.phrasesChanged(etRecoveryPhrase?.text.toString())
         }
     }
 
@@ -139,26 +140,21 @@ class RecoveryKeyFragment : BaseFragment(), RecoveryKeyFrView, View.OnClickListe
         }
     }
 
-    override fun showInputErrorIfNeeded(incorrectPhrases: List<PhraseErrorInfo>, phrases: String) {
-        val spannable = SpannableString(phrases)
-        for (incorrectPhrase in incorrectPhrases) {
-            spannable.setSpan(
-                ForegroundColorSpan(ContextCompat.getColor(context!!, android.R.color.holo_red_light)),
-                incorrectPhrase.startPosition,
-                incorrectPhrase.startPosition + incorrectPhrase.length,
+    override fun showInputErrorIfNeeded(recoveryPhrasesInfo: List<RecoveryPhraseInfo>, phrases: String) {
+        for (phrasesInfo in recoveryPhrasesInfo) {
+            val color = if (phrasesInfo.incorrect) {
+                ForegroundColorSpan(ContextCompat.getColor(context!!, android.R.color.holo_red_light))
+            } else {
+                ForegroundColorSpan(ContextCompat.getColor(context!!, android.R.color.black))
+            }
+
+            etRecoveryPhrase.text.setSpan(
+                color,
+                phrasesInfo.startPosition,
+                phrasesInfo.startPosition + phrasesInfo.length,
                 Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
             )
         }
-
-        val cursorPosition = etRecoveryPhrase.selectionEnd
-        etRecoveryPhrase.removeTextChangedListener(mTextWatcher)
-        etRecoveryPhrase.setText(spannable)
-        if (etRecoveryPhrase.length() < cursorPosition) {
-            etRecoveryPhrase.setSelection(etRecoveryPhrase.length())
-        } else {
-            etRecoveryPhrase.setSelection(cursorPosition)
-        }
-        etRecoveryPhrase.addTextChangedListener(mTextWatcher)
     }
 
     override fun changeTextBackground(isError: Boolean) {

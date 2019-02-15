@@ -19,8 +19,8 @@ data class SetOptionsOperation(
 
     fun getFieldsMap(): Map<String, String?> {
         val map: MutableMap<String, String?> = mutableMapOf()
-        map["inflationDestination"] = inflationDestination
-        map["homeDomain"] = homeDomain
+        if (!inflationDestination.isNullOrEmpty()) map["inflationDestination"] = inflationDestination
+        if (!homeDomain.isNullOrEmpty()) map["homeDomain"] = homeDomain
         if (clearFlags != null) map["clearFlags"] = clearFlags.toString()
         if (setFlags != null) map["setFlags"] = setFlags.toString()
         if (masterKeyWeight != null) map["masterKeyWeight"] = masterKeyWeight.toString()

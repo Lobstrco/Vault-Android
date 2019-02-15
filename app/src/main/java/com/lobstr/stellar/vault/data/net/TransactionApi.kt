@@ -20,6 +20,12 @@ interface TransactionApi {
         @Header("Authorization") token: String
     ): Single<ApiTransactionResult>
 
+    @GET("transactions/{hash}/")
+    fun getTransaction(
+        @Path("hash") hash: String,
+        @Header("Authorization") token: String
+    ): Single<ApiTransactionItem>
+
     /**
      * Add some transaction type
      * @see com.lobstr.stellar.vault.presentation.util.Constant.TransactionType
@@ -30,11 +36,25 @@ interface TransactionApi {
         @Header("Authorization") token: String
     ): Single<ApiTransactionResult>
 
+    /**
+     * Called for submit transaction if needed additional signatures
+     * Horizon: tx_bad_auth
+     */
     @FormUrlEncoded
     @POST("transactions/")
     fun submitSignedTransaction(
         @Header("Authorization") token: String,
-        @Field("submit") submit: Boolean?,
+        @Field("xdr") transaction: String
+    ): Single<ApiSubmitTransaction>
+
+    /**
+     * Called for submit transaction when No additional signatures needed
+     */
+    @FormUrlEncoded
+    @POST("transactions/{hash}/submit/")
+    fun markTransactionAsSubmitted(
+        @Header("Authorization") token: String,
+        @Path("hash") hash: String,
         @Field("xdr") transaction: String
     ): Single<ApiSubmitTransaction>
 

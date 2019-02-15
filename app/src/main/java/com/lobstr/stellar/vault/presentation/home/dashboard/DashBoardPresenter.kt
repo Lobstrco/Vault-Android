@@ -22,7 +22,7 @@ class DashboardPresenter : BasePresenter<DashboardView>() {
     lateinit var eventProviderModule: EventProviderModule
 
     @Inject
-    lateinit var mInteractor: DashboardInteractor
+    lateinit var interactor: DashboardInteractor
 
     init {
         LVApplication.sAppComponent.plusDashboardComponent(DashboardModule()).inject(this)
@@ -32,7 +32,7 @@ class DashboardPresenter : BasePresenter<DashboardView>() {
         super.onFirstViewAttach()
 
         viewState.setupToolbarTitle()
-        viewState.showPublicKey(mInteractor.getUserPublicKey())
+        viewState.showPublicKey(interactor.getUserPublicKey())
         registerEventProvider()
         loadPendingTransactions()
         loadSignedAccountsList()
@@ -62,8 +62,16 @@ class DashboardPresenter : BasePresenter<DashboardView>() {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
                     when (it.type) {
-                        Notification.Type.TRANSACTION_COUNT_CHANGED -> loadPendingTransactions()
-                        Notification.Type.ADDED_NEW_TRANSACTION -> loadPendingTransactions()
+                        Notification.Type.TRANSACTION_COUNT_CHANGED -> {
+                            loadPendingTransactions()
+                            // FIXME SIGNED_NEW_ACCOUNT don't worked. Need additional notification about SIGNERS_COUNT_CHANGED. Temporally solution for update signers count
+                            loadSignedAccountsList()
+                        }
+                        Notification.Type.ADDED_NEW_TRANSACTION -> {
+                            loadPendingTransactions()
+                            // FIXME SIGNED_NEW_ACCOUNT don't worked. Need additional notification about SIGNERS_COUNT_CHANGED. Temporally solution for update signers count
+                            loadSignedAccountsList()
+                        }
                         Notification.Type.SIGNED_NEW_ACCOUNT -> loadSignedAccountsList()
                     }
                 }, {
@@ -74,7 +82,7 @@ class DashboardPresenter : BasePresenter<DashboardView>() {
 
     private fun loadPendingTransactions() {
         unsubscribeOnDestroy(
-            mInteractor.getPendingTransactionList(null)
+            interactor.getPendingTransactionList(null)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
@@ -102,17 +110,23 @@ class DashboardPresenter : BasePresenter<DashboardView>() {
 
     private fun loadSignedAccountsList() {
         unsubscribeOnDestroy(
-            mInteractor.getSignedAccounts()
+            interactor.getSignedAccounts()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
+                    // FIXME Notify about signers count changed: for updated signers count in settings
+                    eventProviderModule.notificationEventSubject.onNext(
+                        Notification(Notification.Type.SIGNERS_COUNT_CHANGED, null)
+                    )
+
+                    viewState.hideSignersProgress()
                     if (it.size == 1) {
                         viewState.showSignersPublickKey(it[0].address)
                     } else {
-                        viewState.showSignersCount(mInteractor.getSignersCount())
+                        viewState.showSignersCount(interactor.getSignersCount())
                     }
                 }, {
-                    viewState.showSignersCount(mInteractor.getSignersCount())
+                    viewState.showSignersCount(interactor.getSignersCount())
 
                     when (it) {
                         is NoInternetConnectionException -> {
@@ -138,6 +152,13 @@ class DashboardPresenter : BasePresenter<DashboardView>() {
     }
 
     fun copyKeyClicked() {
-        viewState.copyKey(mInteractor.getUserPublicKey())
+        viewState.copyKey(interactor.getUserPublicKey())
+    }
+
+    fun userVisibleHintCalled(visible: Boolean) {
+        if(visible) {
+            loadPendingTransactions()
+            loadSignedAccountsList()
+        }
     }
 }

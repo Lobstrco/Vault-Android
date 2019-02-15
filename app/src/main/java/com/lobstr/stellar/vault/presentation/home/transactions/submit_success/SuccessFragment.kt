@@ -94,6 +94,7 @@ class SuccessFragment : BaseFragment(), SuccessView, View.OnClickListener {
 
     override fun setAdditionalSignaturesInfoEnabled(enabled: Boolean) {
         tvAdditionalSignaturesDescription.visibility = if (enabled) View.VISIBLE else View.GONE
+        llXdrContainer.visibility = if (enabled) View.VISIBLE else View.GONE
     }
 
     override fun copyToClipBoard(text: String) {

@@ -67,6 +67,12 @@ class SettingsFragment : BaseFragment(), SettingsView, View.OnClickListener,
     // Getter & Setter
     // ===========================================================
 
+    override fun setUserVisibleHint(isVisibleToUser: Boolean) {
+        super.setUserVisibleHint(isVisibleToUser)
+
+        mPresenter.userVisibleHintCalled(isVisibleToUser)
+    }
+
     // ===========================================================
     // Methods for/from SuperClass
     // ===========================================================

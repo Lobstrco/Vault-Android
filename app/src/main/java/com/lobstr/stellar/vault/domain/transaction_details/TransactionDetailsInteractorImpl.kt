@@ -17,17 +17,36 @@ class TransactionDetailsInteractorImpl(
     private val prefsUtil: PrefsUtil
 ) : TransactionDetailsInteractor {
 
+    /**
+     * Used for retrieve actual transaction XDR for send it to Horizon
+     * In some cases (when used >1 vault accounts) need retrieve actual XDR
+     */
+    override fun retrieveActualTransaction(hash: String): Single<TransactionItem> {
+        return transactionRepository.retrieveTransaction(AppUtil.getJwtToken(prefsUtil.authToken), hash)
+    }
+
     override fun confirmTransactionOnHorizon(transaction: String): Single<SubmitTransactionResponse> {
         return getPhrases().flatMap { stellarRepository.createKeyPair(it.toCharArray(), 0) }
             .flatMap { stellarRepository.submitTransaction(it, transaction) }
     }
 
-    override fun confirmTransactionOnServer(submit: Boolean?, transaction: String): Single<String> {
-        return transactionRepository.submitSignedTransaction(
-            AppUtil.getJwtToken(prefsUtil.authToken),
-            submit,
-            transaction
-        )
+    override fun confirmTransactionOnServer(
+        needAdditionalSignatures: Boolean,
+        hash: String?,
+        transaction: String
+    ): Single<String> {
+        return if (needAdditionalSignatures) {
+            transactionRepository.submitSignedTransaction(
+                AppUtil.getJwtToken(prefsUtil.authToken),
+                transaction
+            )
+        } else {
+            transactionRepository.markTransactionAsSubmitted(
+                AppUtil.getJwtToken(prefsUtil.authToken),
+                hash!!,
+                transaction
+            )
+        }
     }
 
     override fun cancelTransaction(hash: String): Single<TransactionItem> {

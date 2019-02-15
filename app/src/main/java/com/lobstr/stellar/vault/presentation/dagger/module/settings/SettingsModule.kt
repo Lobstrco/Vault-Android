@@ -1,5 +1,6 @@
 package com.lobstr.stellar.vault.presentation.dagger.module.settings
 
+import com.lobstr.stellar.vault.domain.account.AccountRepository
 import com.lobstr.stellar.vault.domain.key_store.KeyStoreRepository
 import com.lobstr.stellar.vault.domain.settings.SettingsInteractor
 import com.lobstr.stellar.vault.domain.settings.SettingsInteractorImpl
@@ -14,8 +15,9 @@ class SettingsModule {
     @HomeScope
     internal fun provideSettingsInteractor(
         prefsUtil: PrefsUtil,
+        accountRepository: AccountRepository,
         keyStoreRepository: KeyStoreRepository
     ): SettingsInteractor {
-        return SettingsInteractorImpl(prefsUtil, keyStoreRepository)
+        return SettingsInteractorImpl(prefsUtil, accountRepository, keyStoreRepository)
     }
 }

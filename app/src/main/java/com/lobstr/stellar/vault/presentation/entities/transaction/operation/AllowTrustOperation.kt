@@ -13,8 +13,8 @@ data class AllowTrustOperation(
 
     fun getFieldsMap(): Map<String, String?> {
         val map: MutableMap<String, String?> = mutableMapOf()
-        map["trustor"] = trustor
-        map["assetCode"] = assetCode
+        if (trustor.isNotEmpty()) map["trustor"] = trustor
+        if (assetCode.isNotEmpty()) map["assetCode"] = assetCode
         map["authorize"] = authorize.toString()
 
         return map

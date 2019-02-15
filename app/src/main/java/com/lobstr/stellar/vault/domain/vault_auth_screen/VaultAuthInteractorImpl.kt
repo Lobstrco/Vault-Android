@@ -78,4 +78,9 @@ class VaultAuthInteractorImpl(
         return accountRepository.getSignedAccounts(AppUtil.getJwtToken(token))
             .doOnSuccess { prefsUtil.accountSignersCount = it.size }
     }
+
+    override fun clearUserData() {
+        prefsUtil.clearUserPrefs()
+        keyStoreRepository.clearAll()
+    }
 }

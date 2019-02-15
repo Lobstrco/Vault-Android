@@ -37,6 +37,13 @@
                       android:layout_height="match_parent"
                       android:orientation="vertical"
                       android:gravity="center">
+
+            <ImageView
+                    android:id="@+id/ivUserPublicKeyQrCode"
+                    android:layout_width="140dp"
+                    android:layout_height="140dp"
+                    android:layout_gravity="center"/>
+
             <TextView
                     android:id="@+id/tvUserPublicKey"
                     android:layout_width="match_parent"

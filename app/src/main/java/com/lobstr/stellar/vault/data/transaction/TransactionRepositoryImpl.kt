@@ -14,6 +14,14 @@ class TransactionRepositoryImpl(
     private val rxErrorUtils: RxErrorUtils
 ) : TransactionRepository {
 
+    override fun retrieveTransaction(token: String, hash: String): Single<TransactionItem> {
+        return transactionApi.getTransaction(hash, token)
+            .onErrorResumeNext { rxErrorUtils.handleSingleRequestHttpError(it) }
+            .map {
+                transactionEntityMapper.transformTransactionItem(it)
+            }
+    }
+
     override fun getTransactionList(token: String, type: String?, nextPageUrl: String?): Single<TransactionResult> {
         return when {
             type.isNullOrEmpty() && nextPageUrl.isNullOrEmpty() -> transactionApi.getTransactionList(token)
@@ -30,8 +38,16 @@ class TransactionRepositoryImpl(
             }
     }
 
-    override fun submitSignedTransaction(token: String, submit: Boolean?, transaction: String): Single<String> {
-        return transactionApi.submitSignedTransaction(token, submit, transaction)
+    override fun submitSignedTransaction(token: String, transaction: String): Single<String> {
+        return transactionApi.submitSignedTransaction(token, transaction)
+            .onErrorResumeNext { rxErrorUtils.handleSingleRequestHttpError(it) }
+            .map {
+                it.xdr!!
+            }
+    }
+
+    override fun markTransactionAsSubmitted(token: String, hash: String, transaction: String): Single<String> {
+        return transactionApi.markTransactionAsSubmitted(token, hash, transaction)
             .onErrorResumeNext { rxErrorUtils.handleSingleRequestHttpError(it) }
             .map {
                 it.xdr!!

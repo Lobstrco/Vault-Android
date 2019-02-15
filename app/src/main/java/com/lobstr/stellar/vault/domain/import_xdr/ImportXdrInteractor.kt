@@ -11,7 +11,8 @@ interface ImportXdrInteractor {
     ): Single<SubmitTransactionResponse>
 
     fun confirmTransactionOnServer(
-        submit: Boolean?,
+        needAdditionalSignatures: Boolean,
+        hash: String?,
         transaction: String
     ): Single<String>
 

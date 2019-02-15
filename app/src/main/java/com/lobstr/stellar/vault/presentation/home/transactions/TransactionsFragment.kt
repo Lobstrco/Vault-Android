@@ -39,7 +39,7 @@ class TransactionsFragment : BaseFragment(), TransactionsView, SwipeRefreshLayou
     // ===========================================================
 
     @InjectPresenter
-    lateinit var presenter: TransactionsPresenter
+    lateinit var mPresenter: TransactionsPresenter
 
     private var mView: View? = null
 
@@ -80,7 +80,7 @@ class TransactionsFragment : BaseFragment(), TransactionsView, SwipeRefreshLayou
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
-        presenter.handleOnActivityResult(requestCode, resultCode, data)
+        mPresenter.handleOnActivityResult(requestCode, resultCode, data)
     }
 
     // ===========================================================
@@ -89,16 +89,16 @@ class TransactionsFragment : BaseFragment(), TransactionsView, SwipeRefreshLayou
 
     override fun onClick(v: View?) {
         when (v?.id) {
-            fabAddTransaction.id -> presenter.addTransactionClicked()
+            fabAddTransaction.id -> mPresenter.addTransactionClicked()
         }
     }
 
     override fun onTransactionItemClick(transactionItem: TransactionItem) {
-        presenter.transactionItemClicked(transactionItem)
+        mPresenter.transactionItemClicked(transactionItem)
     }
 
     override fun onRefresh() {
-        presenter.refreshCalled()
+        mPresenter.refreshCalled()
     }
 
     override fun setupToolbarTitle(titleRes: Int) {

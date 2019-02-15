@@ -6,11 +6,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.lobstr.stellar.vault.R
-import com.lobstr.stellar.vault.R.id.*
 import com.lobstr.stellar.vault.presentation.base.fragment.BaseFragment
 import com.lobstr.stellar.vault.presentation.home.HomeActivity
 import com.lobstr.stellar.vault.presentation.util.AppUtil
@@ -46,6 +44,12 @@ class DashboardFragment : BaseFragment(), DashboardView, View.OnClickListener {
     // Getter & Setter
     // ===========================================================
 
+    override fun setUserVisibleHint(isVisibleToUser: Boolean) {
+        super.setUserVisibleHint(isVisibleToUser)
+
+        mPresenter.userVisibleHintCalled(isVisibleToUser)
+    }
+
     // ===========================================================
     // Methods for/from SuperClass
     // ===========================================================
@@ -55,7 +59,7 @@ class DashboardFragment : BaseFragment(), DashboardView, View.OnClickListener {
         savedInstanceState: Bundle?
     ): View? {
         mView =
-                if (mView == null) inflater.inflate(R.layout.fragment_dash_board, container, false) else mView
+            if (mView == null) inflater.inflate(R.layout.fragment_dash_board, container, false) else mView
         return mView
     }
 
@@ -121,6 +125,10 @@ class DashboardFragment : BaseFragment(), DashboardView, View.OnClickListener {
 
     override fun copyKey(publicKey: String) {
         AppUtil.copyToClipboard(context, publicKey)
+    }
+
+    override fun hideSignersProgress() {
+        pbDashboardSigners.visibility = View.GONE
     }
 
     // ===========================================================

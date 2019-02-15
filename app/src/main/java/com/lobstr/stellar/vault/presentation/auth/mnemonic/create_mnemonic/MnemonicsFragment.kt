@@ -161,7 +161,7 @@ class MnemonicsFragment : BaseFragment(),
             .setTitle(getString(R.string.title_deny_account_creation_dialog))
             .setMessage(getString(R.string.msg_deny_account_creation_dialog))
             .setNegativeBtnText(getString(R.string.text_btn_cancel))
-            .setPositiveBtnText(getString(R.string.text_btn_deny))
+            .setPositiveBtnText(getString(R.string.text_btn_ok))
             .create()
             .show(childFragmentManager, AlertDialogFragment.DialogFragmentIdentifier.DENY_ACCOUNT_CREATION)
     }
@@ -179,9 +179,6 @@ class MnemonicsFragment : BaseFragment(),
     }
 
     override fun showAuthFr() {
-        // TODO or show previous screen?
-//        (activity as? BaseActivity)?.checkBackPress(parentFragment)
-
         // show first fragment in container - AuthFragment
         val containerFragmentManager = parentFragment?.childFragmentManager
 

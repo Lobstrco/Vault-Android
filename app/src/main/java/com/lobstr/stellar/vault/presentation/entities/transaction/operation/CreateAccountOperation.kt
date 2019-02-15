@@ -12,8 +12,8 @@ data class CreateAccountOperation(
 
     fun getFieldsMap(): Map<String, String?> {
         val map: MutableMap<String, String?> = mutableMapOf()
-        map["destination"] = destination
-        map["startingBalance"] = startingBalance
+        if (destination.isNotEmpty()) map["destination"] = destination
+        if (startingBalance.isNotEmpty()) map["startingBalance"] = startingBalance
 
         return map
     }

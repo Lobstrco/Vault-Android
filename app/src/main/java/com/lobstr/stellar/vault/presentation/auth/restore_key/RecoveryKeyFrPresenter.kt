@@ -6,7 +6,7 @@ import com.lobstr.stellar.vault.R
 import com.lobstr.stellar.vault.domain.recovery_key.RecoveryKeyInteractor
 import com.lobstr.stellar.vault.presentation.BasePresenter
 import com.lobstr.stellar.vault.presentation.application.LVApplication
-import com.lobstr.stellar.vault.presentation.auth.restore_key.entities.PhraseErrorInfo
+import com.lobstr.stellar.vault.presentation.auth.restore_key.entities.RecoveryPhraseInfo
 import com.lobstr.stellar.vault.presentation.dagger.module.recovery_key.RecoveryKeyModule
 import com.lobstr.stellar.vault.presentation.util.Constant.Util.COUNT_MNEMONIC_WORDS_12
 import com.lobstr.stellar.vault.presentation.util.Constant.Util.COUNT_MNEMONIC_WORDS_24
@@ -41,25 +41,29 @@ class RecoveryKeyFrPresenter : BasePresenter<RecoveryKeyFrView>() {
     fun phrasesChanged(phrases: String) {
         this.phrases = phrases
         val phraseArray = phrases.split(" ")
-        val incorrectWords: MutableList<PhraseErrorInfo> = mutableListOf()
+        val wordsInfoList: MutableList<RecoveryPhraseInfo> = mutableListOf()
 
         if (phrases.isNotEmpty()) {
-            incorrectWords.addAll(getIncorrectWords(phraseArray, phrases))
-            incorrectWords.addAll(getSmallWords(phraseArray, phrases))
+            wordsInfoList.addAll(checkWords(phraseArray, phrases))
+            wordsInfoList.addAll(checkSmallWords(phraseArray, phrases))
         }
 
-        viewState.showInputErrorIfNeeded(incorrectWords, phrases)
-        viewState.changeTextBackground(!incorrectWords.isEmpty())
+        viewState.changeTextBackground(false)
+        viewState.showInputErrorIfNeeded(wordsInfoList, phrases)
 
         // Handling "Next" button state.
         val words: List<String> = getPhraseList(phraseArray.toMutableList())
         when {
-            incorrectWords.isNotEmpty() -> viewState.enableNextButton(false)
+            wordsInfoList.isEmpty() -> viewState.enableNextButton(false)
+            haveIncorrectWords(wordsInfoList) -> {
+                viewState.enableNextButton(false)
+                viewState.changeTextBackground(true)
+            }
             haveMatchingWords(words) -> {
                 viewState.enableNextButton(false)
-                viewState.changeTextBackground(incorrectWords.isEmpty())
+                viewState.changeTextBackground(true)
             }
-            (words.size == COUNT_MNEMONIC_WORDS_12) || (words.size == COUNT_MNEMONIC_WORDS_24)
+            (words.size == COUNT_MNEMONIC_WORDS_12 || words.size == COUNT_MNEMONIC_WORDS_24)
                     && words[words.size - 1].length > 2 -> viewState.enableNextButton(true)
             else -> viewState.enableNextButton(false)
         }
@@ -68,45 +72,57 @@ class RecoveryKeyFrPresenter : BasePresenter<RecoveryKeyFrView>() {
     /**
      * Checking if entered words contains in mnemonic words.
      */
-    private fun getIncorrectWords(phraseArray: List<String>, phrases: String): List<PhraseErrorInfo> {
-        val incorrectWords: MutableList<PhraseErrorInfo> = mutableListOf()
+    private fun checkWords(phraseArray: List<String>, phrases: String): List<RecoveryPhraseInfo> {
+        val wordsInfoList: MutableList<RecoveryPhraseInfo> = mutableListOf()
         val availableWords = WordList.ENGLISH.words.toString()
         var firstWordIndexPosition: Int = if (phrases.isEmpty()) 0 else phrases.indexOf(phrases[0])
 
         for (phrase in phraseArray) {
             if (!availableWords.contains(phrase) && !phrase.isEmpty()) {
-                incorrectWords.add(PhraseErrorInfo(phrase, firstWordIndexPosition, phrase.length))
+                wordsInfoList.add(RecoveryPhraseInfo(phrase, firstWordIndexPosition, phrase.length, true))
+            } else {
+                wordsInfoList.add(RecoveryPhraseInfo(phrase, firstWordIndexPosition, phrase.length, false))
             }
             firstWordIndexPosition += phrase.length + 1
         }
 
-        return incorrectWords
+        return wordsInfoList
     }
 
     /**
      * Checking if entered words has minimum 3 symbol.
      */
-    private fun getSmallWords(phraseArray: List<String>, phrases: String): List<PhraseErrorInfo> {
-        val incorrectWords: MutableList<PhraseErrorInfo> = mutableListOf()
+    private fun checkSmallWords(phraseArray: List<String>, phrases: String): List<RecoveryPhraseInfo> {
+        val incorrectWords: MutableList<RecoveryPhraseInfo> = mutableListOf()
         var firstWordIndexPosition: Int = if (phrases.isEmpty()) 0 else phrases.indexOf(phrases[0])
 
         if (phrases[phrases.length - 1] == ' ') {
             for (phrase in phraseArray) {
                 if (phrase.length < 3 && phrase.isNotEmpty()) {
-                    incorrectWords.add(PhraseErrorInfo(phrase, firstWordIndexPosition, phrase.length))
+                    incorrectWords.add(RecoveryPhraseInfo(phrase, firstWordIndexPosition, phrase.length, true))
                 }
                 firstWordIndexPosition += phrase.length + 1
             }
         } else {
             for ((itemCount, phrase) in phraseArray.withIndex()) {
                 if (phrase.length < 3 && phrase.isNotEmpty() && itemCount != phraseArray.size - 1) {
-                    incorrectWords.add(PhraseErrorInfo(phrase, firstWordIndexPosition, phrase.length))
+                    incorrectWords.add(RecoveryPhraseInfo(phrase, firstWordIndexPosition, phrase.length, true))
                 }
                 firstWordIndexPosition += phrase.length + 1
             }
         }
 
         return incorrectWords
+    }
+
+    private fun haveIncorrectWords(wordsInfoListRecovery: MutableList<RecoveryPhraseInfo>): Boolean {
+        for (wordInfo in wordsInfoListRecovery) {
+            if (wordInfo.incorrect) {
+                return true
+            }
+        }
+
+        return false
     }
 
     private fun haveMatchingWords(phrases: List<String>): Boolean {

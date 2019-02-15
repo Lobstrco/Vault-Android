@@ -5,13 +5,13 @@ import com.arellomobile.mvp.MvpView
 import com.arellomobile.mvp.viewstate.strategy.AddToEndSingleStrategy
 import com.arellomobile.mvp.viewstate.strategy.SkipStrategy
 import com.arellomobile.mvp.viewstate.strategy.StateStrategyType
-import com.lobstr.stellar.vault.presentation.auth.restore_key.entities.PhraseErrorInfo
+import com.lobstr.stellar.vault.presentation.auth.restore_key.entities.RecoveryPhraseInfo
 
 @StateStrategyType(SkipStrategy::class)
 interface RecoveryKeyFrView : MvpView {
 
     @StateStrategyType(AddToEndSingleStrategy::class)
-    fun showInputErrorIfNeeded(incorrectPhrases: List<PhraseErrorInfo>, phrases: String)
+    fun showInputErrorIfNeeded(recoveryPhrasesInfo: List<RecoveryPhraseInfo>, phrases: String)
 
     @StateStrategyType(AddToEndSingleStrategy::class)
     fun enableNextButton(enable: Boolean)

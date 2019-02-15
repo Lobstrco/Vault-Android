@@ -21,12 +21,23 @@ class ImportXdrInteractorImpl(
             .flatMap { stellarRepository.submitTransaction(it, transaction) }
     }
 
-    override fun confirmTransactionOnServer(submit: Boolean?, transaction: String): Single<String> {
-        return transactionRepository.submitSignedTransaction(
-            AppUtil.getJwtToken(prefsUtil.authToken),
-            submit,
-            transaction
-        )
+    override fun confirmTransactionOnServer(
+        needAdditionalSignatures: Boolean,
+        hash: String?,
+        transaction: String
+    ): Single<String> {
+        return if (needAdditionalSignatures) {
+            transactionRepository.submitSignedTransaction(
+                AppUtil.getJwtToken(prefsUtil.authToken),
+                transaction
+            )
+        } else {
+            transactionRepository.markTransactionAsSubmitted(
+                AppUtil.getJwtToken(prefsUtil.authToken),
+                hash!!,
+                transaction
+            )
+        }
     }
 
     override fun getPhrases(): Single<String> {

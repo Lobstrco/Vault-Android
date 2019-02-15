@@ -7,12 +7,15 @@ import org.stellar.sdk.responses.SubmitTransactionResponse
 
 interface TransactionDetailsInteractor {
 
+    fun retrieveActualTransaction(hash: String): Single<TransactionItem>
+
     fun confirmTransactionOnHorizon(
         transaction: String
     ): Single<SubmitTransactionResponse>
 
     fun confirmTransactionOnServer(
-        submit: Boolean?,
+        needAdditionalSignatures: Boolean,
+        hash: String?,
         transaction: String
     ): Single<String>
 

@@ -19,7 +19,7 @@ data class PathPaymentOperation(
         val map: MutableMap<String, String?> = mutableMapOf()
         map["sendAsset"] = sendAsset.assetCode
         map["sendMax"] = sendMax
-        map["destination"] = destination
+        if (destination.isNotEmpty()) map["destination"] = destination
         map["destAsset"] = destAsset.assetCode
         map["destAmount"] = destAmount
 
