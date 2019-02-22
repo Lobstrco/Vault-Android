@@ -70,12 +70,14 @@ class TransactionsPresenter : BasePresenter<TransactionsView>() {
                 .subscribe({
                     when (it.type) {
                         Notification.Type.ADDED_NEW_TRANSACTION -> {
-                            val transactionItem = it.data as? TransactionItem
-                            if (transactionItem != null && !transactionItem.xdr.isNullOrEmpty()) {
-                                transactions.add(0, transactionItem)
-                                viewState.showTransactionList(transactions)
-                                viewState.hideEmptyState()
-                            }
+                            //TODO improve logic in future
+//                            val transactionItem = it.data as? TransactionItem
+//                            if (transactionItem != null && !transactionItem.xdr.isNullOrEmpty()) {
+//                                transactions.add(0, transactionItem)
+//                                viewState.showTransactionList(transactions)
+//                                viewState.hideEmptyState()
+//                            }
+                            refreshCalled()
                         }
                     }
                 }, {
