@@ -8,6 +8,8 @@ import android.content.pm.PackageManager
 import android.graphics.Point
 import android.net.Uri
 import android.os.Build
+import android.os.VibrationEffect
+import android.os.Vibrator
 import android.util.DisplayMetrics
 import android.util.Log
 import android.view.View
@@ -26,7 +28,6 @@ import com.lobstr.stellar.vault.presentation.entities.transaction.operation.*
 import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.*
-
 
 
 object AppUtil {
@@ -80,6 +81,7 @@ object AppUtil {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
                 packageInfo?.longVersionCode ?: -1
             } else {
+                @Suppress("DEPRECATION")
                 packageInfo?.versionCode?.toLong() ?: -1
             }
         } catch (e: PackageManager.NameNotFoundException) {
@@ -176,5 +178,23 @@ object AppUtil {
         val size = Point()
         display.getSize(size)
         return size.x
+    }
+
+    fun vibrate(context: Context, pattern: LongArray) {
+        val vibrator =
+            context.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator? ?: return
+
+        if (!vibrator.hasVibrator()) {
+            return
+        }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            vibrator.vibrate(
+                VibrationEffect.createWaveform(pattern, VibrationEffect.DEFAULT_AMPLITUDE)
+            )
+        } else {
+            @Suppress("DEPRECATION")
+            vibrator.vibrate(pattern, -1)
+        }
     }
 }

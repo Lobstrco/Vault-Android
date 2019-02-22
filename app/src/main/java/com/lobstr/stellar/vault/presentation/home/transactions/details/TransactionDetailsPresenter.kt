@@ -22,14 +22,14 @@ import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
 
 @InjectViewState
-class TransactionDetailsPresenter(private var mTransactionItem: TransactionItem) :
+class TransactionDetailsPresenter(private var transactionItem: TransactionItem) :
     BasePresenter<TransactionDetailsView>() {
 
     @Inject
-    lateinit var mInteractor: TransactionDetailsInteractor
+    lateinit var interactor: TransactionDetailsInteractor
 
     @Inject
-    lateinit var mEventProviderModule: EventProviderModule
+    lateinit var eventProviderModule: EventProviderModule
 
     private var confirmationInProcess = false
     private var cancellationInProcess = false
@@ -49,7 +49,7 @@ class TransactionDetailsPresenter(private var mTransactionItem: TransactionItem)
 
     private fun prepareUiAndOperationsList() {
         // handle transaction status
-        when (mTransactionItem.status) {
+        when (transactionItem.status) {
             PENDING -> viewState.setActionBtnVisibility(true, true)
             CANCELLED -> viewState.setActionBtnVisibility(false, false)
             SIGNED -> viewState.setActionBtnVisibility(false, false)
@@ -57,7 +57,7 @@ class TransactionDetailsPresenter(private var mTransactionItem: TransactionItem)
 
         // prepare operations list for show it
         operationList.clear()
-        for (operation in mTransactionItem.transaction.operations) {
+        for (operation in transactionItem.transaction.operations) {
             val resId: Int = AppUtil.getTransactionOperationName(operation)
             if (resId != -1) {
                 operationList.add(resId)
@@ -82,11 +82,11 @@ class TransactionDetailsPresenter(private var mTransactionItem: TransactionItem)
         var needAdditionalSignatures = false
 
         unsubscribeOnDestroy(
-            mInteractor.retrieveActualTransaction(mTransactionItem.hash)
+            interactor.retrieveActualTransaction(transactionItem.hash)
                 .subscribeOn(Schedulers.io())
                 .flatMap {
-                    mTransactionItem = it
-                    mInteractor.confirmTransactionOnHorizon(it.xdr!!)
+                    transactionItem = it
+                    interactor.confirmTransactionOnHorizon(it.xdr!!)
                 }
                 .flatMap {
                     val envelopXdr = it.envelopeXdr
@@ -104,7 +104,7 @@ class TransactionDetailsPresenter(private var mTransactionItem: TransactionItem)
                             true
                     }
 
-                    mInteractor.confirmTransactionOnServer(
+                    interactor.confirmTransactionOnServer(
                         needAdditionalSignatures,
                         it.hash,
                         it.envelopeXdr
@@ -121,22 +121,22 @@ class TransactionDetailsPresenter(private var mTransactionItem: TransactionItem)
                 }
                 .subscribe({
                     // update transaction status
-                    mTransactionItem = TransactionItem(
-                        mTransactionItem.cancelledAt,
-                        mTransactionItem.addedAt,
-                        mTransactionItem.xdr,
-                        mTransactionItem.signedAt,
-                        mTransactionItem.hash,
-                        mTransactionItem.getStatusDisplay,
+                    transactionItem = TransactionItem(
+                        transactionItem.cancelledAt,
+                        transactionItem.addedAt,
+                        transactionItem.xdr,
+                        transactionItem.signedAt,
+                        transactionItem.hash,
+                        transactionItem.getStatusDisplay,
                         SIGNED,
-                        mTransactionItem.transaction
+                        transactionItem.transaction
                     )
 
-                    viewState.successConfirmTransaction(it, needAdditionalSignatures, mTransactionItem)
+                    viewState.successConfirmTransaction(it, needAdditionalSignatures, transactionItem)
                     prepareUiAndOperationsList()
 
                     // Notify about transaction changed
-                    mEventProviderModule.notificationEventSubject.onNext(
+                    eventProviderModule.notificationEventSubject.onNext(
                         Notification(Notification.Type.TRANSACTION_COUNT_CHANGED, null)
                     )
                 }, {
@@ -164,7 +164,7 @@ class TransactionDetailsPresenter(private var mTransactionItem: TransactionItem)
             return
         }
         unsubscribeOnDestroy(
-            mInteractor.cancelTransaction(mTransactionItem.hash)
+            interactor.cancelTransaction(transactionItem.hash)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe {
@@ -176,12 +176,12 @@ class TransactionDetailsPresenter(private var mTransactionItem: TransactionItem)
                     cancellationInProcess = false
                 }
                 .subscribe({
-                    mTransactionItem = it
+                    transactionItem = it
                     prepareUiAndOperationsList()
                     viewState.successDenyTransaction(it)
 
                     // Notify about transaction changed
-                    mEventProviderModule.notificationEventSubject.onNext(
+                    eventProviderModule.notificationEventSubject.onNext(
                         Notification(Notification.Type.TRANSACTION_COUNT_CHANGED, null)
                     )
                 }, {
@@ -201,7 +201,7 @@ class TransactionDetailsPresenter(private var mTransactionItem: TransactionItem)
     }
 
     fun operationItemClicked(position: Int) {
-        viewState.showOperationDetailsScreen(mTransactionItem, position)
+        viewState.showOperationDetailsScreen(transactionItem, position)
     }
 
     fun onAlertDialogPositiveButtonClicked(tag: String?) {

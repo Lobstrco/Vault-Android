@@ -1,4 +1,4 @@
-package com.lobstr.stellar.vault.presentation.signed_accounts
+package com.lobstr.stellar.vault.presentation.home.settings.signed_accounts
 
 import com.arellomobile.mvp.InjectViewState
 import com.lobstr.stellar.vault.R
@@ -11,6 +11,7 @@ import com.lobstr.stellar.vault.domain.util.event.Network
 import com.lobstr.stellar.vault.presentation.BasePresenter
 import com.lobstr.stellar.vault.presentation.application.LVApplication
 import com.lobstr.stellar.vault.presentation.dagger.module.signed_account.SignedAccountModule
+import com.lobstr.stellar.vault.presentation.entities.account.Account
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
@@ -96,5 +97,9 @@ class SignedAccountsPresenter : BasePresenter<SignedAccountsView>() {
 
     fun onRefreshCalled() {
         loadSignedAccountsList()
+    }
+
+    fun onSignedAccountItemClicked(account: Account) {
+        viewState.showEditAccountDialog(account.address)
     }
 }

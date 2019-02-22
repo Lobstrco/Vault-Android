@@ -33,8 +33,16 @@ class SettingsInteractorImpl(
         return prefsUtil.biometricState == ENABLED
     }
 
+    override fun isNotificationsEnabled(): Boolean {
+        return prefsUtil.isNotificationsEnabled
+    }
+
     override fun setTouchIdEnabled(enabled: Boolean) {
         prefsUtil.biometricState = if (enabled) ENABLED else DISABLED
+    }
+
+    override fun setNotificationsEnabled(enabled: Boolean) {
+        prefsUtil.isNotificationsEnabled = enabled
     }
 
     override fun getSignedAccounts(): Single<List<Account>> {

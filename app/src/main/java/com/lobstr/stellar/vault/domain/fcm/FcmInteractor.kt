@@ -25,5 +25,7 @@ interface FcmInteractor {
 
     fun isUserAuthorized(): Boolean
 
+    fun isNotificationsEnabled(): Boolean
+
     fun transformNewTransactionResponse(jsonStr: String?): TransactionItem?
 }

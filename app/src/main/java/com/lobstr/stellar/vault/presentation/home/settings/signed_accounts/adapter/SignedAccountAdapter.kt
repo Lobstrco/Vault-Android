@@ -1,4 +1,4 @@
-package com.lobstr.stellar.vault.presentation.signed_accounts.adapter
+package com.lobstr.stellar.vault.presentation.home.settings.signed_accounts.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup

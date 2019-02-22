@@ -13,7 +13,11 @@ interface SettingsInteractor {
 
     fun isTouchIdEnabled(): Boolean
 
+    fun isNotificationsEnabled(): Boolean
+
     fun setTouchIdEnabled(enabled: Boolean)
+
+    fun setNotificationsEnabled(enabled: Boolean)
 
     fun getSignedAccounts(): Single<List<Account>>
 }

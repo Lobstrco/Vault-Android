@@ -55,7 +55,8 @@ class PinActivity : BaseMvpAppCompatActivity(), PinView, PinLockListener,
     @ProvidePresenter
     fun providePinPresenter() = PinPresenter(
         intent?.getBooleanExtra(Constant.Extra.EXTRA_CREATE_PIN, false),
-        intent?.getBooleanExtra(Constant.Extra.EXTRA_CHANGE_PIN, false)
+        intent?.getBooleanExtra(Constant.Extra.EXTRA_CHANGE_PIN, false),
+        intent?.getBooleanExtra(Constant.Extra.EXTRA_CONFIRM_PIN, false)
     )
 
     // ===========================================================
@@ -209,6 +210,7 @@ class PinActivity : BaseMvpAppCompatActivity(), PinView, PinLockListener,
     override fun showLogOutDialog() {
         AlertDialogFragment.Builder(false)
             .setCancelable(true)
+            .setTitle(getString(R.string.title_log_out_dialog))
             .setMessage(getString(R.string.msg_log_out_dialog))
             .setNegativeBtnText(getString(R.string.text_btn_cancel))
             .setPositiveBtnText(getString(R.string.text_btn_log_out))

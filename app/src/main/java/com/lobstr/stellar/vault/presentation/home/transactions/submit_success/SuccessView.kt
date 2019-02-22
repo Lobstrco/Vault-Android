@@ -11,6 +11,9 @@ interface SuccessView : MvpView {
     fun setMovementMethods()
 
     @StateStrategyType(AddToEndSingleStrategy::class)
+    fun vibrate(pattern: LongArray)
+
+    @StateStrategyType(AddToEndSingleStrategy::class)
     fun setupXdr(xdr: String)
 
     @StateStrategyType(SkipStrategy::class)

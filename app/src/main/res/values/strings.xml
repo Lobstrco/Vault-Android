@@ -87,6 +87,7 @@
     <string name="text_title_enter_pin">Enter PIN</string>
     <string name="text_title_create_pin">Create PIN</string>
     <string name="text_title_change_pin">Change PIN</string>
+    <string name="text_title_confirm_pin">Confirm PIN</string>
     <string name="text_enter_pin">Enter PIN</string>
     <string name="text_reenter_pin">Confirm PIN</string>
     <string name="text_create_pin">Create PIN</string>
@@ -106,12 +107,13 @@
     <!--Settings-->
     <string name="title_settings_wallet">Account</string>
     <string name="title_settings_security">Security</string>
-    <string name="title_settings_about">About</string>
+    <string name="title_settings_other">Other</string>
     <string name="text_settings_public_key">Vault Public Key</string>
     <string name="text_settings_signers">Signer for %s account</string>
     <string name="text_settings_mnemonic_code">Recovery Phrase</string>
     <string name="text_settings_change_pin">Change PIN</string>
     <string name="text_settings_touch_id">Fingerprint Login</string>
+    <string name="text_settings_notifications">Notifications</string>
     <string name="text_settings_version">Version</string>
     <string name="text_settings_help">Help</string>
     <string name="text_settings_log_out">Log Out</string>
@@ -158,7 +160,7 @@
 
     <!-- Finger print dialog -->
     <string name="title_finger_print_dialog">Fingerprint not set up</string>
-    <string name="msg_finger_print_dialog">Please set up your fingerprint in the device settings first</string>
+    <string name="msg_finger_print_dialog">Please set up your fingerprint in the device settings first.</string>
 
     <!-- Deny transaction dialog -->
     <string name="title_deny_transaction_dialog">Are you sure?</string>
@@ -166,10 +168,11 @@
 
     <!-- Deny account creation dialog -->
     <string name="title_deny_account_creation_dialog">Are you sure?</string>
-    <string name="msg_deny_account_creation_dialog">Want to deny the account creation?</string>
+    <string name="msg_deny_account_creation_dialog">This action will cancel account creation. Shown recovery phrase will be deleted.</string>
 
     <!-- Log out dialog -->
-    <string name="msg_log_out_dialog">Log out from this account?</string>
+    <string name="title_log_out_dialog">Have you secured your recovery phrase?</string>
+    <string name="msg_log_out_dialog">You will not be able to recover your account or sign in without it.</string>
 
     <!-- Add XDR dialog -->
     <string name="text_tv_import_xdr_title">Add Transaction XDR</string>
@@ -229,4 +232,5 @@
     <string name="expandable_card_view_icon_content_description">Card icon</string>
     <string name="text_action_info">info</string>
     <string name="text_action_log_out">log out</string>
+    <string name="text_btn_copy_public_key">Copy Public Key</string>
 </resources>

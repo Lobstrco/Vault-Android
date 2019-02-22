@@ -30,7 +30,7 @@ interface DashboardView : MvpView {
     fun navigateToTransactionList()
 
     @StateStrategyType(SkipStrategy::class)
-    fun copyKey(publicKey: String)
+    fun copyData(publicKey: String)
 
     @StateStrategyType(AddToEndSingleStrategy::class)
     fun hideSignersProgress()

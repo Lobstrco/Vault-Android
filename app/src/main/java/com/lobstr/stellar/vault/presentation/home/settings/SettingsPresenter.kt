@@ -36,13 +36,14 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
         viewState.setupToolbarTitle(R.string.title_toolbar_settings)
         registerEventProvider()
         viewState.setupSettingsData(
-            BuildConfig.VERSION_NAME,
+            "${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE})",
             BiometricUtils.isBiometricSupported(LVApplication.sAppComponent.context)
         )
         viewState.setTouchIdChecked(
             interactor.isTouchIdEnabled()
                     && BiometricUtils.isFingerprintAvailable(LVApplication.sAppComponent.context)
         )
+        viewState.setNotificationsChecked(interactor.isNotificationsEnabled())
         viewState.setupPolicyYear(R.string.text_all_rights_reserved)
     }
 
@@ -72,6 +73,7 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
         if (resultCode == Activity.RESULT_OK) {
             when (requestCode) {
                 Constant.Code.CHANGE_PIN -> viewState.showSuccessMessage(R.string.text_success_change_pin)
+                Constant.Code.CONFIRM_PIN_FOR_MNEMONIC -> viewState.showMnemonicsScreen()
             }
         }
     }
@@ -85,7 +87,7 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
     }
 
     fun mnemonicsClicked() {
-        viewState.showMnemonicsScreen()
+        viewState.showConfirmPincodeScreen()
     }
 
     fun changePinClicked() {
@@ -100,7 +102,7 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
         when {
             checked -> {
                 if (BiometricUtils.isFingerprintAvailable(LVApplication.sAppComponent.context)) {
-                    // TODO add additional logic if needed
+                    // Add additional logic if needed
                     interactor.setTouchIdEnabled(true)
                     viewState.setTouchIdChecked(true)
                 } else {
@@ -116,6 +118,10 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
                 interactor.setTouchIdEnabled(false)
             }
         }
+    }
+
+    fun notificationsSwitched(checked: Boolean) {
+        interactor.setNotificationsEnabled(checked)
     }
 
     fun publicKeyClicked() {

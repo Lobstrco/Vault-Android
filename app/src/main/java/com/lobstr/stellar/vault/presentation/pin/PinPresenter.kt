@@ -17,7 +17,8 @@ import javax.inject.Inject
  * Main IDEA - when secretKey was empty - confirmation action, else - save secret key
  */
 @InjectViewState
-class PinPresenter(private var needCreatePin: Boolean?, private var needChangePin: Boolean?) :
+class PinPresenter(private var needCreatePin: Boolean?, private var needChangePin: Boolean?,
+                   private var needConfirmPin: Boolean?) :
     BasePresenter<PinView>() {
 
     @Inject
@@ -44,6 +45,11 @@ class PinPresenter(private var needCreatePin: Boolean?, private var needChangePi
             needChangePin!! -> {
                 viewState.showDescriptionMessage(R.string.text_enter_pin)
                 viewState.showTitle(R.string.text_title_change_pin)
+                viewState.setScreenStyle(PinActivity.STYLE_CREATE_PIN)
+            }
+            needConfirmPin!! -> {
+                viewState.showDescriptionMessage(R.string.text_enter_pin)
+                viewState.showTitle(R.string.text_title_confirm_pin)
                 viewState.setScreenStyle(PinActivity.STYLE_CREATE_PIN)
             }
             else -> {
@@ -73,6 +79,7 @@ class PinPresenter(private var needCreatePin: Boolean?, private var needChangePi
             when {
                 needCreatePin!! -> createPin(pin)
                 needChangePin!! -> confirmPin(pin)
+                needConfirmPin!! -> confirmPin(pin)
                 else -> confirmPin(pin)
             }
         } else {
@@ -130,6 +137,7 @@ class PinPresenter(private var needCreatePin: Boolean?, private var needChangePi
                 .doOnSuccess { success ->
                     if (success) {
                         when {
+                            needConfirmPin!! -> viewState.finishScreenWithResult(Activity.RESULT_OK)
                             needCreatePin!! -> viewState.finishScreenWithResult(Activity.RESULT_OK)
                             needChangePin!! -> showCreatePinState()
                             else -> checkAuthState()
@@ -150,7 +158,10 @@ class PinPresenter(private var needCreatePin: Boolean?, private var needChangePi
     }
 
     fun biometricAuthenticationSuccessful() {
-        checkAuthState()
+        when {
+            needConfirmPin!! -> viewState.finishScreenWithResult(Activity.RESULT_OK)
+            else -> checkAuthState()
+        }
     }
 
     private fun checkAuthState() {

@@ -24,6 +24,8 @@ class DashboardPresenter : BasePresenter<DashboardView>() {
     @Inject
     lateinit var interactor: DashboardInteractor
 
+    lateinit var signerKey: String
+
     init {
         LVApplication.sAppComponent.plusDashboardComponent(DashboardModule()).inject(this)
     }
@@ -121,7 +123,8 @@ class DashboardPresenter : BasePresenter<DashboardView>() {
 
                     viewState.hideSignersProgress()
                     if (it.size == 1) {
-                        viewState.showSignersPublickKey(it[0].address)
+                        signerKey = it[0].address
+                        viewState.showSignersPublickKey(signerKey)
                     } else {
                         viewState.showSignersCount(interactor.getSignersCount())
                     }
@@ -147,16 +150,24 @@ class DashboardPresenter : BasePresenter<DashboardView>() {
         )
     }
 
+    fun transactionCountClicked() {
+        viewState.navigateToTransactionList()
+    }
+
     fun showTransactionListClicked() {
         viewState.navigateToTransactionList()
     }
 
     fun copyKeyClicked() {
-        viewState.copyKey(interactor.getUserPublicKey())
+        viewState.copyData(interactor.getUserPublicKey())
+    }
+
+    fun copySignerClicked() {
+        viewState.copyData(signerKey)
     }
 
     fun userVisibleHintCalled(visible: Boolean) {
-        if(visible) {
+        if (visible) {
             loadPendingTransactions()
             loadSignedAccountsList()
         }

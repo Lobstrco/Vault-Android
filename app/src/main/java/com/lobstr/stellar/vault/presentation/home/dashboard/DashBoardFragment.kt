@@ -71,7 +71,9 @@ class DashboardFragment : BaseFragment(), DashboardView, View.OnClickListener {
 
     private fun setListeners() {
         tvDashboardShowList.setOnClickListener(this)
-        tvDashboardCopy.setOnClickListener(this)
+        tvDashboardCopySigner.setOnClickListener(this)
+        tvDashboardCopyPublicKey.setOnClickListener(this)
+        tvDashboardTransactionCount.setOnClickListener(this)
     }
 
     // ===========================================================
@@ -80,8 +82,10 @@ class DashboardFragment : BaseFragment(), DashboardView, View.OnClickListener {
 
     override fun onClick(v: View?) {
         when (v?.id) {
+            tvDashboardTransactionCount.id -> mPresenter.transactionCountClicked()
             tvDashboardShowList.id -> mPresenter.showTransactionListClicked()
-            tvDashboardCopy.id -> mPresenter.copyKeyClicked()
+            tvDashboardCopyPublicKey.id -> mPresenter.copyKeyClicked()
+            tvDashboardCopySigner.id -> mPresenter.copySignerClicked()
         }
     }
 
@@ -96,6 +100,7 @@ class DashboardFragment : BaseFragment(), DashboardView, View.OnClickListener {
     override fun showSignersPublickKey(info: String) {
         tvDashboardSigners.text = info
         tvDashboardSigners.visibility = View.VISIBLE
+        tvDashboardCopySigner.visibility = View.VISIBLE
         tvDashboardSignersCount.visibility = View.GONE
         tvDashboardSignerDescription.visibility = View.GONE
     }
@@ -103,12 +108,14 @@ class DashboardFragment : BaseFragment(), DashboardView, View.OnClickListener {
     override fun showSignersCount(count: Int) {
         tvDashboardSignersCount.text = count.toString()
         tvDashboardSigners.visibility = View.GONE
+        tvDashboardCopySigner.visibility = View.GONE
         tvDashboardSignersCount.visibility = View.VISIBLE
         tvDashboardSignerDescription.visibility = View.VISIBLE
     }
 
     override fun showDashboardInfo(count: Int) {
         tvDashboardTransactionCount.text = count.toString()
+        pbDashboardTransactions.visibility = View.GONE
     }
 
     override fun showErrorMessage(message: String) {
@@ -123,7 +130,7 @@ class DashboardFragment : BaseFragment(), DashboardView, View.OnClickListener {
         (activity as? HomeActivity)?.setSelectedBottomNavigationItem(R.id.action_transactions)
     }
 
-    override fun copyKey(publicKey: String) {
+    override fun copyData(publicKey: String) {
         AppUtil.copyToClipboard(context, publicKey)
     }
 

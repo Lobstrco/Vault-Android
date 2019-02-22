@@ -1,4 +1,4 @@
-package com.lobstr.stellar.vault.presentation.signed_accounts
+package com.lobstr.stellar.vault.presentation.home.settings.signed_accounts
 
 
 import android.os.Bundle
@@ -11,9 +11,12 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.lobstr.stellar.vault.R
 import com.lobstr.stellar.vault.presentation.base.fragment.BaseFragment
+import com.lobstr.stellar.vault.presentation.dialog.alert.base.AlertDialogFragment
 import com.lobstr.stellar.vault.presentation.entities.account.Account
-import com.lobstr.stellar.vault.presentation.signed_accounts.adapter.OnSignedAcoountItemClicked
-import com.lobstr.stellar.vault.presentation.signed_accounts.adapter.SignedAccountAdapter
+import com.lobstr.stellar.vault.presentation.home.settings.signed_accounts.adapter.OnSignedAcoountItemClicked
+import com.lobstr.stellar.vault.presentation.home.settings.signed_accounts.adapter.SignedAccountAdapter
+import com.lobstr.stellar.vault.presentation.home.settings.signed_accounts.edit_account.EditAccountDialogFragment
+import com.lobstr.stellar.vault.presentation.util.Constant
 import kotlinx.android.synthetic.main.fragment_signed_accounts.*
 
 class SignedAccountsFragment : BaseFragment(), SignedAccountsView, SwipeRefreshLayout.OnRefreshListener,
@@ -75,7 +78,7 @@ class SignedAccountsFragment : BaseFragment(), SignedAccountsView, SwipeRefreshL
     }
 
     override fun onSignedAccountItemClick(account: Account) {
-
+        mPresenter.onSignedAccountItemClicked(account)
     }
 
     override fun setupToolbarTitle(titleRes: Int) {
@@ -110,6 +113,15 @@ class SignedAccountsFragment : BaseFragment(), SignedAccountsView, SwipeRefreshL
 
     override fun notifyAdapter(accounts: List<Account>) {
         (rvSignedAccounts.adapter as SignedAccountAdapter).setAccountList(accounts)
+    }
+
+    override fun showEditAccountDialog(address: String) {
+        val bundle = Bundle()
+        bundle.putString(Constant.Bundle.BUNDLE_PUBLIC_KEY, address)
+
+        val dialog = EditAccountDialogFragment()
+        dialog.arguments = bundle
+        dialog.show(childFragmentManager, AlertDialogFragment.DialogFragmentIdentifier.EDIT_ACCOUNT)
     }
 
     // ===========================================================

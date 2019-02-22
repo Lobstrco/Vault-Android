@@ -84,6 +84,10 @@ class SuccessFragment : BaseFragment(), SuccessView, View.OnClickListener {
         tvXdr.movementMethod = ScrollingMovementMethod.getInstance()
     }
 
+    override fun vibrate(pattern: LongArray) {
+        AppUtil.vibrate(context!!, pattern)
+    }
+
     override fun setupXdr(xdr: String) {
         tvXdr.text = xdr
     }

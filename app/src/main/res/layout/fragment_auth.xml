@@ -24,7 +24,8 @@
                   android:layout_height="0dp"
                   android:layout_weight="1"
                   android:orientation="vertical"
-                  android:gravity="center">
+                  android:gravity="center"
+                  android:splitMotionEvents="false">
         <Button
                 android:text="@string/text_start_screen_btn_create_account"
                 android:layout_height="wrap_content"

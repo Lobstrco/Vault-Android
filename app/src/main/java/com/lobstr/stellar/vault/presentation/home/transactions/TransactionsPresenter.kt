@@ -74,6 +74,7 @@ class TransactionsPresenter : BasePresenter<TransactionsView>() {
                             if (transactionItem != null && !transactionItem.xdr.isNullOrEmpty()) {
                                 transactions.add(0, transactionItem)
                                 viewState.showTransactionList(transactions)
+                                viewState.hideEmptyState()
                             }
                         }
                     }

@@ -12,6 +12,7 @@ class SuccessPresenter(
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
         viewState.setMovementMethods()
+        viewState.vibrate(longArrayOf(1500, 175, 0, 0))
         viewState.setupXdr(envelopeXdr)
         viewState.setAdditionalSignaturesInfoEnabled(
             needAdditionalSignatures

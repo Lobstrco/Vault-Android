@@ -47,6 +47,9 @@ interface SettingsView : MvpView {
     @StateStrategyType(AddToEndSingleStrategy::class)
     fun setTouchIdChecked(checked: Boolean)
 
+    @StateStrategyType(AddToEndSingleStrategy::class)
+    fun setNotificationsChecked(checked: Boolean)
+
     @StateStrategyType(SkipStrategy::class)
     fun showFingerprintInfoDialog(@StringRes titleRes: Int, @StringRes messageRes: Int)
 
@@ -58,4 +61,7 @@ interface SettingsView : MvpView {
 
     @StateStrategyType(SkipStrategy::class)
     fun showLogOutDialog()
+
+    @StateStrategyType(SkipStrategy::class)
+    fun showConfirmPincodeScreen()
 }

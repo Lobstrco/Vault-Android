@@ -75,4 +75,7 @@
         <item name="android:background">@drawable/bg_bottom_sheet</item>
     </style>
 
+    <style name="ProgressBarWhite" parent="Widget.AppCompat.ProgressBar">
+        <item name="colorControlActivated">@android:color/white</item>
+    </style>
 </resources>

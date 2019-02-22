@@ -14,6 +14,13 @@
             android:gravity="center_horizontal"
             android:background="@color/color_primary">
 
+        <ProgressBar
+                android:id="@+id/pbDashboardTransactions"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:theme="@style/ProgressBarWhite"
+                android:paddingBottom="35dp"/>
+
         <TextView
                 android:id="@+id/tvDashboardTransactionCount"
                 android:layout_width="match_parent"
@@ -98,7 +105,7 @@
                         android:lineSpacingExtra="10sp"/>
 
                 <TextView
-                        android:id="@+id/tvDashboardCopy"
+                        android:id="@+id/tvDashboardCopyPublicKey"
                         android:layout_width="wrap_content"
                         android:layout_height="32dp"
                         android:text="@string/text_btn_copy_key"
@@ -124,7 +131,7 @@
                     android:layout_height="match_parent"
                     android:orientation="vertical"
                     android:paddingLeft="16dp"
-                    android:layout_weight="1.2"
+                    android:layout_weight="1"
                     android:gravity="center"
                     android:paddingRight="16dp">
 
@@ -173,6 +180,22 @@
                         android:text="@string/text_dashboard_accounts"
                         android:textColor="@color/color_4D000000"
                         android:gravity="center_horizontal"/>
+
+                <TextView
+                        android:id="@+id/tvDashboardCopySigner"
+                        android:layout_width="wrap_content"
+                        android:layout_height="32dp"
+                        android:text="@string/text_btn_copy_key"
+                        android:gravity="center"
+                        android:textStyle="bold"
+                        android:paddingLeft="20dp"
+                        android:paddingRight="20dp"
+                        android:layout_marginTop="10dp"
+                        android:textSize="13sp"
+                        android:visibility="gone"
+                        android:background="@drawable/selector_default_button_with_round"
+                        android:layout_gravity="center_horizontal"
+                        android:textColor="@android:color/white"/>
             </LinearLayout>
         </LinearLayout>
     </androidx.cardview.widget.CardView>

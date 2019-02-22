@@ -9,6 +9,9 @@ import com.arellomobile.mvp.viewstate.strategy.StateStrategyType
 interface ErrorView : MvpView {
 
     @StateStrategyType(AddToEndSingleStrategy::class)
+    fun vibrate(pattern: LongArray)
+
+    @StateStrategyType(AddToEndSingleStrategy::class)
     fun setupErrorInfo(error: String)
 
     @StateStrategyType(SkipStrategy::class)

@@ -16,10 +16,10 @@ class NetworkWorker(context: Context, workerParams: WorkerParameters) : Worker(c
     }
 
     @Inject
-    lateinit var mEventProviderModule: EventProviderModule
+    lateinit var eventProviderModule: EventProviderModule
 
     override fun doWork(): Result {
-        mEventProviderModule.networkEventSubject.onNext(Network(Network.Type.CONNECTED, id))
+        eventProviderModule.networkEventSubject.onNext(Network(Network.Type.CONNECTED, id))
         return Result.success()
     }
 }

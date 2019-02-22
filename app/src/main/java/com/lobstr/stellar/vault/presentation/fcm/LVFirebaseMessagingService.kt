@@ -131,6 +131,10 @@ class LVFirebaseMessagingService : FirebaseMessagingService() {
             Notification(Notification.Type.ADDED_NEW_TRANSACTION, transaction)
         )
 
+        if (!mFcmHelper.isNotificationsEnabled()) {
+            return
+        }
+
         // show transaction details screen after click on notification
         val intent = Intent(this, ContainerActivity::class.java)
         intent.putExtra(Constant.Extra.EXTRA_NAVIGATION_FR, Constant.Navigation.TRANSACTION_DETAILS)
@@ -152,6 +156,10 @@ class LVFirebaseMessagingService : FirebaseMessagingService() {
         notificationsManager: NotificationsManager,
         targetClass: Class<*> = SplashActivity::class.java
     ) {
+        if (!mFcmHelper.isNotificationsEnabled()) {
+            return
+        }
+
         if (TextUtils.isEmpty(messageBody)) {
             return
         }

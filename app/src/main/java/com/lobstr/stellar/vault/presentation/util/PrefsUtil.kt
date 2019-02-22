@@ -18,6 +18,7 @@ class PrefsUtil(private val sharedPreferences: SharedPreferences) {
         const val PREF_IS_FCM_REGISTERED_SUCCESSFULLY = "PREF_IS_FCM_REGISTERED_SUCCESSFULLY"
         const val PREF_ACCOUNT_HAS_SIGNERS = "PREF_ACCOUNT_HAS_SIGNERS"
         const val PREF_BIOMETRIC_STATE = "PREF_BIOMETRIC_STATE"
+        const val PREF_IS_NOTIFICATIONS_ENABLED = "PREF_IS_NOTIFICATIONS_ENABLED"
         const val PREF_ACCOUNT_SIGNERS_COUNT = "PREF_ACCOUNT_SIGNERS_COUNT"
     }
 
@@ -68,6 +69,10 @@ class PrefsUtil(private val sharedPreferences: SharedPreferences) {
         get() = getInt(PREF_BIOMETRIC_STATE)
         set(state) = set(PREF_BIOMETRIC_STATE, state)
 
+    var isNotificationsEnabled: Boolean
+        get() = getBoolean(PREF_IS_NOTIFICATIONS_ENABLED)
+        set(enabled) = set(PREF_IS_NOTIFICATIONS_ENABLED, enabled)
+
     var accountSignersCount: Int
         get() = getInt(PREF_ACCOUNT_SIGNERS_COUNT)
         set(count) = set(PREF_ACCOUNT_SIGNERS_COUNT, count)
@@ -98,7 +103,14 @@ class PrefsUtil(private val sharedPreferences: SharedPreferences) {
     }
 
     fun getBoolean(key: String): Boolean {
-        return sharedPreferences.getBoolean(key, false)
+        var devValue = false
+
+        // set default value for specific cases
+        when (key) {
+            PREF_IS_NOTIFICATIONS_ENABLED -> devValue = true
+        }
+
+        return sharedPreferences.getBoolean(key, devValue)
     }
 
     fun getInt(key: String): Int {
@@ -122,6 +134,7 @@ class PrefsUtil(private val sharedPreferences: SharedPreferences) {
         editor.remove(PREF_IS_FCM_REGISTERED_SUCCESSFULLY)
         editor.remove(PREF_ACCOUNT_HAS_SIGNERS)
         editor.remove(PREF_BIOMETRIC_STATE)
+        editor.remove(PREF_IS_NOTIFICATIONS_ENABLED)
         editor.remove(PREF_ACCOUNT_SIGNERS_COUNT)
         return editor.commit()
     }

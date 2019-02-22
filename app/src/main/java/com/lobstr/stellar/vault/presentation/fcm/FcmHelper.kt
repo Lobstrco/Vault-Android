@@ -156,6 +156,10 @@ class FcmHelper(private val context: Context, private val fcmInteractor: FcmInte
         return fcmInteractor.isUserAuthorized()
     }
 
+    fun isNotificationsEnabled(): Boolean {
+        return fcmInteractor.isNotificationsEnabled()
+    }
+
     fun signedNewAccount(jsonStr: String?): Account? {
         return fcmInteractor.confirmIsUserSignerForLobstr(jsonStr)
     }

@@ -8,6 +8,7 @@ import com.lobstr.stellar.vault.data.error.util.ApiErrorUtil
 import com.lobstr.stellar.vault.data.error.util.HttpStatusCodes
 import retrofit2.HttpException
 import java.io.IOException
+import java.net.ConnectException
 import java.net.SocketTimeoutException
 import java.net.UnknownHostException
 
@@ -43,6 +44,7 @@ class ExceptionMapper(private val context: Context) {
             return when (throwable) {
                 is SocketTimeoutException -> HttpTimeOutException(context.getString(R.string.api_error_connection_timeout))
                 is UnknownHostException -> NoInternetConnectionException(context.getString(R.string.api_error_connection_error))
+                is ConnectException -> NoInternetConnectionException(context.getString(R.string.api_error_connection_error))
                 else -> DefaultException(throwable.message!!)
             }
         }

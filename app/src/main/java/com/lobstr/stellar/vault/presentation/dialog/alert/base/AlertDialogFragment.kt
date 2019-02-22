@@ -48,6 +48,7 @@ open class AlertDialogFragment : BaseMvpAppCompatDialogFragment() {
         const val PUBLIC_KEY = "PUBLIC_KEY"
         const val DENY_ACCOUNT_CREATION = "DENY_ACCOUNT_CREATION"
         const val LOG_OUT = "LOG_OUT"
+        const val EDIT_ACCOUNT = "EDIT_ACCOUNT"
     }
 
     object DialogIdentifier {

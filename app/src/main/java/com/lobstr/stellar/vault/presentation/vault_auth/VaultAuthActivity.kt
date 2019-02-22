@@ -157,6 +157,7 @@ class VaultAuthActivity : BaseActivity(), VaultAuthView, View.OnClickListener,
     override fun showLogOutDialog() {
         AlertDialogFragment.Builder(false)
             .setCancelable(true)
+            .setTitle(getString(R.string.title_log_out_dialog))
             .setMessage(getString(R.string.msg_log_out_dialog))
             .setNegativeBtnText(getString(R.string.text_btn_cancel))
             .setPositiveBtnText(getString(R.string.text_btn_log_out))

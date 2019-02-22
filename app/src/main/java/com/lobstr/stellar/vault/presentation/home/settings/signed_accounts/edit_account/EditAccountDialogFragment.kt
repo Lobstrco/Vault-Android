@@ -1,5 +1,4 @@
-package com.lobstr.stellar.vault.presentation.home.transactions.submit_error
-
+package com.lobstr.stellar.vault.presentation.home.settings.signed_accounts.edit_account
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -8,19 +7,20 @@ import android.view.ViewGroup
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.lobstr.stellar.vault.R
-import com.lobstr.stellar.vault.presentation.base.fragment.BaseFragment
+import com.lobstr.stellar.vault.presentation.BaseBottomSheetDialog
 import com.lobstr.stellar.vault.presentation.util.AppUtil
 import com.lobstr.stellar.vault.presentation.util.Constant
-import kotlinx.android.synthetic.main.fragment_error.*
+import kotlinx.android.synthetic.main.fragment_edit_account.*
 
-class ErrorFragment : BaseFragment(), ErrorView, View.OnClickListener {
+
+class EditAccountDialogFragment : BaseBottomSheetDialog(), EditAccountView, View.OnClickListener {
 
     // ===========================================================
     // Constants
     // ===========================================================
 
     companion object {
-        val LOG_TAG = ErrorFragment::class.simpleName
+        val LOG_TAG = EditAccountDialogFragment::class.simpleName
     }
 
     // ===========================================================
@@ -28,7 +28,7 @@ class ErrorFragment : BaseFragment(), ErrorView, View.OnClickListener {
     // ===========================================================
 
     @InjectPresenter
-    lateinit var mPresenter: ErrorPresenter
+    lateinit var mPresenter: EditAccountPresenter
 
     private var mView: View? = null
 
@@ -37,8 +37,8 @@ class ErrorFragment : BaseFragment(), ErrorView, View.OnClickListener {
     // ===========================================================
 
     @ProvidePresenter
-    fun provideErrorPresenter() = ErrorPresenter(
-        arguments!!.getString(Constant.Bundle.BUNDLE_ERROR_MESSAGE)
+    fun provideEditAccountPresenter() = EditAccountPresenter(
+        arguments?.getString(Constant.Bundle.BUNDLE_PUBLIC_KEY)!!
     )
 
     // ===========================================================
@@ -49,11 +49,15 @@ class ErrorFragment : BaseFragment(), ErrorView, View.OnClickListener {
     // Methods for/from SuperClass
     // ===========================================================
 
+    override fun getTheme(): Int {
+        return R.style.BottomSheetDialogTheme
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        mView = if (mView == null) inflater.inflate(R.layout.fragment_error, container, false) else mView
+        mView = if (mView == null) inflater.inflate(R.layout.fragment_edit_account, container, false) else mView
         return mView
     }
 
@@ -63,7 +67,7 @@ class ErrorFragment : BaseFragment(), ErrorView, View.OnClickListener {
     }
 
     private fun setListeners() {
-        btnDone.setOnClickListener(this)
+        btnCopyPublicKey.setOnClickListener(this)
     }
 
     // ===========================================================
@@ -72,20 +76,15 @@ class ErrorFragment : BaseFragment(), ErrorView, View.OnClickListener {
 
     override fun onClick(v: View?) {
         when (v!!.id) {
-            R.id.btnDone -> mPresenter.doneClicked()
+            R.id.btnCopyPublicKey -> {
+                mPresenter.copyPublicKeyClicked()
+            }
         }
     }
 
-    override fun vibrate(pattern: LongArray) {
-        AppUtil.vibrate(context!!, pattern)
-    }
-
-    override fun setupErrorInfo(error: String) {
-        tvErrorDescription.text = error
-    }
-
-    override fun finishScreen() {
-        activity?.onBackPressed()
+    override fun copyToClipBoard(text: String) {
+        dismiss()
+        AppUtil.copyToClipboard(context, text)
     }
 
     // ===========================================================

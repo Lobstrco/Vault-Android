@@ -6,6 +6,7 @@ import com.lobstr.stellar.vault.presentation.dagger.component.confirm_mnemonics.
 import com.lobstr.stellar.vault.presentation.dagger.component.dashboard.DashboardComponent
 import com.lobstr.stellar.vault.presentation.dagger.component.fcm.FcmInternalComponent
 import com.lobstr.stellar.vault.presentation.dagger.component.fcm.FcmServiceComponent
+import com.lobstr.stellar.vault.presentation.dagger.component.home.HomeComponent
 import com.lobstr.stellar.vault.presentation.dagger.component.import_xdr.ImportXdrComponent
 import com.lobstr.stellar.vault.presentation.dagger.component.mnemonics.MnemonicsComponent
 import com.lobstr.stellar.vault.presentation.dagger.component.operation_details.OperationDetailsComponent
@@ -27,6 +28,7 @@ import com.lobstr.stellar.vault.presentation.dagger.module.confirm_mnemonics.Con
 import com.lobstr.stellar.vault.presentation.dagger.module.dashboard.DashboardModule
 import com.lobstr.stellar.vault.presentation.dagger.module.fcm.FcmInternalModule
 import com.lobstr.stellar.vault.presentation.dagger.module.fcm.FcmServiceModule
+import com.lobstr.stellar.vault.presentation.dagger.module.home.HomeModule
 import com.lobstr.stellar.vault.presentation.dagger.module.import_xdr.ImportXdrModule
 import com.lobstr.stellar.vault.presentation.dagger.module.mnemonics.MnemonicsModule
 import com.lobstr.stellar.vault.presentation.dagger.module.operation_details.OperationDetailsModule
@@ -70,6 +72,8 @@ interface AppComponent {
     fun plusSignerInfoComponent(module: SignerInfoModule): SignerInfoComponent
 
     fun plusRecheckSignerComponent(module: RecheckSignerModule): RecheckSignerComponent
+
+    fun plusHomeComponent(module: HomeModule): HomeComponent
 
     fun plusSettingsComponent(module: SettingsModule): SettingsComponent
 

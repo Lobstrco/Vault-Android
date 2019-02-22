@@ -30,8 +30,8 @@ import com.lobstr.stellar.vault.presentation.dialog.alert.base.AlertDialogFragme
 import com.lobstr.stellar.vault.presentation.faq.FaqFragment
 import com.lobstr.stellar.vault.presentation.fcm.NotificationsManager
 import com.lobstr.stellar.vault.presentation.home.settings.show_public_key.ShowPublicKeyDialogFragment
+import com.lobstr.stellar.vault.presentation.home.settings.signed_accounts.SignedAccountsFragment
 import com.lobstr.stellar.vault.presentation.pin.PinActivity
-import com.lobstr.stellar.vault.presentation.signed_accounts.SignedAccountsFragment
 import com.lobstr.stellar.vault.presentation.util.Constant
 import kotlinx.android.synthetic.main.fragment_settings.*
 import java.util.*
@@ -99,6 +99,7 @@ class SettingsFragment : BaseFragment(), SettingsView, View.OnClickListener,
         llSettingsChangePin.setOnClickListener(this)
         llSettingsHelp.setOnClickListener(this)
         swSettingsTouchId.setOnCheckedChangeListener(this)
+        swSettingsNotifications.setOnCheckedChangeListener(this)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -124,6 +125,7 @@ class SettingsFragment : BaseFragment(), SettingsView, View.OnClickListener,
     override fun onCheckedChanged(buttonView: CompoundButton?, isChecked: Boolean) {
         when (buttonView!!.id) {
             R.id.swSettingsTouchId -> mPresenter.touchIdSwitched(isChecked)
+            R.id.swSettingsNotifications -> mPresenter.notificationsSwitched(isChecked)
         }
     }
 
@@ -224,6 +226,12 @@ class SettingsFragment : BaseFragment(), SettingsView, View.OnClickListener,
         swSettingsTouchId.setOnCheckedChangeListener(this)
     }
 
+    override fun setNotificationsChecked(checked: Boolean) {
+        swSettingsNotifications.setOnCheckedChangeListener(null)
+        swSettingsNotifications.isChecked = checked
+        swSettingsNotifications.setOnCheckedChangeListener(this)
+    }
+
     override fun showFingerprintInfoDialog(titleRes: Int, messageRes: Int) {
         AlertDialogFragment.Builder(true)
             .setCancelable(true)
@@ -262,11 +270,18 @@ class SettingsFragment : BaseFragment(), SettingsView, View.OnClickListener,
     override fun showLogOutDialog() {
         AlertDialogFragment.Builder(true)
             .setCancelable(true)
+            .setTitle(getString(R.string.title_log_out_dialog))
             .setMessage(getString(R.string.msg_log_out_dialog))
             .setNegativeBtnText(getString(R.string.text_btn_cancel))
             .setPositiveBtnText(getString(R.string.text_btn_log_out))
             .create()
             .show(childFragmentManager, AlertDialogFragment.DialogFragmentIdentifier.LOG_OUT)
+    }
+
+    override fun showConfirmPincodeScreen() {
+        val intent = Intent(context, PinActivity::class.java)
+        intent.putExtra(Constant.Extra.EXTRA_CONFIRM_PIN, true)
+        startActivityForResult(intent, Constant.Code.CONFIRM_PIN_FOR_MNEMONIC)
     }
 
     // ===========================================================

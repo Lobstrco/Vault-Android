@@ -68,4 +68,8 @@ class FcmInteractorImpl(private val fcmRepository: FcmRepository, private val pr
     override fun isUserAuthorized(): Boolean {
         return !prefsUtil.authToken.isNullOrEmpty()
     }
+
+    override fun isNotificationsEnabled(): Boolean {
+        return prefsUtil.isNotificationsEnabled
+    }
 }
