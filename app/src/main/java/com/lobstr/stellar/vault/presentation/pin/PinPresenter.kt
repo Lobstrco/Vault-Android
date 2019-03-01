@@ -101,10 +101,10 @@ class PinPresenter(private var needCreatePin: Boolean?, private var needChangePi
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .doOnSubscribe {
-                            viewState.showProgressDialog()
+                            viewState.showProgressDialog(true)
                         }
                         .doOnEvent {
-                            viewState.hideProgressDialog()
+                            viewState.showProgressDialog(false)
                         }
                         .doOnComplete {
                             if (needChangePin!!) {
@@ -129,10 +129,10 @@ class PinPresenter(private var needCreatePin: Boolean?, private var needChangePi
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe {
-                    viewState.showProgressDialog()
+                    viewState.showProgressDialog(true)
                 }
                 .doOnEvent { _: Boolean, _: Throwable? ->
-                    viewState.hideProgressDialog()
+                    viewState.showProgressDialog(false)
                 }
                 .doOnSuccess { success ->
                     if (success) {

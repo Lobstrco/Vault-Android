@@ -273,6 +273,39 @@
                 android:background="@color/color_33979797"/>
 
         <LinearLayout
+                android:id="@+id/llSettingsLicense"
+                android:layout_width="match_parent"
+                android:layout_height="57dp"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:background="@android:color/white">
+
+            <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:textSize="16sp"
+                    android:textColor="@android:color/black"
+                    android:text="@string/text_settings_license"/>
+
+            <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0"
+                    android:src="@drawable/ic_arrow_right"
+                    tools:ignore="ContentDescription"/>
+        </LinearLayout>
+
+        <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="0dp"
+                android:background="@color/color_33979797"/>
+
+        <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="57dp"
                 android:orientation="horizontal"

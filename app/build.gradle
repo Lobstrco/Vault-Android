@@ -13,8 +13,8 @@ android {
         applicationId "com.lobstr.stellar.vault"
         minSdkVersion 19
         targetSdkVersion 28
-        versionCode 2
-        versionName "1.0.1"
+        versionCode 3
+        versionName "1.0.2"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
     }
@@ -87,7 +87,6 @@ ext {
     guava = "23.0-android"
     circleimageview = "2.2.0"
     glide = "4.8.0"
-    stellar_sdk = "0.3.3"
     flexbox = "1.1.0"
     pin = "2.1.0"
     support = "28.0.0"
@@ -101,7 +100,7 @@ ext {
     junit = "4.12"
     runner = "1.1.1"
     espresso_core = "3.1.1"
-    stellar_sdk = "0.4.0"
+    stellar_sdk = "0.6.0"
     work_manager = "1.0.0-rc01"
     lottieVersion = "3.0.0-beta1"
     qr_gen = "2.5.0"

@@ -44,10 +44,10 @@ class RecheckSignerPresenter : BasePresenter<RecheckSignerView>() {
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe {
                     recheckSignersInProcess = true
-                    viewState.showProgressDialog()
+                    viewState.showProgressDialog(true)
                 }
                 .doOnEvent { _, _ ->
-                    viewState.dismissProgressDialog()
+                    viewState.showProgressDialog(false)
                     recheckSignersInProcess = false
                 }
                 .subscribe({

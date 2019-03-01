@@ -19,4 +19,8 @@ class HomeInteractorImpl(private val prefsUtil: PrefsUtil) : HomeInteractor {
     override fun checkFcmRegistration() {
         mFcmHelper.checkIfFcmRegisteredSuccessfully()
     }
+
+    override fun getRateUsState(): Int {
+        return prefsUtil.rateUsState
+    }
 }

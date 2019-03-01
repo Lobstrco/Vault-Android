@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.lobstr.stellar.vault.R
@@ -12,6 +13,7 @@ import com.lobstr.stellar.vault.presentation.dialog.alert.base.AlertDialogFragme
 import com.lobstr.stellar.vault.presentation.util.AppUtil
 import com.lobstr.stellar.vault.presentation.util.Constant
 import kotlinx.android.synthetic.main.fragment_show_public_key.*
+import net.glxn.qrgen.android.QRCode
 
 
 class ShowPublicKeyDialogFragment : BaseBottomSheetDialog(), ShowPublicKeyView, View.OnClickListener {
@@ -87,6 +89,13 @@ class ShowPublicKeyDialogFragment : BaseBottomSheetDialog(), ShowPublicKeyView, 
     }
 
     override fun setupPublicKey(publicKey: String) {
+        val qrCodeImage = QRCode.from(publicKey).withColor(
+            ContextCompat.getColor(context!!, R.color.color_primary),
+            ContextCompat.getColor(context!!, android.R.color.transparent)
+        ).bitmap()
+
+        ivUserPublicKeyQrCode.setImageBitmap(qrCodeImage)
+
         tvPublicKey.text = publicKey
     }
 

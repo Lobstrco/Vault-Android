@@ -8,7 +8,7 @@ import com.arellomobile.mvp.viewstate.strategy.StateStrategyType
 import com.lobstr.stellar.vault.presentation.auth.restore_key.entities.RecoveryPhraseInfo
 
 @StateStrategyType(SkipStrategy::class)
-interface RecoveryKeyFrView : MvpView {
+interface RecoverKeyFrView : MvpView {
 
     @StateStrategyType(AddToEndSingleStrategy::class)
     fun showInputErrorIfNeeded(recoveryPhrasesInfo: List<RecoveryPhraseInfo>, phrases: String)
@@ -26,10 +26,7 @@ interface RecoveryKeyFrView : MvpView {
     fun showErrorMessage(@StringRes message: Int)
 
     @StateStrategyType(AddToEndSingleStrategy::class)
-    fun showProgressDialog()
-
-    @StateStrategyType(AddToEndSingleStrategy::class)
-    fun dismissProgressDialog()
+    fun showProgressDialog(show: Boolean)
 
     @StateStrategyType(SkipStrategy::class)
     fun showHelpScreen()

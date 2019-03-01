@@ -1,13 +1,12 @@
 package com.lobstr.stellar.vault.presentation.base.fragment
 
-import androidx.annotation.StringRes
 import com.arellomobile.mvp.InjectViewState
 import com.arellomobile.mvp.MvpPresenter
 
 @InjectViewState
 class BaseFragmentPresenter : MvpPresenter<BaseFragmentView>() {
 
-    private var toolbarTitle: Int = 0
+    private var toolbarTitle: String? = null
 
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
@@ -19,8 +18,8 @@ class BaseFragmentPresenter : MvpPresenter<BaseFragmentView>() {
         viewState.setActionBarTitle(toolbarTitle)
     }
 
-    fun setToolbarTitle(@StringRes titleRes: Int) {
-        toolbarTitle = titleRes
-        viewState.setActionBarTitle(titleRes)
+    fun setToolbarTitle(title: String?) {
+        toolbarTitle = title
+        viewState.setActionBarTitle(title)
     }
 }

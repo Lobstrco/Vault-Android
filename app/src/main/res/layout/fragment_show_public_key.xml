@@ -24,7 +24,7 @@
             android:id="@+id/tvPublicKey"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="32dp"
+            android:layout_marginBottom="8dp"
             android:gravity="center"
             android:layout_gravity="center"
             android:textColor="@color/color_4D000000"
@@ -32,6 +32,13 @@
             android:textAllCaps="true"
             android:lineSpacingExtra="14sp"
             android:textAppearance="?android:textAppearanceMedium"/>
+
+    <ImageView
+            android:id="@+id/ivUserPublicKeyQrCode"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:layout_gravity="center"
+            android:layout_marginBottom="8dp"/>
 
     <Button
             android:id="@+id/btnCopyKey"

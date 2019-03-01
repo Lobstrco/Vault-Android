@@ -5,6 +5,7 @@ import com.arellomobile.mvp.MvpPresenter
 import com.lobstr.stellar.vault.domain.home.HomeInteractor
 import com.lobstr.stellar.vault.presentation.application.LVApplication
 import com.lobstr.stellar.vault.presentation.dagger.module.home.HomeModule
+import com.lobstr.stellar.vault.presentation.util.Constant
 import javax.inject.Inject
 
 @InjectViewState
@@ -25,5 +26,23 @@ class HomeActivityPresenter : MvpPresenter<HomeActivityView>() {
         viewState.initBottomNavigationView()
 
         viewState.setupViewPager()
+
+        // show Rate Us dialog only after Account Setup Success. UNKNOWN state - dialog never showed
+        if (interactor.getRateUsState() == Constant.RateUsState.UNKNOWN) {
+            checkRateUsDialog()
+        }
+    }
+
+    /**
+     * HomeActivity is responsible for check RateUs Dialog
+     */
+    fun checkRateUsDialog() {
+        if (interactor.getRateUsState() == Constant.RateUsState.RATED
+            || interactor.getRateUsState() == Constant.RateUsState.SKIPPED
+        ) {
+            return
+        }
+
+        viewState.showRateUsDialog()
     }
 }

@@ -118,7 +118,7 @@ abstract class BaseActivity : BaseMvpAppCompatActivity(),
     ///////////////////////////////////////////////////////////////
     // title
 
-    override fun setActionBarTitle(title: String) {
+    override fun setActionBarTitle(title: String?) {
         mTvToolbarTitle?.text = title
     }
 

@@ -33,7 +33,6 @@ class DashboardPresenter : BasePresenter<DashboardView>() {
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
 
-        viewState.setupToolbarTitle()
         viewState.showPublicKey(interactor.getUserPublicKey())
         registerEventProvider()
         loadPendingTransactions()

@@ -3,7 +3,7 @@ package com.lobstr.stellar.vault.presentation.auth.restore_key
 import android.text.TextUtils
 import com.arellomobile.mvp.InjectViewState
 import com.lobstr.stellar.vault.R
-import com.lobstr.stellar.vault.domain.recovery_key.RecoveryKeyInteractor
+import com.lobstr.stellar.vault.domain.recovery_key.RecoverKeyInteractor
 import com.lobstr.stellar.vault.presentation.BasePresenter
 import com.lobstr.stellar.vault.presentation.application.LVApplication
 import com.lobstr.stellar.vault.presentation.auth.restore_key.entities.RecoveryPhraseInfo
@@ -17,10 +17,10 @@ import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
 
 @InjectViewState
-class RecoveryKeyFrPresenter : BasePresenter<RecoveryKeyFrView>() {
+class RecoverKeyFrPresenter : BasePresenter<RecoverKeyFrView>() {
 
     @Inject
-    lateinit var interactor: RecoveryKeyInteractor
+    lateinit var interactor: RecoverKeyInteractor
 
     private lateinit var phrases: String
 
@@ -59,10 +59,7 @@ class RecoveryKeyFrPresenter : BasePresenter<RecoveryKeyFrView>() {
                 viewState.enableNextButton(false)
                 viewState.changeTextBackground(true)
             }
-            haveMatchingWords(words) -> {
-                viewState.enableNextButton(false)
-                viewState.changeTextBackground(true)
-            }
+
             (words.size == COUNT_MNEMONIC_WORDS_12 || words.size == COUNT_MNEMONIC_WORDS_24)
                     && words[words.size - 1].length > 2 -> viewState.enableNextButton(true)
             else -> viewState.enableNextButton(false)
@@ -125,18 +122,6 @@ class RecoveryKeyFrPresenter : BasePresenter<RecoveryKeyFrView>() {
         return false
     }
 
-    private fun haveMatchingWords(phrases: List<String>): Boolean {
-        for (firstPosition in 0 until phrases.size - 1) {
-            for (secondPosition in firstPosition + 1 until phrases.size) {
-                if (phrases[secondPosition].equals(phrases[firstPosition]) && secondPosition != firstPosition) {
-                    return true
-                }
-            }
-        }
-
-        return false
-    }
-
     private fun getPhraseList(list: MutableList<String>): List<String> {
         for (position in list.size - 1 downTo 0) {
             if (TextUtils.isEmpty(list[position]) || list[position].equals(" ")) {
@@ -147,7 +132,7 @@ class RecoveryKeyFrPresenter : BasePresenter<RecoveryKeyFrView>() {
         return list
     }
 
-    fun btnRecoveryClicked() {
+    fun btnRecoverClicked() {
         phrases = phrases.trim()
         while (phrases.contains("  ")) {
             phrases = phrases.replace("  ", " ")
@@ -158,10 +143,10 @@ class RecoveryKeyFrPresenter : BasePresenter<RecoveryKeyFrView>() {
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe {
-                    viewState.showProgressDialog()
+                    viewState.showProgressDialog(true)
                 }
                 .doOnEvent { _: String?, _: Throwable? ->
-                    viewState.dismissProgressDialog()
+                    viewState.showProgressDialog(false)
                 }
                 .subscribe({
                     viewState.showPinScreen()

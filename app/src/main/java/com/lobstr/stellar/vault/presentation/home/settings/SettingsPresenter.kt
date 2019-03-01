@@ -87,7 +87,7 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
     }
 
     fun mnemonicsClicked() {
-        viewState.showConfirmPincodeScreen()
+        viewState.showConfirmPinCodeScreen()
     }
 
     fun changePinClicked() {
@@ -126,6 +126,10 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
 
     fun publicKeyClicked() {
         viewState.showPublicKeyDialog(interactor.getUserPublicKey()!!)
+    }
+
+    fun licenseClicked() {
+        viewState.showLicenseScreen()
     }
 
     fun onAlertDialogPositiveButtonClicked(tag: String?) {

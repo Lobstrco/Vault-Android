@@ -12,7 +12,7 @@ import com.arellomobile.mvp.viewstate.strategy.StateStrategyType
 interface BaseActivityView : MvpView {
 
     @StateStrategyType(SkipStrategy::class)
-    fun setActionBarTitle(title: String)
+    fun setActionBarTitle(title: String?)
 
     @StateStrategyType(SkipStrategy::class)
     fun setActionBarTitle(@StringRes title: Int)

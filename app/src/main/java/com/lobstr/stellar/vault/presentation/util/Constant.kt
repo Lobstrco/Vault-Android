@@ -15,6 +15,7 @@ object Constant {
         const val EXTRA_CONFIRM_PIN = "EXTRA_CONFIRM_PIN"
         const val EXTRA_NAVIGATION_FR = "EXTRA_NAVIGATION_FR"
         const val EXTRA_TRANSACTION_ITEM = "EXTRA_TRANSACTION_ITEM"
+        const val EXTRA_TRANSACTION_STATUS = "EXTRA_TRANSACTION_STATUS"
         const val EXTRA_ENVELOPE_XDR = "EXTRA_ENVELOPE_XDR"
         const val EXTRA_NEED_ADDITIONAL_SIGNATURES = "EXTRA_NEED_ADDITIONAL_SIGNATURES"
         const val EXTRA_ERROR_MESSAGE = "EXTRA_ERROR_MESSAGE"
@@ -53,6 +54,9 @@ object Constant {
         const val PENDING = 1
         const val CANCELLED = 2
         const val SIGNED = 3
+
+        // when transaction created from entered XDR
+        const val IMPORT_XDR = 4
     }
 
     object Symbol {
@@ -121,5 +125,20 @@ object Constant {
         const val UNKNOWN = 0
         const val ENABLED = 1
         const val DISABLED = 2
+    }
+
+    /**
+     * UNKNOWN - the user doesn't see Rate Us dialog
+     * @see com.lobstr.stellar.vault.presentation.home.rate_us.RateUsDialogFragment
+     */
+    object RateUsState {
+        const val UNKNOWN = 0
+        const val DEFERRED = 1
+        const val SKIPPED = 2
+        const val RATED = 3
+    }
+
+    object Social {
+        const val STORE_URL = "https://play.google.com/store/apps/details?id=com.lobstr.stellar.vault"
     }
 }

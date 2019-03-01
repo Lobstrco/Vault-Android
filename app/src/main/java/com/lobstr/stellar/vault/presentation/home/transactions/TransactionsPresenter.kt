@@ -144,9 +144,14 @@ class TransactionsPresenter : BasePresenter<TransactionsView>() {
 
         when (requestCode) {
             Constant.Code.TRANSACTION_DETAILS_FRAGMENT -> {
-                //TODO handle it if needed
+                //TODO handle transactionItem it if needed
                 val transactionItem: TransactionItem? =
                     data?.getParcelableExtra(Constant.Extra.EXTRA_TRANSACTION_ITEM)
+
+                when (data?.getIntExtra(Constant.Extra.EXTRA_TRANSACTION_STATUS, -1)) {
+                    Constant.Transaction.SIGNED -> viewState.checkRateUsDialog()
+                }
+
                 refreshCalled()
             }
         }

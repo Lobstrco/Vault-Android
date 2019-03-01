@@ -7,12 +7,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.lobstr.stellar.vault.R
 import com.lobstr.stellar.vault.presentation.base.fragment.BaseFragment
-import com.lobstr.stellar.vault.presentation.dialog.alert.base.AlertDialogFragment
 import com.lobstr.stellar.vault.presentation.home.HomeActivity
 import com.lobstr.stellar.vault.presentation.util.manager.ProgressManager
 import kotlinx.android.synthetic.main.fragment_recheck_signer.*
@@ -37,8 +35,6 @@ class RecheckSignerFragment : BaseFragment(),
     lateinit var mPresenter: RecheckSignerPresenter
 
     private var mView: View? = null
-
-    private var mProgressDialog: AlertDialogFragment? = null
 
     // ===========================================================
     // Constructors
@@ -86,14 +82,9 @@ class RecheckSignerFragment : BaseFragment(),
         tvUserPublicKey.text = userPublicKey
     }
 
-    override fun showProgressDialog() {
-        mProgressDialog = ProgressManager.show(activity as? AppCompatActivity, false)
+    override fun showProgressDialog(show: Boolean) {
+        ProgressManager.show(show, activity!!.supportFragmentManager)
     }
-
-    override fun dismissProgressDialog() {
-        ProgressManager.dismiss(mProgressDialog)
-    }
-
 
     override fun showMessage(message: String?) {
         Toast.makeText(context, message, Toast.LENGTH_SHORT).show()

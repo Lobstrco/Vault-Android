@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.res.TypedArray
 import android.graphics.drawable.Drawable
 import android.os.Build
+import android.os.Handler
 import android.text.TextUtils
 import android.util.AttributeSet
 import android.util.Log
@@ -108,7 +109,7 @@ class ExpandableCardView @JvmOverloads constructor(
         innerViewRes = typedArray.getResourceId(R.styleable.ExpandableCardView_inner_view, View.NO_ID)
         expandOnClick = typedArray.getBoolean(R.styleable.ExpandableCardView_expandOnClick, false)
         animDuration =
-                typedArray.getInteger(R.styleable.ExpandableCardView_animationDuration, DEFAULT_ANIM_DURATION).toLong()
+            typedArray.getInteger(R.styleable.ExpandableCardView_animationDuration, DEFAULT_ANIM_DURATION).toLong()
         startExpanded = typedArray.getBoolean(R.styleable.ExpandableCardView_startExpanded, false)
         typedArray.recycle()
     }
@@ -134,7 +135,12 @@ class ExpandableCardView @JvmOverloads constructor(
 
         if (startExpanded) {
             animDuration = 0
-            expand()
+
+            // fix for start expanded view
+            Handler().postDelayed({
+                expand()
+                animDuration = DEFAULT_ANIM_DURATION.toLong()
+            }, 0)
         }
 
         if (expandOnClick) {
@@ -145,14 +151,14 @@ class ExpandableCardView @JvmOverloads constructor(
     }
 
     fun expand() {
-        val initialHeight = card_layout.height
-        if (!isMoving) {
-            previousHeight = initialHeight
+        if (isMoving) {
+            return
         }
 
-        card_layout.measure(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+        val initialHeight = card_layout.height
+        previousHeight = initialHeight
 
-        tvContent.measure(0,0)
+        tvContent.measure(0, 0)
 
         val targetHeight = card_layout.measuredHeight + AppUtil.getTextHeight(tvContent)
 

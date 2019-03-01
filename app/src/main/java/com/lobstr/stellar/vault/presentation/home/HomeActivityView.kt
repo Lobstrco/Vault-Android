@@ -27,4 +27,10 @@ interface HomeActivityView : MvpView {
 
     @StateStrategyType(SkipStrategy::class)
     fun setSelectedBottomNavigationItem(@IdRes itemId: Int)
+
+    @StateStrategyType(SkipStrategy::class)
+    fun checkRateUsDialog()
+
+    @StateStrategyType(SkipStrategy::class)
+    fun showRateUsDialog()
 }

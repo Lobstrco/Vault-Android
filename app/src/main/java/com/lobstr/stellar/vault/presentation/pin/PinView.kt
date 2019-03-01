@@ -34,10 +34,7 @@ interface PinView : MvpView {
     fun finishScreenWithResult(resultCode: Int)
 
     @StateStrategyType(AddToEndSingleStrategy::class)
-    fun showProgressDialog()
-
-    @StateStrategyType(AddToEndSingleStrategy::class)
-    fun hideProgressDialog()
+    fun showProgressDialog(show: Boolean)
 
     @StateStrategyType(AddToEndSingleStrategy::class)
     fun showDescriptionMessage(@StringRes message: Int)

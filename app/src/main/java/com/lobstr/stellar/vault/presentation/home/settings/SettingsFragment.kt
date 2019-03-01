@@ -29,6 +29,7 @@ import com.lobstr.stellar.vault.presentation.dialog.alert.base.AlertDialogFragme
 import com.lobstr.stellar.vault.presentation.dialog.alert.base.AlertDialogFragment.DialogFragmentIdentifier.PUBLIC_KEY
 import com.lobstr.stellar.vault.presentation.faq.FaqFragment
 import com.lobstr.stellar.vault.presentation.fcm.NotificationsManager
+import com.lobstr.stellar.vault.presentation.home.settings.license.LicenseFragment
 import com.lobstr.stellar.vault.presentation.home.settings.show_public_key.ShowPublicKeyDialogFragment
 import com.lobstr.stellar.vault.presentation.home.settings.signed_accounts.SignedAccountsFragment
 import com.lobstr.stellar.vault.presentation.pin.PinActivity
@@ -100,10 +101,11 @@ class SettingsFragment : BaseFragment(), SettingsView, View.OnClickListener,
         llSettingsHelp.setOnClickListener(this)
         swSettingsTouchId.setOnCheckedChangeListener(this)
         swSettingsNotifications.setOnCheckedChangeListener(this)
+        llSettingsLicense.setOnClickListener(this)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        attachMvpDelegate()
+        getMvpDelegate().onAttach()
         mPresenter.onActivityResult(requestCode, resultCode, data)
     }
 
@@ -119,6 +121,7 @@ class SettingsFragment : BaseFragment(), SettingsView, View.OnClickListener,
             R.id.llSettingsMnemonics -> mPresenter.mnemonicsClicked()
             R.id.llSettingsChangePin -> mPresenter.changePinClicked()
             R.id.llSettingsHelp -> mPresenter.helpClicked()
+            R.id.llSettingsLicense -> mPresenter.licenseClicked()
         }
     }
 
@@ -251,6 +254,15 @@ class SettingsFragment : BaseFragment(), SettingsView, View.OnClickListener,
         dialog.show(childFragmentManager, PUBLIC_KEY)
     }
 
+    override fun showLicenseScreen() {
+        FragmentTransactionManager.displayFragment(
+            parentFragment!!.childFragmentManager,
+            Fragment.instantiate(context, LicenseFragment::class.java.name),
+            R.id.fl_container,
+            true
+        )
+    }
+
     override fun setupPolicyYear(id: Int) {
         tvCurrentPolicyDate.text = String.format(getString(id), Calendar.getInstance().get(Calendar.YEAR))
     }
@@ -260,6 +272,10 @@ class SettingsFragment : BaseFragment(), SettingsView, View.OnClickListener,
     }
 
     override fun onNegativeBtnClick(tag: String?, dialogInterface: DialogInterface) {
+        // add logic if needed
+    }
+
+    override fun onNeutralBtnClick(tag: String?, dialogInterface: DialogInterface) {
         // add logic if needed
     }
 
@@ -278,7 +294,7 @@ class SettingsFragment : BaseFragment(), SettingsView, View.OnClickListener,
             .show(childFragmentManager, AlertDialogFragment.DialogFragmentIdentifier.LOG_OUT)
     }
 
-    override fun showConfirmPincodeScreen() {
+    override fun showConfirmPinCodeScreen() {
         val intent = Intent(context, PinActivity::class.java)
         intent.putExtra(Constant.Extra.EXTRA_CONFIRM_PIN, true)
         startActivityForResult(intent, Constant.Code.CONFIRM_PIN_FOR_MNEMONIC)

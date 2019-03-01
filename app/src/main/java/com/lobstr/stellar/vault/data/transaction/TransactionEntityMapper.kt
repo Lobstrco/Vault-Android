@@ -7,6 +7,7 @@ import com.lobstr.stellar.vault.presentation.entities.transaction.Transaction
 import com.lobstr.stellar.vault.presentation.entities.transaction.TransactionItem
 import com.lobstr.stellar.vault.presentation.entities.transaction.TransactionResult
 import com.lobstr.stellar.vault.presentation.entities.transaction.operation.*
+import com.lobstr.stellar.vault.presentation.util.Constant.Transaction.IMPORT_XDR
 import org.stellar.sdk.AssetTypeCreditAlphaNum12
 import org.stellar.sdk.AssetTypeCreditAlphaNum4
 
@@ -38,8 +39,20 @@ class TransactionEntityMapper {
     }
 
     fun transformTransactionItem(apiTransactionItem: ApiTransactionItem): TransactionItem {
-        val transaction: org.stellar.sdk.Transaction =
+        // handle issue https://github.com/stellar/java-stellar-sdk/issues/183
+        val transaction = try {
             org.stellar.sdk.Transaction.fromEnvelopeXdr(apiTransactionItem.xdr)
+        } catch (e: ArithmeticException) {
+            e.printStackTrace()
+            null
+        }
+
+        // handle issue https://github.com/stellar/java-stellar-sdk/issues/183
+        val parsedTransaction =
+            if (transaction != null)
+                getTransaction(transaction)
+            else
+                Transaction(mutableListOf(), 0)
 
         return TransactionItem(
             apiTransactionItem.cancelledAt,
@@ -49,12 +62,33 @@ class TransactionEntityMapper {
             apiTransactionItem.hash!!,
             apiTransactionItem.getStatusDisplay,
             apiTransactionItem.status,
-            getTransaction(transaction)
+            apiTransactionItem.sequenceOutdatedAt,
+            parsedTransaction
         )
     }
 
-    // TODO change to private after delete hardcode
-    fun getTransaction(transaction: org.stellar.sdk.Transaction): Transaction {
+    fun transformTransactionItem(transaction: org.stellar.sdk.Transaction?): TransactionItem {
+        // handle issue https://github.com/stellar/java-stellar-sdk/issues/183
+        val parsedTransaction =
+            if (transaction != null)
+                getTransaction(transaction)
+            else
+                Transaction(mutableListOf(), 0)
+
+        return TransactionItem(
+            "",
+            "",
+            transaction?.toEnvelopeXdrBase64(),
+            "",
+            /*transaction?.hash()?.joinToString("") { String.format("%02X", it) } ?:*/ "",
+            "",
+            IMPORT_XDR,
+            null,
+            parsedTransaction
+        )
+    }
+
+    private fun getTransaction(transaction: org.stellar.sdk.Transaction): Transaction {
         val operations: MutableList<Operation> = mutableListOf()
         if (transaction.operations.isNotEmpty()) {
             transaction.operations.forEach {

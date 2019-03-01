@@ -73,10 +73,10 @@ class ConfirmMnemonicsPresenter(private val mnemonicsInitialList: List<MnemonicI
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe {
-                    viewState.showProgressDialog()
+                    viewState.showProgressDialog(true)
                 }
                 .doOnEvent { _: String?, _: Throwable? ->
-                    viewState.dismissProgressDialog()
+                    viewState.showProgressDialog(false)
                 }
                 .subscribe({
                     viewState.showPinScreen()

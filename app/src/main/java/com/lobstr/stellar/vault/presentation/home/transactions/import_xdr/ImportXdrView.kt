@@ -4,6 +4,7 @@ import com.arellomobile.mvp.MvpView
 import com.arellomobile.mvp.viewstate.strategy.AddToEndSingleStrategy
 import com.arellomobile.mvp.viewstate.strategy.SkipStrategy
 import com.arellomobile.mvp.viewstate.strategy.StateStrategyType
+import com.lobstr.stellar.vault.presentation.entities.transaction.TransactionItem
 
 
 interface ImportXdrView : MvpView {
@@ -12,16 +13,10 @@ interface ImportXdrView : MvpView {
     fun showMessage(message: String?)
 
     @StateStrategyType(AddToEndSingleStrategy::class)
-    fun showProgressDialog()
+    fun showProgressDialog(show: Boolean)
 
-    @StateStrategyType(AddToEndSingleStrategy::class)
-    fun dismissProgressDialog()
-
-    @StateStrategyType(AddToEndSingleStrategy::class)
-    fun successConfirmTransaction(envelopeXdr: String, needAdditionalSignatures: Boolean)
-
-    @StateStrategyType(AddToEndSingleStrategy::class)
-    fun errorConfirmTransaction(errorMessage: String)
+    @StateStrategyType(SkipStrategy::class)
+    fun showTransactionDetails(transactionItem: TransactionItem)
 
     @StateStrategyType(AddToEndSingleStrategy::class)
     fun setSubmitEnabled(enabled: Boolean)

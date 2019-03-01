@@ -56,6 +56,9 @@ interface SettingsView : MvpView {
     @StateStrategyType(SkipStrategy::class)
     fun showPublicKeyDialog(publicKey: String)
 
+    @StateStrategyType(SkipStrategy::class)
+    fun showLicenseScreen()
+
     @StateStrategyType(AddToEndSingleStrategy::class)
     fun setupPolicyYear(@StringRes id: Int)
 
@@ -63,5 +66,5 @@ interface SettingsView : MvpView {
     fun showLogOutDialog()
 
     @StateStrategyType(SkipStrategy::class)
-    fun showConfirmPincodeScreen()
+    fun showConfirmPinCodeScreen()
 }

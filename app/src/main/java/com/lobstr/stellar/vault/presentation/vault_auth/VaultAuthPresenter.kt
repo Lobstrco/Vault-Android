@@ -96,10 +96,11 @@ class VaultAuthPresenter : BasePresenter<VaultAuthView>() {
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe {
                     authorizationInProcess = true
-                    viewState.showProgressDialog()
+                    viewState.setBtnRetryVisibility(false)
+                    viewState.showProgressDialog(true)
                 }
                 .doOnEvent { _, _ ->
-                    viewState.dismissProgressDialog()
+                    viewState.showProgressDialog(false)
                     authorizationInProcess = false
                 }
                 .subscribe({
@@ -110,6 +111,7 @@ class VaultAuthPresenter : BasePresenter<VaultAuthView>() {
                         viewState.showHomeScreen()
                     }
                 }, {
+                    viewState.setBtnRetryVisibility(true)
                     when (it) {
                         is NoInternetConnectionException -> {
                             viewState.showMessage(it.details)

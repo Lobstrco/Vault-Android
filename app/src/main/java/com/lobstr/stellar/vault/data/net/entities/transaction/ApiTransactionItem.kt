@@ -23,5 +23,8 @@ data class ApiTransactionItem(
     val getStatusDisplay: String?,
 
     @SerializedName("status")
-    val status: Int?
+    val status: Int?,
+
+    @SerializedName("sequence_outdated_at")
+    val sequenceOutdatedAt: String?
 )

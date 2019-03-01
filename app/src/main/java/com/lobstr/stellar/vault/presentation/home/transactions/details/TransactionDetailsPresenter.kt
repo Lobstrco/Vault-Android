@@ -13,8 +13,8 @@ import com.lobstr.stellar.vault.presentation.application.LVApplication
 import com.lobstr.stellar.vault.presentation.dagger.module.transaction_details.TransactionDetailsModule
 import com.lobstr.stellar.vault.presentation.dialog.alert.base.AlertDialogFragment.DialogFragmentIdentifier.DENY_TRANSACTION
 import com.lobstr.stellar.vault.presentation.entities.transaction.TransactionItem
-import com.lobstr.stellar.vault.presentation.util.AppUtil
 import com.lobstr.stellar.vault.presentation.util.Constant.Transaction.CANCELLED
+import com.lobstr.stellar.vault.presentation.util.Constant.Transaction.IMPORT_XDR
 import com.lobstr.stellar.vault.presentation.util.Constant.Transaction.PENDING
 import com.lobstr.stellar.vault.presentation.util.Constant.Transaction.SIGNED
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -33,7 +33,6 @@ class TransactionDetailsPresenter(private var transactionItem: TransactionItem) 
 
     private var confirmationInProcess = false
     private var cancellationInProcess = false
-    private var operationList: MutableList<Int> = mutableListOf()
 
     init {
         LVApplication.sAppComponent.plusTransactionDetailsComponent(TransactionDetailsModule()).inject(this)
@@ -43,27 +42,28 @@ class TransactionDetailsPresenter(private var transactionItem: TransactionItem) 
         super.onFirstViewAttach()
 
         viewState.setupToolbarTitle(R.string.title_toolbar_transaction_details)
-        viewState.initRecycledView()
         prepareUiAndOperationsList()
     }
 
     private fun prepareUiAndOperationsList() {
+        // handle transaction validation status
+        viewState.setTransactionValid(transactionItem.sequenceOutdatedAt.isNullOrEmpty())
+
         // handle transaction status
         when (transactionItem.status) {
             PENDING -> viewState.setActionBtnVisibility(true, true)
             CANCELLED -> viewState.setActionBtnVisibility(false, false)
             SIGNED -> viewState.setActionBtnVisibility(false, false)
+            IMPORT_XDR -> viewState.setActionBtnVisibility(true, true)
         }
 
-        // prepare operations list for show it
-        operationList.clear()
-        for (operation in transactionItem.transaction.operations) {
-            val resId: Int = AppUtil.getTransactionOperationName(operation)
-            if (resId != -1) {
-                operationList.add(resId)
-            }
+        // prepare operations list or show single operation:
+        // when transaction has only one operation - show operation details screen immediately, else - list
+        if (transactionItem.transaction.operations.size > 1) {
+            viewState.showOperationList(transactionItem)
+        } else {
+            viewState.showOperationDetailsScreen(transactionItem, 0)
         }
-        viewState.setOperationsToList(operationList)
     }
 
     fun btnConfirmClicked() {
@@ -74,6 +74,11 @@ class TransactionDetailsPresenter(private var transactionItem: TransactionItem) 
         viewState.showDenyTransactionDialog()
     }
 
+    /**
+     * cases:
+     * 1. Is Vault Transaction -> retrieve actual transaction -> sign it on horizon -> notify vault server
+     * 2. Is Transaction from IMPORT_XDR: only sign it on horizon
+     */
     private fun confirmTransaction() {
         if (confirmationInProcess) {
             return
@@ -82,7 +87,7 @@ class TransactionDetailsPresenter(private var transactionItem: TransactionItem) 
         var needAdditionalSignatures = false
 
         unsubscribeOnDestroy(
-            interactor.retrieveActualTransaction(transactionItem.hash)
+            interactor.retrieveActualTransaction(transactionItem)
                 .subscribeOn(Schedulers.io())
                 .flatMap {
                     transactionItem = it
@@ -106,6 +111,7 @@ class TransactionDetailsPresenter(private var transactionItem: TransactionItem) 
 
                     interactor.confirmTransactionOnServer(
                         needAdditionalSignatures,
+                        transactionItem.status,
                         it.hash,
                         it.envelopeXdr
                     )
@@ -113,10 +119,10 @@ class TransactionDetailsPresenter(private var transactionItem: TransactionItem) 
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe {
                     confirmationInProcess = true
-                    viewState.showProgressDialog()
+                    viewState.showProgressDialog(true)
                 }
                 .doOnEvent { _, _ ->
-                    viewState.dismissProgressDialog()
+                    viewState.showProgressDialog(false)
                     confirmationInProcess = false
                 }
                 .subscribe({
@@ -129,11 +135,13 @@ class TransactionDetailsPresenter(private var transactionItem: TransactionItem) 
                         transactionItem.hash,
                         transactionItem.getStatusDisplay,
                         SIGNED,
+                        transactionItem.sequenceOutdatedAt,
                         transactionItem.transaction
                     )
 
                     viewState.successConfirmTransaction(it, needAdditionalSignatures, transactionItem)
-                    prepareUiAndOperationsList()
+
+                    // TODO update transaction screen after operation if needed: prepareUiAndOperationsList()
 
                     // Notify about transaction changed
                     eventProviderModule.notificationEventSubject.onNext(
@@ -160,48 +168,59 @@ class TransactionDetailsPresenter(private var transactionItem: TransactionItem) 
     }
 
     private fun denyTransaction() {
-        if (cancellationInProcess) {
-            return
+        // check transaction status = IMPORT_XDR - transaction details showed for entered xdr
+        when (transactionItem.status) {
+            IMPORT_XDR -> {
+                viewState.successDenyTransaction(transactionItem)
+
+                // Notify about transaction changed
+                eventProviderModule.notificationEventSubject.onNext(
+                    Notification(Notification.Type.TRANSACTION_COUNT_CHANGED, null)
+                )
+            }
+            else -> {
+                if (cancellationInProcess) {
+                    return
+                }
+                unsubscribeOnDestroy(
+                    interactor.cancelTransaction(transactionItem.hash)
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .doOnSubscribe {
+                            cancellationInProcess = true
+                            viewState.showProgressDialog(true)
+                        }
+                        .doOnEvent { _, _ ->
+                            viewState.showProgressDialog(false)
+                            cancellationInProcess = false
+                        }
+                        .subscribe({
+                            transactionItem = it
+
+                            // TODO update transaction screen after operation if needed: prepareUiAndOperationsList()
+
+                            viewState.successDenyTransaction(it)
+
+                            // Notify about transaction changed
+                            eventProviderModule.notificationEventSubject.onNext(
+                                Notification(Notification.Type.TRANSACTION_COUNT_CHANGED, null)
+                            )
+                        }, {
+                            when (it) {
+                                is UserNotAuthorizedException -> {
+                                    denyTransaction()
+                                }
+                                is DefaultException -> {
+                                    viewState.showMessage(it.details)
+                                }
+                                else -> {
+                                    viewState.showMessage(it.message ?: "")
+                                }
+                            }
+                        })
+                )
+            }
         }
-        unsubscribeOnDestroy(
-            interactor.cancelTransaction(transactionItem.hash)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .doOnSubscribe {
-                    cancellationInProcess = true
-                    viewState.showProgressDialog()
-                }
-                .doOnEvent { _, _ ->
-                    viewState.dismissProgressDialog()
-                    cancellationInProcess = false
-                }
-                .subscribe({
-                    transactionItem = it
-                    prepareUiAndOperationsList()
-                    viewState.successDenyTransaction(it)
-
-                    // Notify about transaction changed
-                    eventProviderModule.notificationEventSubject.onNext(
-                        Notification(Notification.Type.TRANSACTION_COUNT_CHANGED, null)
-                    )
-                }, {
-                    when (it) {
-                        is UserNotAuthorizedException -> {
-                            denyTransaction()
-                        }
-                        is DefaultException -> {
-                            viewState.showMessage(it.details)
-                        }
-                        else -> {
-                            viewState.showMessage(it.message ?: "")
-                        }
-                    }
-                })
-        )
-    }
-
-    fun operationItemClicked(position: Int) {
-        viewState.showOperationDetailsScreen(transactionItem, position)
     }
 
     fun onAlertDialogPositiveButtonClicked(tag: String?) {

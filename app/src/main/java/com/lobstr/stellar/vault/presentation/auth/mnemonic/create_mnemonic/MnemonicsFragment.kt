@@ -174,6 +174,10 @@ class MnemonicsFragment : BaseFragment(),
         // add logic if needed
     }
 
+    override fun onNeutralBtnClick(tag: String?, dialogInterface: DialogInterface) {
+        // add logic if needed
+    }
+
     override fun onCancel(tag: String?, dialogInterface: DialogInterface) {
         // add logic if needed
     }

@@ -12,6 +12,7 @@ import com.google.android.material.bottomnavigation.LabelVisibilityMode
 import com.lobstr.stellar.vault.R
 import com.lobstr.stellar.vault.presentation.auth.AuthActivity
 import com.lobstr.stellar.vault.presentation.base.activity.BaseActivity
+import com.lobstr.stellar.vault.presentation.dialog.alert.base.AlertDialogFragment
 import com.lobstr.stellar.vault.presentation.home.HomeViewPagerAdapter.Position.DASHBOARD
 import com.lobstr.stellar.vault.presentation.home.HomeViewPagerAdapter.Position.SETTINGS
 import com.lobstr.stellar.vault.presentation.home.HomeViewPagerAdapter.Position.TRANSACTIONS
@@ -136,6 +137,24 @@ class HomeActivity : BaseActivity(), HomeActivityView,
         } catch (exc: IndexOutOfBoundsException) {
             exc.printStackTrace()
         }
+    }
+
+    override fun checkRateUsDialog() {
+        getMvpDelegate().onAttach()
+        mHomePresenter.checkRateUsDialog()
+    }
+
+    override fun showRateUsDialog() {
+        AlertDialogFragment.Builder(false)
+            .setCancelable(true)
+            .setSpecificDialog(AlertDialogFragment.DialogIdentifier.RATE_US, null)
+            .setTitle(getString(R.string.title_rate_us_dialog))
+            .setMessage(getString(R.string.msg_rate_us_dialog))
+            .setNegativeBtnText(getString(R.string.text_btn_rate_never))
+            .setNeutralBtnText(getString(R.string.text_btn_rate_later))
+            .setPositiveBtnText(R.string.text_btn_rate_us)
+            .create()
+            .show(supportFragmentManager, AlertDialogFragment.DialogFragmentIdentifier.RATE_US)
     }
 
     // ===========================================================

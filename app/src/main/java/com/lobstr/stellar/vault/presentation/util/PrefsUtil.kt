@@ -18,6 +18,7 @@ class PrefsUtil(private val sharedPreferences: SharedPreferences) {
         const val PREF_IS_FCM_REGISTERED_SUCCESSFULLY = "PREF_IS_FCM_REGISTERED_SUCCESSFULLY"
         const val PREF_ACCOUNT_HAS_SIGNERS = "PREF_ACCOUNT_HAS_SIGNERS"
         const val PREF_BIOMETRIC_STATE = "PREF_BIOMETRIC_STATE"
+        const val PREF_RATE_US_STATE = "PREF_RATE_US_STATE"
         const val PREF_IS_NOTIFICATIONS_ENABLED = "PREF_IS_NOTIFICATIONS_ENABLED"
         const val PREF_ACCOUNT_SIGNERS_COUNT = "PREF_ACCOUNT_SIGNERS_COUNT"
     }
@@ -68,6 +69,13 @@ class PrefsUtil(private val sharedPreferences: SharedPreferences) {
     var biometricState: Int
         get() = getInt(PREF_BIOMETRIC_STATE)
         set(state) = set(PREF_BIOMETRIC_STATE, state)
+
+    /**
+     * @see Constant.RateUsState
+     */
+    var rateUsState: Int
+        get() = getInt(PREF_RATE_US_STATE)
+        set(state) = set(PREF_RATE_US_STATE, state)
 
     var isNotificationsEnabled: Boolean
         get() = getBoolean(PREF_IS_NOTIFICATIONS_ENABLED)

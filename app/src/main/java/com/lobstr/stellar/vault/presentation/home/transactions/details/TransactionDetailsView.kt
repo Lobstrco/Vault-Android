@@ -13,29 +13,30 @@ interface TransactionDetailsView : MvpView {
     @StateStrategyType(AddToEndSingleStrategy::class)
     fun setupToolbarTitle(@StringRes titleRes: Int)
 
-    @StateStrategyType(AddToEndSingleStrategy::class)
-    fun initRecycledView()
-
-    @StateStrategyType(AddToEndSingleStrategy::class)
-    fun setOperationsToList(operationList: MutableList<Int>)
+    @StateStrategyType(SkipStrategy::class)
+    fun showOperationList(transactionItem: TransactionItem)
 
     @StateStrategyType(SkipStrategy::class)
     fun showMessage(message: String?)
 
     @StateStrategyType(AddToEndSingleStrategy::class)
-    fun showProgressDialog()
-
-    @StateStrategyType(AddToEndSingleStrategy::class)
-    fun dismissProgressDialog()
+    fun showProgressDialog(show: Boolean)
 
     @StateStrategyType(AddToEndSingleStrategy::class)
     fun setActionBtnVisibility(isConfirmVisible: Boolean, isDenyVisible: Boolean)
 
     @StateStrategyType(AddToEndSingleStrategy::class)
+    fun setTransactionValid(valid: Boolean)
+
+    @StateStrategyType(AddToEndSingleStrategy::class)
     fun successDenyTransaction(transactionItem: TransactionItem)
 
     @StateStrategyType(AddToEndSingleStrategy::class)
-    fun successConfirmTransaction(envelopeXdr: String, needAdditionalSignatures: Boolean, transactionItem: TransactionItem)
+    fun successConfirmTransaction(
+        envelopeXdr: String,
+        needAdditionalSignatures: Boolean,
+        transactionItem: TransactionItem
+    )
 
     @StateStrategyType(AddToEndSingleStrategy::class)
     fun errorConfirmTransaction(errorMessage: String)

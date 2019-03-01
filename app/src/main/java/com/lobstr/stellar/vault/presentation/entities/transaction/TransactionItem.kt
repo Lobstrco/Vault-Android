@@ -12,5 +12,6 @@ data class TransactionItem(
     val hash: String,
     val getStatusDisplay: String?,
     val status: Int?,
+    val sequenceOutdatedAt: String?,
     val transaction: Transaction
 ) : Parcelable

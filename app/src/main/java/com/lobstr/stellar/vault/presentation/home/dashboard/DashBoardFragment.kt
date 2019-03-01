@@ -89,10 +89,6 @@ class DashboardFragment : BaseFragment(), DashboardView, View.OnClickListener {
         }
     }
 
-    override fun setupToolbarTitle() {
-        saveActionBarTitle(0)
-    }
-
     override fun showPublicKey(publicKey: String) {
         tvDashboardPublicKey.text = publicKey
     }

@@ -9,9 +9,6 @@ import com.arellomobile.mvp.viewstate.strategy.StateStrategyType
 interface DashboardView : MvpView {
 
     @StateStrategyType(AddToEndSingleStrategy::class)
-    fun setupToolbarTitle()
-
-    @StateStrategyType(AddToEndSingleStrategy::class)
     fun showPublicKey(publicKey: String)
 
     @StateStrategyType(AddToEndSingleStrategy::class)

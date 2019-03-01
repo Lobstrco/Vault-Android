@@ -44,8 +44,6 @@ class PinActivity : BaseMvpAppCompatActivity(), PinView, PinLockListener,
     @InjectPresenter
     lateinit var mPresenter: PinPresenter
 
-    private var mProgressDialog: AlertDialogFragment? = null
-
     private var mBiometricManager: BiometricManager? = null
 
     // ===========================================================
@@ -154,12 +152,8 @@ class PinActivity : BaseMvpAppCompatActivity(), PinView, PinLockListener,
         finish()
     }
 
-    override fun showProgressDialog() {
-        mProgressDialog = ProgressManager.show(this, false)
-    }
-
-    override fun hideProgressDialog() {
-        ProgressManager.dismiss(mProgressDialog)
+    override fun showProgressDialog(show: Boolean) {
+        ProgressManager.show(show, supportFragmentManager)
     }
 
     override fun showDescriptionMessage(@StringRes message: Int) {
@@ -200,6 +194,10 @@ class PinActivity : BaseMvpAppCompatActivity(), PinView, PinLockListener,
     }
 
     override fun onNegativeBtnClick(tag: String?, dialogInterface: DialogInterface) {
+        // add logic if needed
+    }
+
+    override fun onNeutralBtnClick(tag: String?, dialogInterface: DialogInterface) {
         // add logic if needed
     }
 

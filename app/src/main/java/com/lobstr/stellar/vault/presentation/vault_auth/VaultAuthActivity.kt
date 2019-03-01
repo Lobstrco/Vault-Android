@@ -42,8 +42,6 @@ class VaultAuthActivity : BaseActivity(), VaultAuthView, View.OnClickListener,
     @InjectPresenter
     lateinit var mVaultAuthPresenter: VaultAuthPresenter
 
-    private var mProgressDialog: AlertDialogFragment? = null
-
     // ===========================================================
     // Constructors
     // ===========================================================
@@ -101,16 +99,15 @@ class VaultAuthActivity : BaseActivity(), VaultAuthView, View.OnClickListener,
         changeActionBarIconVisibility(false)
     }
 
-    override fun showProgressDialog() {
-        mProgressDialog = ProgressManager.show(this, false)
+    override fun setBtnRetryVisibility(visible: Boolean) {
+        btnRetry.visibility = if (visible) View.VISIBLE else View.GONE
     }
 
-    override fun dismissProgressDialog() {
-        ProgressManager.dismiss(mProgressDialog)
+    override fun showProgressDialog(show: Boolean) {
+        ProgressManager.show(show, supportFragmentManager)
     }
 
     override fun showSignerInfoFragment() {
-        btnRetry.visibility = View.GONE
         val bundle = Bundle()
         bundle.putInt(Constant.Bundle.BUNDLE_NAVIGATION_FR, Constant.Navigation.SIGNER_INFO)
 
@@ -147,6 +144,10 @@ class VaultAuthActivity : BaseActivity(), VaultAuthView, View.OnClickListener,
     }
 
     override fun onNegativeBtnClick(tag: String?, dialogInterface: DialogInterface) {
+        // add logic if needed
+    }
+
+    override fun onNeutralBtnClick(tag: String?, dialogInterface: DialogInterface) {
         // add logic if needed
     }
 

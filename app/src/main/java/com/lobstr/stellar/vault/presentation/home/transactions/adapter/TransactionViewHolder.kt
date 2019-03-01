@@ -1,7 +1,9 @@
 package com.lobstr.stellar.vault.presentation.home.transactions.adapter
 
 import android.content.Context
+import android.graphics.PorterDuff
 import android.view.View
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.lobstr.stellar.vault.R
 import com.lobstr.stellar.vault.presentation.entities.transaction.Transaction
@@ -15,6 +17,19 @@ class TransactionViewHolder(itemView: View, private val listener: OnTransactionI
 
     fun bind(item: TransactionItem) {
         val context: Context = itemView.context
+
+        val isSequenceValid = item.sequenceOutdatedAt.isNullOrEmpty()
+
+        itemView.statusView.background.setColorFilter(
+            ContextCompat.getColor(
+                context,
+                if (isSequenceValid) R.color.color_primary else R.color.color_4D000000
+            ),
+            PorterDuff.Mode.SRC_IN
+        )
+
+        itemView.tvTransactionInvalid.visibility =
+            if (isSequenceValid) View.GONE else View.VISIBLE
 
         itemView.tvTransactionItemDate.text = AppUtil.formatDate(
             DateTime(item.addedAt).toDate().time,

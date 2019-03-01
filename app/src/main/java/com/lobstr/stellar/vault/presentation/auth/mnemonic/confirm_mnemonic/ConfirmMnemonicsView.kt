@@ -26,10 +26,7 @@ interface ConfirmMnemonicsView : MvpView {
     fun showPinScreen()
 
     @StateStrategyType(AddToEndSingleStrategy::class)
-    fun showProgressDialog()
-
-    @StateStrategyType(AddToEndSingleStrategy::class)
-    fun dismissProgressDialog()
+    fun showProgressDialog(show: Boolean)
 
     @StateStrategyType(SkipStrategy::class)
     fun showHelpScreen()

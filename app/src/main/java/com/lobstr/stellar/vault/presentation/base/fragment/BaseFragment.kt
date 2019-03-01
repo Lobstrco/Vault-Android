@@ -1,7 +1,6 @@
 package com.lobstr.stellar.vault.presentation.base.fragment
 
 import android.os.Bundle
-import androidx.annotation.StringRes
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.lobstr.stellar.vault.presentation.BaseMvpAppCompatFragment
@@ -22,7 +21,7 @@ abstract class BaseFragment : BaseMvpAppCompatFragment(), BaseFragmentView {
         setHasOptionsMenu(isVisibleToUser)
 
         if (isAdded) {
-            mvpDelegate.onAttach()
+            getMvpDelegate().onAttach()
             mBasePresenter.setToolbarTitle()
         }
     }
@@ -47,7 +46,7 @@ abstract class BaseFragment : BaseMvpAppCompatFragment(), BaseFragmentView {
      */
     open fun onBackPressed() = false
 
-    override fun setActionBarTitle(@StringRes titleRes: Int) {
+    override fun setActionBarTitle(title: String?) {
         if (parentFragment is BaseContainerFragment
             && !(parentFragment as BaseContainerFragment).userVisibleHint
         ) {
@@ -55,10 +54,14 @@ abstract class BaseFragment : BaseMvpAppCompatFragment(), BaseFragmentView {
         }
 
         (activity as? BaseActivity)?.getMvpDelegate()?.onAttach()
-        (activity as? BaseActivity)?.mPresenter?.setActionBarTitle(titleRes)
+        (activity as? BaseActivity)?.mPresenter?.setActionBarTitle(title)
     }
 
     override fun saveActionBarTitle(titleRes: Int) {
-        mBasePresenter.setToolbarTitle(titleRes)
+        mBasePresenter.setToolbarTitle(if (titleRes == 0) null else getString(titleRes))
+    }
+
+    override fun saveActionBarTitle(title: String?) {
+        mBasePresenter.setToolbarTitle(title)
     }
 }

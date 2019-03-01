@@ -10,6 +10,7 @@
     <string name="title_toolbar_transactions">Transactions</string>
     <string name="title_toolbar_operation_details">Operation Details</string>
     <string name="title_toolbar_settings">Settings</string>
+    <string name="title_toolbar_license">Licenses</string>
 
     <!-- Buttons -->
     <string name="text_btn_cancel">Cancel</string>
@@ -26,12 +27,15 @@
     <string name="text_btn_skip">Skip</string>
     <string name="text_btn_done">Done</string>
     <string name="text_btn_copy_key">Copy Key</string>
-    <string name="text_btn_submit">Submit</string>
+    <string name="text_btn_import_xdr_next">Next</string>
+    <string name="text_btn_rate_us">Rate now</string>
+    <string name="text_btn_rate_later">Remind later</string>
+    <string name="text_btn_rate_never">Don\'t ask again</string>
 
     <!-- Start screen -->
     <string name="text_start_screen_tv_title">Multiply your security</string>
     <string name="text_start_screen_btn_create_account">Create Account</string>
-    <string name="text_start_screen_btn_restore_account">Recovery Account</string>
+    <string name="text_start_screen_btn_restore_account">Recover Account</string>
     <string name="text_start_screen_terms_and_privacy">By registering you agree to our
         <a href="https://lobstr.co/privacy/">Terms of
             Service and Privacy Policy
@@ -39,9 +43,9 @@
     </string>
 
     <!-- Recovery Account -->
-    <string name="text_tv_recovery_phrase_title">Recovery Account</string>
-    <string name="text_tv_recovery_phrase_description">Enter the 12 word recovery phrase you were given when
-        you created your account
+    <string name="text_tv_recovery_phrase_title">Recover Account</string>
+    <string name="text_tv_recovery_phrase_description">Enter the 12 or 24 word recovery phrase you were given when you
+        created your Vault account.
     </string>
 
     <!-- Backup screen -->
@@ -80,7 +84,9 @@
         <![CDATA[This key will be used to sign transactions. To protect your LOBSTR account, copy and paste the code to LOBSTR (Settings→Multisig→Enable)]]></string>
 
     <!-- Re-check signers screen -->
-    <string name="text_tv_re_check_signer_description">Your Vault account is not a signer for any other Stellar accounts</string>
+    <string name="text_tv_re_check_signer_description">Your Vault account is not a signer for any other Stellar
+        accounts
+    </string>
     <string name="text_btn_re_check_signer">Re-Check</string>
 
     <!--Pin screen-->
@@ -116,31 +122,13 @@
     <string name="text_settings_notifications">Notifications</string>
     <string name="text_settings_version">Version</string>
     <string name="text_settings_help">Help</string>
+    <string name="text_settings_license">Licenses</string>
     <string name="text_settings_log_out">Log Out</string>
     <string name="text_tv_settings_show">Show</string>
     <string name="text_all_rights_reserved">©%s. All rights reserved</string>
 
     <!--Signed Accounts screen-->
     <string name="text_signed_account_empty_state">You have 0 signed accounts</string>
-
-    <!--Help screen-->
-    <string name="text_tv_help_mnemonic_code_description">A mnemonic phrase, mnemonic recovery phrase, mnemonic seed,
-        seed key, and seed words are all different names of the same thing. If you break \'mnemonic phrase\' you will
-        understand \'mnemonic\' stands for \'a system such as a pattern of letters, ideas, or associations which assists
-        in remembering something, while \' phrase\' stands for \'a small group of words\'.A mnemonic phrase, mnemonic
-        recovery phrase, mnemonic seed, seed key, and seed words are all different names of the same thing. If you break
-        \'mnemonic phrase\' you will understand \'mnemonic\' stands for \'a system such as a pattern of letters, ideas,
-        or associations which assists in remembering something, while \' phrase\' stands for \'a small group of words\'.
-    </string>
-    <string name="text_tv_help_mnemonic_code_subtitle">1. What is Mnemonics code?</string>
-    <string name="text_tv_help_public_key_description">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed at orci ligula. Curabitur vestibulum, risus quis mollis luctus, ante quam semper sapien, in interdum neque tortor ut nulla. Nulla consectetur, magna a pellentesque elementum, tortor dolor auctor purus, a auctor lorem diam sit amet est. Morbi ultricies interdum diam, quis ullamcorper lorem facilisis iaculis. Sed tristique suscipit nibh. In at erat massa. Donec imperdiet tellus vitae nulla ultrices, aliquam porta mauris tincidunt. Nulla dictum dignissim tellus vel dignissim.</string>
-    <string name="text_tv_help_public_key_subtitle">2. Where I can find Public Key?</string>
-    <string name="text_tv_help_add_transaction_description">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed at orci ligula. Curabitur vestibulum, risus quis mollis luctus, ante quam semper sapien, in interdum neque tortor ut nulla. Nulla consectetur, magna a pellentesque elementum, tortor dolor auctor purus, a auctor lorem diam sit amet est. Morbi ultricies interdum diam, quis ullamcorper lorem facilisis iaculis. Sed tristique suscipit nibh. In at erat massa. Donec imperdiet tellus vitae nulla ultrices, aliquam porta mauris tincidunt. Nulla dictum dignissim tellus vel dignissim.</string>
-    <string name="text_tv_help_add_transaction_subtitle">3. How to add a Transaction?</string>
-    <string name="text_tv_help_change_passcode_description">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed at orci ligula. Curabitur vestibulum, risus quis mollis luctus, ante quam semper sapien, in interdum neque tortor ut nulla. Nulla consectetur, magna a pellentesque elementum, tortor dolor auctor purus, a auctor lorem diam sit amet est. Morbi ultricies interdum diam, quis ullamcorper lorem facilisis iaculis. Sed tristique suscipit nibh. In at erat massa. Donec imperdiet tellus vitae nulla ultrices, aliquam porta mauris tincidunt. Nulla dictum dignissim tellus vel dignissim.</string>
-    <string name="text_tv_help_change_passcode_subtitle">4. How to add a Change Passcode?</string>
-    <string name="text_tv_help_how_to_title">How To</string>
-    <string name="text_tv_help_get_started_title">Get Started</string>
 
     <!-- Stellar Operations -->
     <string name="text_operation_name_payment">Payment</string>
@@ -168,11 +156,17 @@
 
     <!-- Deny account creation dialog -->
     <string name="title_deny_account_creation_dialog">Are you sure?</string>
-    <string name="msg_deny_account_creation_dialog">This action will cancel account creation. Shown recovery phrase will be deleted.</string>
+    <string name="msg_deny_account_creation_dialog">This action will cancel account creation. Shown recovery phrase will
+        be deleted.
+    </string>
 
     <!-- Log out dialog -->
     <string name="title_log_out_dialog">Have you secured your recovery phrase?</string>
     <string name="msg_log_out_dialog">You will not be able to recover your account or sign in without it.</string>
+
+    <!-- Rate us dialog -->
+    <string name="title_rate_us_dialog">Love Using LOBSTR Vault?</string>
+    <string name="msg_rate_us_dialog">Please rate us in the Google Play.</string>
 
     <!-- Add XDR dialog -->
     <string name="text_tv_import_xdr_title">Add Transaction XDR</string>
@@ -191,8 +185,8 @@
     <string name="biometric_failure">Login not successful!</string>
     <string name="biometric_cancelled">Authentication cancelled by user</string>
     <string name="biometric_success">Successful</string>
-    <string name="biometric_title">Confirm To Check out</string>
-    <string name="biometric_subtitle">Need your confirmation</string>
+    <string name="biometric_title">Fingerprint Login</string>
+    <string name="biometric_subtitle">Confirm fingerprint to continue.</string>
     <string name="biometric_description">Touch the fingerprint sensor</string>
 
     <!-- Errors and other UI messages -->
@@ -233,4 +227,11 @@
     <string name="text_action_info">info</string>
     <string name="text_action_log_out">log out</string>
     <string name="text_btn_copy_public_key">Copy Public Key</string>
+
+    <!-- Horizon errors -->
+    <string name="text_tx_bad_seq">Sequence number does not match source account.</string>
+    <string name="text_tv_sequence_number_invalid">Invalid</string>
+    <string name="text_tv_sequence_number_invalid_description">Transaction can\'t be confirmed, it\'s sequence number is
+        invalid.
+    </string>
 </resources>

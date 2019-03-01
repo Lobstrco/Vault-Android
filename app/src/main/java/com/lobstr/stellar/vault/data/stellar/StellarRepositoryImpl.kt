@@ -2,9 +2,11 @@ package com.lobstr.stellar.vault.data.stellar
 
 import android.content.Context
 import com.lobstr.stellar.vault.data.mnemonic.MnemonicsMapper
+import com.lobstr.stellar.vault.data.transaction.TransactionEntityMapper
 import com.lobstr.stellar.vault.domain.stellar.StellarRepository
 import com.lobstr.stellar.vault.presentation.application.LVApplication
 import com.lobstr.stellar.vault.presentation.entities.mnemonic.MnemonicItem
+import com.lobstr.stellar.vault.presentation.entities.transaction.TransactionItem
 import com.soneso.stellarmnemonics.Wallet
 import io.reactivex.Single
 import io.reactivex.Single.fromCallable
@@ -17,7 +19,8 @@ import java.util.concurrent.Callable
 class StellarRepositoryImpl(
     private val context: Context,
     private val server: Server,
-    private val mnemonicsMapper: MnemonicsMapper
+    private val mnemonicsMapper: MnemonicsMapper,
+    private val transactionEntityMapper: TransactionEntityMapper
 ) : StellarRepository {
 
     override fun generate12WordMnemonic(): ArrayList<MnemonicItem> {
@@ -57,6 +60,24 @@ class StellarRepositoryImpl(
 
             // And finally, send it off to Stellar!
             return@Callable transaction.toEnvelopeXdrBase64()
+        })
+    }
+
+    /**
+     * Used for Create Transaction Item from XDR
+     */
+    override fun createTransactionItem(envelopXdr: String): Single<TransactionItem> {
+        return fromCallable(Callable<TransactionItem> {
+            // handle issue https://github.com/stellar/java-stellar-sdk/issues/183
+            val transaction = try {
+                Transaction.fromEnvelopeXdr(envelopXdr)
+            } catch (e: ArithmeticException) {
+                e.printStackTrace()
+                null
+            }
+
+            // Create Transaction Item for handle it in transaction Details
+            return@Callable transactionEntityMapper.transformTransactionItem(transaction)
         })
     }
 }

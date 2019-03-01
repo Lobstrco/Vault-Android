@@ -8,9 +8,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.fragment.app.FragmentManager
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.fusechain.digitalbits.util.manager.FragmentTransactionManager
@@ -19,20 +18,20 @@ import com.lobstr.stellar.vault.presentation.base.fragment.BaseFragment
 import com.lobstr.stellar.vault.presentation.dialog.alert.base.AlertDialogFragment
 import com.lobstr.stellar.vault.presentation.dialog.alert.base.AlertDialogFragment.DialogFragmentIdentifier.DENY_TRANSACTION
 import com.lobstr.stellar.vault.presentation.entities.transaction.TransactionItem
-import com.lobstr.stellar.vault.presentation.home.transactions.details.adapter.OnOperationClicked
-import com.lobstr.stellar.vault.presentation.home.transactions.details.adapter.TransactionOperationAdapter
-import com.lobstr.stellar.vault.presentation.home.transactions.operation.OperationDetailsFragment
+import com.lobstr.stellar.vault.presentation.home.transactions.operation.operation_details.OperationDetailsFragment
+import com.lobstr.stellar.vault.presentation.home.transactions.operation.operation_list.OperationListFragment
 import com.lobstr.stellar.vault.presentation.home.transactions.submit_error.ErrorFragment
 import com.lobstr.stellar.vault.presentation.home.transactions.submit_success.SuccessFragment
 import com.lobstr.stellar.vault.presentation.util.Constant
 import com.lobstr.stellar.vault.presentation.util.Constant.Bundle.BUNDLE_TRANSACTION_ITEM
 import com.lobstr.stellar.vault.presentation.util.Constant.Extra.EXTRA_TRANSACTION_ITEM
+import com.lobstr.stellar.vault.presentation.util.Constant.Extra.EXTRA_TRANSACTION_STATUS
 import com.lobstr.stellar.vault.presentation.util.manager.ProgressManager
 import kotlinx.android.synthetic.main.fragment_transaction_details.*
 
 
 class TransactionDetailsFragment : BaseFragment(), TransactionDetailsView, View.OnClickListener,
-    OnOperationClicked, AlertDialogFragment.OnDefaultAlertDialogListener {
+    AlertDialogFragment.OnDefaultAlertDialogListener {
 
     // ===========================================================
     // Constants
@@ -50,8 +49,6 @@ class TransactionDetailsFragment : BaseFragment(), TransactionDetailsView, View.
     lateinit var mPresenter: TransactionDetailsPresenter
 
     private var mView: View? = null
-
-    private var mProgressDialog: AlertDialogFragment? = null
 
     // ===========================================================
     // Constructors
@@ -89,6 +86,17 @@ class TransactionDetailsFragment : BaseFragment(), TransactionDetailsView, View.
         btnDeny.setOnClickListener(this)
     }
 
+    override fun onBackPressed(): Boolean {
+        // handle operations container backStack.
+        if (childFragmentManager.backStackEntryCount > 1) {
+            childFragmentManager.popBackStack()
+            return true
+        }
+
+        // when operations container backStack has one item - handle backStack through base container
+        return super.onBackPressed()
+    }
+
     // ===========================================================
     // Listeners, methods for/from Interfaces
     // ===========================================================
@@ -100,22 +108,39 @@ class TransactionDetailsFragment : BaseFragment(), TransactionDetailsView, View.
         }
     }
 
-    override fun onOperationItemClick(position: Int) {
-        mPresenter.operationItemClicked(position)
-    }
-
     override fun setupToolbarTitle(titleRes: Int) {
         saveActionBarTitle(titleRes)
     }
 
-    override fun initRecycledView() {
-        rvTransactionOperations.layoutManager = LinearLayoutManager(context)
-        rvTransactionOperations.itemAnimator = null
-        rvTransactionOperations.adapter = TransactionOperationAdapter(this)
+    override fun showOperationList(transactionItem: TransactionItem) {
+        // reset backStack after resetup operations
+        childFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
+
+        val bundle = Bundle()
+        bundle.putParcelable(Constant.Bundle.BUNDLE_TRANSACTION_ITEM, transactionItem)
+
+        FragmentTransactionManager.displayFragment(
+            childFragmentManager,
+            Fragment.instantiate(context, OperationListFragment::class.java.name, bundle),
+            R.id.fl_container,
+            true
+        )
     }
 
-    override fun setOperationsToList(operationList: MutableList<Int>) {
-        (rvTransactionOperations.adapter as TransactionOperationAdapter).setOperationList(operationList)
+    override fun showOperationDetailsScreen(transactionItem: TransactionItem, position: Int) {
+        // reset backStack after resetup operations
+        childFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
+
+        val bundle = Bundle()
+        bundle.putParcelable(Constant.Bundle.BUNDLE_TRANSACTION_ITEM, transactionItem)
+        bundle.putInt(Constant.Bundle.BUNDLE_OPERATION_POSITION, position)
+
+        FragmentTransactionManager.displayFragment(
+            childFragmentManager,
+            Fragment.instantiate(context, OperationDetailsFragment::class.java.name, bundle),
+            R.id.fl_container,
+            true
+        )
     }
 
     override fun setActionBtnVisibility(isConfirmVisible: Boolean, isDenyVisible: Boolean) {
@@ -123,16 +148,17 @@ class TransactionDetailsFragment : BaseFragment(), TransactionDetailsView, View.
         btnDeny.visibility = if (isDenyVisible) View.VISIBLE else View.GONE
     }
 
+    override fun setTransactionValid(valid: Boolean) {
+        btnConfirm.isEnabled = valid
+        tvErrorDescription.visibility = if (valid) View.GONE else View.VISIBLE
+    }
+
     override fun showMessage(message: String?) {
         Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
     }
 
-    override fun showProgressDialog() {
-        mProgressDialog = ProgressManager.show(activity as? AppCompatActivity, false)
-    }
-
-    override fun dismissProgressDialog() {
-        ProgressManager.dismiss(mProgressDialog)
+    override fun showProgressDialog(show: Boolean) {
+        ProgressManager.show(show, activity!!.supportFragmentManager)
     }
 
     override fun successDenyTransaction(transactionItem: TransactionItem) {
@@ -141,6 +167,7 @@ class TransactionDetailsFragment : BaseFragment(), TransactionDetailsView, View.
         // notify target about changes
         val intent = Intent()
         intent.putExtra(EXTRA_TRANSACTION_ITEM, transactionItem)
+        intent.putExtra(EXTRA_TRANSACTION_STATUS, Constant.Transaction.CANCELLED)
         activity?.setResult(Activity.RESULT_OK, intent)
         targetFragment?.onActivityResult(targetRequestCode, Activity.RESULT_OK, intent)
 
@@ -156,6 +183,7 @@ class TransactionDetailsFragment : BaseFragment(), TransactionDetailsView, View.
         // notify target about changes
         val intent = Intent()
         intent.putExtra(EXTRA_TRANSACTION_ITEM, transactionItem)
+        intent.putExtra(EXTRA_TRANSACTION_STATUS, Constant.Transaction.SIGNED)
         activity?.setResult(Activity.RESULT_OK, intent)
         targetFragment?.onActivityResult(targetRequestCode, Activity.RESULT_OK, intent)
 
@@ -176,30 +204,20 @@ class TransactionDetailsFragment : BaseFragment(), TransactionDetailsView, View.
     }
 
     override fun errorConfirmTransaction(errorMessage: String) {
+        // notify target about changes
+        activity?.setResult(Activity.RESULT_OK)
+        targetFragment?.onActivityResult(targetRequestCode, Activity.RESULT_OK, null)
+
+        // close screen
         parentFragment?.childFragmentManager?.popBackStack()
 
+        // show error screen
         val bundle = Bundle()
         bundle.putString(Constant.Bundle.BUNDLE_ERROR_MESSAGE, errorMessage)
 
         FragmentTransactionManager.displayFragment(
             parentFragment!!.childFragmentManager,
             Fragment.instantiate(context, ErrorFragment::class.java.name, bundle),
-            R.id.fl_container,
-            true
-        )
-    }
-
-    override fun showOperationDetailsScreen(transactionItem: TransactionItem, position: Int) {
-        val bundle = Bundle()
-        bundle.putParcelable(Constant.Bundle.BUNDLE_TRANSACTION_ITEM, transactionItem)
-        bundle.putInt(Constant.Bundle.BUNDLE_OPERATION_POSITION, position)
-
-        val fragment = Fragment.instantiate(context, OperationDetailsFragment::class.java.name, bundle)
-        fragment.setTargetFragment(this, Constant.Code.OPERATION_DETAILS_FRAGMENT)
-
-        FragmentTransactionManager.displayFragment(
-            parentFragment!!.childFragmentManager,
-            fragment,
             R.id.fl_container,
             true
         )
@@ -221,6 +239,10 @@ class TransactionDetailsFragment : BaseFragment(), TransactionDetailsView, View.
     }
 
     override fun onNegativeBtnClick(tag: String?, dialogInterface: DialogInterface) {
+        // add logic if needed
+    }
+
+    override fun onNeutralBtnClick(tag: String?, dialogInterface: DialogInterface) {
         // add logic if needed
     }
 

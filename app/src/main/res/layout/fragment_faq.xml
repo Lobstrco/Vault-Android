@@ -13,7 +13,7 @@
         <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/text_tv_help_get_started_title"
+                android:text="@string/text_tv_get_started_section"
                 android:paddingLeft="10dp"
                 android:paddingRight="10dp"
                 android:paddingBottom="16dp"
@@ -24,27 +24,63 @@
                 android:textSize="14sp"/>
 
         <com.lobstr.stellar.vault.presentation.util.expandable_card_view.ExpandableCardView
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:title="@string/text_tv_help_mnemonic_code_subtitle"
+                app:title="@string/text_tv_get_started_subtitle_one"
                 app:inner_view="@layout/layout_expandable_content"
-                app:contentText="@string/text_tv_help_mnemonic_code_description"
+                app:contentText="@string/text_tv_get_started_one_description"
                 app:expandOnClick="true"
         />
 
         <com.lobstr.stellar.vault.presentation.util.expandable_card_view.ExpandableCardView
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:title="@string/text_tv_help_public_key_subtitle"
+                app:title="@string/text_tv_get_started_subtitle_two"
                 app:inner_view="@layout/layout_expandable_content"
-                app:contentText="@string/text_tv_help_public_key_description"
+                app:contentText="@string/text_tv_get_started_two_description"
+                app:expandOnClick="true"
+        />
+
+        <com.lobstr.stellar.vault.presentation.util.expandable_card_view.ExpandableCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:title="@string/text_tv_get_started_subtitle_three"
+                app:inner_view="@layout/layout_expandable_content"
+                app:contentText="@string/text_tv_get_started_three_description"
+                app:expandOnClick="true"
+        />
+
+        <com.lobstr.stellar.vault.presentation.util.expandable_card_view.ExpandableCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:title="@string/text_tv_get_started_subtitle_four"
+                app:inner_view="@layout/layout_expandable_content"
+                app:contentText="@string/text_tv_get_started_four_description"
+                app:expandOnClick="true"
+        />
+
+        <com.lobstr.stellar.vault.presentation.util.expandable_card_view.ExpandableCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:title="@string/text_tv_get_started_subtitle_five"
+                app:inner_view="@layout/layout_expandable_content"
+                app:contentText="@string/text_tv_get_started_five_description"
+                app:expandOnClick="true"
+        />
+
+        <com.lobstr.stellar.vault.presentation.util.expandable_card_view.ExpandableCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:title="@string/text_tv_get_started_subtitle_six"
+                app:inner_view="@layout/layout_expandable_content"
+                app:contentText="@string/text_tv_get_started_six_description"
                 app:expandOnClick="true"
         />
 
         <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/text_tv_help_how_to_title"
+                android:text="@string/text_tv_how_to_section"
                 android:paddingLeft="10dp"
                 android:paddingRight="10dp"
                 android:paddingBottom="16dp"
@@ -56,20 +92,87 @@
                 android:textSize="14sp"/>
 
         <com.lobstr.stellar.vault.presentation.util.expandable_card_view.ExpandableCardView
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:title="@string/text_tv_help_add_transaction_subtitle"
+                app:title="@string/text_tv_how_to_subtitle_seven"
                 app:inner_view="@layout/layout_expandable_content"
-                app:contentText="@string/text_tv_help_add_transaction_description"
+                app:contentText="@string/text_tv_how_to_seven_description"
+                app:expandOnClick="true"
+        />
+        <com.lobstr.stellar.vault.presentation.util.expandable_card_view.ExpandableCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:title="@string/text_tv_how_to_subtitle_eight"
+                app:inner_view="@layout/layout_expandable_content"
+                app:contentText="@string/text_tv_how_to_eight_description"
                 app:expandOnClick="true"
         />
 
         <com.lobstr.stellar.vault.presentation.util.expandable_card_view.ExpandableCardView
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:title="@string/text_tv_help_change_passcode_subtitle"
+                app:title="@string/text_tv_how_to_subtitle_nine"
                 app:inner_view="@layout/layout_expandable_content"
-                app:contentText="@string/text_tv_help_change_passcode_description"
+                app:contentText="@string/text_tv_how_to_nine_description"
+                app:expandOnClick="true"
+        />
+
+        <com.lobstr.stellar.vault.presentation.util.expandable_card_view.ExpandableCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:title="@string/text_tv_how_to_subtitle_ten"
+                app:inner_view="@layout/layout_expandable_content"
+                app:contentText="@string/text_tv_how_to_ten_description"
+                app:expandOnClick="true"
+        />
+
+        <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/text_tv_signing_section"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:paddingBottom="16dp"
+                android:paddingTop="16dp"
+                android:layout_marginTop="8dp"
+                android:fontFamily="sans-serif-medium"
+                android:background="@android:color/white"
+                android:textColor="@color/color_primary"
+                android:textSize="14sp"/>
+
+        <com.lobstr.stellar.vault.presentation.util.expandable_card_view.ExpandableCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:title="@string/text_tv_signing_subtitle_eleven"
+                app:inner_view="@layout/layout_expandable_content"
+                app:contentText="@string/text_tv_signing_eleven_description"
+                app:expandOnClick="true"
+        />
+
+        <com.lobstr.stellar.vault.presentation.util.expandable_card_view.ExpandableCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:title="@string/text_tv_signing_subtitle_twelve"
+                app:inner_view="@layout/layout_expandable_content"
+                app:contentText="@string/text_tv_signing_twelve_description"
+                app:expandOnClick="true"
+        />
+
+        <com.lobstr.stellar.vault.presentation.util.expandable_card_view.ExpandableCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:title="@string/text_tv_signing_subtitle_thirteen"
+                app:inner_view="@layout/layout_expandable_content"
+                app:contentText="@string/text_tv_signing_thirteen_description"
+                app:expandOnClick="true"
+        />
+
+        <com.lobstr.stellar.vault.presentation.util.expandable_card_view.ExpandableCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:title="@string/text_tv_signing_subtitle_fourteen"
+                app:inner_view="@layout/layout_expandable_content"
+                app:contentText="@string/text_tv_signing_fourteen_description"
                 app:expandOnClick="true"
         />
     </LinearLayout>

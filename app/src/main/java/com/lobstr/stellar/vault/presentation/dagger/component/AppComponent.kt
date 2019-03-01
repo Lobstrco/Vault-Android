@@ -11,6 +11,7 @@ import com.lobstr.stellar.vault.presentation.dagger.component.import_xdr.ImportX
 import com.lobstr.stellar.vault.presentation.dagger.component.mnemonics.MnemonicsComponent
 import com.lobstr.stellar.vault.presentation.dagger.component.operation_details.OperationDetailsComponent
 import com.lobstr.stellar.vault.presentation.dagger.component.pin.PinComponent
+import com.lobstr.stellar.vault.presentation.dagger.component.rate_us.RateUsComponent
 import com.lobstr.stellar.vault.presentation.dagger.component.re_check_signer.RecheckSignerComponent
 import com.lobstr.stellar.vault.presentation.dagger.component.recovery_key.RecoveryKeyComponent
 import com.lobstr.stellar.vault.presentation.dagger.component.settings.SettingsComponent
@@ -33,6 +34,7 @@ import com.lobstr.stellar.vault.presentation.dagger.module.import_xdr.ImportXdrM
 import com.lobstr.stellar.vault.presentation.dagger.module.mnemonics.MnemonicsModule
 import com.lobstr.stellar.vault.presentation.dagger.module.operation_details.OperationDetailsModule
 import com.lobstr.stellar.vault.presentation.dagger.module.pin.PinModule
+import com.lobstr.stellar.vault.presentation.dagger.module.rate_us.RateUsModule
 import com.lobstr.stellar.vault.presentation.dagger.module.re_check_signer.RecheckSignerModule
 import com.lobstr.stellar.vault.presentation.dagger.module.recovery_key.RecoveryKeyModule
 import com.lobstr.stellar.vault.presentation.dagger.module.settings.SettingsModule
@@ -92,6 +94,8 @@ interface AppComponent {
     fun plusSignedAccountComponent(module: SignedAccountModule): SignedAccountComponent
 
     fun plusImportXdrComponent(module: ImportXdrModule): ImportXdrComponent
+
+    fun plusRateUsComponent(module: RateUsModule): RateUsComponent
 
     fun inject(networkWorker: NetworkWorker)
 }

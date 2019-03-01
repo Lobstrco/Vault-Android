@@ -1,4 +1,4 @@
-package com.lobstr.stellar.vault.presentation.home.transactions.operation
+package com.lobstr.stellar.vault.presentation.home.transactions.operation.operation_details
 
 
 import android.os.Bundle
@@ -10,11 +10,12 @@ import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.lobstr.stellar.vault.R
 import com.lobstr.stellar.vault.presentation.base.fragment.BaseFragment
-import com.lobstr.stellar.vault.presentation.home.transactions.operation.adapter.OperationDetailsAdapter
+import com.lobstr.stellar.vault.presentation.home.transactions.operation.operation_list.adapter.OperationDetailsAdapter
 import com.lobstr.stellar.vault.presentation.util.Constant
 import kotlinx.android.synthetic.main.fragment_operation_details.*
 
-class OperationDetailsFragment : BaseFragment(), OperationDetailsView {
+class OperationDetailsFragment : BaseFragment(),
+    OperationDetailsView {
 
     // ===========================================================
     // Constants
@@ -38,10 +39,11 @@ class OperationDetailsFragment : BaseFragment(), OperationDetailsView {
     // ===========================================================
 
     @ProvidePresenter
-    fun provideOperationDetailsPresenter() = OperationDetailsPresenter(
-        arguments?.getParcelable(Constant.Bundle.BUNDLE_TRANSACTION_ITEM)!!,
-        arguments?.getInt(Constant.Bundle.BUNDLE_OPERATION_POSITION)!!
-    )
+    fun provideOperationDetailsPresenter() =
+        OperationDetailsPresenter(
+            arguments?.getParcelable(Constant.Bundle.BUNDLE_TRANSACTION_ITEM)!!,
+            arguments?.getInt(Constant.Bundle.BUNDLE_OPERATION_POSITION)!!
+        )
 
     // ===========================================================
     // Getter & Setter

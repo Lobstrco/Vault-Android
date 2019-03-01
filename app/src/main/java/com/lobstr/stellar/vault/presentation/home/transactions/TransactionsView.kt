@@ -44,4 +44,7 @@ interface TransactionsView : MvpView {
 
     @StateStrategyType(SkipStrategy::class)
     fun showErrorScreen(errorMessage: String)
+
+    @StateStrategyType(SkipStrategy::class)
+    fun checkRateUsDialog()
 }

@@ -6,11 +6,11 @@ import com.lobstr.stellar.vault.presentation.util.PrefsUtil
 import io.reactivex.Single
 import org.stellar.sdk.KeyPair
 
-class RecoveryKeyInteractorImpl(
+class RecoverKeyInteractorImpl(
     private val stellarRepository: StellarRepository,
     private val keyStoreRepository: KeyStoreRepository,
     private val prefUtil: PrefsUtil
-) : RecoveryKeyInteractor {
+) : RecoverKeyInteractor {
 
     override fun createAndSaveSecretKey(mnemonics: CharArray): Single<String> {
         return stellarRepository.createKeyPair(mnemonics, 0)

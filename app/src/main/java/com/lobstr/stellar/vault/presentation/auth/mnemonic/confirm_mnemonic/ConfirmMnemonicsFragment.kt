@@ -6,7 +6,6 @@ import android.os.Bundle
 import android.view.*
 import android.widget.Toast
 import androidx.annotation.StringRes
-import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
@@ -14,7 +13,6 @@ import com.fusechain.digitalbits.util.manager.FragmentTransactionManager
 import com.lobstr.stellar.vault.R
 import com.lobstr.stellar.vault.presentation.auth.mnemonic.MnemonicsContainerView
 import com.lobstr.stellar.vault.presentation.base.fragment.BaseFragment
-import com.lobstr.stellar.vault.presentation.dialog.alert.base.AlertDialogFragment
 import com.lobstr.stellar.vault.presentation.entities.mnemonic.MnemonicItem
 import com.lobstr.stellar.vault.presentation.faq.FaqFragment
 import com.lobstr.stellar.vault.presentation.pin.PinActivity
@@ -41,8 +39,6 @@ class ConfirmMnemonicsFragment : BaseFragment(), ConfirmMnemonicsView, View.OnCl
     lateinit var mPresenter: ConfirmMnemonicsPresenter
 
     private var mView: View? = null
-
-    private var mProgressDialog: AlertDialogFragment? = null
 
     // ===========================================================
     // Constructors
@@ -142,12 +138,8 @@ class ConfirmMnemonicsFragment : BaseFragment(), ConfirmMnemonicsView, View.OnCl
         startActivity(intent)
     }
 
-    override fun showProgressDialog() {
-        mProgressDialog = ProgressManager.show(activity as? AppCompatActivity, false)
-    }
-
-    override fun dismissProgressDialog() {
-        ProgressManager.dismiss(mProgressDialog)
+    override fun showProgressDialog(show: Boolean) {
+        ProgressManager.show(show, activity!!.supportFragmentManager)
     }
 
     override fun showHelpScreen() {

@@ -11,7 +11,6 @@ import android.view.*
 import android.view.inputmethod.EditorInfo
 import android.widget.Toast
 import androidx.annotation.StringRes
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.arellomobile.mvp.presenter.InjectPresenter
@@ -20,7 +19,6 @@ import com.fusechain.digitalbits.util.manager.FragmentTransactionManager
 import com.lobstr.stellar.vault.R
 import com.lobstr.stellar.vault.presentation.auth.restore_key.entities.RecoveryPhraseInfo
 import com.lobstr.stellar.vault.presentation.base.fragment.BaseFragment
-import com.lobstr.stellar.vault.presentation.dialog.alert.base.AlertDialogFragment
 import com.lobstr.stellar.vault.presentation.faq.FaqFragment
 import com.lobstr.stellar.vault.presentation.pin.PinActivity
 import com.lobstr.stellar.vault.presentation.util.AppUtil
@@ -28,14 +26,14 @@ import com.lobstr.stellar.vault.presentation.util.Constant
 import com.lobstr.stellar.vault.presentation.util.manager.ProgressManager
 import kotlinx.android.synthetic.main.fragment_recovery_key.*
 
-class RecoveryKeyFragment : BaseFragment(), RecoveryKeyFrView, View.OnClickListener {
+class RecoverKeyFragment : BaseFragment(), RecoverKeyFrView, View.OnClickListener {
 
     // ===========================================================
     // Constants
     // ===========================================================
 
     companion object {
-        val LOG_TAG = RecoveryKeyFragment::class.simpleName
+        val LOG_TAG = RecoverKeyFragment::class.simpleName
     }
 
     // ===========================================================
@@ -43,18 +41,16 @@ class RecoveryKeyFragment : BaseFragment(), RecoveryKeyFrView, View.OnClickListe
     // ===========================================================
 
     @InjectPresenter
-    lateinit var mPresenter: RecoveryKeyFrPresenter
+    lateinit var mPresenter: RecoverKeyFrPresenter
 
     private var mView: View? = null
-
-    private var mProgressDialog: AlertDialogFragment? = null
 
     // ===========================================================
     // Constructors
     // ===========================================================
 
     @ProvidePresenter
-    fun provideRecoveryKeyFrPresenter() = RecoveryKeyFrPresenter()
+    fun provideRecoverKeyFrPresenter() = RecoverKeyFrPresenter()
 
     // ===========================================================
     // Getter & Setter
@@ -87,7 +83,7 @@ class RecoveryKeyFragment : BaseFragment(), RecoveryKeyFrView, View.OnClickListe
 
     private fun setListeners() {
         etRecoveryPhrase.addTextChangedListener(mTextWatcher)
-        btnRecoveryKey.setOnClickListener(this)
+        btnRecoverKey.setOnClickListener(this)
     }
 
     override fun onPause() {
@@ -136,7 +132,7 @@ class RecoveryKeyFragment : BaseFragment(), RecoveryKeyFrView, View.OnClickListe
 
     override fun onClick(v: View?) {
         when (v!!.id) {
-            R.id.btnRecoveryKey -> mPresenter.btnRecoveryClicked()
+            R.id.btnRecoverKey -> mPresenter.btnRecoverClicked()
         }
     }
 
@@ -166,7 +162,7 @@ class RecoveryKeyFragment : BaseFragment(), RecoveryKeyFrView, View.OnClickListe
     }
 
     override fun enableNextButton(enable: Boolean) {
-        btnRecoveryKey.isEnabled = enable
+        btnRecoverKey.isEnabled = enable
     }
 
     override fun showPinScreen() {
@@ -180,12 +176,8 @@ class RecoveryKeyFragment : BaseFragment(), RecoveryKeyFrView, View.OnClickListe
         Toast.makeText(context, getString(message), Toast.LENGTH_SHORT).show()
     }
 
-    override fun showProgressDialog() {
-        mProgressDialog = ProgressManager.show(activity as? AppCompatActivity, false)
-    }
-
-    override fun dismissProgressDialog() {
-        ProgressManager.dismiss(mProgressDialog)
+    override fun showProgressDialog(show: Boolean) {
+        ProgressManager.show(show, activity!!.supportFragmentManager)
     }
 
     override fun showHelpScreen() {

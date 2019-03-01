@@ -14,10 +14,10 @@ interface VaultAuthView : MvpView {
     fun setupToolbar(@ColorRes toolbarColor: Int, @DrawableRes upArrow: Int, @ColorRes upArrowColor: Int)
 
     @StateStrategyType(AddToEndSingleStrategy::class)
-    fun showProgressDialog()
+    fun setBtnRetryVisibility(visible: Boolean)
 
     @StateStrategyType(AddToEndSingleStrategy::class)
-    fun dismissProgressDialog()
+    fun showProgressDialog(show: Boolean)
 
     @StateStrategyType(AddToEndSingleStrategy::class)
     fun showSignerInfoFragment()

@@ -9,54 +9,45 @@ open class BaseMvpAppCompatFragment : Fragment() {
     private var mIsStateSaved: Boolean = false
     private var mMvpDelegate: MvpDelegate<out BaseMvpAppCompatFragment>? = null
 
-    val mvpDelegate: MvpDelegate<*>
-        get() {
-            if (this.mMvpDelegate == null) {
-                this.mMvpDelegate = MvpDelegate(this)
-            }
-
-            return this.mMvpDelegate!!
-        }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        this.mvpDelegate.onCreate(savedInstanceState)
+        this.getMvpDelegate().onCreate(savedInstanceState)
     }
 
     override fun onStart() {
         super.onStart()
         this.mIsStateSaved = false
-        this.mvpDelegate.onAttach()
+        this.getMvpDelegate().onAttach()
     }
 
     override fun onResume() {
         super.onResume()
         this.mIsStateSaved = false
-        this.mvpDelegate.onAttach()
+        this.getMvpDelegate().onAttach()
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         this.mIsStateSaved = true
-        this.mvpDelegate.onSaveInstanceState(outState)
-        this.mvpDelegate.onDetach()
+        this.getMvpDelegate().onSaveInstanceState(outState)
+        this.getMvpDelegate().onDetach()
     }
 
     override fun onStop() {
         super.onStop()
-        this.mvpDelegate.onDetach()
+        this.getMvpDelegate().onDetach()
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
-        this.mvpDelegate.onDetach()
-        this.mvpDelegate.onDestroyView()
+        this.getMvpDelegate().onDetach()
+        this.getMvpDelegate().onDestroyView()
     }
 
     override fun onDestroy() {
         super.onDestroy()
         if (this.activity!!.isFinishing) {
-            this.mvpDelegate.onDestroy()
+            this.getMvpDelegate().onDestroy()
         } else if (this.mIsStateSaved) {
             this.mIsStateSaved = false
         } else {
@@ -69,13 +60,16 @@ open class BaseMvpAppCompatFragment : Fragment() {
             }
 
             if (this.isRemoving || anyParentIsRemoving) {
-                this.mvpDelegate.onDestroy()
+                this.getMvpDelegate().onDestroy()
             }
-
         }
     }
 
-    fun attachMvpDelegate() {
-        this.mvpDelegate.onAttach()
+    fun getMvpDelegate(): MvpDelegate<*> {
+        if (this.mMvpDelegate == null) {
+            this.mMvpDelegate = MvpDelegate(this)
+        }
+
+        return this.mMvpDelegate!!
     }
 }

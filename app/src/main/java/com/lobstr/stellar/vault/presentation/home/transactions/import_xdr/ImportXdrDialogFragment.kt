@@ -1,5 +1,7 @@
 package com.lobstr.stellar.vault.presentation.home.transactions.import_xdr
 
+import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -7,14 +9,15 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.lobstr.stellar.vault.R
 import com.lobstr.stellar.vault.presentation.BaseBottomSheetDialog
-import com.lobstr.stellar.vault.presentation.dialog.alert.base.AlertDialogFragment
+import com.lobstr.stellar.vault.presentation.container.activity.ContainerActivity
+import com.lobstr.stellar.vault.presentation.entities.transaction.TransactionItem
 import com.lobstr.stellar.vault.presentation.home.transactions.TransactionsFragment
 import com.lobstr.stellar.vault.presentation.util.AppUtil
+import com.lobstr.stellar.vault.presentation.util.Constant
 import com.lobstr.stellar.vault.presentation.util.manager.ProgressManager
 import kotlinx.android.synthetic.main.fragment_import_xdr.*
 
@@ -37,8 +40,6 @@ class ImportXdrDialogFragment : BaseBottomSheetDialog(), ImportXdrView, View.OnC
     lateinit var mPresenter: ImportXdrPresenter
 
     private var mView: View? = null
-
-    private var mProgressDialog: AlertDialogFragment? = null
 
     // ===========================================================
     // Constructors
@@ -73,7 +74,7 @@ class ImportXdrDialogFragment : BaseBottomSheetDialog(), ImportXdrView, View.OnC
     }
 
     private fun setListeners() {
-        btnSubmit.setOnClickListener(this)
+        btnNext.setOnClickListener(this)
 
         etImportXdr.addTextChangedListener(
             object : TextWatcher {
@@ -93,15 +94,26 @@ class ImportXdrDialogFragment : BaseBottomSheetDialog(), ImportXdrView, View.OnC
         )
     }
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (resultCode == Activity.RESULT_CANCELED) {
+            return
+        }
+        getMvpDelegate().onAttach()
+
+        // dismiss dialog and pass handle onActivityResult to parent fragment (TransactionsFragment)
+        dismiss()
+        (parentFragment as? TransactionsFragment)?.onActivityResult(requestCode, resultCode, data)
+    }
+
     // ===========================================================
     // Listeners, methods for/from Interfaces
     // ===========================================================
 
     override fun onClick(v: View?) {
         when (v!!.id) {
-            R.id.btnSubmit -> {
+            R.id.btnNext -> {
                 AppUtil.closeKeyboard(activity)
-                mPresenter.confirmClicked(etImportXdr.text.toString())
+                mPresenter.nextClicked(etImportXdr.text.toString())
             }
         }
     }
@@ -110,26 +122,19 @@ class ImportXdrDialogFragment : BaseBottomSheetDialog(), ImportXdrView, View.OnC
         Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
     }
 
-    override fun showProgressDialog() {
-        mProgressDialog = ProgressManager.show(activity as? AppCompatActivity, false)
+    override fun showProgressDialog(show: Boolean) {
+        ProgressManager.show(show, activity!!.supportFragmentManager)
     }
 
-    override fun dismissProgressDialog() {
-        ProgressManager.dismiss(mProgressDialog)
-    }
-
-    override fun successConfirmTransaction(envelopeXdr: String, needAdditionalSignatures: Boolean) {
-        dismiss()
-        (parentFragment as? TransactionsFragment)?.showSuccessScreen(envelopeXdr, needAdditionalSignatures)
-    }
-
-    override fun errorConfirmTransaction(errorMessage: String) {
-        dismiss()
-        (parentFragment as? TransactionsFragment)?.showErrorScreen(errorMessage)
+    override fun showTransactionDetails(transactionItem: TransactionItem) {
+        val intent = Intent(context, ContainerActivity::class.java)
+        intent.putExtra(Constant.Extra.EXTRA_NAVIGATION_FR, Constant.Navigation.TRANSACTION_DETAILS)
+        intent.putExtra(Constant.Extra.EXTRA_TRANSACTION_ITEM, transactionItem)
+        startActivityForResult(intent, Constant.Code.TRANSACTION_DETAILS_FRAGMENT)
     }
 
     override fun setSubmitEnabled(enabled: Boolean) {
-        btnSubmit.isEnabled = enabled
+        btnNext.isEnabled = enabled
     }
 
     override fun showFormError(show: Boolean, error: String?) {

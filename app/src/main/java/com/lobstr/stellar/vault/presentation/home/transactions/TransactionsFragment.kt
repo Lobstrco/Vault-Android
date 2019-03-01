@@ -16,6 +16,7 @@ import com.lobstr.stellar.vault.presentation.base.fragment.BaseFragment
 import com.lobstr.stellar.vault.presentation.container.activity.ContainerActivity
 import com.lobstr.stellar.vault.presentation.dialog.alert.base.AlertDialogFragment.DialogFragmentIdentifier.IMPORT_XDR
 import com.lobstr.stellar.vault.presentation.entities.transaction.TransactionItem
+import com.lobstr.stellar.vault.presentation.home.HomeActivity
 import com.lobstr.stellar.vault.presentation.home.transactions.adapter.OnTransactionItemClicked
 import com.lobstr.stellar.vault.presentation.home.transactions.adapter.TransactionAdapter
 import com.lobstr.stellar.vault.presentation.home.transactions.import_xdr.ImportXdrDialogFragment
@@ -78,8 +79,7 @@ class TransactionsFragment : BaseFragment(), TransactionsView, SwipeRefreshLayou
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-
+        getMvpDelegate().onAttach()
         mPresenter.handleOnActivityResult(requestCode, resultCode, data)
     }
 
@@ -160,6 +160,10 @@ class TransactionsFragment : BaseFragment(), TransactionsView, SwipeRefreshLayou
         intent.putExtra(Constant.Extra.EXTRA_NAVIGATION_FR, Constant.Navigation.ERROR)
         intent.putExtra(Constant.Extra.EXTRA_ERROR_MESSAGE, errorMessage)
         startActivity(intent)
+    }
+
+    override fun checkRateUsDialog() {
+        (activity as? HomeActivity)?.checkRateUsDialog()
     }
 
     // ===========================================================

@@ -1,4 +1,4 @@
-package com.lobstr.stellar.vault.presentation.home.transactions.operation.adapter
+package com.lobstr.stellar.vault.presentation.home.transactions.operation.operation_list.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup

@@ -13,10 +13,7 @@ interface RecheckSignerView : MvpView {
     fun setupUserPublicKey(userPublicKey: String?)
 
     @StateStrategyType(AddToEndSingleStrategy::class)
-    fun showProgressDialog()
-
-    @StateStrategyType(AddToEndSingleStrategy::class)
-    fun dismissProgressDialog()
+    fun showProgressDialog(show: Boolean)
 
     @StateStrategyType(SkipStrategy::class)
     fun showMessage(message: String?)

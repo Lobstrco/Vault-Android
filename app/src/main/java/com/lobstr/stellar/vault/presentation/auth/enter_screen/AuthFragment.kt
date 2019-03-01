@@ -12,7 +12,7 @@ import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.fusechain.digitalbits.util.manager.FragmentTransactionManager
 import com.lobstr.stellar.vault.R
 import com.lobstr.stellar.vault.presentation.auth.backup.BackUpFragment
-import com.lobstr.stellar.vault.presentation.auth.restore_key.RecoveryKeyFragment
+import com.lobstr.stellar.vault.presentation.auth.restore_key.RecoverKeyFragment
 import com.lobstr.stellar.vault.presentation.base.fragment.BaseFragment
 import kotlinx.android.synthetic.main.fragment_auth.*
 
@@ -95,7 +95,7 @@ class AuthFragment : BaseFragment(), AuthFrView, View.OnClickListener {
     override fun showRestoreScreen() {
         FragmentTransactionManager.displayFragment(
             parentFragment!!.childFragmentManager,
-            Fragment.instantiate(context, RecoveryKeyFragment::class.java.name),
+            Fragment.instantiate(context, RecoverKeyFragment::class.java.name),
             R.id.fl_container,
             true
         )
