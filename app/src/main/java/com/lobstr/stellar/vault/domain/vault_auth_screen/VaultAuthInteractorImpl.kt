@@ -29,8 +29,8 @@ class VaultAuthInteractorImpl(
         LVApplication.sAppComponent.plusFcmInternalComponent(FcmInternalModule()).inject(this)
     }
 
-    override fun isUserAuthorized(): Boolean {
-        return !prefsUtil.authToken.isNullOrEmpty()
+    override fun getUserToken(): String?{
+        return prefsUtil.authToken
     }
 
     override fun authorizeVault(): Single<List<Account>> {

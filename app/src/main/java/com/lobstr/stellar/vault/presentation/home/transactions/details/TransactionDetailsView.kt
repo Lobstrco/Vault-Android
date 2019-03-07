@@ -45,5 +45,8 @@ interface TransactionDetailsView : MvpView {
     fun showOperationDetailsScreen(transactionItem: TransactionItem, position: Int)
 
     @StateStrategyType(SkipStrategy::class)
+    fun showConfirmTransactionDialog()
+
+    @StateStrategyType(SkipStrategy::class)
     fun showDenyTransactionDialog()
 }

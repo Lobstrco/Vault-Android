@@ -23,4 +23,6 @@ interface TransactionDetailsInteractor {
     fun cancelTransaction(hash: String): Single<TransactionItem>
 
     fun getPhrases(): Single<String>
+
+    fun isTrConfirmationEnabled(): Boolean
 }

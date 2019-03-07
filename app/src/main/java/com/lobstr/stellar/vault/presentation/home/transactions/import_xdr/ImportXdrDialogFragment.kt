@@ -1,6 +1,7 @@
 package com.lobstr.stellar.vault.presentation.home.transactions.import_xdr
 
 import android.app.Activity
+import android.app.Dialog
 import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
@@ -11,6 +12,8 @@ import android.view.ViewGroup
 import android.widget.Toast
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
+import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.lobstr.stellar.vault.R
 import com.lobstr.stellar.vault.presentation.BaseBottomSheetDialog
 import com.lobstr.stellar.vault.presentation.container.activity.ContainerActivity
@@ -55,6 +58,18 @@ class ImportXdrDialogFragment : BaseBottomSheetDialog(), ImportXdrView, View.OnC
     // ===========================================================
     // Methods for/from SuperClass
     // ===========================================================
+
+    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+        val dialog = super.onCreateDialog(savedInstanceState)
+        // prevent dialog closing when swiping it
+        dialog.setOnShowListener { setHideable(it as? BottomSheetDialog) }
+        return dialog
+    }
+
+    private fun setHideable(dialog: BottomSheetDialog?) {
+        val bottomSheet: View? = dialog?.findViewById(R.id.design_bottom_sheet) ?: return
+        BottomSheetBehavior.from(bottomSheet).isHideable = false
+    }
 
     override fun getTheme(): Int {
         return R.style.BottomSheetDialogTheme
@@ -113,7 +128,7 @@ class ImportXdrDialogFragment : BaseBottomSheetDialog(), ImportXdrView, View.OnC
         when (v!!.id) {
             R.id.btnNext -> {
                 AppUtil.closeKeyboard(activity)
-                mPresenter.nextClicked(etImportXdr.text.toString())
+                mPresenter.nextClicked(etImportXdr.text.toString().trim())
             }
         }
     }
@@ -123,7 +138,7 @@ class ImportXdrDialogFragment : BaseBottomSheetDialog(), ImportXdrView, View.OnC
     }
 
     override fun showProgressDialog(show: Boolean) {
-        ProgressManager.show(show, activity!!.supportFragmentManager)
+        ProgressManager.show(show, childFragmentManager)
     }
 
     override fun showTransactionDetails(transactionItem: TransactionItem) {

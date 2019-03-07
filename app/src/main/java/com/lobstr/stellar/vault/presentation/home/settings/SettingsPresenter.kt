@@ -44,6 +44,7 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
                     && BiometricUtils.isFingerprintAvailable(LVApplication.sAppComponent.context)
         )
         viewState.setNotificationsChecked(interactor.isNotificationsEnabled())
+        viewState.setTrConfirmationChecked(interactor.isTrConfirmationEnabled())
         viewState.setupPolicyYear(R.string.text_all_rights_reserved)
     }
 
@@ -54,7 +55,7 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
                 .subscribe({
                     when (it.type) {
                         Notification.Type.SIGNED_NEW_ACCOUNT, Notification.Type.SIGNERS_COUNT_CHANGED -> {
-                            viewState.setupSignersCount(interactor.getSignersCount().toString())
+                            viewState.setupSignersCount(interactor.getSignersCount())
                         }
                     }
                 }, {
@@ -66,7 +67,7 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
     override fun attachView(view: SettingsView?) {
         super.attachView(view)
         // always check signers count
-        viewState.setupSignersCount(interactor.getSignersCount().toString())
+        viewState.setupSignersCount(interactor.getSignersCount())
     }
 
     fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -124,6 +125,10 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
         interactor.setNotificationsEnabled(checked)
     }
 
+    fun trConfirmationSwitched(checked: Boolean) {
+        interactor.setTrConfirmationEnabled(checked)
+    }
+
     fun publicKeyClicked() {
         viewState.showPublicKeyDialog(interactor.getUserPublicKey()!!)
     }
@@ -152,7 +157,7 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe({
-                        viewState.setupSignersCount(it.size.toString())
+                        viewState.setupSignersCount(it.size)
                     }, {})
             )
         }

@@ -48,12 +48,14 @@ open class AlertDialogFragment : BaseMvpAppCompatDialogFragment() {
         const val PROGRESS_DIALOG = "PROGRESS_DIALOG"
         const val FINGERPRINT_INFO_DIALOG = "FINGERPRINT_INFO_DIALOG"
         const val DENY_TRANSACTION = "DENY_TRANSACTION"
+        const val CONFIRM_TRANSACTION = "CONFIRM_TRANSACTION"
         const val IMPORT_XDR = "IMPORT_XDR"
         const val PUBLIC_KEY = "PUBLIC_KEY"
         const val DENY_ACCOUNT_CREATION = "DENY_ACCOUNT_CREATION"
         const val LOG_OUT = "LOG_OUT"
         const val EDIT_ACCOUNT = "EDIT_ACCOUNT"
         const val RATE_US = "RATE_US"
+        const val COMMON_PIN_PATTERN = "COMMON_PIN_PATTERN"
     }
 
     object DialogIdentifier {

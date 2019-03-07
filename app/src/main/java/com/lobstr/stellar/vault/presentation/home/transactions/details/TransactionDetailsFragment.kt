@@ -16,6 +16,7 @@ import com.fusechain.digitalbits.util.manager.FragmentTransactionManager
 import com.lobstr.stellar.vault.R
 import com.lobstr.stellar.vault.presentation.base.fragment.BaseFragment
 import com.lobstr.stellar.vault.presentation.dialog.alert.base.AlertDialogFragment
+import com.lobstr.stellar.vault.presentation.dialog.alert.base.AlertDialogFragment.DialogFragmentIdentifier.CONFIRM_TRANSACTION
 import com.lobstr.stellar.vault.presentation.dialog.alert.base.AlertDialogFragment.DialogFragmentIdentifier.DENY_TRANSACTION
 import com.lobstr.stellar.vault.presentation.entities.transaction.TransactionItem
 import com.lobstr.stellar.vault.presentation.home.transactions.operation.operation_details.OperationDetailsFragment
@@ -158,7 +159,7 @@ class TransactionDetailsFragment : BaseFragment(), TransactionDetailsView, View.
     }
 
     override fun showProgressDialog(show: Boolean) {
-        ProgressManager.show(show, activity!!.supportFragmentManager)
+        ProgressManager.show(show, childFragmentManager)
     }
 
     override fun successDenyTransaction(transactionItem: TransactionItem) {
@@ -223,13 +224,23 @@ class TransactionDetailsFragment : BaseFragment(), TransactionDetailsView, View.
         )
     }
 
+    override fun showConfirmTransactionDialog() {
+        AlertDialogFragment.Builder(true)
+            .setCancelable(true)
+            .setTitle(getString(R.string.title_transaction_action_dialog))
+            .setMessage(getString(R.string.msg_confirm_transaction_dialog))
+            .setNegativeBtnText(getString(R.string.text_btn_cancel))
+            .setPositiveBtnText(getString(R.string.text_btn_confirm))
+            .create()
+            .show(childFragmentManager, CONFIRM_TRANSACTION)    }
+
     override fun showDenyTransactionDialog() {
         AlertDialogFragment.Builder(true)
             .setCancelable(true)
-            .setTitle(getString(R.string.title_deny_transaction_dialog))
+            .setTitle(getString(R.string.title_transaction_action_dialog))
             .setMessage(getString(R.string.msg_deny_transaction_dialog))
             .setNegativeBtnText(getString(R.string.text_btn_cancel))
-            .setPositiveBtnText(getString(R.string.text_btn_deny))
+            .setPositiveBtnText(getString(R.string.text_btn_confirm))
             .create()
             .show(childFragmentManager, DENY_TRANSACTION)
     }

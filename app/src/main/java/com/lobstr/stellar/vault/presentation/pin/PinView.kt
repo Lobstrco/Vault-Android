@@ -36,9 +36,6 @@ interface PinView : MvpView {
     @StateStrategyType(AddToEndSingleStrategy::class)
     fun showProgressDialog(show: Boolean)
 
-    @StateStrategyType(AddToEndSingleStrategy::class)
-    fun showDescriptionMessage(@StringRes message: Int)
-
     @StateStrategyType(SkipStrategy::class)
     fun showBiometricDialog()
 
@@ -47,4 +44,7 @@ interface PinView : MvpView {
 
     @StateStrategyType(SkipStrategy::class)
     fun showLogOutDialog()
+
+    @StateStrategyType(SkipStrategy::class)
+    fun showCommonPinPatternDialog()
 }

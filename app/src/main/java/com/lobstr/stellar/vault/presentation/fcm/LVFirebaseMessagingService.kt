@@ -145,7 +145,7 @@ class LVFirebaseMessagingService : FirebaseMessagingService() {
             LV_MAIN,
             getString(R.string.app_name),
             messageTitle ?: getString(R.string.app_name),
-            messageBody!!,
+            messageBody,
             /*intent*/SplashActivity::class.java
         )
     }
@@ -166,9 +166,9 @@ class LVFirebaseMessagingService : FirebaseMessagingService() {
 
         notificationsManager.sendNotification(
             LV_MAIN,
-            messageTitle ?: getString(R.string.app_name),
             getString(R.string.app_name),
-            messageBody!!,
+            messageTitle ?: getString(R.string.app_name),
+            messageBody,
             targetClass
         )
     }

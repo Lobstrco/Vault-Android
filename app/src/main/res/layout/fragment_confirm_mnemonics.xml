@@ -14,24 +14,44 @@
             android:layout_height="wrap_content"
             android:gravity="start"
             android:textStyle="bold"
-            android:layout_marginBottom="8dp"
             android:textSize="20sp"
             android:textColor="@android:color/black"
             android:text="@string/text_tv_confirm_mnemonics_title"/>
 
-    <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="start"
-            android:textSize="14sp"
-            android:layout_marginBottom="16dp"
-            android:textColor="@color/color_071c33"
-            android:text="@string/text_tv_confirm_mnemonics_description"/>
+    <LinearLayout android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:orientation="horizontal"
+                  android:gravity="center">
+
+        <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="start"
+                android:textSize="14sp"
+                android:textColor="@color/color_071c33"
+                android:text="@string/text_tv_confirm_mnemonics_description"/>
+
+        <Button
+                android:id="@+id/btnClear"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/text_btn_clear"
+                android:textColor="@color/color_primary"
+                android:minHeight="0dp"
+                android:minWidth="0dp"
+                style="@style/Base.Widget.AppCompat.Button.Borderless.Colored"
+                android:textSize="14sp"
+                android:visibility="invisible"
+                android:textAllCaps="false"/>
+
+    </LinearLayout>
 
 
     <FrameLayout android:layout_width="match_parent"
                  android:layout_height="match_parent"
-                 android:layout_weight="1">
+                 android:layout_weight="1"
+                 android:orientation="vertical">
 
         <com.lobstr.stellar.vault.presentation.auth.mnemonic.MnemonicsContainerView
                 android:id="@+id/mnemonicContainerToConfirmView"
@@ -39,7 +59,6 @@
                 android:layout_height="wrap_content"
                 android:background="@drawable/bg_mnemonics"
                 android:minHeight="144dp"
-                android:splitMotionEvents="false"
                 app:isDraggable="true"
                 app:itemTextColor="@android:color/black"
                 app:itemBackground="@drawable/bg_mnemonic_item_white"/>
@@ -53,7 +72,6 @@
                 android:id="@+id/mnemonicContainerToSelectView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:splitMotionEvents="false"
                 android:layout_gravity="bottom"
                 android:layout_marginBottom="6dp"
                 app:isDraggable="true"

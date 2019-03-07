@@ -30,7 +30,6 @@ class MnemonicsPresenter(private val generate: Boolean) : BasePresenter<Mnemonic
         if (generate) {
             setupMnemonics(interactor.generate12WordMnemonics())
         } else {
-//            viewState.setupToolbarTitle(R.string.mnemonics_title)
             viewState.setActionLayerVisibility(false)
             getExistingMnemonics()
         }
@@ -50,7 +49,7 @@ class MnemonicsPresenter(private val generate: Boolean) : BasePresenter<Mnemonic
     }
 
     private fun setupMnemonics(mnemonicItems: ArrayList<MnemonicItem>) {
-        mnemonicsStr = mnemonicItems.joinToString(" ") { it -> it.value }
+        mnemonicsStr = mnemonicItems.joinToString(" ") { it.value }
 
         mnemonicItemList = mnemonicItems
         viewState.setupMnemonics(mnemonicItems)

@@ -46,7 +46,7 @@ class ConfirmMnemonicsPresenter(private val mnemonicsInitialList: List<MnemonicI
      * Create shuffled list for selection (bottom) section and save original
      */
     private fun prepareShuffledList() {
-        mnemonicsInitialStr = mnemonicsInitialList.joinToString(" ") { it -> it.value }
+        mnemonicsInitialStr = mnemonicsInitialList.joinToString(" ") { it.value }
         mnemonicsToSelectList.shuffle()
     }
 
@@ -54,15 +54,14 @@ class ConfirmMnemonicsPresenter(private val mnemonicsInitialList: List<MnemonicI
         viewState.showHelpScreen()
     }
 
-    fun nextClicked() {
-        // FIXME remove in future for debug
+    fun btnNextClicked() {
         if (BuildConfig.BUILD_TYPE == Constant.BuildType.RELEASE) {
             if (mnemonicsToConfirmList.size < mnemonicsInitialList.size) {
                 viewState.showMessage(R.string.msg_not_all_words_entered)
                 return
             }
 
-            if (mnemonicsInitialStr != mnemonicsToConfirmList.joinToString(" ") { it -> it.value }) {
+            if (mnemonicsInitialStr != mnemonicsToConfirmList.joinToString(" ") { it.value }) {
                 viewState.showMessage(R.string.msg_phrase_dont_fit)
                 return
             }
@@ -86,6 +85,17 @@ class ConfirmMnemonicsPresenter(private val mnemonicsInitialList: List<MnemonicI
                     }
                 })
         )
+    }
+
+    /**
+     * Remove mnemonic items from confirmation section and restore selection section
+     */
+    fun btnClearClicked() {
+        viewState.setActionButtonEnabled(false)
+        mnemonicsToConfirmList.clear()
+        mnemonicsToSelectList.forEach { it.hide = false }
+        viewState.setupMnemonicsToConfirm(mnemonicsToConfirmList)
+        viewState.setupMnemonicsToSelect(mnemonicsToSelectList)
     }
 
     /**

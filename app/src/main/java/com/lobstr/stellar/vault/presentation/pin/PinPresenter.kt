@@ -17,14 +17,18 @@ import javax.inject.Inject
  * Main IDEA - when secretKey was empty - confirmation action, else - save secret key
  */
 @InjectViewState
-class PinPresenter(private var needCreatePin: Boolean?, private var needChangePin: Boolean?,
-                   private var needConfirmPin: Boolean?) :
+class PinPresenter(
+    private var needCreatePin: Boolean?, private var needChangePin: Boolean?,
+    private var needConfirmPin: Boolean?
+) :
     BasePresenter<PinView>() {
 
     @Inject
     lateinit var interactor: PinInteractor
 
     private var newPin: String? = null
+
+    private val commonPinArray: ArrayList<String> = arrayListOf("123456", "121212")
 
     init {
         LVApplication.sAppComponent.plusPinComponent(PinModule()).inject(this)
@@ -38,23 +42,18 @@ class PinPresenter(private var needCreatePin: Boolean?, private var needChangePi
 
         when {
             needCreatePin!! -> {
-                viewState.showDescriptionMessage(R.string.text_create_pin)
                 viewState.showTitle(R.string.text_title_create_pin)
                 viewState.setScreenStyle(PinActivity.STYLE_CREATE_PIN)
             }
             needChangePin!! -> {
-                viewState.showDescriptionMessage(R.string.text_enter_pin)
-                viewState.showTitle(R.string.text_title_change_pin)
+                viewState.showTitle(R.string.text_title_enter_old_pin)
                 viewState.setScreenStyle(PinActivity.STYLE_CREATE_PIN)
             }
             needConfirmPin!! -> {
-                viewState.showDescriptionMessage(R.string.text_enter_pin)
                 viewState.showTitle(R.string.text_title_confirm_pin)
                 viewState.setScreenStyle(PinActivity.STYLE_CREATE_PIN)
             }
             else -> {
-                viewState.showDescriptionMessage(0)
-                viewState.showTitle(R.string.text_title_enter_pin)
                 viewState.setScreenStyle(PinActivity.STYLE_ENTER_PIN)
             }
         }
@@ -75,12 +74,13 @@ class PinPresenter(private var needCreatePin: Boolean?, private var needChangePi
      * pin - your completely entered pin
      */
     fun onPinComplete(pin: String?) {
+        // TODO check viewState.showCommonPinPatternDialog()
         if (pin != null) {
             when {
                 needCreatePin!! -> createPin(pin)
-                needChangePin!! -> confirmPin(pin)
-                needConfirmPin!! -> confirmPin(pin)
-                else -> confirmPin(pin)
+                needChangePin!! -> confirmPin(pin, false)
+                needConfirmPin!! -> confirmPin(pin, false)
+                else -> confirmPin(pin, false)
             }
         } else {
             viewState.showErrorMessage(R.string.text_error_incorrect_pin)
@@ -91,9 +91,7 @@ class PinPresenter(private var needCreatePin: Boolean?, private var needChangePi
     private fun createPin(pin: String) {
         when {
             newPin.isNullOrEmpty() -> {
-                newPin = pin
-                viewState.showDescriptionMessage(R.string.text_reenter_pin)
-                viewState.resetPin()
+                confirmPin(pin, true)
             }
             newPin.equals(pin) -> {
                 unsubscribeOnDestroy(
@@ -117,13 +115,16 @@ class PinPresenter(private var needCreatePin: Boolean?, private var needChangePi
                 )
             }
             else -> {
-                viewState.showErrorMessage(R.string.text_error_incorrect_pin)
+                when {
+                    needChangePin!! -> viewState.showErrorMessage(R.string.text_error_pin_do_not_match)
+                    else -> viewState.showErrorMessage(R.string.text_error_incorrect_pin)
+                }
                 viewState.resetPin()
             }
         }
     }
 
-    private fun confirmPin(pin: String) {
+    private fun confirmPin(pin: String, needCheckOldPint: Boolean) {
         unsubscribeOnDestroy(
             interactor.checkPinValidation(pin)
                 .subscribeOn(Schedulers.io())
@@ -135,16 +136,31 @@ class PinPresenter(private var needCreatePin: Boolean?, private var needChangePi
                     viewState.showProgressDialog(false)
                 }
                 .doOnSuccess { success ->
-                    if (success) {
-                        when {
-                            needConfirmPin!! -> viewState.finishScreenWithResult(Activity.RESULT_OK)
-                            needCreatePin!! -> viewState.finishScreenWithResult(Activity.RESULT_OK)
-                            needChangePin!! -> showCreatePinState()
-                            else -> checkAuthState()
+                    if (needCheckOldPint) {
+                        if (success) {
+                            viewState.showErrorMessage(R.string.text_error_use_old_pin)
+                            viewState.resetPin()
+                        } else {
+                            newPin = pin
+                            if (needChangePin!!) {
+                                viewState.showTitle(R.string.text_title_confirm_new_pin)
+                            } else {
+                                viewState.showTitle(R.string.text_title_confirm_pin)
+                            }
+                            viewState.resetPin()
                         }
                     } else {
-                        viewState.showErrorMessage(R.string.text_error_incorrect_pin)
-                        viewState.resetPin()
+                        if (success) {
+                            when {
+                                needConfirmPin!! -> viewState.finishScreenWithResult(Activity.RESULT_OK)
+                                needCreatePin!! -> viewState.finishScreenWithResult(Activity.RESULT_OK)
+                                needChangePin!! -> showCreatePinState()
+                                else -> checkAuthState()
+                            }
+                        } else {
+                            viewState.showErrorMessage(R.string.text_error_incorrect_pin)
+                            viewState.resetPin()
+                        }
                     }
                 }
                 .subscribe()
@@ -154,7 +170,7 @@ class PinPresenter(private var needCreatePin: Boolean?, private var needChangePi
     private fun showCreatePinState() {
         needCreatePin = true
         viewState.resetPin()
-        viewState.showDescriptionMessage(R.string.text_create_pin)
+        viewState.showTitle(R.string.text_title_create_new_pin)
     }
 
     fun biometricAuthenticationSuccessful() {
@@ -190,6 +206,40 @@ class PinPresenter(private var needCreatePin: Boolean?, private var needChangePi
                 interactor.clearUserData()
                 viewState.showAuthScreen()
             }
+
+            AlertDialogFragment.DialogFragmentIdentifier.COMMON_PIN_PATTERN -> {
+                // TODO CHANGE PIN clicked
+            }
         }
+    }
+
+    fun onAlertDialogNegativeButtonClicked(tag: String?) {
+        if (tag.isNullOrEmpty()) {
+            return
+        }
+
+        when (tag) {
+            AlertDialogFragment.DialogFragmentIdentifier.COMMON_PIN_PATTERN -> {
+                // TODO CONTINUE clicked
+            }
+        }
+    }
+
+
+    // TODO check this method
+    private fun isCommonPin(pin: String): Boolean {
+        // first check common pins from array
+        if (commonPinArray.contains(pin)) {
+            return true
+        }
+
+        // check same symbols like 111111 and etc
+        pin.forEach {
+            if (it != pin[0]) {
+                return false
+            }
+        }
+
+        return true
     }
 }

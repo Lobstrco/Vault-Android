@@ -83,7 +83,7 @@ class RecheckSignerFragment : BaseFragment(),
     }
 
     override fun showProgressDialog(show: Boolean) {
-        ProgressManager.show(show, activity!!.supportFragmentManager)
+        ProgressManager.show(show, childFragmentManager)
     }
 
     override fun showMessage(message: String?) {

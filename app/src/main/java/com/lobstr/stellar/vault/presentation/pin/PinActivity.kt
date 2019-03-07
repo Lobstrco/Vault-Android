@@ -96,7 +96,6 @@ class PinActivity : BaseMvpAppCompatActivity(), PinView, PinLockListener,
             pinLockView.textColor = ContextCompat.getColor(this, android.R.color.white)
 
             tvPinTitle.visibility = View.GONE
-            tvPinDescription.visibility = View.GONE
             ivPinLogo.visibility = View.VISIBLE
             indicatorDotsWhite.visibility = View.VISIBLE
             indicatorDots.visibility = View.GONE
@@ -108,7 +107,6 @@ class PinActivity : BaseMvpAppCompatActivity(), PinView, PinLockListener,
             pinLockView.textColor = ContextCompat.getColor(this, android.R.color.black)
 
             tvPinTitle.visibility = View.VISIBLE
-            tvPinDescription.visibility = View.VISIBLE
             ivPinLogo.visibility = View.GONE
             indicatorDotsWhite.visibility = View.GONE
             indicatorDots.visibility = View.VISIBLE
@@ -156,14 +154,6 @@ class PinActivity : BaseMvpAppCompatActivity(), PinView, PinLockListener,
         ProgressManager.show(show, supportFragmentManager)
     }
 
-    override fun showDescriptionMessage(@StringRes message: Int) {
-        if (message == 0) {
-            return
-        }
-
-        tvPinDescription.text = getString(message)
-    }
-
     override fun showAuthScreen() {
         NotificationsManager.clearNotifications(this)
         val intent = Intent(this, AuthActivity::class.java)
@@ -194,7 +184,7 @@ class PinActivity : BaseMvpAppCompatActivity(), PinView, PinLockListener,
     }
 
     override fun onNegativeBtnClick(tag: String?, dialogInterface: DialogInterface) {
-        // add logic if needed
+        mPresenter.onAlertDialogNegativeButtonClicked(tag)
     }
 
     override fun onNeutralBtnClick(tag: String?, dialogInterface: DialogInterface) {
@@ -214,6 +204,17 @@ class PinActivity : BaseMvpAppCompatActivity(), PinView, PinLockListener,
             .setPositiveBtnText(getString(R.string.text_btn_log_out))
             .create()
             .show(supportFragmentManager, AlertDialogFragment.DialogFragmentIdentifier.LOG_OUT)
+    }
+
+    override fun showCommonPinPatternDialog() {
+        AlertDialogFragment.Builder(false)
+            .setCancelable(false)
+            .setTitle(getString(R.string.title_common_pin_pattern_dialog))
+            .setMessage(getString(R.string.msg_common_pin_pattern_dialog))
+            .setNegativeBtnText(getString(R.string.text_btn_continue))
+            .setPositiveBtnText(getString(R.string.text_btn_change_pin))
+            .create()
+            .show(supportFragmentManager, AlertDialogFragment.DialogFragmentIdentifier.COMMON_PIN_PATTERN)
     }
 
     // Biometric

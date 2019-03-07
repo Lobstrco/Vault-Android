@@ -31,6 +31,8 @@
     <string name="text_btn_rate_us">Rate now</string>
     <string name="text_btn_rate_later">Remind later</string>
     <string name="text_btn_rate_never">Don\'t ask again</string>
+    <string name="text_btn_continue">Continue</string>
+    <string name="text_btn_change_pin">Change PIN</string>
 
     <!-- Start screen -->
     <string name="text_start_screen_tv_title">Multiply your security</string>
@@ -60,14 +62,14 @@
     <string name="text_tv_mnemonics_description">Recovery phrase can help you to recover access to your account in case
         your phone is lost or stolen.
     </string>
-    <string name="text_tv_mnemonics_instruction">Write down these 12 words and keep them secure. Don’t email them or
+    <string name="text_tv_mnemonics_instruction">Write down these %d words and keep them secure. Don’t email them or
         screenshot them.
     </string>
     <string name="text_tv_mnemonics_confirmation">You will need to confirm recovery phrase on the next screen</string>
 
     <!-- Confirm mnemonics title -->
     <string name="text_tv_confirm_mnemonics_title">Verify Recovery Phrase</string>
-    <string name="text_tv_confirm_mnemonics_description">Tap the words in correct order</string>
+    <string name="text_tv_confirm_mnemonics_description">Tap the words in correct order.</string>
 
     <!-- Fingerprint screen -->
     <string name="text_tv_fingerprint_set_up_title">Protect your account</string>
@@ -81,28 +83,24 @@
     <string name="text_btn_retry_vault_authentication">Retry Authorize</string>
     <string name="text_tv_signer_info_title">Your Vault Public Key</string>
     <string name="text_tv_signer_info_description">
-        <![CDATA[This key will be used to sign transactions. To protect your LOBSTR account, copy and paste the code to LOBSTR (Settings→Multisig→Enable)]]></string>
+        <![CDATA[This key will be set as a signer for your Stellar account. To protect your LOBSTR account, copy and paste the key to LOBSTR (Settings→Multisig→Enable).]]></string>
 
     <!-- Re-check signers screen -->
-    <string name="text_tv_re_check_signer_description">Your Vault account is not a signer for any other Stellar
-        accounts
-    </string>
+    <string name="text_tv_re_check_signer_description">LOBSTR Vault is not a signer for any Stellar account now. Press \"Re-Check\" button after adding Vault signer into your wallet.</string>
     <string name="text_btn_re_check_signer">Re-Check</string>
 
     <!--Pin screen-->
-    <string name="text_title_enter_pin">Enter PIN</string>
     <string name="text_title_create_pin">Create PIN</string>
-    <string name="text_title_change_pin">Change PIN</string>
     <string name="text_title_confirm_pin">Confirm PIN</string>
-    <string name="text_enter_pin">Enter PIN</string>
-    <string name="text_reenter_pin">Confirm PIN</string>
-    <string name="text_create_pin">Create PIN</string>
+    <string name="text_title_create_new_pin">Create New PIN</string>
+    <string name="text_title_confirm_new_pin">Confirm New PIN</string>
+    <string name="text_title_enter_old_pin">Enter Old PIN</string>
     <string name="text_success_change_pin">PIN changed</string>
     <string name="text_change_the_same_pin">"You can not use old PIN"</string>
 
     <!-- Dashboard screen -->
     <string name="text_dashboard_transactions">Transactions to Sign</string>
-    <string name="text_dashboard_show_list">View Transaction List</string>
+    <string name="text_dashboard_show_list">View Transactions List</string>
     <string name="text_title_dashboard_public_key">Vault Public Key</string>
     <string name="text_title_dashboard_signers">Signer For</string>
     <string name="text_dashboard_accounts">accounts</string>
@@ -115,11 +113,12 @@
     <string name="title_settings_security">Security</string>
     <string name="title_settings_other">Other</string>
     <string name="text_settings_public_key">Vault Public Key</string>
-    <string name="text_settings_signers">Signer for %s account</string>
+    <string name="text_settings_signer">Signer for %d account</string>
+    <string name="text_settings_signers">Signer for %d accounts</string>
     <string name="text_settings_mnemonic_code">Recovery Phrase</string>
     <string name="text_settings_change_pin">Change PIN</string>
     <string name="text_settings_touch_id">Fingerprint Login</string>
-    <string name="text_settings_notifications">Notifications</string>
+    <string name="text_tv_settings_notifications">Notifications</string>
     <string name="text_settings_version">Version</string>
     <string name="text_settings_help">Help</string>
     <string name="text_settings_license">Licenses</string>
@@ -146,13 +145,19 @@
     <string name="text_operation_name_several_operation">%s Operations</string>
     <string name="text_operation_name_unknown">Unknown</string>
 
+    <!-- Transaction details -->
+    <string name="text_tv_sequence_number_invalid_description">Transaction can not be confirmed, it\'s sequence number is
+        invalid.
+    </string>
+
     <!-- Finger print dialog -->
     <string name="title_finger_print_dialog">Fingerprint not set up</string>
     <string name="msg_finger_print_dialog">Please set up your fingerprint in the device settings first.</string>
 
-    <!-- Deny transaction dialog -->
-    <string name="title_deny_transaction_dialog">Are you sure?</string>
+    <!-- Transaction action dialog -->
+    <string name="title_transaction_action_dialog">Are you sure?</string>
     <string name="msg_deny_transaction_dialog">Want to deny the operation?</string>
+    <string name="msg_confirm_transaction_dialog">Want to confirm the operation?</string>
 
     <!-- Deny account creation dialog -->
     <string name="title_deny_account_creation_dialog">Are you sure?</string>
@@ -163,6 +168,10 @@
     <!-- Log out dialog -->
     <string name="title_log_out_dialog">Have you secured your recovery phrase?</string>
     <string name="msg_log_out_dialog">You will not be able to recover your account or sign in without it.</string>
+
+    <!--Common PIN pattern dialog -->
+    <string name="title_common_pin_pattern_dialog">Warning</string>
+    <string name="msg_common_pin_pattern_dialog">You are trying to set a very common PIN which can be easily guessed by someone. We recommend to set a new PIN.</string>
 
     <!-- Rate us dialog -->
     <string name="title_rate_us_dialog">Love Using LOBSTR Vault?</string>
@@ -200,9 +209,11 @@
     <string name="msg_not_all_words_entered">Not all the words entered</string>
     <string name="msg_phrase_dont_fit">Wrong order. Please try again.</string>
     <string name="msg_success">Success</string>
-    <string name="msg_bad_xdr">Transaction is invalid. Please, try again.</string>
+    <string name="msg_bad_xdr">Invalid XDR</string>
     <string name="text_error_incorrect_mnemonic">Incorrect mnemonic phrases.</string>
     <string name="text_error_incorrect_pin">Incorrect PIN</string>
+    <string name="text_error_pin_do_not_match">PINs do not match</string>
+    <string name="text_error_use_old_pin">You can not use old PIN</string>
     <string name="msg_transaction_denied">Transaction denied</string>
 
     <!-- Api errors -->
@@ -231,7 +242,6 @@
     <!-- Horizon errors -->
     <string name="text_tx_bad_seq">Sequence number does not match source account.</string>
     <string name="text_tv_sequence_number_invalid">Invalid</string>
-    <string name="text_tv_sequence_number_invalid_description">Transaction can\'t be confirmed, it\'s sequence number is
-        invalid.
-    </string>
+    <string name="text_btn_clear">Clear</string>
+    <string name="text_tv_settings_transaction_confirmation">Prompt for transaction decisions</string>
 </resources>

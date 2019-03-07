@@ -101,6 +101,7 @@ class SettingsFragment : BaseFragment(), SettingsView, View.OnClickListener,
         llSettingsHelp.setOnClickListener(this)
         swSettingsTouchId.setOnCheckedChangeListener(this)
         swSettingsNotifications.setOnCheckedChangeListener(this)
+        swSettingsTrConfirmation.setOnCheckedChangeListener(this)
         llSettingsLicense.setOnClickListener(this)
     }
 
@@ -129,6 +130,7 @@ class SettingsFragment : BaseFragment(), SettingsView, View.OnClickListener,
         when (buttonView!!.id) {
             R.id.swSettingsTouchId -> mPresenter.touchIdSwitched(isChecked)
             R.id.swSettingsNotifications -> mPresenter.notificationsSwitched(isChecked)
+            R.id.swSettingsTrConfirmation -> mPresenter.trConfirmationSwitched(isChecked)
         }
     }
 
@@ -144,8 +146,11 @@ class SettingsFragment : BaseFragment(), SettingsView, View.OnClickListener,
         tvSettingsVersion.text = buildVersion
     }
 
-    override fun setupSignersCount(signersCount: String) {
-        val message = String.format(getString(R.string.text_settings_signers), signersCount)
+    override fun setupSignersCount(signersCount: Int) {
+        val message = String.format(
+            getString(if (signersCount == 1) R.string.text_settings_signer else R.string.text_settings_signers),
+            signersCount
+        )
         val spannedText = SpannableString(message)
         val startPosition = 11
         val endPosition = message.lastIndexOf(" ")
@@ -234,6 +239,11 @@ class SettingsFragment : BaseFragment(), SettingsView, View.OnClickListener,
         swSettingsNotifications.isChecked = checked
         swSettingsNotifications.setOnCheckedChangeListener(this)
     }
+
+    override fun setTrConfirmationChecked(checked: Boolean) {
+        swSettingsTrConfirmation.setOnCheckedChangeListener(null)
+        swSettingsTrConfirmation.isChecked = checked
+        swSettingsTrConfirmation.setOnCheckedChangeListener(this)    }
 
     override fun showFingerprintInfoDialog(titleRes: Int, messageRes: Int) {
         AlertDialogFragment.Builder(true)

@@ -4,6 +4,7 @@ import com.arellomobile.mvp.InjectViewState
 import com.lobstr.stellar.vault.R
 import com.lobstr.stellar.vault.data.error.exeption.DefaultException
 import com.lobstr.stellar.vault.data.error.exeption.NoInternetConnectionException
+import com.lobstr.stellar.vault.data.error.exeption.UserNotAuthorizedException
 import com.lobstr.stellar.vault.domain.util.EventProviderModule
 import com.lobstr.stellar.vault.domain.util.event.Network
 import com.lobstr.stellar.vault.domain.util.event.Notification
@@ -45,11 +46,15 @@ class VaultAuthPresenter : BasePresenter<VaultAuthView>() {
     }
 
     private fun checkAuthorization() {
-        if (interactor.isUserAuthorized()) {
+        val userToken = interactor.getUserToken()
+
+        if (userToken.isNullOrEmpty()) {
+            tryAuthorizeVault()
+        } else {
             interactor.registerFcm()
             viewState.showSignerInfoFragment()
-        } else {
-            tryAuthorizeVault()
+            // silent recheck signers for first view attach
+            recheckSigners(userToken)
         }
     }
 
@@ -116,6 +121,40 @@ class VaultAuthPresenter : BasePresenter<VaultAuthView>() {
                         is NoInternetConnectionException -> {
                             viewState.showMessage(it.details)
                             handleNoInternetConnection()
+                        }
+                        is DefaultException -> {
+                            viewState.showMessage(it.details)
+                        }
+                        else -> {
+                            viewState.showMessage(it.message ?: "")
+                        }
+                    }
+                })
+        )
+    }
+
+    private fun recheckSigners(token: String) {
+        unsubscribeOnDestroy(
+            interactor.getSignedAccounts(token)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnSubscribe {
+                    viewState.showProgressDialog(true)
+                }
+                .doOnEvent { _, _ ->
+                    viewState.showProgressDialog(false)
+                }
+                .subscribe({
+                    if (it.isEmpty()) {
+                        // handle if needed
+                    } else {
+                        interactor.confirmAccountHasSigners()
+                        viewState.showHomeScreen()
+                    }
+                }, {
+                    when (it) {
+                        is UserNotAuthorizedException -> {
+                            recheckSigners(token)
                         }
                         is DefaultException -> {
                             viewState.showMessage(it.details)

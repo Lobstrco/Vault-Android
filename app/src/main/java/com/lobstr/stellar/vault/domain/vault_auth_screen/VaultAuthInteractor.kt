@@ -6,7 +6,7 @@ import io.reactivex.Single
 
 interface VaultAuthInteractor {
 
-    fun isUserAuthorized(): Boolean
+    fun getUserToken(): String?
 
     fun authorizeVault(): Single<List<Account>>
 

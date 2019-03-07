@@ -11,7 +11,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:splitMotionEvents="false"
             android:layout_marginBottom="70dp">
 
         <TextView
@@ -78,7 +77,7 @@
                     android:layout_weight="1"
                     android:textSize="16sp"
                     android:textColor="@android:color/black"
-                    android:text="@string/text_settings_signers"/>
+                    android:text="@string/text_settings_signer"/>
 
             <ImageView
                     android:layout_width="wrap_content"
@@ -256,11 +255,43 @@
                     android:layout_weight="1"
                     android:textSize="16sp"
                     android:textColor="@android:color/black"
-                    android:text="@string/text_settings_notifications"/>
+                    android:text="@string/text_tv_settings_notifications"/>
 
             <androidx.appcompat.widget.SwitchCompat
                     android:layout_weight="0"
                     android:id="@+id/swSettingsNotifications"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+        </LinearLayout>
+
+        <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="0dp"
+                android:background="@color/color_33979797"/>
+
+
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="57dp"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:background="@android:color/white">
+
+            <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:textSize="16sp"
+                    android:textColor="@android:color/black"
+                    android:text="@string/text_tv_settings_transaction_confirmation"/>
+
+            <androidx.appcompat.widget.SwitchCompat
+                    android:layout_weight="0"
+                    android:id="@+id/swSettingsTrConfirmation"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
         </LinearLayout>

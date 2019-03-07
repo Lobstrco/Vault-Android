@@ -71,6 +71,7 @@ class ConfirmMnemonicsFragment : BaseFragment(), ConfirmMnemonicsView, View.OnCl
     }
 
     private fun setListeners() {
+        btnClear.setOnClickListener(this)
         btnNext.setOnClickListener(this)
         mnemonicContainerToSelectView.setMnemonicItemActionListener(this)
         mnemonicContainerToConfirmView.setMnemonicItemActionListener(this)
@@ -109,7 +110,8 @@ class ConfirmMnemonicsFragment : BaseFragment(), ConfirmMnemonicsView, View.OnCl
 
     override fun onClick(v: View?) {
         when (v!!.id) {
-            R.id.btnNext -> mPresenter.nextClicked()
+            R.id.btnClear -> mPresenter.btnClearClicked()
+            R.id.btnNext -> mPresenter.btnNextClicked()
         }
     }
 
@@ -121,6 +123,7 @@ class ConfirmMnemonicsFragment : BaseFragment(), ConfirmMnemonicsView, View.OnCl
     override fun setupMnemonicsToConfirm(mnemonics: List<MnemonicItem>) {
         mnemonicContainerToConfirmView.mMnemonicList = mnemonics
         mnemonicContainerToConfirmView.setupMnemonics()
+        btnClear.visibility = if (mnemonics.isEmpty()) View.INVISIBLE else View.VISIBLE
     }
 
     override fun showMessage(message: String) {
@@ -139,7 +142,7 @@ class ConfirmMnemonicsFragment : BaseFragment(), ConfirmMnemonicsView, View.OnCl
     }
 
     override fun showProgressDialog(show: Boolean) {
-        ProgressManager.show(show, activity!!.supportFragmentManager)
+        ProgressManager.show(show, childFragmentManager)
     }
 
     override fun showHelpScreen() {

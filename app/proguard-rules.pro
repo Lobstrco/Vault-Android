@@ -26,7 +26,10 @@
 -dontwarn android.webkit.**
 -dontwarn java.lang.invoke**
 -dontwarn rx.internal.util.**
+
+# Ignore annotation used for build tooling.
 -dontwarn org.codehaus.mojo.animal_sniffer.IgnoreJRERequirement
+
 -dontwarn okio.**
 -dontwarn okhttp3.**
 -dontwarn retrofit2.**
@@ -44,9 +47,16 @@
 -dontwarn com.google.j2objc.annotations.Weak
 -dontwarn org.codehaus.mojo.animal_sniffer.IgnoreJRERequirement
 
--keepattributes Signature
+# Ignore JSR 305 annotations for embedding nullability information.
+-dontwarn javax.annotation.**
+
+# Guarded by a NoClassDefFoundError try/catch and only used when on the classpath.
+-dontwarn kotlin.Unit
+
+# Top-level functions that can only be used by Kotlin.
+-dontwarn retrofit2.KotlinExtensions
+
 -keepattributes *Annotation*
--keepattributes EnclosingMethod
 
 # Platform calls Class.forName on types which do not exist on Android to determine platform.
 -dontnote retrofit2.Platform
@@ -56,6 +66,23 @@
 -dontwarn retrofit2.Platform$Java8
 # Retain declared checked exceptions for use by a Proxy instance.
 -keepattributes Exceptions
+
+# Retrofit does reflection on generic parameters. InnerClasses is required to use Signature and
+# EnclosingMethod is required to use InnerClasses.
+-keepattributes Signature, InnerClasses, EnclosingMethod
+
+# Retrofit does reflection on method and parameter annotations.
+-keepattributes RuntimeVisibleAnnotations, RuntimeVisibleParameterAnnotations
+
+# Retain service method parameters when optimizing.
+-keepclassmembers, allowshrinking, allowobfuscation interface * {
+    @retrofit2.http.* <methods>;
+}
+
+# With R8 full mode, it sees no subtypes of Retrofit interfaces since they are created with a Proxy
+# and replaces all potential values with null. Explicitly keeping the interfaces prevents this.
+-if interface * { @retrofit2.http.* <methods>; }
+-keep,allowobfuscation interface <1>
 
 -keepclassmembers class ** {
     @com.google.common.eventbus.Subscribe public *;
@@ -162,16 +189,6 @@
 
 -keepclassmembers class rx.internal.util.unsafe.BaseLinkedQueueConsumerNodeRef {
     rx.internal.util.atomic.LinkedQueueNode consumerNode;
-}
-
--keepclassmembers class com.myapp.models.** { *; }
-
--keepclasseswithmembers class * {
-    @retrofit2.* <methods>;
-}
-
--keepclasseswithmembers interface * {
-    @retrofit2.* <methods>;
 }
 
 -keep public class * implements com.bumptech.glide.module.GlideModule

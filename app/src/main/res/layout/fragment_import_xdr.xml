@@ -40,6 +40,7 @@
             android:layout_marginBottom="8dp"
             android:padding="17dp"
             android:textSize="14sp"
+            android:scrollbars="vertical"
             android:textColorHint="@color/color_4D000000"
             android:hint="@string/hint_et_import_xdr"
             android:background="@drawable/shape_input_edit_text"/>

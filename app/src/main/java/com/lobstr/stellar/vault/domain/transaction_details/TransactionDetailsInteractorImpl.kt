@@ -81,4 +81,8 @@ class TransactionDetailsInteractorImpl(
             )
         }
     }
+
+    override fun isTrConfirmationEnabled(): Boolean {
+        return prefsUtil.isTrConfirmationEnabled
+    }
 }

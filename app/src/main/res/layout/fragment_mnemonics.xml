@@ -46,7 +46,9 @@
                       android:orientation="horizontal"
                       android:gravity="center">
 
-            <TextView android:layout_width="0dp"
+            <TextView
+                    android:id="@+id/tvMnemonicsInstruction"
+                    android:layout_width="0dp"
                       android:layout_height="wrap_content"
                       android:layout_weight="1"
                       android:textSize="12sp"

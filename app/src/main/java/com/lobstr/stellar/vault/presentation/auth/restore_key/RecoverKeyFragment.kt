@@ -177,7 +177,7 @@ class RecoverKeyFragment : BaseFragment(), RecoverKeyFrView, View.OnClickListene
     }
 
     override fun showProgressDialog(show: Boolean) {
-        ProgressManager.show(show, activity!!.supportFragmentManager)
+        ProgressManager.show(show, childFragmentManager)
     }
 
     override fun showHelpScreen() {

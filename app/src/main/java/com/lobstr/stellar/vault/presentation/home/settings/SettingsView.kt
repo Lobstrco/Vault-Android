@@ -20,7 +20,7 @@ interface SettingsView : MvpView {
 
     @StateStrategyType(AddToEndSingleStrategy::class)
     fun setupSignersCount(
-        signersCount: String
+        signersCount: Int
     )
 
     @StateStrategyType(SkipStrategy::class)
@@ -47,8 +47,11 @@ interface SettingsView : MvpView {
     @StateStrategyType(AddToEndSingleStrategy::class)
     fun setTouchIdChecked(checked: Boolean)
 
-    @StateStrategyType(AddToEndSingleStrategy::class)
+    @StateStrategyType(SkipStrategy::class)
     fun setNotificationsChecked(checked: Boolean)
+
+    @StateStrategyType(SkipStrategy::class)
+    fun setTrConfirmationChecked(checked: Boolean)
 
     @StateStrategyType(SkipStrategy::class)
     fun showFingerprintInfoDialog(@StringRes titleRes: Int, @StringRes messageRes: Int)

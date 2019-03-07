@@ -11,6 +11,7 @@ import com.lobstr.stellar.vault.domain.util.event.Notification
 import com.lobstr.stellar.vault.presentation.BasePresenter
 import com.lobstr.stellar.vault.presentation.application.LVApplication
 import com.lobstr.stellar.vault.presentation.dagger.module.transaction_details.TransactionDetailsModule
+import com.lobstr.stellar.vault.presentation.dialog.alert.base.AlertDialogFragment.DialogFragmentIdentifier.CONFIRM_TRANSACTION
 import com.lobstr.stellar.vault.presentation.dialog.alert.base.AlertDialogFragment.DialogFragmentIdentifier.DENY_TRANSACTION
 import com.lobstr.stellar.vault.presentation.entities.transaction.TransactionItem
 import com.lobstr.stellar.vault.presentation.util.Constant.Transaction.CANCELLED
@@ -67,11 +68,17 @@ class TransactionDetailsPresenter(private var transactionItem: TransactionItem) 
     }
 
     fun btnConfirmClicked() {
-        confirmTransaction()
+        when {
+            interactor.isTrConfirmationEnabled() -> viewState.showConfirmTransactionDialog()
+            else -> confirmTransaction()
+        }
     }
 
     fun btnDenyClicked() {
-        viewState.showDenyTransactionDialog()
+        when {
+            interactor.isTrConfirmationEnabled() -> viewState.showDenyTransactionDialog()
+            else -> denyTransaction()
+        }
     }
 
     /**
@@ -230,6 +237,7 @@ class TransactionDetailsPresenter(private var transactionItem: TransactionItem) 
 
         when (tag) {
             DENY_TRANSACTION -> denyTransaction()
+            CONFIRM_TRANSACTION -> confirmTransaction()
         }
     }
 }

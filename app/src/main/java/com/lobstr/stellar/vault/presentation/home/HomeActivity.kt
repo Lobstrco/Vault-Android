@@ -93,10 +93,6 @@ class HomeActivity : BaseActivity(), HomeActivityView,
         bnvHomeTabs.labelVisibilityMode = LabelVisibilityMode.LABEL_VISIBILITY_LABELED
     }
 
-    override fun setupToolBarTitle(title: Int) {
-        setActionBarTitle(title)
-    }
-
     override fun showAuthScreen() {
         val intent = Intent(this, AuthActivity::class.java)
         intent.putExtra(Constant.Extra.EXTRA_NAVIGATION_FR, Constant.Navigation.AUTH)

@@ -5,7 +5,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:splitMotionEvents="false"
         android:background="@color/color_f9f9ff"
         tools:context=".presentation.home.transactions.details.TransactionDetailsFragment">
 

@@ -15,7 +15,7 @@ class PinInteractorImpl(
     override fun checkPinValidation(pin: String): Single<Boolean> {
         return Single.fromCallable {
             val savedPin = keyStoreRepository.decryptData(PrefsUtil.PREF_ENCRYPTED_PIN, PrefsUtil.PREF_PIN_IV)
-            return@fromCallable !(savedPin.isNullOrEmpty() || !savedPin.equals(pin))
+            return@fromCallable !(savedPin.isNullOrEmpty() || savedPin != pin)
         }
     }
 

@@ -10,6 +10,7 @@ import android.net.Uri
 import android.os.Build
 import android.os.VibrationEffect
 import android.os.Vibrator
+import android.text.TextUtils
 import android.util.DisplayMetrics
 import android.util.Log
 import android.view.View
@@ -195,6 +196,26 @@ object AppUtil {
         } else {
             @Suppress("DEPRECATION")
             vibrator.vibrate(pattern, -1)
+        }
+    }
+
+    fun removeZeroInFractionalPart(price: String): String {
+        if (TextUtils.isEmpty(price)) {
+            return "0"
+        }
+
+        val builder = StringBuilder(price)
+        return if (builder.indexOf(".") != -1) {
+            while (builder.indexOf(".") != -1) {
+                if (builder[builder.length - 1] == '0' || builder[builder.length - 1] == '.') {
+                    builder.deleteCharAt(builder.length - 1)
+                } else {
+                    break
+                }
+            }
+            builder.toString()
+        } else {
+            builder.toString()
         }
     }
 }
