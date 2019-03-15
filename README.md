@@ -79,7 +79,7 @@ Visit the [LOBSTR Vault Help Center](https://lobstr.zendesk.com/hc/en-us/categor
 
 - Visit [LOBSTR Vault web page](https://lobstr.co/vault/)
 - Get LOBSTR Vault on [Google Play](https://play.google.com/store/apps/details?id=com.lobstr.stellar.vault)
-- Download LOBSTR Vault on the [App Store](https://itunes.apple.com/by/app/lobstr-vault/id1452248529)
+- Download LOBSTR Vault on the [App Store](https://itunes.apple.com/app/lobstr-vault/id1452248529)
 - Sign up in [LOBSTR Wallet](https://lobstr.co/)
 - Trade with [StellarTerm](https://stellarterm.com/)
 - Follow [LOBSTR wallet on Twitter](https://twitter.com/Lobstrco)

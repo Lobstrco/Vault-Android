@@ -120,7 +120,7 @@ class TransactionDetailsPresenter(private var transactionItem: TransactionItem) 
                         needAdditionalSignatures,
                         transactionItem.status,
                         it.hash,
-                        it.envelopeXdr
+                        envelopXdr
                     )
                 }
                 .observeOn(AndroidSchedulers.mainThread())

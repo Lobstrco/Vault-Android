@@ -57,7 +57,7 @@ class FcmInteractorImpl(private val fcmRepository: FcmRepository, private val pr
         return account
     }
 
-    override fun transformNewTransactionResponse(jsonStr: String?): TransactionItem? {
+    override fun transformTransactionResponse(jsonStr: String?): TransactionItem? {
         if (jsonStr.isNullOrEmpty()) {
             return null
         }

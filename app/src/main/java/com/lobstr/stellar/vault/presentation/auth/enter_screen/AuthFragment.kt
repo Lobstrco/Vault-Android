@@ -14,6 +14,7 @@ import com.lobstr.stellar.vault.R
 import com.lobstr.stellar.vault.presentation.auth.backup.BackUpFragment
 import com.lobstr.stellar.vault.presentation.auth.restore_key.RecoverKeyFragment
 import com.lobstr.stellar.vault.presentation.base.fragment.BaseFragment
+import com.lobstr.stellar.vault.presentation.faq.FaqFragment
 import kotlinx.android.synthetic.main.fragment_auth.*
 
 class AuthFragment : BaseFragment(), AuthFrView, View.OnClickListener {
@@ -66,6 +67,7 @@ class AuthFragment : BaseFragment(), AuthFrView, View.OnClickListener {
     private fun setListeners() {
         btnAuthNew.setOnClickListener(this)
         btnAuthRestore.setOnClickListener(this)
+        tvHelp.setOnClickListener(this)
     }
 
     // ===========================================================
@@ -76,6 +78,7 @@ class AuthFragment : BaseFragment(), AuthFrView, View.OnClickListener {
         when (v!!.id) {
             R.id.btnAuthNew -> mPresenter.newClicked()
             R.id.btnAuthRestore -> mPresenter.restoreClicked()
+            R.id.tvHelp -> mPresenter.helpClicked()
         }
     }
 
@@ -96,6 +99,15 @@ class AuthFragment : BaseFragment(), AuthFrView, View.OnClickListener {
         FragmentTransactionManager.displayFragment(
             parentFragment!!.childFragmentManager,
             Fragment.instantiate(context, RecoverKeyFragment::class.java.name),
+            R.id.fl_container,
+            true
+        )
+    }
+
+    override fun showHelpScreen() {
+        FragmentTransactionManager.displayFragment(
+            parentFragment!!.childFragmentManager,
+            Fragment.instantiate(context, FaqFragment::class.java.name),
             R.id.fl_container,
             true
         )

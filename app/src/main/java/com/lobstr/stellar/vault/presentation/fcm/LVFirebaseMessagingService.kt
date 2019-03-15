@@ -45,6 +45,8 @@ class LVFirebaseMessagingService : FirebaseMessagingService() {
     object Type {
         const val SIGNED_NEW_ACCOUNT = "signed_new_account"
         const val ADDED_NEW_TRANSACTION = "added_new_transaction"
+        const val ADDED_NEW_SIGNATURE = "added_new_signature"
+        const val TRANSACTION_SUBMITTED = "transaction_submitted"
     }
 
     init {
@@ -89,6 +91,14 @@ class LVFirebaseMessagingService : FirebaseMessagingService() {
                 )
 
                 Type.ADDED_NEW_TRANSACTION -> wrapAddedNewTransactionMessage(
+                    data[TRANSACTION] as? String, messageTitle, messageBody, notificationsManager
+                )
+
+                Type.ADDED_NEW_SIGNATURE -> wrapAddedNewSignatureMessage(
+                    data[TRANSACTION] as? String, messageTitle, messageBody, notificationsManager
+                )
+
+                Type.TRANSACTION_SUBMITTED -> wrapTransactionSubmittedMessage(
                     data[TRANSACTION] as? String, messageTitle, messageBody, notificationsManager
                 )
 
@@ -147,6 +157,42 @@ class LVFirebaseMessagingService : FirebaseMessagingService() {
             messageTitle ?: getString(R.string.app_name),
             messageBody,
             /*intent*/SplashActivity::class.java
+        )
+    }
+
+    private fun wrapAddedNewSignatureMessage(
+        jsonStr: String?,
+        messageTitle: String?,
+        messageBody: String?,
+        notificationsManager: NotificationsManager
+    ) {
+        val transaction = mFcmHelper.addedNewSignature(jsonStr)
+        mEventProviderModule.notificationEventSubject.onNext(
+            Notification(Notification.Type.ADDED_NEW_SIGNATURE, transaction)
+        )
+
+        sendDefaultMessage(
+            messageTitle,
+            messageBody,
+            notificationsManager
+        )
+    }
+
+    private fun wrapTransactionSubmittedMessage(
+        jsonStr: String?,
+        messageTitle: String?,
+        messageBody: String?,
+        notificationsManager: NotificationsManager
+    ) {
+        val transaction = mFcmHelper.transactionSubmitted(jsonStr)
+        mEventProviderModule.notificationEventSubject.onNext(
+            Notification(Notification.Type.TRANSACTION_SUBMITTED, transaction)
+        )
+
+        sendDefaultMessage(
+            messageTitle,
+            messageBody,
+            notificationsManager
         )
     }
 

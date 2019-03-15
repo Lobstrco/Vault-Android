@@ -30,6 +30,10 @@ class SignerInfoPresenter : MvpPresenter<SignerInfoView>() {
         viewState.copyToClipBoard(userPublicKey)
     }
 
+    fun infoClicked() {
+        viewState.showHelpScreen()
+    }
+
     fun btnNextClicked() {
         viewState.showRecheckSingerScreen()
     }

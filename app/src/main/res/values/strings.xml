@@ -4,7 +4,7 @@
 
     <!-- toolbar titles-->
     <string name="title_toolbar_faq">Help</string>
-    <string name="title_toolbar_signed_accounts">Signed Accounts</string>
+    <string name="title_toolbar_signed_accounts">Protected Accounts</string>
     <string name="title_toolbar_transaction_details">Transaction Details</string>
     <string name="title_toolbar_dashboard">Home</string>
     <string name="title_toolbar_transactions">Transactions</string>
@@ -35,10 +35,11 @@
     <string name="text_btn_change_pin">Change PIN</string>
 
     <!-- Start screen -->
-    <string name="text_start_screen_tv_title">Multiply your security</string>
-    <string name="text_start_screen_btn_create_account">Create Account</string>
-    <string name="text_start_screen_btn_restore_account">Recover Account</string>
-    <string name="text_start_screen_terms_and_privacy">By registering you agree to our
+    <string name="text_tv_start_screen_title">Multiply your security</string>
+    <string name="text_btn_start_screen_create_account">Create Account</string>
+    <string name="text_btn_start_screen_restore_account">Recover Account</string>
+    <string name="text_tv_start_screen_help">First time user? See our <a href="https://lobstr.co/vault/">Help section</a></string>
+    <string name="text_tv_start_screen_terms_and_privacy">By registering you agree to our
         <a href="https://lobstr.co/privacy/">Terms of
             Service and Privacy Policy
         </a>
@@ -83,7 +84,7 @@
     <string name="text_btn_retry_vault_authentication">Retry Authorize</string>
     <string name="text_tv_signer_info_title">Your Vault Public Key</string>
     <string name="text_tv_signer_info_description">
-        <![CDATA[This key will be set as a signer for your Stellar account. To protect your LOBSTR account, copy and paste the key to LOBSTR (Settings→Multisig→Enable).]]></string>
+        <![CDATA[This key will be set as a signer for your Stellar account. If you want to protect your LOBSTR account, copy and paste the key to LOBSTR (Settings→Multisig→Enable).]]></string>
 
     <!-- Re-check signers screen -->
     <string name="text_tv_re_check_signer_description">LOBSTR Vault is not a signer for any Stellar account now. Press \"Re-Check\" button after adding Vault signer into your wallet.</string>
@@ -127,7 +128,7 @@
     <string name="text_all_rights_reserved">©%s. All rights reserved</string>
 
     <!--Signed Accounts screen-->
-    <string name="text_signed_account_empty_state">You have 0 signed accounts</string>
+    <string name="text_signed_account_empty_state">Protected accounts not found</string>
 
     <!-- Stellar Operations -->
     <string name="text_operation_name_payment">Payment</string>
@@ -235,7 +236,7 @@
     <!-- Other -->
     <string name="expandable_card_view_image_content_description">Arrow to expand card</string>
     <string name="expandable_card_view_icon_content_description">Card icon</string>
-    <string name="text_action_info">info</string>
+    <string name="text_action_info">help</string>
     <string name="text_action_log_out">log out</string>
     <string name="text_btn_copy_public_key">Copy Public Key</string>
 
@@ -243,5 +244,5 @@
     <string name="text_tx_bad_seq">Sequence number does not match source account.</string>
     <string name="text_tv_sequence_number_invalid">Invalid</string>
     <string name="text_btn_clear">Clear</string>
-    <string name="text_tv_settings_transaction_confirmation">Prompt for transaction decisions</string>
+    <string name="text_tv_settings_transaction_confirmation">Prompt for Transaction Decisions</string>
 </resources>

@@ -19,6 +19,10 @@ class SuccessPresenter(
         )
     }
 
+    fun infoClicked() {
+        viewState.showHelpScreen()
+    }
+
     fun doneClicked() {
         viewState.finishScreen()
     }

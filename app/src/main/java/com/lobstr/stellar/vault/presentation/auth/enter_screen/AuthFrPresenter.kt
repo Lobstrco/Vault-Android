@@ -18,4 +18,8 @@ class AuthFrPresenter : MvpPresenter<AuthFrView>() {
     fun restoreClicked() {
         viewState.showRestoreScreen()
     }
+
+    fun helpClicked() {
+        viewState.showHelpScreen()
+    }
 }

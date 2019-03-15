@@ -42,7 +42,7 @@ class TransactionDetailsInteractorImpl(
     }
 
     /**
-     * For case when transaction status = IMPORT_XDR - ignore server confirmation and return existing transaction xdr
+     * For case when transaction status = IMPORT_XDR - ignore server confirmation errors and return existing transaction xdr
      * @see Constant.Transaction.IMPORT_XDR
      */
     override fun confirmTransactionOnServer(
@@ -51,19 +51,24 @@ class TransactionDetailsInteractorImpl(
         hash: String?,
         transaction: String
     ): Single<String> {
-        return when (transactionStatus) {
-            IMPORT_XDR -> Single.fromCallable { transaction }
-            else -> {
-                when (needAdditionalSignatures) {
-                    true -> transactionRepository.submitSignedTransaction(
-                        AppUtil.getJwtToken(prefsUtil.authToken),
-                        transaction
-                    )
-                    else -> transactionRepository.markTransactionAsSubmitted(
-                        AppUtil.getJwtToken(prefsUtil.authToken),
-                        hash!!,
-                        transaction
-                    )
+        return when (needAdditionalSignatures) {
+            true -> transactionRepository.submitSignedTransaction(
+                AppUtil.getJwtToken(prefsUtil.authToken),
+                transaction
+            )
+            else -> transactionRepository.markTransactionAsSubmitted(
+                AppUtil.getJwtToken(prefsUtil.authToken),
+                hash!!,
+                transaction
+            )
+        }.onErrorResumeNext {
+            // ignore errors from Vault server for IMPORT_XDR transaction status
+            when (transactionStatus) {
+                IMPORT_XDR -> {
+                    Single.fromCallable { transaction }
+                }
+                else -> {
+                    Single.error(it)
                 }
             }
         }

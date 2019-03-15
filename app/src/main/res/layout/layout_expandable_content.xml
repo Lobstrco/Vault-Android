@@ -10,6 +10,7 @@
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
             android:textSize="15sp"
+            android:textColorLink="@color/color_primary"
             android:textColor="@color/color_071c33"/>
 
 </LinearLayout>

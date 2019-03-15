@@ -12,7 +12,6 @@ import com.lobstr.stellar.vault.domain.vault_auth_screen.VaultAuthInteractor
 import com.lobstr.stellar.vault.presentation.BasePresenter
 import com.lobstr.stellar.vault.presentation.application.LVApplication
 import com.lobstr.stellar.vault.presentation.dagger.module.vault_auth.VaultAuthModule
-import com.lobstr.stellar.vault.presentation.dialog.alert.base.AlertDialogFragment
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
@@ -165,22 +164,5 @@ class VaultAuthPresenter : BasePresenter<VaultAuthView>() {
                     }
                 })
         )
-    }
-
-    fun logOutClicked() {
-        viewState.showLogOutDialog()
-    }
-
-    fun onAlertDialogPositiveButtonClicked(tag: String?) {
-        if (tag.isNullOrEmpty()) {
-            return
-        }
-
-        when (tag) {
-            AlertDialogFragment.DialogFragmentIdentifier.LOG_OUT -> {
-                interactor.clearUserData()
-                viewState.showAuthScreen()
-            }
-        }
     }
 }

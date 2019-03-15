@@ -8,6 +8,7 @@ import com.lobstr.stellar.vault.domain.re_check_signer.RecheckSignerInteractor
 import com.lobstr.stellar.vault.presentation.BasePresenter
 import com.lobstr.stellar.vault.presentation.application.LVApplication
 import com.lobstr.stellar.vault.presentation.dagger.module.re_check_signer.RecheckSignerModule
+import com.lobstr.stellar.vault.presentation.dialog.alert.base.AlertDialogFragment
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
@@ -77,5 +78,22 @@ class RecheckSignerPresenter : BasePresenter<RecheckSignerView>() {
                 })
         )
 
+    }
+
+    fun logOutClicked() {
+        viewState.showLogOutDialog()
+    }
+
+    fun onAlertDialogPositiveButtonClicked(tag: String?) {
+        if (tag.isNullOrEmpty()) {
+            return
+        }
+
+        when (tag) {
+            AlertDialogFragment.DialogFragmentIdentifier.LOG_OUT -> {
+                interactor.clearUserData()
+                viewState.showAuthScreen()
+            }
+        }
     }
 }

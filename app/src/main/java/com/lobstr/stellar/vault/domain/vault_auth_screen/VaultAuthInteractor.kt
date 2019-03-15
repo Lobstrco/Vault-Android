@@ -23,6 +23,4 @@ interface VaultAuthInteractor {
     fun confirmAccountHasSigners()
 
     fun getSignedAccounts(token: String): Single<List<Account>>
-
-    fun clearUserData()
 }

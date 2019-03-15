@@ -17,8 +17,8 @@ import javax.inject.Inject
 class VaultAuthInteractorImpl(
     private val vaultAuthRepository: VaultAuthRepository,
     private val stellarRepository: StellarRepository,
-    private val keyStoreRepository: KeyStoreRepository,
     private val accountRepository: AccountRepository,
+    private val keyStoreRepository: KeyStoreRepository,
     private val prefsUtil: PrefsUtil
 ) : VaultAuthInteractor {
 
@@ -29,7 +29,7 @@ class VaultAuthInteractorImpl(
         LVApplication.sAppComponent.plusFcmInternalComponent(FcmInternalModule()).inject(this)
     }
 
-    override fun getUserToken(): String?{
+    override fun getUserToken(): String? {
         return prefsUtil.authToken
     }
 
@@ -77,10 +77,5 @@ class VaultAuthInteractorImpl(
     override fun getSignedAccounts(token: String): Single<List<Account>> {
         return accountRepository.getSignedAccounts(AppUtil.getJwtToken(token))
             .doOnSuccess { prefsUtil.accountSignersCount = it.size }
-    }
-
-    override fun clearUserData() {
-        prefsUtil.clearUserPrefs()
-        keyStoreRepository.clearAll()
     }
 }

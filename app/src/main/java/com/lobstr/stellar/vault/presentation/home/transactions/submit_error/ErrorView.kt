@@ -8,7 +8,7 @@ import com.arellomobile.mvp.viewstate.strategy.StateStrategyType
 
 interface ErrorView : MvpView {
 
-    @StateStrategyType(AddToEndSingleStrategy::class)
+    @StateStrategyType(SkipStrategy::class)
     fun vibrate(pattern: LongArray)
 
     @StateStrategyType(AddToEndSingleStrategy::class)
@@ -16,4 +16,7 @@ interface ErrorView : MvpView {
 
     @StateStrategyType(SkipStrategy::class)
     fun finishScreen()
+
+    @StateStrategyType(SkipStrategy::class)
+    fun showHelpScreen()
 }

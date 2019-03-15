@@ -197,3 +197,8 @@
   **[] $VALUES;
   public *;
 }
+
+# Get deobfuscated crash reports
+-keep public class * extends java.lang.Exception
+-keep class com.crashlytics.** { *; }
+-dontwarn com.crashlytics.**

@@ -69,7 +69,9 @@ class TransactionsPresenter : BasePresenter<TransactionsView>() {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
                     when (it.type) {
-                        Notification.Type.ADDED_NEW_TRANSACTION -> {
+                        Notification.Type.ADDED_NEW_TRANSACTION,
+                        Notification.Type.ADDED_NEW_SIGNATURE,
+                        Notification.Type.TRANSACTION_SUBMITTED -> {
                             //TODO improve logic in future
 //                            val transactionItem = it.data as? TransactionItem
 //                            if (transactionItem != null && !transactionItem.xdr.isNullOrEmpty()) {

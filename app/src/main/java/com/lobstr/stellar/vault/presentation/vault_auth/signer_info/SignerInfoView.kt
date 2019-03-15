@@ -16,4 +16,7 @@ interface SignerInfoView : MvpView {
 
     @StateStrategyType(SkipStrategy::class)
     fun copyToClipBoard(text: String)
+
+    @StateStrategyType(SkipStrategy::class)
+    fun showHelpScreen()
 }

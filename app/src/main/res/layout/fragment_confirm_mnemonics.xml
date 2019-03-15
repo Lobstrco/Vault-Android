@@ -60,8 +60,8 @@
                 android:background="@drawable/bg_mnemonics"
                 android:minHeight="144dp"
                 app:isDraggable="true"
-                app:itemTextColor="@android:color/black"
-                app:itemBackground="@drawable/bg_mnemonic_item_white"/>
+                app:itemTextColor="@android:color/white"
+                app:itemBackground="@drawable/bg_mnemonic_item_purple"/>
     </FrameLayout>
 
     <FrameLayout android:layout_width="match_parent"

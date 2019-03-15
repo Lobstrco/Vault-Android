@@ -19,14 +19,14 @@ class VaultAuthModule {
         prefsUtil: PrefsUtil,
         vaultAuthRepository: VaultAuthRepository,
         stellarRepository: StellarRepository,
-        keyStoreRepository: KeyStoreRepository,
-        accountRepository: AccountRepository
+        accountRepository: AccountRepository,
+        keyStoreRepository: KeyStoreRepository
     ): VaultAuthInteractor {
         return VaultAuthInteractorImpl(
             vaultAuthRepository,
             stellarRepository,
-            keyStoreRepository,
             accountRepository,
+            keyStoreRepository,
             prefsUtil
         )
     }

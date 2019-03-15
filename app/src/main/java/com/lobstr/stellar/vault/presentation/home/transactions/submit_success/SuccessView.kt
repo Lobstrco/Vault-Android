@@ -10,7 +10,7 @@ interface SuccessView : MvpView {
     @StateStrategyType(AddToEndSingleStrategy::class)
     fun setMovementMethods()
 
-    @StateStrategyType(AddToEndSingleStrategy::class)
+    @StateStrategyType(SkipStrategy::class)
     fun vibrate(pattern: LongArray)
 
     @StateStrategyType(AddToEndSingleStrategy::class)
@@ -24,4 +24,7 @@ interface SuccessView : MvpView {
 
     @StateStrategyType(SkipStrategy::class)
     fun copyToClipBoard(text: String)
+
+    @StateStrategyType(SkipStrategy::class)
+    fun showHelpScreen()
 }

@@ -27,5 +27,5 @@ interface FcmInteractor {
 
     fun isNotificationsEnabled(): Boolean
 
-    fun transformNewTransactionResponse(jsonStr: String?): TransactionItem?
+    fun transformTransactionResponse(jsonStr: String?): TransactionItem?
 }

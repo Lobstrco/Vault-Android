@@ -15,4 +15,7 @@ interface AuthFrView : MvpView {
 
     @StateStrategyType(SkipStrategy::class)
     fun showRestoreScreen()
+
+    @StateStrategyType(SkipStrategy::class)
+    fun showHelpScreen()
 }

@@ -63,12 +63,10 @@ class DashboardPresenter : BasePresenter<DashboardView>() {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
                     when (it.type) {
-                        Notification.Type.TRANSACTION_COUNT_CHANGED -> {
-                            loadPendingTransactions()
-                            // FIXME SIGNED_NEW_ACCOUNT don't worked. Need additional notification about SIGNERS_COUNT_CHANGED. Temporally solution for update signers count
-                            loadSignedAccountsList()
-                        }
-                        Notification.Type.ADDED_NEW_TRANSACTION -> {
+                        Notification.Type.TRANSACTION_COUNT_CHANGED,
+                        Notification.Type.ADDED_NEW_TRANSACTION,
+                        Notification.Type.ADDED_NEW_SIGNATURE,
+                        Notification.Type.TRANSACTION_SUBMITTED -> {
                             loadPendingTransactions()
                             // FIXME SIGNED_NEW_ACCOUNT don't worked. Need additional notification about SIGNERS_COUNT_CHANGED. Temporally solution for update signers count
                             loadSignedAccountsList()

@@ -27,8 +27,15 @@ class PinPresenter(
     lateinit var interactor: PinInteractor
 
     private var newPin: String? = null
+    private var tempCommonPin: String? = null
+    private var needBlockPinView = false
 
-    private val commonPinArray: ArrayList<String> = arrayListOf("123456", "121212")
+    private val commonPinArray: ArrayList<String> =
+        arrayListOf(
+            "123456", "121212", "101010", "112233", "200000", "696969", "131313",
+            "654321", "222111", "111222", "121111", "111112", "011111", "111110",
+            "010000", "000111", "111000", "000001", "100000"
+        )
 
     init {
         LVApplication.sAppComponent.plusPinComponent(PinModule()).inject(this)
@@ -74,7 +81,6 @@ class PinPresenter(
      * pin - your completely entered pin
      */
     fun onPinComplete(pin: String?) {
-        // TODO check viewState.showCommonPinPatternDialog()
         if (pin != null) {
             when {
                 needCreatePin!! -> createPin(pin)
@@ -94,14 +100,20 @@ class PinPresenter(
                 confirmPin(pin, true)
             }
             newPin.equals(pin) -> {
+                if(needBlockPinView) {
+                    return
+                }
+
                 unsubscribeOnDestroy(
                     interactor.savePin(pin)
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .doOnSubscribe {
+                            needBlockPinView = true
                             viewState.showProgressDialog(true)
                         }
                         .doOnEvent {
+                            needBlockPinView = false
                             viewState.showProgressDialog(false)
                         }
                         .doOnComplete {
@@ -125,14 +137,20 @@ class PinPresenter(
     }
 
     private fun confirmPin(pin: String, needCheckOldPint: Boolean) {
+        if(needBlockPinView) {
+            return
+        }
+
         unsubscribeOnDestroy(
             interactor.checkPinValidation(pin)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe {
+                    needBlockPinView = true
                     viewState.showProgressDialog(true)
                 }
                 .doOnEvent { _: Boolean, _: Throwable? ->
+                    needBlockPinView = false
                     viewState.showProgressDialog(false)
                 }
                 .doOnSuccess { success ->
@@ -141,13 +159,18 @@ class PinPresenter(
                             viewState.showErrorMessage(R.string.text_error_use_old_pin)
                             viewState.resetPin()
                         } else {
-                            newPin = pin
-                            if (needChangePin!!) {
-                                viewState.showTitle(R.string.text_title_confirm_new_pin)
+                            if (isCommonPin(pin)) {
+                                tempCommonPin = pin
+                                viewState.showCommonPinPatternDialog()
                             } else {
-                                viewState.showTitle(R.string.text_title_confirm_pin)
+                                newPin = pin
+                                if (needChangePin!!) {
+                                    viewState.showTitle(R.string.text_title_confirm_new_pin)
+                                } else {
+                                    viewState.showTitle(R.string.text_title_confirm_pin)
+                                }
+                                viewState.resetPin()
                             }
-                            viewState.resetPin()
                         }
                     } else {
                         if (success) {
@@ -208,7 +231,9 @@ class PinPresenter(
             }
 
             AlertDialogFragment.DialogFragmentIdentifier.COMMON_PIN_PATTERN -> {
-                // TODO CHANGE PIN clicked
+                newPin = null
+                tempCommonPin = null
+                viewState.resetPin()
             }
         }
     }
@@ -220,13 +245,18 @@ class PinPresenter(
 
         when (tag) {
             AlertDialogFragment.DialogFragmentIdentifier.COMMON_PIN_PATTERN -> {
-                // TODO CONTINUE clicked
+                newPin = tempCommonPin
+                tempCommonPin = null
+                if (needChangePin!!) {
+                    viewState.showTitle(R.string.text_title_confirm_new_pin)
+                } else {
+                    viewState.showTitle(R.string.text_title_confirm_pin)
+                }
+                viewState.resetPin()
             }
         }
     }
 
-
-    // TODO check this method
     private fun isCommonPin(pin: String): Boolean {
         // first check common pins from array
         if (commonPinArray.contains(pin)) {

@@ -160,11 +160,21 @@ class FcmHelper(private val context: Context, private val fcmInteractor: FcmInte
         return fcmInteractor.isNotificationsEnabled()
     }
 
+    // Handle specific notifications
+
     fun signedNewAccount(jsonStr: String?): Account? {
         return fcmInteractor.confirmIsUserSignerForLobstr(jsonStr)
     }
 
     fun addedNewTransaction(jsonStr: String?): TransactionItem? {
-        return fcmInteractor.transformNewTransactionResponse(jsonStr)
+        return fcmInteractor.transformTransactionResponse(jsonStr)
+    }
+
+    fun addedNewSignature(jsonStr: String?): TransactionItem? {
+        return fcmInteractor.transformTransactionResponse(jsonStr)
+    }
+
+    fun transactionSubmitted(jsonStr: String?): TransactionItem? {
+        return fcmInteractor.transformTransactionResponse(jsonStr)
     }
 }

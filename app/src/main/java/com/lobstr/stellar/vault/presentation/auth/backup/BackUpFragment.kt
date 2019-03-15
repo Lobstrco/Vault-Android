@@ -2,9 +2,7 @@ package com.lobstr.stellar.vault.presentation.auth.backup
 
 
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import androidx.fragment.app.Fragment
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
@@ -65,6 +63,19 @@ class BackUpFragment : BaseFragment(), BackUpView, View.OnClickListener {
 
     private fun setListeners() {
         btnNext.setOnClickListener(this)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
+        inflater?.inflate(R.menu.backup, menu)
+        super.onCreateOptionsMenu(menu, inflater)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        when (item?.itemId) {
+            R.id.action_info -> mPresenter.infoClicked()
+        }
+
+        return super.onOptionsItemSelected(item)
     }
 
     // ===========================================================

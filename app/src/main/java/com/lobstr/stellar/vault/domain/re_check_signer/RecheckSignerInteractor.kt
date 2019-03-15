@@ -11,4 +11,6 @@ interface RecheckSignerInteractor {
     fun getSignedAccounts(): Single<List<Account>>
 
     fun confirmAccountHasSigners()
+
+    fun clearUserData()
 }

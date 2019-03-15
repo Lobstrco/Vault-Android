@@ -6,7 +6,7 @@ import android.content.res.TypedArray
 import android.graphics.drawable.Drawable
 import android.os.Build
 import android.os.Handler
-import android.text.TextUtils
+import android.text.method.LinkMovementMethod
 import android.util.AttributeSet
 import android.util.Log
 import android.view.LayoutInflater
@@ -53,14 +53,14 @@ class ExpandableCardView @JvmOverloads constructor(
     defStyleAttr: Int = 0
 ) : LinearLayout(context, attrs, defStyleAttr) {
 
-    private var title: String? = null
+    private var title: Int = View.NO_ID
 
-    private var content: String? = null
+    private var content: Int = View.NO_ID
 
     private var innerView: View? = null
 
     private var typedArray: TypedArray? = null
-    private var innerViewRes: Int = 0
+    private var innerViewRes: Int = View.NO_ID
     private var iconDrawable: Drawable? = null
 
     var animDuration = DEFAULT_ANIM_DURATION.toLong()
@@ -103,8 +103,8 @@ class ExpandableCardView @JvmOverloads constructor(
     private fun initAttributes(context: Context, attrs: AttributeSet) {
         val typedArray = context.obtainStyledAttributes(attrs, R.styleable.ExpandableCardView)
         this@ExpandableCardView.typedArray = typedArray
-        title = typedArray.getString(R.styleable.ExpandableCardView_title)
-        content = typedArray.getString(R.styleable.ExpandableCardView_contentText)
+        title = typedArray.getResourceId(R.styleable.ExpandableCardView_titleText, View.NO_ID)
+        content = typedArray.getResourceId(R.styleable.ExpandableCardView_contentText, View.NO_ID)
         iconDrawable = typedArray.getDrawable(R.styleable.ExpandableCardView_icon)
         innerViewRes = typedArray.getResourceId(R.styleable.ExpandableCardView_inner_view, View.NO_ID)
         expandOnClick = typedArray.getBoolean(R.styleable.ExpandableCardView_expandOnClick, false)
@@ -118,7 +118,7 @@ class ExpandableCardView @JvmOverloads constructor(
         super.onFinishInflate()
 
         //Setting attributes
-        if (!TextUtils.isEmpty(title)) card_title.text = title
+        if (title != View.NO_ID) card_title.setText(title)
 
         iconDrawable?.let { drawable ->
             card_header.visibility = View.VISIBLE
@@ -282,7 +282,12 @@ class ExpandableCardView @JvmOverloads constructor(
     private fun setInnerView(resId: Int) {
         card_stub.layoutResource = resId
         innerView = card_stub.inflate()
-        tvContent?.text = content
+
+        if (content != View.NO_ID) {
+            tvContent?.setText(content)
+            tvContent.movementMethod = LinkMovementMethod.getInstance()
+            tvContent.setOnClickListener(defaultClickListener)
+        }
     }
 
 

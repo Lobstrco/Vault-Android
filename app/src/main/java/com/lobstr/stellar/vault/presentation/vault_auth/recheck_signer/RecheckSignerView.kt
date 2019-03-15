@@ -23,4 +23,10 @@ interface RecheckSignerView : MvpView {
 
     @StateStrategyType(AddToEndSingleStrategy::class)
     fun showHomeScreen()
+
+    @StateStrategyType(SkipStrategy::class)
+    fun showAuthScreen()
+
+    @StateStrategyType(SkipStrategy::class)
+    fun showLogOutDialog()
 }

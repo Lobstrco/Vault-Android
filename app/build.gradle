@@ -1,10 +1,11 @@
 apply plugin: 'com.android.application'
 
+apply plugin: 'io.fabric'
+
 apply plugin: 'kotlin-android'
-
 apply plugin: 'kotlin-kapt'
-
 apply plugin: 'kotlin-android-extensions'
+
 apply plugin: 'com.google.gms.google-services'
 
 android {
@@ -13,8 +14,8 @@ android {
         applicationId "com.lobstr.stellar.vault"
         minSdkVersion 19
         targetSdkVersion 28
-        versionCode 4
-        versionName "1.0.3"
+        versionCode 6
+        versionName "1.0.7"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
     }
@@ -84,7 +85,6 @@ ext {
     moxy = "1.5.5"
     leakcanary = "1.5.4"
     joda_time = "2.9.9"
-    guava = "23.0-android"
     circleimageview = "2.2.0"
     glide = "4.8.0"
     flexbox = "1.1.0"
@@ -92,7 +92,7 @@ ext {
     support = "28.0.0"
     firebase_messaging = "17.4.0"
     firebase_core = "16.0.7"
-    firebase_crash = "16.2.1"
+    firebase_crashlytics = "2.9.9"
     javax_annotation = "10.0-b28"
     androidx_appcompat = "1.0.2"
     androidx_constraintlayout = "2.0.0-alpha3"
@@ -101,8 +101,8 @@ ext {
     runner = "1.1.1"
     espresso_core = "3.1.1"
     stellar_sdk = "0.6.0"
-    work_manager = "1.0.0-rc02"
-    lottieVersion = "3.0.0-beta1"
+    work_manager = "1.0.0"
+    lottieVersion = "3.0.0-beta4"
     qr_gen = "2.5.0"
 }
 
@@ -160,7 +160,7 @@ dependencies {
     //Firebase
     implementation "com.google.firebase:firebase-messaging:$firebase_messaging"
     implementation "com.google.firebase:firebase-core:$firebase_core"
-    implementation "com.google.firebase:firebase-crash:$firebase_crash"
+    implementation "com.crashlytics.sdk.android:crashlytics:$firebase_crashlytics"
 
     //Other
     implementation "de.hdodenhof:circleimageview:$circleimageview"

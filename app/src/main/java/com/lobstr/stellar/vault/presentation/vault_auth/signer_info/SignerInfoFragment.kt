@@ -2,9 +2,7 @@ package com.lobstr.stellar.vault.presentation.vault_auth.signer_info
 
 
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.arellomobile.mvp.presenter.InjectPresenter
@@ -12,6 +10,7 @@ import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.fusechain.digitalbits.util.manager.FragmentTransactionManager
 import com.lobstr.stellar.vault.R
 import com.lobstr.stellar.vault.presentation.base.fragment.BaseFragment
+import com.lobstr.stellar.vault.presentation.faq.FaqFragment
 import com.lobstr.stellar.vault.presentation.util.AppUtil
 import com.lobstr.stellar.vault.presentation.vault_auth.recheck_signer.RecheckSignerFragment
 import kotlinx.android.synthetic.main.fragment_signer_info.*
@@ -70,6 +69,19 @@ class SignerInfoFragment : BaseFragment(),
         btnNext.setOnClickListener(this)
     }
 
+    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
+        inflater?.inflate(R.menu.signer_info, menu)
+        super.onCreateOptionsMenu(menu, inflater)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        when (item?.itemId) {
+            R.id.action_info -> mPresenter.infoClicked()
+        }
+
+        return super.onOptionsItemSelected(item)
+    }
+
     // ===========================================================
     // Listeners, methods for/from Interfaces
     // ===========================================================
@@ -102,6 +114,15 @@ class SignerInfoFragment : BaseFragment(),
         FragmentTransactionManager.displayFragment(
             parentFragment!!.childFragmentManager,
             Fragment.instantiate(context, RecheckSignerFragment::class.java.name),
+            R.id.fl_container,
+            true
+        )
+    }
+
+    override fun showHelpScreen() {
+        FragmentTransactionManager.displayFragment(
+            parentFragment!!.childFragmentManager,
+            Fragment.instantiate(context, FaqFragment::class.java.name),
             R.id.fl_container,
             true
         )

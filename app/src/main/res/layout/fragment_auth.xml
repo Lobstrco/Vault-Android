@@ -17,7 +17,7 @@
               android:textColor="@color/color_071c33"
               android:textAppearance="?android:textAppearanceMedium"
               android:textSize="16sp"
-              android:text="@string/text_start_screen_tv_title"
+              android:text="@string/text_tv_start_screen_title"
               android:layout_gravity="center"/>
 
     <LinearLayout android:layout_width="match_parent"
@@ -26,7 +26,7 @@
                   android:orientation="vertical"
                   android:gravity="center">
         <Button
-                android:text="@string/text_start_screen_btn_create_account"
+                android:text="@string/text_btn_start_screen_create_account"
                 android:layout_height="wrap_content"
                 android:id="@+id/btnAuthNew"
                 android:layout_width="match_parent"
@@ -36,7 +36,7 @@
                 android:textSize="14sp"
                 android:textAllCaps="false"/>
         <Button
-                android:text="@string/text_start_screen_btn_restore_account"
+                android:text="@string/text_btn_start_screen_restore_account"
                 android:layout_height="wrap_content"
                 android:id="@+id/btnAuthRestore"
                 android:layout_width="match_parent"
@@ -46,6 +46,19 @@
                 android:textColor="@color/color_primary"
                 android:background="@drawable/selector_default_button_with_round_stroked"
                 style="@style/Base.Widget.AppCompat.Button.Borderless.Colored"/>
+
+        <TextView
+                android:id="@+id/tvHelp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingTop="8dp"
+                android:paddingBottom="8dp"
+                android:textColor="@color/color_99000000"
+                android:gravity="center"
+                android:textSize="12sp"
+                android:linksClickable="false"
+                android:textColorLink="@color/color_primary"
+                android:text="@string/text_tv_start_screen_help"/>
 
     </LinearLayout>
 
@@ -57,5 +70,5 @@
             android:gravity="center"
             android:textSize="12sp"
             android:textColorLink="@color/color_primary"
-            android:text="@string/text_start_screen_terms_and_privacy"/>
+            android:text="@string/text_tv_start_screen_terms_and_privacy"/>
 </LinearLayout>

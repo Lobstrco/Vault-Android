@@ -6,5 +6,7 @@ data class Notification(val type: Byte, val data: Any?) {
         const val ADDED_NEW_TRANSACTION: Byte = 1
         const val TRANSACTION_COUNT_CHANGED: Byte = 2
         const val SIGNERS_COUNT_CHANGED: Byte = 3
+        const val ADDED_NEW_SIGNATURE: Byte = 4
+        const val TRANSACTION_SUBMITTED: Byte = 5
     }
 }

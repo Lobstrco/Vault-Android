@@ -26,6 +26,10 @@ class ErrorPresenter(private val error: String) : MvpPresenter<ErrorView>() {
         return if (resValue == 0) error else LVApplication.sAppComponent.context.getString(resValue)
     }
 
+    fun infoClicked() {
+        viewState.showHelpScreen()
+    }
+
     fun doneClicked() {
         viewState.finishScreen()
     }
