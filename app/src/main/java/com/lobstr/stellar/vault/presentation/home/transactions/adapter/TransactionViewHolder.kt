@@ -31,10 +31,16 @@ class TransactionViewHolder(itemView: View, private val listener: OnTransactionI
         itemView.tvTransactionInvalid.visibility =
             if (isSequenceValid) View.GONE else View.VISIBLE
 
+        itemView.tvSourceAccount.visibility =
+            if (item.transaction.sourceAccount.isNullOrEmpty()) View.GONE else View.VISIBLE
+
         itemView.tvTransactionItemDate.text = AppUtil.formatDate(
             DateTime(item.addedAt).toDate().time,
             "MMM dd yyyy hh:mm a"
         )
+
+        itemView.tvSourceAccount.text = item.transaction.sourceAccount
+
         itemView.tvTransactionItemOperation.text = getOperationName(item.transaction, context)
         itemView.setOnClickListener {
             val position = this@TransactionViewHolder.adapterPosition

@@ -40,11 +40,5 @@ interface TransactionsView : MvpView {
     fun showImportXdrScreen()
 
     @StateStrategyType(SkipStrategy::class)
-    fun showSuccessScreen(envelopeXdr: String, needAdditionalSignatures: Boolean)
-
-    @StateStrategyType(SkipStrategy::class)
-    fun showErrorScreen(errorMessage: String)
-
-    @StateStrategyType(SkipStrategy::class)
     fun checkRateUsDialog()
 }

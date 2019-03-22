@@ -3,28 +3,15 @@
               android:orientation="vertical"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
-              android:paddingTop="24dp"
-              android:paddingBottom="24dp"
-              android:paddingRight="16dp"
-              android:paddingLeft="16dp">
+              android:layout_marginLeft="16dp"
+              android:layout_marginRight="16dp"
+              android:layout_marginBottom="16dp">
 
-    <TextView
-            android:id="@+id/tvTitle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@android:color/black"
-            android:text="@string/text_tv_import_xdr_title"
-            android:layout_gravity="center"
-            android:gravity="center"
-            android:textSize="16sp"
-            android:layout_marginBottom="10dp"
-            android:textStyle="bold"/>
 
     <TextView
             android:id="@+id/tvSubtitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="center"
             android:layout_gravity="center"
             android:textColor="@color/color_071c33"
             android:textSize="14sp"
@@ -40,6 +27,7 @@
             android:layout_marginBottom="8dp"
             android:padding="17dp"
             android:textSize="14sp"
+            android:inputType="textNoSuggestions|textMultiLine"
             android:scrollbars="vertical"
             android:textColorHint="@color/color_4D000000"
             android:hint="@string/hint_et_import_xdr"

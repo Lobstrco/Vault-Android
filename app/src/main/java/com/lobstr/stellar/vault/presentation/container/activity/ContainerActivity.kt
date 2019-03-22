@@ -14,6 +14,7 @@ import com.lobstr.stellar.vault.presentation.entities.transaction.TransactionIte
 import com.lobstr.stellar.vault.presentation.util.Constant
 import com.lobstr.stellar.vault.presentation.util.Constant.Extra.EXTRA_NAVIGATION_FR
 import com.lobstr.stellar.vault.presentation.util.Constant.Navigation.DASHBOARD
+import com.lobstr.stellar.vault.presentation.util.Constant.Navigation.IMPORT_XDR
 import com.lobstr.stellar.vault.presentation.util.Constant.Navigation.SETTINGS
 import com.lobstr.stellar.vault.presentation.util.Constant.Navigation.TRANSACTION_DETAILS
 
@@ -87,6 +88,18 @@ class ContainerActivity : BaseActivity(), ContainerView {
         val bundle = Bundle()
         bundle.putInt(Constant.Bundle.BUNDLE_NAVIGATION_FR, TRANSACTION_DETAILS)
         bundle.putParcelable(Constant.Bundle.BUNDLE_TRANSACTION_ITEM, transactionItem)
+
+        FragmentTransactionManager.displayFragment(
+            supportFragmentManager,
+            Fragment.instantiate(this, ContainerFragment::class.java.name, bundle),
+            R.id.fl_container,
+            true
+        )
+    }
+
+    override fun showImportXdrFr() {
+        val bundle = Bundle()
+        bundle.putInt(Constant.Bundle.BUNDLE_NAVIGATION_FR, IMPORT_XDR)
 
         FragmentTransactionManager.displayFragment(
             supportFragmentManager,

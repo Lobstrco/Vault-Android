@@ -14,8 +14,8 @@ android {
         applicationId "com.lobstr.stellar.vault"
         minSdkVersion 19
         targetSdkVersion 28
-        versionCode 6
-        versionName "1.0.7"
+        versionCode 7
+        versionName "1.0.8"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
     }
@@ -91,7 +91,7 @@ ext {
     pin = "2.1.0"
     support = "28.0.0"
     firebase_messaging = "17.4.0"
-    firebase_core = "16.0.7"
+    firebase_core = "16.0.8"
     firebase_crashlytics = "2.9.9"
     javax_annotation = "10.0-b28"
     androidx_appcompat = "1.0.2"
@@ -100,7 +100,7 @@ ext {
     junit = "4.12"
     runner = "1.1.1"
     espresso_core = "3.1.1"
-    stellar_sdk = "0.6.0"
+//    stellar_sdk = "0.6.0"
     work_manager = "1.0.0"
     lottieVersion = "3.0.0-beta4"
     qr_gen = "2.5.0"
@@ -115,7 +115,8 @@ dependencies {
     androidTestImplementation "androidx.test.espresso:espresso-core:$espresso_core"
 
     // Stellar
-    implementation "com.github.stellar:java-stellar-sdk:$stellar_sdk"
+    // TODO handle issue https://github.com/stellar/java-stellar-sdk/issues/183
+    // implementation "com.github.stellar:java-stellar-sdk:$stellar_sdk"
 
     // Android
     implementation "androidx.appcompat:appcompat:$androidx_appcompat"

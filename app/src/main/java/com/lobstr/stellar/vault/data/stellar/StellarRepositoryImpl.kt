@@ -68,13 +68,7 @@ class StellarRepositoryImpl(
      */
     override fun createTransactionItem(envelopXdr: String): Single<TransactionItem> {
         return fromCallable(Callable<TransactionItem> {
-            // handle issue https://github.com/stellar/java-stellar-sdk/issues/183
-            val transaction = try {
-                Transaction.fromEnvelopeXdr(envelopXdr)
-            } catch (e: ArithmeticException) {
-                e.printStackTrace()
-                null
-            }
+            val transaction = Transaction.fromEnvelopeXdr(envelopXdr)
 
             // Create Transaction Item for handle it in transaction Details
             return@Callable transactionEntityMapper.transformTransactionItem(transaction)

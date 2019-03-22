@@ -6,6 +6,7 @@ import kotlinx.android.parcel.Parcelize
 
 @Parcelize
 data class Transaction(
+    val sourceAccount: String?,
     val operations: List<Operation>,
     var mSequenceNumber: Long = 0
 ) : Parcelable

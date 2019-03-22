@@ -48,6 +48,7 @@ object Constant {
         const val SIGNER_INFO = 8
         const val SUCCESS = 9
         const val ERROR = 10
+        const val IMPORT_XDR = 11
     }
 
     object Transaction {
@@ -94,6 +95,7 @@ object Constant {
         const val OPERATION_DETAILS_FRAGMENT = 103
         const val CHANGE_PIN = 104
         const val CONFIRM_PIN_FOR_MNEMONIC = 105
+        const val IMPORT_XDR_FRAGMENT = 106
     }
 
     object ResultCode {

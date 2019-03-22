@@ -20,6 +20,7 @@
     <string name="text_btn_add">Add</string>
     <string name="text_btn_retry">Retry</string>
     <string name="text_btn_confirm">Confirm</string>
+    <string name="text_btn_yes">Yes</string>
     <string name="text_btn_deny">Deny</string>
     <string name="text_btn_log_out">Log Out</string>
     <string name="text_btn_next">Next</string>

@@ -39,21 +39,6 @@ class TransactionEntityMapper {
     }
 
     fun transformTransactionItem(apiTransactionItem: ApiTransactionItem): TransactionItem {
-        // handle issue https://github.com/stellar/java-stellar-sdk/issues/183
-        val transaction = try {
-            org.stellar.sdk.Transaction.fromEnvelopeXdr(apiTransactionItem.xdr)
-        } catch (e: ArithmeticException) {
-            e.printStackTrace()
-            null
-        }
-
-        // handle issue https://github.com/stellar/java-stellar-sdk/issues/183
-        val parsedTransaction =
-            if (transaction != null)
-                getTransaction(transaction)
-            else
-                Transaction(mutableListOf(), 0)
-
         return TransactionItem(
             apiTransactionItem.cancelledAt,
             apiTransactionItem.addedAt,
@@ -63,53 +48,51 @@ class TransactionEntityMapper {
             apiTransactionItem.getStatusDisplay,
             apiTransactionItem.status,
             apiTransactionItem.sequenceOutdatedAt,
-            parsedTransaction
+            getTransaction(
+                org.stellar.sdk.Transaction.fromEnvelopeXdr(apiTransactionItem.xdr)
+            )
         )
     }
 
-    fun transformTransactionItem(transaction: org.stellar.sdk.Transaction?): TransactionItem {
-        // handle issue https://github.com/stellar/java-stellar-sdk/issues/183
-        val parsedTransaction =
-            if (transaction != null)
-                getTransaction(transaction)
-            else
-                Transaction(mutableListOf(), 0)
-
+    fun transformTransactionItem(transaction: org.stellar.sdk.Transaction): TransactionItem {
         return TransactionItem(
             "",
             "",
-            transaction?.toEnvelopeXdrBase64(),
+            transaction.toEnvelopeXdrBase64(),
             "",
             /*transaction?.hash()?.joinToString("") { String.format("%02X", it) } ?:*/ "",
             "",
             IMPORT_XDR,
             null,
-            parsedTransaction
+            getTransaction(transaction)
         )
     }
 
     private fun getTransaction(transaction: org.stellar.sdk.Transaction): Transaction {
         val operations: MutableList<Operation> = mutableListOf()
-        if (transaction.operations.isNotEmpty()) {
-            transaction.operations.forEach {
-                when (it) {
-                    is org.stellar.sdk.PaymentOperation -> operations.add(mapPaymentOperation(it))
-                    is org.stellar.sdk.CreateAccountOperation -> operations.add(mapCreateAccountOperation(it))
-                    is org.stellar.sdk.PathPaymentOperation -> operations.add(mapPathPaymentOperation(it))
-                    is org.stellar.sdk.ManageOfferOperation -> operations.add(mapManageOfferOperation(it))
-                    is org.stellar.sdk.CreatePassiveOfferOperation -> operations.add(mapCreatePassiveOfferOperation(it))
-                    is org.stellar.sdk.SetOptionsOperation -> operations.add(mapSetOptionsOperation(it))
-                    is org.stellar.sdk.ChangeTrustOperation -> operations.add(mapChangeTrustOperation(it))
-                    is org.stellar.sdk.AllowTrustOperation -> operations.add(mapAllowTrustOperation(it))
-                    is org.stellar.sdk.AccountMergeOperation -> operations.add(mapAccountMergeOperation(it))
-                    is org.stellar.sdk.InflationOperation -> operations.add(mapInflationOperation(it))
-                    is org.stellar.sdk.ManageDataOperation -> operations.add(mapManageDataOperation(it))
-                    is org.stellar.sdk.BumpSequenceOperation -> operations.add(mapBumpSequenceOperation(it))
-                }
+
+        transaction.operations.forEach {
+            when (it) {
+                is org.stellar.sdk.PaymentOperation -> operations.add(mapPaymentOperation(it))
+                is org.stellar.sdk.CreateAccountOperation -> operations.add(mapCreateAccountOperation(it))
+                is org.stellar.sdk.PathPaymentOperation -> operations.add(mapPathPaymentOperation(it))
+                is org.stellar.sdk.ManageOfferOperation -> operations.add(mapManageOfferOperation(it))
+                is org.stellar.sdk.CreatePassiveOfferOperation -> operations.add(mapCreatePassiveOfferOperation(it))
+                is org.stellar.sdk.SetOptionsOperation -> operations.add(mapSetOptionsOperation(it))
+                is org.stellar.sdk.ChangeTrustOperation -> operations.add(mapChangeTrustOperation(it))
+                is org.stellar.sdk.AllowTrustOperation -> operations.add(mapAllowTrustOperation(it))
+                is org.stellar.sdk.AccountMergeOperation -> operations.add(mapAccountMergeOperation(it))
+                is org.stellar.sdk.InflationOperation -> operations.add(mapInflationOperation(it))
+                is org.stellar.sdk.ManageDataOperation -> operations.add(mapManageDataOperation(it))
+                is org.stellar.sdk.BumpSequenceOperation -> operations.add(mapBumpSequenceOperation(it))
             }
         }
 
-        return Transaction(operations, transaction.sequenceNumber)
+        return Transaction(
+            transaction.sourceAccount?.accountId,
+            operations,
+            transaction.sequenceNumber
+        )
     }
 
     private fun mapPaymentOperation(operation: org.stellar.sdk.PaymentOperation): PaymentOperation {

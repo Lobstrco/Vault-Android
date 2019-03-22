@@ -26,6 +26,9 @@ interface ContainerView : MvpView {
     fun showTransactionDetails(transactionItem: TransactionItem)
 
     @StateStrategyType(SkipStrategy::class)
+    fun showImportXdrFr()
+
+    @StateStrategyType(SkipStrategy::class)
     fun showMnemonicsFr()
 
     @StateStrategyType(SkipStrategy::class)

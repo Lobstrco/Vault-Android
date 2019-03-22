@@ -7,6 +7,7 @@ import com.lobstr.stellar.vault.presentation.util.Constant.Navigation.AUTH
 import com.lobstr.stellar.vault.presentation.util.Constant.Navigation.DASHBOARD
 import com.lobstr.stellar.vault.presentation.util.Constant.Navigation.ERROR
 import com.lobstr.stellar.vault.presentation.util.Constant.Navigation.FINGERPRINT_SET_UP
+import com.lobstr.stellar.vault.presentation.util.Constant.Navigation.IMPORT_XDR
 import com.lobstr.stellar.vault.presentation.util.Constant.Navigation.MNEMONICS
 import com.lobstr.stellar.vault.presentation.util.Constant.Navigation.SETTINGS
 import com.lobstr.stellar.vault.presentation.util.Constant.Navigation.SIGNER_INFO
@@ -43,6 +44,8 @@ class ContainerPresenter(
             SETTINGS -> viewState.showSettingsFr()
 
             TRANSACTION_DETAILS -> viewState.showTransactionDetails(null, transactionItem!!)
+
+            IMPORT_XDR -> viewState.showImportXdrFr()
 
             MNEMONICS -> viewState.showMnemonicsFr()
 

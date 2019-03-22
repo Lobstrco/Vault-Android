@@ -36,7 +36,6 @@
                     android:fontFamily="sans-serif-medium"
                     android:textColor="@android:color/black"
                     android:id="@+id/tvTransactionItemOperation"
-                    android:text="2 Operations"
                     android:textSize="16sp"/>
 
             <TextView
@@ -53,16 +52,35 @@
 
         </LinearLayout>
 
+        <LinearLayout android:layout_width="wrap_content"
+                      android:layout_height="match_parent"
+                      android:orientation="vertical"
+                      android:layout_weight="0"
+                      android:gravity="center|end"
+                      android:layout_marginStart="10dp"
+                      android:paddingStart="0dp"
+                      android:paddingEnd="10dp">
 
-        <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/tvTransactionItemDate"
-                android:layout_weight="0"
-                android:paddingStart="0dp"
-                android:paddingEnd="10dp"
-                android:textColor="@color/color_99000000"
-                android:layout_marginStart="10dp"
-                android:textSize="14sp"/>
+            <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/tvSourceAccount"
+                    android:ellipsize="middle"
+                    android:singleLine="true"
+                    android:layout_marginBottom="2dp"
+                    android:gravity="center"
+                    android:textColor="@android:color/black"
+                    android:textSize="14sp"/>
+
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="end"
+                    android:id="@+id/tvTransactionItemDate"
+                    android:textColor="@color/color_4D000000"
+                    android:textSize="14sp"/>
+
+        </LinearLayout>
+
     </LinearLayout>
 </androidx.cardview.widget.CardView>

@@ -6,6 +6,7 @@ import com.lobstr.stellar.vault.R
 import com.lobstr.stellar.vault.presentation.entities.transaction.TransactionItem
 import com.lobstr.stellar.vault.presentation.util.Constant.Navigation.DASHBOARD
 import com.lobstr.stellar.vault.presentation.util.Constant.Navigation.ERROR
+import com.lobstr.stellar.vault.presentation.util.Constant.Navigation.IMPORT_XDR
 import com.lobstr.stellar.vault.presentation.util.Constant.Navigation.MNEMONICS
 import com.lobstr.stellar.vault.presentation.util.Constant.Navigation.SETTINGS
 import com.lobstr.stellar.vault.presentation.util.Constant.Navigation.SUCCESS
@@ -43,6 +44,8 @@ class ContainerPresenter(
             SETTINGS -> viewState.showSettingsFr()
 
             TRANSACTION_DETAILS -> viewState.showTransactionDetails(transactionItem!!)
+
+            IMPORT_XDR -> viewState.showImportXdrFr()
 
             MNEMONICS -> viewState.showMnemonicsFr()
 

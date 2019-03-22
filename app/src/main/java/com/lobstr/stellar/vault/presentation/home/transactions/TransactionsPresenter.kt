@@ -145,7 +145,7 @@ class TransactionsPresenter : BasePresenter<TransactionsView>() {
         }
 
         when (requestCode) {
-            Constant.Code.TRANSACTION_DETAILS_FRAGMENT -> {
+            Constant.Code.TRANSACTION_DETAILS_FRAGMENT, Constant.Code.IMPORT_XDR_FRAGMENT -> {
                 //TODO handle transactionItem it if needed
                 val transactionItem: TransactionItem? =
                     data?.getParcelableExtra(Constant.Extra.EXTRA_TRANSACTION_ITEM)

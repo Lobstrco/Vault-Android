@@ -4,7 +4,9 @@ import android.app.Dialog
 import android.content.DialogInterface
 import android.os.Bundle
 import android.util.Log
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import androidx.annotation.LayoutRes
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AlertDialog
@@ -149,6 +151,10 @@ open class AlertDialogFragment : BaseMvpAppCompatDialogFragment() {
                 )
             }
             .create()
+    }
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        return mContentView
     }
 
     override fun onCancel(dialog: DialogInterface?) {

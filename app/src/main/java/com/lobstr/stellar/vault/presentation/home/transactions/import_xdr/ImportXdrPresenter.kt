@@ -27,6 +27,12 @@ class ImportXdrPresenter : BasePresenter<ImportXdrView>() {
         LVApplication.sAppComponent.plusImportXdrComponent(ImportXdrModule()).inject(this)
     }
 
+    override fun onFirstViewAttach() {
+        super.onFirstViewAttach()
+
+        viewState.setupToolbarTitle(R.string.text_tv_import_xdr_title)
+    }
+
     fun nextClicked(xdr: String?) {
         if (xdr.isNullOrEmpty()) {
             return

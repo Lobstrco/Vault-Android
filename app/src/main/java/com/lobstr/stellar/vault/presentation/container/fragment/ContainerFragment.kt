@@ -18,6 +18,7 @@ import com.lobstr.stellar.vault.presentation.home.dashboard.DashboardFragment
 import com.lobstr.stellar.vault.presentation.home.settings.SettingsFragment
 import com.lobstr.stellar.vault.presentation.home.transactions.TransactionsFragment
 import com.lobstr.stellar.vault.presentation.home.transactions.details.TransactionDetailsFragment
+import com.lobstr.stellar.vault.presentation.home.transactions.import_xdr.ImportXdrFragment
 import com.lobstr.stellar.vault.presentation.home.transactions.submit_error.ErrorFragment
 import com.lobstr.stellar.vault.presentation.home.transactions.submit_success.SuccessFragment
 import com.lobstr.stellar.vault.presentation.util.Constant
@@ -150,6 +151,15 @@ class ContainerFragment : BaseContainerFragment(),
         FragmentTransactionManager.displayFragment(
             childFragmentManager,
             fragment,
+            R.id.fl_container,
+            true
+        )
+    }
+
+    override fun showImportXdrFr() {
+        FragmentTransactionManager.displayFragment(
+            childFragmentManager,
+            Fragment.instantiate(context, ImportXdrFragment::class.java.name),
             R.id.fl_container,
             true
         )

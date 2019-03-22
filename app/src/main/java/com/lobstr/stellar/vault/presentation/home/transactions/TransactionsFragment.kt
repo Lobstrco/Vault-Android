@@ -14,13 +14,12 @@ import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.lobstr.stellar.vault.R
 import com.lobstr.stellar.vault.presentation.base.fragment.BaseFragment
 import com.lobstr.stellar.vault.presentation.container.activity.ContainerActivity
-import com.lobstr.stellar.vault.presentation.dialog.alert.base.AlertDialogFragment.DialogFragmentIdentifier.IMPORT_XDR
 import com.lobstr.stellar.vault.presentation.entities.transaction.TransactionItem
 import com.lobstr.stellar.vault.presentation.home.HomeActivity
 import com.lobstr.stellar.vault.presentation.home.transactions.adapter.OnTransactionItemClicked
 import com.lobstr.stellar.vault.presentation.home.transactions.adapter.TransactionAdapter
-import com.lobstr.stellar.vault.presentation.home.transactions.import_xdr.ImportXdrDialogFragment
 import com.lobstr.stellar.vault.presentation.util.Constant
+import com.lobstr.stellar.vault.presentation.util.Constant.Code.IMPORT_XDR_FRAGMENT
 import com.lobstr.stellar.vault.presentation.util.Constant.Code.TRANSACTION_DETAILS_FRAGMENT
 import kotlinx.android.synthetic.main.fragment_transactions.*
 
@@ -143,23 +142,9 @@ class TransactionsFragment : BaseFragment(), TransactionsView, SwipeRefreshLayou
     }
 
     override fun showImportXdrScreen() {
-        val dialog = ImportXdrDialogFragment()
-        dialog.show(childFragmentManager, IMPORT_XDR)
-    }
-
-    override fun showSuccessScreen(envelopeXdr: String, needAdditionalSignatures: Boolean) {
         val intent = Intent(context, ContainerActivity::class.java)
-        intent.putExtra(Constant.Extra.EXTRA_NAVIGATION_FR, Constant.Navigation.SUCCESS)
-        intent.putExtra(Constant.Extra.EXTRA_ENVELOPE_XDR, envelopeXdr)
-        intent.putExtra(Constant.Extra.EXTRA_NEED_ADDITIONAL_SIGNATURES, needAdditionalSignatures)
-        startActivity(intent)
-    }
-
-    override fun showErrorScreen(errorMessage: String) {
-        val intent = Intent(context, ContainerActivity::class.java)
-        intent.putExtra(Constant.Extra.EXTRA_NAVIGATION_FR, Constant.Navigation.ERROR)
-        intent.putExtra(Constant.Extra.EXTRA_ERROR_MESSAGE, errorMessage)
-        startActivity(intent)
+        intent.putExtra(Constant.Extra.EXTRA_NAVIGATION_FR, Constant.Navigation.IMPORT_XDR)
+        startActivityForResult(intent, IMPORT_XDR_FRAGMENT)
     }
 
     override fun checkRateUsDialog() {
