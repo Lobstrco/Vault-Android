@@ -11,6 +11,7 @@
     <string name="title_toolbar_operation_details">Operation Details</string>
     <string name="title_toolbar_settings">Settings</string>
     <string name="title_toolbar_license">Licenses</string>
+    <string name="title_toolbar_import_xdr">Add Transaction XDR</string>
 
     <!-- Buttons -->
     <string name="text_btn_cancel">Cancel</string>
@@ -72,6 +73,7 @@
     <!-- Confirm mnemonics title -->
     <string name="text_tv_confirm_mnemonics_title">Verify Recovery Phrase</string>
     <string name="text_tv_confirm_mnemonics_description">Tap the words in correct order.</string>
+    <string name="text_btn_clear">Clear</string>
 
     <!-- Fingerprint screen -->
     <string name="text_tv_fingerprint_set_up_title">Protect your account</string>
@@ -109,6 +111,7 @@
 
     <!-- Transaction screen -->
     <string name="text_empty_state_transactions_list">Transactions not found</string>
+    <string name="text_tv_sequence_number_invalid">Invalid</string>
 
     <!--Settings-->
     <string name="title_settings_wallet">Account</string>
@@ -124,9 +127,11 @@
     <string name="text_settings_version">Version</string>
     <string name="text_settings_help">Help</string>
     <string name="text_settings_license">Licenses</string>
+    <string name="text_settings_rate_us">Rate Us</string>
     <string name="text_settings_log_out">Log Out</string>
     <string name="text_tv_settings_show">Show</string>
     <string name="text_all_rights_reserved">©%s. All rights reserved</string>
+    <string name="text_tv_settings_transaction_confirmation">Prompt for Transaction Decisions</string>
 
     <!--Signed Accounts screen-->
     <string name="text_signed_account_empty_state">Protected accounts not found</string>
@@ -151,6 +156,10 @@
     <string name="text_tv_sequence_number_invalid_description">Transaction can not be confirmed, it\'s sequence number is
         invalid.
     </string>
+
+    <!-- Add XDR screen -->
+    <string name="text_tv_import_xdr_subtitle">To submit transaction enter its XDR below</string>
+    <string name="hint_et_import_xdr">Transaction XDR</string>
 
     <!-- Finger print dialog -->
     <string name="title_finger_print_dialog">Fingerprint not set up</string>
@@ -178,11 +187,6 @@
     <!-- Rate us dialog -->
     <string name="title_rate_us_dialog">Love Using LOBSTR Vault?</string>
     <string name="msg_rate_us_dialog">Please rate us in the Google Play.</string>
-
-    <!-- Add XDR dialog -->
-    <string name="text_tv_import_xdr_title">Add Transaction XDR</string>
-    <string name="text_tv_import_xdr_subtitle">To submit transaction enter its XDR below</string>
-    <string name="hint_et_import_xdr">Transaction XDR</string>
 
     <!-- Public key dialog -->
     <string name="text_tv_show_public_key_title">Vault Public Key</string>
@@ -242,8 +246,15 @@
     <string name="text_btn_copy_public_key">Copy Public Key</string>
 
     <!-- Horizon errors -->
-    <string name="text_tx_bad_seq">Sequence number does not match source account.</string>
-    <string name="text_tv_sequence_number_invalid">Invalid</string>
-    <string name="text_btn_clear">Clear</string>
-    <string name="text_tv_settings_transaction_confirmation">Prompt for Transaction Decisions</string>
+    <string name="text_tv_tx_bad_seq">Sequence number does not match source account.</string>
+    <string name="text_tv_tx_failed">One of the operations failed.</string>
+    <string name="text_tv_tx_too_early">Ledger closeTime before minTime value in the transaction.</string>
+    <string name="text_tv_tx_too_late">Ledger closeTime after maxTime value in the transaction.</string>
+    <string name="text_tv_tx_missing_operation">No operation was specified.</string>
+    <string name="text_tv_tx_bad_auth">Too few valid signatures / wrong network.</string>
+    <string name="text_tv_tx_insufficient_balance">Fee would bring account below minimum reserve.</string>
+    <string name="text_tv_tx_no_account">Source account not found.</string>
+    <string name="text_tv_tx_insufficient_fee">Fee is too small.</string>
+    <string name="text_tv_tx_bad_auth_extra">Unused signatures attached to transaction.</string>
+    <string name="text_tv_tx_internal_error">An unknown error occurred.</string>
 </resources>

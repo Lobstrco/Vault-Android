@@ -1,8 +1,10 @@
 package com.lobstr.stellar.vault.presentation.home.settings
 
+import android.content.ActivityNotFoundException
 import android.content.DialogInterface
 import android.content.Intent
 import android.graphics.Typeface
+import android.net.Uri
 import android.os.Bundle
 import android.text.SpannableString
 import android.text.Spanned
@@ -33,6 +35,7 @@ import com.lobstr.stellar.vault.presentation.home.settings.license.LicenseFragme
 import com.lobstr.stellar.vault.presentation.home.settings.show_public_key.ShowPublicKeyDialogFragment
 import com.lobstr.stellar.vault.presentation.home.settings.signed_accounts.SignedAccountsFragment
 import com.lobstr.stellar.vault.presentation.pin.PinActivity
+import com.lobstr.stellar.vault.presentation.util.AppUtil
 import com.lobstr.stellar.vault.presentation.util.Constant
 import kotlinx.android.synthetic.main.fragment_settings.*
 import java.util.*
@@ -93,7 +96,6 @@ class SettingsFragment : BaseFragment(), SettingsView, View.OnClickListener,
     }
 
     private fun setListeners() {
-        tvLogOut.setOnClickListener(this)
         llPublicKey.setOnClickListener(this)
         llSettingsSigners.setOnClickListener(this)
         llSettingsMnemonics.setOnClickListener(this)
@@ -103,6 +105,8 @@ class SettingsFragment : BaseFragment(), SettingsView, View.OnClickListener,
         swSettingsNotifications.setOnCheckedChangeListener(this)
         swSettingsTrConfirmation.setOnCheckedChangeListener(this)
         llSettingsLicense.setOnClickListener(this)
+        llSettingsRateUs.setOnClickListener(this)
+        tvLogOut.setOnClickListener(this)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -116,13 +120,14 @@ class SettingsFragment : BaseFragment(), SettingsView, View.OnClickListener,
 
     override fun onClick(v: View?) {
         when (v!!.id) {
-            R.id.tvLogOut -> mPresenter.logOutClicked()
             R.id.llPublicKey -> mPresenter.publicKeyClicked()
             R.id.llSettingsSigners -> mPresenter.signersClicked()
             R.id.llSettingsMnemonics -> mPresenter.mnemonicsClicked()
             R.id.llSettingsChangePin -> mPresenter.changePinClicked()
             R.id.llSettingsHelp -> mPresenter.helpClicked()
             R.id.llSettingsLicense -> mPresenter.licenseClicked()
+            R.id.llSettingsRateUs -> mPresenter.rateUsClicked()
+            R.id.tvLogOut -> mPresenter.logOutClicked()
         }
     }
 
@@ -181,21 +186,21 @@ class SettingsFragment : BaseFragment(), SettingsView, View.OnClickListener,
         Toast.makeText(context, getString(message), Toast.LENGTH_SHORT).show()
     }
 
-    override fun showInfoFr() {
-        FragmentTransactionManager.displayFragment(
-            parentFragment!!.childFragmentManager,
-            Fragment.instantiate(context, FaqFragment::class.java.name),
-            R.id.fl_container,
-            true
-        )
-    }
-
     override fun showAuthScreen() {
         NotificationsManager.clearNotifications(context!!)
         val intent = Intent(context, AuthActivity::class.java)
         intent.putExtra(Constant.Extra.EXTRA_NAVIGATION_FR, Constant.Navigation.AUTH)
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         startActivity(intent)
+    }
+
+    override fun showPublicKeyDialog(publicKey: String) {
+        val bundle = Bundle()
+        bundle.putString(Constant.Bundle.BUNDLE_PUBLIC_KEY, publicKey)
+
+        val dialog = ShowPublicKeyDialogFragment()
+        dialog.arguments = bundle
+        dialog.show(childFragmentManager, PUBLIC_KEY)
     }
 
     override fun showSignersScreen() {
@@ -211,6 +216,12 @@ class SettingsFragment : BaseFragment(), SettingsView, View.OnClickListener,
         val intent = Intent(context, ContainerActivity::class.java)
         intent.putExtra(Constant.Extra.EXTRA_NAVIGATION_FR, Constant.Navigation.MNEMONICS)
         startActivity(intent)
+    }
+
+    override fun showConfirmPinCodeScreen() {
+        val intent = Intent(context, PinActivity::class.java)
+        intent.putExtra(Constant.Extra.EXTRA_CONFIRM_PIN, true)
+        startActivityForResult(intent, Constant.Code.CONFIRM_PIN_FOR_MNEMONIC)
     }
 
     override fun showChangePinScreen() {
@@ -243,7 +254,8 @@ class SettingsFragment : BaseFragment(), SettingsView, View.OnClickListener,
     override fun setTrConfirmationChecked(checked: Boolean) {
         swSettingsTrConfirmation.setOnCheckedChangeListener(null)
         swSettingsTrConfirmation.isChecked = checked
-        swSettingsTrConfirmation.setOnCheckedChangeListener(this)    }
+        swSettingsTrConfirmation.setOnCheckedChangeListener(this)
+    }
 
     override fun showFingerprintInfoDialog(titleRes: Int, messageRes: Int) {
         AlertDialogFragment.Builder(true)
@@ -255,15 +267,6 @@ class SettingsFragment : BaseFragment(), SettingsView, View.OnClickListener,
             .show(childFragmentManager, FINGERPRINT_INFO_DIALOG)
     }
 
-    override fun showPublicKeyDialog(publicKey: String) {
-        val bundle = Bundle()
-        bundle.putString(Constant.Bundle.BUNDLE_PUBLIC_KEY, publicKey)
-
-        val dialog = ShowPublicKeyDialogFragment()
-        dialog.arguments = bundle
-        dialog.show(childFragmentManager, PUBLIC_KEY)
-    }
-
     override fun showLicenseScreen() {
         FragmentTransactionManager.displayFragment(
             parentFragment!!.childFragmentManager,
@@ -271,6 +274,14 @@ class SettingsFragment : BaseFragment(), SettingsView, View.OnClickListener,
             R.id.fl_container,
             true
         )
+    }
+
+    override fun showStore(storeUrl: String) {
+        try {
+            startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(storeUrl)))
+        } catch (exc: ActivityNotFoundException) {
+            AppUtil.launchGoogleCustomTabs(context, storeUrl)
+        }
     }
 
     override fun setupPolicyYear(id: Int) {
@@ -302,12 +313,6 @@ class SettingsFragment : BaseFragment(), SettingsView, View.OnClickListener,
             .setPositiveBtnText(getString(R.string.text_btn_log_out))
             .create()
             .show(childFragmentManager, AlertDialogFragment.DialogFragmentIdentifier.LOG_OUT)
-    }
-
-    override fun showConfirmPinCodeScreen() {
-        val intent = Intent(context, PinActivity::class.java)
-        intent.putExtra(Constant.Extra.EXTRA_CONFIRM_PIN, true)
-        startActivityForResult(intent, Constant.Code.CONFIRM_PIN_FOR_MNEMONIC)
     }
 
     // ===========================================================

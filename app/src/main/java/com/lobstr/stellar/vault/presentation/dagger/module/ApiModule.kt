@@ -25,7 +25,7 @@ class ApiModule {
     private val BASE_PRODUCTION_URL = "https://vault.lobstr.co/api/"
 
     // Horizon server
-    private val HOST_HORIZON_PRODUCTION = "https://horizon.stellar.org/"
+    private val HOST_HORIZON_PRODUCTION = "https://horizon.stellar.lobstr.co/"
 
     @Provides
     @Singleton
@@ -35,7 +35,7 @@ class ApiModule {
 
         if (BuildConfig.BUILD_TYPE == Constant.BuildType.DEBUG) {
             val logging = HttpLoggingInterceptor()
-            logging.setLevel(HttpLoggingInterceptor.Level.BODY)
+            logging.level = HttpLoggingInterceptor.Level.BODY
             builder.addInterceptor(logging)
         }
 

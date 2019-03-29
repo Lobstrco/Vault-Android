@@ -27,16 +27,19 @@ interface SettingsView : MvpView {
     fun showSuccessMessage(@StringRes message: Int)
 
     @StateStrategyType(SkipStrategy::class)
-    fun showInfoFr()
+    fun showAuthScreen()
 
     @StateStrategyType(SkipStrategy::class)
-    fun showAuthScreen()
+    fun showPublicKeyDialog(publicKey: String)
 
     @StateStrategyType(SkipStrategy::class)
     fun showSignersScreen()
 
     @StateStrategyType(SkipStrategy::class)
     fun showMnemonicsScreen()
+
+    @StateStrategyType(SkipStrategy::class)
+    fun showConfirmPinCodeScreen()
 
     @StateStrategyType(SkipStrategy::class)
     fun showChangePinScreen()
@@ -57,9 +60,6 @@ interface SettingsView : MvpView {
     fun showFingerprintInfoDialog(@StringRes titleRes: Int, @StringRes messageRes: Int)
 
     @StateStrategyType(SkipStrategy::class)
-    fun showPublicKeyDialog(publicKey: String)
-
-    @StateStrategyType(SkipStrategy::class)
     fun showLicenseScreen()
 
     @StateStrategyType(AddToEndSingleStrategy::class)
@@ -69,5 +69,5 @@ interface SettingsView : MvpView {
     fun showLogOutDialog()
 
     @StateStrategyType(SkipStrategy::class)
-    fun showConfirmPinCodeScreen()
+    fun showStore(storeUrl: String)
 }

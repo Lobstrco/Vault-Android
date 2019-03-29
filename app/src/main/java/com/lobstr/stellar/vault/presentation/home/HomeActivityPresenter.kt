@@ -5,6 +5,7 @@ import com.arellomobile.mvp.MvpPresenter
 import com.lobstr.stellar.vault.domain.home.HomeInteractor
 import com.lobstr.stellar.vault.presentation.application.LVApplication
 import com.lobstr.stellar.vault.presentation.dagger.module.home.HomeModule
+import com.lobstr.stellar.vault.presentation.util.Constant
 import javax.inject.Inject
 
 @InjectViewState
@@ -31,13 +32,12 @@ class HomeActivityPresenter : MvpPresenter<HomeActivityView>() {
      * HomeActivity is responsible for check RateUs Dialog
      */
     fun checkRateUsDialog() {
-        // FIXME Enable if needed
-//        if (interactor.getRateUsState() == Constant.RateUsState.RATED
-//            || interactor.getRateUsState() == Constant.RateUsState.SKIPPED
-//        ) {
-//            return
-//        }
-//
-//        viewState.showRateUsDialog()
+        if (interactor.getRateUsState() == Constant.RateUsState.RATED
+            || interactor.getRateUsState() == Constant.RateUsState.SKIPPED
+        ) {
+            return
+        }
+
+        viewState.showRateUsDialog()
     }
 }

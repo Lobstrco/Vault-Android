@@ -137,6 +137,10 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
         viewState.showLicenseScreen()
     }
 
+    fun rateUsClicked() {
+        viewState.showStore(Constant.Social.STORE_URL)
+    }
+
     fun onAlertDialogPositiveButtonClicked(tag: String?) {
         if (tag.isNullOrEmpty()) {
             return

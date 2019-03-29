@@ -230,7 +230,7 @@ class TransactionDetailsFragment : BaseFragment(), TransactionDetailsView, View.
             .setTitle(getString(R.string.title_transaction_action_dialog))
             .setMessage(getString(R.string.msg_confirm_transaction_dialog))
             .setNegativeBtnText(getString(R.string.text_btn_cancel))
-            .setPositiveBtnText(getString(R.string.text_btn_confirm))
+            .setPositiveBtnText(getString(R.string.text_btn_yes))
             .create()
             .show(childFragmentManager, CONFIRM_TRANSACTION)    }
 

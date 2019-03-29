@@ -15,11 +15,7 @@ open class BasePresenter<View : MvpView> : MvpPresenter<View>() {
     protected var networkWorkerId: UUID? = null
     protected var needCheckConnectionState = false
 
-    protected fun unsubscribeOnDestroy(disposable: Disposable?) {
-        if (disposable == null) {
-            return
-        }
-
+    protected fun unsubscribeOnDestroy(disposable: Disposable) {
         compositeDisposable.add(disposable)
     }
 
@@ -64,7 +60,6 @@ open class BasePresenter<View : MvpView> : MvpPresenter<View>() {
 
     override fun onDestroy() {
         super.onDestroy()
-
         unsubscribeNow()
     }
 }

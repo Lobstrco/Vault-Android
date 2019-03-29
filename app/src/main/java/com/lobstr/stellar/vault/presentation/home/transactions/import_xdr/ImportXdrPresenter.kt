@@ -30,7 +30,7 @@ class ImportXdrPresenter : BasePresenter<ImportXdrView>() {
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
 
-        viewState.setupToolbarTitle(R.string.text_tv_import_xdr_title)
+        viewState.setupToolbarTitle(R.string.title_toolbar_import_xdr)
     }
 
     fun nextClicked(xdr: String?) {
