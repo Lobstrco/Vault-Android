@@ -6,7 +6,6 @@ import androidx.annotation.DrawableRes
 import androidx.fragment.app.Fragment
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
-import com.fusechain.digitalbits.util.manager.FragmentTransactionManager
 import com.lobstr.stellar.vault.R
 import com.lobstr.stellar.vault.presentation.base.activity.BaseActivity
 import com.lobstr.stellar.vault.presentation.container.fragment.ContainerFragment
@@ -17,6 +16,7 @@ import com.lobstr.stellar.vault.presentation.util.Constant.Navigation.DASHBOARD
 import com.lobstr.stellar.vault.presentation.util.Constant.Navigation.IMPORT_XDR
 import com.lobstr.stellar.vault.presentation.util.Constant.Navigation.SETTINGS
 import com.lobstr.stellar.vault.presentation.util.Constant.Navigation.TRANSACTION_DETAILS
+import com.lobstr.stellar.vault.presentation.util.manager.FragmentTransactionManager
 
 /**
  * Used for show separate activity with fragments container
@@ -82,6 +82,7 @@ class ContainerActivity : BaseActivity(), ContainerView {
         setActionBarBackground(toolbarColor)
         setHomeAsUpIndicator(upArrow, upArrowColor)
         setActionBarTitleColor(titleColor)
+        changeActionBarIconVisibility(true)
     }
 
     override fun showTransactionDetails(transactionItem: TransactionItem) {
@@ -91,9 +92,8 @@ class ContainerActivity : BaseActivity(), ContainerView {
 
         FragmentTransactionManager.displayFragment(
             supportFragmentManager,
-            Fragment.instantiate(this, ContainerFragment::class.java.name, bundle),
-            R.id.fl_container,
-            true
+            Fragment.instantiate(this, ContainerFragment::class.qualifiedName, bundle),
+            R.id.fl_container
         )
     }
 
@@ -103,9 +103,8 @@ class ContainerActivity : BaseActivity(), ContainerView {
 
         FragmentTransactionManager.displayFragment(
             supportFragmentManager,
-            Fragment.instantiate(this, ContainerFragment::class.java.name, bundle),
-            R.id.fl_container,
-            true
+            Fragment.instantiate(this, ContainerFragment::class.qualifiedName, bundle),
+            R.id.fl_container
         )
     }
 
@@ -115,9 +114,8 @@ class ContainerActivity : BaseActivity(), ContainerView {
 
         FragmentTransactionManager.displayFragment(
             supportFragmentManager,
-            Fragment.instantiate(this, ContainerFragment::class.java.name, bundle),
-            R.id.fl_container,
-            true
+            Fragment.instantiate(this, ContainerFragment::class.qualifiedName, bundle),
+            R.id.fl_container
         )
     }
 
@@ -127,9 +125,8 @@ class ContainerActivity : BaseActivity(), ContainerView {
 
         FragmentTransactionManager.displayFragment(
             supportFragmentManager,
-            Fragment.instantiate(this, ContainerFragment::class.java.name, bundle),
-            R.id.fl_container,
-            true
+            Fragment.instantiate(this, ContainerFragment::class.qualifiedName, bundle),
+            R.id.fl_container
         )
     }
 
@@ -139,9 +136,8 @@ class ContainerActivity : BaseActivity(), ContainerView {
 
         FragmentTransactionManager.displayFragment(
             supportFragmentManager,
-            Fragment.instantiate(this, ContainerFragment::class.java.name, bundle),
-            R.id.fl_container,
-            true
+            Fragment.instantiate(this, ContainerFragment::class.qualifiedName, bundle),
+            R.id.fl_container
         )
     }
 
@@ -151,9 +147,8 @@ class ContainerActivity : BaseActivity(), ContainerView {
 
         FragmentTransactionManager.displayFragment(
             supportFragmentManager,
-            Fragment.instantiate(this, ContainerFragment::class.java.name, bundle),
-            R.id.fl_container,
-            true
+            Fragment.instantiate(this, ContainerFragment::class.qualifiedName, bundle),
+            R.id.fl_container
         )
     }
 
@@ -165,9 +160,8 @@ class ContainerActivity : BaseActivity(), ContainerView {
 
         FragmentTransactionManager.displayFragment(
             supportFragmentManager,
-            Fragment.instantiate(this, ContainerFragment::class.java.name, bundle),
-            R.id.fl_container,
-            true
+            Fragment.instantiate(this, ContainerFragment::class.qualifiedName, bundle),
+            R.id.fl_container
         )
     }
 
@@ -178,9 +172,8 @@ class ContainerActivity : BaseActivity(), ContainerView {
 
         FragmentTransactionManager.displayFragment(
             supportFragmentManager,
-            Fragment.instantiate(this, ContainerFragment::class.java.name, bundle),
-            R.id.fl_container,
-            true
+            Fragment.instantiate(this, ContainerFragment::class.qualifiedName, bundle),
+            R.id.fl_container
         )
     }
 

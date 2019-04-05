@@ -12,7 +12,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
-import com.fusechain.digitalbits.util.manager.FragmentTransactionManager
 import com.lobstr.stellar.vault.R
 import com.lobstr.stellar.vault.presentation.base.fragment.BaseFragment
 import com.lobstr.stellar.vault.presentation.dialog.alert.base.AlertDialogFragment
@@ -27,6 +26,7 @@ import com.lobstr.stellar.vault.presentation.util.Constant
 import com.lobstr.stellar.vault.presentation.util.Constant.Bundle.BUNDLE_TRANSACTION_ITEM
 import com.lobstr.stellar.vault.presentation.util.Constant.Extra.EXTRA_TRANSACTION_ITEM
 import com.lobstr.stellar.vault.presentation.util.Constant.Extra.EXTRA_TRANSACTION_STATUS
+import com.lobstr.stellar.vault.presentation.util.manager.FragmentTransactionManager
 import com.lobstr.stellar.vault.presentation.util.manager.ProgressManager
 import kotlinx.android.synthetic.main.fragment_transaction_details.*
 
@@ -122,9 +122,8 @@ class TransactionDetailsFragment : BaseFragment(), TransactionDetailsView, View.
 
         FragmentTransactionManager.displayFragment(
             childFragmentManager,
-            Fragment.instantiate(context, OperationListFragment::class.java.name, bundle),
-            R.id.fl_container,
-            true
+            Fragment.instantiate(context, OperationListFragment::class.qualifiedName, bundle),
+            R.id.fl_container
         )
     }
 
@@ -138,9 +137,8 @@ class TransactionDetailsFragment : BaseFragment(), TransactionDetailsView, View.
 
         FragmentTransactionManager.displayFragment(
             childFragmentManager,
-            Fragment.instantiate(context, OperationDetailsFragment::class.java.name, bundle),
-            R.id.fl_container,
-            true
+            Fragment.instantiate(context, OperationDetailsFragment::class.qualifiedName, bundle),
+            R.id.fl_container
         )
     }
 
@@ -198,9 +196,8 @@ class TransactionDetailsFragment : BaseFragment(), TransactionDetailsView, View.
 
         FragmentTransactionManager.displayFragment(
             parentFragment!!.childFragmentManager,
-            Fragment.instantiate(context, SuccessFragment::class.java.name, bundle),
-            R.id.fl_container,
-            true
+            Fragment.instantiate(context, SuccessFragment::class.qualifiedName, bundle),
+            R.id.fl_container
         )
     }
 
@@ -218,9 +215,8 @@ class TransactionDetailsFragment : BaseFragment(), TransactionDetailsView, View.
 
         FragmentTransactionManager.displayFragment(
             parentFragment!!.childFragmentManager,
-            Fragment.instantiate(context, ErrorFragment::class.java.name, bundle),
-            R.id.fl_container,
-            true
+            Fragment.instantiate(context, ErrorFragment::class.qualifiedName, bundle),
+            R.id.fl_container
         )
     }
 

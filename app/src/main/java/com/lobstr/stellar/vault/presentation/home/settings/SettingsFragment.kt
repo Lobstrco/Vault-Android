@@ -21,7 +21,6 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
-import com.fusechain.digitalbits.util.manager.FragmentTransactionManager
 import com.lobstr.stellar.vault.R
 import com.lobstr.stellar.vault.presentation.auth.AuthActivity
 import com.lobstr.stellar.vault.presentation.base.fragment.BaseFragment
@@ -37,6 +36,7 @@ import com.lobstr.stellar.vault.presentation.home.settings.signed_accounts.Signe
 import com.lobstr.stellar.vault.presentation.pin.PinActivity
 import com.lobstr.stellar.vault.presentation.util.AppUtil
 import com.lobstr.stellar.vault.presentation.util.Constant
+import com.lobstr.stellar.vault.presentation.util.manager.FragmentTransactionManager
 import kotlinx.android.synthetic.main.fragment_settings.*
 import java.util.*
 
@@ -206,9 +206,8 @@ class SettingsFragment : BaseFragment(), SettingsView, View.OnClickListener,
     override fun showSignersScreen() {
         FragmentTransactionManager.displayFragment(
             parentFragment!!.childFragmentManager,
-            Fragment.instantiate(context, SignedAccountsFragment::class.java.name),
-            R.id.fl_container,
-            true
+            Fragment.instantiate(context, SignedAccountsFragment::class.qualifiedName),
+            R.id.fl_container
         )
     }
 
@@ -233,9 +232,8 @@ class SettingsFragment : BaseFragment(), SettingsView, View.OnClickListener,
     override fun showHelpScreen() {
         FragmentTransactionManager.displayFragment(
             parentFragment!!.childFragmentManager,
-            Fragment.instantiate(context, FaqFragment::class.java.name),
-            R.id.fl_container,
-            true
+            Fragment.instantiate(context, FaqFragment::class.qualifiedName),
+            R.id.fl_container
         )
     }
 
@@ -270,9 +268,8 @@ class SettingsFragment : BaseFragment(), SettingsView, View.OnClickListener,
     override fun showLicenseScreen() {
         FragmentTransactionManager.displayFragment(
             parentFragment!!.childFragmentManager,
-            Fragment.instantiate(context, LicenseFragment::class.java.name),
-            R.id.fl_container,
-            true
+            Fragment.instantiate(context, LicenseFragment::class.qualifiedName),
+            R.id.fl_container
         )
     }
 

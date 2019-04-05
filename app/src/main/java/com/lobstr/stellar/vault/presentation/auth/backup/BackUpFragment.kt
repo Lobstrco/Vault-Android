@@ -6,12 +6,12 @@ import android.view.*
 import androidx.fragment.app.Fragment
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
-import com.fusechain.digitalbits.util.manager.FragmentTransactionManager
 import com.lobstr.stellar.vault.R
 import com.lobstr.stellar.vault.presentation.auth.mnemonic.create_mnemonic.MnemonicsFragment
 import com.lobstr.stellar.vault.presentation.base.fragment.BaseFragment
 import com.lobstr.stellar.vault.presentation.faq.FaqFragment
 import com.lobstr.stellar.vault.presentation.util.Constant
+import com.lobstr.stellar.vault.presentation.util.manager.FragmentTransactionManager
 import kotlinx.android.synthetic.main.fragment_back_up.*
 
 class BackUpFragment : BaseFragment(), BackUpView, View.OnClickListener {
@@ -94,18 +94,16 @@ class BackUpFragment : BaseFragment(), BackUpView, View.OnClickListener {
 
         FragmentTransactionManager.displayFragment(
             parentFragment!!.childFragmentManager,
-            Fragment.instantiate(context, MnemonicsFragment::class.java.name, bundle),
-            R.id.fl_container,
-            true
+            Fragment.instantiate(context, MnemonicsFragment::class.qualifiedName, bundle),
+            R.id.fl_container
         )
     }
 
     override fun showHelpScreen() {
         FragmentTransactionManager.displayFragment(
             parentFragment!!.childFragmentManager,
-            Fragment.instantiate(context, FaqFragment::class.java.name),
-            R.id.fl_container,
-            true
+            Fragment.instantiate(context, FaqFragment::class.qualifiedName),
+            R.id.fl_container
         )
     }
 

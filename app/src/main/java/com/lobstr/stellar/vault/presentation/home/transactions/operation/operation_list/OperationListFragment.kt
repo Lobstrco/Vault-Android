@@ -9,7 +9,6 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
-import com.fusechain.digitalbits.util.manager.FragmentTransactionManager
 import com.lobstr.stellar.vault.R
 import com.lobstr.stellar.vault.presentation.base.fragment.BaseFragment
 import com.lobstr.stellar.vault.presentation.entities.transaction.TransactionItem
@@ -17,6 +16,7 @@ import com.lobstr.stellar.vault.presentation.home.transactions.details.adapter.O
 import com.lobstr.stellar.vault.presentation.home.transactions.details.adapter.TransactionOperationAdapter
 import com.lobstr.stellar.vault.presentation.home.transactions.operation.operation_details.OperationDetailsFragment
 import com.lobstr.stellar.vault.presentation.util.Constant
+import com.lobstr.stellar.vault.presentation.util.manager.FragmentTransactionManager
 import kotlinx.android.synthetic.main.fragment_operation_list.*
 
 class OperationListFragment : BaseFragment(),
@@ -92,14 +92,13 @@ class OperationListFragment : BaseFragment(),
         bundle.putParcelable(Constant.Bundle.BUNDLE_TRANSACTION_ITEM, transactionItem)
         bundle.putInt(Constant.Bundle.BUNDLE_OPERATION_POSITION, position)
 
-        val fragment = Fragment.instantiate(context, OperationDetailsFragment::class.java.name, bundle)
+        val fragment = Fragment.instantiate(context, OperationDetailsFragment::class.qualifiedName, bundle)
         fragment.setTargetFragment(this, Constant.Code.OPERATION_DETAILS_FRAGMENT)
 
         FragmentTransactionManager.displayFragment(
             parentFragment!!.childFragmentManager,
             fragment,
-            R.id.fl_container,
-            true
+            R.id.fl_container
         )
     }
 

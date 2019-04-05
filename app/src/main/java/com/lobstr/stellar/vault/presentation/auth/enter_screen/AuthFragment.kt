@@ -9,12 +9,12 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
-import com.fusechain.digitalbits.util.manager.FragmentTransactionManager
 import com.lobstr.stellar.vault.R
 import com.lobstr.stellar.vault.presentation.auth.backup.BackUpFragment
 import com.lobstr.stellar.vault.presentation.auth.restore_key.RecoverKeyFragment
 import com.lobstr.stellar.vault.presentation.base.fragment.BaseFragment
 import com.lobstr.stellar.vault.presentation.faq.FaqFragment
+import com.lobstr.stellar.vault.presentation.util.manager.FragmentTransactionManager
 import kotlinx.android.synthetic.main.fragment_auth.*
 
 class AuthFragment : BaseFragment(), AuthFrView, View.OnClickListener {
@@ -89,27 +89,24 @@ class AuthFragment : BaseFragment(), AuthFrView, View.OnClickListener {
     override fun showBackUpScreen() {
         FragmentTransactionManager.displayFragment(
             parentFragment!!.childFragmentManager,
-            Fragment.instantiate(context, BackUpFragment::class.java.name),
-            R.id.fl_container,
-            true
+            Fragment.instantiate(context, BackUpFragment::class.qualifiedName),
+            R.id.fl_container
         )
     }
 
     override fun showRestoreScreen() {
         FragmentTransactionManager.displayFragment(
             parentFragment!!.childFragmentManager,
-            Fragment.instantiate(context, RecoverKeyFragment::class.java.name),
-            R.id.fl_container,
-            true
+            Fragment.instantiate(context, RecoverKeyFragment::class.qualifiedName),
+            R.id.fl_container
         )
     }
 
     override fun showHelpScreen() {
         FragmentTransactionManager.displayFragment(
             parentFragment!!.childFragmentManager,
-            Fragment.instantiate(context, FaqFragment::class.java.name),
-            R.id.fl_container,
-            true
+            Fragment.instantiate(context, FaqFragment::class.qualifiedName),
+            R.id.fl_container
         )
     }
 

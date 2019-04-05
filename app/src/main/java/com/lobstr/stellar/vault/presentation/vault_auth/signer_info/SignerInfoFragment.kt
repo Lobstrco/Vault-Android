@@ -7,11 +7,11 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
-import com.fusechain.digitalbits.util.manager.FragmentTransactionManager
 import com.lobstr.stellar.vault.R
 import com.lobstr.stellar.vault.presentation.base.fragment.BaseFragment
 import com.lobstr.stellar.vault.presentation.faq.FaqFragment
 import com.lobstr.stellar.vault.presentation.util.AppUtil
+import com.lobstr.stellar.vault.presentation.util.manager.FragmentTransactionManager
 import com.lobstr.stellar.vault.presentation.vault_auth.recheck_signer.RecheckSignerFragment
 import kotlinx.android.synthetic.main.fragment_signer_info.*
 import net.glxn.qrgen.android.QRCode
@@ -113,18 +113,16 @@ class SignerInfoFragment : BaseFragment(),
     override fun showRecheckSingerScreen() {
         FragmentTransactionManager.displayFragment(
             parentFragment!!.childFragmentManager,
-            Fragment.instantiate(context, RecheckSignerFragment::class.java.name),
-            R.id.fl_container,
-            true
+            Fragment.instantiate(context, RecheckSignerFragment::class.qualifiedName),
+            R.id.fl_container
         )
     }
 
     override fun showHelpScreen() {
         FragmentTransactionManager.displayFragment(
             parentFragment!!.childFragmentManager,
-            Fragment.instantiate(context, FaqFragment::class.java.name),
-            R.id.fl_container,
-            true
+            Fragment.instantiate(context, FaqFragment::class.qualifiedName),
+            R.id.fl_container
         )
     }
 

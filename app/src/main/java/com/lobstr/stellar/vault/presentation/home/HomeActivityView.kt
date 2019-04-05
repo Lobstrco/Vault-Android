@@ -10,6 +10,9 @@ import com.arellomobile.mvp.viewstate.strategy.StateStrategyType
 interface HomeActivityView : MvpView {
 
     @StateStrategyType(AddToEndSingleStrategy::class)
+    fun setupToolbar()
+
+    @StateStrategyType(AddToEndSingleStrategy::class)
     fun initBottomNavigationView()
 
     @StateStrategyType(AddToEndSingleStrategy::class)

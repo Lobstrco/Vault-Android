@@ -21,6 +21,8 @@ class HomeActivityPresenter : MvpPresenter<HomeActivityView>() {
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
 
+        viewState.setupToolbar()
+
         interactor.checkFcmRegistration()
 
         viewState.initBottomNavigationView()

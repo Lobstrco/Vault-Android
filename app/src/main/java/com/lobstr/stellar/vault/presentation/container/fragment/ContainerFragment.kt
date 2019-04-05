@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
-import com.fusechain.digitalbits.util.manager.FragmentTransactionManager
 import com.lobstr.stellar.vault.R
 import com.lobstr.stellar.vault.presentation.auth.enter_screen.AuthFragment
 import com.lobstr.stellar.vault.presentation.auth.mnemonic.create_mnemonic.MnemonicsFragment
@@ -23,6 +22,7 @@ import com.lobstr.stellar.vault.presentation.home.transactions.submit_error.Erro
 import com.lobstr.stellar.vault.presentation.home.transactions.submit_success.SuccessFragment
 import com.lobstr.stellar.vault.presentation.util.Constant
 import com.lobstr.stellar.vault.presentation.util.Constant.Bundle.BUNDLE_NAVIGATION_FR
+import com.lobstr.stellar.vault.presentation.util.manager.FragmentTransactionManager
 import com.lobstr.stellar.vault.presentation.vault_auth.signer_info.SignerInfoFragment
 
 /**
@@ -87,54 +87,48 @@ class ContainerFragment : BaseContainerFragment(),
     override fun showAuthFr() {
         FragmentTransactionManager.displayFragment(
             childFragmentManager,
-            Fragment.instantiate(context, AuthFragment::class.java.name),
-            R.id.fl_container,
-            true
+            Fragment.instantiate(context, AuthFragment::class.qualifiedName),
+            R.id.fl_container
         )
     }
 
     override fun showSignerInfoFr() {
         FragmentTransactionManager.displayFragment(
             childFragmentManager,
-            Fragment.instantiate(context, SignerInfoFragment::class.java.name),
-            R.id.fl_container,
-            true
+            Fragment.instantiate(context, SignerInfoFragment::class.qualifiedName),
+            R.id.fl_container
         )
     }
 
     override fun showFingerprintSetUpFr() {
         FragmentTransactionManager.displayFragment(
             childFragmentManager,
-            Fragment.instantiate(context, FingerprintSetUpFragment::class.java.name),
-            R.id.fl_container,
-            true
+            Fragment.instantiate(context, FingerprintSetUpFragment::class.qualifiedName),
+            R.id.fl_container
         )
     }
 
     override fun showDashBoardFr() {
         FragmentTransactionManager.displayFragment(
             childFragmentManager,
-            Fragment.instantiate(context, DashboardFragment::class.java.name),
-            R.id.fl_container,
-            true
+            Fragment.instantiate(context, DashboardFragment::class.qualifiedName),
+            R.id.fl_container
         )
     }
 
     override fun showSettingsFr() {
         FragmentTransactionManager.displayFragment(
             childFragmentManager,
-            Fragment.instantiate(context, SettingsFragment::class.java.name),
-            R.id.fl_container,
-            true
+            Fragment.instantiate(context, SettingsFragment::class.qualifiedName),
+            R.id.fl_container
         )
     }
 
     override fun showTransactionsFr() {
         FragmentTransactionManager.displayFragment(
             childFragmentManager,
-            Fragment.instantiate(context, TransactionsFragment::class.java.name),
-            R.id.fl_container,
-            true
+            Fragment.instantiate(context, TransactionsFragment::class.qualifiedName),
+            R.id.fl_container
         )
     }
 
@@ -151,26 +145,23 @@ class ContainerFragment : BaseContainerFragment(),
         FragmentTransactionManager.displayFragment(
             childFragmentManager,
             fragment,
-            R.id.fl_container,
-            true
+            R.id.fl_container
         )
     }
 
     override fun showImportXdrFr() {
         FragmentTransactionManager.displayFragment(
             childFragmentManager,
-            Fragment.instantiate(context, ImportXdrFragment::class.java.name),
-            R.id.fl_container,
-            true
+            Fragment.instantiate(context, ImportXdrFragment::class.qualifiedName),
+            R.id.fl_container
         )
     }
 
     override fun showMnemonicsFr() {
         FragmentTransactionManager.displayFragment(
             childFragmentManager,
-            Fragment.instantiate(context, MnemonicsFragment::class.java.name),
-            R.id.fl_container,
-            true
+            Fragment.instantiate(context, MnemonicsFragment::class.qualifiedName),
+            R.id.fl_container
         )
     }
 
@@ -181,9 +172,8 @@ class ContainerFragment : BaseContainerFragment(),
 
         FragmentTransactionManager.displayFragment(
             childFragmentManager,
-            Fragment.instantiate(context, SuccessFragment::class.java.name, bundle),
-            R.id.fl_container,
-            true
+            Fragment.instantiate(context, SuccessFragment::class.qualifiedName, bundle),
+            R.id.fl_container
         )
     }
 
@@ -193,9 +183,8 @@ class ContainerFragment : BaseContainerFragment(),
 
         FragmentTransactionManager.displayFragment(
             childFragmentManager,
-            Fragment.instantiate(context, ErrorFragment::class.java.name, bundle),
-            R.id.fl_container,
-            true
+            Fragment.instantiate(context, ErrorFragment::class.qualifiedName, bundle),
+            R.id.fl_container
         )
     }
 

@@ -12,13 +12,13 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
-import com.fusechain.digitalbits.util.manager.FragmentTransactionManager
 import com.lobstr.stellar.vault.R
 import com.lobstr.stellar.vault.presentation.base.fragment.BaseFragment
 import com.lobstr.stellar.vault.presentation.entities.transaction.TransactionItem
 import com.lobstr.stellar.vault.presentation.home.transactions.details.TransactionDetailsFragment
 import com.lobstr.stellar.vault.presentation.util.AppUtil
 import com.lobstr.stellar.vault.presentation.util.Constant
+import com.lobstr.stellar.vault.presentation.util.manager.FragmentTransactionManager
 import com.lobstr.stellar.vault.presentation.util.manager.ProgressManager
 import kotlinx.android.synthetic.main.fragment_import_xdr.*
 
@@ -134,15 +134,14 @@ class ImportXdrFragment : BaseFragment(), ImportXdrView, View.OnClickListener {
         val bundle = Bundle()
         bundle.putParcelable(Constant.Bundle.BUNDLE_TRANSACTION_ITEM, transactionItem)
 
-        val fragment = Fragment.instantiate(context, TransactionDetailsFragment::class.java.name, bundle)
+        val fragment = Fragment.instantiate(context, TransactionDetailsFragment::class.qualifiedName, bundle)
 
         fragment.setTargetFragment(this, Constant.Code.TRANSACTION_DETAILS_FRAGMENT)
 
         FragmentTransactionManager.displayFragment(
             parentFragment!!.childFragmentManager,
             fragment,
-            R.id.fl_container,
-            true
+            R.id.fl_container
         )
     }
 

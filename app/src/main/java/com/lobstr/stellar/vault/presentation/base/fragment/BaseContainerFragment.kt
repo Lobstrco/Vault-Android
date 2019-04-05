@@ -4,12 +4,9 @@ import android.os.Bundle
 import android.view.View
 import com.lobstr.stellar.vault.R
 import com.lobstr.stellar.vault.presentation.BaseMvpAppCompatFragment
-import com.lobstr.stellar.vault.presentation.auth.AuthActivity
 import com.lobstr.stellar.vault.presentation.base.activity.BaseActivity
 import com.lobstr.stellar.vault.presentation.container.activity.ContainerActivity
-import com.lobstr.stellar.vault.presentation.home.HomeActivity
 import com.lobstr.stellar.vault.presentation.util.AppUtil
-import com.lobstr.stellar.vault.presentation.vault_auth.VaultAuthActivity
 
 
 abstract class BaseContainerFragment : BaseMvpAppCompatFragment() {
@@ -54,20 +51,13 @@ abstract class BaseContainerFragment : BaseMvpAppCompatFragment() {
 
         AppUtil.closeKeyboard(activity)
 
-        if (childFragmentManager.backStackEntryCount == 0) {
-            (activity as? BaseActivity)?.mPresenter?.changeHomeBtnVisibility(false)
-            return
-        }
-
-        if (childFragmentManager.backStackEntryCount == 1) {
-            when (activity) {
-                is AuthActivity -> (activity as? BaseActivity)?.mPresenter?.changeHomeBtnVisibility(false)
-                is VaultAuthActivity -> (activity as? BaseActivity)?.mPresenter?.changeHomeBtnVisibility(false)
-                is HomeActivity -> (activity as? BaseActivity)?.mPresenter?.changeHomeBtnVisibility(false)
+        // define back button behavior for container (after back pressed)
+        when (childFragmentManager.backStackEntryCount) {
+            1 -> when (activity) {
                 is ContainerActivity -> (activity as? BaseActivity)?.mPresenter?.changeHomeBtnVisibility(true)
+                else -> (activity as? BaseActivity)?.mPresenter?.changeHomeBtnVisibility(false)
             }
-        } else {
-            (activity as? BaseActivity)?.mPresenter?.changeHomeBtnVisibility(true)
+            else -> (activity as? BaseActivity)?.mPresenter?.changeHomeBtnVisibility(true)
         }
     }
 }

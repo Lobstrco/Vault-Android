@@ -9,12 +9,12 @@ import androidx.annotation.DrawableRes
 import androidx.fragment.app.Fragment
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
-import com.fusechain.digitalbits.util.manager.FragmentTransactionManager
 import com.lobstr.stellar.vault.R
 import com.lobstr.stellar.vault.presentation.base.activity.BaseActivity
 import com.lobstr.stellar.vault.presentation.container.fragment.ContainerFragment
 import com.lobstr.stellar.vault.presentation.home.HomeActivity
 import com.lobstr.stellar.vault.presentation.util.Constant
+import com.lobstr.stellar.vault.presentation.util.manager.FragmentTransactionManager
 import com.lobstr.stellar.vault.presentation.util.manager.ProgressManager
 import kotlinx.android.synthetic.main.activity_vault_auth.*
 
@@ -94,9 +94,8 @@ class VaultAuthActivity : BaseActivity(), VaultAuthView, View.OnClickListener {
 
         FragmentTransactionManager.displayFragment(
             supportFragmentManager,
-            Fragment.instantiate(this, ContainerFragment::class.java.name, bundle),
-            R.id.fl_container,
-            true
+            Fragment.instantiate(this, ContainerFragment::class.qualifiedName, bundle),
+            R.id.fl_container
         )
     }
 

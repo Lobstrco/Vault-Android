@@ -67,6 +67,10 @@ class HomeActivity : BaseActivity(), HomeActivityView,
     // Listeners, methods for/from Interfaces
     // ===========================================================
 
+    override fun setupToolbar() {
+        changeActionBarIconVisibility(false)
+    }
+
     override fun setupViewPager() {
         vpHome.offscreenPageLimit = 4
         vpHome.adapter = HomeViewPagerAdapter(this, supportFragmentManager)
@@ -108,7 +112,7 @@ class HomeActivity : BaseActivity(), HomeActivityView,
         try {
             checkBackPress(supportFragmentManager.fragments[vpHome.currentItem])
         } catch (exc: IndexOutOfBoundsException) {
-            finish()
+            super.onBackPressed()
         }
     }
 
