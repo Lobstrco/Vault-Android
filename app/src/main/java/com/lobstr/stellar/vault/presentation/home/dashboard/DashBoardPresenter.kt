@@ -169,4 +169,10 @@ class DashboardPresenter : BasePresenter<DashboardView>() {
             loadSignedAccountsList()
         }
     }
+
+    fun signersCountClicked() {
+        if (interactor.getSignersCount() > 1) {
+            viewState.showSignersScreen()
+        }
+    }
 }

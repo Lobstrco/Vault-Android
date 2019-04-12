@@ -167,8 +167,8 @@
 
     <!-- Transaction action dialog -->
     <string name="title_transaction_action_dialog">Are you sure?</string>
-    <string name="msg_deny_transaction_dialog">Want to deny the operation?</string>
-    <string name="msg_confirm_transaction_dialog">Want to confirm the operation?</string>
+    <string name="msg_deny_transaction_dialog">Want to deny the transaction?</string>
+    <string name="msg_confirm_transaction_dialog">Want to confirm the transaction?</string>
 
     <!-- Deny account creation dialog -->
     <string name="title_deny_account_creation_dialog">Are you sure?</string>

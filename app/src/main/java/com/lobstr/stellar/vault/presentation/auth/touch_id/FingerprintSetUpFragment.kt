@@ -101,8 +101,8 @@ class FingerprintSetUpFragment : BaseFragment(), FingerprintSetUpView, Biometric
     }
 
     override fun showBiometricDialog() {
-        if (mBiometricManager != null && mBiometricManager!!.isDialogShowing()) {
-            return
+        if (mBiometricManager?.isDialogShowing() == true) {
+            mBiometricManager?.dismissDialog()
         }
         mBiometricManager = BiometricManager.BiometricBuilder(context!!)
             .setTitle(getString(R.string.biometric_title))

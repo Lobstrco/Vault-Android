@@ -220,8 +220,8 @@ class PinActivity : BaseMvpAppCompatActivity(), PinView, PinLockListener,
     // Biometric
 
     override fun showBiometricDialog() {
-        if (mBiometricManager != null && mBiometricManager!!.isDialogShowing()) {
-            return
+        if (mBiometricManager?.isDialogShowing() == true) {
+            mBiometricManager?.dismissDialog()
         }
         mBiometricManager = BiometricManager.BiometricBuilder(this)
             .setTitle(getString(R.string.biometric_title))

@@ -231,10 +231,6 @@ class TransactionDetailsPresenter(private var transactionItem: TransactionItem) 
     }
 
     fun onAlertDialogPositiveButtonClicked(tag: String?) {
-        if (tag.isNullOrEmpty()) {
-            return
-        }
-
         when (tag) {
             DENY_TRANSACTION -> denyTransaction()
             CONFIRM_TRANSACTION -> confirmTransaction()

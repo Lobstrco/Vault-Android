@@ -15,6 +15,7 @@ import com.lobstr.stellar.vault.presentation.base.fragment.BaseContainerFragment
 import com.lobstr.stellar.vault.presentation.entities.transaction.TransactionItem
 import com.lobstr.stellar.vault.presentation.home.dashboard.DashboardFragment
 import com.lobstr.stellar.vault.presentation.home.settings.SettingsFragment
+import com.lobstr.stellar.vault.presentation.home.settings.signed_accounts.SignedAccountsFragment
 import com.lobstr.stellar.vault.presentation.home.transactions.TransactionsFragment
 import com.lobstr.stellar.vault.presentation.home.transactions.details.TransactionDetailsFragment
 import com.lobstr.stellar.vault.presentation.home.transactions.import_xdr.ImportXdrFragment
@@ -184,6 +185,14 @@ class ContainerFragment : BaseContainerFragment(),
         FragmentTransactionManager.displayFragment(
             childFragmentManager,
             Fragment.instantiate(context, ErrorFragment::class.qualifiedName, bundle),
+            R.id.fl_container
+        )
+    }
+
+    override fun showSignedAccountsFr() {
+        FragmentTransactionManager.displayFragment(
+            childFragmentManager,
+            Fragment.instantiate(context, SignedAccountsFragment::class.qualifiedName),
             R.id.fl_container
         )
     }

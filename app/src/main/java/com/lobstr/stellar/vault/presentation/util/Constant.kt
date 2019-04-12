@@ -49,6 +49,7 @@ object Constant {
         const val SUCCESS = 9
         const val ERROR = 10
         const val IMPORT_XDR = 11
+        const val SIGNED_ACCOUNTS = 12
     }
 
     object Transaction {

@@ -220,10 +220,6 @@ class PinPresenter(
     }
 
     fun onAlertDialogPositiveButtonClicked(tag: String?) {
-        if (tag.isNullOrEmpty()) {
-            return
-        }
-
         when (tag) {
             AlertDialogFragment.DialogFragmentIdentifier.LOG_OUT -> {
                 interactor.clearUserData()
@@ -239,10 +235,6 @@ class PinPresenter(
     }
 
     fun onAlertDialogNegativeButtonClicked(tag: String?) {
-        if (tag.isNullOrEmpty()) {
-            return
-        }
-
         when (tag) {
             AlertDialogFragment.DialogFragmentIdentifier.COMMON_PIN_PATTERN -> {
                 newPin = tempCommonPin

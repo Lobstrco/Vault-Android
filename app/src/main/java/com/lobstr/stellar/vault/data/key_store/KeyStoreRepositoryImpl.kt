@@ -115,7 +115,7 @@ class KeyStoreRepositoryImpl(
             }
         } else {
             val entry = keyStore.getEntry(alias, null)
-            val privateKey = (entry as KeyStore.PrivateKeyEntry).privateKey
+            val privateKey = (entry as? KeyStore.PrivateKeyEntry)?.privateKey
             return if (privateKey == null || encryptedString.isNullOrEmpty()) {
                 null
             } else {

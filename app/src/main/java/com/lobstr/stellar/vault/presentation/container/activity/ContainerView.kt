@@ -36,4 +36,7 @@ interface ContainerView : MvpView {
 
     @StateStrategyType(SkipStrategy::class)
     fun showErrorFr(errorMessage: String)
+
+    @StateStrategyType(SkipStrategy::class)
+    fun showSignedAccountsFr()
 }

@@ -76,10 +76,6 @@ class MnemonicsPresenter(private val generate: Boolean) : BasePresenter<Mnemonic
     }
 
     fun onAlertDialogPositiveButtonClicked(tag: String?) {
-        if (tag.isNullOrEmpty()) {
-            return
-        }
-
         when (tag) {
             AlertDialogFragment.DialogFragmentIdentifier.DENY_ACCOUNT_CREATION -> viewState.showAuthFr()
         }

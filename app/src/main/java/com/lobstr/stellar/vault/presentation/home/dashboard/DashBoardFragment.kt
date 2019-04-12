@@ -1,6 +1,7 @@
 package com.lobstr.stellar.vault.presentation.home.dashboard
 
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -10,8 +11,10 @@ import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.lobstr.stellar.vault.R
 import com.lobstr.stellar.vault.presentation.base.fragment.BaseFragment
+import com.lobstr.stellar.vault.presentation.container.activity.ContainerActivity
 import com.lobstr.stellar.vault.presentation.home.HomeActivity
 import com.lobstr.stellar.vault.presentation.util.AppUtil
+import com.lobstr.stellar.vault.presentation.util.Constant
 import kotlinx.android.synthetic.main.fragment_dash_board.*
 
 class DashboardFragment : BaseFragment(), DashboardView, View.OnClickListener {
@@ -74,6 +77,7 @@ class DashboardFragment : BaseFragment(), DashboardView, View.OnClickListener {
         tvDashboardCopySigner.setOnClickListener(this)
         tvDashboardCopyPublicKey.setOnClickListener(this)
         tvDashboardTransactionCount.setOnClickListener(this)
+        tvDashboardSignersCount.setOnClickListener(this)
     }
 
     // ===========================================================
@@ -86,6 +90,7 @@ class DashboardFragment : BaseFragment(), DashboardView, View.OnClickListener {
             tvDashboardShowList.id -> mPresenter.showTransactionListClicked()
             tvDashboardCopyPublicKey.id -> mPresenter.copyKeyClicked()
             tvDashboardCopySigner.id -> mPresenter.copySignerClicked()
+            tvDashboardSignersCount.id -> mPresenter.signersCountClicked()
         }
     }
 
@@ -112,6 +117,12 @@ class DashboardFragment : BaseFragment(), DashboardView, View.OnClickListener {
     override fun showDashboardInfo(count: Int) {
         tvDashboardTransactionCount.text = count.toString()
         pbDashboardTransactions.visibility = View.GONE
+    }
+
+    override fun showSignersScreen() {
+        val intent = Intent(context, ContainerActivity::class.java)
+        intent.putExtra(Constant.Extra.EXTRA_NAVIGATION_FR, Constant.Navigation.SIGNED_ACCOUNTS)
+        startActivity(intent)
     }
 
     override fun showErrorMessage(message: String) {

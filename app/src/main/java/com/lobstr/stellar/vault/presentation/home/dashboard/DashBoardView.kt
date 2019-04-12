@@ -21,6 +21,9 @@ interface DashboardView : MvpView {
     fun showDashboardInfo(count: Int)
 
     @StateStrategyType(SkipStrategy::class)
+    fun showSignersScreen()
+
+    @StateStrategyType(SkipStrategy::class)
     fun showErrorMessage(message: String)
 
     @StateStrategyType(SkipStrategy::class)

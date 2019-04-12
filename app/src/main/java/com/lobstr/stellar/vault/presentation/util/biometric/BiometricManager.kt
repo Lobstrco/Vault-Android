@@ -24,6 +24,10 @@ open class BiometricManager protected constructor(biometricBuilder: BiometricBui
         return biometricDialogV23?.isShowing ?: false
     }
 
+    fun dismissDialog() {
+        biometricDialogV23?.dismiss()
+    }
+
     fun authenticate(biometricCallback: BiometricCallback) {
         if (title == null) {
             biometricCallback.onBiometricAuthenticationInternalError("Biometric Dialog title cannot be null")

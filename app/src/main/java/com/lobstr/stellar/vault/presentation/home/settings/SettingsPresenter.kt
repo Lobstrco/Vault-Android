@@ -142,10 +142,6 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
     }
 
     fun onAlertDialogPositiveButtonClicked(tag: String?) {
-        if (tag.isNullOrEmpty()) {
-            return
-        }
-
         when (tag) {
             AlertDialogFragment.DialogFragmentIdentifier.LOG_OUT -> {
                 interactor.clearUserData()

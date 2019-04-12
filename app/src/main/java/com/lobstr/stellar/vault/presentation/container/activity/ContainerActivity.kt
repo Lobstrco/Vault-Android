@@ -177,6 +177,17 @@ class ContainerActivity : BaseActivity(), ContainerView {
         )
     }
 
+    override fun showSignedAccountsFr() {
+        val bundle = Bundle()
+        bundle.putInt(Constant.Bundle.BUNDLE_NAVIGATION_FR, Constant.Navigation.SIGNED_ACCOUNTS)
+
+        FragmentTransactionManager.displayFragment(
+            supportFragmentManager,
+            Fragment.instantiate(this, ContainerFragment::class.qualifiedName, bundle),
+            R.id.fl_container
+        )
+    }
+
     // ===========================================================
     // Methods
     // ===========================================================

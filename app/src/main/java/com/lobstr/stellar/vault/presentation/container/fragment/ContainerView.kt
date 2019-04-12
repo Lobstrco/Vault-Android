@@ -30,4 +30,6 @@ interface ContainerView : MvpView {
     fun showSuccessFr(envelopeXdr: String, needAdditionalSignatures: Boolean)
 
     fun showErrorFr(errorMessage: String)
+
+    fun showSignedAccountsFr()
 }
