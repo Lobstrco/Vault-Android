@@ -3,6 +3,7 @@ package com.lobstr.stellar.vault.data.net
 import com.lobstr.stellar.vault.data.net.entities.transaction.ApiSubmitTransaction
 import com.lobstr.stellar.vault.data.net.entities.transaction.ApiTransactionItem
 import com.lobstr.stellar.vault.data.net.entities.transaction.ApiTransactionResult
+import io.reactivex.Completable
 import io.reactivex.Single
 import retrofit2.http.*
 
@@ -63,4 +64,9 @@ interface TransactionApi {
         @Path("hash") hash: String,
         @Header("Authorization") token: String
     ): Single<ApiTransactionItem>
+
+    @POST("transactions/hide-outdated/")
+    fun cancelOutdatedTransactions(
+        @Header("Authorization") token: String
+    ): Completable
 }

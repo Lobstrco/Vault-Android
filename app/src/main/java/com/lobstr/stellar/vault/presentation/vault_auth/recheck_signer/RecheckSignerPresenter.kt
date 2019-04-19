@@ -54,7 +54,6 @@ class RecheckSignerPresenter : BasePresenter<RecheckSignerView>() {
                 .subscribe({
                     if (it.isEmpty()) {
                         // Add action if needed
-//                        viewState.showMessage(R.string.text_tv_re_check_signer_description)
                     } else {
                         interactor.confirmAccountHasSigners()
                         viewState.showHomeScreen()

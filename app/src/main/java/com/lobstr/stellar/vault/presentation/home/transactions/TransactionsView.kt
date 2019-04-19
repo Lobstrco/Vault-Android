@@ -25,10 +25,13 @@ interface TransactionsView : MvpView {
     fun showTransactionList(items: MutableList<TransactionItem>)
 
     @StateStrategyType(AddToEndSingleStrategy::class)
-    fun showProgress()
+    fun showOptionsMenu(show: Boolean)
 
     @StateStrategyType(AddToEndSingleStrategy::class)
-    fun hideProgress()
+    fun showPullToRefresh(show: Boolean)
+
+    @StateStrategyType(AddToEndSingleStrategy::class)
+    fun showProgressDialog(show: Boolean)
 
     @StateStrategyType(AddToEndSingleStrategy::class)
     fun showEmptyState()
@@ -41,4 +44,7 @@ interface TransactionsView : MvpView {
 
     @StateStrategyType(SkipStrategy::class)
     fun checkRateUsDialog()
+
+    @StateStrategyType(SkipStrategy::class)
+    fun showClearInvalidTrDialog()
 }

@@ -25,8 +25,6 @@ class VaultAuthPresenter : BasePresenter<VaultAuthView>() {
     @Inject
     lateinit var eventProviderModule: EventProviderModule
 
-    private var authorizationInProcess = false
-
     init {
         LVApplication.sAppComponent.plusVaultAuthComponent(VaultAuthModule()).inject(this)
     }
@@ -91,21 +89,16 @@ class VaultAuthPresenter : BasePresenter<VaultAuthView>() {
     }
 
     fun tryAuthorizeVault() {
-        if (authorizationInProcess) {
-            return
-        }
         unsubscribeOnDestroy(
             interactor.authorizeVault()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe {
-                    authorizationInProcess = true
                     viewState.setBtnRetryVisibility(false)
                     viewState.showProgressDialog(true)
                 }
                 .doOnEvent { _, _ ->
                     viewState.showProgressDialog(false)
-                    authorizationInProcess = false
                 }
                 .subscribe({
                     if (it.isEmpty()) {

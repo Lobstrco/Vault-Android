@@ -15,11 +15,11 @@ The app uses the secret key to sign transactions on-device - you make the final 
 
 Quick and easy to use, LOBSTR Vault is an open source app that fully integrates with LOBSTR wallet and takes the security of your Stellar account to the next level.
 
-LOBSTR Vault can be used to secure other wallets and exchanges operating on the Stellar Network, including StellarTerm.com.
+LOBSTR Vault can be used to secure other wallets and exchanges operating on the Stellar Network, including StellarTerm.com and Stellarport.io.
 
 If you are using LOBSTR wallet, you can find the \'Multisig\' option under the \'Settings\' tab.
 
-With LOBSTR wallet and StellarTerm integration, there is no need to import Transaction XDRs. Your pending outgoing transactions will appear in the signing LOBSTR Vault account automatically in a matter of seconds.
+With LOBSTR wallet, StellarTerm and Stellarport integration, there is no need to import Transaction XDRs. Your pending outgoing transactions will appear in the signing LOBSTR Vault account automatically in a matter of seconds.
 
 LOBSTR Vault supports push notifications to help you to stay up-to-date with your transaction \'sign\' requests.
 
@@ -244,7 +244,7 @@ This string should be provided to the owner of signing account and imported to t
 
 The good news is that LOBSTR Vault saves you time and manages this process automatically - you won\'t need to import the Transaction XDR manually.
 
-If you are using LOBSTR Vault paired with LOBSTR wallet or StellarTerm, your pending outgoing transaction will appear in the connected LOBSTR Vault account in a matter of seconds.
+If you are using LOBSTR Vault paired with LOBSTR wallet, StellarTerm or Stellarport, your pending outgoing transaction will appear in the connected LOBSTR Vault account in a matter of seconds.
 
 Connected LOBSTR Vault account will show a push notification asking to confirm or deny every new transaction.
 "
@@ -327,7 +327,7 @@ If you followed the steps correctly, your LOBSTR Stellar account should be prote
 
 It is likely that you need additional signatures for this transaction to occur on your account.
 
-If you are using LOBSTR Vault paired with LOBSTR wallet or StellarTerm, transaction \'sign\' requests should appear automatically in LOBSTR Vault in most cases - there is no need to import Transaction XDRs.
+If you are using LOBSTR Vault paired with LOBSTR wallet, StellarTerm or Stellarport, transaction \'sign\' requests should appear automatically in LOBSTR Vault in most cases - there is no need to import Transaction XDRs.
 
 LOBSTR Vault parses the XDR and shows you the operations in a human-readable format.
 Always verify the contents of transaction before adding a signature.
@@ -429,7 +429,7 @@ In most cases, this means that other signers for the main account should provide
 
 Such transaction will not occur on the Stellar Network until it is signed by all signers including the main account.
 
-If you are using LOBSTR Vault paired with LOBSTR wallet or StellarTerm, all signers will be notified of the transaction \'sign\' requests automatically.
+If you are using LOBSTR Vault paired with LOBSTR wallet, StellarTerm or Stellarport, all signers will be notified of the transaction \'sign\' requests automatically.
 
 
 In case you need more signatures, the \'Success\' screen will also display a Transaction XDR.
@@ -497,11 +497,11 @@ If you successfully \'Denied\' a transaction in LOBSTR Vault, the transaction is
     <string name="text_tv_other_section">Other</string>
 
     <string name="text_tv_signing_subtitle_eighteen">18. Supported wallets and services</string>
-    <string name="text_tv_signing_eighteen_description">"At the moment LOBSTR Vault signer app fully integrates and operates with LOBSTR wallet and StellarTerm open source client.
+    <string name="text_tv_signing_eighteen_description">"At the moment LOBSTR Vault signer app fully integrates and operates with LOBSTR wallet, StellarTerm open source client and Stellarport wallet.
 
 LOBSTR wallet also supports StellarGuard multisig provider.
 
-LOBSTR Vault can be easily integrated with other service operating on Stellar to bring advanced multisignature capabilities and increase security of your account.
+LOBSTR Vault can be easily integrated with other service operating on Stellar to bring advanced multisignature capabilities and increase the security of your account.
 
 We are working on increasing support for LOBSTR Vault across many applications."
     </string>

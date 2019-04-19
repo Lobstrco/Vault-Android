@@ -109,9 +109,10 @@
     <string name="text_title_dashboard_signers">Signer For</string>
     <string name="text_dashboard_accounts">accounts</string>
 
-    <!-- Transaction screen -->
+    <!-- Transactions screen -->
     <string name="text_empty_state_transactions_list">Transactions not found</string>
     <string name="text_tv_sequence_number_invalid">Invalid</string>
+    <string name="text_tv_transactions_clear">Clear</string>
 
     <!--Settings-->
     <string name="title_settings_wallet">Account</string>
@@ -179,6 +180,10 @@
     <!-- Log out dialog -->
     <string name="title_log_out_dialog">Have you secured your recovery phrase?</string>
     <string name="msg_log_out_dialog">You will not be able to recover your account or sign in without it.</string>
+
+    <!-- Clear Invalid transactions dialog -->
+    <string name="title_clear_invalid_tr_dialog">Are you sure?</string>
+    <string name="msg_clear_invalid_tr_dialog">Do you want to remove all invalid transactions?</string>
 
     <!--Common PIN pattern dialog -->
     <string name="title_common_pin_pattern_dialog">Warning</string>

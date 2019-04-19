@@ -14,6 +14,7 @@ import com.lobstr.stellar.vault.domain.util.event.Notification
 import com.lobstr.stellar.vault.presentation.BasePresenter
 import com.lobstr.stellar.vault.presentation.application.LVApplication
 import com.lobstr.stellar.vault.presentation.dagger.module.transaction.TransactionModule
+import com.lobstr.stellar.vault.presentation.dialog.alert.base.AlertDialogFragment
 import com.lobstr.stellar.vault.presentation.entities.transaction.TransactionItem
 import com.lobstr.stellar.vault.presentation.util.Constant
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -27,7 +28,7 @@ class TransactionsPresenter : BasePresenter<TransactionsView>() {
     lateinit var eventProviderModule: EventProviderModule
 
     @Inject
-    lateinit var transactionInteractor: TransactionInteractor
+    lateinit var interactor: TransactionInteractor
 
     private var nextPageUrl: String? = null
     private var newLoadTransactions = true
@@ -41,6 +42,7 @@ class TransactionsPresenter : BasePresenter<TransactionsView>() {
         super.onFirstViewAttach()
 
         registerEventProvider()
+        viewState.showOptionsMenu(false)
         viewState.setupToolbarTitle(R.string.title_toolbar_transactions)
         viewState.initRecycledView()
         loadTransactions()
@@ -90,16 +92,17 @@ class TransactionsPresenter : BasePresenter<TransactionsView>() {
 
     private fun loadTransactions() {
         unsubscribeOnDestroy(
-            transactionInteractor.getPendingTransactionList(nextPageUrl)
+            interactor.getPendingTransactionList(nextPageUrl)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe {
+                    viewState.showOptionsMenu(false)
                     if (newLoadTransactions) {
-                        viewState.showProgress()
+                        viewState.showPullToRefresh(true)
                         viewState.hideEmptyState()
                     }
                 }
-                .doOnEvent { _, _ -> viewState.hideProgress() }
+                .doOnEvent { _, _ -> viewState.showPullToRefresh(false) }
                 .subscribe({ result ->
                     if (newLoadTransactions) {
                         transactions.clear()
@@ -114,25 +117,27 @@ class TransactionsPresenter : BasePresenter<TransactionsView>() {
                     nextPageUrl = result.next
                     newLoadTransactions = false
                     viewState.showTransactionList(transactions)
-                }, {
+                    viewState.showOptionsMenu(transactions.find { !it.sequenceOutdatedAt.isNullOrEmpty() } != null)
+                }, { throwable ->
+                    viewState.showOptionsMenu(transactions.find { !it.sequenceOutdatedAt.isNullOrEmpty() } != null)
                     if (transactions.isEmpty()) {
                         viewState.showEmptyState()
                     } else {
                         viewState.hideEmptyState()
                     }
-                    when (it) {
+                    when (throwable) {
                         is NoInternetConnectionException -> {
-                            viewState.showErrorMessage(it.details)
+                            viewState.showErrorMessage(throwable.details)
                             handleNoInternetConnection()
                         }
                         is UserNotAuthorizedException -> {
                             loadTransactions()
                         }
                         is DefaultException -> {
-                            viewState.showErrorMessage(it.details)
+                            viewState.showErrorMessage(throwable.details)
                         }
                         else -> {
-                            viewState.showErrorMessage(it.message ?: "")
+                            viewState.showErrorMessage(throwable.message ?: "")
                         }
                     }
                 })
@@ -171,5 +176,50 @@ class TransactionsPresenter : BasePresenter<TransactionsView>() {
 
     fun addTransactionClicked() {
         viewState.showImportXdrScreen()
+    }
+
+    fun clearClicked() {
+        viewState.showClearInvalidTrDialog()
+    }
+
+    fun onAlertDialogPositiveButtonClicked(tag: String?) {
+        when (tag) {
+            AlertDialogFragment.DialogFragmentIdentifier.CLEAR_INVALID_TR -> {
+                clearInvalidTransactions()
+            }
+        }
+    }
+
+    private fun clearInvalidTransactions() {
+        unsubscribeOnDestroy(
+            interactor.cancelOutdatedTransactions()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnSubscribe {
+                    viewState.showProgressDialog(true)
+                }
+                .doOnEvent {
+                    viewState.showProgressDialog(false)
+                }
+                .subscribe({
+                    viewState.showOptionsMenu(false)
+                    refreshCalled()
+                }, {
+                    when (it) {
+                        is NoInternetConnectionException -> {
+                            viewState.showErrorMessage(it.details)
+                        }
+                        is UserNotAuthorizedException -> {
+                            clearInvalidTransactions()
+                        }
+                        is DefaultException -> {
+                            viewState.showErrorMessage(it.details)
+                        }
+                        else -> {
+                            viewState.showErrorMessage(it.message ?: "")
+                        }
+                    }
+                })
+        )
     }
 }

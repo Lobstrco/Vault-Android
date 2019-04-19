@@ -4,6 +4,7 @@ import com.lobstr.stellar.vault.presentation.entities.transaction.TransactionRes
 import com.lobstr.stellar.vault.presentation.util.AppUtil
 import com.lobstr.stellar.vault.presentation.util.Constant
 import com.lobstr.stellar.vault.presentation.util.PrefsUtil
+import io.reactivex.Completable
 import io.reactivex.Single
 
 class TransactionInteractorImpl(
@@ -29,5 +30,9 @@ class TransactionInteractorImpl(
             Constant.TransactionType.INACTIVE,
             nextPageUrl
         )
+    }
+
+    override fun cancelOutdatedTransactions(): Completable {
+        return transactionRepository.cancelOutdatedTransactions(AppUtil.getJwtToken(prefUtil.authToken))
     }
 }

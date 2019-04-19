@@ -5,6 +5,7 @@ import com.lobstr.stellar.vault.domain.error.RxErrorUtils
 import com.lobstr.stellar.vault.domain.transaction.TransactionRepository
 import com.lobstr.stellar.vault.presentation.entities.transaction.TransactionItem
 import com.lobstr.stellar.vault.presentation.entities.transaction.TransactionResult
+import io.reactivex.Completable
 import io.reactivex.Single
 
 
@@ -60,5 +61,10 @@ class TransactionRepositoryImpl(
             .map {
                 transactionEntityMapper.transformTransactionItem(it)
             }
+    }
+
+    override fun cancelOutdatedTransactions(token: String): Completable {
+        return transactionApi.cancelOutdatedTransactions(token)
+            .onErrorResumeNext { rxErrorUtils.handleCompletableRequestHttpError(it) }
     }
 }

@@ -2,6 +2,7 @@ package com.lobstr.stellar.vault.domain.transaction
 
 import com.lobstr.stellar.vault.presentation.entities.transaction.TransactionItem
 import com.lobstr.stellar.vault.presentation.entities.transaction.TransactionResult
+import io.reactivex.Completable
 import io.reactivex.Single
 
 
@@ -20,4 +21,6 @@ interface TransactionRepository {
     ): Single<String>
 
     fun markTransactionAsCancelled(token: String, hash: String): Single<TransactionItem>
+
+    fun cancelOutdatedTransactions(token: String): Completable
 }

@@ -58,6 +58,7 @@ open class AlertDialogFragment : BaseMvpAppCompatDialogFragment() {
         const val EDIT_ACCOUNT = "EDIT_ACCOUNT"
         const val RATE_US = "RATE_US"
         const val COMMON_PIN_PATTERN = "COMMON_PIN_PATTERN"
+        const val CLEAR_INVALID_TR = "CLEAR_INVALID_TR"
     }
 
     object DialogIdentifier {
