@@ -163,7 +163,11 @@ class FcmHelper(private val context: Context, private val fcmInteractor: FcmInte
     // Handle specific notifications
 
     fun signedNewAccount(jsonStr: String?): Account? {
-        return fcmInteractor.confirmIsUserSignerForLobstr(jsonStr)
+        return fcmInteractor.signedNewAccount(jsonStr)
+    }
+
+    fun removedSigner(jsonStr: String?): Account? {
+        return fcmInteractor.removedSigner(jsonStr)
     }
 
     fun addedNewTransaction(jsonStr: String?): TransactionItem? {

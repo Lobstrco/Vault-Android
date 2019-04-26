@@ -26,13 +26,18 @@ class FingerprintSetUpPresenter : MvpPresenter<FingerprintSetUpView>() {
 
     fun turnOnClicked() {
         if (BiometricUtils.isFingerprintAvailable(LVApplication.sAppComponent.context)) {
-            viewState.showBiometricDialog()
+            viewState.showBiometricDialog(true)
         } else {
             viewState.showFingerprintInfoDialog(
                 R.string.title_finger_print_dialog,
                 R.string.msg_finger_print_dialog
             )
         }
+    }
+
+    override fun detachView(view: FingerprintSetUpView?) {
+        viewState.showBiometricDialog(false)
+        super.detachView(view)
     }
 
     fun biometricAuthenticationSuccessful() {

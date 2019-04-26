@@ -15,5 +15,5 @@ interface FingerprintSetUpView : MvpView {
     fun showFingerprintInfoDialog(@StringRes titleRes: Int, @StringRes messageRes: Int)
 
     @StateStrategyType(SkipStrategy::class)
-    fun showBiometricDialog()
+    fun showBiometricDialog(show: Boolean)
 }

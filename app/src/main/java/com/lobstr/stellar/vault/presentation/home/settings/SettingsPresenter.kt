@@ -54,7 +54,8 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
                     when (it.type) {
-                        Notification.Type.SIGNED_NEW_ACCOUNT, Notification.Type.SIGNERS_COUNT_CHANGED -> {
+                        Notification.Type.SIGNED_NEW_ACCOUNT,
+                        Notification.Type.REMOVED_SIGNER -> {
                             viewState.setupSignersCount(interactor.getSignersCount())
                         }
                     }
@@ -70,7 +71,7 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
         viewState.setupSignersCount(interactor.getSignersCount())
     }
 
-    fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+    fun handleOnActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (resultCode == Activity.RESULT_OK) {
             when (requestCode) {
                 Constant.Code.CHANGE_PIN -> viewState.showSuccessMessage(R.string.text_success_change_pin)

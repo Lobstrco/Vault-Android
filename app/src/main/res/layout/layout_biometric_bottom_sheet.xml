@@ -15,7 +15,7 @@
             android:orientation="vertical">
 
         <TextView
-                android:id="@+id/item_title"
+                android:id="@+id/tvTitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingStart="16dp"
@@ -27,7 +27,7 @@
                 android:textSize="16sp"/>
 
         <TextView
-                android:id="@+id/item_subtitle"
+                android:id="@+id/tvSubtitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/margin_xxsmall"
@@ -47,7 +47,7 @@
 
 
     <TextView
-            android:id="@+id/item_description"
+            android:id="@+id/tvDescription"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/img_fingerprint"
@@ -58,20 +58,20 @@
             android:layout_marginEnd="@dimen/margin_large"/>
 
     <TextView
-            android:id="@+id/item_status"
+            android:id="@+id/tvStatus"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/item_description"
+            android:layout_below="@id/tvDescription"
             android:layout_marginTop="20dp"
             android:gravity="center"
             android:textColor="@color/color_d9534f"/>
 
 
     <Button
-            android:id="@+id/btn_cancel"
+            android:id="@+id/btnCancel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/item_status"
+            android:layout_below="@id/tvStatus"
             android:layout_marginTop="22dp"
             android:background="@null"
             android:textColor="@color/color_primary"/>

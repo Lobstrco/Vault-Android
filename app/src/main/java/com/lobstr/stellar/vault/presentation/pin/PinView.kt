@@ -37,7 +37,7 @@ interface PinView : MvpView {
     fun showProgressDialog(show: Boolean)
 
     @StateStrategyType(SkipStrategy::class)
-    fun showBiometricDialog()
+    fun showBiometricDialog(show: Boolean)
 
     @StateStrategyType(SkipStrategy::class)
     fun showAuthScreen()

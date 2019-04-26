@@ -154,7 +154,7 @@
     <string name="text_operation_name_unknown">Unknown</string>
 
     <!-- Transaction details -->
-    <string name="text_tv_sequence_number_invalid_description">Transaction can not be confirmed, it\'s sequence number is
+    <string name="text_tv_sequence_number_invalid_description">Transaction can not be confirmed, its sequence number is
         invalid.
     </string>
 

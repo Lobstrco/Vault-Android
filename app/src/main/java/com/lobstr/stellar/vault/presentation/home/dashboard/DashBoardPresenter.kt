@@ -68,10 +68,11 @@ class DashboardPresenter : BasePresenter<DashboardView>() {
                         Notification.Type.ADDED_NEW_SIGNATURE,
                         Notification.Type.TRANSACTION_SUBMITTED -> {
                             loadPendingTransactions()
-                            // FIXME SIGNED_NEW_ACCOUNT don't worked. Need additional notification about SIGNERS_COUNT_CHANGED. Temporally solution for update signers count
-                            loadSignedAccountsList()
                         }
-                        Notification.Type.SIGNED_NEW_ACCOUNT -> loadSignedAccountsList()
+                        Notification.Type.SIGNED_NEW_ACCOUNT, Notification.Type.REMOVED_SIGNER -> {
+                            loadSignedAccountsList()
+                            loadPendingTransactions()
+                        }
                     }
                 }, {
                     it.printStackTrace()
@@ -113,11 +114,6 @@ class DashboardPresenter : BasePresenter<DashboardView>() {
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
-                    // FIXME Notify about signers count changed: for updated signers count in settings
-                    eventProviderModule.notificationEventSubject.onNext(
-                        Notification(Notification.Type.SIGNERS_COUNT_CHANGED, null)
-                    )
-
                     viewState.hideSignersProgress()
                     if (it.size == 1) {
                         signerKey = it[0].address

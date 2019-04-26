@@ -8,7 +8,6 @@ import android.security.keystore.KeyPermanentlyInvalidatedException
 import android.security.keystore.KeyProperties
 import androidx.core.hardware.fingerprint.FingerprintManagerCompat
 import androidx.core.os.CancellationSignal
-import com.lobstr.stellar.vault.R
 import java.io.IOException
 import java.security.*
 import java.security.cert.CertificateException
@@ -31,26 +30,24 @@ open class BiometricManagerV23 {
     private var keyGenerator: KeyGenerator? = null
     private var cryptoObject: FingerprintManagerCompat.CryptoObject? = null
 
-
-    protected var context: Context? = null
+    protected lateinit var context: Context
 
     protected var title: String? = null
     protected var subtitle: String? = null
     protected var description: String? = null
     protected var negativeButtonText: String? = null
     protected var biometricDialogV23: BiometricDialogV23? = null
-
+    protected var cancellationSignalV23: CancellationSignal? = null
 
     fun displayBiometricPromptV23(biometricCallback: BiometricCallback) {
         generateKey()
 
         if (initCipher()) {
-
             cryptoObject = FingerprintManagerCompat.CryptoObject(cipher!!)
-            val fingerprintManagerCompat = FingerprintManagerCompat.from(context!!)
+            val fingerprintManagerCompat = FingerprintManagerCompat.from(context)
 
             fingerprintManagerCompat.authenticate(
-                cryptoObject, 0, CancellationSignal(),
+                cryptoObject, 0, cancellationSignalV23,
                 object : FingerprintManagerCompat.AuthenticationCallback() {
                     override fun onAuthenticationError(errMsgId: Int, errString: CharSequence?) {
                         super.onAuthenticationError(errMsgId, errString)
@@ -73,7 +70,7 @@ open class BiometricManagerV23 {
 
                     override fun onAuthenticationFailed() {
                         super.onAuthenticationFailed()
-                        updateStatus(context!!.getString(R.string.biometric_failed))
+                        updateStatus("failed")
                         biometricCallback.onAuthenticationFailed()
                     }
                 },
@@ -84,38 +81,39 @@ open class BiometricManagerV23 {
         }
     }
 
-
     private fun displayBiometricDialog(biometricCallback: BiometricCallback) {
-        biometricDialogV23 = BiometricDialogV23(context!!, biometricCallback)
-        biometricDialogV23!!.setTitle(title!!)
-        biometricDialogV23!!.setSubtitle(subtitle!!)
-        biometricDialogV23!!.setDescription(description!!)
-        biometricDialogV23!!.setButtonText(negativeButtonText!!)
-        biometricDialogV23!!.show()
+        biometricDialogV23 = BiometricDialogV23(context, biometricCallback)
+            .apply {
+                setTitle(title!!)
+                setSubtitle(subtitle!!)
+                setDescription(description!!)
+                setButtonText(negativeButtonText!!)
+                setOnDismissListener { cancellationSignalV23!!.cancel() }
+                show()
+            }
     }
 
-
     private fun dismissDialog() {
-        if (biometricDialogV23 != null) {
-            biometricDialogV23!!.dismiss()
-        }
+        biometricDialogV23?.dismiss()
+        cancellationSignalV23?.cancel()
     }
 
     private fun updateStatus(status: String) {
-        if (biometricDialogV23 != null) {
-            biometricDialogV23!!.updateStatus(status)
-        }
+        biometricDialogV23?.updateStatus(status)
     }
 
     private fun generateKey() {
         try {
-
             keyStore = KeyStore.getInstance("AndroidKeyStore")
             keyStore!!.load(null)
 
-            keyGenerator = KeyGenerator.getInstance(KeyProperties.KEY_ALGORITHM_AES, "AndroidKeyStore")
+            keyGenerator =
+                KeyGenerator.getInstance(KeyProperties.KEY_ALGORITHM_AES, "AndroidKeyStore")
             keyGenerator!!.init(
-                KeyGenParameterSpec.Builder(KEY_NAME, KeyProperties.PURPOSE_ENCRYPT or KeyProperties.PURPOSE_DECRYPT)
+                KeyGenParameterSpec.Builder(
+                    KEY_NAME,
+                    KeyProperties.PURPOSE_ENCRYPT or KeyProperties.PURPOSE_DECRYPT
+                )
                     .setBlockModes(KeyProperties.BLOCK_MODE_CBC)
                     .setUserAuthenticationRequired(true)
                     .setEncryptionPaddings(KeyProperties.ENCRYPTION_PADDING_PKCS7)
@@ -137,7 +135,6 @@ open class BiometricManagerV23 {
         } catch (exc: IOException) {
             exc.printStackTrace()
         }
-
     }
 
 
@@ -161,7 +158,6 @@ open class BiometricManagerV23 {
             cipher!!.init(Cipher.ENCRYPT_MODE, key)
             return true
 
-
         } catch (e: KeyPermanentlyInvalidatedException) {
             return false
         } catch (e: KeyStoreException) {
@@ -177,6 +173,5 @@ open class BiometricManagerV23 {
         } catch (e: InvalidKeyException) {
             throw RuntimeException("Failed to init Cipher", e)
         }
-
     }
 }

@@ -219,17 +219,18 @@ class PinActivity : BaseMvpAppCompatActivity(), PinView, PinLockListener,
 
     // Biometric
 
-    override fun showBiometricDialog() {
-        if (mBiometricManager?.isDialogShowing() == true) {
-            mBiometricManager?.dismissDialog()
+    override fun showBiometricDialog(show: Boolean) {
+        mBiometricManager?.dismissDialog()
+
+        if (show) {
+            mBiometricManager = BiometricManager.BiometricBuilder(this)
+                .setTitle(getString(R.string.biometric_title))
+                .setSubtitle(getString(R.string.biometric_subtitle))
+                .setDescription(getString(R.string.biometric_description))
+                .setNegativeButtonText(getString(R.string.text_btn_cancel).toUpperCase())
+                .build()
+            mBiometricManager?.authenticate(this)
         }
-        mBiometricManager = BiometricManager.BiometricBuilder(this)
-            .setTitle(getString(R.string.biometric_title))
-            .setSubtitle(getString(R.string.biometric_subtitle))
-            .setDescription(getString(R.string.biometric_description))
-            .setNegativeButtonText(getString(R.string.text_btn_cancel).toUpperCase())
-            .build()
-        mBiometricManager?.authenticate(this)
     }
 
     override fun onSdkVersionNotSupported() {

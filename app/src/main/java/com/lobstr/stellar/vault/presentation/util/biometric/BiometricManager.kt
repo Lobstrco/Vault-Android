@@ -10,7 +10,10 @@ import android.os.CancellationSignal
 /**
  * https://github.com/anitaa1990/Biometric-Auth-Sample
  */
-open class BiometricManager protected constructor(biometricBuilder: BiometricBuilder) : BiometricManagerV23() {
+open class BiometricManager protected constructor(biometricBuilder: BiometricBuilder) :
+    BiometricManagerV23() {
+
+    private var cancellationSignal: CancellationSignal? = null
 
     init {
         this.context = biometricBuilder.context
@@ -26,6 +29,12 @@ open class BiometricManager protected constructor(biometricBuilder: BiometricBui
 
     fun dismissDialog() {
         biometricDialogV23?.dismiss()
+        cancelAuthentication()
+    }
+
+    private fun cancelAuthentication() {
+        cancellationSignal?.cancel()
+        cancellationSignalV23?.cancel()
     }
 
     fun authenticate(biometricCallback: BiometricCallback) {
@@ -48,27 +57,43 @@ open class BiometricManager protected constructor(biometricBuilder: BiometricBui
             return
         }
 
+        checkNotSupporting(biometricCallback)
+
+        if (!BiometricUtils.isFingerprintAvailable(context)) {
+            biometricCallback.onBiometricAuthenticationNotAvailable()
+            return
+        }
+
+        cancellationSignal = CancellationSignal()
+        cancellationSignalV23 = androidx.core.os.CancellationSignal()
+
+        displayBiometricDialog(biometricCallback)
+    }
+
+//    fun checkSupporting(biometricCallback: BiometricCallback) {
+//        if (BiometricUtils.isBiometricSupported(context)) {
+//            biometricCallback.onBiometricSupported()
+//            return
+//        } else {
+//            checkNotSupporting(biometricCallback)
+//        }
+//    }
+
+    private fun checkNotSupporting(biometricCallback: BiometricCallback) {
         if (!BiometricUtils.isSdkVersionSupported) {
             biometricCallback.onSdkVersionNotSupported()
             return
         }
 
-        if (!BiometricUtils.isPermissionGranted(context!!)) {
+        if (!BiometricUtils.isPermissionGranted(context)) {
             biometricCallback.onBiometricAuthenticationPermissionNotGranted()
             return
         }
 
-        if (!BiometricUtils.isHardwareSupported(context!!)) {
+        if (!BiometricUtils.isHardwareSupported(context)) {
             biometricCallback.onBiometricAuthenticationNotSupported()
             return
         }
-
-        if (!BiometricUtils.isFingerprintAvailable(context!!)) {
-            biometricCallback.onBiometricAuthenticationNotAvailable()
-            return
-        }
-
-        displayBiometricDialog(biometricCallback)
     }
 
     private fun displayBiometricDialog(biometricCallback: BiometricCallback) {
@@ -87,14 +112,22 @@ open class BiometricManager protected constructor(biometricBuilder: BiometricBui
             .setDescription(description!!)
             .setNegativeButton(
                 negativeButtonText!!,
-                context!!.mainExecutor,
+                context.mainExecutor,
                 DialogInterface.OnClickListener { _, _ -> biometricCallback.onAuthenticationCancelled() })
             .build()
             .authenticate(
-                CancellationSignal(), context!!.mainExecutor,
+                cancellationSignal!!, context.mainExecutor,
                 BiometricCallbackV28(biometricCallback)
             )
     }
+
+//    fun checkAvailability(biometricCallback: BiometricCallback) {
+//        if (BiometricUtils.isFingerprintAvailable(context)) {
+//            biometricCallback.onBiometricAuthenticationAvailable()
+//        } else {
+//            biometricCallback.onBiometricAuthenticationNotAvailable()
+//        }
+//    }
 
     class BiometricBuilder(val context: Context) {
         var title: String? = null
@@ -116,7 +149,6 @@ open class BiometricManager protected constructor(biometricBuilder: BiometricBui
             this.description = description
             return this
         }
-
 
         fun setNegativeButtonText(negativeButtonText: String): BiometricBuilder {
             this.negativeButtonText = negativeButtonText

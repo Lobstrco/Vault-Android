@@ -73,8 +73,13 @@ class PinPresenter(
         if (!needChangePin!! && !needCreatePin!! && interactor.isTouchIdEnabled() &&
             BiometricUtils.isFingerprintAvailable(LVApplication.sAppComponent.context)
         ) {
-            viewState.showBiometricDialog()
+            viewState.showBiometricDialog(true)
         }
+    }
+
+    override fun detachView(view: PinView) {
+        viewState.showBiometricDialog(false)
+        super.detachView(view)
     }
 
     /**
@@ -100,7 +105,7 @@ class PinPresenter(
                 confirmPin(pin, true)
             }
             newPin.equals(pin) -> {
-                if(needBlockPinView) {
+                if (needBlockPinView) {
                     return
                 }
 
@@ -137,7 +142,7 @@ class PinPresenter(
     }
 
     private fun confirmPin(pin: String, needCheckOldPint: Boolean) {
-        if(needBlockPinView) {
+        if (needBlockPinView) {
             return
         }
 

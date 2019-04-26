@@ -8,6 +8,7 @@ import com.lobstr.stellar.vault.data.error.exeption.UserNotAuthorizedException
 import com.lobstr.stellar.vault.domain.signed_account.SignedAccountInteractor
 import com.lobstr.stellar.vault.domain.util.EventProviderModule
 import com.lobstr.stellar.vault.domain.util.event.Network
+import com.lobstr.stellar.vault.domain.util.event.Notification
 import com.lobstr.stellar.vault.presentation.BasePresenter
 import com.lobstr.stellar.vault.presentation.application.LVApplication
 import com.lobstr.stellar.vault.presentation.dagger.module.signed_account.SignedAccountModule
@@ -51,6 +52,17 @@ class SignedAccountsPresenter : BasePresenter<SignedAccountsView>() {
                             needCheckConnectionState = false
                             cancelNetworkWorker()
                         }
+                    }
+                }, {
+                    it.printStackTrace()
+                })
+        )
+        unsubscribeOnDestroy(
+            eventProviderModule.notificationEventSubject
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({
+                    when (it.type) {
+                        Notification.Type.REMOVED_SIGNER, Notification.Type.SIGNED_NEW_ACCOUNT -> loadSignedAccountsList()
                     }
                 }, {
                     it.printStackTrace()

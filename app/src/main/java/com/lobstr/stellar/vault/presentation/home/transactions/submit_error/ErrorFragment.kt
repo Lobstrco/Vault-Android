@@ -39,7 +39,7 @@ class ErrorFragment : BaseFragment(), ErrorView, View.OnClickListener {
 
     @ProvidePresenter
     fun provideErrorPresenter() = ErrorPresenter(
-        arguments!!.getString(Constant.Bundle.BUNDLE_ERROR_MESSAGE)
+        arguments!!.getString(Constant.Bundle.BUNDLE_ERROR_MESSAGE)!!
     )
 
     // ===========================================================

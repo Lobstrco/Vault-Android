@@ -102,7 +102,7 @@ class TransactionsFragment : BaseFragment(), TransactionsView, SwipeRefreshLayou
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        getMvpDelegate().onAttach()
+        super.onActivityResult(requestCode, resultCode, data)
         mPresenter.handleOnActivityResult(requestCode, resultCode, data)
     }
 

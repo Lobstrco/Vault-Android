@@ -73,8 +73,9 @@ class TransactionsPresenter : BasePresenter<TransactionsView>() {
                     when (it.type) {
                         Notification.Type.ADDED_NEW_TRANSACTION,
                         Notification.Type.ADDED_NEW_SIGNATURE,
-                        Notification.Type.TRANSACTION_SUBMITTED -> {
-                            //TODO improve logic in future
+                        Notification.Type.TRANSACTION_SUBMITTED,
+                        Notification.Type.SIGNED_NEW_ACCOUNT, Notification.Type.REMOVED_SIGNER -> {
+                            // handle transactionItem it if needed
 //                            val transactionItem = it.data as? TransactionItem
 //                            if (transactionItem != null && !transactionItem.xdr.isNullOrEmpty()) {
 //                                transactions.add(0, transactionItem)
@@ -151,7 +152,7 @@ class TransactionsPresenter : BasePresenter<TransactionsView>() {
 
         when (requestCode) {
             Constant.Code.TRANSACTION_DETAILS_FRAGMENT, Constant.Code.IMPORT_XDR_FRAGMENT -> {
-                //TODO handle transactionItem it if needed
+                // handle transactionItem it if needed
                 val transactionItem: TransactionItem? =
                     data?.getParcelableExtra(Constant.Extra.EXTRA_TRANSACTION_ITEM)
 

@@ -1,5 +1,6 @@
 package com.lobstr.stellar.vault.presentation.base.fragment
 
+import android.content.Intent
 import android.os.Bundle
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
@@ -36,6 +37,13 @@ abstract class BaseFragment : BaseMvpAppCompatFragment(), BaseFragmentView {
         // Check: has menu options or don't
         if ((parentFragment as BaseContainerFragment).userVisibleHint) {
             setHasOptionsMenu(true)
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (isAdded) {
+            getMvpDelegate().onAttach()
         }
     }
 

@@ -8,6 +8,10 @@ interface BiometricCallback {
 
     fun onBiometricAuthenticationNotAvailable()
 
+//    fun onBiometricAuthenticationAvailable()
+
+//    fun onBiometricSupported()
+
     fun onBiometricAuthenticationPermissionNotGranted()
 
     fun onBiometricAuthenticationInternalError(error: String)

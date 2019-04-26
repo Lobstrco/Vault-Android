@@ -21,7 +21,9 @@ interface FcmInteractor {
 
     fun isFcmRegistered(): Boolean
 
-    fun confirmIsUserSignerForLobstr(jsonStr: String?): Account?
+    fun signedNewAccount(jsonStr: String?): Account?
+
+    fun removedSigner(jsonStr: String?): Account?
 
     fun isUserAuthorized(): Boolean
 

@@ -110,8 +110,8 @@ class SettingsFragment : BaseFragment(), SettingsView, View.OnClickListener,
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        getMvpDelegate().onAttach()
-        mPresenter.onActivityResult(requestCode, resultCode, data)
+        super.onActivityResult(requestCode, resultCode, data)
+        mPresenter.handleOnActivityResult(requestCode, resultCode, data)
     }
 
     // ===========================================================

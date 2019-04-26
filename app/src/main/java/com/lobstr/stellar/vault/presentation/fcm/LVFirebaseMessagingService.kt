@@ -44,6 +44,7 @@ class LVFirebaseMessagingService : FirebaseMessagingService() {
 
     object Type {
         const val SIGNED_NEW_ACCOUNT = "signed_new_account"
+        const val REMOVED_SIGNER = "removed_signer"
         const val ADDED_NEW_TRANSACTION = "added_new_transaction"
         const val ADDED_NEW_SIGNATURE = "added_new_signature"
         const val TRANSACTION_SUBMITTED = "transaction_submitted"
@@ -90,6 +91,10 @@ class LVFirebaseMessagingService : FirebaseMessagingService() {
                     data[ACCOUNT] as? String, messageTitle, messageBody, notificationsManager
                 )
 
+                Type.REMOVED_SIGNER -> wrapRemovedSignerMessage(
+                    data[ACCOUNT] as? String, messageTitle, messageBody, notificationsManager
+                )
+
                 Type.ADDED_NEW_TRANSACTION -> wrapAddedNewTransactionMessage(
                     data[TRANSACTION] as? String, messageTitle, messageBody, notificationsManager
                 )
@@ -119,6 +124,26 @@ class LVFirebaseMessagingService : FirebaseMessagingService() {
         val account = mFcmHelper.signedNewAccount(jsonStr)
         mEventProviderModule.notificationEventSubject.onNext(
             Notification(Notification.Type.SIGNED_NEW_ACCOUNT, account)
+        )
+
+        // TODO show by default Splash screen, otherwise - HomeActivity . Fix caused by security reasons (click notification on Pin Screen)
+        sendDefaultMessage(
+            messageTitle,
+            messageBody,
+            notificationsManager/*,
+            HomeActivity::class.java*/
+        )
+    }
+
+    private fun wrapRemovedSignerMessage(
+        jsonStr: String?,
+        messageTitle: String?,
+        messageBody: String?,
+        notificationsManager: NotificationsManager
+    ) {
+        val account = mFcmHelper.removedSigner(jsonStr)
+        mEventProviderModule.notificationEventSubject.onNext(
+            Notification(Notification.Type.REMOVED_SIGNER, account)
         )
 
         // TODO show by default Splash screen, otherwise - HomeActivity . Fix caused by security reasons (click notification on Pin Screen)
