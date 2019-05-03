@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.view.*
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
@@ -129,9 +130,10 @@ class TransactionsFragment : BaseFragment(), TransactionsView, SwipeRefreshLayou
     }
 
     override fun initRecycledView() {
-        rvTransactions.layoutManager = LinearLayoutManager(activity)
+        rvTransactions.layoutManager = LinearLayoutManager(context)
         rvTransactions.itemAnimator = null
         rvTransactions.adapter = TransactionAdapter(this)
+        rvTransactions.addOnScrollListener(RecyclerAccessHistoryScrollingListener())
     }
 
     override fun showTransactionDetails(transactionItem: TransactionItem) {
@@ -147,6 +149,10 @@ class TransactionsFragment : BaseFragment(), TransactionsView, SwipeRefreshLayou
 
     override fun showTransactionList(items: MutableList<TransactionItem>) {
         (rvTransactions.adapter as TransactionAdapter).setTransactionList(items)
+    }
+
+    override fun scrollListToPosition(position: Int) {
+        rvTransactions.scrollToPosition(position)
     }
 
     override fun showOptionsMenu(show: Boolean) {
@@ -213,4 +219,17 @@ class TransactionsFragment : BaseFragment(), TransactionsView, SwipeRefreshLayou
     // ===========================================================
     // Inner and Anonymous Classes
     // ===========================================================
+
+    private inner class RecyclerAccessHistoryScrollingListener : RecyclerView.OnScrollListener() {
+        override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+            super.onScrolled(recyclerView, dx, dy)
+
+            val layoutManager: LinearLayoutManager = recyclerView.layoutManager as LinearLayoutManager
+            val visibleItemCount = layoutManager.childCount
+            val totalItemCount = layoutManager.itemCount
+            val firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition()
+            val lastVisibleItemPosition = layoutManager.findLastVisibleItemPosition()
+            mPresenter.onListScrolled(visibleItemCount, totalItemCount, firstVisibleItemPosition, lastVisibleItemPosition)
+        }
+    }
 }

@@ -6,6 +6,7 @@ import android.content.UriMatcher
 import android.database.Cursor
 import android.database.MatrixCursor
 import android.net.Uri
+import com.lobstr.stellar.vault.R
 import com.lobstr.stellar.vault.presentation.util.PrefsUtil
 
 /**
@@ -15,14 +16,8 @@ import com.lobstr.stellar.vault.presentation.util.PrefsUtil
 class PreferencesProvider : ContentProvider() {
 
     companion object {
-        const val AUTHORITY = "public.shared.data.preference"
-
         const val PUBLIC_KEY_PATH = "public_key"
         const val PUBLIC_KEY_CODE = 1
-
-        // add other if needed
-//        const val OTHER_PREF_PATH = "other_pref"
-//        const val OTHER_PREF_PATH_CODE = 2
     }
 
     private lateinit var prefsUtil: PrefsUtil
@@ -31,10 +26,8 @@ class PreferencesProvider : ContentProvider() {
 
     override fun onCreate(): Boolean {
         prefsUtil = PrefsUtil(android.preference.PreferenceManager.getDefaultSharedPreferences(context))
-        uriMatcher.addURI(AUTHORITY, PUBLIC_KEY_PATH, PUBLIC_KEY_CODE)
-
-        // add other if needed
-//        uriMatcher.addURI(AUTHORITY, OTHER_PREF_PATH, OTHER_PREF_PATH_CODE)
+        // see authority in product flavor resValue
+        uriMatcher.addURI(context?.getString(R.string.authority), PUBLIC_KEY_PATH, PUBLIC_KEY_CODE)
         return true
     }
 

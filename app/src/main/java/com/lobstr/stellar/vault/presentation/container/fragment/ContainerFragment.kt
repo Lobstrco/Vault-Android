@@ -109,7 +109,10 @@ class ContainerFragment : BaseContainerFragment(),
         )
     }
 
+    // base unique home tabs fragment
     override fun showDashBoardFr() {
+        // unique fragment must be first in container
+        if (childFragmentManager.findFragmentById(R.id.fl_container) != null) return
         FragmentTransactionManager.displayFragment(
             childFragmentManager,
             Fragment.instantiate(context, DashboardFragment::class.qualifiedName),
@@ -117,7 +120,10 @@ class ContainerFragment : BaseContainerFragment(),
         )
     }
 
+    // base unique home tabs fragment
     override fun showSettingsFr() {
+        // unique fragment must be first in container
+        if (childFragmentManager.findFragmentById(R.id.fl_container) != null) return
         FragmentTransactionManager.displayFragment(
             childFragmentManager,
             Fragment.instantiate(context, SettingsFragment::class.qualifiedName),
@@ -125,7 +131,10 @@ class ContainerFragment : BaseContainerFragment(),
         )
     }
 
+    // base unique home tabs fragment
     override fun showTransactionsFr() {
+        // unique fragment must be first in container
+        if (childFragmentManager.findFragmentById(R.id.fl_container) != null) return
         FragmentTransactionManager.displayFragment(
             childFragmentManager,
             Fragment.instantiate(context, TransactionsFragment::class.qualifiedName),

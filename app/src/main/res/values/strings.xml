@@ -1,6 +1,6 @@
 <resources>
     <!-- main -->
-    <string name="app_name">LOBSTR Vault</string>
+    <!--<string name="app_name">LOBSTR Vault</string>-->
 
     <!-- toolbar titles-->
     <string name="title_toolbar_faq">Help</string>

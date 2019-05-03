@@ -109,7 +109,7 @@ open class BiometricManager protected constructor(biometricBuilder: BiometricBui
         BiometricPrompt.Builder(context)
             .setTitle(title!!)
             .setSubtitle(subtitle!!)
-            .setDescription(description!!)
+            /*.setDescription(description!!)*/
             .setNegativeButton(
                 negativeButtonText!!,
                 context.mainExecutor,

@@ -86,6 +86,11 @@ object Constant {
         const val DEBUG = "debug"
     }
 
+    object Flavor {
+        const val QA = "qa"
+        const val VAULT = "vault"
+    }
+
     object Permission {
         const val CAMERA = 1
     }

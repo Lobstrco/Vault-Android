@@ -65,7 +65,7 @@
         </activity>
 
         <provider
-                android:authorities="public.shared.data.preference"
+                android:authorities="@string/authority"
                 android:name=".presentation.util.content_provider.PreferencesProvider"
                 android:exported="true"/>
     </application>

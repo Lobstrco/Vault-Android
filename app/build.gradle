@@ -14,8 +14,8 @@ android {
         applicationId "com.lobstr.stellar.vault"
         minSdkVersion 19
         targetSdkVersion 28
-        versionCode 10
-        versionName "1.1.2"
+        versionCode 11
+        versionName "1.1.3"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
     }
@@ -38,21 +38,35 @@ android {
     }
 
     signingConfigs {
-        Properties keyProps = new Properties()
-        keyProps.load(new FileInputStream(file('../local.properties')))
-
-        release {
+        qa {
+            Properties keyProps = new Properties()
+            keyProps.load(new FileInputStream(file('../local.properties')))
+            storeFile file(keyProps["debug.store.path"])
+            keyAlias keyProps["debug.key.alias"]
+            storePassword keyProps["debug.store.password"]
+            keyPassword keyProps["debug.key.password"]
+        }
+        vault {
+            Properties keyProps = new Properties()
+            keyProps.load(new FileInputStream(file('../local.properties')))
             storeFile file(keyProps["release.store.path"])
             keyAlias keyProps["release.key.alias"]
             storePassword keyProps["release.store.password"]
             keyPassword keyProps["release.key.password"]
         }
+    }
 
-        debug {
-            storeFile file(keyProps["debug.store.path"])
-            keyAlias keyProps["debug.key.alias"]
-            storePassword keyProps["debug.store.password"]
-            keyPassword keyProps["debug.key.password"]
+    flavorDimensions "mode"
+    productFlavors {
+        qa {
+            applicationId "com.lobstr.stellar.vault.qa"
+            resValue "string", "app_name", "QA Vault"
+            resValue "string", "authority", "public.shared.data.preference.qa"
+        }
+        vault {
+            applicationId "com.lobstr.stellar.vault"
+            resValue "string", "app_name", "LOBSTR Vault"
+            resValue "string", "authority", "public.shared.data.preference"
         }
     }
 
@@ -60,7 +74,7 @@ android {
         debug {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            signingConfig signingConfigs.debug
+            signingConfig signingConfigs.qa
             debuggable true
             buildConfigField "boolean", "isDEBUG", "true"
         }
@@ -69,7 +83,7 @@ android {
             shrinkResources true
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            signingConfig signingConfigs.release
+            signingConfig signingConfigs.vault
             debuggable false
             buildConfigField "boolean", "isDEBUG", "false"
         }

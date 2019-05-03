@@ -24,6 +24,9 @@ interface TransactionsView : MvpView {
     @StateStrategyType(AddToEndSingleStrategy::class)
     fun showTransactionList(items: MutableList<TransactionItem>)
 
+    @StateStrategyType(SkipStrategy::class)
+    fun scrollListToPosition(position: Int)
+
     @StateStrategyType(AddToEndSingleStrategy::class)
     fun showOptionsMenu(show: Boolean)
 

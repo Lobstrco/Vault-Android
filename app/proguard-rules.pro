@@ -203,6 +203,9 @@
 -keep class com.crashlytics.** { *; }
 -dontwarn com.crashlytics.**
 
+# Keeping Stellar SDK
+-keep class org.stellar.sdk.** { *; }
+
 # R8 compatibility
 -keepclassmembers,allowobfuscation class * {
   @com.google.gson.annotations.SerializedName <fields>;
