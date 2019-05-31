@@ -337,7 +337,8 @@ open class AlertDialogFragment : BaseMvpAppCompatDialogFragment() {
          * Use it for specific AlertDialogFragments
          *
          * @param dialogId specific dialog id (used for dialog factory)
-         * @param bundle   data passed to specific dialog
+         * @param bundle data passed to specific dialog. Retrieve it by const ARGUMENT_DIALOG_SPECIFIC_DATA
+         * @see ARGUMENT_DIALOG_SPECIFIC_DATA
          * @return Builder
          */
         fun setSpecificDialog(dialogId: Int, bundle: Bundle?): Builder {

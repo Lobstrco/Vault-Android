@@ -143,8 +143,8 @@ object AppUtil {
             is PaymentOperation -> R.string.text_operation_name_payment
             is CreateAccountOperation -> R.string.text_operation_name_create_account
             is PathPaymentOperation -> R.string.text_operation_name_path_payment
-            is ManageOfferOperation -> R.string.text_operation_name_manage_offer
-            is CreatePassiveOfferOperation -> R.string.text_operation_name_create_passive_offer
+            is ManageSellOfferOperation -> R.string.text_operation_name_manage_sell_offer
+            is CreatePassiveSellOfferOperation -> R.string.text_operation_name_create_passive_sell_offer
             is SetOptionsOperation -> R.string.text_operation_name_set_options
             is ChangeTrustOperation -> R.string.text_operation_name_change_trust
             is AllowTrustOperation -> R.string.text_operation_name_allow_trust

@@ -76,8 +76,8 @@ class TransactionEntityMapper {
                 is org.stellar.sdk.PaymentOperation -> operations.add(mapPaymentOperation(it))
                 is org.stellar.sdk.CreateAccountOperation -> operations.add(mapCreateAccountOperation(it))
                 is org.stellar.sdk.PathPaymentOperation -> operations.add(mapPathPaymentOperation(it))
-                is org.stellar.sdk.ManageOfferOperation -> operations.add(mapManageOfferOperation(it))
-                is org.stellar.sdk.CreatePassiveOfferOperation -> operations.add(mapCreatePassiveOfferOperation(it))
+                is org.stellar.sdk.ManageSellOfferOperation -> operations.add(mapManageSellOfferOperation(it))
+                is org.stellar.sdk.CreatePassiveSellOfferOperation -> operations.add(mapCreatePassiveSellOfferOperation(it))
                 is org.stellar.sdk.SetOptionsOperation -> operations.add(mapSetOptionsOperation(it))
                 is org.stellar.sdk.ChangeTrustOperation -> operations.add(mapChangeTrustOperation(it))
                 is org.stellar.sdk.AllowTrustOperation -> operations.add(mapAllowTrustOperation(it))
@@ -131,8 +131,8 @@ class TransactionEntityMapper {
         )
     }
 
-    private fun mapManageOfferOperation(operation: org.stellar.sdk.ManageOfferOperation): ManageOfferOperation {
-        return ManageOfferOperation(
+    private fun mapManageSellOfferOperation(operation: org.stellar.sdk.ManageSellOfferOperation): ManageSellOfferOperation {
+        return ManageSellOfferOperation(
             (operation as org.stellar.sdk.Operation).sourceAccount?.accountId,
             mapAsset(operation.selling),
             mapAsset(operation.buying),
@@ -142,8 +142,8 @@ class TransactionEntityMapper {
         )
     }
 
-    private fun mapCreatePassiveOfferOperation(operation: org.stellar.sdk.CreatePassiveOfferOperation): CreatePassiveOfferOperation {
-        return CreatePassiveOfferOperation(
+    private fun mapCreatePassiveSellOfferOperation(operation: org.stellar.sdk.CreatePassiveSellOfferOperation): CreatePassiveSellOfferOperation {
+        return CreatePassiveSellOfferOperation(
             (operation as org.stellar.sdk.Operation).sourceAccount?.accountId,
             mapAsset(operation.selling),
             mapAsset(operation.buying),

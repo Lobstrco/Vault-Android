@@ -143,7 +143,7 @@ class FingerprintSetUpFragment : BaseFragment(), FingerprintSetUpView, Biometric
         ).show()
     }
 
-    override fun onBiometricAuthenticationInternalError(error: String) {
+    override fun onBiometricAuthenticationInternalError(error: String?) {
         Toast.makeText(context, error, Toast.LENGTH_LONG).show()
     }
 
@@ -159,11 +159,11 @@ class FingerprintSetUpFragment : BaseFragment(), FingerprintSetUpView, Biometric
         mPresenter.biometricAuthenticationSuccessful()
     }
 
-    override fun onAuthenticationHelp(helpCode: Int, helpString: CharSequence) {
+    override fun onAuthenticationHelp(helpCode: Int, helpString: CharSequence?) {
         // Toast.makeText(applicationContext, helpString, Toast.LENGTH_LONG).show();
     }
 
-    override fun onAuthenticationError(errorCode: Int, errString: CharSequence) {
+    override fun onAuthenticationError(errorCode: Int, errString: CharSequence?) {
         // Toast.makeText(applicationContext, errString, Toast.LENGTH_LONG).show();
     }
 

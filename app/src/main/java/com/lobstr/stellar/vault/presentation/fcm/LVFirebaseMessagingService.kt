@@ -16,9 +16,9 @@ import com.lobstr.stellar.vault.presentation.fcm.LVFirebaseMessagingService.Fiel
 import com.lobstr.stellar.vault.presentation.fcm.LVFirebaseMessagingService.Field.MESSAGE_BODY
 import com.lobstr.stellar.vault.presentation.fcm.LVFirebaseMessagingService.Field.MESSAGE_TITLE
 import com.lobstr.stellar.vault.presentation.fcm.LVFirebaseMessagingService.Field.TRANSACTION
-import com.lobstr.stellar.vault.presentation.fcm.NotificationsManager.ChanelId.LV_MAIN
 import com.lobstr.stellar.vault.presentation.splash.SplashActivity
 import com.lobstr.stellar.vault.presentation.util.Constant
+import java.util.*
 import javax.inject.Inject
 
 
@@ -107,7 +107,15 @@ class LVFirebaseMessagingService : FirebaseMessagingService() {
                     data[TRANSACTION] as? String, messageTitle, messageBody, notificationsManager
                 )
 
-                else -> sendDefaultMessage(messageTitle, messageBody, notificationsManager)
+                else -> sendDefaultMessage(
+                    (Date().time / 1000L % Int.MAX_VALUE).toInt(),
+                    NotificationsManager.ChannelId.OTHER,
+                    messageTitle,
+                    messageBody,
+                    NotificationsManager.GroupId.OTHER,
+                    NotificationsManager.GroupName.OTHER,
+                    notificationsManager
+                )
             }
 
         } catch (exc: Exception) {
@@ -128,8 +136,12 @@ class LVFirebaseMessagingService : FirebaseMessagingService() {
 
         // TODO show by default Splash screen, otherwise - HomeActivity . Fix caused by security reasons (click notification on Pin Screen)
         sendDefaultMessage(
+            NotificationsManager.NotificationId.SIGNERS_COUNT_CHANGED,
+            NotificationsManager.ChannelId.SIGNER_STATUS,
             messageTitle,
             messageBody,
+            NotificationsManager.GroupId.SIGNER_STATUS,
+            NotificationsManager.GroupName.SIGNER_STATUS,
             notificationsManager/*,
             HomeActivity::class.java*/
         )
@@ -148,8 +160,12 @@ class LVFirebaseMessagingService : FirebaseMessagingService() {
 
         // TODO show by default Splash screen, otherwise - HomeActivity . Fix caused by security reasons (click notification on Pin Screen)
         sendDefaultMessage(
+            NotificationsManager.NotificationId.SIGNERS_COUNT_CHANGED,
+            NotificationsManager.ChannelId.SIGNER_STATUS,
             messageTitle,
             messageBody,
+            NotificationsManager.GroupId.SIGNER_STATUS,
+            NotificationsManager.GroupName.SIGNER_STATUS,
             notificationsManager/*,
             HomeActivity::class.java*/
         )
@@ -177,10 +193,12 @@ class LVFirebaseMessagingService : FirebaseMessagingService() {
 
         // TODO show by default Splash screen, otherwise - send intent. Fix caused by security reasons (click notification on Pin Screen)
         notificationsManager.sendNotification(
-            LV_MAIN,
-            getString(R.string.app_name),
+            NotificationsManager.ChannelId.INCOMING_TRANSACTIONS,
+            NotificationsManager.NotificationId.LV_MAIN,
             messageTitle ?: getString(R.string.app_name),
             messageBody,
+            NotificationsManager.GroupId.LV_MAIN,
+            /*NotificationsManager.GroupName.TRANSACTION_HISTORY*/NotificationsManager.GroupName.LV_MAIN,
             /*intent*/SplashActivity::class.java
         )
     }
@@ -197,8 +215,12 @@ class LVFirebaseMessagingService : FirebaseMessagingService() {
         )
 
         sendDefaultMessage(
+            NotificationsManager.NotificationId.LV_MAIN,
+            NotificationsManager.ChannelId.NEW_SIGNATURES,
             messageTitle,
             messageBody,
+            NotificationsManager.GroupId.LV_MAIN,
+            /*NotificationsManager.GroupName.NEW_SIGNATURES*/NotificationsManager.GroupName.LV_MAIN,
             notificationsManager
         )
     }
@@ -215,15 +237,23 @@ class LVFirebaseMessagingService : FirebaseMessagingService() {
         )
 
         sendDefaultMessage(
+            NotificationsManager.NotificationId.LV_MAIN,
+            NotificationsManager.ChannelId.AUTHORIZED_TRANSACTIONS,
             messageTitle,
             messageBody,
+            NotificationsManager.GroupId.LV_MAIN,
+            /*NotificationsManager.GroupName.AUTHORIZED_TRANSACTIONS*/NotificationsManager.GroupName.LV_MAIN,
             notificationsManager
         )
     }
 
     private fun sendDefaultMessage(
+        notificationId: Int,
+        channelId: String,
         messageTitle: String?,
         messageBody: String?,
+        groupId: Int,
+        groupName: String,
         notificationsManager: NotificationsManager,
         targetClass: Class<*> = SplashActivity::class.java
     ) {
@@ -236,10 +266,12 @@ class LVFirebaseMessagingService : FirebaseMessagingService() {
         }
 
         notificationsManager.sendNotification(
-            LV_MAIN,
-            getString(R.string.app_name),
+            channelId,
+            notificationId,
             messageTitle ?: getString(R.string.app_name),
             messageBody,
+            groupId,
+            groupName,
             targetClass
         )
     }

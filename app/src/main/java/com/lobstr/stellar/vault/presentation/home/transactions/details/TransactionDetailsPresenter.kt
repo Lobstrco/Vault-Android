@@ -4,6 +4,7 @@ import com.arellomobile.mvp.InjectViewState
 import com.lobstr.stellar.vault.R
 import com.lobstr.stellar.vault.data.error.exeption.DefaultException
 import com.lobstr.stellar.vault.data.error.exeption.HorizonException
+import com.lobstr.stellar.vault.data.error.exeption.InternalException
 import com.lobstr.stellar.vault.data.error.exeption.UserNotAuthorizedException
 import com.lobstr.stellar.vault.domain.transaction_details.TransactionDetailsInteractor
 import com.lobstr.stellar.vault.domain.util.EventProviderModule
@@ -157,12 +158,16 @@ class TransactionDetailsPresenter(private var transactionItem: TransactionItem) 
                 }, {
                     when (it) {
                         is HorizonException -> {
-                            // TODO handle "tx_bad_seq"
                             viewState.errorConfirmTransaction(it.details)
                         }
                         is UserNotAuthorizedException -> {
                             confirmTransaction()
                         }
+                        is InternalException -> viewState.showMessage(
+                            LVApplication.sAppComponent.context.getString(
+                                R.string.api_error_internal_submit_transaction
+                            )
+                        )
                         is DefaultException -> {
                             viewState.showMessage(it.details)
                         }
@@ -217,9 +222,12 @@ class TransactionDetailsPresenter(private var transactionItem: TransactionItem) 
                                 is UserNotAuthorizedException -> {
                                     denyTransaction()
                                 }
-                                is DefaultException -> {
-                                    viewState.showMessage(it.details)
-                                }
+                                is InternalException -> viewState.showMessage(
+                                    LVApplication.sAppComponent.context.getString(
+                                        R.string.api_error_internal_submit_transaction
+                                    )
+                                )
+                                is DefaultException -> viewState.showMessage(it.details)
                                 else -> {
                                     viewState.showMessage(it.message ?: "")
                                 }

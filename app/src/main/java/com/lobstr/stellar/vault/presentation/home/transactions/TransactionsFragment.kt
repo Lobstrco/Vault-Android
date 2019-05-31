@@ -133,7 +133,7 @@ class TransactionsFragment : BaseFragment(), TransactionsView, SwipeRefreshLayou
         rvTransactions.layoutManager = LinearLayoutManager(context)
         rvTransactions.itemAnimator = null
         rvTransactions.adapter = TransactionAdapter(this)
-        rvTransactions.addOnScrollListener(RecyclerAccessHistoryScrollingListener())
+        rvTransactions.addOnScrollListener(RecyclerTransactionsScrollingListener())
     }
 
     override fun showTransactionDetails(transactionItem: TransactionItem) {
@@ -220,7 +220,7 @@ class TransactionsFragment : BaseFragment(), TransactionsView, SwipeRefreshLayou
     // Inner and Anonymous Classes
     // ===========================================================
 
-    private inner class RecyclerAccessHistoryScrollingListener : RecyclerView.OnScrollListener() {
+    private inner class RecyclerTransactionsScrollingListener : RecyclerView.OnScrollListener() {
         override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
             super.onScrolled(recyclerView, dx, dy)
 

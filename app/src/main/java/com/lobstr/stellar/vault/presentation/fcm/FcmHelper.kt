@@ -34,9 +34,9 @@ class FcmHelper(private val context: Context, private val fcmInteractor: FcmInte
         if (!fcmInteractor.isFcmRegistered()) {
             val registrationStatus = requestFcmToken()
             when (registrationStatus) {
-                FcmRegStatus.TRYING_REGISTER_FCM, FcmHelper.FcmRegStatus.DEVICE_ALREADY_REGISTERED -> {
+                FcmRegStatus.TRYING_REGISTER_FCM, FcmRegStatus.DEVICE_ALREADY_REGISTERED -> {
                     val fcmDeviceId = getSavedFcmToken()
-                    if (!fcmDeviceId.isEmpty()) {
+                    if (fcmDeviceId.isNotEmpty()) {
                         sendFcmToken(fcmDeviceId)
                     }
                 }
@@ -48,14 +48,14 @@ class FcmHelper(private val context: Context, private val fcmInteractor: FcmInte
         // FCM registration (Check device for Play Services APK before, If check succeeds - proceed)
         if (checkIsGooglePlayServicesAvailable()) {
             val fcmDeviceId = getSavedFcmToken()
-            if (fcmDeviceId.isEmpty()) {
+            return if (fcmDeviceId.isEmpty()) {
                 createFcmToken()
-                return FcmRegStatus.TRYING_REGISTER_FCM
+                FcmRegStatus.TRYING_REGISTER_FCM
             } else {
                 // if device already registered on FCM  - send its id on server
                 // it can happen e.g. when two or more users use one device
                 Log.i(LOG_TAG, "Device already registered with id - $fcmDeviceId")
-                return FcmRegStatus.DEVICE_ALREADY_REGISTERED
+                FcmRegStatus.DEVICE_ALREADY_REGISTERED
             }
         } else {
             // if no - open app anyway
@@ -68,7 +68,7 @@ class FcmHelper(private val context: Context, private val fcmInteractor: FcmInte
         if (checkIsGooglePlayServicesAvailable()) {
             createFcmToken()
             val fcmToken = getSavedFcmToken()
-            if (!fcmToken.isEmpty() /*&& !TextUtils.isEmpty(PrefsUtils.getUserToken())*/) {
+            if (fcmToken.isNotEmpty() /*&& !TextUtils.isEmpty(PrefsUtils.getUserToken())*/) {
                 sendFcmToken(fcmToken)
             }
         }
@@ -83,7 +83,7 @@ class FcmHelper(private val context: Context, private val fcmInteractor: FcmInte
     }
 
     private fun sendFcmToken(token: String?) {
-        if (token != null && !token.isEmpty()) {
+        if (!token.isNullOrEmpty()) {
             fcmInteractor.fcmDeviceRegistration(OS_TYPE, token)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -122,7 +122,7 @@ class FcmHelper(private val context: Context, private val fcmInteractor: FcmInte
         }
 
         val fcmToken = fcmInteractor.getFcmToken()
-        if (fcmToken != null && !fcmToken.isEmpty()) {
+        if (!fcmToken.isNullOrEmpty()) {
             Log.i(LOG_TAG, "Previous registration was not found, register device on FCM")
             return fcmToken
         }

@@ -141,8 +141,8 @@
     <string name="text_operation_name_payment">Payment</string>
     <string name="text_operation_name_create_account">Create Account</string>
     <string name="text_operation_name_path_payment">Path Payment</string>
-    <string name="text_operation_name_manage_offer">Manage Offer</string>
-    <string name="text_operation_name_create_passive_offer">Create Passive Offer</string>
+    <string name="text_operation_name_manage_sell_offer">Manage Offer</string>
+    <string name="text_operation_name_create_passive_sell_offer">Create Passive Offer</string>
     <string name="text_operation_name_set_options">Set Options</string>
     <string name="text_operation_name_change_trust">Change Trust</string>
     <string name="text_operation_name_allow_trust">Allow Trust</string>
@@ -231,7 +231,9 @@
     <string name="api_error_not_found">Not Found</string>
     <string name="api_error_connection_timeout">Timeout</string>
     <string name="api_error_connection_error">No Internet connection</string>
-    <string name="api_error_something_went_wrong">Something went wrong, please try again later</string>
+    <string name="api_error_internal_default">Something went wrong, please try again later</string>
+    <string name="api_error_internal_submit_transaction">Failed to submit the transaction due to the server overload or Stellar
+        network outage. Please try again later</string>
     <string name="api_error_user_not_authorized">User Not Authorized</string>
 
     <!-- Success screen -->
@@ -262,4 +264,11 @@
     <string name="text_tv_tx_insufficient_fee">Fee is too small.</string>
     <string name="text_tv_tx_bad_auth_extra">Unused signatures attached to transaction.</string>
     <string name="text_tv_tx_internal_error">An unknown error occurred.</string>
+
+    <!-- notifications channels-->
+    <string name="channel_signer_status">Signer status</string>
+    <string name="channel_incoming_transactions">Incoming transactions</string>
+    <string name="channel_new_signatures">New signatures</string>
+    <string name="channel_authorized_transactions">Authorized transactions</string>
+    <string name="channel_other">Other</string>
 </resources>

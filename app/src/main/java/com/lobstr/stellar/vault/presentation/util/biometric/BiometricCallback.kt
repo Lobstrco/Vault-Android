@@ -14,7 +14,7 @@ interface BiometricCallback {
 
     fun onBiometricAuthenticationPermissionNotGranted()
 
-    fun onBiometricAuthenticationInternalError(error: String)
+    fun onBiometricAuthenticationInternalError(error: String?)
 
     fun onAuthenticationFailed()
 
@@ -22,7 +22,7 @@ interface BiometricCallback {
 
     fun onAuthenticationSuccessful()
 
-    fun onAuthenticationHelp(helpCode: Int, helpString: CharSequence)
+    fun onAuthenticationHelp(helpCode: Int, helpString: CharSequence?)
 
-    fun onAuthenticationError(errorCode: Int, errString: CharSequence)
+    fun onAuthenticationError(errorCode: Int, errString: CharSequence?)
 }

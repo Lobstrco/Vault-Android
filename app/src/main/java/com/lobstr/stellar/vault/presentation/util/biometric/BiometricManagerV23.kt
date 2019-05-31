@@ -52,13 +52,13 @@ open class BiometricManagerV23 {
                     override fun onAuthenticationError(errMsgId: Int, errString: CharSequence?) {
                         super.onAuthenticationError(errMsgId, errString)
                         updateStatus(errString.toString())
-                        biometricCallback.onAuthenticationError(errMsgId, errString!!)
+                        biometricCallback.onAuthenticationError(errMsgId, errString)
                     }
 
                     override fun onAuthenticationHelp(helpMsgId: Int, helpString: CharSequence?) {
                         super.onAuthenticationHelp(helpMsgId, helpString)
                         updateStatus(helpString.toString())
-                        biometricCallback.onAuthenticationHelp(helpMsgId, helpString!!)
+                        biometricCallback.onAuthenticationHelp(helpMsgId, helpString)
                     }
 
                     override fun onAuthenticationSucceeded(result: FingerprintManagerCompat.AuthenticationResult?) {

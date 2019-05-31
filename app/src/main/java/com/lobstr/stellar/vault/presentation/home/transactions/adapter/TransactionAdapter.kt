@@ -11,8 +11,8 @@ class TransactionAdapter(private val listener: OnTransactionItemClicked) :
 
     private var transactionItems: MutableList<TransactionItem> = mutableListOf()
 
-    fun setTransactionList(orderBookList: MutableList<TransactionItem>) {
-        transactionItems = orderBookList
+    fun setTransactionList(transactionItems: MutableList<TransactionItem>) {
+        this.transactionItems = transactionItems
         notifyDataSetChanged()
     }
 

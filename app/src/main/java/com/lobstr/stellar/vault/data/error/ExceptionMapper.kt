@@ -35,7 +35,7 @@ class ExceptionMapper(private val context: Context) {
                 )
                 throwable.code() == HttpStatusCodes.HTTP_FORBIDDEN -> return getHttpForbiddenError(error, throwable)
                 throwable.code() == HttpStatusCodes.HTTP_BAD_REQUEST -> return getHttpBadRequestError(error, throwable)
-                throwable.code() >= HttpStatusCodes.HTTP_INTERNAL_ERROR -> return InternalException(context.getString(R.string.api_error_something_went_wrong))
+                throwable.code() >= HttpStatusCodes.HTTP_INTERNAL_ERROR -> return InternalException(context.getString(R.string.api_error_internal_default))
             }
         }
 
@@ -63,7 +63,7 @@ class ExceptionMapper(private val context: Context) {
 
     private fun getHttpBadRequestError(error: Error?, throwable: Throwable): DefaultException {
         return when {
-            error == null -> DefaultException(context.getString(R.string.api_error_something_went_wrong))
+            error == null -> DefaultException(context.getString(R.string.api_error_internal_default))
             !error.message.isNullOrEmpty() -> BadRequestException(error.message)
             !error.detail.isNullOrEmpty() -> BadRequestException(error.detail)
             !error.error.isNullOrEmpty() -> BadRequestException(error.error)

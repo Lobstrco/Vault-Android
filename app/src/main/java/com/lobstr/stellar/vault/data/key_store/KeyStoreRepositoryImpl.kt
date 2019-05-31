@@ -152,11 +152,19 @@ class KeyStoreRepositoryImpl(
     override fun clearAll() {
         val aliases = keyStore.aliases()
         aliases.iterator().forEach {
-            keyStore.deleteEntry(it)
+            try {
+                keyStore.deleteEntry(it)
+            } catch (exc: KeyStoreException) {
+                exc.printStackTrace()
+            }
         }
     }
 
     override fun clear(alias: String) {
-        keyStore.deleteEntry(alias)
+        try {
+            keyStore.deleteEntry(alias)
+        } catch (exc: KeyStoreException) {
+            exc.printStackTrace()
+        }
     }
 }

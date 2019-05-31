@@ -7,49 +7,83 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.media.RingtoneManager
+import android.os.Build
 import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationManagerCompat
 import androidx.core.app.TaskStackBuilder
 import com.lobstr.stellar.vault.R
+import com.lobstr.stellar.vault.presentation.fcm.NotificationsManager.ChannelId.AUTHORIZED_TRANSACTIONS
+import com.lobstr.stellar.vault.presentation.fcm.NotificationsManager.ChannelId.INCOMING_TRANSACTIONS
+import com.lobstr.stellar.vault.presentation.fcm.NotificationsManager.ChannelId.LV_MAIN
+import com.lobstr.stellar.vault.presentation.fcm.NotificationsManager.ChannelId.NEW_SIGNATURES
+import com.lobstr.stellar.vault.presentation.fcm.NotificationsManager.ChannelId.OTHER
+import com.lobstr.stellar.vault.presentation.fcm.NotificationsManager.ChannelId.SIGNER_STATUS
 
 
 class NotificationsManager(private val context: Context) {
 
     companion object {
-        val NOTIFICATION_ID = 1
-
         fun clearNotifications(context: Context) {
-            val notificationManager =
-                context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-
+            val notificationManager = NotificationManagerCompat.from(context)
             notificationManager.cancelAll()
         }
     }
 
-    object ChanelId {
-        val LV_MAIN = "LV_MAIN"
+    object ChannelId {
+        const val LV_MAIN = "LV_MAIN"
+        const val SIGNER_STATUS = "Signer status"
+        const val INCOMING_TRANSACTIONS = "Incoming transactions"
+        const val NEW_SIGNATURES = "New signatures"
+        const val AUTHORIZED_TRANSACTIONS = "Authorized transactions"
+        const val OTHER = "Other"
     }
 
-    object ChanelName {
-        val LV = "LV"
+    // must be unique (not equal GroupId)
+    object NotificationId {
+        const val LV_MAIN = 0
+        const val SIGNERS_COUNT_CHANGED = 1
+    }
+
+    // must be unique (not equal NotificationId)
+    object GroupId {
+        const val LV_MAIN = 2
+        const val SIGNER_STATUS = 3
+        const val TRANSACTION_HISTORY = 4
+        const val NEW_SIGNATURES = 5
+        const val AUTHORIZED_TRANSACTIONS = 6
+        const val OTHER = 7
+    }
+
+    object GroupName {
+        const val LV_MAIN = "LOBSTR Vault Main"
+        const val SIGNER_STATUS = "Signer Status"
+        const val TRANSACTION_HISTORY = "Transaction History"
+        const val NEW_SIGNATURES = "New Signatures"
+        const val AUTHORIZED_TRANSACTIONS = "Authorized Transactions"
+        const val OTHER = "Other"
     }
 
     /**
      * Show only specific activity
      */
     fun sendNotification(
-        channelId: String, channelName: String,
-        notificationTitle: String, notificationMessage: String?,
+        channelId: String,
+        notificationId: Int,
+        notificationTitle: String,
+        notificationMessage: String?,
+        groupId: Int,
+        groupName: String,
         targetClass: Class<*>
     ) {
-        val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        val notificationManager = NotificationManagerCompat.from(context)
 
         val intent = Intent(context, targetClass)
         intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_CLEAR_TOP)
         intent.action = java.lang.Long.toString(System.currentTimeMillis())
         val contentIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
 
-        val mBuilder =
-            NotificationCompat.Builder(context, createNotificationChannel(notificationManager, channelId, channelName))
+        val notificationBuilder =
+            NotificationCompat.Builder(context, createNotificationChannel(channelId))
                 .setSmallIcon(R.drawable.ic_stat_notif)
                 .setLights(Color.BLUE, 500, 500)
                 .setContentTitle(notificationTitle)
@@ -57,9 +91,31 @@ class NotificationsManager(private val context: Context) {
                 .setContentText(notificationMessage)
                 .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
                 .setAutoCancel(true)
-        mBuilder.setContentIntent(contentIntent)
+        notificationBuilder.setContentIntent(contentIntent)
 
-        notificationManager.notify(NOTIFICATION_ID, mBuilder.build())
+        // notifications group with NotificationCompat.InboxStyle() starting Android N
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            notificationBuilder.setGroup(groupName)
+
+            val groupBuilder =
+                NotificationCompat.Builder(
+                    context,
+                    createNotificationChannel(channelId)
+                )
+                    .setSmallIcon(R.drawable.ic_stat_notif)
+                    .setLights(Color.BLUE, 500, 500)
+                    .setContentTitle(notificationTitle)
+                    .setStyle(NotificationCompat.InboxStyle())
+                    .setContentText(notificationMessage)
+                    .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
+                    .setGroupSummary(true)
+                    .setGroup(groupName)
+                    .setAutoCancel(true)
+
+            notificationManager.notify(groupId, groupBuilder.build())
+        }
+
+        notificationManager.notify(notificationId, notificationBuilder.build())
     }
 
     /**
@@ -67,17 +123,18 @@ class NotificationsManager(private val context: Context) {
      */
     fun sendNotification(
         channelId: String,
-        channelName: String,
+        notificationId: Int,
         notificationTitle: String,
         notificationMessage: String?,
+        groupId: Int,
+        groupName: String,
         intent: Intent
     ) {
-        val notificationManager =
-            context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        val notificationManager = NotificationManagerCompat.from(context)
 
-        val mBuilder = NotificationCompat.Builder(
+        val notificationBuilder = NotificationCompat.Builder(
             context,
-            createNotificationChannel(notificationManager, channelId, channelName)
+            createNotificationChannel(channelId)
         )
             .setSmallIcon(R.drawable.ic_stat_notif)
             .setLights(Color.BLUE, 500, 500)
@@ -92,8 +149,31 @@ class NotificationsManager(private val context: Context) {
         // in KitKat and Lollipop PendingIntent.FLAG_UPDATE_CURRENT not working correct
         // (after first time) and this trick helps to solve the problem
         getPendingIntent(intent)?.cancel()
-        mBuilder.setContentIntent(getPendingIntent(intent))
-        notificationManager.notify(NOTIFICATION_ID, mBuilder.build())
+        notificationBuilder.setContentIntent(getPendingIntent(intent))
+
+        // notifications group with NotificationCompat.InboxStyle() starting Android N
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            notificationBuilder.setGroup(groupName)
+
+            val groupBuilder =
+                NotificationCompat.Builder(
+                    context,
+                    createNotificationChannel(channelId)
+                )
+                    .setSmallIcon(R.drawable.ic_stat_notif)
+                    .setLights(Color.BLUE, 500, 500)
+                    .setContentTitle(notificationTitle)
+                    .setStyle(NotificationCompat.InboxStyle())
+                    .setContentText(notificationMessage)
+                    .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
+                    .setGroupSummary(true)
+                    .setGroup(groupName)
+                    .setAutoCancel(true)
+
+            notificationManager.notify(groupId, groupBuilder.build())
+        }
+
+        notificationManager.notify(notificationId, notificationBuilder.build())
     }
 
     // notificationIntent - some data that we must pass from fcm
@@ -118,13 +198,13 @@ class NotificationsManager(private val context: Context) {
     }
 
     private fun createNotificationChannel(
-        notificationManager: NotificationManager,
         channelId: String,
-        channelName: String
+        notificationManager: NotificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
     ): String {
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val importance = NotificationManager.IMPORTANCE_HIGH
-            val notificationChannel = NotificationChannel(channelId, channelName, importance)
+            val notificationChannel = NotificationChannel(channelId, createChannelName(channelId), importance)
+            notificationChannel.description = createChannelDescription(channelId)
             notificationChannel.enableLights(true)
             notificationChannel.enableVibration(true)
             notificationChannel.setShowBadge(true)
@@ -133,5 +213,24 @@ class NotificationsManager(private val context: Context) {
         }
 
         return channelId
+    }
+
+    private fun createChannelName(chanelId: String): String {
+        return when (chanelId) {
+            LV_MAIN -> context.getString(R.string.app_name)
+            SIGNER_STATUS -> context.getString(R.string.channel_signer_status)
+            INCOMING_TRANSACTIONS -> context.getString(R.string.channel_incoming_transactions)
+            NEW_SIGNATURES -> context.getString(R.string.channel_new_signatures)
+            AUTHORIZED_TRANSACTIONS -> context.getString(R.string.channel_authorized_transactions)
+            OTHER -> context.getString(R.string.channel_other)
+            else -> context.getString(R.string.app_name)
+        }
+    }
+
+    private fun createChannelDescription(chanelId: String): String? {
+        // add channel descriptions
+        return when (chanelId) {
+            else -> null
+        }
     }
 }
