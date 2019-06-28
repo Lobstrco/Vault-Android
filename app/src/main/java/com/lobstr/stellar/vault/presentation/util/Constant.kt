@@ -117,6 +117,7 @@ object Constant {
     object Util {
         const val COUNT_MNEMONIC_WORDS_12 = 12
         const val COUNT_MNEMONIC_WORDS_24 = 24
+        const val UNDEFINED_VALUE = -1
     }
 
     object ApiRequestTag {
@@ -144,6 +145,12 @@ object Constant {
         const val DEFERRED = 1
         const val SKIPPED = 2
         const val RATED = 3
+    }
+
+    object Explorer{
+        private const val URL = "https://stellar.expert/explorer/public"
+        const val ACCOUNT = URL.plus("/account/")
+        const val TRANSACTION = URL.plus("/tx/")
     }
 
     object Social {

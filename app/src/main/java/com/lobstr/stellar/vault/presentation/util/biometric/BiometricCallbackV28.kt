@@ -9,19 +9,19 @@ import androidx.annotation.RequiresApi
 class BiometricCallbackV28(private val biometricCallback: BiometricCallback) :
     BiometricPrompt.AuthenticationCallback() {
 
-    override fun onAuthenticationSucceeded(result: BiometricPrompt.AuthenticationResult) {
+    override fun onAuthenticationSucceeded(result: BiometricPrompt.AuthenticationResult?) {
         super.onAuthenticationSucceeded(result)
 
         biometricCallback.onAuthenticationSuccessful()
     }
 
-    override fun onAuthenticationHelp(helpCode: Int, helpString: CharSequence) {
+    override fun onAuthenticationHelp(helpCode: Int, helpString: CharSequence?) {
         super.onAuthenticationHelp(helpCode, helpString)
 
         biometricCallback.onAuthenticationHelp(helpCode, helpString)
     }
 
-    override fun onAuthenticationError(errorCode: Int, errString: CharSequence) {
+    override fun onAuthenticationError(errorCode: Int, errString: CharSequence?) {
         super.onAuthenticationError(errorCode, errString)
 
         biometricCallback.onAuthenticationError(errorCode, errString)
@@ -29,7 +29,7 @@ class BiometricCallbackV28(private val biometricCallback: BiometricCallback) :
 
     override fun onAuthenticationFailed() {
         super.onAuthenticationFailed()
-        
+
         biometricCallback.onAuthenticationFailed()
     }
 }

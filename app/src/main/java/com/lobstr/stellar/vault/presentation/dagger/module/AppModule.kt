@@ -3,7 +3,7 @@ package com.lobstr.stellar.vault.presentation.dagger.module
 import android.app.Application
 import android.content.Context
 import android.content.SharedPreferences
-import android.preference.PreferenceManager
+import androidx.preference.PreferenceManager
 import com.lobstr.stellar.vault.data.error.ExceptionMapper
 import com.lobstr.stellar.vault.domain.util.EventProviderModule
 import com.lobstr.stellar.vault.presentation.util.PrefsUtil

@@ -2,6 +2,7 @@ package com.lobstr.stellar.vault.presentation.home.transactions.adapter
 
 import android.content.Context
 import android.graphics.PorterDuff
+import android.graphics.PorterDuffColorFilter
 import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
@@ -20,11 +21,8 @@ class TransactionViewHolder(itemView: View, private val listener: OnTransactionI
 
         val isSequenceValid = item.sequenceOutdatedAt.isNullOrEmpty()
 
-        itemView.statusView.background.setColorFilter(
-            ContextCompat.getColor(
-                context,
-                if (isSequenceValid) R.color.color_primary else R.color.color_4D000000
-            ),
+        itemView.statusView.background.colorFilter = PorterDuffColorFilter(
+            ContextCompat.getColor(context, if (isSequenceValid) R.color.color_primary else R.color.color_4D000000),
             PorterDuff.Mode.SRC_IN
         )
 

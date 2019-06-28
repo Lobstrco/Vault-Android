@@ -13,6 +13,7 @@ import com.lobstr.stellar.vault.presentation.BasePresenter
 import com.lobstr.stellar.vault.presentation.application.LVApplication
 import com.lobstr.stellar.vault.presentation.dagger.module.signed_account.SignedAccountModule
 import com.lobstr.stellar.vault.presentation.entities.account.Account
+import com.lobstr.stellar.vault.presentation.util.Constant
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
@@ -25,6 +26,9 @@ class SignedAccountsPresenter : BasePresenter<SignedAccountsView>() {
 
     @Inject
     lateinit var mInteractor: SignedAccountInteractor
+
+    // for restore RecycleView position after saveInstanceState (-1 - undefined state)
+    private var savedRvPosition: Int = Constant.Util.UNDEFINED_VALUE
 
     init {
         LVApplication.sAppComponent.plusSignedAccountComponent(SignedAccountModule()).inject(this)
@@ -78,12 +82,17 @@ class SignedAccountsPresenter : BasePresenter<SignedAccountsView>() {
                 .doOnSubscribe { viewState.showProgress() }
                 .doOnEvent { _, _ -> viewState.hideProgress() }
                 .subscribe({
+                    // reset saved scroll position for avoid scroll to wrong position after
+                    // pagination action
+                    savedRvPosition = Constant.Util.UNDEFINED_VALUE
+
                     if (it.isEmpty()) {
                         viewState.showEmptyState()
                     } else {
                         viewState.hideEmptyState()
                     }
                     viewState.notifyAdapter(it)
+                    viewState.scrollListToPosition(0)
                 }, {
                     viewState.showEmptyState()
                     viewState.notifyAdapter(emptyList())
@@ -113,5 +122,20 @@ class SignedAccountsPresenter : BasePresenter<SignedAccountsView>() {
 
     fun onSignedAccountItemClicked(account: Account) {
         viewState.showEditAccountDialog(account.address)
+    }
+
+    fun onSaveInstanceState(position: Int) {
+        // save list position and restore it after if needed
+        savedRvPosition = position
+    }
+
+    fun attemptRestoreRvPosition() {
+        if (savedRvPosition == Constant.Util.UNDEFINED_VALUE) {
+            return
+        }
+
+        viewState.scrollListToPosition(savedRvPosition)
+
+        savedRvPosition = Constant.Util.UNDEFINED_VALUE
     }
 }

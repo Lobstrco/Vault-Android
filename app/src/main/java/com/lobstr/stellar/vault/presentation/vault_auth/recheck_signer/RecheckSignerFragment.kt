@@ -145,10 +145,10 @@ class RecheckSignerFragment : BaseFragment(),
     override fun showLogOutDialog() {
         AlertDialogFragment.Builder(true)
             .setCancelable(true)
-            .setTitle(getString(R.string.title_log_out_dialog))
-            .setMessage(getString(R.string.msg_log_out_dialog))
-            .setNegativeBtnText(getString(R.string.text_btn_cancel))
-            .setPositiveBtnText(getString(R.string.text_btn_log_out))
+            .setTitle(R.string.title_log_out_dialog)
+            .setMessage(R.string.msg_log_out_dialog)
+            .setNegativeBtnText(R.string.text_btn_cancel)
+            .setPositiveBtnText(R.string.text_btn_log_out)
             .create()
             .show(childFragmentManager, AlertDialogFragment.DialogFragmentIdentifier.LOG_OUT)
     }

@@ -6,6 +6,7 @@ import android.content.UriMatcher
 import android.database.Cursor
 import android.database.MatrixCursor
 import android.net.Uri
+import androidx.preference.PreferenceManager
 import com.lobstr.stellar.vault.R
 import com.lobstr.stellar.vault.presentation.util.PrefsUtil
 
@@ -25,7 +26,7 @@ class PreferencesProvider : ContentProvider() {
     private val uriMatcher = UriMatcher(UriMatcher.NO_MATCH)
 
     override fun onCreate(): Boolean {
-        prefsUtil = PrefsUtil(android.preference.PreferenceManager.getDefaultSharedPreferences(context))
+        prefsUtil = PrefsUtil(PreferenceManager.getDefaultSharedPreferences(context))
         // see authority in product flavor resValue
         uriMatcher.addURI(context?.getString(R.string.authority), PUBLIC_KEY_PATH, PUBLIC_KEY_CODE)
         return true

@@ -68,6 +68,7 @@ class EditAccountDialogFragment : BaseBottomSheetDialog(), EditAccountView, View
 
     private fun setListeners() {
         btnCopyPublicKey.setOnClickListener(this)
+        btnOpenExplorer.setOnClickListener(this)
     }
 
     // ===========================================================
@@ -76,15 +77,19 @@ class EditAccountDialogFragment : BaseBottomSheetDialog(), EditAccountView, View
 
     override fun onClick(v: View?) {
         when (v!!.id) {
-            R.id.btnCopyPublicKey -> {
-                mPresenter.copyPublicKeyClicked()
-            }
+            R.id.btnCopyPublicKey -> mPresenter.copyPublicKeyClicked()
+            R.id.btnOpenExplorer -> mPresenter.openExplorerClicked()
         }
     }
 
     override fun copyToClipBoard(text: String) {
         dismiss()
         AppUtil.copyToClipboard(context, text)
+    }
+
+    override fun openExplorer(url: String) {
+        dismiss()
+        AppUtil.openWebPage(context, url)
     }
 
     // ===========================================================

@@ -102,7 +102,7 @@ class TransactionDetailsPresenter(private var transactionItem: TransactionItem) 
                     interactor.confirmTransactionOnHorizon(it.xdr!!)
                 }
                 .flatMap {
-                    val envelopXdr = it.envelopeXdr
+                    val envelopXdr = it.envelopeXdr.get()
                     val extras = it.extras
                     val transactionResultCode = extras?.resultCodes?.transactionResultCode
 

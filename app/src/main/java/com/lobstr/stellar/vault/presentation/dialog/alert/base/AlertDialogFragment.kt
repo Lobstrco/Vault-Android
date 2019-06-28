@@ -173,6 +173,14 @@ open class AlertDialogFragment : BaseMvpAppCompatDialogFragment() {
         super.show(manager, tag)
     }
 
+    override fun onDismiss(dialog: DialogInterface?) {
+        super.onDismiss(dialog)
+        // dismiss dialog for all specific cases
+        if (fragmentManager != null) {
+            dismissAllowingStateLoss()
+        }
+    }
+
     // ===========================================================
     // Listeners, methods for/from Interfaces
     // ===========================================================

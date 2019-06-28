@@ -7,4 +7,5 @@ import com.arellomobile.mvp.viewstate.strategy.StateStrategyType
 @StateStrategyType(SkipStrategy::class)
 interface EditAccountView : MvpView {
     fun copyToClipBoard(text: String)
+    fun openExplorer(url: String)
 }

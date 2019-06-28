@@ -10,8 +10,9 @@ import com.lobstr.stellar.vault.presentation.entities.transaction.operation.*
 import com.lobstr.stellar.vault.presentation.util.Constant.Transaction.IMPORT_XDR
 import org.stellar.sdk.AssetTypeCreditAlphaNum12
 import org.stellar.sdk.AssetTypeCreditAlphaNum4
+import org.stellar.sdk.Network
 
-class TransactionEntityMapper {
+class TransactionEntityMapper(private val network: Network) {
 
     fun transformTransactions(apiTransactionResult: ApiTransactionResult?): TransactionResult {
         if (apiTransactionResult == null) {
@@ -49,7 +50,7 @@ class TransactionEntityMapper {
             apiTransactionItem.status,
             apiTransactionItem.sequenceOutdatedAt,
             getTransaction(
-                org.stellar.sdk.Transaction.fromEnvelopeXdr(apiTransactionItem.xdr)
+                org.stellar.sdk.Transaction.fromEnvelopeXdr(apiTransactionItem.xdr, network)
             )
         )
     }
@@ -77,6 +78,7 @@ class TransactionEntityMapper {
                 is org.stellar.sdk.CreateAccountOperation -> operations.add(mapCreateAccountOperation(it))
                 is org.stellar.sdk.PathPaymentOperation -> operations.add(mapPathPaymentOperation(it))
                 is org.stellar.sdk.ManageSellOfferOperation -> operations.add(mapManageSellOfferOperation(it))
+                is org.stellar.sdk.ManageBuyOfferOperation -> operations.add(mapManageBuyOfferOperation(it))
                 is org.stellar.sdk.CreatePassiveSellOfferOperation -> operations.add(mapCreatePassiveSellOfferOperation(it))
                 is org.stellar.sdk.SetOptionsOperation -> operations.add(mapSetOptionsOperation(it))
                 is org.stellar.sdk.ChangeTrustOperation -> operations.add(mapChangeTrustOperation(it))
@@ -133,6 +135,17 @@ class TransactionEntityMapper {
 
     private fun mapManageSellOfferOperation(operation: org.stellar.sdk.ManageSellOfferOperation): ManageSellOfferOperation {
         return ManageSellOfferOperation(
+            (operation as org.stellar.sdk.Operation).sourceAccount?.accountId,
+            mapAsset(operation.selling),
+            mapAsset(operation.buying),
+            operation.amount,
+            operation.price,
+            operation.offerId
+        )
+    }
+
+    private fun mapManageBuyOfferOperation(operation: org.stellar.sdk.ManageBuyOfferOperation): ManageBuyOfferOperation {
+        return ManageBuyOfferOperation(
             (operation as org.stellar.sdk.Operation).sourceAccount?.accountId,
             mapAsset(operation.selling),
             mapAsset(operation.buying),

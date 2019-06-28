@@ -107,6 +107,15 @@ class TransactionsFragment : BaseFragment(), TransactionsView, SwipeRefreshLayou
         mPresenter.handleOnActivityResult(requestCode, resultCode, data)
     }
 
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+
+        // save RecycleView position for restore it after
+        mPresenter.onSaveInstanceState(
+            (rvTransactions?.layoutManager as? LinearLayoutManager)?.findFirstVisibleItemPosition() ?: 0
+        )
+    }
+
     // ===========================================================
     // Listeners, methods for/from Interfaces
     // ===========================================================
@@ -149,6 +158,8 @@ class TransactionsFragment : BaseFragment(), TransactionsView, SwipeRefreshLayou
 
     override fun showTransactionList(items: MutableList<TransactionItem>) {
         (rvTransactions.adapter as TransactionAdapter).setTransactionList(items)
+
+        mPresenter.attemptRestoreRvPosition()
     }
 
     override fun scrollListToPosition(position: Int) {
@@ -188,10 +199,10 @@ class TransactionsFragment : BaseFragment(), TransactionsView, SwipeRefreshLayou
     override fun showClearInvalidTrDialog() {
         AlertDialogFragment.Builder(true)
             .setCancelable(true)
-            .setTitle(getString(R.string.title_clear_invalid_tr_dialog))
-            .setMessage(getString(R.string.msg_clear_invalid_tr_dialog))
-            .setNegativeBtnText(getString(R.string.text_btn_cancel))
-            .setPositiveBtnText(getString(R.string.text_btn_ok))
+            .setTitle(R.string.title_clear_invalid_tr_dialog)
+            .setMessage(R.string.msg_clear_invalid_tr_dialog)
+            .setNegativeBtnText(R.string.text_btn_cancel)
+            .setPositiveBtnText(R.string.text_btn_ok)
             .create()
             .show(childFragmentManager, AlertDialogFragment.DialogFragmentIdentifier.CLEAR_INVALID_TR)
     }
@@ -229,7 +240,12 @@ class TransactionsFragment : BaseFragment(), TransactionsView, SwipeRefreshLayou
             val totalItemCount = layoutManager.itemCount
             val firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition()
             val lastVisibleItemPosition = layoutManager.findLastVisibleItemPosition()
-            mPresenter.onListScrolled(visibleItemCount, totalItemCount, firstVisibleItemPosition, lastVisibleItemPosition)
+            mPresenter.onListScrolled(
+                visibleItemCount,
+                totalItemCount,
+                firstVisibleItemPosition,
+                lastVisibleItemPosition
+            )
         }
     }
 }

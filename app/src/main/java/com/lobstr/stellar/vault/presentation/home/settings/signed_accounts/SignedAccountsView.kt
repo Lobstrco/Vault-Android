@@ -33,5 +33,8 @@ interface SignedAccountsView : MvpView {
     fun notifyAdapter(accounts: List<Account>)
 
     @StateStrategyType(SkipStrategy::class)
+    fun scrollListToPosition(position: Int)
+
+    @StateStrategyType(SkipStrategy::class)
     fun showEditAccountDialog(address: String)
 }

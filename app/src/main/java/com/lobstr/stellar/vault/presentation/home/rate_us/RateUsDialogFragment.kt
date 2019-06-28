@@ -1,9 +1,6 @@
 package com.lobstr.stellar.vault.presentation.home.rate_us
 
-import android.content.ActivityNotFoundException
 import android.content.DialogInterface
-import android.content.Intent
-import android.net.Uri
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.lobstr.stellar.vault.presentation.dialog.alert.base.AlertDialogFragment
@@ -67,11 +64,7 @@ class RateUsDialogFragment : AlertDialogFragment(), RateUsView {
     // ===========================================================
 
     override fun showStore(storeUrl: String) {
-        try {
-            startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(storeUrl)))
-        } catch (exc: ActivityNotFoundException) {
-            AppUtil.launchGoogleCustomTabs(context, storeUrl)
-        }
+        AppUtil.openWebPage(context, storeUrl)
     }
 
     // ===========================================================

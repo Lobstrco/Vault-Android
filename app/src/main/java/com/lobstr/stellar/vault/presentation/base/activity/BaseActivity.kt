@@ -1,6 +1,7 @@
 package com.lobstr.stellar.vault.presentation.base.activity
 
 import android.graphics.PorterDuff
+import android.graphics.PorterDuffColorFilter
 import android.os.Bundle
 import android.text.TextUtils
 import android.widget.TextView
@@ -161,7 +162,7 @@ abstract class BaseActivity : BaseMvpAppCompatActivity(),
 
     override fun setHomeAsUpIndicator(@DrawableRes image: Int, @ColorRes color: Int) {
         val upArrow = ContextCompat.getDrawable(this, image)
-        upArrow?.setColorFilter(ContextCompat.getColor(this, color), PorterDuff.Mode.SRC_ATOP)
+        upArrow?.colorFilter = PorterDuffColorFilter(ContextCompat.getColor(this, color), PorterDuff.Mode.SRC_ATOP)
         supportActionBar?.setHomeAsUpIndicator(upArrow)
     }
 }

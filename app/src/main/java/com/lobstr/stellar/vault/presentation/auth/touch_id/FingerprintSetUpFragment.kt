@@ -93,9 +93,9 @@ class FingerprintSetUpFragment : BaseFragment(), FingerprintSetUpView, Biometric
     override fun showFingerprintInfoDialog(titleRes: Int, messageRes: Int) {
         AlertDialogFragment.Builder(true)
             .setCancelable(true)
-            .setTitle(getString(titleRes))
-            .setMessage(getString(messageRes))
-            .setPositiveBtnText(getString(R.string.text_btn_ok))
+            .setTitle(titleRes)
+            .setMessage(messageRes)
+            .setPositiveBtnText(R.string.text_btn_ok)
             .create()
             .show(childFragmentManager, AlertDialogFragment.DialogFragmentIdentifier.FINGERPRINT_INFO_DIALOG)
     }

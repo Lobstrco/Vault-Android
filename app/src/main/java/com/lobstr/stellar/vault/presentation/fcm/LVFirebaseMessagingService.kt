@@ -2,7 +2,6 @@ package com.lobstr.stellar.vault.presentation.fcm
 
 import android.content.Intent
 import android.text.TextUtils
-import android.util.Log
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import com.lobstr.stellar.vault.R
@@ -56,7 +55,6 @@ class LVFirebaseMessagingService : FirebaseMessagingService() {
 
     override fun onNewToken(newToken: String?) {
         super.onNewToken(newToken)
-        Log.d(LOG_TAG, newToken)
         mFcmHelper.requestToRefreshFcmToken()
     }
 

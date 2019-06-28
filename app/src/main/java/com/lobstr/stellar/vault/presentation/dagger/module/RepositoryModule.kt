@@ -27,6 +27,7 @@ import com.lobstr.stellar.vault.domain.vault_auth.VaultAuthRepository
 import com.lobstr.stellar.vault.presentation.util.PrefsUtil
 import dagger.Module
 import dagger.Provides
+import org.stellar.sdk.Network
 import org.stellar.sdk.Server
 import javax.inject.Singleton
 
@@ -35,8 +36,8 @@ class RepositoryModule {
 
     @Singleton
     @Provides
-    fun provideStellarRepository(context: Context, server: Server): StellarRepository {
-        return StellarRepositoryImpl(context, server, MnemonicsMapper(), TransactionEntityMapper())
+    fun provideStellarRepository(context: Context, network: Network, server: Server): StellarRepository {
+        return StellarRepositoryImpl(context, network, server, MnemonicsMapper(), TransactionEntityMapper(network))
     }
 
     @Singleton
@@ -59,11 +60,11 @@ class RepositoryModule {
 
     @Singleton
     @Provides
-    fun provideFcmRepository(fcmApi: FcmApi, rxErrorUtils: RxErrorUtils): FcmRepository {
+    fun provideFcmRepository(fcmApi: FcmApi, network: Network, rxErrorUtils: RxErrorUtils): FcmRepository {
         return FcmRepositoryImpl(
             fcmApi,
             FcmEntityMapper(),
-            TransactionEntityMapper(),
+            TransactionEntityMapper(network),
             AccountEntityMapper(),
             rxErrorUtils
         )
@@ -82,9 +83,10 @@ class RepositoryModule {
     @Provides
     fun provideTransactionRepository(
         transactionApi: TransactionApi,
+        network: Network,
         rxErrorUtils: RxErrorUtils
     ): TransactionRepository {
-        return TransactionRepositoryImpl(transactionApi, TransactionEntityMapper(), rxErrorUtils)
+        return TransactionRepositoryImpl(transactionApi, TransactionEntityMapper(network), rxErrorUtils)
     }
 
     @Singleton

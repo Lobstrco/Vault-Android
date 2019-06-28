@@ -1,7 +1,10 @@
 package com.lobstr.stellar.vault.presentation.application
 
+import android.content.Intent
 import android.os.StrictMode
+import android.util.Log
 import androidx.multidex.MultiDexApplication
+import com.google.android.gms.security.ProviderInstaller
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.lobstr.stellar.vault.BuildConfig
 import com.lobstr.stellar.vault.presentation.dagger.component.AppComponent
@@ -24,6 +27,7 @@ class LVApplication : MultiDexApplication() {
     // ===========================================================
 
     companion object {
+        val LOG_TAG = LVApplication::class.simpleName
         lateinit var sAppComponent: AppComponent
     }
 
@@ -42,6 +46,7 @@ class LVApplication : MultiDexApplication() {
     override fun onCreate() {
         super.onCreate()
 
+        upgradeSecurityProvider()
         setupBouncyCastle()
         enableStrictMode()
         FirebaseAnalytics.getInstance(this)
@@ -79,6 +84,26 @@ class LVApplication : MultiDexApplication() {
                     .penaltyLog()
                     .build()
             )
+        }
+    }
+
+    /**
+     * Fix for SSLException
+     * Enable SSL compatibility in pre-lollipop and lollipop devices
+     */
+    private fun upgradeSecurityProvider() {
+        try {
+            ProviderInstaller.installIfNeededAsync(this, object : ProviderInstaller.ProviderInstallListener {
+                override fun onProviderInstalled() {
+                    Log.e(LOG_TAG, "New security provider installed.")
+                }
+
+                override fun onProviderInstallFailed(errorCode: Int, recoveryIntent: Intent) {
+                    Log.e(LOG_TAG, "New security provider install failed.")
+                }
+            })
+        } catch (ex: Exception) {
+            Log.e(LOG_TAG, "Unknown issue trying to install a new security provider", ex)
         }
     }
 

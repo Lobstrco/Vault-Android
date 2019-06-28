@@ -1,10 +1,8 @@
 package com.lobstr.stellar.vault.presentation.home.settings
 
-import android.content.ActivityNotFoundException
 import android.content.DialogInterface
 import android.content.Intent
 import android.graphics.Typeface
-import android.net.Uri
 import android.os.Bundle
 import android.text.SpannableString
 import android.text.Spanned
@@ -258,9 +256,9 @@ class SettingsFragment : BaseFragment(), SettingsView, View.OnClickListener,
     override fun showFingerprintInfoDialog(titleRes: Int, messageRes: Int) {
         AlertDialogFragment.Builder(true)
             .setCancelable(true)
-            .setTitle(getString(titleRes))
-            .setMessage(getString(messageRes))
-            .setPositiveBtnText(getString(R.string.text_btn_ok))
+            .setTitle(titleRes)
+            .setMessage(messageRes)
+            .setPositiveBtnText(R.string.text_btn_ok)
             .create()
             .show(childFragmentManager, FINGERPRINT_INFO_DIALOG)
     }
@@ -274,11 +272,7 @@ class SettingsFragment : BaseFragment(), SettingsView, View.OnClickListener,
     }
 
     override fun showStore(storeUrl: String) {
-        try {
-            startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(storeUrl)))
-        } catch (exc: ActivityNotFoundException) {
-            AppUtil.launchGoogleCustomTabs(context, storeUrl)
-        }
+        AppUtil.openWebPage(context, storeUrl)
     }
 
     override fun setupPolicyYear(id: Int) {
@@ -304,10 +298,10 @@ class SettingsFragment : BaseFragment(), SettingsView, View.OnClickListener,
     override fun showLogOutDialog() {
         AlertDialogFragment.Builder(true)
             .setCancelable(true)
-            .setTitle(getString(R.string.title_log_out_dialog))
-            .setMessage(getString(R.string.msg_log_out_dialog))
-            .setNegativeBtnText(getString(R.string.text_btn_cancel))
-            .setPositiveBtnText(getString(R.string.text_btn_log_out))
+            .setTitle(R.string.title_log_out_dialog)
+            .setMessage(R.string.msg_log_out_dialog)
+            .setNegativeBtnText(R.string.text_btn_cancel)
+            .setPositiveBtnText(R.string.text_btn_log_out)
             .create()
             .show(childFragmentManager, AlertDialogFragment.DialogFragmentIdentifier.LOG_OUT)
     }

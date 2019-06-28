@@ -198,10 +198,10 @@ class PinActivity : BaseMvpAppCompatActivity(), PinView, PinLockListener,
     override fun showLogOutDialog() {
         AlertDialogFragment.Builder(false)
             .setCancelable(true)
-            .setTitle(getString(R.string.title_log_out_dialog))
-            .setMessage(getString(R.string.msg_log_out_dialog))
-            .setNegativeBtnText(getString(R.string.text_btn_cancel))
-            .setPositiveBtnText(getString(R.string.text_btn_log_out))
+            .setTitle(R.string.title_log_out_dialog)
+            .setMessage(R.string.msg_log_out_dialog)
+            .setNegativeBtnText(R.string.text_btn_cancel)
+            .setPositiveBtnText(R.string.text_btn_log_out)
             .create()
             .show(supportFragmentManager, AlertDialogFragment.DialogFragmentIdentifier.LOG_OUT)
     }
@@ -209,10 +209,10 @@ class PinActivity : BaseMvpAppCompatActivity(), PinView, PinLockListener,
     override fun showCommonPinPatternDialog() {
         AlertDialogFragment.Builder(false)
             .setCancelable(false)
-            .setTitle(getString(R.string.title_common_pin_pattern_dialog))
-            .setMessage(getString(R.string.msg_common_pin_pattern_dialog))
-            .setNegativeBtnText(getString(R.string.text_btn_continue))
-            .setPositiveBtnText(getString(R.string.text_btn_change_pin))
+            .setTitle(R.string.title_common_pin_pattern_dialog)
+            .setMessage(R.string.msg_common_pin_pattern_dialog)
+            .setNegativeBtnText(R.string.text_btn_continue)
+            .setPositiveBtnText(R.string.text_btn_change_pin)
             .create()
             .show(supportFragmentManager, AlertDialogFragment.DialogFragmentIdentifier.COMMON_PIN_PATTERN)
     }

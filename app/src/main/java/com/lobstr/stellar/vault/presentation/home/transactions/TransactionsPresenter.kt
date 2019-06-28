@@ -17,6 +17,7 @@ import com.lobstr.stellar.vault.presentation.dagger.module.transaction.Transacti
 import com.lobstr.stellar.vault.presentation.dialog.alert.base.AlertDialogFragment
 import com.lobstr.stellar.vault.presentation.entities.transaction.TransactionItem
 import com.lobstr.stellar.vault.presentation.util.Constant
+import com.lobstr.stellar.vault.presentation.util.Constant.Util.UNDEFINED_VALUE
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
@@ -34,6 +35,9 @@ class TransactionsPresenter : BasePresenter<TransactionsView>() {
 
     @Inject
     lateinit var interactor: TransactionInteractor
+
+    // for restore RecycleView position after saveInstanceState (-1 - undefined state)
+    private var savedRvPosition: Int = UNDEFINED_VALUE
 
     private var transactionsLoadingDisposable: Disposable? = null
     private var nextPageUrl: String? = null
@@ -111,6 +115,10 @@ class TransactionsPresenter : BasePresenter<TransactionsView>() {
                 viewState.showPullToRefresh(false)
             }
             .subscribe({ result ->
+                // reset saved scroll position for avoid scroll to wrong position after
+                // pagination action
+                savedRvPosition = UNDEFINED_VALUE
+
                 if (newLoadTransactions) {
                     transactions.clear()
                 }
@@ -246,5 +254,20 @@ class TransactionsPresenter : BasePresenter<TransactionsView>() {
                 loadTransactions()
             }
         }
+    }
+
+    fun onSaveInstanceState(position: Int) {
+        // save list position and restore it after if needed
+        savedRvPosition = position
+    }
+
+    fun attemptRestoreRvPosition() {
+        if (savedRvPosition == UNDEFINED_VALUE) {
+            return
+        }
+
+        viewState.scrollListToPosition(savedRvPosition)
+
+        savedRvPosition = UNDEFINED_VALUE
     }
 }

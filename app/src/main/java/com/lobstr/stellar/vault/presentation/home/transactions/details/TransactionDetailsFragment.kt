@@ -223,20 +223,20 @@ class TransactionDetailsFragment : BaseFragment(), TransactionDetailsView, View.
     override fun showConfirmTransactionDialog() {
         AlertDialogFragment.Builder(true)
             .setCancelable(true)
-            .setTitle(getString(R.string.title_transaction_action_dialog))
-            .setMessage(getString(R.string.msg_confirm_transaction_dialog))
-            .setNegativeBtnText(getString(R.string.text_btn_cancel))
-            .setPositiveBtnText(getString(R.string.text_btn_yes))
+            .setTitle(R.string.title_transaction_action_dialog)
+            .setMessage(R.string.msg_confirm_transaction_dialog)
+            .setNegativeBtnText(R.string.text_btn_cancel)
+            .setPositiveBtnText(R.string.text_btn_yes)
             .create()
             .show(childFragmentManager, CONFIRM_TRANSACTION)    }
 
     override fun showDenyTransactionDialog() {
         AlertDialogFragment.Builder(true)
             .setCancelable(true)
-            .setTitle(getString(R.string.title_transaction_action_dialog))
-            .setMessage(getString(R.string.msg_deny_transaction_dialog))
-            .setNegativeBtnText(getString(R.string.text_btn_cancel))
-            .setPositiveBtnText(getString(R.string.text_btn_yes))
+            .setTitle(R.string.title_transaction_action_dialog)
+            .setMessage(R.string.msg_deny_transaction_dialog)
+            .setNegativeBtnText(R.string.text_btn_cancel)
+            .setPositiveBtnText(R.string.text_btn_yes)
             .create()
             .show(childFragmentManager, DENY_TRANSACTION)
     }

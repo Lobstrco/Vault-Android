@@ -157,10 +157,10 @@ class MnemonicsFragment : BaseFragment(),
     override fun showDenyAccountCreationDialog() {
         AlertDialogFragment.Builder(true)
             .setCancelable(true)
-            .setTitle(getString(R.string.title_deny_account_creation_dialog))
-            .setMessage(getString(R.string.msg_deny_account_creation_dialog))
-            .setNegativeBtnText(getString(R.string.text_btn_cancel))
-            .setPositiveBtnText(getString(R.string.text_btn_ok))
+            .setTitle(R.string.title_deny_account_creation_dialog)
+            .setMessage(R.string.msg_deny_account_creation_dialog)
+            .setNegativeBtnText(R.string.text_btn_cancel)
+            .setPositiveBtnText(R.string.text_btn_ok)
             .create()
             .show(childFragmentManager, AlertDialogFragment.DialogFragmentIdentifier.DENY_ACCOUNT_CREATION)
     }

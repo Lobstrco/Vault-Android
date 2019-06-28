@@ -33,7 +33,7 @@ import java.util.*
 
 object AppUtil {
 
-    fun launchGoogleCustomTabs(context: Context?, url: String) {
+    fun openWebPage(context: Context?, url: String) {
         if (url.isEmpty()) {
             return
         }
@@ -62,7 +62,7 @@ object AppUtil {
     fun copyToClipboard(context: Context?, extractedString: String) {
         val clipboard = context?.getSystemService(Context.CLIPBOARD_SERVICE) as? ClipboardManager
         val clip = ClipData.newPlainText("Copied Text", extractedString)
-        clipboard?.primaryClip = clip
+        clipboard?.setPrimaryClip(clip)
         Toast.makeText(context, R.string.msg_successfully_copied, Toast.LENGTH_SHORT).show()
     }
 
@@ -144,6 +144,7 @@ object AppUtil {
             is CreateAccountOperation -> R.string.text_operation_name_create_account
             is PathPaymentOperation -> R.string.text_operation_name_path_payment
             is ManageSellOfferOperation -> R.string.text_operation_name_manage_sell_offer
+            is ManageBuyOfferOperation -> R.string.text_operation_name_manage_buy_offer
             is CreatePassiveSellOfferOperation -> R.string.text_operation_name_create_passive_sell_offer
             is SetOptionsOperation -> R.string.text_operation_name_set_options
             is ChangeTrustOperation -> R.string.text_operation_name_change_trust

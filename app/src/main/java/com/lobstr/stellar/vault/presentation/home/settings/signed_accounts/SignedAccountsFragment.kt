@@ -69,6 +69,15 @@ class SignedAccountsFragment : BaseFragment(), SignedAccountsView, SwipeRefreshL
         srlSignedAccounts.setOnRefreshListener(this)
     }
 
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+
+        // save RecycleView position for restore it after
+        mPresenter.onSaveInstanceState(
+            (rvSignedAccounts?.layoutManager as? LinearLayoutManager)?.findFirstVisibleItemPosition() ?: 0
+        )
+    }
+
     // ===========================================================
     // Listeners, methods for/from Interfaces
     // ===========================================================
@@ -113,6 +122,12 @@ class SignedAccountsFragment : BaseFragment(), SignedAccountsView, SwipeRefreshL
 
     override fun notifyAdapter(accounts: List<Account>) {
         (rvSignedAccounts.adapter as SignedAccountAdapter).setAccountList(accounts)
+
+        mPresenter.attemptRestoreRvPosition()
+    }
+
+    override fun scrollListToPosition(position: Int) {
+        rvSignedAccounts.scrollToPosition(position)
     }
 
     override fun showEditAccountDialog(address: String) {

@@ -29,6 +29,7 @@ class OperationDetailsPresenter(private val mTransactionItem: TransactionItem, p
             is CreateAccountOperation -> viewState.initRecycledView(operation.getFieldsMap())
             is PathPaymentOperation -> viewState.initRecycledView(operation.getFieldsMap())
             is ManageSellOfferOperation -> viewState.initRecycledView(operation.getFieldsMap())
+            is ManageBuyOfferOperation -> viewState.initRecycledView(operation.getFieldsMap())
             is CreatePassiveSellOfferOperation -> viewState.initRecycledView(operation.getFieldsMap())
             is SetOptionsOperation -> viewState.initRecycledView(operation.getFieldsMap())
             is ChangeTrustOperation -> viewState.initRecycledView(operation.getFieldsMap())

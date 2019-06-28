@@ -136,12 +136,15 @@
 
     <!--Signed Accounts screen-->
     <string name="text_signed_account_empty_state">Protected accounts not found</string>
+    <string name="text_btn_copy_public_key">Copy Public Key</string>
+    <string name="text_btn_open_explorer">Open Explorer</string>
 
     <!-- Stellar Operations -->
     <string name="text_operation_name_payment">Payment</string>
     <string name="text_operation_name_create_account">Create Account</string>
     <string name="text_operation_name_path_payment">Path Payment</string>
-    <string name="text_operation_name_manage_sell_offer">Manage Offer</string>
+    <string name="text_operation_name_manage_sell_offer">Sell Offer</string>
+    <string name="text_operation_name_manage_buy_offer">Buy Offer</string>
     <string name="text_operation_name_create_passive_sell_offer">Create Passive Offer</string>
     <string name="text_operation_name_set_options">Set Options</string>
     <string name="text_operation_name_change_trust">Change Trust</string>
@@ -250,7 +253,6 @@
     <string name="expandable_card_view_icon_content_description">Card icon</string>
     <string name="text_action_info">help</string>
     <string name="text_action_log_out">log out</string>
-    <string name="text_btn_copy_public_key">Copy Public Key</string>
 
     <!-- Horizon errors -->
     <string name="text_tv_tx_bad_seq">Sequence number does not match source account.</string>

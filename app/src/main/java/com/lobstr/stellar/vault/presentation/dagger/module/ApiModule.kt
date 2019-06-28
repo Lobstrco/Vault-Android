@@ -58,31 +58,36 @@ class ApiModule {
     @Provides
     @Singleton
     internal fun provideFcmApi(restAdapter: Retrofit): FcmApi {
-        return restAdapter.create<FcmApi>(FcmApi::class.java)
+        return restAdapter.create(FcmApi::class.java)
+    }
+
+    @Provides
+    @Singleton
+    internal fun provideHorizonNetwork(): Network {
+        return Network.PUBLIC
     }
 
     @Provides
     @Singleton
     internal fun provideHorizonServer(): Server {
-        Network.usePublicNetwork()
         return Server(HOST_HORIZON_PRODUCTION)
     }
 
     @Provides
     @Singleton
     internal fun provideVaultAuthApi(restAdapter: Retrofit): VaultAuthApi {
-        return restAdapter.create<VaultAuthApi>(VaultAuthApi::class.java)
+        return restAdapter.create(VaultAuthApi::class.java)
     }
 
     @Provides
     @Singleton
     internal fun provideTransactionApi(restAdapter: Retrofit): TransactionApi {
-        return restAdapter.create<TransactionApi>(TransactionApi::class.java)
+        return restAdapter.create(TransactionApi::class.java)
     }
 
     @Provides
     @Singleton
     internal fun provideAccountApi(restAdapter: Retrofit): AccountApi {
-        return restAdapter.create<AccountApi>(AccountApi::class.java)
+        return restAdapter.create(AccountApi::class.java)
     }
 }
