@@ -14,8 +14,8 @@ android {
         applicationId "com.lobstr.stellar.vault"
         minSdkVersion 19
         targetSdkVersion 29
-        versionCode 12
-        versionName "1.1.4"
+        versionCode 13
+        versionName "1.1.5"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
     }
@@ -116,7 +116,7 @@ ext {
     junit = "4.12"
     runner = "1.1.1"
     espresso_core = "3.1.1"
-    stellar_sdk = "0.8.0"
+    stellar_sdk = "0.8.1"
     work_manager = "2.0.1"
     lottieVersion = "3.0.1"
     qr_gen = "2.5.0"

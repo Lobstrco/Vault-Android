@@ -79,7 +79,7 @@ class NotificationsManager(private val context: Context) {
 
         val intent = Intent(context, targetClass)
         intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_CLEAR_TOP)
-        intent.action = java.lang.Long.toString(System.currentTimeMillis())
+        intent.action = System.currentTimeMillis().toString()
         val contentIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
 
         val notificationBuilder =
@@ -182,13 +182,14 @@ class NotificationsManager(private val context: Context) {
         notificationIntent: Intent
     ): PendingIntent? {
         // Creates an explicit intent for an Activity in your app
-        notificationIntent.action = java.lang.Long.toString(System.currentTimeMillis())
+        notificationIntent.action = System.currentTimeMillis().toString()
 
         // The stack builder object will contain an artificial back stack for the started Activity.
         // This ensures that navigating backward from the Activity leads out of your application to the Home screen.
         val stackBuilder = TaskStackBuilder.create(context)
 
         // Adds the back stack for the Intent (but not the Intent itself)
+        // NOTE: don't worked for 'qa' product flavor
         stackBuilder.addParentStack(notificationIntent.component)
 
         // Adds the Intent that starts the Activity to the top of the stack

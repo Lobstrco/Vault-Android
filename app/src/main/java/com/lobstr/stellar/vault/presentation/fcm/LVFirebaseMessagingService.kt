@@ -64,45 +64,41 @@ class LVFirebaseMessagingService : FirebaseMessagingService() {
             return
         }
 
-        val data = remoteMessage!!.data
-        if (data.isNotEmpty()) {
-            parseData(data)
-        }
+        parseData(remoteMessage?.data)
     }
 
-    private fun parseData(data: Map<*, *>?) {
-        if (data == null || data.isEmpty()) {
+    private fun parseData(data: Map<String, String>?) {
+        if (data.isNullOrEmpty()) {
             return
         }
 
         try {
-
-            val messageTitle: String? = data[MESSAGE_TITLE] as? String
-            val eventType: String? = data[EVENT_TYPE] as? String
-            val messageBody: String? = data[MESSAGE_BODY] as? String
+            val messageTitle: String? = data[MESSAGE_TITLE]
+            val eventType: String? = data[EVENT_TYPE]
+            val messageBody: String? = data[MESSAGE_BODY]
 
             val notificationsManager = NotificationsManager(this)
 
             when (eventType) {
 
                 Type.SIGNED_NEW_ACCOUNT -> wrapSignedNewAccountMessage(
-                    data[ACCOUNT] as? String, messageTitle, messageBody, notificationsManager
+                    data[ACCOUNT], messageTitle, messageBody, notificationsManager
                 )
 
                 Type.REMOVED_SIGNER -> wrapRemovedSignerMessage(
-                    data[ACCOUNT] as? String, messageTitle, messageBody, notificationsManager
+                    data[ACCOUNT], messageTitle, messageBody, notificationsManager
                 )
 
                 Type.ADDED_NEW_TRANSACTION -> wrapAddedNewTransactionMessage(
-                    data[TRANSACTION] as? String, messageTitle, messageBody, notificationsManager
+                    data[TRANSACTION], messageTitle, messageBody, notificationsManager
                 )
 
                 Type.ADDED_NEW_SIGNATURE -> wrapAddedNewSignatureMessage(
-                    data[TRANSACTION] as? String, messageTitle, messageBody, notificationsManager
+                    data[TRANSACTION], messageTitle, messageBody, notificationsManager
                 )
 
                 Type.TRANSACTION_SUBMITTED -> wrapTransactionSubmittedMessage(
-                    data[TRANSACTION] as? String, messageTitle, messageBody, notificationsManager
+                    data[TRANSACTION], messageTitle, messageBody, notificationsManager
                 )
 
                 else -> sendDefaultMessage(
@@ -115,7 +111,6 @@ class LVFirebaseMessagingService : FirebaseMessagingService() {
                     notificationsManager
                 )
             }
-
         } catch (exc: Exception) {
             exc.printStackTrace()
         }
@@ -196,7 +191,7 @@ class LVFirebaseMessagingService : FirebaseMessagingService() {
             messageTitle ?: getString(R.string.app_name),
             messageBody,
             NotificationsManager.GroupId.LV_MAIN,
-            /*NotificationsManager.GroupName.TRANSACTION_HISTORY*/NotificationsManager.GroupName.LV_MAIN,
+            NotificationsManager.GroupName.LV_MAIN,
             /*intent*/SplashActivity::class.java
         )
     }
@@ -218,7 +213,7 @@ class LVFirebaseMessagingService : FirebaseMessagingService() {
             messageTitle,
             messageBody,
             NotificationsManager.GroupId.LV_MAIN,
-            /*NotificationsManager.GroupName.NEW_SIGNATURES*/NotificationsManager.GroupName.LV_MAIN,
+            NotificationsManager.GroupName.LV_MAIN,
             notificationsManager
         )
     }
@@ -240,7 +235,7 @@ class LVFirebaseMessagingService : FirebaseMessagingService() {
             messageTitle,
             messageBody,
             NotificationsManager.GroupId.LV_MAIN,
-            /*NotificationsManager.GroupName.AUTHORIZED_TRANSACTIONS*/NotificationsManager.GroupName.LV_MAIN,
+            NotificationsManager.GroupName.LV_MAIN,
             notificationsManager
         )
     }

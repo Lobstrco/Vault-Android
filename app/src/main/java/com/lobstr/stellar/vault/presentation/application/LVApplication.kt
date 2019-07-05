@@ -1,6 +1,7 @@
 package com.lobstr.stellar.vault.presentation.application
 
 import android.content.Intent
+import android.os.Build
 import android.os.StrictMode
 import android.util.Log
 import androidx.multidex.MultiDexApplication
@@ -92,18 +93,20 @@ class LVApplication : MultiDexApplication() {
      * Enable SSL compatibility in pre-lollipop and lollipop devices
      */
     private fun upgradeSecurityProvider() {
-        try {
-            ProviderInstaller.installIfNeededAsync(this, object : ProviderInstaller.ProviderInstallListener {
-                override fun onProviderInstalled() {
-                    Log.e(LOG_TAG, "New security provider installed.")
-                }
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+            try {
+                ProviderInstaller.installIfNeededAsync(this, object : ProviderInstaller.ProviderInstallListener {
+                    override fun onProviderInstallFailed(errorCode: Int, recoveryIntent: Intent?) {
+                        Log.e(LOG_TAG, "New security provider install failed.")
+                    }
 
-                override fun onProviderInstallFailed(errorCode: Int, recoveryIntent: Intent) {
-                    Log.e(LOG_TAG, "New security provider install failed.")
-                }
-            })
-        } catch (ex: Exception) {
-            Log.e(LOG_TAG, "Unknown issue trying to install a new security provider", ex)
+                    override fun onProviderInstalled() {
+                        Log.e(LOG_TAG, "New security provider installed.")
+                    }
+                })
+            } catch (ex: Exception) {
+                Log.e(LOG_TAG, "Unknown issue trying to install a new security provider", ex)
+            }
         }
     }
 

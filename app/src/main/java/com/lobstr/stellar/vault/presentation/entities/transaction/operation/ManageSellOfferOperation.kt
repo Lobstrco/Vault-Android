@@ -28,6 +28,8 @@ data class ManageSellOfferOperation(
         return map
     }
 
+    // NOTE: REMOVE calculate price logic for new trade api in future
+    @Deprecated("Remove")
     private fun calculatePrice(sellingAssetCode: String, buyingAssetCode: String, price: String): String {
         val mathContext = MathContext(10)
         val bdOne = BigDecimal(1, mathContext)
