@@ -5,6 +5,10 @@ import com.lobstr.stellar.vault.R
 import com.lobstr.stellar.vault.presentation.BasePresenter
 import com.lobstr.stellar.vault.presentation.entities.transaction.TransactionItem
 import com.lobstr.stellar.vault.presentation.entities.transaction.operation.*
+import com.lobstr.stellar.vault.presentation.entities.transaction.operation.offer.CancelSellOfferOperation
+import com.lobstr.stellar.vault.presentation.entities.transaction.operation.offer.CreatePassiveSellOfferOperation
+import com.lobstr.stellar.vault.presentation.entities.transaction.operation.offer.ManageBuyOfferOperation
+import com.lobstr.stellar.vault.presentation.entities.transaction.operation.offer.SellOfferOperation
 import com.lobstr.stellar.vault.presentation.util.AppUtil
 
 @InjectViewState
@@ -28,7 +32,8 @@ class OperationDetailsPresenter(private val mTransactionItem: TransactionItem, p
             is PaymentOperation -> viewState.initRecycledView(operation.getFieldsMap())
             is CreateAccountOperation -> viewState.initRecycledView(operation.getFieldsMap())
             is PathPaymentOperation -> viewState.initRecycledView(operation.getFieldsMap())
-            is ManageSellOfferOperation -> viewState.initRecycledView(operation.getFieldsMap())
+            is SellOfferOperation -> viewState.initRecycledView(operation.getFieldsMap())
+            is CancelSellOfferOperation -> viewState.initRecycledView(operation.getFieldsMap())
             is ManageBuyOfferOperation -> viewState.initRecycledView(operation.getFieldsMap())
             is CreatePassiveSellOfferOperation -> viewState.initRecycledView(operation.getFieldsMap())
             is SetOptionsOperation -> viewState.initRecycledView(operation.getFieldsMap())

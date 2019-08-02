@@ -7,10 +7,13 @@ import com.lobstr.stellar.vault.presentation.entities.transaction.Transaction
 import com.lobstr.stellar.vault.presentation.entities.transaction.TransactionItem
 import com.lobstr.stellar.vault.presentation.entities.transaction.TransactionResult
 import com.lobstr.stellar.vault.presentation.entities.transaction.operation.*
+import com.lobstr.stellar.vault.presentation.entities.transaction.operation.offer.*
 import com.lobstr.stellar.vault.presentation.util.Constant.Transaction.IMPORT_XDR
 import org.stellar.sdk.AssetTypeCreditAlphaNum12
 import org.stellar.sdk.AssetTypeCreditAlphaNum4
+import org.stellar.sdk.Memo
 import org.stellar.sdk.Network
+import java.math.BigDecimal
 
 class TransactionEntityMapper(private val network: Network) {
 
@@ -74,12 +77,16 @@ class TransactionEntityMapper(private val network: Network) {
 
         transaction.operations.forEach {
             when (it) {
-                is org.stellar.sdk.PaymentOperation -> operations.add(mapPaymentOperation(it))
+                is org.stellar.sdk.PaymentOperation -> operations.add(mapPaymentOperation(transaction.memo, it))
                 is org.stellar.sdk.CreateAccountOperation -> operations.add(mapCreateAccountOperation(it))
                 is org.stellar.sdk.PathPaymentOperation -> operations.add(mapPathPaymentOperation(it))
                 is org.stellar.sdk.ManageSellOfferOperation -> operations.add(mapManageSellOfferOperation(it))
                 is org.stellar.sdk.ManageBuyOfferOperation -> operations.add(mapManageBuyOfferOperation(it))
-                is org.stellar.sdk.CreatePassiveSellOfferOperation -> operations.add(mapCreatePassiveSellOfferOperation(it))
+                is org.stellar.sdk.CreatePassiveSellOfferOperation -> operations.add(
+                    mapCreatePassiveSellOfferOperation(
+                        it
+                    )
+                )
                 is org.stellar.sdk.SetOptionsOperation -> operations.add(mapSetOptionsOperation(it))
                 is org.stellar.sdk.ChangeTrustOperation -> operations.add(mapChangeTrustOperation(it))
                 is org.stellar.sdk.AllowTrustOperation -> operations.add(mapAllowTrustOperation(it))
@@ -91,25 +98,26 @@ class TransactionEntityMapper(private val network: Network) {
         }
 
         return Transaction(
-            transaction.sourceAccount?.accountId,
+            transaction.sourceAccount,
             operations,
             transaction.sequenceNumber
         )
     }
 
-    private fun mapPaymentOperation(operation: org.stellar.sdk.PaymentOperation): PaymentOperation {
+    private fun mapPaymentOperation(memo: Memo, operation: org.stellar.sdk.PaymentOperation): PaymentOperation {
         return PaymentOperation(
-            (operation as org.stellar.sdk.Operation).sourceAccount?.accountId,
-            operation.destination.accountId,
+            (operation as org.stellar.sdk.Operation).sourceAccount,
+            operation.destination,
             mapAsset(operation.asset),
-            operation.amount
+            operation.amount,
+            memo.toString()
         )
     }
 
     private fun mapCreateAccountOperation(operation: org.stellar.sdk.CreateAccountOperation): CreateAccountOperation {
         return CreateAccountOperation(
-            (operation as org.stellar.sdk.Operation).sourceAccount?.accountId,
-            operation.destination.accountId,
+            (operation as org.stellar.sdk.Operation).sourceAccount,
+            operation.destination,
             operation.startingBalance
         )
     }
@@ -123,10 +131,10 @@ class TransactionEntityMapper(private val network: Network) {
         }
 
         return PathPaymentOperation(
-            (operation as org.stellar.sdk.Operation).sourceAccount?.accountId,
+            (operation as org.stellar.sdk.Operation).sourceAccount,
             mapAsset(operation.sendAsset),
             operation.sendMax,
-            operation.destination.accountId,
+            operation.destination,
             mapAsset(operation.destAsset),
             operation.destAmount,
             path
@@ -134,41 +142,50 @@ class TransactionEntityMapper(private val network: Network) {
     }
 
     private fun mapManageSellOfferOperation(operation: org.stellar.sdk.ManageSellOfferOperation): ManageSellOfferOperation {
-        return ManageSellOfferOperation(
-            (operation as org.stellar.sdk.Operation).sourceAccount?.accountId,
-            mapAsset(operation.selling),
-            mapAsset(operation.buying),
-            operation.amount,
-            operation.price,
-            operation.offerId
-        )
+        // determine sell offer operation type: SellOfferOperation or CancelSellOfferOperation
+        return if (operation.amount.isEmpty() || operation.amount == "0") {
+            CancelSellOfferOperation(
+                (operation as org.stellar.sdk.Operation).sourceAccount,
+                mapAsset(operation.selling),
+                mapAsset(operation.buying),
+                BigDecimal(operation.price).stripTrailingZeros().toPlainString(),
+                operation.offerId
+            )
+        } else {
+            SellOfferOperation(
+                (operation as org.stellar.sdk.Operation).sourceAccount,
+                mapAsset(operation.selling),
+                mapAsset(operation.buying),
+                operation.amount,
+                BigDecimal(operation.price).stripTrailingZeros().toPlainString()
+            )
+        }
     }
 
     private fun mapManageBuyOfferOperation(operation: org.stellar.sdk.ManageBuyOfferOperation): ManageBuyOfferOperation {
         return ManageBuyOfferOperation(
-            (operation as org.stellar.sdk.Operation).sourceAccount?.accountId,
+            (operation as org.stellar.sdk.Operation).sourceAccount,
             mapAsset(operation.selling),
             mapAsset(operation.buying),
             operation.amount,
-            operation.price,
-            operation.offerId
+            BigDecimal(operation.price).stripTrailingZeros().toPlainString()
         )
     }
 
     private fun mapCreatePassiveSellOfferOperation(operation: org.stellar.sdk.CreatePassiveSellOfferOperation): CreatePassiveSellOfferOperation {
         return CreatePassiveSellOfferOperation(
-            (operation as org.stellar.sdk.Operation).sourceAccount?.accountId,
+            (operation as org.stellar.sdk.Operation).sourceAccount,
             mapAsset(operation.selling),
             mapAsset(operation.buying),
             operation.amount,
-            operation.price
+            BigDecimal(operation.price).stripTrailingZeros().toPlainString()
         )
     }
 
     private fun mapSetOptionsOperation(operation: org.stellar.sdk.SetOptionsOperation): SetOptionsOperation {
         return SetOptionsOperation(
-            (operation as org.stellar.sdk.Operation).sourceAccount?.accountId,
-            operation.inflationDestination?.accountId,
+            (operation as org.stellar.sdk.Operation).sourceAccount,
+            operation.inflationDestination,
             operation.clearFlags,
             operation.setFlags,
             operation.masterKeyWeight,
@@ -182,7 +199,7 @@ class TransactionEntityMapper(private val network: Network) {
 
     private fun mapChangeTrustOperation(operation: org.stellar.sdk.ChangeTrustOperation): ChangeTrustOperation {
         return ChangeTrustOperation(
-            (operation as org.stellar.sdk.Operation).sourceAccount?.accountId,
+            (operation as org.stellar.sdk.Operation).sourceAccount,
             mapAsset(operation.asset),
             operation.limit
         )
@@ -190,8 +207,8 @@ class TransactionEntityMapper(private val network: Network) {
 
     private fun mapAllowTrustOperation(operation: org.stellar.sdk.AllowTrustOperation): AllowTrustOperation {
         return AllowTrustOperation(
-            (operation as org.stellar.sdk.Operation).sourceAccount?.accountId,
-            operation.trustor.accountId,
+            (operation as org.stellar.sdk.Operation).sourceAccount,
+            operation.trustor,
             operation.assetCode,
             operation.authorize
         )
@@ -199,20 +216,20 @@ class TransactionEntityMapper(private val network: Network) {
 
     private fun mapAccountMergeOperation(operation: org.stellar.sdk.AccountMergeOperation): AccountMergeOperation {
         return AccountMergeOperation(
-            (operation as org.stellar.sdk.Operation).sourceAccount?.accountId,
-            operation.destination.accountId
+            (operation as org.stellar.sdk.Operation).sourceAccount,
+            operation.destination
         )
     }
 
     private fun mapInflationOperation(operation: org.stellar.sdk.InflationOperation): InflationOperation {
         return InflationOperation(
-            (operation as org.stellar.sdk.Operation).sourceAccount?.accountId
+            (operation as org.stellar.sdk.Operation).sourceAccount
         )
     }
 
     private fun mapManageDataOperation(operation: org.stellar.sdk.ManageDataOperation): ManageDataOperation {
         return ManageDataOperation(
-            (operation as org.stellar.sdk.Operation).sourceAccount?.accountId,
+            (operation as org.stellar.sdk.Operation).sourceAccount,
             operation.name,
             operation.value
         )
@@ -220,15 +237,15 @@ class TransactionEntityMapper(private val network: Network) {
 
     private fun mapBumpSequenceOperation(operation: org.stellar.sdk.BumpSequenceOperation): BumpSequenceOperation {
         return BumpSequenceOperation(
-            (operation as org.stellar.sdk.Operation).sourceAccount?.accountId,
+            (operation as org.stellar.sdk.Operation).sourceAccount,
             operation.bumpTo
         )
     }
 
     private fun mapAsset(asset: org.stellar.sdk.Asset?): Asset {
         return when (asset) {
-            is AssetTypeCreditAlphaNum4 -> Asset(asset.code, asset.type, asset.issuer.accountId)
-            is AssetTypeCreditAlphaNum12 -> Asset(asset.code, asset.type, asset.issuer.accountId)
+            is AssetTypeCreditAlphaNum4 -> Asset(asset.code, asset.type, asset.issuer)
+            is AssetTypeCreditAlphaNum12 -> Asset(asset.code, asset.type, asset.issuer)
             else -> Asset("XLM", "native", null)
         }
     }

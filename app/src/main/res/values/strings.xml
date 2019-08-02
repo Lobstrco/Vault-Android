@@ -143,7 +143,8 @@
     <string name="text_operation_name_payment">Payment</string>
     <string name="text_operation_name_create_account">Create Account</string>
     <string name="text_operation_name_path_payment">Path Payment</string>
-    <string name="text_operation_name_manage_sell_offer">Sell Offer</string>
+    <string name="text_operation_name_sell_offer">Sell Offer</string>
+    <string name="text_operation_name_cancel_offer">Cancel Offer</string>
     <string name="text_operation_name_manage_buy_offer">Buy Offer</string>
     <string name="text_operation_name_create_passive_sell_offer">Create Passive Offer</string>
     <string name="text_operation_name_set_options">Set Options</string>

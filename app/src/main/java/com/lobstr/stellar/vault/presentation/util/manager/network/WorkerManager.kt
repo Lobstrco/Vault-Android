@@ -1,6 +1,7 @@
 package com.lobstr.stellar.vault.presentation.util.manager.network
 
 import androidx.work.*
+import com.lobstr.stellar.vault.presentation.application.LVApplication
 import java.util.*
 
 
@@ -14,12 +15,12 @@ object WorkerManager {
         val networkWorkRequest =
             OneTimeWorkRequest.Builder(clazz).setConstraints(constraints)
                 .build()
-        WorkManager.getInstance().enqueue(networkWorkRequest)
+        WorkManager.getInstance(LVApplication.sAppComponent.context).enqueue(networkWorkRequest)
         return networkWorkRequest.id
     }
 
     fun cancelWorkById(id: UUID?) {
         if (id != null)
-            WorkManager.getInstance().cancelWorkById(id)
+            WorkManager.getInstance(LVApplication.sAppComponent.context).cancelWorkById(id)
     }
 }

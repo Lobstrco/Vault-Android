@@ -8,7 +8,8 @@ data class PaymentOperation(
     override val sourceAccount: String?,
     val destination: String,
     val asset: Asset,
-    val amount: String
+    val amount: String,
+    val memo: String
 ) : Operation(sourceAccount) {
 
     fun getFieldsMap(): Map<String, String?> {
@@ -16,6 +17,9 @@ data class PaymentOperation(
         if (destination.isNotEmpty()) map["destination"] = destination
         map["asset"] = asset.assetCode
         map["amount"] = amount
+        if (memo.isNotEmpty()) {
+            map["memo"] = memo
+        }
 
         return map
     }

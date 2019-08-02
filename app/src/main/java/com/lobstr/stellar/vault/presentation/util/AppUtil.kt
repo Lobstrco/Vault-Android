@@ -26,6 +26,10 @@ import com.google.gson.JsonSyntaxException
 import com.google.gson.internal.Primitives
 import com.lobstr.stellar.vault.R
 import com.lobstr.stellar.vault.presentation.entities.transaction.operation.*
+import com.lobstr.stellar.vault.presentation.entities.transaction.operation.offer.CancelSellOfferOperation
+import com.lobstr.stellar.vault.presentation.entities.transaction.operation.offer.CreatePassiveSellOfferOperation
+import com.lobstr.stellar.vault.presentation.entities.transaction.operation.offer.ManageBuyOfferOperation
+import com.lobstr.stellar.vault.presentation.entities.transaction.operation.offer.SellOfferOperation
 import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.*
@@ -143,7 +147,8 @@ object AppUtil {
             is PaymentOperation -> R.string.text_operation_name_payment
             is CreateAccountOperation -> R.string.text_operation_name_create_account
             is PathPaymentOperation -> R.string.text_operation_name_path_payment
-            is ManageSellOfferOperation -> R.string.text_operation_name_manage_sell_offer
+            is SellOfferOperation -> R.string.text_operation_name_sell_offer
+            is CancelSellOfferOperation -> R.string.text_operation_name_cancel_offer
             is ManageBuyOfferOperation -> R.string.text_operation_name_manage_buy_offer
             is CreatePassiveSellOfferOperation -> R.string.text_operation_name_create_passive_sell_offer
             is SetOptionsOperation -> R.string.text_operation_name_set_options
