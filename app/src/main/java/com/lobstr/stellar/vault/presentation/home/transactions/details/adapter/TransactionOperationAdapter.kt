@@ -21,7 +21,7 @@ class TransactionOperationAdapter(private val listener: OnOperationClicked) : Re
     }
 
     override fun onBindViewHolder(viewHolder: RecyclerView.ViewHolder, position: Int) {
-        (viewHolder as TransactionOperationViewHolder).bind(operationItems[position])
+        (viewHolder as TransactionOperationViewHolder).bind(operationItems[position], itemCount)
     }
 
     override fun getItemCount(): Int {

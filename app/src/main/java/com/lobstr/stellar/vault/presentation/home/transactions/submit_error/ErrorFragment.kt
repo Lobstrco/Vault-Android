@@ -3,7 +3,6 @@ package com.lobstr.stellar.vault.presentation.home.transactions.submit_error
 
 import android.os.Bundle
 import android.view.*
-import androidx.fragment.app.Fragment
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.lobstr.stellar.vault.R
@@ -67,13 +66,13 @@ class ErrorFragment : BaseFragment(), ErrorView, View.OnClickListener {
         btnDone.setOnClickListener(this)
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
-        inflater?.inflate(R.menu.success, menu)
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.success, menu)
         super.onCreateOptionsMenu(menu, inflater)
     }
 
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        when (item?.itemId) {
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
             R.id.action_info -> mPresenter.infoClicked()
         }
 
@@ -105,7 +104,7 @@ class ErrorFragment : BaseFragment(), ErrorView, View.OnClickListener {
     override fun showHelpScreen() {
         FragmentTransactionManager.displayFragment(
             parentFragment!!.childFragmentManager,
-            Fragment.instantiate(context, FaqFragment::class.qualifiedName),
+            parentFragment!!.childFragmentManager.fragmentFactory.instantiate(context!!.classLoader, FaqFragment::class.qualifiedName!!),
             R.id.fl_container
         )
     }

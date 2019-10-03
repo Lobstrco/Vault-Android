@@ -6,7 +6,6 @@ import android.view.View
 import android.widget.Toast
 import androidx.annotation.ColorRes
 import androidx.annotation.DrawableRes
-import androidx.fragment.app.Fragment
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.lobstr.stellar.vault.R
@@ -91,10 +90,12 @@ class VaultAuthActivity : BaseActivity(), VaultAuthView, View.OnClickListener {
     override fun showSignerInfoFragment() {
         val bundle = Bundle()
         bundle.putInt(Constant.Bundle.BUNDLE_NAVIGATION_FR, Constant.Navigation.SIGNER_INFO)
+        val fragment = supportFragmentManager.fragmentFactory.instantiate(this.classLoader, ContainerFragment::class.qualifiedName!!)
+        fragment.arguments = bundle
 
         FragmentTransactionManager.displayFragment(
             supportFragmentManager,
-            Fragment.instantiate(this, ContainerFragment::class.qualifiedName, bundle),
+            fragment,
             R.id.fl_container
         )
     }

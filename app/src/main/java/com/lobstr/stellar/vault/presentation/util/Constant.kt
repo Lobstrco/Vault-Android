@@ -3,10 +3,6 @@ package com.lobstr.stellar.vault.presentation.util
 
 object Constant {
 
-    object Argument {
-        const val ARGUMENT_USER_ID = "ARGUMENT_USER_ID"
-    }
-
     object Extra {
         const val EXTRA_ID = "EXTRA_ID"
         const val EXTRA_QR_CODE_RESULT = "EXTRA_QR_CODE_RESULT"
@@ -22,11 +18,8 @@ object Constant {
     }
 
     object Bundle {
-        const val BUNDLE_SAVED_TOOLBAR_TITLE = "BUNDLE_SAVED_TOOLBAR_TITLE"
-        const val BUNDLE_TRANSACTION_HASH = "BUNDLE_TRANSACTION_HASH"
         const val BUNDLE_MNEMONICS_ARRAY = "BUNDLE_MNEMONICS_ARRAY"
         const val BUNDLE_GENERATE_MNEMONICS = "BUNDLE_GENERATE_MNEMONICS"
-        const val BUNDLE_SECRET_KEY = "BUNDLE_SECRET_KEY"
         const val BUNDLE_PUBLIC_KEY = "BUNDLE_PUBLIC_KEY"
         const val BUNDLE_NAVIGATION_FR = "BUNDLE_NAVIGATION_FR"
         const val BUNDLE_TRANSACTION_ITEM = "BUNDLE_TRANSACTION_ITEM"
@@ -104,11 +97,6 @@ object Constant {
         const val IMPORT_XDR_FRAGMENT = 106
     }
 
-    object ResultCode {
-        const val CANCELED = 0
-        const val OK = -1
-    }
-
     object TransactionType {
         const val PENDING = "pending/"
         const val INACTIVE = "inactive/"
@@ -155,5 +143,6 @@ object Constant {
 
     object Social {
         const val STORE_URL = "https://play.google.com/store/apps/details?id=com.lobstr.stellar.vault"
+        const val USER_ICON_LINK = "https://id.lobstr.co/"
     }
 }

@@ -7,7 +7,6 @@
 
 -optimizations !code/simplification/arithmetic,!code/simplification/cast,!field/*,!class/merging/*
 -optimizationpasses 5
--useuniqueclassmembernames
 -keepattributes SourceFile,LineNumberTable
 -allowaccessmodification
 
@@ -55,6 +54,7 @@
 
 # Top-level functions that can only be used by Kotlin.
 -dontwarn retrofit2.KotlinExtensions
+-dontwarn retrofit2.KotlinExtensions$*
 
 -keepattributes *Annotation*
 

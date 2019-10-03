@@ -28,16 +28,17 @@ abstract class BaseContainerFragment : BaseMvpAppCompatFragment() {
         }
     }
 
-    override fun setUserVisibleHint(isVisibleToUser: Boolean) {
-        super.setUserVisibleHint(isVisibleToUser)
-        setHasOptionsMenu(isVisibleToUser)
+    override fun setMenuVisibility(menuVisible: Boolean) {
+        super.setMenuVisibility(menuVisible)
+
+        setHasOptionsMenu(menuVisible)
 
         if (isAdded) {
             val fragment = childFragmentManager.findFragmentById(R.id.fl_container)
-            fragment?.userVisibleHint = isVisibleToUser
+            fragment?.setMenuVisibility(menuVisible)
         }
 
-        if (!isVisibleToUser) {
+        if (!menuVisible) {
             return
         }
 

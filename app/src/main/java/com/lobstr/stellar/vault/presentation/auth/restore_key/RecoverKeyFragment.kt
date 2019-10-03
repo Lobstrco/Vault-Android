@@ -12,7 +12,6 @@ import android.view.inputmethod.EditorInfo
 import android.widget.Toast
 import androidx.annotation.StringRes
 import androidx.core.content.ContextCompat
-import androidx.fragment.app.Fragment
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.lobstr.stellar.vault.R
@@ -92,13 +91,13 @@ class RecoverKeyFragment : BaseFragment(), RecoverKeyFrView, View.OnClickListene
         AppUtil.closeKeyboard(activity)
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
-        inflater?.inflate(R.menu.recovery_key, menu)
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.recovery_key, menu)
         super.onCreateOptionsMenu(menu, inflater)
     }
 
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        when (item?.itemId) {
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
             R.id.action_info -> mPresenter.infoClicked()
         }
 
@@ -183,7 +182,7 @@ class RecoverKeyFragment : BaseFragment(), RecoverKeyFrView, View.OnClickListene
     override fun showHelpScreen() {
         FragmentTransactionManager.displayFragment(
             parentFragment!!.childFragmentManager,
-            Fragment.instantiate(context, FaqFragment::class.qualifiedName),
+            parentFragment!!.childFragmentManager.fragmentFactory.instantiate(context!!.classLoader, FaqFragment::class.qualifiedName!!),
             R.id.fl_container
         )
     }

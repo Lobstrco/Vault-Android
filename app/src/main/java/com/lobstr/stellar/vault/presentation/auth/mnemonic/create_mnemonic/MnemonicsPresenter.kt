@@ -18,7 +18,7 @@ class MnemonicsPresenter(private val generate: Boolean) : BasePresenter<Mnemonic
     lateinit var interactor: MnemonicsInteractor
 
     init {
-        LVApplication.sAppComponent.plusMnemonicsComponent(MnemonicsModule()).inject(this)
+        LVApplication.appComponent.plusMnemonicsComponent(MnemonicsModule()).inject(this)
     }
 
     private var mnemonicItemList: ArrayList<MnemonicItem>? = null

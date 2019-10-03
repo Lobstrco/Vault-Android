@@ -13,14 +13,15 @@ import com.lobstr.stellar.vault.R
 import com.lobstr.stellar.vault.presentation.base.fragment.BaseFragment
 import com.lobstr.stellar.vault.presentation.dialog.alert.base.AlertDialogFragment
 import com.lobstr.stellar.vault.presentation.entities.account.Account
-import com.lobstr.stellar.vault.presentation.home.settings.signed_accounts.adapter.OnSignedAcoountItemClicked
-import com.lobstr.stellar.vault.presentation.home.settings.signed_accounts.adapter.SignedAccountAdapter
+import com.lobstr.stellar.vault.presentation.home.settings.signed_accounts.adapter.AccountAdapter
+import com.lobstr.stellar.vault.presentation.home.settings.signed_accounts.adapter.AccountAdapter.Companion.ACCOUNT_EXTENDED
+import com.lobstr.stellar.vault.presentation.home.settings.signed_accounts.adapter.OnAccountItemListener
 import com.lobstr.stellar.vault.presentation.home.settings.signed_accounts.edit_account.EditAccountDialogFragment
 import com.lobstr.stellar.vault.presentation.util.Constant
 import kotlinx.android.synthetic.main.fragment_signed_accounts.*
 
 class SignedAccountsFragment : BaseFragment(), SignedAccountsView, SwipeRefreshLayout.OnRefreshListener,
-    OnSignedAcoountItemClicked {
+    OnAccountItemListener {
 
     // ===========================================================
     // Constants
@@ -86,8 +87,12 @@ class SignedAccountsFragment : BaseFragment(), SignedAccountsView, SwipeRefreshL
         mPresenter.onRefreshCalled()
     }
 
-    override fun onSignedAccountItemClick(account: Account) {
+    override fun onAccountItemClick(account: Account) {
         mPresenter.onSignedAccountItemClicked(account)
+    }
+
+    override fun onAccountItemLongClick(account: Account) {
+        // implement logic if needed
     }
 
     override fun setupToolbarTitle(titleRes: Int) {
@@ -97,7 +102,7 @@ class SignedAccountsFragment : BaseFragment(), SignedAccountsView, SwipeRefreshL
     override fun initRecycledView() {
         rvSignedAccounts.layoutManager = LinearLayoutManager(activity)
         rvSignedAccounts.itemAnimator = null
-        rvSignedAccounts.adapter = SignedAccountAdapter(this)
+        rvSignedAccounts.adapter = AccountAdapter(ACCOUNT_EXTENDED,this)
     }
 
     override fun showProgress() {
@@ -121,7 +126,7 @@ class SignedAccountsFragment : BaseFragment(), SignedAccountsView, SwipeRefreshL
     }
 
     override fun notifyAdapter(accounts: List<Account>) {
-        (rvSignedAccounts.adapter as SignedAccountAdapter).setAccountList(accounts)
+        (rvSignedAccounts.adapter as AccountAdapter).setAccountList(accounts)
 
         mPresenter.attemptRestoreRvPosition()
     }

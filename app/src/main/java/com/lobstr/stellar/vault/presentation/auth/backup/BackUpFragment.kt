@@ -3,7 +3,6 @@ package com.lobstr.stellar.vault.presentation.auth.backup
 
 import android.os.Bundle
 import android.view.*
-import androidx.fragment.app.Fragment
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.lobstr.stellar.vault.R
@@ -65,13 +64,13 @@ class BackUpFragment : BaseFragment(), BackUpView, View.OnClickListener {
         btnNext.setOnClickListener(this)
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
-        inflater?.inflate(R.menu.backup, menu)
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.backup, menu)
         super.onCreateOptionsMenu(menu, inflater)
     }
 
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        when (item?.itemId) {
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
             R.id.action_info -> mPresenter.infoClicked()
         }
 
@@ -91,10 +90,12 @@ class BackUpFragment : BaseFragment(), BackUpView, View.OnClickListener {
     override fun showCreateMnemonicsScreen() {
         val bundle = Bundle()
         bundle.putBoolean(Constant.Bundle.BUNDLE_GENERATE_MNEMONICS, true)
+        val fragment = parentFragment!!.childFragmentManager.fragmentFactory.instantiate(context!!.classLoader, MnemonicsFragment::class.qualifiedName!!)
+        fragment.arguments = bundle
 
         FragmentTransactionManager.displayFragment(
             parentFragment!!.childFragmentManager,
-            Fragment.instantiate(context, MnemonicsFragment::class.qualifiedName, bundle),
+            fragment,
             R.id.fl_container
         )
     }
@@ -102,7 +103,7 @@ class BackUpFragment : BaseFragment(), BackUpView, View.OnClickListener {
     override fun showHelpScreen() {
         FragmentTransactionManager.displayFragment(
             parentFragment!!.childFragmentManager,
-            Fragment.instantiate(context, FaqFragment::class.qualifiedName),
+            parentFragment!!.childFragmentManager.fragmentFactory.instantiate(context!!.classLoader, FaqFragment::class.qualifiedName!!),
             R.id.fl_container
         )
     }

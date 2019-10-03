@@ -22,7 +22,7 @@ class RecheckSignerPresenter : BasePresenter<RecheckSignerView>() {
     private var recheckSignersInProcess = false
 
     init {
-        LVApplication.sAppComponent.plusRecheckSignerComponent(RecheckSignerModule()).inject(this)
+        LVApplication.appComponent.plusRecheckSignerComponent(RecheckSignerModule()).inject(this)
     }
 
     override fun onFirstViewAttach() {

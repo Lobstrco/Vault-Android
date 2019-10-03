@@ -14,7 +14,7 @@ class SignerInfoPresenter : MvpPresenter<SignerInfoView>() {
     lateinit var interactor: SignerInfoInteractor
 
     init {
-        LVApplication.sAppComponent.plusSignerInfoComponent(SignerInfoModule()).inject(this)
+        LVApplication.appComponent.plusSignerInfoComponent(SignerInfoModule()).inject(this)
     }
 
     override fun onFirstViewAttach() {

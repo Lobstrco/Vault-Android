@@ -50,21 +50,21 @@ class LVFirebaseMessagingService : FirebaseMessagingService() {
     }
 
     init {
-        LVApplication.sAppComponent.plusFcmServiceComponent(FcmServiceModule()).inject(this)
+        LVApplication.appComponent.plusFcmServiceComponent(FcmServiceModule()).inject(this)
     }
 
-    override fun onNewToken(newToken: String?) {
+    override fun onNewToken(newToken: String) {
         super.onNewToken(newToken)
         mFcmHelper.requestToRefreshFcmToken()
     }
 
-    override fun onMessageReceived(remoteMessage: RemoteMessage?) {
+    override fun onMessageReceived(remoteMessage: RemoteMessage) {
         super.onMessageReceived(remoteMessage)
         if (!mFcmHelper.isUserAuthorized()) {
             return
         }
 
-        parseData(remoteMessage?.data)
+        parseData(remoteMessage.data)
     }
 
     private fun parseData(data: Map<String, String>?) {

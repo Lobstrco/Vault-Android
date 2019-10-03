@@ -31,7 +31,7 @@ class SignedAccountsPresenter : BasePresenter<SignedAccountsView>() {
     private var savedRvPosition: Int = Constant.Util.UNDEFINED_VALUE
 
     init {
-        LVApplication.sAppComponent.plusSignedAccountComponent(SignedAccountModule()).inject(this)
+        LVApplication.appComponent.plusSignedAccountComponent(SignedAccountModule()).inject(this)
     }
 
     override fun onFirstViewAttach() {

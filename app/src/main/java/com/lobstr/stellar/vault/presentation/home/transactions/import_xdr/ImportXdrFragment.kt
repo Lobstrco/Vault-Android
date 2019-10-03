@@ -9,7 +9,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.fragment.app.Fragment
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.lobstr.stellar.vault.R
@@ -133,8 +132,8 @@ class ImportXdrFragment : BaseFragment(), ImportXdrView, View.OnClickListener {
     override fun showTransactionDetails(transactionItem: TransactionItem) {
         val bundle = Bundle()
         bundle.putParcelable(Constant.Bundle.BUNDLE_TRANSACTION_ITEM, transactionItem)
-
-        val fragment = Fragment.instantiate(context, TransactionDetailsFragment::class.qualifiedName, bundle)
+        val fragment = parentFragment!!.childFragmentManager.fragmentFactory.instantiate(context!!.classLoader, TransactionDetailsFragment::class.qualifiedName!!)
+        fragment.arguments = bundle
 
         fragment.setTargetFragment(this, Constant.Code.TRANSACTION_DETAILS_FRAGMENT)
 

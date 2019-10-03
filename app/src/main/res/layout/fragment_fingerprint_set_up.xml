@@ -18,7 +18,8 @@
                    android:layout_height="wrap_content"
                    android:src="@drawable/ic_fingerprint_purple"
                    android:layout_gravity="center"
-                   android:layout_marginBottom="20dp"/>
+                   android:layout_marginBottom="20dp"
+                   tools:ignore="ContentDescription" />
 
         <TextView
                 android:layout_width="match_parent"
@@ -35,6 +36,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:textSize="14sp"
+                android:alpha="0.6"
                 android:textColor="@color/color_071c33"
                 android:text="@string/text_tv_fingerprint_set_up_description"/>
 

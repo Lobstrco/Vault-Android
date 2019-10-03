@@ -4,15 +4,19 @@ import com.arellomobile.mvp.MvpView
 import com.arellomobile.mvp.viewstate.strategy.AddToEndSingleStrategy
 import com.arellomobile.mvp.viewstate.strategy.SkipStrategy
 import com.arellomobile.mvp.viewstate.strategy.StateStrategyType
+import com.lobstr.stellar.vault.presentation.entities.account.Account
 
 
 interface DashboardView : MvpView {
 
     @StateStrategyType(AddToEndSingleStrategy::class)
-    fun showPublicKey(publicKey: String)
+    fun initSignedAccountsRecycledView()
 
     @StateStrategyType(AddToEndSingleStrategy::class)
-    fun showSignersPublickKey(info: String)
+    fun notifySignedAccountsAdapter(accounts: List<Account>)
+
+    @StateStrategyType(AddToEndSingleStrategy::class)
+    fun showPublicKey(publicKey: String)
 
     @StateStrategyType(AddToEndSingleStrategy::class)
     fun showSignersCount(count: Int)
@@ -33,5 +37,5 @@ interface DashboardView : MvpView {
     fun copyData(publicKey: String)
 
     @StateStrategyType(AddToEndSingleStrategy::class)
-    fun hideSignersProgress()
+    fun showSignersProgress(show: Boolean)
 }

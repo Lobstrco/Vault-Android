@@ -14,6 +14,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:textColor="@color/color_071c33"
+            android:alpha="0.6"
             android:textSize="14sp"
             android:layout_marginBottom="16dp"
             android:text="@string/text_tv_import_xdr_subtitle"

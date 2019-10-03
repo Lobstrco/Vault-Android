@@ -20,7 +20,7 @@ class SplashPresenter : BasePresenter<SplashView>() {
     lateinit var interactor: SplashInteractor
 
     init {
-        LVApplication.sAppComponent.plusSplashComponent(SplashModule()).inject(this)
+        LVApplication.appComponent.plusSplashComponent(SplashModule()).inject(this)
     }
 
     override fun onFirstViewAttach() {

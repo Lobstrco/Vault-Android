@@ -2,12 +2,10 @@ package com.lobstr.stellar.vault.presentation.home.transactions.details
 
 import com.arellomobile.mvp.InjectViewState
 import com.lobstr.stellar.vault.R
-import com.lobstr.stellar.vault.data.error.exeption.DefaultException
-import com.lobstr.stellar.vault.data.error.exeption.HorizonException
-import com.lobstr.stellar.vault.data.error.exeption.InternalException
-import com.lobstr.stellar.vault.data.error.exeption.UserNotAuthorizedException
+import com.lobstr.stellar.vault.data.error.exeption.*
 import com.lobstr.stellar.vault.domain.transaction_details.TransactionDetailsInteractor
 import com.lobstr.stellar.vault.domain.util.EventProviderModule
+import com.lobstr.stellar.vault.domain.util.event.Network
 import com.lobstr.stellar.vault.domain.util.event.Notification
 import com.lobstr.stellar.vault.presentation.BasePresenter
 import com.lobstr.stellar.vault.presentation.application.LVApplication
@@ -37,14 +35,74 @@ class TransactionDetailsPresenter(private var transactionItem: TransactionItem) 
     private var cancellationInProcess = false
 
     init {
-        LVApplication.sAppComponent.plusTransactionDetailsComponent(TransactionDetailsModule()).inject(this)
+        LVApplication.appComponent.plusTransactionDetailsComponent(TransactionDetailsModule())
+            .inject(this)
     }
 
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
 
+        registerEventProvider()
         viewState.setupToolbarTitle(R.string.title_toolbar_transaction_details)
+        viewState.initSignersRecycledView()
         prepareUiAndOperationsList()
+        getTransactionSigners()
+    }
+
+    private fun registerEventProvider() {
+        unsubscribeOnDestroy(
+            eventProviderModule.networkEventSubject
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({
+                    when (it.type) {
+                        Network.Type.CONNECTED -> {
+                            if (needCheckConnectionState) {
+                                getTransactionSigners()
+                            }
+                            needCheckConnectionState = false
+                            cancelNetworkWorker()
+                        }
+                    }
+                }, {
+                    it.printStackTrace()
+                })
+        )
+    }
+
+    private fun getTransactionSigners() {
+        unsubscribeOnDestroy(
+            interactor.getTransactionSigners(
+                transactionItem.xdr!!,
+                transactionItem.transaction.sourceAccount!!
+            )
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnSubscribe {
+                    viewState.showSignersContainer(false)
+                    viewState.showSignersProgress(true)
+                }
+                .doOnEvent { _, _ ->
+                    viewState.showSignersProgress(false)
+                }
+                .subscribe({
+                    viewState.showSignersContainer(it.isNotEmpty())
+                    viewState.notifySignersAdapter(it)
+                }, {
+                    when (it) {
+                        is NoInternetConnectionException -> {
+                            viewState.showMessage(it.details)
+                            handleNoInternetConnection()
+                        }
+                        is UserNotAuthorizedException -> {
+                            getTransactionSigners()
+                        }
+                        is DefaultException -> viewState.showMessage(it.details)
+                        else -> {
+                            viewState.showMessage(it.message ?: "")
+                        }
+                    }
+                })
+        )
     }
 
     private fun prepareUiAndOperationsList() {
@@ -147,7 +205,11 @@ class TransactionDetailsPresenter(private var transactionItem: TransactionItem) 
                         transactionItem.transaction
                     )
 
-                    viewState.successConfirmTransaction(it, needAdditionalSignatures, transactionItem)
+                    viewState.successConfirmTransaction(
+                        it,
+                        needAdditionalSignatures,
+                        transactionItem
+                    )
 
                     // TODO update transaction screen after operation if needed: prepareUiAndOperationsList()
 
@@ -164,7 +226,7 @@ class TransactionDetailsPresenter(private var transactionItem: TransactionItem) 
                             confirmTransaction()
                         }
                         is InternalException -> viewState.showMessage(
-                            LVApplication.sAppComponent.context.getString(
+                            LVApplication.appComponent.context.getString(
                                 R.string.api_error_internal_submit_transaction
                             )
                         )
@@ -223,7 +285,7 @@ class TransactionDetailsPresenter(private var transactionItem: TransactionItem) 
                                     denyTransaction()
                                 }
                                 is InternalException -> viewState.showMessage(
-                                    LVApplication.sAppComponent.context.getString(
+                                    LVApplication.appComponent.context.getString(
                                         R.string.api_error_internal_submit_transaction
                                     )
                                 )

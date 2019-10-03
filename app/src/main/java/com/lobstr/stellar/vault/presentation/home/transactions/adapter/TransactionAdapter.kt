@@ -9,24 +9,54 @@ import com.lobstr.stellar.vault.presentation.entities.transaction.TransactionIte
 class TransactionAdapter(private val listener: OnTransactionItemClicked) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-    private var transactionItems: MutableList<TransactionItem> = mutableListOf()
+    companion object {
+        private const val CONTENT_VIEW_TYPE = 0
+        private const val PROGRESS_VIEW_TYPE = 1
+    }
 
-    fun setTransactionList(transactionItems: MutableList<TransactionItem>) {
+    private var transactionItems: MutableList<TransactionItem> = mutableListOf()
+    private var needShowProgress: Boolean = false
+
+    fun setTransactionList(
+        transactionItems: MutableList<TransactionItem>,
+        needShowProgress: Boolean
+    ) {
         this.transactionItems = transactionItems
+        this.needShowProgress = needShowProgress
         notifyDataSetChanged()
     }
 
-    override fun onCreateViewHolder(viewGroup: ViewGroup, i: Int): RecyclerView.ViewHolder {
-        val view = LayoutInflater.from(viewGroup.context)
-            .inflate(R.layout.adapter_item_transaction, viewGroup, false)
-        return TransactionViewHolder(view, listener)
+    override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+        return when (viewType) {
+            CONTENT_VIEW_TYPE -> {
+                TransactionViewHolder(
+                    LayoutInflater.from(viewGroup.context)
+                        .inflate(R.layout.adapter_item_transaction, viewGroup, false),
+                    listener
+                )
+            }
+            else -> {
+                ProgressViewHolder(
+                    LayoutInflater.from(viewGroup.context)
+                        .inflate(R.layout.layout_list_preloader, viewGroup, false)
+                )
+            }
+        }
     }
 
     override fun onBindViewHolder(viewHolder: RecyclerView.ViewHolder, position: Int) {
-        (viewHolder as TransactionViewHolder).bind(transactionItems[position])
+        (viewHolder as? TransactionViewHolder)?.bind(transactionItems[position])
     }
 
     override fun getItemCount(): Int {
-        return transactionItems.size
+        return calculateItemCount()
+    }
+
+    private fun calculateItemCount(): Int {
+        return if (needShowProgress) transactionItems.size + 1 else transactionItems.size
+    }
+
+    override fun getItemViewType(position: Int): Int {
+        return if (position >= transactionItems.size) PROGRESS_VIEW_TYPE else CONTENT_VIEW_TYPE
     }
 }

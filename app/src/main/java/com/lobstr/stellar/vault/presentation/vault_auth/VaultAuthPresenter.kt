@@ -26,7 +26,7 @@ class VaultAuthPresenter : BasePresenter<VaultAuthView>() {
     lateinit var eventProviderModule: EventProviderModule
 
     init {
-        LVApplication.sAppComponent.plusVaultAuthComponent(VaultAuthModule()).inject(this)
+        LVApplication.appComponent.plusVaultAuthComponent(VaultAuthModule()).inject(this)
     }
 
     override fun onFirstViewAttach() {

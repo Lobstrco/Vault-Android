@@ -3,7 +3,6 @@ package com.lobstr.stellar.vault.presentation.container.activity
 import android.os.Bundle
 import androidx.annotation.ColorRes
 import androidx.annotation.DrawableRes
-import androidx.fragment.app.Fragment
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.lobstr.stellar.vault.R
@@ -89,10 +88,12 @@ class ContainerActivity : BaseActivity(), ContainerView {
         val bundle = Bundle()
         bundle.putInt(Constant.Bundle.BUNDLE_NAVIGATION_FR, TRANSACTION_DETAILS)
         bundle.putParcelable(Constant.Bundle.BUNDLE_TRANSACTION_ITEM, transactionItem)
+        val fragment = supportFragmentManager.fragmentFactory.instantiate(this.classLoader, ContainerFragment::class.qualifiedName!!)
+        fragment.arguments = bundle
 
         FragmentTransactionManager.displayFragment(
             supportFragmentManager,
-            Fragment.instantiate(this, ContainerFragment::class.qualifiedName, bundle),
+            fragment,
             R.id.fl_container
         )
     }
@@ -100,10 +101,12 @@ class ContainerActivity : BaseActivity(), ContainerView {
     override fun showImportXdrFr() {
         val bundle = Bundle()
         bundle.putInt(Constant.Bundle.BUNDLE_NAVIGATION_FR, IMPORT_XDR)
+        val fragment = supportFragmentManager.fragmentFactory.instantiate(this.classLoader, ContainerFragment::class.qualifiedName!!)
+        fragment.arguments = bundle
 
         FragmentTransactionManager.displayFragment(
             supportFragmentManager,
-            Fragment.instantiate(this, ContainerFragment::class.qualifiedName, bundle),
+            fragment,
             R.id.fl_container
         )
     }
@@ -111,10 +114,12 @@ class ContainerActivity : BaseActivity(), ContainerView {
     override fun showDashBoardFr() {
         val bundle = Bundle()
         bundle.putInt(Constant.Bundle.BUNDLE_NAVIGATION_FR, DASHBOARD)
+        val fragment = supportFragmentManager.fragmentFactory.instantiate(this.classLoader, ContainerFragment::class.qualifiedName!!)
+        fragment.arguments = bundle
 
         FragmentTransactionManager.displayFragment(
             supportFragmentManager,
-            Fragment.instantiate(this, ContainerFragment::class.qualifiedName, bundle),
+            fragment,
             R.id.fl_container
         )
     }
@@ -122,10 +127,12 @@ class ContainerActivity : BaseActivity(), ContainerView {
     override fun showSettingsFr() {
         val bundle = Bundle()
         bundle.putInt(Constant.Bundle.BUNDLE_NAVIGATION_FR, SETTINGS)
+        val fragment = supportFragmentManager.fragmentFactory.instantiate(this.classLoader, ContainerFragment::class.qualifiedName!!)
+        fragment.arguments = bundle
 
         FragmentTransactionManager.displayFragment(
             supportFragmentManager,
-            Fragment.instantiate(this, ContainerFragment::class.qualifiedName, bundle),
+            fragment,
             R.id.fl_container
         )
     }
@@ -133,10 +140,12 @@ class ContainerActivity : BaseActivity(), ContainerView {
     override fun showTransactionsFr() {
         val bundle = Bundle()
         bundle.putInt(Constant.Bundle.BUNDLE_NAVIGATION_FR, TRANSACTION_DETAILS)
+        val fragment = supportFragmentManager.fragmentFactory.instantiate(this.classLoader, ContainerFragment::class.qualifiedName!!)
+        fragment.arguments = bundle
 
         FragmentTransactionManager.displayFragment(
             supportFragmentManager,
-            Fragment.instantiate(this, ContainerFragment::class.qualifiedName, bundle),
+            fragment,
             R.id.fl_container
         )
     }
@@ -144,10 +153,12 @@ class ContainerActivity : BaseActivity(), ContainerView {
     override fun showMnemonicsFr() {
         val bundle = Bundle()
         bundle.putInt(Constant.Bundle.BUNDLE_NAVIGATION_FR, Constant.Navigation.MNEMONICS)
+        val fragment = supportFragmentManager.fragmentFactory.instantiate(this.classLoader, ContainerFragment::class.qualifiedName!!)
+        fragment.arguments = bundle
 
         FragmentTransactionManager.displayFragment(
             supportFragmentManager,
-            Fragment.instantiate(this, ContainerFragment::class.qualifiedName, bundle),
+            fragment,
             R.id.fl_container
         )
     }
@@ -157,10 +168,12 @@ class ContainerActivity : BaseActivity(), ContainerView {
         bundle.putInt(Constant.Bundle.BUNDLE_NAVIGATION_FR, Constant.Navigation.SUCCESS)
         bundle.putString(Constant.Bundle.BUNDLE_ENVELOPE_XDR, envelopeXdr)
         bundle.putBoolean(Constant.Bundle.BUNDLE_NEED_ADDITIONAL_SIGNATURES, needAdditionalSignatures)
+        val fragment = supportFragmentManager.fragmentFactory.instantiate(this.classLoader, ContainerFragment::class.qualifiedName!!)
+        fragment.arguments = bundle
 
         FragmentTransactionManager.displayFragment(
             supportFragmentManager,
-            Fragment.instantiate(this, ContainerFragment::class.qualifiedName, bundle),
+            fragment,
             R.id.fl_container
         )
     }
@@ -169,10 +182,12 @@ class ContainerActivity : BaseActivity(), ContainerView {
         val bundle = Bundle()
         bundle.putInt(Constant.Bundle.BUNDLE_NAVIGATION_FR, Constant.Navigation.ERROR)
         bundle.putString(Constant.Bundle.BUNDLE_ERROR_MESSAGE, errorMessage)
+        val fragment = supportFragmentManager.fragmentFactory.instantiate(this.classLoader, ContainerFragment::class.qualifiedName!!)
+        fragment.arguments = bundle
 
         FragmentTransactionManager.displayFragment(
             supportFragmentManager,
-            Fragment.instantiate(this, ContainerFragment::class.qualifiedName, bundle),
+            fragment,
             R.id.fl_container
         )
     }
@@ -180,10 +195,12 @@ class ContainerActivity : BaseActivity(), ContainerView {
     override fun showSignedAccountsFr() {
         val bundle = Bundle()
         bundle.putInt(Constant.Bundle.BUNDLE_NAVIGATION_FR, Constant.Navigation.SIGNED_ACCOUNTS)
+        val fragment = supportFragmentManager.fragmentFactory.instantiate(this.classLoader, ContainerFragment::class.qualifiedName!!)
+        fragment.arguments = bundle
 
         FragmentTransactionManager.displayFragment(
             supportFragmentManager,
-            Fragment.instantiate(this, ContainerFragment::class.qualifiedName, bundle),
+            fragment,
             R.id.fl_container
         )
     }

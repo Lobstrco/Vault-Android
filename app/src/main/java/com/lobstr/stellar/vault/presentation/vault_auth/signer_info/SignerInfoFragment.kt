@@ -4,7 +4,6 @@ package com.lobstr.stellar.vault.presentation.vault_auth.signer_info
 import android.os.Bundle
 import android.view.*
 import androidx.core.content.ContextCompat
-import androidx.fragment.app.Fragment
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.lobstr.stellar.vault.R
@@ -69,13 +68,13 @@ class SignerInfoFragment : BaseFragment(),
         btnNext.setOnClickListener(this)
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
-        inflater?.inflate(R.menu.signer_info, menu)
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.signer_info, menu)
         super.onCreateOptionsMenu(menu, inflater)
     }
 
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        when (item?.itemId) {
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
             R.id.action_info -> mPresenter.infoClicked()
         }
 
@@ -113,7 +112,7 @@ class SignerInfoFragment : BaseFragment(),
     override fun showRecheckSingerScreen() {
         FragmentTransactionManager.displayFragment(
             parentFragment!!.childFragmentManager,
-            Fragment.instantiate(context, RecheckSignerFragment::class.qualifiedName),
+            parentFragment!!.childFragmentManager.fragmentFactory.instantiate(context!!.classLoader, RecheckSignerFragment::class.qualifiedName!!),
             R.id.fl_container
         )
     }
@@ -121,7 +120,7 @@ class SignerInfoFragment : BaseFragment(),
     override fun showHelpScreen() {
         FragmentTransactionManager.displayFragment(
             parentFragment!!.childFragmentManager,
-            Fragment.instantiate(context, FaqFragment::class.qualifiedName),
+            parentFragment!!.childFragmentManager.fragmentFactory.instantiate(context!!.classLoader, FaqFragment::class.qualifiedName!!),
             R.id.fl_container
         )
     }

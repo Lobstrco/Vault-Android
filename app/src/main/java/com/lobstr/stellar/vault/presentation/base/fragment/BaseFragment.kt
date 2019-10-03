@@ -16,28 +16,25 @@ abstract class BaseFragment : BaseMvpAppCompatFragment(), BaseFragmentView {
     @ProvidePresenter
     fun provideBaseFragmentPresenter() = BaseFragmentPresenter()
 
-    override fun setUserVisibleHint(isVisibleToUser: Boolean) {
-        super.setUserVisibleHint(isVisibleToUser)
+    override fun setMenuVisibility(menuVisible: Boolean) {
+        super.setMenuVisibility(menuVisible)
 
-        setHasOptionsMenu(isVisibleToUser)
+        setHasOptionsMenu(menuVisible)
 
         if (isAdded) {
             getMvpDelegate().onAttach()
             mBasePresenter.setToolbarTitle()
+
+            if (menuVisible) {
+                mBasePresenter.checkOptionsMenuVisibility()
+            }
         }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        if (parentFragment !is BaseContainerFragment) {
-            return
-        }
-
-        // Check: has menu options or don't
-        if ((parentFragment as BaseContainerFragment).userVisibleHint) {
-            setHasOptionsMenu(true)
-        }
+        // Check: has menu options or don't (by default true)
+        setHasOptionsMenu(if (parentFragment is BaseContainerFragment) (parentFragment as BaseContainerFragment).isMenuVisible else true)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -54,9 +51,25 @@ abstract class BaseFragment : BaseMvpAppCompatFragment(), BaseFragmentView {
      */
     open fun onBackPressed() = false
 
+    override fun saveOptionsMenuVisibility(visible: Boolean) {
+        mBasePresenter.saveOptionsMenuVisibilityCalled(visible)
+    }
+
+    override fun setOptionsMenuVisible(visible: Boolean) {
+        if (parentFragment is BaseContainerFragment) {
+            // manage options menu visibility only i case when BaseContainerFragment is visible to user
+            if (parentFragment?.isMenuVisible == true) {
+                setHasOptionsMenu(visible)
+            }
+        } else {
+            // otherwise - handle as is
+            setHasOptionsMenu(visible)
+        }
+    }
+
     override fun setActionBarTitle(title: String?) {
         if (parentFragment is BaseContainerFragment
-            && !(parentFragment as BaseContainerFragment).userVisibleHint
+            && !(parentFragment as BaseContainerFragment).isMenuVisible
         ) {
             return
         }

@@ -7,9 +7,6 @@ import com.arellomobile.mvp.viewstate.strategy.StateStrategyType
 
 interface SuccessView : MvpView {
 
-    @StateStrategyType(AddToEndSingleStrategy::class)
-    fun setMovementMethods()
-
     @StateStrategyType(SkipStrategy::class)
     fun vibrate(pattern: LongArray)
 

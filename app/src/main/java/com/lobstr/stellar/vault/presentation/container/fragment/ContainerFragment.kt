@@ -88,7 +88,7 @@ class ContainerFragment : BaseContainerFragment(),
     override fun showAuthFr() {
         FragmentTransactionManager.displayFragment(
             childFragmentManager,
-            Fragment.instantiate(context, AuthFragment::class.qualifiedName),
+            childFragmentManager.fragmentFactory.instantiate(context!!.classLoader, AuthFragment::class.qualifiedName!!),
             R.id.fl_container
         )
     }
@@ -96,7 +96,7 @@ class ContainerFragment : BaseContainerFragment(),
     override fun showSignerInfoFr() {
         FragmentTransactionManager.displayFragment(
             childFragmentManager,
-            Fragment.instantiate(context, SignerInfoFragment::class.qualifiedName),
+            childFragmentManager.fragmentFactory.instantiate(context!!.classLoader, SignerInfoFragment::class.qualifiedName!!),
             R.id.fl_container
         )
     }
@@ -104,7 +104,7 @@ class ContainerFragment : BaseContainerFragment(),
     override fun showFingerprintSetUpFr() {
         FragmentTransactionManager.displayFragment(
             childFragmentManager,
-            Fragment.instantiate(context, FingerprintSetUpFragment::class.qualifiedName),
+            childFragmentManager.fragmentFactory.instantiate(context!!.classLoader, FingerprintSetUpFragment::class.qualifiedName!!),
             R.id.fl_container
         )
     }
@@ -115,7 +115,7 @@ class ContainerFragment : BaseContainerFragment(),
         if (childFragmentManager.findFragmentById(R.id.fl_container) != null) return
         FragmentTransactionManager.displayFragment(
             childFragmentManager,
-            Fragment.instantiate(context, DashboardFragment::class.qualifiedName),
+            childFragmentManager.fragmentFactory.instantiate(context!!.classLoader, DashboardFragment::class.qualifiedName!!),
             R.id.fl_container
         )
     }
@@ -126,7 +126,7 @@ class ContainerFragment : BaseContainerFragment(),
         if (childFragmentManager.findFragmentById(R.id.fl_container) != null) return
         FragmentTransactionManager.displayFragment(
             childFragmentManager,
-            Fragment.instantiate(context, SettingsFragment::class.qualifiedName),
+            childFragmentManager.fragmentFactory.instantiate(context!!.classLoader, SettingsFragment::class.qualifiedName!!),
             R.id.fl_container
         )
     }
@@ -137,7 +137,7 @@ class ContainerFragment : BaseContainerFragment(),
         if (childFragmentManager.findFragmentById(R.id.fl_container) != null) return
         FragmentTransactionManager.displayFragment(
             childFragmentManager,
-            Fragment.instantiate(context, TransactionsFragment::class.qualifiedName),
+            childFragmentManager.fragmentFactory.instantiate(context!!.classLoader, TransactionsFragment::class.qualifiedName!!),
             R.id.fl_container
         )
     }
@@ -145,8 +145,8 @@ class ContainerFragment : BaseContainerFragment(),
     override fun showTransactionDetails(target: Fragment?, transactionItem: TransactionItem) {
         val bundle = Bundle()
         bundle.putParcelable(Constant.Bundle.BUNDLE_TRANSACTION_ITEM, transactionItem)
-
-        val fragment = Fragment.instantiate(context, TransactionDetailsFragment::class.java.name, bundle)
+        val fragment = childFragmentManager.fragmentFactory.instantiate(context!!.classLoader, TransactionDetailsFragment::class.qualifiedName!!)
+        fragment.arguments = bundle
 
         if (target != null) {
             fragment.setTargetFragment(target, Constant.Code.TRANSACTION_DETAILS_FRAGMENT)
@@ -162,7 +162,7 @@ class ContainerFragment : BaseContainerFragment(),
     override fun showImportXdrFr() {
         FragmentTransactionManager.displayFragment(
             childFragmentManager,
-            Fragment.instantiate(context, ImportXdrFragment::class.qualifiedName),
+            childFragmentManager.fragmentFactory.instantiate(context!!.classLoader, ImportXdrFragment::class.qualifiedName!!),
             R.id.fl_container
         )
     }
@@ -170,7 +170,7 @@ class ContainerFragment : BaseContainerFragment(),
     override fun showMnemonicsFr() {
         FragmentTransactionManager.displayFragment(
             childFragmentManager,
-            Fragment.instantiate(context, MnemonicsFragment::class.qualifiedName),
+            childFragmentManager.fragmentFactory.instantiate(context!!.classLoader, MnemonicsFragment::class.qualifiedName!!),
             R.id.fl_container
         )
     }
@@ -179,10 +179,12 @@ class ContainerFragment : BaseContainerFragment(),
         val bundle = Bundle()
         bundle.putString(Constant.Bundle.BUNDLE_ENVELOPE_XDR, envelopeXdr)
         bundle.putBoolean(Constant.Bundle.BUNDLE_NEED_ADDITIONAL_SIGNATURES, needAdditionalSignatures)
+        val fragment = childFragmentManager.fragmentFactory.instantiate(context!!.classLoader, SuccessFragment::class.qualifiedName!!)
+        fragment.arguments = bundle
 
         FragmentTransactionManager.displayFragment(
             childFragmentManager,
-            Fragment.instantiate(context, SuccessFragment::class.qualifiedName, bundle),
+            fragment,
             R.id.fl_container
         )
     }
@@ -190,10 +192,12 @@ class ContainerFragment : BaseContainerFragment(),
     override fun showErrorFr(errorMessage: String) {
         val bundle = Bundle()
         bundle.putString(Constant.Bundle.BUNDLE_ERROR_MESSAGE, errorMessage)
+        val fragment = childFragmentManager.fragmentFactory.instantiate(context!!.classLoader, ErrorFragment::class.qualifiedName!!)
+        fragment.arguments = bundle
 
         FragmentTransactionManager.displayFragment(
             childFragmentManager,
-            Fragment.instantiate(context, ErrorFragment::class.qualifiedName, bundle),
+            fragment,
             R.id.fl_container
         )
     }
@@ -201,7 +205,7 @@ class ContainerFragment : BaseContainerFragment(),
     override fun showSignedAccountsFr() {
         FragmentTransactionManager.displayFragment(
             childFragmentManager,
-            Fragment.instantiate(context, SignedAccountsFragment::class.qualifiedName),
+            childFragmentManager.fragmentFactory.instantiate(context!!.classLoader, SignedAccountsFragment::class.qualifiedName!!),
             R.id.fl_container
         )
     }

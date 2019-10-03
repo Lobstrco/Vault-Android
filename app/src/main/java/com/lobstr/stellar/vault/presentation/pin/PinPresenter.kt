@@ -38,7 +38,7 @@ class PinPresenter(
         )
 
     init {
-        LVApplication.sAppComponent.plusPinComponent(PinModule()).inject(this)
+        LVApplication.appComponent.plusPinComponent(PinModule()).inject(this)
         if (needCreatePin == null) {
             needCreatePin = false
         }
@@ -71,7 +71,7 @@ class PinPresenter(
 
         // logic for show fingerprint
         if (!needChangePin!! && !needCreatePin!! && interactor.isTouchIdEnabled() &&
-            BiometricUtils.isFingerprintAvailable(LVApplication.sAppComponent.context)
+            BiometricUtils.isFingerprintAvailable(LVApplication.appComponent.context)
         ) {
             viewState.showBiometricDialog(true)
         }
@@ -213,7 +213,7 @@ class PinPresenter(
             interactor.accountHasSigners() -> viewState.showHomeScreen()
             else -> {
                 when {
-                    !interactor.isTouchIdSetUp() && BiometricUtils.isBiometricSupported(LVApplication.sAppComponent.context) -> viewState.showFingerprintSetUpScreen()
+                    !interactor.isTouchIdSetUp() && BiometricUtils.isBiometricSupported(LVApplication.appComponent.context) -> viewState.showFingerprintSetUpScreen()
                     else -> viewState.showVaultAuthScreen()
                 }
             }
@@ -254,14 +254,14 @@ class PinPresenter(
         }
     }
 
-    private fun isCommonPin(pin: String): Boolean {
+    private fun isCommonPin(pin: String?): Boolean {
         // first check common pins from array
         if (commonPinArray.contains(pin)) {
             return true
         }
 
         // check same symbols like 111111 and etc
-        pin.forEach {
+        pin?.forEach {
             if (it != pin[0]) {
                 return false
             }

@@ -22,7 +22,7 @@ interface TransactionsView : MvpView {
     fun showErrorMessage(message: String)
 
     @StateStrategyType(AddToEndSingleStrategy::class)
-    fun showTransactionList(items: MutableList<TransactionItem>)
+    fun showTransactionList(items: MutableList<TransactionItem>, needShowProgress: Boolean)
 
     @StateStrategyType(SkipStrategy::class)
     fun scrollListToPosition(position: Int)

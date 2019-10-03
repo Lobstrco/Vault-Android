@@ -18,7 +18,6 @@ class OperationDetailsPresenter(private val mTransactionItem: TransactionItem, p
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
         // check case, when operations list is empty
-        // see https://github.com/stellar/java-stellar-sdk/issues/183
         if (mTransactionItem.transaction.operations.isNullOrEmpty()) {
             viewState.setupToolbarTitle(R.string.title_toolbar_transaction_details)
             return

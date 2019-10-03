@@ -5,6 +5,7 @@ import com.arellomobile.mvp.MvpView
 import com.arellomobile.mvp.viewstate.strategy.AddToEndSingleStrategy
 import com.arellomobile.mvp.viewstate.strategy.SkipStrategy
 import com.arellomobile.mvp.viewstate.strategy.StateStrategyType
+import com.lobstr.stellar.vault.presentation.entities.account.Account
 import com.lobstr.stellar.vault.presentation.entities.transaction.TransactionItem
 
 
@@ -12,6 +13,18 @@ interface TransactionDetailsView : MvpView {
 
     @StateStrategyType(AddToEndSingleStrategy::class)
     fun setupToolbarTitle(@StringRes titleRes: Int)
+
+    @StateStrategyType(AddToEndSingleStrategy::class)
+    fun initSignersRecycledView()
+
+    @StateStrategyType(AddToEndSingleStrategy::class)
+    fun notifySignersAdapter(accounts: List<Account>)
+
+    @StateStrategyType(AddToEndSingleStrategy::class)
+    fun showSignersProgress(show: Boolean)
+
+    @StateStrategyType(AddToEndSingleStrategy::class)
+    fun showSignersContainer(show: Boolean)
 
     @StateStrategyType(SkipStrategy::class)
     fun showOperationList(transactionItem: TransactionItem)

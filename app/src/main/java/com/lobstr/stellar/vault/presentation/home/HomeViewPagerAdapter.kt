@@ -12,7 +12,7 @@ import com.lobstr.stellar.vault.presentation.util.Constant.Navigation.SETTINGS
 import com.lobstr.stellar.vault.presentation.util.Constant.Navigation.TRANSACTIONS
 
 
-class HomeViewPagerAdapter(private val context: Context, fm: FragmentManager) : FragmentStatePagerAdapter(fm) {
+class HomeViewPagerAdapter(private val context: Context, fm: FragmentManager) : FragmentStatePagerAdapter(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
 
     // ===========================================================
     // Constants
@@ -45,7 +45,7 @@ class HomeViewPagerAdapter(private val context: Context, fm: FragmentManager) : 
     // Methods for/from SuperClass/Interfaces
     // ===========================================================
 
-    override fun getItem(position: Int): Fragment? {
+    override fun getItem(position: Int): Fragment {
         val bundle = Bundle()
 
         when (position) {
@@ -62,7 +62,10 @@ class HomeViewPagerAdapter(private val context: Context, fm: FragmentManager) : 
             }
         }
 
-        return Fragment.instantiate(context, ContainerFragment::class.java.name, bundle)
+        val fragment = ContainerFragment()
+        fragment.arguments = bundle
+
+        return fragment
     }
 
 

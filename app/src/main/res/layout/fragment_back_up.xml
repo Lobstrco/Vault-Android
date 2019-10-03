@@ -35,6 +35,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:textSize="14sp"
+                android:alpha="0.6"
                 android:textColor="@color/color_071c33"
                 android:text="@string/text_tv_backup_description"/>
 

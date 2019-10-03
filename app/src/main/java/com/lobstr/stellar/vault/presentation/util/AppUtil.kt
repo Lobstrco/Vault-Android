@@ -30,6 +30,7 @@ import com.lobstr.stellar.vault.presentation.entities.transaction.operation.offe
 import com.lobstr.stellar.vault.presentation.entities.transaction.operation.offer.CreatePassiveSellOfferOperation
 import com.lobstr.stellar.vault.presentation.entities.transaction.operation.offer.ManageBuyOfferOperation
 import com.lobstr.stellar.vault.presentation.entities.transaction.operation.offer.SellOfferOperation
+import com.lobstr.stellar.vault.presentation.util.Constant.Symbol.NULL
 import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.*
@@ -53,14 +54,12 @@ object AppUtil {
         calendar.timeInMillis = date
         try {
             val format = SimpleDateFormat(datePattern, Locale.ENGLISH)
-            var formattedString = format.format(date)
-            formattedString = formattedString.replace("am", "AM").replace("pm", "PM")
-            return formattedString
+            return format.format(date)
         } catch (e: Exception) {
             e.printStackTrace()
         }
 
-        return "Unknown"
+        return NULL
     }
 
     fun copyToClipboard(context: Context?, extractedString: String) {

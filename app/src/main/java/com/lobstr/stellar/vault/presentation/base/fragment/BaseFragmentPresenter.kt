@@ -6,6 +6,9 @@ import com.arellomobile.mvp.MvpPresenter
 @InjectViewState
 class BaseFragmentPresenter : MvpPresenter<BaseFragmentView>() {
 
+    // set by default options menu visible
+    private var optionsMenuVisibility: Boolean = true
+
     private var toolbarTitle: String? = null
 
     override fun onFirstViewAttach() {
@@ -21,5 +24,14 @@ class BaseFragmentPresenter : MvpPresenter<BaseFragmentView>() {
     fun setToolbarTitle(title: String?) {
         toolbarTitle = title
         viewState.setActionBarTitle(title)
+    }
+
+    fun saveOptionsMenuVisibilityCalled(visible: Boolean) {
+        optionsMenuVisibility = visible
+        viewState.setOptionsMenuVisible(optionsMenuVisibility)
+    }
+
+    fun checkOptionsMenuVisibility(){
+        viewState.setOptionsMenuVisible(optionsMenuVisibility)
     }
 }

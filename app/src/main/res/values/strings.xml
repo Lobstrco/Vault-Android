@@ -161,6 +161,9 @@
     <string name="text_tv_sequence_number_invalid_description">Transaction can not be confirmed, its sequence number is
         invalid.
     </string>
+    <string name="text_tv_signers">Signers</string>
+    <string name="text_tv_status_signed">Signed</string>
+    <string name="text_tv_status_pending">Pending</string>
 
     <!-- Add XDR screen -->
     <string name="text_tv_import_xdr_subtitle">To submit transaction enter its XDR below</string>
@@ -242,18 +245,12 @@
 
     <!-- Success screen -->
     <string name="text_tv_success">Success</string>
-    <string name="text_tv_need_additional_signatures">You need more signatures to submit the operation</string>
+    <string name="text_tv_need_additional_signatures">You have successfully signed this transaction. More signatures required to submit this transaction to the network.</string>
     <string name="text_tv_signed_xdr">Signed XDR</string>
     <string name="text_btn_copy_xdr">Copy XDR</string>
 
     <!-- Error screen -->
     <string name="text_tv_error">Transaction Failed</string>
-
-    <!-- Other -->
-    <string name="expandable_card_view_image_content_description">Arrow to expand card</string>
-    <string name="expandable_card_view_icon_content_description">Card icon</string>
-    <string name="text_action_info">help</string>
-    <string name="text_action_log_out">log out</string>
 
     <!-- Horizon errors -->
     <string name="text_tv_tx_bad_seq">Sequence number does not match source account.</string>
@@ -274,4 +271,11 @@
     <string name="channel_new_signatures">New signatures</string>
     <string name="channel_authorized_transactions">Authorized transactions</string>
     <string name="channel_other">Other</string>
+
+    <!-- Other -->
+    <string name="expandable_card_view_image_content_description">Arrow to expand card</string>
+    <string name="expandable_card_view_icon_content_description">Card icon</string>
+    <string name="text_action_info">help</string>
+    <string name="text_action_log_out">log out</string>
+
 </resources>

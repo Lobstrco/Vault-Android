@@ -72,6 +72,7 @@ class OperationDetailsFragment : BaseFragment(),
     override fun initRecycledView(map: Map<String, String?>) {
         rvOperationDetails.layoutManager = LinearLayoutManager(activity)
         rvOperationDetails.itemAnimator = null
+        rvOperationDetails.isNestedScrollingEnabled = false
         rvOperationDetails.adapter = OperationDetailsAdapter(map)
     }
 

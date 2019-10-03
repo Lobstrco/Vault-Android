@@ -6,7 +6,6 @@ import android.text.method.LinkMovementMethod
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.lobstr.stellar.vault.R
@@ -89,7 +88,7 @@ class AuthFragment : BaseFragment(), AuthFrView, View.OnClickListener {
     override fun showBackUpScreen() {
         FragmentTransactionManager.displayFragment(
             parentFragment!!.childFragmentManager,
-            Fragment.instantiate(context, BackUpFragment::class.qualifiedName),
+            parentFragment!!.childFragmentManager.fragmentFactory.instantiate(context!!.classLoader, BackUpFragment::class.qualifiedName!!),
             R.id.fl_container
         )
     }
@@ -97,7 +96,7 @@ class AuthFragment : BaseFragment(), AuthFrView, View.OnClickListener {
     override fun showRestoreScreen() {
         FragmentTransactionManager.displayFragment(
             parentFragment!!.childFragmentManager,
-            Fragment.instantiate(context, RecoverKeyFragment::class.qualifiedName),
+            parentFragment!!.childFragmentManager.fragmentFactory.instantiate(context!!.classLoader, RecoverKeyFragment::class.qualifiedName!!),
             R.id.fl_container
         )
     }
@@ -105,7 +104,7 @@ class AuthFragment : BaseFragment(), AuthFrView, View.OnClickListener {
     override fun showHelpScreen() {
         FragmentTransactionManager.displayFragment(
             parentFragment!!.childFragmentManager,
-            Fragment.instantiate(context, FaqFragment::class.qualifiedName),
+            parentFragment!!.childFragmentManager.fragmentFactory.instantiate(context!!.classLoader, FaqFragment::class.qualifiedName!!),
             R.id.fl_container
         )
     }

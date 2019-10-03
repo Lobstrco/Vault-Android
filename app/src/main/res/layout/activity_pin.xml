@@ -29,7 +29,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_app_logo"
-            android:paddingTop="100dp"/>
+            android:paddingTop="100dp"
+            tools:ignore="ContentDescription"/>
 
     <com.andrognito.pinlockview.IndicatorDots
             android:id="@+id/indicatorDotsWhite"

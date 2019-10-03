@@ -3,6 +3,7 @@ package com.lobstr.stellar.vault.domain.transaction_details
 import com.lobstr.stellar.vault.domain.key_store.KeyStoreRepository
 import com.lobstr.stellar.vault.domain.stellar.StellarRepository
 import com.lobstr.stellar.vault.domain.transaction.TransactionRepository
+import com.lobstr.stellar.vault.presentation.entities.account.Account
 import com.lobstr.stellar.vault.presentation.entities.transaction.TransactionItem
 import com.lobstr.stellar.vault.presentation.util.AppUtil
 import com.lobstr.stellar.vault.presentation.util.Constant
@@ -89,5 +90,9 @@ class TransactionDetailsInteractorImpl(
 
     override fun isTrConfirmationEnabled(): Boolean {
         return prefsUtil.isTrConfirmationEnabled
+    }
+
+    override fun getTransactionSigners(xdr: String, sourceAccount: String): Single<List<Account>> {
+        return stellarRepository.getTransactionSigners(xdr, sourceAccount)
     }
 }

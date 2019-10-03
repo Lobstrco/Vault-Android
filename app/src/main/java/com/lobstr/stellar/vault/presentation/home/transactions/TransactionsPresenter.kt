@@ -46,7 +46,7 @@ class TransactionsPresenter : BasePresenter<TransactionsView>() {
     private val transactions: MutableList<TransactionItem> = mutableListOf()
 
     init {
-        LVApplication.sAppComponent.plusTransactionComponent(TransactionModule()).inject(this)
+        LVApplication.appComponent.plusTransactionComponent(TransactionModule()).inject(this)
     }
 
     override fun onFirstViewAttach() {
@@ -130,7 +130,7 @@ class TransactionsPresenter : BasePresenter<TransactionsView>() {
                     viewState.hideEmptyState()
                 }
                 nextPageUrl = result.next
-                viewState.showTransactionList(transactions)
+                viewState.showTransactionList(transactions, !nextPageUrl.isNullOrEmpty())
                 if (newLoadTransactions) {
                     viewState.scrollListToPosition(0)
                 }

@@ -22,9 +22,9 @@ open class BaseBottomSheetDialog : BaseMvpAppCompatDialogFragment() {
         }
     }
 
-    override fun show(manager: FragmentManager?, tag: String?) {
+    override fun show(manager: FragmentManager, tag: String?) {
         // if dialog is showed - skip it
-        if (manager?.findFragmentByTag(tag)?.isVisible == true) {
+        if (manager.findFragmentByTag(tag)?.isVisible == true) {
             return
         }
 

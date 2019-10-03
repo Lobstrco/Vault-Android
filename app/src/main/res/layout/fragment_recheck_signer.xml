@@ -42,6 +42,7 @@
                 android:textAllCaps="true"
                 android:lineSpacingExtra="8sp"
                 android:textSize="14sp"
+                android:alpha="0.6"
                 android:textColor="@color/color_071c33"/>
 
     </LinearLayout>

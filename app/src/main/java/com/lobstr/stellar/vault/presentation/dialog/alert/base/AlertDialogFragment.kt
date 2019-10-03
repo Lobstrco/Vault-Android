@@ -158,22 +158,22 @@ open class AlertDialogFragment : BaseMvpAppCompatDialogFragment() {
         return mContentView
     }
 
-    override fun onCancel(dialog: DialogInterface?) {
+    override fun onCancel(dialog: DialogInterface) {
         this@AlertDialogFragment.onCanceled(
-            dialog!!
+            dialog
         )
     }
 
-    override fun show(manager: FragmentManager?, tag: String?) {
+    override fun show(manager: FragmentManager, tag: String?) {
         // if dialog is showed - skip it
-        if ((manager?.findFragmentByTag(tag) as? AlertDialogFragment)?.dialog?.isShowing == true) {
+        if ((manager.findFragmentByTag(tag) as? AlertDialogFragment)?.dialog?.isShowing == true) {
             return
         }
 
         super.show(manager, tag)
     }
 
-    override fun onDismiss(dialog: DialogInterface?) {
+    override fun onDismiss(dialog: DialogInterface) {
         super.onDismiss(dialog)
         // dismiss dialog for all specific cases
         if (fragmentManager != null) {
@@ -281,7 +281,7 @@ open class AlertDialogFragment : BaseMvpAppCompatDialogFragment() {
         }
 
         fun setTitle(@StringRes title: Int): Builder {
-            this.title = LVApplication.sAppComponent.context.getText(title)
+            this.title = LVApplication.appComponent.context.getText(title)
             return this
         }
 
@@ -291,7 +291,7 @@ open class AlertDialogFragment : BaseMvpAppCompatDialogFragment() {
         }
 
         fun setMessage(@StringRes message: Int): Builder {
-            this.message = LVApplication.sAppComponent.context.getText(message)
+            this.message = LVApplication.appComponent.context.getText(message)
             return this
         }
 
@@ -312,7 +312,7 @@ open class AlertDialogFragment : BaseMvpAppCompatDialogFragment() {
         }
 
         fun setNegativeBtnText(@StringRes negativeBtnText: Int): Builder {
-            this.negativeBtnText = LVApplication.sAppComponent.context.getText(negativeBtnText)
+            this.negativeBtnText = LVApplication.appComponent.context.getText(negativeBtnText)
             return this
         }
 
@@ -322,7 +322,7 @@ open class AlertDialogFragment : BaseMvpAppCompatDialogFragment() {
         }
 
         fun setPositiveBtnText(@StringRes positiveBtnText: Int): Builder {
-            this.positiveBtnText = LVApplication.sAppComponent.context.getText(positiveBtnText)
+            this.positiveBtnText = LVApplication.appComponent.context.getText(positiveBtnText)
             return this
         }
 
@@ -332,7 +332,7 @@ open class AlertDialogFragment : BaseMvpAppCompatDialogFragment() {
         }
 
         fun setNeutralBtnText(@StringRes neutralBtnText: Int): Builder {
-            this.neutralBtnText = LVApplication.sAppComponent.context.getText(neutralBtnText)
+            this.neutralBtnText = LVApplication.appComponent.context.getText(neutralBtnText)
             return this
         }
 

@@ -25,6 +25,7 @@
             android:gravity="start"
             android:textSize="14sp"
             android:layout_marginBottom="25dp"
+            android:alpha="0.6"
             android:textColor="@color/color_071c33"
             android:text="@string/text_tv_mnemonics_description"/>
 
@@ -62,6 +63,7 @@
                     android:text="@string/text_btn_clip_to_board"
                     android:textColor="@color/color_primary"
                     android:drawableStart="@drawable/ic_content_copy_purple"
+                    android:fontFamily="sans-serif"
                     style="@style/Base.Widget.AppCompat.Button.Borderless.Colored"
                     android:textSize="14sp"
                     android:textAllCaps="false"/>

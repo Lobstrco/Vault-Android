@@ -15,12 +15,12 @@ object WorkerManager {
         val networkWorkRequest =
             OneTimeWorkRequest.Builder(clazz).setConstraints(constraints)
                 .build()
-        WorkManager.getInstance(LVApplication.sAppComponent.context).enqueue(networkWorkRequest)
+        WorkManager.getInstance(LVApplication.appComponent.context).enqueue(networkWorkRequest)
         return networkWorkRequest.id
     }
 
     fun cancelWorkById(id: UUID?) {
         if (id != null)
-            WorkManager.getInstance(LVApplication.sAppComponent.context).cancelWorkById(id)
+            WorkManager.getInstance(LVApplication.appComponent.context).cancelWorkById(id)
     }
 }

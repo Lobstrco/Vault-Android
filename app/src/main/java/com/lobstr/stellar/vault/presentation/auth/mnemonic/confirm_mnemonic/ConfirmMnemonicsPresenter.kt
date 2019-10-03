@@ -23,7 +23,7 @@ class ConfirmMnemonicsPresenter(private val mnemonicsInitialList: List<MnemonicI
     lateinit var interactor: ConfirmMnemonicsInteractor
 
     init {
-        LVApplication.sAppComponent.plusConfirmMnemonicsComponent(ConfirmMnemonicsModule()).inject(this)
+        LVApplication.appComponent.plusConfirmMnemonicsComponent(ConfirmMnemonicsModule()).inject(this)
     }
 
     // List of mnemonics in confirmation (top) section

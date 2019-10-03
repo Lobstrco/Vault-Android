@@ -1,63 +1,114 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
         android:background="@color/color_f9f9ff"
+        android:orientation="vertical"
         tools:context=".presentation.home.transactions.details.TransactionDetailsFragment">
 
-    <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                 android:id="@+id/fl_container"
-                 android:layout_width="match_parent"
-                 android:layout_height="match_parent"
-                 android:orientation="vertical"
-                 android:layout_weight="1"/>
+    <androidx.core.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:fillViewport="true"
+            android:layout_marginBottom="16dp"
+            android:scrollbars="vertical">
+
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+            <FrameLayout
+                    android:id="@+id/fl_container"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+            <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="16dp">
+
+                <LinearLayout
+                        android:id="@+id/llSignersContainer"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@android:color/white"
+                        android:orientation="vertical"
+                        android:visibility="gone">
+
+                    <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="16dp"
+                            android:fontFamily="sans-serif-medium"
+                            android:text="@string/text_tv_signers"
+                            android:textColor="@color/color_primary"
+                            android:textSize="14sp" />
+
+                    <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/rvSigners"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:paddingBottom="9dp"/>
+                </LinearLayout>
+
+                <ProgressBar
+                        android:id="@+id/pbSigners"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center"
+                        android:visibility="gone" />
+            </FrameLayout>
+
+        </LinearLayout>
+
+    </androidx.core.widget.NestedScrollView>
 
     <TextView
             android:id="@+id/tvErrorDescription"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
             android:gravity="center"
-            android:textSize="14sp"
-            android:paddingTop="8dp"
             android:paddingStart="16dp"
+            android:paddingTop="8dp"
             android:paddingEnd="16dp"
             android:paddingBottom="8dp"
             android:text="@string/text_tv_sequence_number_invalid_description"
             android:textAppearance="?android:textAppearanceMedium"
-            android:layout_gravity="center"
-            android:visibility="gone"
-            android:textColor="@color/color_d9534f"/>
+            android:textColor="@color/color_d9534f"
+            android:textSize="14sp"
+            android:visibility="gone" />
 
     <Button
             android:id="@+id/btnConfirm"
-            android:layout_height="wrap_content"
+            style="@style/Base.Widget.AppCompat.Button.Borderless.Colored"
             android:layout_width="match_parent"
-            android:background="@drawable/selector_default_button_with_round"
-            android:text="@string/text_btn_confirm"
-            android:textColor="@android:color/white"
-            android:textSize="14sp"
-            android:textAllCaps="false"
-            android:layout_weight="0"
-            android:layout_marginTop="8dp"
+            android:layout_height="wrap_content"
             android:layout_marginLeft="16dp"
+            android:layout_marginTop="8dp"
             android:layout_marginRight="16dp"
             android:layout_marginBottom="5dp"
-            style="@style/Base.Widget.AppCompat.Button.Borderless.Colored"/>
+            android:layout_weight="0"
+            android:background="@drawable/selector_default_button_with_round"
+            android:text="@string/text_btn_confirm"
+            android:textAllCaps="false"
+            android:textColor="@android:color/white"
+            android:textSize="14sp" />
 
     <Button
             android:id="@+id/btnDeny"
-            android:layout_height="wrap_content"
+            style="@style/Base.Widget.AppCompat.Button.Borderless.Colored"
             android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_weight="0"
             android:background="@android:color/transparent"
             android:text="@string/text_btn_deny"
             android:textAllCaps="false"
             android:textColor="@color/color_d9534f"
-            android:textSize="14sp"
-            android:layout_weight="0"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp"
-            style="@style/Base.Widget.AppCompat.Button.Borderless.Colored"/>
+            android:textSize="14sp" />
 </LinearLayout>

@@ -11,6 +11,7 @@ import com.lobstr.stellar.vault.domain.util.event.Notification
 import com.lobstr.stellar.vault.presentation.BasePresenter
 import com.lobstr.stellar.vault.presentation.application.LVApplication
 import com.lobstr.stellar.vault.presentation.dagger.module.dashboard.DashboardModule
+import com.lobstr.stellar.vault.presentation.entities.account.Account
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
@@ -24,15 +25,14 @@ class DashboardPresenter : BasePresenter<DashboardView>() {
     @Inject
     lateinit var interactor: DashboardInteractor
 
-    lateinit var signerKey: String
-
     init {
-        LVApplication.sAppComponent.plusDashboardComponent(DashboardModule()).inject(this)
+        LVApplication.appComponent.plusDashboardComponent(DashboardModule()).inject(this)
     }
 
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
 
+        viewState.initSignedAccountsRecycledView()
         viewState.showPublicKey(interactor.getUserPublicKey())
         registerEventProvider()
         loadPendingTransactions()
@@ -113,14 +113,10 @@ class DashboardPresenter : BasePresenter<DashboardView>() {
             interactor.getSignedAccounts()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
+                .doOnEvent { _, _ -> viewState.showSignersProgress(false) }
                 .subscribe({
-                    viewState.hideSignersProgress()
-                    if (it.size == 1) {
-                        signerKey = it[0].address
-                        viewState.showSignersPublickKey(signerKey)
-                    } else {
-                        viewState.showSignersCount(interactor.getSignersCount())
-                    }
+                    viewState.showSignersCount(interactor.getSignersCount())
+                    viewState.notifySignedAccountsAdapter(it)
                 }, {
                     viewState.showSignersCount(interactor.getSignersCount())
 
@@ -155,10 +151,6 @@ class DashboardPresenter : BasePresenter<DashboardView>() {
         viewState.copyData(interactor.getUserPublicKey())
     }
 
-    fun copySignerClicked() {
-        viewState.copyData(signerKey)
-    }
-
     fun userVisibleHintCalled(visible: Boolean) {
         if (visible) {
             loadPendingTransactions()
@@ -170,5 +162,9 @@ class DashboardPresenter : BasePresenter<DashboardView>() {
         if (interactor.getSignersCount() > 1) {
             viewState.showSignersScreen()
         }
+    }
+
+    fun copySignedAccountClicked(account: Account) {
+        viewState.copyData(account.address)
     }
 }

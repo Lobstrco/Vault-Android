@@ -12,9 +12,6 @@ import com.lobstr.stellar.vault.presentation.dagger.component.AppComponent
 import com.lobstr.stellar.vault.presentation.dagger.component.DaggerAppComponent
 import com.lobstr.stellar.vault.presentation.dagger.module.AppModule
 import com.lobstr.stellar.vault.presentation.util.Constant
-import org.bouncycastle.jce.provider.BouncyCastleProvider
-import java.security.Provider
-import java.security.Security
 
 
 class LVApplication : MultiDexApplication() {
@@ -29,7 +26,7 @@ class LVApplication : MultiDexApplication() {
 
     companion object {
         val LOG_TAG = LVApplication::class.simpleName
-        lateinit var sAppComponent: AppComponent
+        lateinit var appComponent: AppComponent
     }
 
     // ===========================================================
@@ -46,13 +43,11 @@ class LVApplication : MultiDexApplication() {
 
     override fun onCreate() {
         super.onCreate()
-
         upgradeSecurityProvider()
-        setupBouncyCastle()
         enableStrictMode()
         FirebaseAnalytics.getInstance(this)
             .setAnalyticsCollectionEnabled(BuildConfig.BUILD_TYPE != Constant.BuildType.DEBUG)
-        sAppComponent = DaggerAppComponent.builder()
+        appComponent = DaggerAppComponent.builder()
             .appModule(AppModule(this))
             .build()
     }
@@ -60,33 +55,6 @@ class LVApplication : MultiDexApplication() {
     // ===========================================================
     // Methods
     // ===========================================================
-
-    /**
-     * For create Mnemonics
-     * Setup Bouncy Castle as well, because some of the security algorithms used within
-     * the library are supported starting with Java 1.8 only.
-     */
-    private fun setupBouncyCastle() {
-        Security.removeProvider("BC")
-        Security.addProvider(BouncyCastleProvider() as Provider?)
-    }
-
-    private fun enableStrictMode() {
-        if (BuildConfig.BUILD_TYPE == Constant.BuildType.DEBUG) {
-            StrictMode.setThreadPolicy(
-                StrictMode.ThreadPolicy.Builder()
-                    .detectAll()
-                    .penaltyLog()
-                    .build()
-            )
-            StrictMode.setVmPolicy(
-                StrictMode.VmPolicy.Builder()
-                    .detectAll()
-                    .penaltyLog()
-                    .build()
-            )
-        }
-    }
 
     /**
      * Fix for SSLException
@@ -107,6 +75,23 @@ class LVApplication : MultiDexApplication() {
             } catch (ex: Exception) {
                 Log.e(LOG_TAG, "Unknown issue trying to install a new security provider", ex)
             }
+        }
+    }
+
+    private fun enableStrictMode() {
+        if (BuildConfig.BUILD_TYPE == Constant.BuildType.DEBUG) {
+            StrictMode.setThreadPolicy(
+                StrictMode.ThreadPolicy.Builder()
+                    .detectAll()
+                    .penaltyLog()
+                    .build()
+            )
+            StrictMode.setVmPolicy(
+                StrictMode.VmPolicy.Builder()
+                    .detectAll()
+                    .penaltyLog()
+                    .build()
+            )
         }
     }
 

@@ -2,22 +2,35 @@ package com.lobstr.stellar.vault.presentation.home.dashboard
 
 
 import android.content.Intent
+import android.graphics.Typeface
 import android.os.Bundle
+import android.text.SpannableString
+import android.text.Spanned
+import android.text.style.ForegroundColorSpan
+import android.text.style.RelativeSizeSpan
+import android.text.style.StyleSpan
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
+import com.bumptech.glide.Glide
 import com.lobstr.stellar.vault.R
 import com.lobstr.stellar.vault.presentation.base.fragment.BaseFragment
 import com.lobstr.stellar.vault.presentation.container.activity.ContainerActivity
+import com.lobstr.stellar.vault.presentation.entities.account.Account
 import com.lobstr.stellar.vault.presentation.home.HomeActivity
+import com.lobstr.stellar.vault.presentation.home.settings.signed_accounts.adapter.AccountAdapter
+import com.lobstr.stellar.vault.presentation.home.settings.signed_accounts.adapter.OnAccountItemListener
 import com.lobstr.stellar.vault.presentation.util.AppUtil
 import com.lobstr.stellar.vault.presentation.util.Constant
 import kotlinx.android.synthetic.main.fragment_dash_board.*
 
-class DashboardFragment : BaseFragment(), DashboardView, View.OnClickListener {
+class DashboardFragment : BaseFragment(), DashboardView, View.OnClickListener,
+    OnAccountItemListener {
 
     // ===========================================================
     // Constants
@@ -47,10 +60,10 @@ class DashboardFragment : BaseFragment(), DashboardView, View.OnClickListener {
     // Getter & Setter
     // ===========================================================
 
-    override fun setUserVisibleHint(isVisibleToUser: Boolean) {
-        super.setUserVisibleHint(isVisibleToUser)
+    override fun setMenuVisibility(menuVisible: Boolean) {
+        super.setMenuVisibility(menuVisible)
 
-        mPresenter.userVisibleHintCalled(isVisibleToUser)
+        mPresenter.userVisibleHintCalled(menuVisible)
     }
 
     // ===========================================================
@@ -62,7 +75,11 @@ class DashboardFragment : BaseFragment(), DashboardView, View.OnClickListener {
         savedInstanceState: Bundle?
     ): View? {
         mView =
-            if (mView == null) inflater.inflate(R.layout.fragment_dash_board, container, false) else mView
+            if (mView == null) inflater.inflate(
+                R.layout.fragment_dash_board,
+                container,
+                false
+            ) else mView
         return mView
     }
 
@@ -74,7 +91,6 @@ class DashboardFragment : BaseFragment(), DashboardView, View.OnClickListener {
 
     private fun setListeners() {
         tvDashboardShowList.setOnClickListener(this)
-        tvDashboardCopySigner.setOnClickListener(this)
         tvDashboardCopyPublicKey.setOnClickListener(this)
         tvDashboardTransactionCount.setOnClickListener(this)
         tvDashboardSignersCount.setOnClickListener(this)
@@ -89,29 +105,75 @@ class DashboardFragment : BaseFragment(), DashboardView, View.OnClickListener {
             tvDashboardTransactionCount.id -> mPresenter.transactionCountClicked()
             tvDashboardShowList.id -> mPresenter.showTransactionListClicked()
             tvDashboardCopyPublicKey.id -> mPresenter.copyKeyClicked()
-            tvDashboardCopySigner.id -> mPresenter.copySignerClicked()
             tvDashboardSignersCount.id -> mPresenter.signersCountClicked()
         }
     }
 
+    override fun initSignedAccountsRecycledView() {
+        rvSignedAccounts.layoutManager = LinearLayoutManager(activity)
+        rvSignedAccounts.itemAnimator = null
+        rvSignedAccounts.isNestedScrollingEnabled = false
+        rvSignedAccounts.adapter = AccountAdapter(AccountAdapter.ACCOUNT, this)
+    }
+
+    override fun notifySignedAccountsAdapter(accounts: List<Account>) {
+        (rvSignedAccounts.adapter as AccountAdapter).setAccountList(accounts)
+    }
+
+    override fun onAccountItemClick(account: Account) {
+        // implement logic if need
+    }
+
+    override fun onAccountItemLongClick(account: Account) {
+        mPresenter.copySignedAccountClicked(account)
+    }
+
     override fun showPublicKey(publicKey: String) {
+        // set user icon
+        Glide.with(context!!)
+            .load(
+                Constant.Social.USER_ICON_LINK
+                    .plus(publicKey)
+                    .plus(".png")
+            )
+            .placeholder(R.drawable.ic_person)
+            .into(ivIdentity)
+
         tvDashboardPublicKey.text = publicKey
     }
 
-    override fun showSignersPublickKey(info: String) {
-        tvDashboardSigners.text = info
-        tvDashboardSigners.visibility = View.VISIBLE
-        tvDashboardCopySigner.visibility = View.VISIBLE
-        tvDashboardSignersCount.visibility = View.GONE
-        tvDashboardSignerDescription.visibility = View.GONE
-    }
-
     override fun showSignersCount(count: Int) {
-        tvDashboardSignersCount.text = count.toString()
-        tvDashboardSigners.visibility = View.GONE
-        tvDashboardCopySigner.visibility = View.GONE
+
+        val message = String.format(
+            getString(if (count == 1) R.string.text_settings_signer else R.string.text_settings_signers),
+            count
+        )
+        val spannedText = SpannableString(message)
+        val startPosition = message.indexOf(count.toString())
+        val endPosition = startPosition + count.toString().length
+
+        spannedText.setSpan(
+            ForegroundColorSpan(ContextCompat.getColor(this.context!!, R.color.color_primary)),
+            startPosition,
+            endPosition,
+            Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+        )
+        spannedText.setSpan(
+            RelativeSizeSpan(1.5f),
+            startPosition,
+            endPosition,
+            Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+        )
+        spannedText.setSpan(
+            StyleSpan(Typeface.BOLD),
+            startPosition,
+            endPosition,
+            Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+        )
+
+        tvDashboardSignersCount.text = spannedText
+
         tvDashboardSignersCount.visibility = View.VISIBLE
-        tvDashboardSignerDescription.visibility = View.VISIBLE
     }
 
     override fun showDashboardInfo(count: Int) {
@@ -141,8 +203,8 @@ class DashboardFragment : BaseFragment(), DashboardView, View.OnClickListener {
         AppUtil.copyToClipboard(context, publicKey)
     }
 
-    override fun hideSignersProgress() {
-        pbDashboardSigners.visibility = View.GONE
+    override fun showSignersProgress(show: Boolean) {
+        pbDashboardSigners.visibility = if (show) View.VISIBLE else View.GONE
     }
 
     // ===========================================================

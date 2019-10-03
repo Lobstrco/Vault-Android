@@ -12,7 +12,7 @@ import javax.inject.Inject
 class NetworkWorker(context: Context, workerParams: WorkerParameters) : Worker(context, workerParams) {
 
     init {
-        LVApplication.sAppComponent.inject(this)
+        LVApplication.appComponent.inject(this)
     }
 
     @Inject

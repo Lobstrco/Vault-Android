@@ -16,7 +16,7 @@ class FingerprintSetUpPresenter : MvpPresenter<FingerprintSetUpView>() {
     lateinit var interactor: FingerprintSetUpInteractor
 
     init {
-        LVApplication.sAppComponent.plusFingerprintSetUpComponent(FingerprintSetUpModule()).inject(this)
+        LVApplication.appComponent.plusFingerprintSetUpComponent(FingerprintSetUpModule()).inject(this)
     }
 
     fun skipClicked() {
@@ -25,7 +25,7 @@ class FingerprintSetUpPresenter : MvpPresenter<FingerprintSetUpView>() {
     }
 
     fun turnOnClicked() {
-        if (BiometricUtils.isFingerprintAvailable(LVApplication.sAppComponent.context)) {
+        if (BiometricUtils.isFingerprintAvailable(LVApplication.appComponent.context)) {
             viewState.showBiometricDialog(true)
         } else {
             viewState.showFingerprintInfoDialog(

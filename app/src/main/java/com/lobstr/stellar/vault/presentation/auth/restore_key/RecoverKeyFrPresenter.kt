@@ -25,7 +25,7 @@ class RecoverKeyFrPresenter : BasePresenter<RecoverKeyFrView>() {
     private lateinit var phrases: String
 
     init {
-        LVApplication.sAppComponent.plusRecoveryKeyComponent(RecoveryKeyModule()).inject(this)
+        LVApplication.appComponent.plusRecoveryKeyComponent(RecoveryKeyModule()).inject(this)
     }
 
     override fun onFirstViewAttach() {

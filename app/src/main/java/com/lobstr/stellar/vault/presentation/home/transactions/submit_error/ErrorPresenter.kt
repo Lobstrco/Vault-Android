@@ -33,7 +33,7 @@ class ErrorPresenter(private val error: String) : MvpPresenter<ErrorView>() {
             else -> 0
         }
 
-        return if (resValue == 0) error else LVApplication.sAppComponent.context.getString(resValue)
+        return if (resValue == 0) error else LVApplication.appComponent.context.getString(resValue)
     }
 
     fun infoClicked() {

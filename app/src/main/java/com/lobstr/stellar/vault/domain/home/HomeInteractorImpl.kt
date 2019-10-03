@@ -13,7 +13,7 @@ class HomeInteractorImpl(private val prefsUtil: PrefsUtil) : HomeInteractor {
     lateinit var mFcmHelper: FcmHelper
 
     init {
-        LVApplication.sAppComponent.plusFcmInternalComponent(FcmInternalModule()).inject(this)
+        LVApplication.appComponent.plusFcmInternalComponent(FcmInternalModule()).inject(this)
     }
 
     override fun checkFcmRegistration() {

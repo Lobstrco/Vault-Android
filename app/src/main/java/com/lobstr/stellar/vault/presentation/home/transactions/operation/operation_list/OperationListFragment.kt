@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
@@ -76,6 +75,7 @@ class OperationListFragment : BaseFragment(),
     override fun initRecycledView() {
         rvTransactionOperations.layoutManager = LinearLayoutManager(context)
         rvTransactionOperations.itemAnimator = null
+        rvTransactionOperations.isNestedScrollingEnabled = false
         rvTransactionOperations.adapter = TransactionOperationAdapter(this)
     }
 
@@ -92,7 +92,9 @@ class OperationListFragment : BaseFragment(),
         bundle.putParcelable(Constant.Bundle.BUNDLE_TRANSACTION_ITEM, transactionItem)
         bundle.putInt(Constant.Bundle.BUNDLE_OPERATION_POSITION, position)
 
-        val fragment = Fragment.instantiate(context, OperationDetailsFragment::class.qualifiedName, bundle)
+        val fragment = parentFragment!!.childFragmentManager.fragmentFactory.instantiate(context!!.classLoader, OperationDetailsFragment::class.qualifiedName!!)
+        fragment.arguments = bundle
+
         fragment.setTargetFragment(this, Constant.Code.OPERATION_DETAILS_FRAGMENT)
 
         FragmentTransactionManager.displayFragment(

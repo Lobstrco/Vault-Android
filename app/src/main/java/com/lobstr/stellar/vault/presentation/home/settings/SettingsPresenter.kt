@@ -28,7 +28,7 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
     lateinit var interactor: SettingsInteractor
 
     init {
-        LVApplication.sAppComponent.plusSettingsComponent(SettingsModule()).inject(this)
+        LVApplication.appComponent.plusSettingsComponent(SettingsModule()).inject(this)
     }
 
     override fun onFirstViewAttach() {
@@ -37,11 +37,11 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
         registerEventProvider()
         viewState.setupSettingsData(
             "${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE})",
-            BiometricUtils.isBiometricSupported(LVApplication.sAppComponent.context)
+            BiometricUtils.isBiometricSupported(LVApplication.appComponent.context)
         )
         viewState.setTouchIdChecked(
             interactor.isTouchIdEnabled()
-                    && BiometricUtils.isFingerprintAvailable(LVApplication.sAppComponent.context)
+                    && BiometricUtils.isFingerprintAvailable(LVApplication.appComponent.context)
         )
         viewState.setNotificationsChecked(interactor.isNotificationsEnabled())
         viewState.setTrConfirmationChecked(interactor.isTrConfirmationEnabled())
@@ -103,7 +103,7 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
     fun touchIdSwitched(checked: Boolean) {
         when {
             checked -> {
-                if (BiometricUtils.isFingerprintAvailable(LVApplication.sAppComponent.context)) {
+                if (BiometricUtils.isFingerprintAvailable(LVApplication.appComponent.context)) {
                     // Add additional logic if needed
                     interactor.setTouchIdEnabled(true)
                     viewState.setTouchIdChecked(true)

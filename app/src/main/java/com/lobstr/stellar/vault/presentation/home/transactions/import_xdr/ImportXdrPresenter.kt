@@ -24,7 +24,7 @@ class ImportXdrPresenter : BasePresenter<ImportXdrView>() {
     private var transactionCreationInProcess = false
 
     init {
-        LVApplication.sAppComponent.plusImportXdrComponent(ImportXdrModule()).inject(this)
+        LVApplication.appComponent.plusImportXdrComponent(ImportXdrModule()).inject(this)
     }
 
     override fun onFirstViewAttach() {
@@ -63,7 +63,7 @@ class ImportXdrPresenter : BasePresenter<ImportXdrView>() {
                 }, {
                     viewState.showFormError(
                         true,
-                        LVApplication.sAppComponent.context.getString(R.string.msg_bad_xdr)
+                        LVApplication.appComponent.context.getString(R.string.msg_bad_xdr)
                     )
                 })
         )

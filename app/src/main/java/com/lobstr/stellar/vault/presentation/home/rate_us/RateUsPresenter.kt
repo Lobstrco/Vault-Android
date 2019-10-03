@@ -15,7 +15,7 @@ class RateUsPresenter : MvpPresenter<RateUsView>() {
     lateinit var interactor: RateUsInteractor
 
     init {
-        LVApplication.sAppComponent.plusRateUsComponent(RateUsModule()).inject(this)
+        LVApplication.appComponent.plusRateUsComponent(RateUsModule()).inject(this)
     }
 
     fun rateUsClicked() {

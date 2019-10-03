@@ -3,7 +3,6 @@ package com.lobstr.stellar.vault.presentation.auth
 import android.os.Bundle
 import androidx.annotation.ColorRes
 import androidx.annotation.DrawableRes
-import androidx.fragment.app.Fragment
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.lobstr.stellar.vault.R
@@ -64,10 +63,12 @@ class AuthActivity : BaseActivity(), AuthView {
     override fun showAuthFragment() {
         val bundle = Bundle()
         bundle.putInt(Constant.Bundle.BUNDLE_NAVIGATION_FR, Constant.Navigation.AUTH)
+        val fragment = supportFragmentManager.fragmentFactory.instantiate(this.classLoader, ContainerFragment::class.qualifiedName!!)
+        fragment.arguments = bundle
 
         FragmentTransactionManager.displayFragment(
             supportFragmentManager,
-            Fragment.instantiate(this, ContainerFragment::class.qualifiedName, bundle),
+            fragment,
             R.id.fl_container
         )
     }
@@ -75,10 +76,12 @@ class AuthActivity : BaseActivity(), AuthView {
     override fun showFingerprintSetUpFragment() {
         val bundle = Bundle()
         bundle.putInt(Constant.Bundle.BUNDLE_NAVIGATION_FR, Constant.Navigation.FINGERPRINT_SET_UP)
+        val fragment = supportFragmentManager.fragmentFactory.instantiate(this.classLoader, ContainerFragment::class.qualifiedName!!)
+        fragment.arguments = bundle
 
         FragmentTransactionManager.displayFragment(
             supportFragmentManager,
-            Fragment.instantiate(this, ContainerFragment::class.qualifiedName, bundle),
+            fragment,
             R.id.fl_container
         )
     }

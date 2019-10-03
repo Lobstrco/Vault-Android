@@ -15,7 +15,7 @@ class HomeActivityPresenter : MvpPresenter<HomeActivityView>() {
     lateinit var interactor: HomeInteractor
 
     init {
-        LVApplication.sAppComponent.plusHomeComponent(HomeModule()).inject(this)
+        LVApplication.appComponent.plusHomeComponent(HomeModule()).inject(this)
     }
 
     override fun onFirstViewAttach() {

@@ -16,7 +16,6 @@ import android.widget.CompoundButton
 import android.widget.Toast
 import androidx.annotation.StringRes
 import androidx.core.content.ContextCompat
-import androidx.fragment.app.Fragment
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.lobstr.stellar.vault.R
@@ -69,10 +68,10 @@ class SettingsFragment : BaseFragment(), SettingsView, View.OnClickListener,
     // Getter & Setter
     // ===========================================================
 
-    override fun setUserVisibleHint(isVisibleToUser: Boolean) {
-        super.setUserVisibleHint(isVisibleToUser)
+    override fun setMenuVisibility(menuVisible: Boolean) {
+        super.setMenuVisibility(menuVisible)
 
-        mPresenter.userVisibleHintCalled(isVisibleToUser)
+        mPresenter.userVisibleHintCalled(menuVisible)
     }
 
     // ===========================================================
@@ -83,7 +82,11 @@ class SettingsFragment : BaseFragment(), SettingsView, View.OnClickListener,
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        mView = if (mView == null) inflater.inflate(R.layout.fragment_settings, container, false) else mView
+        mView = if (mView == null) inflater.inflate(
+            R.layout.fragment_settings,
+            container,
+            false
+        ) else mView
         return mView
     }
 
@@ -155,8 +158,8 @@ class SettingsFragment : BaseFragment(), SettingsView, View.OnClickListener,
             signersCount
         )
         val spannedText = SpannableString(message)
-        val startPosition = 11
-        val endPosition = message.lastIndexOf(" ")
+        val startPosition = message.indexOf(signersCount.toString())
+        val endPosition = startPosition + signersCount.toString().length
 
         spannedText.setSpan(
             ForegroundColorSpan(ContextCompat.getColor(this.context!!, R.color.color_primary)),
@@ -204,7 +207,10 @@ class SettingsFragment : BaseFragment(), SettingsView, View.OnClickListener,
     override fun showSignersScreen() {
         FragmentTransactionManager.displayFragment(
             parentFragment!!.childFragmentManager,
-            Fragment.instantiate(context, SignedAccountsFragment::class.qualifiedName),
+            parentFragment!!.childFragmentManager.fragmentFactory.instantiate(
+                context!!.classLoader,
+                SignedAccountsFragment::class.qualifiedName!!
+            ),
             R.id.fl_container
         )
     }
@@ -230,7 +236,10 @@ class SettingsFragment : BaseFragment(), SettingsView, View.OnClickListener,
     override fun showHelpScreen() {
         FragmentTransactionManager.displayFragment(
             parentFragment!!.childFragmentManager,
-            Fragment.instantiate(context, FaqFragment::class.qualifiedName),
+            parentFragment!!.childFragmentManager.fragmentFactory.instantiate(
+                context!!.classLoader,
+                FaqFragment::class.qualifiedName!!
+            ),
             R.id.fl_container
         )
     }
@@ -266,7 +275,10 @@ class SettingsFragment : BaseFragment(), SettingsView, View.OnClickListener,
     override fun showLicenseScreen() {
         FragmentTransactionManager.displayFragment(
             parentFragment!!.childFragmentManager,
-            Fragment.instantiate(context, LicenseFragment::class.qualifiedName),
+            parentFragment!!.childFragmentManager.fragmentFactory.instantiate(
+                context!!.classLoader,
+                LicenseFragment::class.qualifiedName!!
+            ),
             R.id.fl_container
         )
     }
@@ -276,7 +288,8 @@ class SettingsFragment : BaseFragment(), SettingsView, View.OnClickListener,
     }
 
     override fun setupPolicyYear(id: Int) {
-        tvCurrentPolicyDate.text = String.format(getString(id), Calendar.getInstance().get(Calendar.YEAR))
+        tvCurrentPolicyDate.text =
+            String.format(getString(id), Calendar.getInstance().get(Calendar.YEAR))
     }
 
     override fun onPositiveBtnClick(tag: String?, dialogInterface: DialogInterface) {

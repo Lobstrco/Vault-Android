@@ -26,7 +26,8 @@ import com.lobstr.stellar.vault.presentation.util.manager.ProgressManager
 import kotlinx.android.synthetic.main.fragment_transactions.*
 
 class TransactionsFragment : BaseFragment(), TransactionsView, SwipeRefreshLayout.OnRefreshListener,
-    OnTransactionItemClicked, View.OnClickListener, AlertDialogFragment.OnDefaultAlertDialogListener {
+    OnTransactionItemClicked, View.OnClickListener,
+    AlertDialogFragment.OnDefaultAlertDialogListener {
 
     // ===========================================================
     // Constants
@@ -64,14 +65,18 @@ class TransactionsFragment : BaseFragment(), TransactionsView, SwipeRefreshLayou
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        mView = if (mView == null) inflater.inflate(R.layout.fragment_transactions, container, false) else mView
+        mView = if (mView == null) inflater.inflate(
+            R.layout.fragment_transactions,
+            container,
+            false
+        ) else mView
         return mView
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
-        inflater?.inflate(R.menu.transactions, menu)
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.transactions, menu)
 
-        val itemClear = menu?.findItem(R.id.action_clear)
+        val itemClear = menu.findItem(R.id.action_clear)
 
         itemClear?.actionView?.setOnClickListener {
             onOptionsItemSelected(itemClear)
@@ -80,8 +85,8 @@ class TransactionsFragment : BaseFragment(), TransactionsView, SwipeRefreshLayou
         super.onCreateOptionsMenu(menu, inflater)
     }
 
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        when (item?.itemId) {
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
             R.id.action_clear -> {
                 mPresenter.clearClicked()
                 return true
@@ -112,7 +117,8 @@ class TransactionsFragment : BaseFragment(), TransactionsView, SwipeRefreshLayou
 
         // save RecycleView position for restore it after
         mPresenter.onSaveInstanceState(
-            (rvTransactions?.layoutManager as? LinearLayoutManager)?.findFirstVisibleItemPosition() ?: 0
+            (rvTransactions?.layoutManager as? LinearLayoutManager)?.findFirstVisibleItemPosition()
+                ?: 0
         )
     }
 
@@ -156,9 +162,11 @@ class TransactionsFragment : BaseFragment(), TransactionsView, SwipeRefreshLayou
         Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
     }
 
-    override fun showTransactionList(items: MutableList<TransactionItem>) {
-        (rvTransactions.adapter as TransactionAdapter).setTransactionList(items)
-
+    override fun showTransactionList(
+        items: MutableList<TransactionItem>,
+        needShowProgress: Boolean
+    ) {
+        (rvTransactions.adapter as TransactionAdapter).setTransactionList(items, needShowProgress)
         mPresenter.attemptRestoreRvPosition()
     }
 
@@ -167,7 +175,7 @@ class TransactionsFragment : BaseFragment(), TransactionsView, SwipeRefreshLayou
     }
 
     override fun showOptionsMenu(show: Boolean) {
-        setMenuVisibility(show)
+        super.saveOptionsMenuVisibility(show)
     }
 
     override fun showPullToRefresh(show: Boolean) {
@@ -204,7 +212,10 @@ class TransactionsFragment : BaseFragment(), TransactionsView, SwipeRefreshLayou
             .setNegativeBtnText(R.string.text_btn_cancel)
             .setPositiveBtnText(R.string.text_btn_ok)
             .create()
-            .show(childFragmentManager, AlertDialogFragment.DialogFragmentIdentifier.CLEAR_INVALID_TR)
+            .show(
+                childFragmentManager,
+                AlertDialogFragment.DialogFragmentIdentifier.CLEAR_INVALID_TR
+            )
     }
 
     override fun onPositiveBtnClick(tag: String?, dialogInterface: DialogInterface) {
@@ -235,7 +246,8 @@ class TransactionsFragment : BaseFragment(), TransactionsView, SwipeRefreshLayou
         override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
             super.onScrolled(recyclerView, dx, dy)
 
-            val layoutManager: LinearLayoutManager = recyclerView.layoutManager as LinearLayoutManager
+            val layoutManager: LinearLayoutManager =
+                recyclerView.layoutManager as LinearLayoutManager
             val visibleItemCount = layoutManager.childCount
             val totalItemCount = layoutManager.itemCount
             val firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition()
