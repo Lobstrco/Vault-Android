@@ -48,7 +48,7 @@ open class AlertDialogFragment : BaseMvpAppCompatDialogFragment() {
 
     object DialogFragmentIdentifier {
         const val PROGRESS_DIALOG = "PROGRESS_DIALOG"
-        const val FINGERPRINT_INFO_DIALOG = "FINGERPRINT_INFO_DIALOG"
+        const val BIOMETRIC_INFO_DIALOG = "BIOMETRIC_INFO_DIALOG"
         const val DENY_TRANSACTION = "DENY_TRANSACTION"
         const val CONFIRM_TRANSACTION = "CONFIRM_TRANSACTION"
         const val IMPORT_XDR = "IMPORT_XDR"

@@ -8,9 +8,9 @@ import androidx.fragment.app.Fragment
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.lobstr.stellar.vault.R
+import com.lobstr.stellar.vault.presentation.auth.biometric.BiometricSetUpFragment
 import com.lobstr.stellar.vault.presentation.auth.enter_screen.AuthFragment
 import com.lobstr.stellar.vault.presentation.auth.mnemonic.create_mnemonic.MnemonicsFragment
-import com.lobstr.stellar.vault.presentation.auth.touch_id.FingerprintSetUpFragment
 import com.lobstr.stellar.vault.presentation.base.fragment.BaseContainerFragment
 import com.lobstr.stellar.vault.presentation.entities.transaction.TransactionItem
 import com.lobstr.stellar.vault.presentation.home.dashboard.DashboardFragment
@@ -101,10 +101,10 @@ class ContainerFragment : BaseContainerFragment(),
         )
     }
 
-    override fun showFingerprintSetUpFr() {
+    override fun showBiometricSetUpFr() {
         FragmentTransactionManager.displayFragment(
             childFragmentManager,
-            childFragmentManager.fragmentFactory.instantiate(context!!.classLoader, FingerprintSetUpFragment::class.qualifiedName!!),
+            childFragmentManager.fragmentFactory.instantiate(context!!.classLoader, BiometricSetUpFragment::class.qualifiedName!!),
             R.id.fl_container
         )
     }

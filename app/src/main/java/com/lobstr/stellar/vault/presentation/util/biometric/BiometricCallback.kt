@@ -1,28 +1,25 @@
 package com.lobstr.stellar.vault.presentation.util.biometric
 
-interface BiometricCallback {
+import androidx.biometric.BiometricPrompt
 
-    fun onSdkVersionNotSupported()
+class BiometricCallback(private val biometricListener: BiometricListener) :
+    BiometricPrompt.AuthenticationCallback() {
 
-    fun onBiometricAuthenticationNotSupported()
+    override fun onAuthenticationError(errorCode: Int, errString: CharSequence) {
+        super.onAuthenticationError(errorCode, errString)
 
-    fun onBiometricAuthenticationNotAvailable()
+        biometricListener.onAuthenticationError(errorCode, errString)
+    }
 
-//    fun onBiometricAuthenticationAvailable()
+    override fun onAuthenticationSucceeded(result: BiometricPrompt.AuthenticationResult) {
+        super.onAuthenticationSucceeded(result)
 
-//    fun onBiometricSupported()
+        biometricListener.onAuthenticationSuccessful()
+    }
 
-    fun onBiometricAuthenticationPermissionNotGranted()
+    override fun onAuthenticationFailed() {
+        super.onAuthenticationFailed()
 
-    fun onBiometricAuthenticationInternalError(error: String?)
-
-    fun onAuthenticationFailed()
-
-    fun onAuthenticationCancelled()
-
-    fun onAuthenticationSuccessful()
-
-    fun onAuthenticationHelp(helpCode: Int, helpString: CharSequence?)
-
-    fun onAuthenticationError(errorCode: Int, errString: CharSequence?)
+        biometricListener.onAuthenticationFailed()
+    }
 }

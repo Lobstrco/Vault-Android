@@ -7,58 +7,75 @@
         android:orientation="vertical"
         tools:context=".presentation.home.dashboard.DashboardFragment">
 
-    <LinearLayout
+    <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="2"
-            android:background="@color/color_primary"
-            android:gravity="center_horizontal"
-            android:orientation="vertical">
+            android:fillViewport="true"
+            android:overScrollMode="never">
 
-        <ProgressBar
-                android:id="@+id/pbDashboardTransactions"
-                android:layout_width="wrap_content"
+        <FrameLayout
+                android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:paddingBottom="35dp"
-                android:theme="@style/ProgressBarWhite" />
+                android:background="@color/color_primary">
 
-        <TextView
-                android:id="@+id/tvDashboardTransactionCount"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="-25dp"
-                android:layout_marginBottom="-25dp"
-                android:gravity="center"
-                android:text="0"
-                android:textColor="@android:color/white"
-                android:textSize="80sp"
-                android:textStyle="bold" />
+            <LinearLayout
+                    android:id="@+id/llDashboardTransactionToSignContainer"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal"
+                    android:orientation="vertical"
+                    android:visibility="gone"
+                    android:layout_gravity="center">
 
-        <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="15dp"
-                android:layout_marginBottom="15dp"
-                android:gravity="center"
-                android:text="@string/text_dashboard_transactions"
-                android:textColor="@android:color/white"
-                android:textSize="17sp"
-                android:textStyle="bold" />
+                <TextView
+                        android:id="@+id/tvDashboardTransactionCount"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="-25dp"
+                        android:layout_marginBottom="-25dp"
+                        android:gravity="center"
+                        android:text="0"
+                        android:textColor="@android:color/white"
+                        android:textSize="80sp"
+                        android:textStyle="bold" />
 
-        <TextView
-                android:id="@+id/tvDashboardShowList"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/shape_dashboard_text_view"
-                android:gravity="center"
-                android:paddingLeft="16dp"
-                android:paddingTop="6dp"
-                android:paddingRight="16dp"
-                android:paddingBottom="6dp"
-                android:text="@string/text_dashboard_show_list"
-                android:textColor="@color/color_99ffffff"
-                android:textSize="13sp" />
-    </LinearLayout>
+                <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="15dp"
+                        android:layout_marginBottom="15dp"
+                        android:gravity="center"
+                        android:text="@string/text_dashboard_transactions"
+                        android:textColor="@android:color/white"
+                        android:textSize="17sp"
+                        android:textStyle="bold" />
+
+                <TextView
+                        android:id="@+id/tvDashboardShowList"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/shape_dashboard_text_view"
+                        android:gravity="center"
+                        android:paddingLeft="16dp"
+                        android:paddingTop="6dp"
+                        android:paddingRight="16dp"
+                        android:paddingBottom="6dp"
+                        android:text="@string/text_dashboard_show_list"
+                        android:textColor="@color/color_99ffffff"
+                        android:textSize="13sp" />
+            </LinearLayout>
+
+            <ProgressBar
+                    android:id="@+id/pbDashboardTransactions"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:paddingBottom="35dp"
+                    android:theme="@style/ProgressBarWhite" />
+
+        </FrameLayout>
+    </androidx.core.widget.NestedScrollView>
 
     <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
@@ -156,16 +173,16 @@
                     <FrameLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:focusableInTouchMode="true"
                             android:paddingTop="16dp"
-                            android:paddingBottom="16dp"
-                            android:focusableInTouchMode="true">
+                            android:paddingBottom="16dp">
 
                         <LinearLayout
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
+                                android:focusableInTouchMode="true"
                                 android:gravity="center"
-                                android:orientation="vertical"
-                                android:focusableInTouchMode="true">
+                                android:orientation="vertical">
 
                             <TextView
                                     android:id="@+id/tvDashboardSignersCount"
@@ -200,12 +217,13 @@
                     android:layout_height="64dp"
                     android:layout_gravity="center|top"
                     android:background="@drawable/bg_identity_bold">
+
                 <ImageView
                         android:id="@+id/ivIdentity"
                         android:layout_width="40dp"
                         android:layout_height="40dp"
                         android:layout_gravity="center"
-                        tools:ignore="ContentDescription"/>
+                        tools:ignore="ContentDescription" />
             </FrameLayout>
         </FrameLayout>
     </androidx.core.widget.NestedScrollView>

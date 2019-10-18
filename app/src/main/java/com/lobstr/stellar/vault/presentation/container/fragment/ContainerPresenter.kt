@@ -4,9 +4,9 @@ import com.arellomobile.mvp.InjectViewState
 import com.arellomobile.mvp.MvpPresenter
 import com.lobstr.stellar.vault.presentation.entities.transaction.TransactionItem
 import com.lobstr.stellar.vault.presentation.util.Constant.Navigation.AUTH
+import com.lobstr.stellar.vault.presentation.util.Constant.Navigation.BIOMETRIC_SET_UP
 import com.lobstr.stellar.vault.presentation.util.Constant.Navigation.DASHBOARD
 import com.lobstr.stellar.vault.presentation.util.Constant.Navigation.ERROR
-import com.lobstr.stellar.vault.presentation.util.Constant.Navigation.FINGERPRINT_SET_UP
 import com.lobstr.stellar.vault.presentation.util.Constant.Navigation.IMPORT_XDR
 import com.lobstr.stellar.vault.presentation.util.Constant.Navigation.MNEMONICS
 import com.lobstr.stellar.vault.presentation.util.Constant.Navigation.SETTINGS
@@ -36,7 +36,7 @@ class ContainerPresenter(
 
             SIGNER_INFO -> viewState.showSignerInfoFr()
 
-            FINGERPRINT_SET_UP -> viewState.showFingerprintSetUpFr()
+            BIOMETRIC_SET_UP -> viewState.showBiometricSetUpFr()
 
             DASHBOARD -> viewState.showDashBoardFr()
 

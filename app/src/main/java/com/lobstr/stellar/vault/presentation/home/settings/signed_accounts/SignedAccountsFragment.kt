@@ -126,7 +126,7 @@ class SignedAccountsFragment : BaseFragment(), SignedAccountsView, SwipeRefreshL
     }
 
     override fun notifyAdapter(accounts: List<Account>) {
-        (rvSignedAccounts.adapter as AccountAdapter).setAccountList(accounts)
+        (rvSignedAccounts.adapter as? AccountAdapter)?.setAccountList(accounts)
 
         mPresenter.attemptRestoreRvPosition()
     }

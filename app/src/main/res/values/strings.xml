@@ -1,6 +1,4 @@
 <resources>
-    <!-- main -->
-    <!--<string name="app_name">LOBSTR Vault</string>-->
 
     <!-- toolbar titles-->
     <string name="title_toolbar_faq">Help</string>
@@ -15,11 +13,7 @@
 
     <!-- Buttons -->
     <string name="text_btn_cancel">Cancel</string>
-    <string name="text_btn_reset">Reset</string>
     <string name="text_btn_ok">OK</string>
-    <string name="text_btn_edit">Edit</string>
-    <string name="text_btn_add">Add</string>
-    <string name="text_btn_retry">Retry</string>
     <string name="text_btn_confirm">Confirm</string>
     <string name="text_btn_yes">Yes</string>
     <string name="text_btn_deny">Deny</string>
@@ -75,7 +69,7 @@
     <string name="text_tv_confirm_mnemonics_description">Tap the words in correct order.</string>
     <string name="text_btn_clear">Clear</string>
 
-    <!-- Fingerprint screen -->
+    <!-- Biometric screen -->
     <string name="text_tv_fingerprint_set_up_title">Protect your account</string>
     <string name="text_tv_fingerprint_set_up_description">Use fingerprint login instead of your PIN to access your
         account.
@@ -100,14 +94,12 @@
     <string name="text_title_confirm_new_pin">Confirm New PIN</string>
     <string name="text_title_enter_old_pin">Enter Old PIN</string>
     <string name="text_success_change_pin">PIN changed</string>
-    <string name="text_change_the_same_pin">"You can not use old PIN"</string>
 
     <!-- Dashboard screen -->
     <string name="text_dashboard_transactions">Transactions to Sign</string>
     <string name="text_dashboard_show_list">View Transactions List</string>
     <string name="text_title_dashboard_public_key">Vault Public Key</string>
     <string name="text_title_dashboard_signers">Signer For</string>
-    <string name="text_dashboard_accounts">accounts</string>
 
     <!-- Transactions screen -->
     <string name="text_empty_state_transactions_list">Transactions not found</string>
@@ -123,7 +115,7 @@
     <string name="text_settings_signers">Signer for %d accounts</string>
     <string name="text_settings_mnemonic_code">Recovery Phrase</string>
     <string name="text_settings_change_pin">Change PIN</string>
-    <string name="text_settings_touch_id">Fingerprint Login</string>
+    <string name="text_settings_fingerprint_login">Fingerprint Login</string>
     <string name="text_tv_settings_notifications">Notifications</string>
     <string name="text_settings_version">Version</string>
     <string name="text_settings_help">Help</string>
@@ -142,7 +134,8 @@
     <!-- Stellar Operations -->
     <string name="text_operation_name_payment">Payment</string>
     <string name="text_operation_name_create_account">Create Account</string>
-    <string name="text_operation_name_path_payment">Path Payment</string>
+    <string name="text_operation_name_path_payment_strict_send">Path Payment Strict Send</string>
+    <string name="text_operation_name_path_payment_strict_receive">Path Payment Strict Receive</string>
     <string name="text_operation_name_sell_offer">Sell Offer</string>
     <string name="text_operation_name_cancel_offer">Cancel Offer</string>
     <string name="text_operation_name_manage_buy_offer">Buy Offer</string>
@@ -169,7 +162,7 @@
     <string name="text_tv_import_xdr_subtitle">To submit transaction enter its XDR below</string>
     <string name="hint_et_import_xdr">Transaction XDR</string>
 
-    <!-- Finger print dialog -->
+    <!-- Biometric dialog -->
     <string name="title_finger_print_dialog">Fingerprint not set up</string>
     <string name="msg_finger_print_dialog">Please set up your fingerprint in the device settings first.</string>
 
@@ -204,29 +197,15 @@
     <string name="text_tv_show_public_key_title">Vault Public Key</string>
 
     <!--Biometric-->
-    <string name="biometric_failed">Fingerprint not recognized</string>
-    <string name="biometric_error_sdk_not_supported">Sdk version not supported</string>
-    <string name="biometric_error_hardware_not_supported">Device does not support biometric authentication</string>
-    <string name="biometric_error_fingerprint_not_available">Fingerprint is not registered in device</string>
     <string name="biometric_error_permission_not_granted">Permission is not granted by user</string>
-    <string name="biometric_failure">Login not successful!</string>
-    <string name="biometric_cancelled">Authentication cancelled by user</string>
-    <string name="biometric_success">Successful</string>
     <string name="biometric_title">Fingerprint Login</string>
     <string name="biometric_subtitle">Confirm fingerprint to continue.</string>
-    <string name="biometric_description">Touch the fingerprint sensor</string>
 
     <!-- Errors and other UI messages -->
     <string name="text_error_invalid_token">Invalid token.</string>
-    <string name="msg_field_required">Field required</string>
-    <string name="msg_invalid_number">Invalid number</string>
-    <string name="msg_confirmation_error">Don\'t match</string>
-    <string name="msg_unknown_error">Unknown error</string>
     <string name="msg_successfully_copied">"Successfully copied"</string>
-    <string name="msg_camera_permission_scan_explanation">Please, allow Camera permission to decode QR code</string>
     <string name="msg_not_all_words_entered">Not all the words entered</string>
     <string name="msg_phrase_dont_fit">Wrong order. Please try again.</string>
-    <string name="msg_success">Success</string>
     <string name="msg_bad_xdr">Invalid XDR</string>
     <string name="text_error_incorrect_mnemonic">Incorrect mnemonic phrases.</string>
     <string name="text_error_incorrect_pin">Incorrect PIN</string>
@@ -273,8 +252,6 @@
     <string name="channel_other">Other</string>
 
     <!-- Other -->
-    <string name="expandable_card_view_image_content_description">Arrow to expand card</string>
-    <string name="expandable_card_view_icon_content_description">Card icon</string>
     <string name="text_action_info">help</string>
     <string name="text_action_log_out">log out</string>
 

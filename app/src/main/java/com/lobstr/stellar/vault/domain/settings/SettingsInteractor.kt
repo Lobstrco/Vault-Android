@@ -11,13 +11,13 @@ interface SettingsInteractor {
 
     fun getSignersCount(): Int
 
-    fun isTouchIdEnabled(): Boolean
+    fun isBiometricEnabled(): Boolean
 
     fun isNotificationsEnabled(): Boolean
 
     fun isTrConfirmationEnabled(): Boolean
 
-    fun setTouchIdEnabled(enabled: Boolean)
+    fun setBiometricEnabled(enabled: Boolean)
 
     fun setNotificationsEnabled(enabled: Boolean)
 

@@ -13,7 +13,7 @@ interface ContainerView : MvpView {
 
     fun showSignerInfoFr()
 
-    fun showFingerprintSetUpFr()
+    fun showBiometricSetUpFr()
 
     fun showDashBoardFr()
 

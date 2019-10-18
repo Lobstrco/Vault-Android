@@ -79,7 +79,8 @@ class TransactionEntityMapper(private val network: Network) {
             when (it) {
                 is org.stellar.sdk.PaymentOperation -> operations.add(mapPaymentOperation(transaction.memo, it))
                 is org.stellar.sdk.CreateAccountOperation -> operations.add(mapCreateAccountOperation(it))
-                is org.stellar.sdk.PathPaymentOperation -> operations.add(mapPathPaymentOperation(it))
+                is org.stellar.sdk.PathPaymentStrictSendOperation -> operations.add(mapPathPaymentStrictSendOperation(it))
+                is org.stellar.sdk.PathPaymentStrictReceiveOperation -> operations.add(mapPathPaymentStrictReceiveOperation(it))
                 is org.stellar.sdk.ManageSellOfferOperation -> operations.add(mapManageSellOfferOperation(it))
                 is org.stellar.sdk.ManageBuyOfferOperation -> operations.add(mapManageBuyOfferOperation(it))
                 is org.stellar.sdk.CreatePassiveSellOfferOperation -> operations.add(
@@ -122,7 +123,7 @@ class TransactionEntityMapper(private val network: Network) {
         )
     }
 
-    private fun mapPathPaymentOperation(operation: org.stellar.sdk.PathPaymentOperation): PathPaymentOperation {
+    private fun mapPathPaymentStrictSendOperation(operation: org.stellar.sdk.PathPaymentStrictSendOperation): PathPaymentStrictSendOperation {
         val path: MutableList<Asset> = mutableListOf()
         if (operation.path.isNotEmpty()) {
             operation.path.forEach {
@@ -130,7 +131,26 @@ class TransactionEntityMapper(private val network: Network) {
             }
         }
 
-        return PathPaymentOperation(
+        return PathPaymentStrictSendOperation(
+            (operation as org.stellar.sdk.Operation).sourceAccount,
+            mapAsset(operation.sendAsset),
+            operation.sendAmount,
+            operation.destination,
+            mapAsset(operation.destAsset),
+            operation.destMin,
+            path
+        )
+    }
+
+    private fun mapPathPaymentStrictReceiveOperation(operation: org.stellar.sdk.PathPaymentStrictReceiveOperation): PathPaymentStrictReceiveOperation {
+        val path: MutableList<Asset> = mutableListOf()
+        if (operation.path.isNotEmpty()) {
+            operation.path.forEach {
+                path.add(mapAsset(it))
+            }
+        }
+
+        return PathPaymentStrictReceiveOperation(
             (operation as org.stellar.sdk.Operation).sourceAccount,
             mapAsset(operation.sendAsset),
             operation.sendMax,

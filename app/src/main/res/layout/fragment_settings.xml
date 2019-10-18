@@ -169,7 +169,7 @@
             </LinearLayout>
 
             <LinearLayout
-                    android:id="@+id/llSettingsTouchId"
+                    android:id="@+id/llBiometric"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
@@ -195,11 +195,11 @@
                             android:layout_weight="1"
                             android:textSize="16sp"
                             android:textColor="@android:color/black"
-                            android:text="@string/text_settings_touch_id"/>
+                            android:text="@string/text_settings_fingerprint_login"/>
 
                     <androidx.appcompat.widget.SwitchCompat
                             android:layout_weight="0"
-                            android:id="@+id/swSettingsTouchId"
+                            android:id="@+id/swSettingsBiometric"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"/>
                 </LinearLayout>

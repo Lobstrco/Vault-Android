@@ -5,49 +5,49 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Build
+import androidx.biometric.BiometricManager
 import androidx.core.app.ActivityCompat
-import androidx.core.hardware.fingerprint.FingerprintManagerCompat
 
 
 @SuppressLint("MissingPermission")
 object BiometricUtils {
 
 
-    val isBiometricPromptEnabled: Boolean
-        get() = Build.VERSION.SDK_INT >= Build.VERSION_CODES.P
-
     /*
      * Condition I: Check if the android version in device is greater than
-     * Marshmallow, since fingerprint authentication is only supported
+     * Marshmallow, since biometric authentication is only supported
      * from Android 6.0.
      * Note: If your project's minSdkversion is 23 or higher,
      * then you won't need to perform this check.
-     *
      * */
-    val isSdkVersionSupported: Boolean
+    private val isSdkVersionSupported: Boolean
         get() = Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
 
     /*
-     * Condition II: Check if the device has fingerprint sensors.
-     * Note: If you marked android.hardware.fingerprint as something that
-     * your app requires (android:required="true"), then you don't need
-     * to perform this check.
-     *
+     * Condition II: Check if the device has biometric sensors.
      * */
-    fun isHardwareSupported(context: Context): Boolean {
-        val fingerprintManager = FingerprintManagerCompat.from(context)
-        return fingerprintManager.isHardwareDetected
+    private fun isHardwareSupported(context: Context): Boolean {
+        return try {
+            BiometricManager.from(context).canAuthenticate() != BiometricManager.BIOMETRIC_ERROR_NO_HARDWARE
+        } catch (exc: SecurityException) {
+            exc.printStackTrace()
+            false
+        }
     }
 
     /*
-     * Condition III: Fingerprint authentication can be matched with a
-     * registered fingerprint of the user. So we need to perform this check
-     * in order to enable fingerprint authentication
+     * Condition III: Biometric authentication can be matched with a
+     * registered biometric of the user. So we need to perform this check
+     * in order to enable biometric authentication
      *
      * */
-    fun isFingerprintAvailable(context: Context): Boolean {
-        val fingerprintManager = FingerprintManagerCompat.from(context)
-        return fingerprintManager.hasEnrolledFingerprints()
+    fun isBiometricAvailable(context: Context): Boolean {
+        return try {
+            BiometricManager.from(context).canAuthenticate() != BiometricManager.BIOMETRIC_ERROR_NONE_ENROLLED
+        } catch (exc: SecurityException) {
+            exc.printStackTrace()
+            false
+        }
     }
 
     /*
@@ -64,6 +64,11 @@ object BiometricUtils {
     }
 
     fun isBiometricSupported(context: Context): Boolean {
-        return isSdkVersionSupported && isHardwareSupported(context) && isPermissionGranted(context)
+        return try {
+            isSdkVersionSupported && isHardwareSupported(context) && isPermissionGranted(context)
+        } catch (exc: SecurityException) {
+            exc.printStackTrace()
+            false
+        }
     }
 }

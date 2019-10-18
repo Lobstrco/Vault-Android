@@ -117,7 +117,7 @@ class DashboardFragment : BaseFragment(), DashboardView, View.OnClickListener,
     }
 
     override fun notifySignedAccountsAdapter(accounts: List<Account>) {
-        (rvSignedAccounts.adapter as AccountAdapter).setAccountList(accounts)
+        (rvSignedAccounts.adapter as? AccountAdapter)?.setAccountList(accounts)
     }
 
     override fun onAccountItemClick(account: Account) {
@@ -152,24 +152,26 @@ class DashboardFragment : BaseFragment(), DashboardView, View.OnClickListener,
         val startPosition = message.indexOf(count.toString())
         val endPosition = startPosition + count.toString().length
 
-        spannedText.setSpan(
-            ForegroundColorSpan(ContextCompat.getColor(this.context!!, R.color.color_primary)),
-            startPosition,
-            endPosition,
-            Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
-        )
-        spannedText.setSpan(
-            RelativeSizeSpan(1.5f),
-            startPosition,
-            endPosition,
-            Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
-        )
-        spannedText.setSpan(
-            StyleSpan(Typeface.BOLD),
-            startPosition,
-            endPosition,
-            Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
-        )
+        if (startPosition != Constant.Util.UNDEFINED_VALUE) {
+            spannedText.setSpan(
+                ForegroundColorSpan(ContextCompat.getColor(this.context!!, R.color.color_primary)),
+                startPosition,
+                endPosition,
+                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+            )
+            spannedText.setSpan(
+                RelativeSizeSpan(1.5f),
+                startPosition,
+                endPosition,
+                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+            )
+            spannedText.setSpan(
+                StyleSpan(Typeface.BOLD),
+                startPosition,
+                endPosition,
+                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+            )
+        }
 
         tvDashboardSignersCount.text = spannedText
 
@@ -179,6 +181,7 @@ class DashboardFragment : BaseFragment(), DashboardView, View.OnClickListener,
     override fun showDashboardInfo(count: Int) {
         tvDashboardTransactionCount.text = count.toString()
         pbDashboardTransactions.visibility = View.GONE
+        llDashboardTransactionToSignContainer.visibility = View.VISIBLE
     }
 
     override fun showSignersScreen() {

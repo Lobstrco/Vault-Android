@@ -25,7 +25,7 @@ interface PinView : MvpView {
     fun showVaultAuthScreen()
 
     @StateStrategyType(SkipStrategy::class)
-    fun showFingerprintSetUpScreen()
+    fun showBiometricSetUpScreen()
 
     @StateStrategyType(SkipStrategy::class)
     fun showErrorMessage(@StringRes message: Int)

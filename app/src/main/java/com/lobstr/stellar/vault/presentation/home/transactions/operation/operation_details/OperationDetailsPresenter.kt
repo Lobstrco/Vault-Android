@@ -30,7 +30,8 @@ class OperationDetailsPresenter(private val mTransactionItem: TransactionItem, p
         when (operation) {
             is PaymentOperation -> viewState.initRecycledView(operation.getFieldsMap())
             is CreateAccountOperation -> viewState.initRecycledView(operation.getFieldsMap())
-            is PathPaymentOperation -> viewState.initRecycledView(operation.getFieldsMap())
+            is PathPaymentStrictSendOperation -> viewState.initRecycledView(operation.getFieldsMap())
+            is PathPaymentStrictReceiveOperation -> viewState.initRecycledView(operation.getFieldsMap())
             is SellOfferOperation -> viewState.initRecycledView(operation.getFieldsMap())
             is CancelSellOfferOperation -> viewState.initRecycledView(operation.getFieldsMap())
             is ManageBuyOfferOperation -> viewState.initRecycledView(operation.getFieldsMap())

@@ -145,7 +145,8 @@ object AppUtil {
         return when (operation) {
             is PaymentOperation -> R.string.text_operation_name_payment
             is CreateAccountOperation -> R.string.text_operation_name_create_account
-            is PathPaymentOperation -> R.string.text_operation_name_path_payment
+            is PathPaymentStrictSendOperation -> R.string.text_operation_name_path_payment_strict_send
+            is PathPaymentStrictReceiveOperation -> R.string.text_operation_name_path_payment_strict_receive
             is SellOfferOperation -> R.string.text_operation_name_sell_offer
             is CancelSellOfferOperation -> R.string.text_operation_name_cancel_offer
             is ManageBuyOfferOperation -> R.string.text_operation_name_manage_buy_offer

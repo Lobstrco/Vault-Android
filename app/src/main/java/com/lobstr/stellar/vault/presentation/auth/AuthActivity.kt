@@ -73,9 +73,9 @@ class AuthActivity : BaseActivity(), AuthView {
         )
     }
 
-    override fun showFingerprintSetUpFragment() {
+    override fun showBiometricSetUpFragment() {
         val bundle = Bundle()
-        bundle.putInt(Constant.Bundle.BUNDLE_NAVIGATION_FR, Constant.Navigation.FINGERPRINT_SET_UP)
+        bundle.putInt(Constant.Bundle.BUNDLE_NAVIGATION_FR, Constant.Navigation.BIOMETRIC_SET_UP)
         val fragment = supportFragmentManager.fragmentFactory.instantiate(this.classLoader, ContainerFragment::class.qualifiedName!!)
         fragment.arguments = bundle
 

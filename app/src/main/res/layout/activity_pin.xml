@@ -1,83 +1,91 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
+
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
-        android:id="@+id/llPinContainer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@android:color/white"
-        android:orientation="vertical"
-        android:paddingLeft="16dp"
-        android:paddingRight="16dp"
-        tools:context=".presentation.pin.PinActivity">
+        android:fillViewport="true"
+        android:scrollbars="vertical"
+        android:overScrollMode="never">
 
-    <TextView
-            android:id="@+id/tvPinTitle"
+    <LinearLayout
+            android:id="@+id/llPinContainer"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:textAppearance="?android:textAppearanceLarge"
-            android:textStyle="bold"
-            android:paddingBottom="5dp"
-            android:layout_marginTop="60dp"
-            android:textColor="@android:color/black"
-            android:text="@string/text_title_create_pin"/>
-
-    <ImageView
-            android:id="@+id/ivPinLogo"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_app_logo"
-            android:paddingTop="100dp"
-            tools:ignore="ContentDescription"/>
-
-    <com.andrognito.pinlockview.IndicatorDots
-            android:id="@+id/indicatorDotsWhite"
-            android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:visibility="gone"
-            app:dotDiameter="15dp"
-            app:dotEmptyBackground="@drawable/shape_dot_indicator_empty_white"
-            app:dotFilledBackground="@drawable/shape_dot_indicator_filled_white"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="26dp"/>
+            android:background="@android:color/white"
+            android:orientation="vertical"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            tools:context=".presentation.pin.PinActivity">
 
-    <com.andrognito.pinlockview.IndicatorDots
-            android:id="@+id/indicatorDots"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:gravity="center"
-            app:dotDiameter="15dp"
-            app:dotEmptyBackground="@drawable/shape_dot_indicator_empty"
-            app:dotFilledBackground="@drawable/shape_dot_indicator_filled"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="26dp"/>
+        <TextView
+                android:id="@+id/tvPinTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="60dp"
+                android:gravity="center"
+                android:paddingBottom="5dp"
+                android:text="@string/text_title_create_pin"
+                android:textAppearance="?android:textAppearanceLarge"
+                android:textColor="@android:color/black"
+                android:textStyle="bold" />
 
-    <com.andrognito.pinlockview.PinLockView
-            android:id="@+id/pinLockView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:layout_weight="0"
-            android:layout_gravity="center_horizontal"
-            app:keypadButtonSize="72dp"
-            app:keypadShowDeleteButton="true"
-            app:keypadTextColor="@android:color/black"
-            app:keypadTextSize="18dp"/>
+        <ImageView
+                android:id="@+id/ivPinLogo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="100dp"
+                android:src="@drawable/ic_app_logo"
+                tools:ignore="ContentDescription" />
 
-    <TextView
-            android:id="@+id/tvPinLogOut"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
-            android:gravity="center"
-            android:textStyle="bold"
-            android:layout_weight="0"
-            android:textColor="@android:color/white"
-            android:text="@string/text_settings_log_out"
-            android:textAppearance="?android:textAppearanceMedium"/>
-</LinearLayout>
+        <com.andrognito.pinlockview.IndicatorDots
+                android:id="@+id/indicatorDotsWhite"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="26dp"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:visibility="gone"
+                app:dotDiameter="15dp"
+                app:dotEmptyBackground="@drawable/shape_dot_indicator_empty_white"
+                app:dotFilledBackground="@drawable/shape_dot_indicator_filled_white" />
+
+        <com.andrognito.pinlockview.IndicatorDots
+                android:id="@+id/indicatorDots"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="26dp"
+                android:layout_weight="1"
+                android:gravity="center"
+                app:dotDiameter="15dp"
+                app:dotEmptyBackground="@drawable/shape_dot_indicator_empty"
+                app:dotFilledBackground="@drawable/shape_dot_indicator_filled" />
+
+        <com.andrognito.pinlockview.PinLockView
+                android:id="@+id/pinLockView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="16dp"
+                android:layout_weight="0"
+                app:keypadButtonSize="72dp"
+                app:keypadShowDeleteButton="true"
+                app:keypadTextColor="@android:color/black"
+                app:keypadTextSize="18dp" />
+
+        <TextView
+                android:id="@+id/tvPinLogOut"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:layout_weight="0"
+                android:gravity="center"
+                android:text="@string/text_settings_log_out"
+                android:textAppearance="?android:textAppearanceMedium"
+                android:textColor="@android:color/white"
+                android:textStyle="bold" />
+    </LinearLayout>
+</androidx.core.widget.NestedScrollView>

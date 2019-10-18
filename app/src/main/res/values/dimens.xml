@@ -1,16 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- biometric -->
-    <dimen name="margin_xxsmall">3dp</dimen>
-    <dimen name="margin_xsmall">5dp</dimen>
-    <dimen name="margin_small">8dp</dimen>
-    <dimen name="margin">10dp</dimen>
-    <dimen name="margin_medium">12dp</dimen>
-    <dimen name="margin_large">15dp</dimen>
-    <dimen name="margin_xlarge">18dp</dimen>
-    <dimen name="margin_xxlarge">22dp</dimen>
-    <dimen name="padding_large">14dp</dimen>
-
     <!-- expandable card view -->
     <dimen name="default_card_height">60dp</dimen>
     <dimen name="default_vertical_padding">12dp</dimen>

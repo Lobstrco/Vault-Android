@@ -48,7 +48,7 @@ interface SettingsView : MvpView {
     fun showHelpScreen()
 
     @StateStrategyType(AddToEndSingleStrategy::class)
-    fun setTouchIdChecked(checked: Boolean)
+    fun setBiometricChecked(checked: Boolean)
 
     @StateStrategyType(SkipStrategy::class)
     fun setNotificationsChecked(checked: Boolean)
@@ -57,7 +57,7 @@ interface SettingsView : MvpView {
     fun setTrConfirmationChecked(checked: Boolean)
 
     @StateStrategyType(SkipStrategy::class)
-    fun showFingerprintInfoDialog(@StringRes titleRes: Int, @StringRes messageRes: Int)
+    fun showBiometricInfoDialog(@StringRes titleRes: Int, @StringRes messageRes: Int)
 
     @StateStrategyType(SkipStrategy::class)
     fun showLicenseScreen()

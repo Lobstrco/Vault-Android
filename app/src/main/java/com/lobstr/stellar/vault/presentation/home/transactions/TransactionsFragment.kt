@@ -166,7 +166,7 @@ class TransactionsFragment : BaseFragment(), TransactionsView, SwipeRefreshLayou
         items: MutableList<TransactionItem>,
         needShowProgress: Boolean
     ) {
-        (rvTransactions.adapter as TransactionAdapter).setTransactionList(items, needShowProgress)
+        (rvTransactions.adapter as? TransactionAdapter)?.setTransactionList(items, needShowProgress)
         mPresenter.attemptRestoreRvPosition()
     }
 

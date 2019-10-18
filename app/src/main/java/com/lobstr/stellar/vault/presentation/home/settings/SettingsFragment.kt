@@ -23,7 +23,7 @@ import com.lobstr.stellar.vault.presentation.auth.AuthActivity
 import com.lobstr.stellar.vault.presentation.base.fragment.BaseFragment
 import com.lobstr.stellar.vault.presentation.container.activity.ContainerActivity
 import com.lobstr.stellar.vault.presentation.dialog.alert.base.AlertDialogFragment
-import com.lobstr.stellar.vault.presentation.dialog.alert.base.AlertDialogFragment.DialogFragmentIdentifier.FINGERPRINT_INFO_DIALOG
+import com.lobstr.stellar.vault.presentation.dialog.alert.base.AlertDialogFragment.DialogFragmentIdentifier.BIOMETRIC_INFO_DIALOG
 import com.lobstr.stellar.vault.presentation.dialog.alert.base.AlertDialogFragment.DialogFragmentIdentifier.PUBLIC_KEY
 import com.lobstr.stellar.vault.presentation.faq.FaqFragment
 import com.lobstr.stellar.vault.presentation.fcm.NotificationsManager
@@ -102,7 +102,7 @@ class SettingsFragment : BaseFragment(), SettingsView, View.OnClickListener,
         llSettingsMnemonics.setOnClickListener(this)
         llSettingsChangePin.setOnClickListener(this)
         llSettingsHelp.setOnClickListener(this)
-        swSettingsTouchId.setOnCheckedChangeListener(this)
+        swSettingsBiometric.setOnCheckedChangeListener(this)
         swSettingsNotifications.setOnCheckedChangeListener(this)
         swSettingsTrConfirmation.setOnCheckedChangeListener(this)
         llSettingsLicense.setOnClickListener(this)
@@ -134,7 +134,7 @@ class SettingsFragment : BaseFragment(), SettingsView, View.OnClickListener,
 
     override fun onCheckedChanged(buttonView: CompoundButton?, isChecked: Boolean) {
         when (buttonView!!.id) {
-            R.id.swSettingsTouchId -> mPresenter.touchIdSwitched(isChecked)
+            R.id.swSettingsBiometric -> mPresenter.biometricSwitched(isChecked)
             R.id.swSettingsNotifications -> mPresenter.notificationsSwitched(isChecked)
             R.id.swSettingsTrConfirmation -> mPresenter.trConfirmationSwitched(isChecked)
         }
@@ -148,7 +148,7 @@ class SettingsFragment : BaseFragment(), SettingsView, View.OnClickListener,
         buildVersion: String,
         isBiometricSupported: Boolean
     ) {
-        llSettingsTouchId.visibility = if (isBiometricSupported) View.VISIBLE else View.GONE
+        llBiometric.visibility = if (isBiometricSupported) View.VISIBLE else View.GONE
         tvSettingsVersion.text = buildVersion
     }
 
@@ -161,24 +161,26 @@ class SettingsFragment : BaseFragment(), SettingsView, View.OnClickListener,
         val startPosition = message.indexOf(signersCount.toString())
         val endPosition = startPosition + signersCount.toString().length
 
-        spannedText.setSpan(
-            ForegroundColorSpan(ContextCompat.getColor(this.context!!, R.color.color_primary)),
-            startPosition,
-            endPosition,
-            Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
-        )
-        spannedText.setSpan(
-            RelativeSizeSpan(1.2f),
-            startPosition,
-            endPosition,
-            Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
-        )
-        spannedText.setSpan(
-            StyleSpan(Typeface.BOLD),
-            startPosition,
-            endPosition,
-            Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
-        )
+        if (startPosition != Constant.Util.UNDEFINED_VALUE) {
+            spannedText.setSpan(
+                ForegroundColorSpan(ContextCompat.getColor(this.context!!, R.color.color_primary)),
+                startPosition,
+                endPosition,
+                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+            )
+            spannedText.setSpan(
+                RelativeSizeSpan(1.2f),
+                startPosition,
+                endPosition,
+                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+            )
+            spannedText.setSpan(
+                StyleSpan(Typeface.BOLD),
+                startPosition,
+                endPosition,
+                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+            )
+        }
 
         tvSettingsSigners.text = spannedText
     }
@@ -244,10 +246,10 @@ class SettingsFragment : BaseFragment(), SettingsView, View.OnClickListener,
         )
     }
 
-    override fun setTouchIdChecked(checked: Boolean) {
-        swSettingsTouchId.setOnCheckedChangeListener(null)
-        swSettingsTouchId.isChecked = checked
-        swSettingsTouchId.setOnCheckedChangeListener(this)
+    override fun setBiometricChecked(checked: Boolean) {
+        swSettingsBiometric.setOnCheckedChangeListener(null)
+        swSettingsBiometric.isChecked = checked
+        swSettingsBiometric.setOnCheckedChangeListener(this)
     }
 
     override fun setNotificationsChecked(checked: Boolean) {
@@ -262,14 +264,14 @@ class SettingsFragment : BaseFragment(), SettingsView, View.OnClickListener,
         swSettingsTrConfirmation.setOnCheckedChangeListener(this)
     }
 
-    override fun showFingerprintInfoDialog(titleRes: Int, messageRes: Int) {
+    override fun showBiometricInfoDialog(titleRes: Int, messageRes: Int) {
         AlertDialogFragment.Builder(true)
             .setCancelable(true)
             .setTitle(titleRes)
             .setMessage(messageRes)
             .setPositiveBtnText(R.string.text_btn_ok)
             .create()
-            .show(childFragmentManager, FINGERPRINT_INFO_DIALOG)
+            .show(childFragmentManager, BIOMETRIC_INFO_DIALOG)
     }
 
     override fun showLicenseScreen() {

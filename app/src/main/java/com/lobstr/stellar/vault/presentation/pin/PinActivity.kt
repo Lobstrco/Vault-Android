@@ -18,14 +18,14 @@ import com.lobstr.stellar.vault.presentation.dialog.alert.base.AlertDialogFragme
 import com.lobstr.stellar.vault.presentation.fcm.NotificationsManager
 import com.lobstr.stellar.vault.presentation.home.HomeActivity
 import com.lobstr.stellar.vault.presentation.util.Constant
-import com.lobstr.stellar.vault.presentation.util.biometric.BiometricCallback
+import com.lobstr.stellar.vault.presentation.util.biometric.BiometricListener
 import com.lobstr.stellar.vault.presentation.util.biometric.BiometricManager
 import com.lobstr.stellar.vault.presentation.util.manager.ProgressManager
 import com.lobstr.stellar.vault.presentation.vault_auth.VaultAuthActivity
 import kotlinx.android.synthetic.main.activity_pin.*
 
 class PinActivity : BaseMvpAppCompatActivity(), PinView, PinLockListener,
-    BiometricCallback, View.OnClickListener, AlertDialogFragment.OnDefaultAlertDialogListener {
+    BiometricListener, View.OnClickListener, AlertDialogFragment.OnDefaultAlertDialogListener {
 
     // ===========================================================
     // Constants
@@ -134,9 +134,9 @@ class PinActivity : BaseMvpAppCompatActivity(), PinView, PinLockListener,
         startActivity(intent)
     }
 
-    override fun showFingerprintSetUpScreen() {
+    override fun showBiometricSetUpScreen() {
         val intent = Intent(this, AuthActivity::class.java)
-        intent.putExtra(Constant.Extra.EXTRA_NAVIGATION_FR, Constant.Navigation.FINGERPRINT_SET_UP)
+        intent.putExtra(Constant.Extra.EXTRA_NAVIGATION_FR, Constant.Navigation.BIOMETRIC_SET_UP)
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         startActivity(intent)
     }
@@ -220,38 +220,16 @@ class PinActivity : BaseMvpAppCompatActivity(), PinView, PinLockListener,
     // Biometric
 
     override fun showBiometricDialog(show: Boolean) {
-        mBiometricManager?.dismissDialog()
+        mBiometricManager?.cancelAuthentication()
 
         if (show) {
-            mBiometricManager = BiometricManager.BiometricBuilder(this)
+            mBiometricManager = BiometricManager.BiometricBuilder(this, this)
                 .setTitle(getString(R.string.biometric_title))
                 .setSubtitle(getString(R.string.biometric_subtitle))
-                .setDescription(getString(R.string.biometric_description))
                 .setNegativeButtonText(getString(R.string.text_btn_cancel).toUpperCase())
                 .build()
             mBiometricManager?.authenticate(this)
         }
-    }
-
-    override fun onSdkVersionNotSupported() {
-        Toast.makeText(applicationContext, getString(R.string.biometric_error_sdk_not_supported), Toast.LENGTH_LONG)
-            .show()
-    }
-
-    override fun onBiometricAuthenticationNotSupported() {
-        Toast.makeText(
-            applicationContext,
-            getString(R.string.biometric_error_hardware_not_supported),
-            Toast.LENGTH_LONG
-        ).show()
-    }
-
-    override fun onBiometricAuthenticationNotAvailable() {
-        Toast.makeText(
-            applicationContext,
-            getString(R.string.biometric_error_fingerprint_not_available),
-            Toast.LENGTH_LONG
-        ).show()
     }
 
     override fun onBiometricAuthenticationPermissionNotGranted() {
@@ -270,16 +248,8 @@ class PinActivity : BaseMvpAppCompatActivity(), PinView, PinLockListener,
         // Toast.makeText(applicationContext, getString(R.string.biometric_failure), Toast.LENGTH_LONG).show();
     }
 
-    override fun onAuthenticationCancelled() {
-        // Toast.makeText(applicationContext, getString(R.string.biometric_cancelled), Toast.LENGTH_LONG).show()
-    }
-
     override fun onAuthenticationSuccessful() {
         mPresenter.biometricAuthenticationSuccessful()
-    }
-
-    override fun onAuthenticationHelp(helpCode: Int, helpString: CharSequence?) {
-        // Toast.makeText(applicationContext, helpString, Toast.LENGTH_LONG).show();
     }
 
     override fun onAuthenticationError(errorCode: Int, errString: CharSequence?) {

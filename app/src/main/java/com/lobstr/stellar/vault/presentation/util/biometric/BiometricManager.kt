@@ -1,19 +1,29 @@
 package com.lobstr.stellar.vault.presentation.util.biometric
 
-import android.annotation.TargetApi
 import android.content.Context
-import android.content.DialogInterface
-import android.hardware.biometrics.BiometricPrompt
-import android.os.Build
-import android.os.CancellationSignal
+import android.util.Log
+import androidx.biometric.BiometricPrompt
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
+import com.google.android.gms.tasks.TaskExecutors.MAIN_THREAD
+import java.util.concurrent.Executor
 
 /**
  * https://github.com/anitaa1990/Biometric-Auth-Sample
  */
-open class BiometricManager protected constructor(biometricBuilder: BiometricBuilder) :
-    BiometricManagerV23() {
+open class BiometricManager protected constructor(biometricBuilder: BiometricBuilder) {
 
-    private var cancellationSignal: CancellationSignal? = null
+    companion object {
+        val LOG_TAG = BiometricManager::class.simpleName
+    }
+
+    private var context: Context
+    private var title: String?
+    private var subtitle: String?
+    private var description: String?
+    private var negativeButtonText: String?
+
+    private var biometricPrompt: BiometricPrompt?
 
     init {
         this.context = biometricBuilder.context
@@ -21,137 +31,111 @@ open class BiometricManager protected constructor(biometricBuilder: BiometricBui
         this.subtitle = biometricBuilder.subtitle
         this.description = biometricBuilder.description
         this.negativeButtonText = biometricBuilder.negativeButtonText
+
+        val fragment = biometricBuilder.biometricListener as? Fragment
+        val activity = biometricBuilder.biometricListener as? FragmentActivity
+
+        biometricPrompt = when {
+            fragment != null -> BiometricPrompt(
+                fragment,
+                biometricBuilder.executor,
+                BiometricCallback(biometricBuilder.biometricListener)
+            )
+            activity != null -> BiometricPrompt(
+                activity,
+                biometricBuilder.executor,
+                BiometricCallback(biometricBuilder.biometricListener)
+            )
+            else -> null
+        }
     }
 
-    fun isDialogShowing(): Boolean {
-        return biometricDialogV23?.isShowing ?: false
+    fun cancelAuthentication() {
+        biometricPrompt?.cancelAuthentication()
     }
 
-    fun dismissDialog() {
-        biometricDialogV23?.dismiss()
-        cancelAuthentication()
-    }
-
-    private fun cancelAuthentication() {
-        cancellationSignal?.cancel()
-        cancellationSignalV23?.cancel()
-    }
-
-    fun authenticate(biometricCallback: BiometricCallback) {
-        if (title == null) {
-            biometricCallback.onBiometricAuthenticationInternalError("Biometric Dialog title cannot be null")
+    fun authenticate(biometricListener: BiometricListener) {
+        if (title.isNullOrEmpty()) {
+            Log.e(LOG_TAG, "Biometric Dialog title cannot be null")
+            biometricListener.onBiometricAuthenticationInternalError("Biometric Dialog title cannot be null")
             return
         }
 
-        if (subtitle == null) {
-            biometricCallback.onBiometricAuthenticationInternalError("Biometric Dialog subtitle cannot be null")
-        }
-
-        if (description == null) {
-            biometricCallback.onBiometricAuthenticationInternalError("Biometric Dialog description cannot be null")
-            return
-        }
-
-        if (negativeButtonText == null) {
-            biometricCallback.onBiometricAuthenticationInternalError("Biometric Dialog negative button text cannot be null")
-            return
-        }
-
-        checkNotSupporting(biometricCallback)
-
-        if (!BiometricUtils.isFingerprintAvailable(context)) {
-            biometricCallback.onBiometricAuthenticationNotAvailable()
-            return
-        }
-
-        cancellationSignal = CancellationSignal()
-        cancellationSignalV23 = androidx.core.os.CancellationSignal()
-
-        displayBiometricDialog(biometricCallback)
-    }
-
-//    fun checkSupporting(biometricCallback: BiometricCallback) {
-//        if (BiometricUtils.isBiometricSupported(context)) {
-//            biometricCallback.onBiometricSupported()
-//            return
-//        } else {
-//            checkNotSupporting(biometricCallback)
-//        }
-//    }
-
-    private fun checkNotSupporting(biometricCallback: BiometricCallback) {
-        if (!BiometricUtils.isSdkVersionSupported) {
-            biometricCallback.onSdkVersionNotSupported()
+        if (negativeButtonText.isNullOrEmpty()) {
+            Log.e(LOG_TAG, "Biometric Dialog negative button text cannot be null")
+            biometricListener.onBiometricAuthenticationInternalError("Biometric Dialog negative button text cannot be null")
             return
         }
 
         if (!BiometricUtils.isPermissionGranted(context)) {
-            biometricCallback.onBiometricAuthenticationPermissionNotGranted()
+            biometricListener.onBiometricAuthenticationPermissionNotGranted()
             return
         }
 
-        if (!BiometricUtils.isHardwareSupported(context)) {
-            biometricCallback.onBiometricAuthenticationNotSupported()
-            return
+        displayBiometricDialog()
+    }
+
+    private fun displayBiometricDialog() {
+        if (BiometricUtils.isBiometricSupported(context)) {
+            displayBiometricPrompt()
         }
     }
 
-    private fun displayBiometricDialog(biometricCallback: BiometricCallback) {
-        if (BiometricUtils.isBiometricPromptEnabled) {
-            displayBiometricPrompt(biometricCallback)
-        } else {
-            displayBiometricPromptV23(biometricCallback)
-        }
-    }
-
-    @TargetApi(Build.VERSION_CODES.P)
-    private fun displayBiometricPrompt(biometricCallback: BiometricCallback) {
-        BiometricPrompt.Builder(context)
-            .setTitle(title!!)
-            .setSubtitle(subtitle!!)
-            /*.setDescription(description!!)*/
-            .setNegativeButton(
-                negativeButtonText!!,
-                context.mainExecutor,
-                DialogInterface.OnClickListener { _, _ -> biometricCallback.onAuthenticationCancelled() })
-            .build()
-            .authenticate(
-                cancellationSignal!!, context.mainExecutor,
-                BiometricCallbackV28(biometricCallback)
+    private fun displayBiometricPrompt() {
+        try {
+            biometricPrompt?.authenticate(
+                BiometricPrompt.PromptInfo.Builder()
+                    .setTitle(title!!)
+                    .setSubtitle(subtitle)
+                    .setDescription(description)
+                    .setNegativeButtonText(negativeButtonText!!)
+                    .build()
             )
+        } catch (exc: Exception) {
+            // handle internal errors
+            exc.printStackTrace()
+        }
     }
 
-//    fun checkAvailability(biometricCallback: BiometricCallback) {
-//        if (BiometricUtils.isFingerprintAvailable(context)) {
-//            biometricCallback.onBiometricAuthenticationAvailable()
-//        } else {
-//            biometricCallback.onBiometricAuthenticationNotAvailable()
-//        }
-//    }
-
-    class BiometricBuilder(val context: Context) {
+    class BiometricBuilder(val context: Context, val biometricListener: BiometricListener) {
         var title: String? = null
         var subtitle: String? = null
         var description: String? = null
         var negativeButtonText: String? = null
+        var executor: Executor = MAIN_THREAD
 
+        /**
+         * required field
+         */
         fun setTitle(title: String): BiometricBuilder {
             this.title = title
             return this
         }
 
-        fun setSubtitle(subtitle: String): BiometricBuilder {
+        fun setSubtitle(subtitle: String?): BiometricBuilder {
             this.subtitle = subtitle
             return this
         }
 
-        fun setDescription(description: String): BiometricBuilder {
+        fun setDescription(description: String?): BiometricBuilder {
             this.description = description
             return this
         }
 
+        /**
+         * required field
+         */
         fun setNegativeButtonText(negativeButtonText: String): BiometricBuilder {
             this.negativeButtonText = negativeButtonText
+            return this
+        }
+
+        /**
+         * Set executor for handle biometric callback if needed
+         * By default - MAIN_THREAD
+         */
+        fun setExecutor(executor: Executor): BiometricBuilder {
+            this.executor = executor
             return this
         }
 

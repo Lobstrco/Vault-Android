@@ -29,7 +29,7 @@ class SettingsInteractorImpl(
         keyStoreRepository.clearAll()
     }
 
-    override fun isTouchIdEnabled(): Boolean {
+    override fun isBiometricEnabled(): Boolean {
         return prefsUtil.biometricState == ENABLED
     }
 
@@ -41,7 +41,7 @@ class SettingsInteractorImpl(
         return prefsUtil.isTrConfirmationEnabled
     }
 
-    override fun setTouchIdEnabled(enabled: Boolean) {
+    override fun setBiometricEnabled(enabled: Boolean) {
         prefsUtil.biometricState = if (enabled) ENABLED else DISABLED
     }
 

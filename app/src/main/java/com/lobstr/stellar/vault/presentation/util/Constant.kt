@@ -37,7 +37,7 @@ object Constant {
         const val TRANSACTION_DETAILS = 4
         const val MNEMONICS = 5
         const val OPERATION_DETAILS = 6
-        const val FINGERPRINT_SET_UP = 7
+        const val BIOMETRIC_SET_UP = 7
         const val SIGNER_INFO = 8
         const val SUCCESS = 9
         const val ERROR = 10
@@ -115,8 +115,8 @@ object Constant {
     }
 
     /**
-     * UNKNOWN - the user doesn't see Finger Print setup screen
-     * @see com.lobstr.stellar.vault.presentation.auth.touch_id.FingerprintSetUpFragment
+     * UNKNOWN - the user doesn't see Biometric setup screen
+     * @see com.lobstr.stellar.vault.presentation.auth.biometric.BiometricSetUpFragment
      */
     object BiometricState {
         const val UNKNOWN = 0

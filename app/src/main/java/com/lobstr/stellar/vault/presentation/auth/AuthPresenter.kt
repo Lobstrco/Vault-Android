@@ -24,7 +24,7 @@ class AuthPresenter(private val targetFr: Int) : MvpPresenter<AuthView>() {
         when (targetFr) {
             Constant.Navigation.AUTH -> viewState.showAuthFragment()
 
-            Constant.Navigation.FINGERPRINT_SET_UP -> viewState.showFingerprintSetUpFragment()
+            Constant.Navigation.BIOMETRIC_SET_UP -> viewState.showBiometricSetUpFragment()
         }
     }
 }

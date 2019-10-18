@@ -39,9 +39,9 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
             "${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE})",
             BiometricUtils.isBiometricSupported(LVApplication.appComponent.context)
         )
-        viewState.setTouchIdChecked(
-            interactor.isTouchIdEnabled()
-                    && BiometricUtils.isFingerprintAvailable(LVApplication.appComponent.context)
+        viewState.setBiometricChecked(
+            interactor.isBiometricEnabled()
+                    && BiometricUtils.isBiometricAvailable(LVApplication.appComponent.context)
         )
         viewState.setNotificationsChecked(interactor.isNotificationsEnabled())
         viewState.setTrConfirmationChecked(interactor.isTrConfirmationEnabled())
@@ -100,24 +100,24 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
         viewState.showHelpScreen()
     }
 
-    fun touchIdSwitched(checked: Boolean) {
+    fun biometricSwitched(checked: Boolean) {
         when {
             checked -> {
-                if (BiometricUtils.isFingerprintAvailable(LVApplication.appComponent.context)) {
+                if (BiometricUtils.isBiometricAvailable(LVApplication.appComponent.context)) {
                     // Add additional logic if needed
-                    interactor.setTouchIdEnabled(true)
-                    viewState.setTouchIdChecked(true)
+                    interactor.setBiometricEnabled(true)
+                    viewState.setBiometricChecked(true)
                 } else {
-                    interactor.setTouchIdEnabled(false)
-                    viewState.setTouchIdChecked(false)
-                    viewState.showFingerprintInfoDialog(
+                    interactor.setBiometricEnabled(false)
+                    viewState.setBiometricChecked(false)
+                    viewState.showBiometricInfoDialog(
                         R.string.title_finger_print_dialog,
                         R.string.msg_finger_print_dialog
                     )
                 }
             }
             else -> {
-                interactor.setTouchIdEnabled(false)
+                interactor.setBiometricEnabled(false)
             }
         }
     }

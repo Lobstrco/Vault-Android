@@ -5,7 +5,7 @@
               android:layout_height="match_parent"
               android:padding="16dp"
               android:orientation="vertical"
-              tools:context=".presentation.auth.touch_id.FingerprintSetUpFragment">
+              tools:context=".presentation.auth.biometric.BiometricSetUpFragment">
 
 
     <LinearLayout android:layout_width="match_parent"

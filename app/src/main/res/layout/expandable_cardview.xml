@@ -2,6 +2,7 @@
 <androidx.cardview.widget.CardView
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
         android:id="@+id/card_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -28,7 +29,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="15dp"
                     android:visibility="gone"
-                    android:contentDescription="@string/expandable_card_view_icon_content_description"/>
+                    tools:ignore="ContentDescription"/>
 
             <TextView
                     android:id="@+id/card_title"
@@ -50,7 +51,7 @@
                     android:layout_marginStart="10dp"
                     android:background="?selectableItemBackgroundBorderless"
                     android:src="@drawable/arrow_down"
-                    android:contentDescription="@string/expandable_card_view_image_content_description"/>
+                    tools:ignore="ContentDescription" />
 
         </LinearLayout>
 

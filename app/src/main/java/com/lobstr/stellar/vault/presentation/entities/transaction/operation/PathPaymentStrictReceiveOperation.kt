@@ -5,7 +5,7 @@ import com.lobstr.stellar.vault.presentation.entities.transaction.Asset
 import kotlinx.android.parcel.Parcelize
 
 @Parcelize
-data class PathPaymentOperation(
+data class PathPaymentStrictReceiveOperation(
     override val sourceAccount: String?,
     val sendAsset: Asset,
     val sendMax: String,

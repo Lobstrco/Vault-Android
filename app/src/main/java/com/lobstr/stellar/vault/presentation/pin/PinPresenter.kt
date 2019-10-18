@@ -69,9 +69,9 @@ class PinPresenter(
     override fun attachView(view: PinView?) {
         super.attachView(view)
 
-        // logic for show fingerprint
+        // logic for show biometric
         if (!needChangePin!! && !needCreatePin!! && interactor.isTouchIdEnabled() &&
-            BiometricUtils.isFingerprintAvailable(LVApplication.appComponent.context)
+            BiometricUtils.isBiometricAvailable(LVApplication.appComponent.context)
         ) {
             viewState.showBiometricDialog(true)
         }
@@ -213,7 +213,7 @@ class PinPresenter(
             interactor.accountHasSigners() -> viewState.showHomeScreen()
             else -> {
                 when {
-                    !interactor.isTouchIdSetUp() && BiometricUtils.isBiometricSupported(LVApplication.appComponent.context) -> viewState.showFingerprintSetUpScreen()
+                    !interactor.isTouchIdSetUp() && BiometricUtils.isBiometricSupported(LVApplication.appComponent.context) -> viewState.showBiometricSetUpScreen()
                     else -> viewState.showVaultAuthScreen()
                 }
             }
