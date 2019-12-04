@@ -195,7 +195,7 @@
                             android:layout_weight="1"
                             android:textSize="16sp"
                             android:textColor="@android:color/black"
-                            android:text="@string/text_settings_fingerprint_login"/>
+                            android:text="@string/text_settings_biometric_login"/>
 
                     <androidx.appcompat.widget.SwitchCompat
                             android:layout_weight="0"

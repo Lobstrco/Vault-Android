@@ -53,7 +53,7 @@ class TransactionViewHolder(itemView: View, private val listener: OnTransactionI
             if(DateFormat.is24HourFormat(context)) "MMM dd yyyy HH:mm" else "MMM dd yyyy h:mm a"
         )
 
-        itemView.tvSourceAccount.text = item.transaction.sourceAccount
+        itemView.tvSourceAccount.text = if(item.transaction.federation.isNullOrEmpty()) item.transaction.sourceAccount else item.transaction.federation
 
         itemView.tvTransactionItemOperation.text = getOperationName(item.transaction, context)
         itemView.setOnClickListener {

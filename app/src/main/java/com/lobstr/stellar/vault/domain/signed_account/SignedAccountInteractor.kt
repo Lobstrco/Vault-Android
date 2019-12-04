@@ -6,4 +6,6 @@ import io.reactivex.Single
 interface SignedAccountInteractor {
 
     fun getSignedAccounts(): Single<List<Account>>
+
+    fun getStellarAccount(stellarAddress: String): Single<Account>
 }

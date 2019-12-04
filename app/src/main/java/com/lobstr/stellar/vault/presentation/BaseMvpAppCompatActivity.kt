@@ -3,58 +3,49 @@ package com.lobstr.stellar.vault.presentation
 import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import com.arellomobile.mvp.MvpDelegate
+import moxy.MvpDelegate
+import moxy.MvpDelegateHolder
 
 @SuppressLint("Registered")
-open class BaseMvpAppCompatActivity : AppCompatActivity() {
+open class BaseMvpAppCompatActivity : AppCompatActivity(), MvpDelegateHolder {
 
     private var mMvpDelegate: MvpDelegate<out BaseMvpAppCompatActivity>? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        getMvpDelegate().onCreate(savedInstanceState)
+        mvpDelegate.onCreate(savedInstanceState)
     }
 
     override fun onStart() {
         super.onStart()
-
-        getMvpDelegate().onAttach()
+        mvpDelegate.onAttach()
     }
 
     override fun onResume() {
         super.onResume()
-
-        getMvpDelegate().onAttach()
+        mvpDelegate.onAttach()
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-
-        getMvpDelegate().onSaveInstanceState(outState)
-        getMvpDelegate().onDetach()
+        mvpDelegate.onSaveInstanceState(outState)
+        mvpDelegate.onDetach()
     }
 
     override fun onStop() {
         super.onStop()
-
-        getMvpDelegate().onDetach()
+        mvpDelegate.onDetach()
     }
 
     override fun onDestroy() {
         super.onDestroy()
-
-        getMvpDelegate().onDestroyView()
-
+        mvpDelegate.onDestroyView()
         if (isFinishing) {
-            getMvpDelegate().onDestroy()
+            mvpDelegate.onDestroy()
         }
     }
 
-    /**
-     * @return The [MvpDelegate] being used by this Activity.
-     */
-    fun getMvpDelegate(): MvpDelegate<*> {
+    override fun getMvpDelegate(): MvpDelegate<*> {
         if (mMvpDelegate == null) {
             mMvpDelegate = MvpDelegate<BaseMvpAppCompatActivity>(this)
         }

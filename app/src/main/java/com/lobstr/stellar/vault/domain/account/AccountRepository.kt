@@ -9,5 +9,7 @@ interface AccountRepository {
 
     fun updateAccountSigners(token: String, account: String): Completable
 
-    fun getSignedAccounts(token: String) : Single<List<Account>>
+    fun getSignedAccounts(token: String): Single<List<Account>>
+
+    fun getStellarAccount(accountId: String, type: String): Single<Account>
 }

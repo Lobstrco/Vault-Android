@@ -2,7 +2,6 @@ package com.lobstr.stellar.vault.presentation.home.settings
 
 import android.app.Activity
 import android.content.Intent
-import com.arellomobile.mvp.InjectViewState
 import com.lobstr.stellar.vault.BuildConfig
 import com.lobstr.stellar.vault.R
 import com.lobstr.stellar.vault.domain.settings.SettingsInteractor
@@ -13,9 +12,11 @@ import com.lobstr.stellar.vault.presentation.application.LVApplication
 import com.lobstr.stellar.vault.presentation.dagger.module.settings.SettingsModule
 import com.lobstr.stellar.vault.presentation.dialog.alert.base.AlertDialogFragment
 import com.lobstr.stellar.vault.presentation.util.Constant
+import com.lobstr.stellar.vault.presentation.util.Constant.Social.STORE_URL
 import com.lobstr.stellar.vault.presentation.util.biometric.BiometricUtils
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
+import moxy.InjectViewState
 import javax.inject.Inject
 
 @InjectViewState
@@ -67,7 +68,7 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
 
     override fun attachView(view: SettingsView?) {
         super.attachView(view)
-        // always check signers count
+        // Always check signers count.
         viewState.setupSignersCount(interactor.getSignersCount())
     }
 
@@ -111,8 +112,8 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
                     interactor.setBiometricEnabled(false)
                     viewState.setBiometricChecked(false)
                     viewState.showBiometricInfoDialog(
-                        R.string.title_finger_print_dialog,
-                        R.string.msg_finger_print_dialog
+                        R.string.title_biometric_not_set_up_dialog,
+                        R.string.msg_biometric_not_set_up_dialog
                     )
                 }
             }
@@ -139,7 +140,7 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
     }
 
     fun rateUsClicked() {
-        viewState.showStore(Constant.Social.STORE_URL)
+        viewState.showStore(STORE_URL.plus(BuildConfig.APPLICATION_ID))
     }
 
     fun onAlertDialogPositiveButtonClicked(tag: String?) {

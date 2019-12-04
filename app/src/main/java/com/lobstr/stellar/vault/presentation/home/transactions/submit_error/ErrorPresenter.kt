@@ -1,9 +1,9 @@
 package com.lobstr.stellar.vault.presentation.home.transactions.submit_error
 
-import com.arellomobile.mvp.InjectViewState
-import com.arellomobile.mvp.MvpPresenter
 import com.lobstr.stellar.vault.R
 import com.lobstr.stellar.vault.presentation.application.LVApplication
+import moxy.InjectViewState
+import moxy.MvpPresenter
 
 @InjectViewState
 class ErrorPresenter(private val error: String) : MvpPresenter<ErrorView>() {

@@ -3,8 +3,6 @@ package com.lobstr.stellar.vault.presentation.home.transactions.submit_error
 
 import android.os.Bundle
 import android.view.*
-import com.arellomobile.mvp.presenter.InjectPresenter
-import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.lobstr.stellar.vault.R
 import com.lobstr.stellar.vault.presentation.base.fragment.BaseFragment
 import com.lobstr.stellar.vault.presentation.faq.FaqFragment
@@ -12,6 +10,8 @@ import com.lobstr.stellar.vault.presentation.util.AppUtil
 import com.lobstr.stellar.vault.presentation.util.Constant
 import com.lobstr.stellar.vault.presentation.util.manager.FragmentTransactionManager
 import kotlinx.android.synthetic.main.fragment_error.*
+import moxy.presenter.InjectPresenter
+import moxy.presenter.ProvidePresenter
 
 class ErrorFragment : BaseFragment(), ErrorView, View.OnClickListener {
 

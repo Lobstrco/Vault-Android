@@ -132,7 +132,7 @@ class RxErrorUtilsImpl(
                 throw UserNotAuthorizedException("User Not Authorized")
             }
             .toCompletable()
-            .onErrorResumeNext { it: Throwable ->
+            .onErrorResumeNext {
                 handleCompletableRequestHttpError(
                     it,
                     Constant.ApiRequestTag.REFRESH_AUTH

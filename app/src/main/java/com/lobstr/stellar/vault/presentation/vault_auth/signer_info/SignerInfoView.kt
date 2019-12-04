@@ -1,12 +1,15 @@
 package com.lobstr.stellar.vault.presentation.vault_auth.signer_info
 
-import com.arellomobile.mvp.MvpView
-import com.arellomobile.mvp.viewstate.strategy.AddToEndSingleStrategy
-import com.arellomobile.mvp.viewstate.strategy.SkipStrategy
-import com.arellomobile.mvp.viewstate.strategy.StateStrategyType
+import moxy.MvpView
+import moxy.viewstate.strategy.AddToEndSingleStrategy
+import moxy.viewstate.strategy.SkipStrategy
+import moxy.viewstate.strategy.StateStrategyType
 
 
 interface SignerInfoView : MvpView {
+
+    @StateStrategyType(AddToEndSingleStrategy::class)
+    fun checkExistenceLobstrApp()
 
     @StateStrategyType(SkipStrategy::class)
     fun showRecheckSingerScreen()
@@ -19,4 +22,16 @@ interface SignerInfoView : MvpView {
 
     @StateStrategyType(SkipStrategy::class)
     fun showHelpScreen()
+
+    @StateStrategyType(SkipStrategy::class)
+    fun showPublicKeyDialog(publicKey: String)
+
+    @StateStrategyType(SkipStrategy::class)
+    fun downloadLobstrApp()
+
+    @StateStrategyType(SkipStrategy::class)
+    fun openLobstrMultisigSetupScreen()
+
+    @StateStrategyType(SkipStrategy::class)
+    fun openLobstrApp()
 }

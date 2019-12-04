@@ -8,5 +8,6 @@ import kotlinx.android.parcel.Parcelize
 data class Transaction(
     val sourceAccount: String?,
     val operations: List<Operation>,
-    var mSequenceNumber: Long = 0
+    var mSequenceNumber: Long = 0,
+    var federation: String? = null
 ) : Parcelable

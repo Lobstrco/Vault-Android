@@ -31,4 +31,6 @@ interface TransactionDetailsInteractor {
         xdr: String,
         sourceAccount: String
     ): Single<List<Account>>
+
+    fun getStellarAccount(stellarAddress: String): Single<Account>
 }

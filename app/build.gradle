@@ -14,8 +14,8 @@ android {
         applicationId "com.lobstr.stellar.vault"
         minSdkVersion 19
         targetSdkVersion 29
-        versionCode 14
-        versionName "1.2.0"
+        versionCode 15
+        versionName "1.3.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
     }
@@ -35,6 +35,11 @@ android {
     lintOptions {
         disable 'RestrictedApi'
         disable 'MissingTranslation'
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
 
     signingConfigs {
@@ -62,11 +67,17 @@ android {
             applicationId "com.lobstr.stellar.vault.qa"
             resValue "string", "app_name", "QA Vault"
             resValue "string", "authority", "public.shared.data.preference.qa"
+            ext {
+                apkName = [debug: "LOBSTR_Vault_qa_staging", release: "LOBSTR_Vault_qa_prod"]
+            }
         }
         vault {
             applicationId "com.lobstr.stellar.vault"
             resValue "string", "app_name", "LOBSTR Vault"
             resValue "string", "authority", "public.shared.data.preference"
+            ext {
+                apkName = [debug: "LOBSTR_Vault_staging", release: "LOBSTR_Vault_market"]
+            }
         }
     }
 
@@ -87,26 +98,41 @@ android {
             debuggable false
             buildConfigField "boolean", "isDEBUG", "false"
         }
+
+        applicationVariants.all { variant ->
+            variant.outputs.all { output ->
+                generateApkName(variant)
+            }
+        }
+    }
+}
+
+static def generateApkName(variant) {
+    variant.outputs.all { output ->
+        def date = new Date().format('dd.MM.yyyy')
+        def apkName = variant.productFlavors[0].ext.apkName[variant.buildType.name]
+        def fullApkName = apkName + "_" + variant.versionName + "(" + variant.versionCode + ")" + "_" + date + ".apk"
+        output.outputFileName = new File(output.outputFile.name, fullApkName)
     }
 }
 
 ext {
-    dagger = "2.24"
+    dagger = "2.25.2"
     rx_java = "2.2.4"
     rx_android = "2.1.0"
     rx_kotlin = "2.3.0"
     retrofit = "2.6.2"
     okhttp = '4.2.2'
-    moxy = "1.5.6"
+    moxy = "2.0.2"
     leakcanary = "1.5.4"
-    joda_time = "2.9.9"
-    circleimageview = "2.2.0"
+    joda_time = "2.10.5"
     glide = "4.10.0"
     flexbox = "1.1.0"
     pin = "2.1.0"
-    support = "28.0.0"
-    firebase_messaging = "20.0.0"
-    firebase_core = "17.2.0"
+    material = "1.0.0"
+    browser = "1.0.0"
+    firebase_messaging = '20.0.1'
+    firebase_core = '17.2.1'
     firebase_crashlytics = "2.10.1"
     javax_annotation = "10.0-b28"
     androidx_appcompat = "1.1.0"
@@ -116,10 +142,10 @@ ext {
     junit = "4.12"
     runner = "1.2.0"
     espresso_core = "3.2.0"
-    stellar_sdk = "0.10.0"
+    stellar_sdk = "0.11.0"
     work_manager = "2.2.0"
-    biometric = "1.0.0-rc01"
-    lottieVersion = '3.1.0'
+    biometric = '1.0.0'
+    lottieVersion = '3.3.0'
     qr_gen = "2.6.0"
 }
 
@@ -132,7 +158,7 @@ dependencies {
     androidTestImplementation "androidx.test.espresso:espresso-core:$espresso_core"
 
     // Stellar
-     implementation "com.github.stellar:java-stellar-sdk:$stellar_sdk"
+    implementation "com.github.stellar:java-stellar-sdk:$stellar_sdk"
 
     // Android
     implementation "androidx.appcompat:appcompat:$androidx_appcompat"
@@ -140,8 +166,8 @@ dependencies {
     implementation "androidx.legacy:legacy-support-v4:$androidx_legacy_support_v4"
     implementation "androidx.preference:preference-ktx:$androidx_preference"
     implementation "com.google.android:flexbox:$flexbox"
-    implementation "com.android.support:design:$support"
-    implementation "com.android.support:customtabs:$support"
+    implementation "com.google.android.material:material:$material"
+    implementation "androidx.browser:browser:$browser"
     implementation "androidx.work:work-runtime-ktx:$work_manager"
     implementation "androidx.biometric:biometric:$biometric"
 
@@ -162,8 +188,8 @@ dependencies {
     implementation "com.squareup.okhttp3:logging-interceptor:$okhttp"
 
     //Moxy
-    implementation "com.arello-mobile:moxy:$moxy"
-    kapt "com.arello-mobile:moxy-compiler:$moxy"
+    implementation "com.github.moxy-community:moxy:$moxy"
+    kapt "com.github.moxy-community:moxy-compiler:$moxy"
 
     //Leakcanary
     debugImplementation "com.squareup.leakcanary:leakcanary-android:$leakcanary"

@@ -127,7 +127,7 @@ class LVFirebaseMessagingService : FirebaseMessagingService() {
             Notification(Notification.Type.SIGNED_NEW_ACCOUNT, account)
         )
 
-        // TODO show by default Splash screen, otherwise - HomeActivity . Fix caused by security reasons (click notification on Pin Screen)
+        // TODO Show by default Splash screen, otherwise - HomeActivity . Fix caused by security reasons (click notification on Pin Screen).
         sendDefaultMessage(
             NotificationsManager.NotificationId.SIGNERS_COUNT_CHANGED,
             NotificationsManager.ChannelId.SIGNER_STATUS,
@@ -151,7 +151,7 @@ class LVFirebaseMessagingService : FirebaseMessagingService() {
             Notification(Notification.Type.REMOVED_SIGNER, account)
         )
 
-        // TODO show by default Splash screen, otherwise - HomeActivity . Fix caused by security reasons (click notification on Pin Screen)
+        // TODO Show by default Splash screen, otherwise - HomeActivity . Fix caused by security reasons (click notification on Pin Screen).
         sendDefaultMessage(
             NotificationsManager.NotificationId.SIGNERS_COUNT_CHANGED,
             NotificationsManager.ChannelId.SIGNER_STATUS,
@@ -184,7 +184,7 @@ class LVFirebaseMessagingService : FirebaseMessagingService() {
         intent.putExtra(Constant.Extra.EXTRA_NAVIGATION_FR, Constant.Navigation.TRANSACTION_DETAILS)
         intent.putExtra(Constant.Extra.EXTRA_TRANSACTION_ITEM, transaction)
 
-        // TODO show by default Splash screen, otherwise - send intent. Fix caused by security reasons (click notification on Pin Screen)
+        // TODO Show by default Splash screen, otherwise - send intent. Fix caused by security reasons (click notification on Pin Screen).
         notificationsManager.sendNotification(
             NotificationsManager.ChannelId.INCOMING_TRANSACTIONS,
             NotificationsManager.NotificationId.LV_MAIN,

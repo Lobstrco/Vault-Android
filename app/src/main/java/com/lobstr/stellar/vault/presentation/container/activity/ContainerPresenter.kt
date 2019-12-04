@@ -1,7 +1,5 @@
 package com.lobstr.stellar.vault.presentation.container.activity
 
-import com.arellomobile.mvp.InjectViewState
-import com.arellomobile.mvp.MvpPresenter
 import com.lobstr.stellar.vault.R
 import com.lobstr.stellar.vault.presentation.entities.transaction.TransactionItem
 import com.lobstr.stellar.vault.presentation.util.Constant.Navigation.DASHBOARD
@@ -13,6 +11,8 @@ import com.lobstr.stellar.vault.presentation.util.Constant.Navigation.SIGNED_ACC
 import com.lobstr.stellar.vault.presentation.util.Constant.Navigation.SUCCESS
 import com.lobstr.stellar.vault.presentation.util.Constant.Navigation.TRANSACTIONS
 import com.lobstr.stellar.vault.presentation.util.Constant.Navigation.TRANSACTION_DETAILS
+import moxy.InjectViewState
+import moxy.MvpPresenter
 
 @InjectViewState
 class ContainerPresenter(

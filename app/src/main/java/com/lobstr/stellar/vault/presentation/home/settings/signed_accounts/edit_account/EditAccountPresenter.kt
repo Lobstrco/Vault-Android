@@ -1,8 +1,8 @@
 package com.lobstr.stellar.vault.presentation.home.settings.signed_accounts.edit_account
 
-import com.arellomobile.mvp.InjectViewState
-import com.arellomobile.mvp.MvpPresenter
 import com.lobstr.stellar.vault.presentation.util.Constant
+import moxy.InjectViewState
+import moxy.MvpPresenter
 
 @InjectViewState
 class EditAccountPresenter(private val publicKey: String) : MvpPresenter<EditAccountView>() {

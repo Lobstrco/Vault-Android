@@ -1,6 +1,5 @@
 package com.lobstr.stellar.vault.presentation.home.settings.signed_accounts
 
-import com.arellomobile.mvp.InjectViewState
 import com.lobstr.stellar.vault.R
 import com.lobstr.stellar.vault.data.error.exeption.DefaultException
 import com.lobstr.stellar.vault.data.error.exeption.NoInternetConnectionException
@@ -14,8 +13,11 @@ import com.lobstr.stellar.vault.presentation.application.LVApplication
 import com.lobstr.stellar.vault.presentation.dagger.module.signed_account.SignedAccountModule
 import com.lobstr.stellar.vault.presentation.entities.account.Account
 import com.lobstr.stellar.vault.presentation.util.Constant
+import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
+import moxy.InjectViewState
 import javax.inject.Inject
 
 @InjectViewState
@@ -27,8 +29,11 @@ class SignedAccountsPresenter : BasePresenter<SignedAccountsView>() {
     @Inject
     lateinit var mInteractor: SignedAccountInteractor
 
-    // for restore RecycleView position after saveInstanceState (-1 - undefined state)
+    // For restore RecycleView position after saveInstanceState (-1 - undefined state).
     private var savedRvPosition: Int = Constant.Util.UNDEFINED_VALUE
+
+    private var stellarAccountsSubscription: Disposable? = null
+    private val cashedStellarAccounts: MutableList<Account> = mutableListOf()
 
     init {
         LVApplication.appComponent.plusSignedAccountComponent(SignedAccountModule()).inject(this)
@@ -53,8 +58,7 @@ class SignedAccountsPresenter : BasePresenter<SignedAccountsView>() {
                             if (needCheckConnectionState) {
                                 loadSignedAccountsList()
                             }
-                            needCheckConnectionState = false
-                            cancelNetworkWorker()
+                            cancelNetworkWorker(false)
                         }
                     }
                 }, {
@@ -91,7 +95,19 @@ class SignedAccountsPresenter : BasePresenter<SignedAccountsView>() {
                     } else {
                         viewState.hideEmptyState()
                     }
+
+                    // check cashed federation items
+                    it.forEachIndexed { index, accountItem ->
+                        val federation =
+                            cashedStellarAccounts.find { account -> account.address == accountItem.address }
+                                ?.federation
+                        it[index].federation = federation
+                    }
                     viewState.notifyAdapter(it)
+
+                    // try receive federations for accounts
+                    getStellarAccounts(it)
+
                     viewState.scrollListToPosition(0)
                 }, {
                     viewState.showEmptyState()
@@ -116,16 +132,60 @@ class SignedAccountsPresenter : BasePresenter<SignedAccountsView>() {
         )
     }
 
+    /**
+     * Used for receive federation by account id
+     */
+    private fun getStellarAccounts(accounts: List<Account>) {
+        stellarAccountsSubscription?.dispose()
+        stellarAccountsSubscription = Observable.fromIterable(accounts)
+            .subscribeOn(Schedulers.io())
+            .filter { account: Account ->
+                cashedStellarAccounts
+                    .find { cashedAccount -> cashedAccount.address == account.address } == null
+            }
+            .flatMapSingle {
+                mInteractor.getStellarAccount(it.address).onErrorReturnItem(it)
+            }
+            .filter { it.federation != null }
+            .toList()
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({
+                it.forEach { account ->
+                    if (cashedStellarAccounts.find { cashedAccount -> cashedAccount.address == account.address } == null) {
+                        cashedStellarAccounts.add(account)
+                    }
+                }
+
+                // check cashed federation items
+                accounts.forEachIndexed { index, accountItem ->
+                    val federation =
+                        cashedStellarAccounts.find { account -> account.address == accountItem.address }
+                            ?.federation
+                    accounts[index].federation = federation
+                }
+
+                viewState.notifyAdapter(accounts)
+            }, {
+                // ignore
+            })
+
+        unsubscribeOnDestroy(stellarAccountsSubscription!!)
+    }
+
     fun onRefreshCalled() {
         loadSignedAccountsList()
     }
 
-    fun onSignedAccountItemClicked(account: Account) {
+    fun signedAccountItemClicked(account: Account) {
         viewState.showEditAccountDialog(account.address)
     }
 
+    fun signedAccountItemLongClicked(account: Account) {
+        viewState.copyToClipBoard(account.address)
+    }
+
     fun onSaveInstanceState(position: Int) {
-        // save list position and restore it after if needed
+        // Save list position and restore it after if needed.
         savedRvPosition = position
     }
 

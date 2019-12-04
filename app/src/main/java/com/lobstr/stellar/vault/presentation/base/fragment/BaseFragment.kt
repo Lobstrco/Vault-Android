@@ -2,10 +2,10 @@ package com.lobstr.stellar.vault.presentation.base.fragment
 
 import android.content.Intent
 import android.os.Bundle
-import com.arellomobile.mvp.presenter.InjectPresenter
-import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.lobstr.stellar.vault.presentation.BaseMvpAppCompatFragment
 import com.lobstr.stellar.vault.presentation.base.activity.BaseActivity
+import moxy.presenter.InjectPresenter
+import moxy.presenter.ProvidePresenter
 
 
 abstract class BaseFragment : BaseMvpAppCompatFragment(), BaseFragmentView {
@@ -45,7 +45,7 @@ abstract class BaseFragment : BaseMvpAppCompatFragment(), BaseFragmentView {
     }
 
     /**
-     * @return boolean Return false to allow normal back press processing to
+     * @return False to allow normal back press processing to
      * proceed, true to consume it here.
      * @see BaseActivity.onBackPressed
      */

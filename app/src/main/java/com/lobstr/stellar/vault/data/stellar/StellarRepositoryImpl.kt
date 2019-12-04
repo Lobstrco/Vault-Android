@@ -11,15 +11,12 @@ import com.lobstr.stellar.vault.presentation.entities.transaction.TransactionIte
 import com.soneso.stellarmnemonics.Wallet
 import io.reactivex.Single
 import io.reactivex.Single.fromCallable
-import org.bouncycastle.jce.provider.BouncyCastleProvider
 import org.stellar.sdk.KeyPair
 import org.stellar.sdk.Network
 import org.stellar.sdk.Server
 import org.stellar.sdk.Transaction
 import org.stellar.sdk.responses.AccountResponse
 import org.stellar.sdk.responses.SubmitTransactionResponse
-import java.security.Provider
-import java.security.Security
 import java.util.concurrent.Callable
 
 class StellarRepositoryImpl(
@@ -38,21 +35,10 @@ class StellarRepositoryImpl(
         return mnemonicsMapper.transformMnemonicsArray(Wallet.generate24WordMnemonic()!!)
     }
 
-    /**
-     * Setup Bouncy Castle as well, because some of the security algorithms used within
-     * the library (stellarmnemonic) are supported starting with Java 1.8 only.
-     * After remove it.
-     */
     override fun createKeyPair(mnemonics: CharArray, index: Int): Single<KeyPair> {
         return fromCallable(Callable<KeyPair> {
-            Security.removeProvider("BC")
-            Security.addProvider(BouncyCastleProvider() as Provider?)
             return@Callable Wallet.createKeyPair(mnemonics, null, index)
         })
-            .doOnEvent { _, _ ->
-                // always remove Bouncy Castle after
-                Security.removeProvider("BC")
-            }
     }
 
     override fun submitTransaction(
@@ -85,7 +71,7 @@ class StellarRepositoryImpl(
     }
 
     /**
-     * Used for Create Transaction Item from XDR
+     * Used for Create Transaction Item from XDR.
      */
     override fun createTransactionItem(envelopXdr: String): Single<TransactionItem> {
         return fromCallable(Callable {
@@ -97,7 +83,7 @@ class StellarRepositoryImpl(
     }
 
     /**
-     * Used for get transaction signers list (exclude VAULT marker key)
+     * Used for get transaction signers list (exclude VAULT marker key).
      */
     override fun getTransactionSigners(
         envelopXdr: String,
@@ -117,17 +103,17 @@ class StellarRepositoryImpl(
 
                 val signatures = transaction.signatures
 
-                // check signatures list
+                // Check signatures list.
                 if (signatures.isNullOrEmpty()) {
                     return@map accountsList
                 }
 
-                // exclude marker key (VAULT)
+                // Exclude marker key (VAULT).
                 val listOfTargetSigners = accountResponse.signers
                     .filter { !it.key.contains("VAULT") }
                     .map { it.key }
 
-                // check verification for each key
+                // Check verification for each key.
                 for (key in listOfTargetSigners) {
                     var signed = false
 
@@ -142,7 +128,7 @@ class StellarRepositoryImpl(
                         }
                     }
 
-                    accountsList.add(Account(key, signed))
+                    accountsList.add(Account(key, signed = signed))
                 }
 
                 return@map accountsList.sortedBy { it.signed == true }

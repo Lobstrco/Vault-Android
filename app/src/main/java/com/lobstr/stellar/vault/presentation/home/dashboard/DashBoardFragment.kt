@@ -15,19 +15,21 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.arellomobile.mvp.presenter.InjectPresenter
-import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.bumptech.glide.Glide
 import com.lobstr.stellar.vault.R
 import com.lobstr.stellar.vault.presentation.base.fragment.BaseFragment
 import com.lobstr.stellar.vault.presentation.container.activity.ContainerActivity
+import com.lobstr.stellar.vault.presentation.dialog.alert.base.AlertDialogFragment
 import com.lobstr.stellar.vault.presentation.entities.account.Account
 import com.lobstr.stellar.vault.presentation.home.HomeActivity
 import com.lobstr.stellar.vault.presentation.home.settings.signed_accounts.adapter.AccountAdapter
 import com.lobstr.stellar.vault.presentation.home.settings.signed_accounts.adapter.OnAccountItemListener
+import com.lobstr.stellar.vault.presentation.home.settings.signed_accounts.edit_account.EditAccountDialogFragment
 import com.lobstr.stellar.vault.presentation.util.AppUtil
 import com.lobstr.stellar.vault.presentation.util.Constant
 import kotlinx.android.synthetic.main.fragment_dash_board.*
+import moxy.presenter.InjectPresenter
+import moxy.presenter.ProvidePresenter
 
 class DashboardFragment : BaseFragment(), DashboardView, View.OnClickListener,
     OnAccountItemListener {
@@ -121,11 +123,11 @@ class DashboardFragment : BaseFragment(), DashboardView, View.OnClickListener,
     }
 
     override fun onAccountItemClick(account: Account) {
-        // implement logic if need
+        mPresenter.signedAccountItemClicked(account)
     }
 
     override fun onAccountItemLongClick(account: Account) {
-        mPresenter.copySignedAccountClicked(account)
+        mPresenter.signedAccountItemLongClicked(account)
     }
 
     override fun showPublicKey(publicKey: String) {
@@ -202,8 +204,17 @@ class DashboardFragment : BaseFragment(), DashboardView, View.OnClickListener,
         (activity as? HomeActivity)?.setSelectedBottomNavigationItem(R.id.action_transactions)
     }
 
-    override fun copyData(publicKey: String) {
-        AppUtil.copyToClipboard(context, publicKey)
+    override fun showEditAccountDialog(address: String) {
+        val bundle = Bundle()
+        bundle.putString(Constant.Bundle.BUNDLE_PUBLIC_KEY, address)
+
+        val dialog = EditAccountDialogFragment()
+        dialog.arguments = bundle
+        dialog.show(childFragmentManager, AlertDialogFragment.DialogFragmentIdentifier.EDIT_ACCOUNT)
+    }
+
+    override fun copyToClipBoard(text: String) {
+        AppUtil.copyToClipboard(context, text)
     }
 
     override fun showSignersProgress(show: Boolean) {

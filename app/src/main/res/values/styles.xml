@@ -33,12 +33,12 @@
     </style>
 
     <style name="AlertDialog" parent="Theme.AppCompat.Light.Dialog.Alert">
-        <!-- buttons color -->
+        <!-- Buttons color -->
         <item name="colorAccent">@color/color_primary</item>
         <item name="android:windowBackground">@drawable/bg_dialog_inset</item>
-        <!-- message color -->
+        <!-- Message color -->
         <item name="android:textColorPrimary">@color/color_8a000000</item>
-        <!-- title color -->
+        <!-- Title color -->
         <item name="android:windowTitleStyle">@style/DialogWindowTitle</item>
     </style>
 
@@ -47,31 +47,20 @@
     </style>
 
     <style name="Widget.AppTheme.Toolbar" parent="Theme.AppCompat.Light.NoActionBar">
-
-        <!--&lt;!&ndash; colorPrimaryDark is used for the tool bar &ndash;&gt;-->
-        <!--<item name="colorPrimary">@color/custom_grey</item>-->
-
-        <!--&lt;!&ndash; colorPrimaryDark is used for the status bar &ndash;&gt;-->
-        <!--<item name="colorPrimaryDark">@color/custom_orange</item>-->
-
         <!-- colorControlNormal is used for the toggle btn color -->
         <item name="colorControlNormal">@android:color/white</item>
-
         <item name="actionMenuTextColor">@android:color/white</item>
-        <!-- textColor is used for the text color in toolbar-->
-        <!--<item name="android:textColor">@android:color/white</item>-->
-
     </style>
 
     <style name="Widget.AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>
 
-    <!-- biometric -->
+    <!-- Biometric -->
     <style name="BottomSheetDialogTheme" parent="BaseBottomSheetDialog"/>
     <style name="BaseBottomSheetDialog" parent="@style/Theme.Design.Light.BottomSheetDialog">
         <item name="android:windowIsFloating">true</item>
         <item name="bottomSheetStyle">@style/BottomSheet</item>
     </style>
-    <!-- set the rounded drawable as background to your bottom sheet -->
+    <!-- Set the rounded drawable as background to your bottom sheet -->
     <style name="BottomSheet" parent="@style/Widget.Design.BottomSheet.Modal">
         <item name="android:background">@drawable/bg_bottom_sheet</item>
     </style>

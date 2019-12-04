@@ -1,17 +1,28 @@
 package com.lobstr.stellar.vault.presentation.vault_auth.signer_info
 
-import com.arellomobile.mvp.InjectViewState
-import com.arellomobile.mvp.MvpPresenter
 import com.lobstr.stellar.vault.domain.signer_info.SignerInfoInteractor
+import com.lobstr.stellar.vault.presentation.BasePresenter
 import com.lobstr.stellar.vault.presentation.application.LVApplication
 import com.lobstr.stellar.vault.presentation.dagger.module.signer_info.SignerInfoModule
+import io.reactivex.Observable
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.Disposable
+import io.reactivex.schedulers.Schedulers
+import moxy.InjectViewState
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 @InjectViewState
-class SignerInfoPresenter : MvpPresenter<SignerInfoView>() {
+class SignerInfoPresenter : BasePresenter<SignerInfoView>() {
+
+    companion object {
+        private const val REQUEST_PERIOD = 3L
+    }
 
     @Inject
     lateinit var interactor: SignerInfoInteractor
+
+    private var checkLobstrAppIntervalSubscription: Disposable? = null
 
     init {
         LVApplication.appComponent.plusSignerInfoComponent(SignerInfoModule()).inject(this)
@@ -22,12 +33,46 @@ class SignerInfoPresenter : MvpPresenter<SignerInfoView>() {
         viewState.setupUserPublicKey(interactor.getUserPublicKey())
     }
 
-    fun copyUserPublicKey(userPublicKey: String?) {
-        if (userPublicKey.isNullOrEmpty()) {
-            return
-        }
+    override fun attachView(view: SignerInfoView?) {
+        super.attachView(view)
+        viewState.checkExistenceLobstrApp()
+    }
 
-        viewState.copyToClipBoard(userPublicKey)
+    override fun detachView(view: SignerInfoView) {
+        super.detachView(view)
+        startCheckExistenceLobstrAppWithInterval(false)
+    }
+
+    fun startCheckExistenceLobstrAppWithInterval(start: Boolean) {
+        if (start) {
+            if (checkLobstrAppIntervalSubscription?.isDisposed != false) {
+                checkLobstrAppIntervalSubscription =
+                    Observable.interval(0, REQUEST_PERIOD, TimeUnit.SECONDS)
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(
+                            { viewState.checkExistenceLobstrApp() },
+                            { it.printStackTrace() })
+            }
+        } else {
+            checkLobstrAppIntervalSubscription?.dispose()
+        }
+    }
+
+    fun downloadLobstrAppClicked() {
+        viewState.downloadLobstrApp()
+    }
+
+    fun openLobstrAppClicked() {
+        viewState.openLobstrMultisigSetupScreen()
+    }
+
+    fun copyUserPublicKeyClicked() {
+        viewState.copyToClipBoard(interactor.getUserPublicKey()!!)
+    }
+
+    fun showQrClicked() {
+        viewState.showPublicKeyDialog(interactor.getUserPublicKey()!!)
     }
 
     fun infoClicked() {

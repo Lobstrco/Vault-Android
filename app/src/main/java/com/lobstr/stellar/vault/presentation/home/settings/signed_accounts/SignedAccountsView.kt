@@ -1,11 +1,12 @@
 package com.lobstr.stellar.vault.presentation.home.settings.signed_accounts
 
 import androidx.annotation.StringRes
-import com.arellomobile.mvp.MvpView
-import com.arellomobile.mvp.viewstate.strategy.AddToEndSingleStrategy
-import com.arellomobile.mvp.viewstate.strategy.SkipStrategy
-import com.arellomobile.mvp.viewstate.strategy.StateStrategyType
+
 import com.lobstr.stellar.vault.presentation.entities.account.Account
+import moxy.MvpView
+import moxy.viewstate.strategy.AddToEndSingleStrategy
+import moxy.viewstate.strategy.SkipStrategy
+import moxy.viewstate.strategy.StateStrategyType
 
 interface SignedAccountsView : MvpView {
     @StateStrategyType(AddToEndSingleStrategy::class)
@@ -37,4 +38,7 @@ interface SignedAccountsView : MvpView {
 
     @StateStrategyType(SkipStrategy::class)
     fun showEditAccountDialog(address: String)
+
+    @StateStrategyType(SkipStrategy::class)
+    fun copyToClipBoard(text: String)
 }

@@ -8,7 +8,6 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-import com.arellomobile.mvp.presenter.InjectPresenter
 import com.lobstr.stellar.vault.R
 import com.lobstr.stellar.vault.presentation.base.fragment.BaseFragment
 import com.lobstr.stellar.vault.presentation.dialog.alert.base.AlertDialogFragment
@@ -17,10 +16,13 @@ import com.lobstr.stellar.vault.presentation.home.settings.signed_accounts.adapt
 import com.lobstr.stellar.vault.presentation.home.settings.signed_accounts.adapter.AccountAdapter.Companion.ACCOUNT_EXTENDED
 import com.lobstr.stellar.vault.presentation.home.settings.signed_accounts.adapter.OnAccountItemListener
 import com.lobstr.stellar.vault.presentation.home.settings.signed_accounts.edit_account.EditAccountDialogFragment
+import com.lobstr.stellar.vault.presentation.util.AppUtil
 import com.lobstr.stellar.vault.presentation.util.Constant
 import kotlinx.android.synthetic.main.fragment_signed_accounts.*
+import moxy.presenter.InjectPresenter
 
-class SignedAccountsFragment : BaseFragment(), SignedAccountsView, SwipeRefreshLayout.OnRefreshListener,
+class SignedAccountsFragment : BaseFragment(), SignedAccountsView,
+    SwipeRefreshLayout.OnRefreshListener,
     OnAccountItemListener {
 
     // ===========================================================
@@ -56,7 +58,11 @@ class SignedAccountsFragment : BaseFragment(), SignedAccountsView, SwipeRefreshL
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        mView = if (mView == null) inflater.inflate(R.layout.fragment_signed_accounts, container, false) else mView
+        mView = if (mView == null) inflater.inflate(
+            R.layout.fragment_signed_accounts,
+            container,
+            false
+        ) else mView
         return mView
     }
 
@@ -75,7 +81,8 @@ class SignedAccountsFragment : BaseFragment(), SignedAccountsView, SwipeRefreshL
 
         // save RecycleView position for restore it after
         mPresenter.onSaveInstanceState(
-            (rvSignedAccounts?.layoutManager as? LinearLayoutManager)?.findFirstVisibleItemPosition() ?: 0
+            (rvSignedAccounts?.layoutManager as? LinearLayoutManager)?.findFirstVisibleItemPosition()
+                ?: 0
         )
     }
 
@@ -88,11 +95,11 @@ class SignedAccountsFragment : BaseFragment(), SignedAccountsView, SwipeRefreshL
     }
 
     override fun onAccountItemClick(account: Account) {
-        mPresenter.onSignedAccountItemClicked(account)
+        mPresenter.signedAccountItemClicked(account)
     }
 
     override fun onAccountItemLongClick(account: Account) {
-        // implement logic if needed
+        mPresenter.signedAccountItemLongClicked(account)
     }
 
     override fun setupToolbarTitle(titleRes: Int) {
@@ -102,7 +109,7 @@ class SignedAccountsFragment : BaseFragment(), SignedAccountsView, SwipeRefreshL
     override fun initRecycledView() {
         rvSignedAccounts.layoutManager = LinearLayoutManager(activity)
         rvSignedAccounts.itemAnimator = null
-        rvSignedAccounts.adapter = AccountAdapter(ACCOUNT_EXTENDED,this)
+        rvSignedAccounts.adapter = AccountAdapter(ACCOUNT_EXTENDED, this)
     }
 
     override fun showProgress() {
@@ -142,6 +149,10 @@ class SignedAccountsFragment : BaseFragment(), SignedAccountsView, SwipeRefreshL
         val dialog = EditAccountDialogFragment()
         dialog.arguments = bundle
         dialog.show(childFragmentManager, AlertDialogFragment.DialogFragmentIdentifier.EDIT_ACCOUNT)
+    }
+
+    override fun copyToClipBoard(text: String) {
+        AppUtil.copyToClipboard(context, text)
     }
 
     // ===========================================================

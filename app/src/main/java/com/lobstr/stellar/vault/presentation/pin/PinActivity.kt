@@ -9,8 +9,6 @@ import android.widget.Toast
 import androidx.annotation.StringRes
 import androidx.core.content.ContextCompat
 import com.andrognito.pinlockview.PinLockListener
-import com.arellomobile.mvp.presenter.InjectPresenter
-import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.lobstr.stellar.vault.R
 import com.lobstr.stellar.vault.presentation.BaseMvpAppCompatActivity
 import com.lobstr.stellar.vault.presentation.auth.AuthActivity
@@ -23,6 +21,8 @@ import com.lobstr.stellar.vault.presentation.util.biometric.BiometricManager
 import com.lobstr.stellar.vault.presentation.util.manager.ProgressManager
 import com.lobstr.stellar.vault.presentation.vault_auth.VaultAuthActivity
 import kotlinx.android.synthetic.main.activity_pin.*
+import moxy.presenter.InjectPresenter
+import moxy.presenter.ProvidePresenter
 
 class PinActivity : BaseMvpAppCompatActivity(), PinView, PinLockListener,
     BiometricListener, View.OnClickListener, AlertDialogFragment.OnDefaultAlertDialogListener {
@@ -162,7 +162,7 @@ class PinActivity : BaseMvpAppCompatActivity(), PinView, PinLockListener,
         startActivity(intent)
     }
 
-    // Pin Lock listeners callbacks
+    // Pin Lock listeners callbacks.
 
     override fun onComplete(pin: String?) {
         Log.i(LOG_TAG, "Pin complete: $pin")
@@ -177,7 +177,7 @@ class PinActivity : BaseMvpAppCompatActivity(), PinView, PinLockListener,
         Log.i(LOG_TAG, "Pin changed, new length $pinLength with intermediate pin $intermediatePin")
     }
 
-    // Dialogs
+    // Dialogs.
 
     override fun onPositiveBtnClick(tag: String?, dialogInterface: DialogInterface) {
         mPresenter.onAlertDialogPositiveButtonClicked(tag)
@@ -188,11 +188,11 @@ class PinActivity : BaseMvpAppCompatActivity(), PinView, PinLockListener,
     }
 
     override fun onNeutralBtnClick(tag: String?, dialogInterface: DialogInterface) {
-        // add logic if needed
+        // Add logic if needed.
     }
 
     override fun onCancel(tag: String?, dialogInterface: DialogInterface) {
-        // add logic if needed
+        // Add logic if needed.
     }
 
     override fun showLogOutDialog() {
@@ -217,7 +217,7 @@ class PinActivity : BaseMvpAppCompatActivity(), PinView, PinLockListener,
             .show(supportFragmentManager, AlertDialogFragment.DialogFragmentIdentifier.COMMON_PIN_PATTERN)
     }
 
-    // Biometric
+    // Biometric.
 
     override fun showBiometricDialog(show: Boolean) {
         mBiometricManager?.cancelAuthentication()
@@ -245,7 +245,7 @@ class PinActivity : BaseMvpAppCompatActivity(), PinView, PinLockListener,
     }
 
     override fun onAuthenticationFailed() {
-        // Toast.makeText(applicationContext, getString(R.string.biometric_failure), Toast.LENGTH_LONG).show();
+        // Show message if needed.
     }
 
     override fun onAuthenticationSuccessful() {
@@ -253,7 +253,7 @@ class PinActivity : BaseMvpAppCompatActivity(), PinView, PinLockListener,
     }
 
     override fun onAuthenticationError(errorCode: Int, errString: CharSequence?) {
-        // Toast.makeText(applicationContext, errString, Toast.LENGTH_LONG).show();
+        // Show message if needed.
     }
 
     // ===========================================================

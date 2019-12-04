@@ -35,4 +35,8 @@ class DashboardInteractorImpl(
     override fun getSignersCount(): Int {
         return prefUtil.accountSignersCount
     }
+
+    override fun getStellarAccount(stellarAddress: String): Single<Account> {
+        return accountRepository.getStellarAccount(stellarAddress, "id")
+    }
 }

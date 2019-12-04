@@ -92,7 +92,7 @@ open class BiometricManager protected constructor(biometricBuilder: BiometricBui
                     .build()
             )
         } catch (exc: Exception) {
-            // handle internal errors
+            // Handle internal errors.
             exc.printStackTrace()
         }
     }
@@ -105,7 +105,7 @@ open class BiometricManager protected constructor(biometricBuilder: BiometricBui
         var executor: Executor = MAIN_THREAD
 
         /**
-         * required field
+         * Required field.
          */
         fun setTitle(title: String): BiometricBuilder {
             this.title = title
@@ -123,7 +123,7 @@ open class BiometricManager protected constructor(biometricBuilder: BiometricBui
         }
 
         /**
-         * required field
+         * Required field.
          */
         fun setNegativeButtonText(negativeButtonText: String): BiometricBuilder {
             this.negativeButtonText = negativeButtonText
@@ -131,8 +131,8 @@ open class BiometricManager protected constructor(biometricBuilder: BiometricBui
         }
 
         /**
-         * Set executor for handle biometric callback if needed
-         * By default - MAIN_THREAD
+         * Set executor for handle biometric callback if needed.
+         * By default - MAIN_THREAD.
          */
         fun setExecutor(executor: Executor): BiometricBuilder {
             this.executor = executor

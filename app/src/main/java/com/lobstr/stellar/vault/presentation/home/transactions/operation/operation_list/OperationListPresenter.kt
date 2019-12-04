@@ -1,10 +1,10 @@
 package com.lobstr.stellar.vault.presentation.home.transactions.operation.operation_list
 
-import com.arellomobile.mvp.InjectViewState
-import com.arellomobile.mvp.MvpPresenter
 import com.lobstr.stellar.vault.R
 import com.lobstr.stellar.vault.presentation.entities.transaction.TransactionItem
 import com.lobstr.stellar.vault.presentation.util.AppUtil
+import moxy.InjectViewState
+import moxy.MvpPresenter
 
 @InjectViewState
 class OperationListPresenter(private val transactionItem: TransactionItem) : MvpPresenter<OperationListView>() {
@@ -21,7 +21,7 @@ class OperationListPresenter(private val transactionItem: TransactionItem) : Mvp
 
     private fun prepareOperationsList() {
 
-        // prepare operations list for show it
+        // Prepare operations list for show it.
         operationList.clear()
         for (operation in transactionItem.transaction.operations) {
             val resId: Int = AppUtil.getTransactionOperationName(operation)

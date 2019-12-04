@@ -1,6 +1,5 @@
 package com.lobstr.stellar.vault.presentation.home.transactions.details
 
-import com.arellomobile.mvp.InjectViewState
 import com.lobstr.stellar.vault.R
 import com.lobstr.stellar.vault.data.error.exeption.*
 import com.lobstr.stellar.vault.domain.transaction_details.TransactionDetailsInteractor
@@ -12,13 +11,17 @@ import com.lobstr.stellar.vault.presentation.application.LVApplication
 import com.lobstr.stellar.vault.presentation.dagger.module.transaction_details.TransactionDetailsModule
 import com.lobstr.stellar.vault.presentation.dialog.alert.base.AlertDialogFragment.DialogFragmentIdentifier.CONFIRM_TRANSACTION
 import com.lobstr.stellar.vault.presentation.dialog.alert.base.AlertDialogFragment.DialogFragmentIdentifier.DENY_TRANSACTION
+import com.lobstr.stellar.vault.presentation.entities.account.Account
 import com.lobstr.stellar.vault.presentation.entities.transaction.TransactionItem
 import com.lobstr.stellar.vault.presentation.util.Constant.Transaction.CANCELLED
 import com.lobstr.stellar.vault.presentation.util.Constant.Transaction.IMPORT_XDR
 import com.lobstr.stellar.vault.presentation.util.Constant.Transaction.PENDING
 import com.lobstr.stellar.vault.presentation.util.Constant.Transaction.SIGNED
+import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
+import moxy.InjectViewState
 import javax.inject.Inject
 
 @InjectViewState
@@ -33,6 +36,9 @@ class TransactionDetailsPresenter(private var transactionItem: TransactionItem) 
 
     private var confirmationInProcess = false
     private var cancellationInProcess = false
+
+    private var stellarAccountsSubscription: Disposable? = null
+    private val cashedStellarAccounts: MutableList<Account> = mutableListOf()
 
     init {
         LVApplication.appComponent.plusTransactionDetailsComponent(TransactionDetailsModule())
@@ -59,8 +65,7 @@ class TransactionDetailsPresenter(private var transactionItem: TransactionItem) 
                             if (needCheckConnectionState) {
                                 getTransactionSigners()
                             }
-                            needCheckConnectionState = false
-                            cancelNetworkWorker()
+                            cancelNetworkWorker(false)
                         }
                     }
                 }, {
@@ -86,7 +91,18 @@ class TransactionDetailsPresenter(private var transactionItem: TransactionItem) 
                 }
                 .subscribe({
                     viewState.showSignersContainer(it.isNotEmpty())
+
+                    // check cashed federation items
+                    it.forEachIndexed { index, accountItem ->
+                        val federation =
+                            cashedStellarAccounts.find { account -> account.address == accountItem.address }
+                                ?.federation
+                        it[index].federation = federation
+                    }
                     viewState.notifySignersAdapter(it)
+
+                    // try receive federations for accounts
+                    getStellarAccounts(it)
                 }, {
                     when (it) {
                         is NoInternetConnectionException -> {
@@ -105,11 +121,51 @@ class TransactionDetailsPresenter(private var transactionItem: TransactionItem) 
         )
     }
 
+    /**
+     * Used for receive federation by account id
+     */
+    private fun getStellarAccounts(accounts: List<Account>) {
+        stellarAccountsSubscription?.dispose()
+        stellarAccountsSubscription = Observable.fromIterable(accounts)
+            .subscribeOn(Schedulers.io())
+            .filter { account: Account ->
+                cashedStellarAccounts
+                    .find { cashedAccount -> cashedAccount.address == account.address } == null
+            }
+            .flatMapSingle {
+                interactor.getStellarAccount(it.address).onErrorReturnItem(it)
+            }
+            .filter { it.federation != null }
+            .toList()
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({
+                it.forEach { account ->
+                    if (cashedStellarAccounts.find { cashedAccount -> cashedAccount.address == account.address } == null) {
+                        cashedStellarAccounts.add(account)
+                    }
+                }
+
+                // check cashed federation items
+                accounts.forEachIndexed { index, accountItem ->
+                    val federation =
+                        cashedStellarAccounts.find { account -> account.address == accountItem.address }
+                            ?.federation
+                    accounts[index].federation = federation
+                }
+
+                viewState.notifySignersAdapter(accounts)
+            }, {
+                // ignore
+            })
+
+        unsubscribeOnDestroy(stellarAccountsSubscription!!)
+    }
+
     private fun prepareUiAndOperationsList() {
-        // handle transaction validation status
+        // Handle transaction validation status.
         viewState.setTransactionValid(transactionItem.sequenceOutdatedAt.isNullOrEmpty())
 
-        // handle transaction status
+        // Handle transaction status.
         when (transactionItem.status) {
             PENDING -> viewState.setActionBtnVisibility(true, true)
             CANCELLED -> viewState.setActionBtnVisibility(false, false)
@@ -117,8 +173,8 @@ class TransactionDetailsPresenter(private var transactionItem: TransactionItem) 
             IMPORT_XDR -> viewState.setActionBtnVisibility(true, true)
         }
 
-        // prepare operations list or show single operation:
-        // when transaction has only one operation - show operation details screen immediately, else - list
+        // Prepare operations list or show single operation:
+        // when transaction has only one operation - show operation details screen immediately, else - list.
         if (transactionItem.transaction.operations.size > 1) {
             viewState.showOperationList(transactionItem)
         } else {
@@ -141,7 +197,7 @@ class TransactionDetailsPresenter(private var transactionItem: TransactionItem) 
     }
 
     /**
-     * cases:
+     * Cases:
      * 1. Is Vault Transaction -> retrieve actual transaction -> sign it on horizon -> notify vault server
      * 2. Is Transaction from IMPORT_XDR: only sign it on horizon
      */
@@ -211,9 +267,9 @@ class TransactionDetailsPresenter(private var transactionItem: TransactionItem) 
                         transactionItem
                     )
 
-                    // TODO update transaction screen after operation if needed: prepareUiAndOperationsList()
+                    // NOTE Update transaction screen after operation if needed: prepareUiAndOperationsList().
 
-                    // Notify about transaction changed
+                    // Notify about transaction changed.
                     eventProviderModule.notificationEventSubject.onNext(
                         Notification(Notification.Type.TRANSACTION_COUNT_CHANGED, null)
                     )
@@ -242,12 +298,12 @@ class TransactionDetailsPresenter(private var transactionItem: TransactionItem) 
     }
 
     private fun denyTransaction() {
-        // check transaction status = IMPORT_XDR - transaction details showed for entered xdr
+        // Check transaction status = IMPORT_XDR - transaction details showed for entered xdr.
         when (transactionItem.status) {
             IMPORT_XDR -> {
                 viewState.successDenyTransaction(transactionItem)
 
-                // Notify about transaction changed
+                // Notify about transaction changed.
                 eventProviderModule.notificationEventSubject.onNext(
                     Notification(Notification.Type.TRANSACTION_COUNT_CHANGED, null)
                 )
@@ -271,11 +327,11 @@ class TransactionDetailsPresenter(private var transactionItem: TransactionItem) 
                         .subscribe({
                             transactionItem = it
 
-                            // TODO update transaction screen after operation if needed: prepareUiAndOperationsList()
+                            // NOTE Update transaction screen after operation if needed: prepareUiAndOperationsList().
 
                             viewState.successDenyTransaction(it)
 
-                            // Notify about transaction changed
+                            // Notify about transaction changed.
                             eventProviderModule.notificationEventSubject.onNext(
                                 Notification(Notification.Type.TRANSACTION_COUNT_CHANGED, null)
                             )
@@ -305,5 +361,9 @@ class TransactionDetailsPresenter(private var transactionItem: TransactionItem) 
             DENY_TRANSACTION -> denyTransaction()
             CONFIRM_TRANSACTION -> confirmTransaction()
         }
+    }
+
+    fun signedAccountItemLongClicked(account: Account) {
+        viewState.copyToClipBoard(account.address)
     }
 }

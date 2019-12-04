@@ -1,11 +1,11 @@
 package com.lobstr.stellar.vault.presentation.home.transactions.import_xdr
 
 import androidx.annotation.StringRes
-import com.arellomobile.mvp.MvpView
-import com.arellomobile.mvp.viewstate.strategy.AddToEndSingleStrategy
-import com.arellomobile.mvp.viewstate.strategy.SkipStrategy
-import com.arellomobile.mvp.viewstate.strategy.StateStrategyType
 import com.lobstr.stellar.vault.presentation.entities.transaction.TransactionItem
+import moxy.MvpView
+import moxy.viewstate.strategy.AddToEndSingleStrategy
+import moxy.viewstate.strategy.SkipStrategy
+import moxy.viewstate.strategy.StateStrategyType
 
 
 interface ImportXdrView : MvpView {

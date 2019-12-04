@@ -1,8 +1,8 @@
 package com.lobstr.stellar.vault.presentation.faq
 
-import com.arellomobile.mvp.InjectViewState
-import com.arellomobile.mvp.MvpPresenter
 import com.lobstr.stellar.vault.R
+import moxy.InjectViewState
+import moxy.MvpPresenter
 
 @InjectViewState
 class FaqPresenter : MvpPresenter<FaqView>() {

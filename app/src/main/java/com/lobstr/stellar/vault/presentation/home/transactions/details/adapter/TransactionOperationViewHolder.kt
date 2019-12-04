@@ -29,9 +29,9 @@ class TransactionOperationViewHolder(itemView: View, private val listener: OnOpe
     }
 
     /**
-     * Don't show divider for last ore one item
-     * @param itemsCount count of items
-     * @return visibility
+     * Don't show divider for last ore one item.
+     * @param itemsCount Count of items.
+     * @return Visibility.
      */
     private fun calculateDividerVisibility(itemsCount: Int): Int {
         return if (itemsCount == 1 || adapterPosition == itemsCount - 1) {

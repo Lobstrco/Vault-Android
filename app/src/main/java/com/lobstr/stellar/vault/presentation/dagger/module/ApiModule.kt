@@ -8,6 +8,7 @@ import com.lobstr.stellar.vault.data.net.VaultAuthApi
 import com.lobstr.stellar.vault.presentation.util.Constant
 import dagger.Module
 import dagger.Provides
+import io.reactivex.schedulers.Schedulers
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import org.stellar.sdk.Network
@@ -50,7 +51,7 @@ class ApiModule {
         builder.client(okHttpClient)
             .baseUrl(if (BuildConfig.BUILD_TYPE == Constant.BuildType.RELEASE) BASE_PRODUCTION_URL else BASE_STAGING_URL)
             .addConverterFactory(GsonConverterFactory.create())
-            .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+            .addCallAdapterFactory(RxJava2CallAdapterFactory.createWithScheduler(Schedulers.io()))
 
         return builder.build()
     }

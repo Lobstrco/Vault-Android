@@ -1,7 +1,6 @@
 package com.lobstr.stellar.vault.presentation.pin
 
 import android.app.Activity
-import com.arellomobile.mvp.InjectViewState
 import com.lobstr.stellar.vault.R
 import com.lobstr.stellar.vault.domain.pin.PinInteractor
 import com.lobstr.stellar.vault.presentation.BasePresenter
@@ -11,10 +10,11 @@ import com.lobstr.stellar.vault.presentation.dialog.alert.base.AlertDialogFragme
 import com.lobstr.stellar.vault.presentation.util.biometric.BiometricUtils
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
+import moxy.InjectViewState
 import javax.inject.Inject
 
 /**
- * Main IDEA - when secretKey was empty - confirmation action, else - save secret key
+ * Main IDEA - when secretKey was empty - confirmation action, else - save secret key.
  */
 @InjectViewState
 class PinPresenter(
@@ -83,7 +83,7 @@ class PinPresenter(
     }
 
     /**
-     * pin - your completely entered pin
+     * @param pin Your completely entered pin
      */
     fun onPinComplete(pin: String?) {
         if (pin != null) {
@@ -255,12 +255,12 @@ class PinPresenter(
     }
 
     private fun isCommonPin(pin: String?): Boolean {
-        // first check common pins from array
+        // First check common pins from array.
         if (commonPinArray.contains(pin)) {
             return true
         }
 
-        // check same symbols like 111111 and etc
+        // Check same symbols like 111111 and etc.
         pin?.forEach {
             if (it != pin[0]) {
                 return false

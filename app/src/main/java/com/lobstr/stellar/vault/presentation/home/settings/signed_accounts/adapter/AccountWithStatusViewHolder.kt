@@ -29,7 +29,9 @@ class AccountWithStatusViewHolder(
             .placeholder(R.drawable.ic_person)
             .into(itemView.ivIdentity)
 
+        itemView.tvAccount.visibility = if(account.federation.isNullOrEmpty()) View.GONE else View.VISIBLE
         itemView.tvAccount.text = account.address
+        itemView.tvAccountFederation.text = if(account.federation.isNullOrEmpty()) account.address else account.federation
 
         itemView.tvStatus.text =
             if (account.signed == true) {
@@ -59,9 +61,9 @@ class AccountWithStatusViewHolder(
     }
 
     /**
-     * Don't show divider for last ore one item
-     * @param itemsCount count of items
-     * @return visibility
+     * Don't show divider for last ore one item.
+     * @param itemsCount Count of items.
+     * @return Visibility.
      */
     private fun calculateDividerVisibility(itemsCount: Int): Int {
         return if (itemsCount == 1 || adapterPosition == itemsCount - 1) {

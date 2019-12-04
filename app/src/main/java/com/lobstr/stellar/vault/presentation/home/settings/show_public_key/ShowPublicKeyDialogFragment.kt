@@ -5,14 +5,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
-import com.arellomobile.mvp.presenter.InjectPresenter
-import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.lobstr.stellar.vault.R
 import com.lobstr.stellar.vault.presentation.BaseBottomSheetDialog
 import com.lobstr.stellar.vault.presentation.dialog.alert.base.AlertDialogFragment
 import com.lobstr.stellar.vault.presentation.util.AppUtil
 import com.lobstr.stellar.vault.presentation.util.Constant
 import kotlinx.android.synthetic.main.fragment_show_public_key.*
+import moxy.presenter.InjectPresenter
+import moxy.presenter.ProvidePresenter
 import net.glxn.qrgen.android.QRCode
 
 

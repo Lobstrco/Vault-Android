@@ -118,7 +118,7 @@ class PrefsUtil(private val sharedPreferences: SharedPreferences) {
     fun getBoolean(key: String): Boolean {
         var devValue = false
 
-        // set default value for specific cases
+        // Set default value for specific cases.
         when (key) {
             PREF_IS_NOTIFICATIONS_ENABLED -> devValue = true
             PREF_IS_TR_CONFIRMATION_ENABLED -> devValue = true

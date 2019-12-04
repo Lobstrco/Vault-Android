@@ -45,20 +45,20 @@ class FcmHelper(private val context: Context, private val fcmInteractor: FcmInte
     }
 
     private fun requestFcmToken(): Int {
-        // FCM registration (Check device for Play Services APK before, If check succeeds - proceed)
+        // FCM registration (Check device for Play Services APK before, If check succeeds - proceed).
         if (checkIsGooglePlayServicesAvailable()) {
             val fcmDeviceId = getSavedFcmToken()
             return if (fcmDeviceId.isEmpty()) {
                 createFcmToken()
                 FcmRegStatus.TRYING_REGISTER_FCM
             } else {
-                // if device already registered on FCM  - send its id on server
-                // it can happen e.g. when two or more users use one device
+                // If device already registered on FCM  - send its id on server.
+                // It can happen e.g. when two or more users use one device.
                 Log.i(LOG_TAG, "Device already registered with id - $fcmDeviceId")
                 FcmRegStatus.DEVICE_ALREADY_REGISTERED
             }
         } else {
-            // if no - open app anyway
+            // If no - open app anyway.
             Log.e(LOG_TAG, "No valid Google Play Services APK found. ")
             return FcmRegStatus.NO_VALID_GOOGLE_PLAY
         }
@@ -68,7 +68,7 @@ class FcmHelper(private val context: Context, private val fcmInteractor: FcmInte
         if (checkIsGooglePlayServicesAvailable()) {
             createFcmToken()
             val fcmToken = getSavedFcmToken()
-            if (fcmToken.isNotEmpty() /*&& !TextUtils.isEmpty(PrefsUtils.getUserToken())*/) {
+            if (fcmToken.isNotEmpty()) {
                 sendFcmToken(fcmToken)
             }
         }

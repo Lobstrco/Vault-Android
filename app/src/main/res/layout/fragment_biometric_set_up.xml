@@ -16,7 +16,7 @@
 
         <ImageView android:layout_width="wrap_content"
                    android:layout_height="wrap_content"
-                   android:src="@drawable/ic_fingerprint_purple"
+                   android:src="@drawable/ic_biometric_purple"
                    android:layout_gravity="center"
                    android:layout_marginBottom="20dp"
                    tools:ignore="ContentDescription" />
@@ -29,7 +29,7 @@
                 android:layout_marginBottom="10dp"
                 android:textStyle="bold"
                 android:textColor="@android:color/black"
-                android:text="@string/text_tv_fingerprint_set_up_title"/>
+                android:text="@string/text_tv_biometric_set_up_title"/>
 
         <TextView
                 android:layout_width="match_parent"
@@ -38,7 +38,7 @@
                 android:textSize="14sp"
                 android:alpha="0.6"
                 android:textColor="@color/color_071c33"
-                android:text="@string/text_tv_fingerprint_set_up_description"/>
+                android:text="@string/text_tv_biometric_set_up_description"/>
 
     </LinearLayout>
 
@@ -48,11 +48,11 @@
             android:gravity="center"
             android:textSize="12sp"
             android:textColor="@color/color_994A4A4A"
-            android:text="@string/text_tv_fingerprint_set_up_later"
+            android:text="@string/text_tv_biometric_set_up_later"
             android:layout_marginBottom="16dp"/>
 
     <Button
-            android:text="@string/text_btn_fingerprint_enable"
+            android:text="@string/text_btn_biometric_enable"
             android:layout_height="wrap_content"
             android:id="@+id/btnTurOn"
             android:layout_width="match_parent"

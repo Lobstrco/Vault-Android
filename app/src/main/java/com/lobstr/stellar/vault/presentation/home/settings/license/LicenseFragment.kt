@@ -5,11 +5,11 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.arellomobile.mvp.presenter.InjectPresenter
-import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.lobstr.stellar.vault.R
 import com.lobstr.stellar.vault.presentation.base.fragment.BaseFragment
 import kotlinx.android.synthetic.main.fragment_license.*
+import moxy.presenter.InjectPresenter
+import moxy.presenter.ProvidePresenter
 
 class LicenseFragment : BaseFragment(), LicenseView {
 

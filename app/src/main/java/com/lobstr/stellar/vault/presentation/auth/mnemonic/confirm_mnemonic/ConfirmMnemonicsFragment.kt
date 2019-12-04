@@ -6,8 +6,6 @@ import android.os.Bundle
 import android.view.*
 import android.widget.Toast
 import androidx.annotation.StringRes
-import com.arellomobile.mvp.presenter.InjectPresenter
-import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.lobstr.stellar.vault.R
 import com.lobstr.stellar.vault.presentation.auth.mnemonic.MnemonicsContainerView
 import com.lobstr.stellar.vault.presentation.base.fragment.BaseFragment
@@ -18,6 +16,8 @@ import com.lobstr.stellar.vault.presentation.util.Constant
 import com.lobstr.stellar.vault.presentation.util.manager.FragmentTransactionManager
 import com.lobstr.stellar.vault.presentation.util.manager.ProgressManager
 import kotlinx.android.synthetic.main.fragment_confirm_mnemonics.*
+import moxy.presenter.InjectPresenter
+import moxy.presenter.ProvidePresenter
 
 class ConfirmMnemonicsFragment : BaseFragment(), ConfirmMnemonicsView, View.OnClickListener,
     MnemonicsContainerView.MnemonicItemActionListener {

@@ -6,8 +6,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.arellomobile.mvp.presenter.InjectPresenter
-import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.lobstr.stellar.vault.R
 import com.lobstr.stellar.vault.presentation.base.fragment.BaseFragment
 import com.lobstr.stellar.vault.presentation.entities.transaction.TransactionItem
@@ -17,6 +15,8 @@ import com.lobstr.stellar.vault.presentation.home.transactions.operation.operati
 import com.lobstr.stellar.vault.presentation.util.Constant
 import com.lobstr.stellar.vault.presentation.util.manager.FragmentTransactionManager
 import kotlinx.android.synthetic.main.fragment_operation_list.*
+import moxy.presenter.InjectPresenter
+import moxy.presenter.ProvidePresenter
 
 class OperationListFragment : BaseFragment(),
     OperationListView, OnOperationClicked {

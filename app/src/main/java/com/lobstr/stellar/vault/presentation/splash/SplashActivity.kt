@@ -1,12 +1,12 @@
 package com.lobstr.stellar.vault.presentation.splash
 
 import android.content.Intent
-import com.arellomobile.mvp.presenter.InjectPresenter
-import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.lobstr.stellar.vault.presentation.BaseMvpAppCompatActivity
 import com.lobstr.stellar.vault.presentation.auth.AuthActivity
 import com.lobstr.stellar.vault.presentation.pin.PinActivity
 import com.lobstr.stellar.vault.presentation.util.Constant
+import moxy.presenter.InjectPresenter
+import moxy.presenter.ProvidePresenter
 
 class SplashActivity : BaseMvpAppCompatActivity(), SplashView {
 

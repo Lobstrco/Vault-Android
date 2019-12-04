@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!--Help screen-->
+    <!-- Help screen -->
 
     <!-- Get Started -->
     <string name="text_tv_get_started_section">Get Started</string>

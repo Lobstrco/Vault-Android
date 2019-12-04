@@ -3,8 +3,6 @@ package com.lobstr.stellar.vault.presentation.container.activity
 import android.os.Bundle
 import androidx.annotation.ColorRes
 import androidx.annotation.DrawableRes
-import com.arellomobile.mvp.presenter.InjectPresenter
-import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.lobstr.stellar.vault.R
 import com.lobstr.stellar.vault.presentation.base.activity.BaseActivity
 import com.lobstr.stellar.vault.presentation.container.fragment.ContainerFragment
@@ -16,9 +14,11 @@ import com.lobstr.stellar.vault.presentation.util.Constant.Navigation.IMPORT_XDR
 import com.lobstr.stellar.vault.presentation.util.Constant.Navigation.SETTINGS
 import com.lobstr.stellar.vault.presentation.util.Constant.Navigation.TRANSACTION_DETAILS
 import com.lobstr.stellar.vault.presentation.util.manager.FragmentTransactionManager
+import moxy.presenter.InjectPresenter
+import moxy.presenter.ProvidePresenter
 
 /**
- * Used for show separate activity with fragments container
+ * Used for show separate activity with fragments container.
  * @see ContainerFragment
  */
 class ContainerActivity : BaseActivity(), ContainerView {
@@ -43,7 +43,7 @@ class ContainerActivity : BaseActivity(), ContainerView {
     // ===========================================================
 
     /**
-     * Pass EXTRA_NAVIGATION_FR for navigate fragments container
+     * Pass EXTRA_NAVIGATION_FR for navigate fragments container.
      * @see Constant.Navigation
      * @see ContainerFragment
      *

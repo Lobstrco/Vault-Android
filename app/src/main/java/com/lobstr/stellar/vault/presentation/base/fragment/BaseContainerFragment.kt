@@ -52,7 +52,7 @@ abstract class BaseContainerFragment : BaseMvpAppCompatFragment() {
 
         AppUtil.closeKeyboard(activity)
 
-        // define back button behavior for container (after back pressed)
+        // Define back button behavior for container (after back pressed).
         when (childFragmentManager.backStackEntryCount) {
             1 -> when (activity) {
                 is ContainerActivity -> (activity as? BaseActivity)?.mPresenter?.changeHomeBtnVisibility(true)

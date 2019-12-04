@@ -50,7 +50,7 @@ class PinInteractorImpl(
     }
 
     /**
-     * Check when the user doesn't see Biometric setup screen
+     * Check when the user doesn't see Biometric setup screen.
      * @see com.lobstr.stellar.vault.presentation.auth.biometric.BiometricSetUpFragment
      */
     override fun isTouchIdSetUp(): Boolean {

@@ -4,15 +4,15 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@android:color/white"
+        android:foreground="?android:attr/selectableItemBackground"
         android:paddingStart="18dp"
-        android:paddingEnd="18dp"
-        android:foreground="?android:attr/selectableItemBackground">
+        android:paddingEnd="18dp">
 
     <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
             android:gravity="center_vertical"
+            android:orientation="horizontal"
             android:paddingTop="18dp"
             android:paddingBottom="18dp">
 
@@ -26,22 +26,49 @@
                     android:layout_width="16dp"
                     android:layout_height="16dp"
                     android:layout_gravity="center"
-                    tools:ignore="ContentDescription"/>
+                    tools:ignore="ContentDescription" />
         </FrameLayout>
 
-        <TextView
-                android:id="@+id/tvAccount"
-                android:layout_width="match_parent"
+        <LinearLayout
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:maxLines="2"
-                android:ellipsize="end"
-                android:lineSpacingExtra="10sp"
-                android:gravity="start|center"
-                android:paddingStart="8dp"
-                android:alpha="0.3"
-                android:textColor="@android:color/black"
-                android:textSize="12sp" />
+                android:orientation="vertical"
+                android:layout_weight="1"
+                android:layout_marginEnd="32dp"
+                android:layout_marginStart="8dp">
+
+            <TextView
+                    android:id="@+id/tvAccountFederation"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:ellipsize="middle"
+                    android:gravity="start|center"
+                    android:textStyle="bold"
+                    android:singleLine="true"
+                    android:textColor="@android:color/black"
+                    android:textSize="12sp" />
+
+            <TextView
+                    android:id="@+id/tvAccount"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:alpha="0.3"
+                    android:ellipsize="middle"
+                    android:gravity="start|center"
+                    android:singleLine="true"
+                    android:textColor="@android:color/black"
+                    android:textSize="12sp" />
+
+        </LinearLayout>
+
+        <ImageView
+                android:id="@+id/ivMore"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:src="@drawable/ic_more_purple"
+                tools:ignore="ContentDescription" />
     </LinearLayout>
 
     <View

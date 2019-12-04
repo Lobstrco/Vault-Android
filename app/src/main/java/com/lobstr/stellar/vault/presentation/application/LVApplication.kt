@@ -12,6 +12,9 @@ import com.lobstr.stellar.vault.presentation.dagger.component.AppComponent
 import com.lobstr.stellar.vault.presentation.dagger.component.DaggerAppComponent
 import com.lobstr.stellar.vault.presentation.dagger.module.AppModule
 import com.lobstr.stellar.vault.presentation.util.Constant
+import org.bouncycastle.jce.provider.BouncyCastleProvider
+import java.security.Provider
+import java.security.Security
 
 
 class LVApplication : MultiDexApplication() {
@@ -44,6 +47,7 @@ class LVApplication : MultiDexApplication() {
     override fun onCreate() {
         super.onCreate()
         upgradeSecurityProvider()
+        setupBouncyCastle()
         enableStrictMode()
         FirebaseAnalytics.getInstance(this)
             .setAnalyticsCollectionEnabled(BuildConfig.BUILD_TYPE != Constant.BuildType.DEBUG)
@@ -57,8 +61,8 @@ class LVApplication : MultiDexApplication() {
     // ===========================================================
 
     /**
-     * Fix for SSLException
-     * Enable SSL compatibility in pre-lollipop and lollipop devices
+     * Fix for SSLException.
+     * Enable SSL compatibility in pre-lollipop and lollipop devices.
      */
     private fun upgradeSecurityProvider() {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
@@ -76,6 +80,16 @@ class LVApplication : MultiDexApplication() {
                 Log.e(LOG_TAG, "Unknown issue trying to install a new security provider", ex)
             }
         }
+    }
+
+    /**
+     * For create Mnemonics.
+     * Setup Bouncy Castle as well, because some of the security algorithms used within
+     * the library are supported starting with Java 1.8 only.
+     */
+    private fun setupBouncyCastle() {
+        Security.removeProvider("BC")
+        Security.addProvider(BouncyCastleProvider() as Provider?)
     }
 
     private fun enableStrictMode() {

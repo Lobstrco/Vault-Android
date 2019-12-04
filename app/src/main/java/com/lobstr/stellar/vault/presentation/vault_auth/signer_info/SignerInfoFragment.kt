@@ -1,19 +1,29 @@
 package com.lobstr.stellar.vault.presentation.vault_auth.signer_info
 
 
+import android.content.ActivityNotFoundException
+import android.content.Intent
+import android.content.pm.ApplicationInfo
+import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Bundle
 import android.view.*
-import androidx.core.content.ContextCompat
-import com.arellomobile.mvp.presenter.InjectPresenter
-import com.arellomobile.mvp.presenter.ProvidePresenter
+import android.widget.Toast
 import com.lobstr.stellar.vault.R
 import com.lobstr.stellar.vault.presentation.base.fragment.BaseFragment
+import com.lobstr.stellar.vault.presentation.dialog.alert.base.AlertDialogFragment
 import com.lobstr.stellar.vault.presentation.faq.FaqFragment
+import com.lobstr.stellar.vault.presentation.home.settings.show_public_key.ShowPublicKeyDialogFragment
 import com.lobstr.stellar.vault.presentation.util.AppUtil
+import com.lobstr.stellar.vault.presentation.util.Constant
+import com.lobstr.stellar.vault.presentation.util.Constant.LobstrWallet.DEEP_LINK_MULTISIG_SETUP
+import com.lobstr.stellar.vault.presentation.util.Constant.LobstrWallet.PACKAGE_NAME
+import com.lobstr.stellar.vault.presentation.util.Constant.Social.STORE_URL
 import com.lobstr.stellar.vault.presentation.util.manager.FragmentTransactionManager
 import com.lobstr.stellar.vault.presentation.vault_auth.recheck_signer.RecheckSignerFragment
 import kotlinx.android.synthetic.main.fragment_signer_info.*
-import net.glxn.qrgen.android.QRCode
+import moxy.presenter.InjectPresenter
+import moxy.presenter.ProvidePresenter
 
 class SignerInfoFragment : BaseFragment(),
     SignerInfoView, View.OnClickListener {
@@ -54,7 +64,11 @@ class SignerInfoFragment : BaseFragment(),
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        mView = if (mView == null) inflater.inflate(R.layout.fragment_signer_info, container, false) else mView
+        mView = if (mView == null) inflater.inflate(
+            R.layout.fragment_signer_info,
+            container,
+            false
+        ) else mView
         return mView
     }
 
@@ -64,7 +78,10 @@ class SignerInfoFragment : BaseFragment(),
     }
 
     private fun setListeners() {
+        btnDownloadLobstrApp.setOnClickListener(this)
+        btnOpenLobstrApp.setOnClickListener(this)
         btnCopyUserPk.setOnClickListener(this)
+        btnShowQr.setOnClickListener(this)
         btnNext.setOnClickListener(this)
     }
 
@@ -86,22 +103,32 @@ class SignerInfoFragment : BaseFragment(),
     // ===========================================================
 
     override fun onClick(v: View?) {
-        when (v!!.id) {
-
-            R.id.btnCopyUserPk -> mPresenter.copyUserPublicKey(tvUserPublicKey.text.toString())
-
-            R.id.btnNext -> mPresenter.btnNextClicked()
+        when (v?.id) {
+            btnDownloadLobstrApp.id -> mPresenter.downloadLobstrAppClicked()
+            btnOpenLobstrApp.id -> mPresenter.openLobstrAppClicked()
+            btnCopyUserPk.id -> mPresenter.copyUserPublicKeyClicked()
+            btnShowQr.id -> mPresenter.showQrClicked()
+            btnNext.id -> mPresenter.btnNextClicked()
         }
     }
 
+    override fun checkExistenceLobstrApp() {
+        val packageManager = activity!!.packageManager
+        var applicationInfo: ApplicationInfo? = null
+        try {
+            applicationInfo = packageManager.getApplicationInfo(PACKAGE_NAME, 0)
+        } catch (e: PackageManager.NameNotFoundException) {
+            e.printStackTrace()
+        }
+
+        cvLobstrWalletInfo.visibility = if (applicationInfo != null) View.VISIBLE else View.GONE
+        cvLobstrWalletInstall.visibility = if (applicationInfo != null) View.GONE else View.VISIBLE
+
+        // Start check of Lobstr Wallet app install.
+        mPresenter.startCheckExistenceLobstrAppWithInterval(applicationInfo == null)
+    }
+
     override fun setupUserPublicKey(userPublicKey: String?) {
-        val qrCodeImage = QRCode.from(userPublicKey).withColor(
-            ContextCompat.getColor(context!!, R.color.color_primary),
-            ContextCompat.getColor(context!!, android.R.color.transparent)
-        ).bitmap()
-
-        ivUserPublicKeyQrCode.setImageBitmap(qrCodeImage)
-
         tvUserPublicKey.text = userPublicKey
     }
 
@@ -112,7 +139,10 @@ class SignerInfoFragment : BaseFragment(),
     override fun showRecheckSingerScreen() {
         FragmentTransactionManager.displayFragment(
             parentFragment!!.childFragmentManager,
-            parentFragment!!.childFragmentManager.fragmentFactory.instantiate(context!!.classLoader, RecheckSignerFragment::class.qualifiedName!!),
+            parentFragment!!.childFragmentManager.fragmentFactory.instantiate(
+                context!!.classLoader,
+                RecheckSignerFragment::class.qualifiedName!!
+            ),
             R.id.fl_container
         )
     }
@@ -120,9 +150,48 @@ class SignerInfoFragment : BaseFragment(),
     override fun showHelpScreen() {
         FragmentTransactionManager.displayFragment(
             parentFragment!!.childFragmentManager,
-            parentFragment!!.childFragmentManager.fragmentFactory.instantiate(context!!.classLoader, FaqFragment::class.qualifiedName!!),
+            parentFragment!!.childFragmentManager.fragmentFactory.instantiate(
+                context!!.classLoader,
+                FaqFragment::class.qualifiedName!!
+            ),
             R.id.fl_container
         )
+    }
+
+    override fun showPublicKeyDialog(publicKey: String) {
+        val bundle = Bundle()
+        bundle.putString(Constant.Bundle.BUNDLE_PUBLIC_KEY, publicKey)
+
+        val dialog = ShowPublicKeyDialogFragment()
+        dialog.arguments = bundle
+        dialog.show(childFragmentManager, AlertDialogFragment.DialogFragmentIdentifier.PUBLIC_KEY)
+    }
+
+    override fun downloadLobstrApp() {
+        startActivity(
+            Intent(
+                Intent.ACTION_VIEW,
+                Uri.parse(STORE_URL.plus(PACKAGE_NAME))
+            )
+        )
+    }
+
+    override fun openLobstrMultisigSetupScreen() {
+        try {
+            // Try open lobstr multisignature setup screen by deep link.
+            startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(DEEP_LINK_MULTISIG_SETUP)))
+        } catch (exc: ActivityNotFoundException) {
+            // Otherwise try open Lobstr App.
+            openLobstrApp()
+        }
+    }
+
+    override fun openLobstrApp() {
+        try {
+            startActivity(activity!!.packageManager.getLaunchIntentForPackage(PACKAGE_NAME))
+        } catch (exc: ActivityNotFoundException) {
+            Toast.makeText(context, R.string.msg_no_app_found, Toast.LENGTH_SHORT).show()
+        }
     }
 
     // ===========================================================

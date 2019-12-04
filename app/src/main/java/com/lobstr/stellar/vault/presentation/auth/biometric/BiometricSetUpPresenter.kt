@@ -1,12 +1,12 @@
 package com.lobstr.stellar.vault.presentation.auth.biometric
 
-import com.arellomobile.mvp.InjectViewState
-import com.arellomobile.mvp.MvpPresenter
 import com.lobstr.stellar.vault.R
 import com.lobstr.stellar.vault.domain.biometric.BiometricSetUpInteractor
 import com.lobstr.stellar.vault.presentation.application.LVApplication
 import com.lobstr.stellar.vault.presentation.dagger.module.biometric.BiometricSetUpModule
 import com.lobstr.stellar.vault.presentation.util.biometric.BiometricUtils
+import moxy.InjectViewState
+import moxy.MvpPresenter
 import javax.inject.Inject
 
 @InjectViewState
@@ -29,8 +29,8 @@ class BiometricSetUpPresenter : MvpPresenter<BiometricSetUpView>() {
             viewState.showBiometricDialog(true)
         } else {
             viewState.showBiometricInfoDialog(
-                R.string.title_finger_print_dialog,
-                R.string.msg_finger_print_dialog
+                R.string.title_biometric_not_set_up_dialog,
+                R.string.msg_biometric_not_set_up_dialog
             )
         }
     }

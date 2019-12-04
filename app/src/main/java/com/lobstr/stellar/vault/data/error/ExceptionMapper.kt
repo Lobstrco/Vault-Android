@@ -15,7 +15,7 @@ import java.net.UnknownHostException
 class ExceptionMapper(private val context: Context) {
 
     fun transformHttpToDomain(throwable: Throwable): DefaultException {
-        // for case when called several transformHttpToDomain() in Observable/Single/Completable
+        // For case when called several transformHttpToDomain() in Observable/Single/Completable.
         if (throwable is DefaultException) {
             return throwable
         }
@@ -40,7 +40,7 @@ class ExceptionMapper(private val context: Context) {
         }
 
         if (throwable is IOException) {
-            // A network or conversion error happened
+            // A network or conversion error happened.
             return when (throwable) {
                 is SocketTimeoutException -> HttpTimeOutException(context.getString(R.string.api_error_connection_timeout))
                 is UnknownHostException -> NoInternetConnectionException(context.getString(R.string.api_error_connection_error))

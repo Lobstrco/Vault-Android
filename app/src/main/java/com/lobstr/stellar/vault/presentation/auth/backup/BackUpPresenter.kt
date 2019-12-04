@@ -1,7 +1,7 @@
 package com.lobstr.stellar.vault.presentation.auth.backup
 
-import com.arellomobile.mvp.InjectViewState
-import com.arellomobile.mvp.MvpPresenter
+import moxy.InjectViewState
+import moxy.MvpPresenter
 
 @InjectViewState
 class BackUpPresenter : MvpPresenter<BackUpView>() {

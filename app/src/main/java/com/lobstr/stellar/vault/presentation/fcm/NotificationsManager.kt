@@ -38,13 +38,13 @@ class NotificationsManager(private val context: Context) {
         const val OTHER = "Other"
     }
 
-    // must be unique (not equal GroupId)
+    // Must be unique (not equal GroupId).
     object NotificationId {
         const val LV_MAIN = 0
         const val SIGNERS_COUNT_CHANGED = 1
     }
 
-    // must be unique (not equal NotificationId)
+    // Must be unique (not equal NotificationId).
     object GroupId {
         const val LV_MAIN = 2
         const val SIGNER_STATUS = 3
@@ -64,7 +64,7 @@ class NotificationsManager(private val context: Context) {
     }
 
     /**
-     * Show only specific activity
+     * Show only specific activity.
      */
     fun sendNotification(
         channelId: String,
@@ -93,7 +93,7 @@ class NotificationsManager(private val context: Context) {
                 .setAutoCancel(true)
         notificationBuilder.setContentIntent(contentIntent)
 
-        // notifications group with NotificationCompat.InboxStyle() starting Android N
+        // Notifications group with NotificationCompat.InboxStyle() starting Android N.
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             notificationBuilder.setGroup(groupName)
 
@@ -119,7 +119,7 @@ class NotificationsManager(private val context: Context) {
     }
 
     /**
-     * Show specific activity with extra
+     * Show specific activity with extra.
      */
     fun sendNotification(
         channelId: String,
@@ -144,14 +144,14 @@ class NotificationsManager(private val context: Context) {
             .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
             .setAutoCancel(true)
 
-        // data (image url or something else) - some data that we must pass to activity from fcm
-        // and refresh this data when we will open activity
-        // in KitKat and Lollipop PendingIntent.FLAG_UPDATE_CURRENT not working correct
-        // (after first time) and this trick helps to solve the problem
+        // Data (image url or something else) - some data that we must pass to activity from fcm
+        // and refresh this data when we will open activity.
+        // In KitKat and Lollipop PendingIntent.FLAG_UPDATE_CURRENT not working correct
+        // (after first time) and this trick helps to solve the problem.
         getPendingIntent(intent)?.cancel()
         notificationBuilder.setContentIntent(getPendingIntent(intent))
 
-        // notifications group with NotificationCompat.InboxStyle() starting Android N
+        // Notifications group with NotificationCompat.InboxStyle() starting Android N.
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             notificationBuilder.setGroup(groupName)
 
@@ -176,23 +176,23 @@ class NotificationsManager(private val context: Context) {
         notificationManager.notify(notificationId, notificationBuilder.build())
     }
 
-    // notificationIntent - some data that we must pass from fcm
-    // and refresh this data when we will open activity
+    // NotificationIntent - some data that we must pass from fcm
+    // and refresh this data when we will open activity.
     private fun getPendingIntent(
         notificationIntent: Intent
     ): PendingIntent? {
-        // Creates an explicit intent for an Activity in your app
+        // Creates an explicit intent for an Activity in your app.
         notificationIntent.action = System.currentTimeMillis().toString()
 
         // The stack builder object will contain an artificial back stack for the started Activity.
         // This ensures that navigating backward from the Activity leads out of your application to the Home screen.
         val stackBuilder = TaskStackBuilder.create(context)
 
-        // Adds the back stack for the Intent (but not the Intent itself)
+        // Adds the back stack for the Intent (but not the Intent itself).
         // NOTE: don't worked for 'qa' product flavor
         stackBuilder.addParentStack(notificationIntent.component)
 
-        // Adds the Intent that starts the Activity to the top of the stack
+        // Adds the Intent that starts the Activity to the top of the stack.
         stackBuilder.addNextIntent(notificationIntent)
 
         return stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT)
@@ -229,7 +229,7 @@ class NotificationsManager(private val context: Context) {
     }
 
     private fun createChannelDescription(chanelId: String): String? {
-        // add channel descriptions
+        // Add channel descriptions.
         return when (chanelId) {
             else -> null
         }

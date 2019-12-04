@@ -26,20 +26,39 @@
                     tools:ignore="ContentDescription"/>
         </FrameLayout>
 
-        <TextView
-                android:id="@+id/tvAccount"
+        <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_marginStart="6dp"
+                android:orientation="vertical"
                 android:layout_weight="0.5"
-                android:drawablePadding="6dp"
-                android:ellipsize="middle"
-                android:fontFamily="sans-serif"
-                android:gravity="start|center"
-                android:singleLine="true"
-                android:textColor="@android:color/black"
-                android:textSize="14sp" />
+                android:layout_marginStart="6dp">
+
+            <TextView
+                    android:id="@+id/tvAccountFederation"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:ellipsize="middle"
+                    android:textStyle="bold"
+                    android:fontFamily="sans-serif"
+                    android:gravity="start|center"
+                    android:singleLine="true"
+                    android:textColor="@android:color/black"
+                    android:textSize="14sp" />
+
+            <TextView
+                    android:id="@+id/tvAccount"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:ellipsize="middle"
+                    android:alpha="0.3"
+                    android:fontFamily="sans-serif"
+                    android:gravity="start|center"
+                    android:singleLine="true"
+                    android:textColor="@android:color/black"
+                    android:textSize="14sp" />
+        </LinearLayout>
 
         <TextView
                 android:id="@+id/tvStatus"

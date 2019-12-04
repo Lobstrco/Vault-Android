@@ -1,8 +1,6 @@
 package com.lobstr.stellar.vault.presentation.vault_auth.recheck_signer
 
-import com.arellomobile.mvp.InjectViewState
 import com.lobstr.stellar.vault.data.error.exeption.DefaultException
-import com.lobstr.stellar.vault.data.error.exeption.NoInternetConnectionException
 import com.lobstr.stellar.vault.data.error.exeption.UserNotAuthorizedException
 import com.lobstr.stellar.vault.domain.re_check_signer.RecheckSignerInteractor
 import com.lobstr.stellar.vault.presentation.BasePresenter
@@ -11,6 +9,7 @@ import com.lobstr.stellar.vault.presentation.dagger.module.re_check_signer.Reche
 import com.lobstr.stellar.vault.presentation.dialog.alert.base.AlertDialogFragment
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
+import moxy.InjectViewState
 import javax.inject.Inject
 
 @InjectViewState
@@ -52,18 +51,12 @@ class RecheckSignerPresenter : BasePresenter<RecheckSignerView>() {
                     recheckSignersInProcess = false
                 }
                 .subscribe({
-                    if (it.isEmpty()) {
-                        // Add action if needed
-                    } else {
+                    if (it.isNotEmpty()) {
                         interactor.confirmAccountHasSigners()
                         viewState.showHomeScreen()
                     }
                 }, {
                     when (it) {
-                        is NoInternetConnectionException -> {
-                            viewState.showMessage(it.details)
-                            handleNoInternetConnection()
-                        }
                         is UserNotAuthorizedException -> {
                             recheckSigners()
                         }

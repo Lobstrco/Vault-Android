@@ -5,8 +5,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import com.arellomobile.mvp.presenter.InjectPresenter
-import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.lobstr.stellar.vault.R
 import com.lobstr.stellar.vault.presentation.auth.biometric.BiometricSetUpFragment
 import com.lobstr.stellar.vault.presentation.auth.enter_screen.AuthFragment
@@ -25,10 +23,12 @@ import com.lobstr.stellar.vault.presentation.util.Constant
 import com.lobstr.stellar.vault.presentation.util.Constant.Bundle.BUNDLE_NAVIGATION_FR
 import com.lobstr.stellar.vault.presentation.util.manager.FragmentTransactionManager
 import com.lobstr.stellar.vault.presentation.vault_auth.signer_info.SignerInfoFragment
+import moxy.presenter.InjectPresenter
+import moxy.presenter.ProvidePresenter
 
 /**
  * Used for containing all main fragments in the app
- * and manage common toolbar: title, up button and other
+ * and manage common toolbar: title, up button and other.
  */
 class ContainerFragment : BaseContainerFragment(),
     ContainerView {
@@ -53,7 +53,7 @@ class ContainerFragment : BaseContainerFragment(),
     // ===========================================================
 
     /**
-     * BUNDLE_NAVIGATION_FR - flag for setup main (initial) fragment in container
+     * BUNDLE_NAVIGATION_FR - flag for setup main (initial) fragment in container.
      * @see Constant.Navigation
      */
     @ProvidePresenter
@@ -109,9 +109,9 @@ class ContainerFragment : BaseContainerFragment(),
         )
     }
 
-    // base unique home tabs fragment
+    // Base unique home tabs fragment.
     override fun showDashBoardFr() {
-        // unique fragment must be first in container
+        // Unique fragment must be first in container.
         if (childFragmentManager.findFragmentById(R.id.fl_container) != null) return
         FragmentTransactionManager.displayFragment(
             childFragmentManager,
@@ -120,9 +120,9 @@ class ContainerFragment : BaseContainerFragment(),
         )
     }
 
-    // base unique home tabs fragment
+    // Base unique home tabs fragment.
     override fun showSettingsFr() {
-        // unique fragment must be first in container
+        // Unique fragment must be first in container.
         if (childFragmentManager.findFragmentById(R.id.fl_container) != null) return
         FragmentTransactionManager.displayFragment(
             childFragmentManager,
@@ -131,9 +131,9 @@ class ContainerFragment : BaseContainerFragment(),
         )
     }
 
-    // base unique home tabs fragment
+    // Base unique home tabs fragment.
     override fun showTransactionsFr() {
-        // unique fragment must be first in container
+        // Unique fragment must be first in container.
         if (childFragmentManager.findFragmentById(R.id.fl_container) != null) return
         FragmentTransactionManager.displayFragment(
             childFragmentManager,

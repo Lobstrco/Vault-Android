@@ -1,19 +1,19 @@
 package com.lobstr.stellar.vault.presentation.base.fragment
 
-import com.arellomobile.mvp.InjectViewState
-import com.arellomobile.mvp.MvpPresenter
+import moxy.InjectViewState
+import moxy.MvpPresenter
 
 @InjectViewState
 class BaseFragmentPresenter : MvpPresenter<BaseFragmentView>() {
 
-    // set by default options menu visible
+    // Set by default options menu visible.
     private var optionsMenuVisibility: Boolean = true
 
     private var toolbarTitle: String? = null
 
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
-        // set default title
+        // Set default title.
         setToolbarTitle(toolbarTitle)
     }
 

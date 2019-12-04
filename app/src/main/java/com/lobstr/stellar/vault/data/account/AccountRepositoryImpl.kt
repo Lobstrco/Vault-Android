@@ -24,4 +24,10 @@ class AccountRepositoryImpl(
             .map { accountEntityMapper.transformSignedAccounts(it) }
             .onErrorResumeNext { rxErrorUtils.handleSingleRequestHttpError(it) }
     }
+
+    override fun getStellarAccount(accountId: String, type: String): Single<Account> {
+        return accountApi.getStellarAccount(accountId, type)
+            .map { accountEntityMapper.transformStellarAccount(it) }
+            .onErrorResumeNext { rxErrorUtils.handleSingleRequestHttpError(it) }
+    }
 }

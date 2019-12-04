@@ -11,5 +11,7 @@ interface DashboardInteractor {
 
     fun getSignedAccounts(): Single<List<Account>>
 
+    fun getStellarAccount(stellarAddress: String): Single<Account>
+
     fun getSignersCount(): Int
 }

@@ -11,11 +11,11 @@ import androidx.annotation.StringRes
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import com.arellomobile.mvp.presenter.InjectPresenter
-import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.lobstr.stellar.vault.R
 import com.lobstr.stellar.vault.presentation.BaseMvpAppCompatActivity
 import com.lobstr.stellar.vault.presentation.base.fragment.BaseFragment
+import moxy.presenter.InjectPresenter
+import moxy.presenter.ProvidePresenter
 
 abstract class BaseActivity : BaseMvpAppCompatActivity(),
     BaseActivityView {
@@ -68,7 +68,7 @@ abstract class BaseActivity : BaseMvpAppCompatActivity(),
     override fun onBackPressed() {
         val container = supportFragmentManager.findFragmentById(R.id.fl_container)
 
-        // handle back press in fragment if needed
+        // Handle back press in fragment if needed.
         val childFragment = container?.childFragmentManager?.findFragmentById(R.id.fl_container)
         if ((childFragment as? BaseFragment)?.onBackPressed() == true) return
 
@@ -87,15 +87,15 @@ abstract class BaseActivity : BaseMvpAppCompatActivity(),
     }
 
     private fun setupToolbar() {
-        // set toolbar
-        // replace actionbar with toolbar
+        // Set toolbar.
+        // Replace actionbar with toolbar.
         setSupportActionBar(mToolbar)
-        // show up btn in actionbar
+        // Show up btn in actionbar.
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setHomeButtonEnabled(true)
-        // remove actionbar title
+        // Remove actionbar title.
         supportActionBar?.setDisplayShowTitleEnabled(false)
-        // handle HomeAsUpIndicator click
+        // Handle HomeAsUpIndicator click.
         mToolbar?.setNavigationOnClickListener { onBackPressed() }
     }
 

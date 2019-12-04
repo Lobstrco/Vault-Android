@@ -1,5 +1,7 @@
 package com.lobstr.stellar.vault.domain.transaction
 
+import com.lobstr.stellar.vault.domain.account.AccountRepository
+import com.lobstr.stellar.vault.presentation.entities.account.Account
 import com.lobstr.stellar.vault.presentation.entities.transaction.TransactionResult
 import com.lobstr.stellar.vault.presentation.util.AppUtil
 import com.lobstr.stellar.vault.presentation.util.Constant
@@ -8,6 +10,7 @@ import io.reactivex.Completable
 import io.reactivex.Single
 
 class TransactionInteractorImpl(
+    private val accountRepository: AccountRepository,
     private val transactionRepository: TransactionRepository,
     private val prefUtil: PrefsUtil
 ) : TransactionInteractor {
@@ -34,5 +37,9 @@ class TransactionInteractorImpl(
 
     override fun cancelOutdatedTransactions(): Completable {
         return transactionRepository.cancelOutdatedTransactions(AppUtil.getJwtToken(prefUtil.authToken))
+    }
+
+    override fun getStellarAccount(stellarAddress: String): Single<Account> {
+        return accountRepository.getStellarAccount(stellarAddress, "id")
     }
 }

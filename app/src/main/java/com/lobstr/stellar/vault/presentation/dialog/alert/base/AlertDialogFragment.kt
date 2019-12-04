@@ -28,10 +28,10 @@ open class AlertDialogFragment : BaseMvpAppCompatDialogFragment() {
 
     protected var mOnBaseAlertDialogListener: OnBaseAlertDialogListener? = null
 
-    // required parameters
+    // Required parameters.
     protected var isCalledInFragment: Boolean = false
 
-    // optional parameters
+    // Optional parameters.
     private var cancelableOf: Boolean = false
 
     @LayoutRes
@@ -154,7 +154,11 @@ open class AlertDialogFragment : BaseMvpAppCompatDialogFragment() {
             .create()
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         return mContentView
     }
 
@@ -165,7 +169,7 @@ open class AlertDialogFragment : BaseMvpAppCompatDialogFragment() {
     }
 
     override fun show(manager: FragmentManager, tag: String?) {
-        // if dialog is showed - skip it
+        // If dialog is showed - skip it.
         if ((manager.findFragmentByTag(tag) as? AlertDialogFragment)?.dialog?.isShowing == true) {
             return
         }
@@ -175,7 +179,7 @@ open class AlertDialogFragment : BaseMvpAppCompatDialogFragment() {
 
     override fun onDismiss(dialog: DialogInterface) {
         super.onDismiss(dialog)
-        // dismiss dialog for all specific cases
+        // Dismiss dialog for all specific cases.
         if (fragmentManager != null) {
             dismissAllowingStateLoss()
         }
@@ -251,7 +255,7 @@ open class AlertDialogFragment : BaseMvpAppCompatDialogFragment() {
     // Inner and Anonymous Classes
     // ===========================================================
     /**
-     * Determine where dialog was called
+     * Determine where dialog was called.
      *
      * @param isCalledInFragment True: in Fragment. False: in Activity.
      */
@@ -301,10 +305,10 @@ open class AlertDialogFragment : BaseMvpAppCompatDialogFragment() {
         }
 
         /**
-         * Determine custom layout for dialog
+         * Determine custom layout for dialog.
          *
-         * @param view layout resource
-         * @return Builder
+         * @param view Layout resource.
+         * @return Builder.
          */
         fun setView(@LayoutRes view: Int): Builder {
             this.view = view
@@ -342,12 +346,12 @@ open class AlertDialogFragment : BaseMvpAppCompatDialogFragment() {
         }
 
         /**
-         * Use it for specific AlertDialogFragments
+         * Use it for specific AlertDialogFragments.
          *
-         * @param dialogId specific dialog id (used for dialog factory)
-         * @param bundle data passed to specific dialog. Retrieve it by const ARGUMENT_DIALOG_SPECIFIC_DATA
+         * @param dialogId Specific dialog id (used for dialog factory).
+         * @param bundle Data passed to specific dialog. Retrieve it by const ARGUMENT_DIALOG_SPECIFIC_DATA.
          * @see ARGUMENT_DIALOG_SPECIFIC_DATA
-         * @return Builder
+         * @return Builder.
          */
         fun setSpecificDialog(dialogId: Int, bundle: Bundle?): Builder {
             this.dialogId = dialogId
@@ -377,10 +381,10 @@ open class AlertDialogFragment : BaseMvpAppCompatDialogFragment() {
     }
 
     /**
-     * you must extend your custom AlertDialogFragment action listener
-     * from OnBaseActionListener
+     * Extend your custom AlertDialogFragment action listener
+     * from OnBaseActionListener.
      */
-    interface OnBaseAlertDialogListener// implement your methods if needed
+    interface OnBaseAlertDialogListener// Implement your methods if needed.
 
     interface OnDefaultAlertDialogListener : OnBaseAlertDialogListener {
         fun onPositiveBtnClick(tag: String?, dialogInterface: DialogInterface)

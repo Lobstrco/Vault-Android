@@ -1,6 +1,5 @@
 package com.lobstr.stellar.vault.presentation.home.transactions.import_xdr
 
-import com.arellomobile.mvp.InjectViewState
 import com.lobstr.stellar.vault.R
 import com.lobstr.stellar.vault.domain.import_xdr.ImportXdrInteractor
 import com.lobstr.stellar.vault.domain.util.EventProviderModule
@@ -9,6 +8,7 @@ import com.lobstr.stellar.vault.presentation.application.LVApplication
 import com.lobstr.stellar.vault.presentation.dagger.module.import_xdr.ImportXdrModule
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
+import moxy.InjectViewState
 import javax.inject.Inject
 
 @InjectViewState

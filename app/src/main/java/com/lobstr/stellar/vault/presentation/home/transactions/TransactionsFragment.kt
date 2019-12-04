@@ -9,8 +9,6 @@ import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-import com.arellomobile.mvp.presenter.InjectPresenter
-import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.lobstr.stellar.vault.R
 import com.lobstr.stellar.vault.presentation.base.fragment.BaseFragment
 import com.lobstr.stellar.vault.presentation.container.activity.ContainerActivity
@@ -24,6 +22,8 @@ import com.lobstr.stellar.vault.presentation.util.Constant.Code.IMPORT_XDR_FRAGM
 import com.lobstr.stellar.vault.presentation.util.Constant.Code.TRANSACTION_DETAILS_FRAGMENT
 import com.lobstr.stellar.vault.presentation.util.manager.ProgressManager
 import kotlinx.android.synthetic.main.fragment_transactions.*
+import moxy.presenter.InjectPresenter
+import moxy.presenter.ProvidePresenter
 
 class TransactionsFragment : BaseFragment(), TransactionsView, SwipeRefreshLayout.OnRefreshListener,
     OnTransactionItemClicked, View.OnClickListener,
@@ -115,7 +115,7 @@ class TransactionsFragment : BaseFragment(), TransactionsView, SwipeRefreshLayou
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
 
-        // save RecycleView position for restore it after
+        // Save RecycleView position for restore it after.
         mPresenter.onSaveInstanceState(
             (rvTransactions?.layoutManager as? LinearLayoutManager)?.findFirstVisibleItemPosition()
                 ?: 0
@@ -164,7 +164,7 @@ class TransactionsFragment : BaseFragment(), TransactionsView, SwipeRefreshLayou
 
     override fun showTransactionList(
         items: MutableList<TransactionItem>,
-        needShowProgress: Boolean
+        needShowProgress: Boolean?
     ) {
         (rvTransactions.adapter as? TransactionAdapter)?.setTransactionList(items, needShowProgress)
         mPresenter.attemptRestoreRvPosition()
@@ -223,15 +223,15 @@ class TransactionsFragment : BaseFragment(), TransactionsView, SwipeRefreshLayou
     }
 
     override fun onNegativeBtnClick(tag: String?, dialogInterface: DialogInterface) {
-        // add logic if needed
+        // Add logic if needed.
     }
 
     override fun onNeutralBtnClick(tag: String?, dialogInterface: DialogInterface) {
-        // add logic if needed
+        // Add logic if needed.
     }
 
     override fun onCancel(tag: String?, dialogInterface: DialogInterface) {
-        // add logic if needed
+        // Add logic if needed.
     }
 
     // ===========================================================

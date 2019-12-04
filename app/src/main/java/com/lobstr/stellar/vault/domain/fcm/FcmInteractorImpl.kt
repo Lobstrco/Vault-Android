@@ -51,7 +51,7 @@ class FcmInteractorImpl(private val fcmRepository: FcmRepository, private val pr
 
         val account = fcmRepository.transformApiAccountResponse(jsonStr)
 
-        // increment signers count
+        // Increment signers count.
         prefsUtil.accountSignersCount = ++prefsUtil.accountSignersCount
 
         return account
@@ -64,7 +64,7 @@ class FcmInteractorImpl(private val fcmRepository: FcmRepository, private val pr
 
         val account = fcmRepository.transformApiAccountResponse(jsonStr)
 
-        // decrement signers count
+        // Decrement signers count.
         if (prefsUtil.accountSignersCount > 0) {
             prefsUtil.accountSignersCount = --prefsUtil.accountSignersCount
         }

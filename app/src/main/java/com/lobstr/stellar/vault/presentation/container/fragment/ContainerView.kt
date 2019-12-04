@@ -1,10 +1,10 @@
 package com.lobstr.stellar.vault.presentation.container.fragment
 
 import androidx.fragment.app.Fragment
-import com.arellomobile.mvp.MvpView
-import com.arellomobile.mvp.viewstate.strategy.SkipStrategy
-import com.arellomobile.mvp.viewstate.strategy.StateStrategyType
 import com.lobstr.stellar.vault.presentation.entities.transaction.TransactionItem
+import moxy.MvpView
+import moxy.viewstate.strategy.SkipStrategy
+import moxy.viewstate.strategy.StateStrategyType
 
 @StateStrategyType(SkipStrategy::class)
 interface ContainerView : MvpView {

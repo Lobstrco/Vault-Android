@@ -19,10 +19,12 @@ class TransactionAdapter(private val listener: OnTransactionItemClicked) :
 
     fun setTransactionList(
         transactionItems: MutableList<TransactionItem>,
-        needShowProgress: Boolean
+        needShowProgress: Boolean?
     ) {
         this.transactionItems = transactionItems
-        this.needShowProgress = needShowProgress
+        if(needShowProgress != null) {
+            this.needShowProgress = needShowProgress
+        }
         notifyDataSetChanged()
     }
 

@@ -2,7 +2,6 @@ package com.lobstr.stellar.vault.presentation.home.transactions
 
 import android.app.Activity
 import android.content.Intent
-import com.arellomobile.mvp.InjectViewState
 import com.lobstr.stellar.vault.R
 import com.lobstr.stellar.vault.data.error.exeption.DefaultException
 import com.lobstr.stellar.vault.data.error.exeption.NoInternetConnectionException
@@ -15,12 +14,15 @@ import com.lobstr.stellar.vault.presentation.BasePresenter
 import com.lobstr.stellar.vault.presentation.application.LVApplication
 import com.lobstr.stellar.vault.presentation.dagger.module.transaction.TransactionModule
 import com.lobstr.stellar.vault.presentation.dialog.alert.base.AlertDialogFragment
+import com.lobstr.stellar.vault.presentation.entities.account.Account
 import com.lobstr.stellar.vault.presentation.entities.transaction.TransactionItem
 import com.lobstr.stellar.vault.presentation.util.Constant
 import com.lobstr.stellar.vault.presentation.util.Constant.Util.UNDEFINED_VALUE
+import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
+import moxy.InjectViewState
 import javax.inject.Inject
 
 @InjectViewState
@@ -36,7 +38,7 @@ class TransactionsPresenter : BasePresenter<TransactionsView>() {
     @Inject
     lateinit var interactor: TransactionInteractor
 
-    // for restore RecycleView position after saveInstanceState (-1 - undefined state)
+    // For restore RecycleView position after saveInstanceState (-1 - undefined state).
     private var savedRvPosition: Int = UNDEFINED_VALUE
 
     private var transactionsLoadingDisposable: Disposable? = null
@@ -44,6 +46,9 @@ class TransactionsPresenter : BasePresenter<TransactionsView>() {
     private var newLoadTransactions = true
     private var isLoading = false
     private val transactions: MutableList<TransactionItem> = mutableListOf()
+
+    private var stellarAccountsSubscription: Disposable? = null
+    private val cashedStellarAccounts: MutableList<Account> = mutableListOf()
 
     init {
         LVApplication.appComponent.plusTransactionComponent(TransactionModule()).inject(this)
@@ -69,8 +74,7 @@ class TransactionsPresenter : BasePresenter<TransactionsView>() {
                             if (needCheckConnectionState) {
                                 loadTransactions()
                             }
-                            needCheckConnectionState = false
-                            cancelNetworkWorker()
+                            cancelNetworkWorker(false)
                         }
                     }
                 }, {
@@ -96,7 +100,7 @@ class TransactionsPresenter : BasePresenter<TransactionsView>() {
     }
 
     private fun loadTransactions() {
-        // cancel previous loading
+        // Cancel previous loading.
         transactionsLoadingDisposable?.dispose()
 
         transactionsLoadingDisposable = interactor.getPendingTransactionList(nextPageUrl)
@@ -115,8 +119,8 @@ class TransactionsPresenter : BasePresenter<TransactionsView>() {
                 viewState.showPullToRefresh(false)
             }
             .subscribe({ result ->
-                // reset saved scroll position for avoid scroll to wrong position after
-                // pagination action
+                // Reset saved scroll position for avoid scroll to wrong position after
+                // pagination action.
                 savedRvPosition = UNDEFINED_VALUE
 
                 if (newLoadTransactions) {
@@ -130,7 +134,20 @@ class TransactionsPresenter : BasePresenter<TransactionsView>() {
                     viewState.hideEmptyState()
                 }
                 nextPageUrl = result.next
+
+                // check cashed federation items
+                transactions.forEachIndexed { index, transactionItem ->
+                    val federation =
+                        cashedStellarAccounts.find { account -> account.address == transactionItem.transaction.sourceAccount }
+                            ?.federation
+                    transactions[index].transaction.federation = federation
+                }
+
                 viewState.showTransactionList(transactions, !nextPageUrl.isNullOrEmpty())
+
+                // try receive federations for accounts in transaction
+                getStellarAccounts(transactions)
+
                 if (newLoadTransactions) {
                     viewState.scrollListToPosition(0)
                 }
@@ -163,6 +180,50 @@ class TransactionsPresenter : BasePresenter<TransactionsView>() {
         unsubscribeOnDestroy(transactionsLoadingDisposable!!)
     }
 
+    /**
+     * Used for receive federation by account id
+     */
+    private fun getStellarAccounts(transactions: MutableList<TransactionItem>) {
+
+        // first create list of unique accounts (don't existing in cashed list)
+        val accountList = mutableListOf<Account>()
+        transactions.forEach {
+            if (cashedStellarAccounts.find { account -> account.address == it.transaction.sourceAccount } == null
+                && accountList.find { account -> account.address == it.transaction.sourceAccount } == null) {
+                accountList.add(Account(it.transaction.sourceAccount!!, it.transaction.federation))
+            }
+        }
+        stellarAccountsSubscription?.dispose()
+        stellarAccountsSubscription = Observable.fromIterable(accountList)
+            .subscribeOn(Schedulers.io())
+            .flatMapSingle {
+                interactor.getStellarAccount(it.address).onErrorReturnItem(it)
+            }
+            .filter { it.federation != null }
+            .toList()
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({
+                it.forEach { account ->
+                    if (cashedStellarAccounts.find { cashedAccount -> cashedAccount.address == account.address } == null) {
+                        cashedStellarAccounts.add(account)
+                    }
+                }
+
+                // check cashed federation items
+                transactions.forEachIndexed { index, transactionItem ->
+                    val federation =
+                        cashedStellarAccounts.find { account -> account.address == transactionItem.transaction.sourceAccount }
+                            ?.federation
+                    transactions[index].transaction.federation = federation
+                }
+                viewState.showTransactionList(transactions, null)
+            }, {
+                // ignore
+            })
+
+        unsubscribeOnDestroy(stellarAccountsSubscription!!)
+    }
+
     internal fun handleOnActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (resultCode == Activity.RESULT_CANCELED) {
             return
@@ -170,7 +231,7 @@ class TransactionsPresenter : BasePresenter<TransactionsView>() {
 
         when (requestCode) {
             Constant.Code.TRANSACTION_DETAILS_FRAGMENT, Constant.Code.IMPORT_XDR_FRAGMENT -> {
-                // handle transactionItem it if needed
+                // Handle transactionItem it if needed.
                 val transactionItem: TransactionItem? =
                     data?.getParcelableExtra(Constant.Extra.EXTRA_TRANSACTION_ITEM)
 
@@ -257,7 +318,7 @@ class TransactionsPresenter : BasePresenter<TransactionsView>() {
     }
 
     fun onSaveInstanceState(position: Int) {
-        // save list position and restore it after if needed
+        // Save list position and restore it after if needed.
         savedRvPosition = position
     }
 

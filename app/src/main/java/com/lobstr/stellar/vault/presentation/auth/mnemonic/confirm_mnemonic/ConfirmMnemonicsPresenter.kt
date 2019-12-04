@@ -1,6 +1,5 @@
 package com.lobstr.stellar.vault.presentation.auth.mnemonic.confirm_mnemonic
 
-import com.arellomobile.mvp.InjectViewState
 import com.lobstr.stellar.vault.BuildConfig
 import com.lobstr.stellar.vault.R
 import com.lobstr.stellar.vault.domain.confirm_mnemonics.ConfirmMnemonicsInteractor
@@ -13,6 +12,7 @@ import com.lobstr.stellar.vault.presentation.util.Constant.Util.COUNT_MNEMONIC_W
 import com.soneso.stellarmnemonics.mnemonic.MnemonicException
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
+import moxy.InjectViewState
 import javax.inject.Inject
 
 @InjectViewState
@@ -43,7 +43,7 @@ class ConfirmMnemonicsPresenter(private val mnemonicsInitialList: List<MnemonicI
     }
 
     /**
-     * Create shuffled list for selection (bottom) section and save original
+     * Create shuffled list for selection (bottom) section and save original.
      */
     private fun prepareShuffledList() {
         mnemonicsInitialStr = mnemonicsInitialList.joinToString(" ") { it.value }
@@ -88,7 +88,7 @@ class ConfirmMnemonicsPresenter(private val mnemonicsInitialList: List<MnemonicI
     }
 
     /**
-     * Remove mnemonic items from confirmation section and restore selection section
+     * Remove mnemonic items from confirmation section and restore selection section.
      */
     fun btnClearClicked() {
         viewState.setActionButtonEnabled(false)
@@ -99,7 +99,7 @@ class ConfirmMnemonicsPresenter(private val mnemonicsInitialList: List<MnemonicI
     }
 
     /**
-     * Remove mnemonic item from confirmation section and add it to selection section
+     * Remove mnemonic item from confirmation section and add it to selection section.
      */
     fun mnemonicItemToConfirmClicked(position: Int, value: String) {
         viewState.setActionButtonEnabled(false)
@@ -110,7 +110,7 @@ class ConfirmMnemonicsPresenter(private val mnemonicsInitialList: List<MnemonicI
     }
 
     /**
-     * Remove mnemonic item from selection section (set it hide = true) and add it to confirmation section
+     * Remove mnemonic item from selection section (set it hide = true) and add it to confirmation section.
      */
     fun mnemonicItemToSelectClicked(position: Int, value: String) {
         mnemonicsToSelectList[position].hide = true

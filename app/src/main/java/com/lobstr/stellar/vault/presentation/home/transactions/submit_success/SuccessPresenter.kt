@@ -1,7 +1,7 @@
 package com.lobstr.stellar.vault.presentation.home.transactions.submit_success
 
-import com.arellomobile.mvp.InjectViewState
-import com.arellomobile.mvp.MvpPresenter
+import moxy.InjectViewState
+import moxy.MvpPresenter
 
 @InjectViewState
 class SuccessPresenter(

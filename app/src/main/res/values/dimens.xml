@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- expandable card view -->
+    <!-- Expandable card view -->
     <dimen name="default_card_height">60dp</dimen>
     <dimen name="default_vertical_padding">12dp</dimen>
 </resources>

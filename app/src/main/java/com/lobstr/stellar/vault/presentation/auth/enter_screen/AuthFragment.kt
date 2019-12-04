@@ -6,8 +6,6 @@ import android.text.method.LinkMovementMethod
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.arellomobile.mvp.presenter.InjectPresenter
-import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.lobstr.stellar.vault.R
 import com.lobstr.stellar.vault.presentation.auth.backup.BackUpFragment
 import com.lobstr.stellar.vault.presentation.auth.restore_key.RecoverKeyFragment
@@ -15,6 +13,8 @@ import com.lobstr.stellar.vault.presentation.base.fragment.BaseFragment
 import com.lobstr.stellar.vault.presentation.faq.FaqFragment
 import com.lobstr.stellar.vault.presentation.util.manager.FragmentTransactionManager
 import kotlinx.android.synthetic.main.fragment_auth.*
+import moxy.presenter.InjectPresenter
+import moxy.presenter.ProvidePresenter
 
 class AuthFragment : BaseFragment(), AuthFrView, View.OnClickListener {
 

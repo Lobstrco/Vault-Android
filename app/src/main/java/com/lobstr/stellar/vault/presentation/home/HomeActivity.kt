@@ -5,8 +5,6 @@ import android.os.Bundle
 import android.view.MenuItem
 import androidx.annotation.IdRes
 import androidx.fragment.app.FragmentManager.POP_BACK_STACK_INCLUSIVE
-import com.arellomobile.mvp.presenter.InjectPresenter
-import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.bottomnavigation.LabelVisibilityMode
 import com.lobstr.stellar.vault.R
@@ -18,6 +16,8 @@ import com.lobstr.stellar.vault.presentation.home.HomeViewPagerAdapter.Position.
 import com.lobstr.stellar.vault.presentation.home.HomeViewPagerAdapter.Position.TRANSACTIONS
 import com.lobstr.stellar.vault.presentation.util.Constant
 import kotlinx.android.synthetic.main.activity_home.*
+import moxy.presenter.InjectPresenter
+import moxy.presenter.ProvidePresenter
 
 class HomeActivity : BaseActivity(), HomeActivityView,
     BottomNavigationView.OnNavigationItemSelectedListener {

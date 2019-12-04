@@ -9,8 +9,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import com.arellomobile.mvp.presenter.InjectPresenter
-import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.lobstr.stellar.vault.R
 import com.lobstr.stellar.vault.presentation.base.fragment.BaseFragment
 import com.lobstr.stellar.vault.presentation.entities.transaction.TransactionItem
@@ -20,6 +18,8 @@ import com.lobstr.stellar.vault.presentation.util.Constant
 import com.lobstr.stellar.vault.presentation.util.manager.FragmentTransactionManager
 import com.lobstr.stellar.vault.presentation.util.manager.ProgressManager
 import kotlinx.android.synthetic.main.fragment_import_xdr.*
+import moxy.presenter.InjectPresenter
+import moxy.presenter.ProvidePresenter
 
 
 class ImportXdrFragment : BaseFragment(), ImportXdrView, View.OnClickListener {
@@ -76,11 +76,11 @@ class ImportXdrFragment : BaseFragment(), ImportXdrView, View.OnClickListener {
             object : TextWatcher {
 
                 override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
-                    // implement logic if needed
+                    // Implement logic if needed.
                 }
 
                 override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-                    // implement logic if needed
+                    // Implement logic if needed.
                 }
 
                 override fun afterTextChanged(s: Editable) {

@@ -6,7 +6,10 @@ import com.bumptech.glide.Glide
 import com.lobstr.stellar.vault.R
 import com.lobstr.stellar.vault.presentation.entities.account.Account
 import com.lobstr.stellar.vault.presentation.util.Constant
-import kotlinx.android.synthetic.main.adapter_item_account_extended.view.*
+import kotlinx.android.synthetic.main.adapter_item_account.view.*
+import kotlinx.android.synthetic.main.adapter_item_account_extended.view.divider
+import kotlinx.android.synthetic.main.adapter_item_account_extended.view.ivIdentity
+import kotlinx.android.synthetic.main.adapter_item_account_extended.view.tvAccount
 
 class AccountViewHolder(itemView: View, private val listener: OnAccountItemListener) :
     RecyclerView.ViewHolder(itemView) {
@@ -25,7 +28,18 @@ class AccountViewHolder(itemView: View, private val listener: OnAccountItemListe
             .placeholder(R.drawable.ic_person)
             .into(itemView.ivIdentity)
 
+        itemView.tvAccount.visibility = if(account.federation.isNullOrEmpty()) View.GONE else View.VISIBLE
         itemView.tvAccount.text = account.address
+        itemView.tvAccountFederation.text = if(account.federation.isNullOrEmpty()) account.address else account.federation
+
+        itemView.setOnClickListener {
+            val position = this@AccountViewHolder.adapterPosition
+            if (position == RecyclerView.NO_POSITION) {
+                return@setOnClickListener
+            }
+
+            listener.onAccountItemClick(account)
+        }
 
         itemView.setOnLongClickListener {
             val position = this@AccountViewHolder.adapterPosition
@@ -40,9 +54,9 @@ class AccountViewHolder(itemView: View, private val listener: OnAccountItemListe
     }
 
     /**
-     * Don't show divider for last ore one item
-     * @param itemsCount count of items
-     * @return visibility
+     * Don't show divider for last ore one item.
+     * @param itemsCount Count of items.
+     * @return Visibility.
      */
     private fun calculateDividerVisibility(itemsCount: Int): Int {
         return if (itemsCount == 1 || adapterPosition == itemsCount - 1) {

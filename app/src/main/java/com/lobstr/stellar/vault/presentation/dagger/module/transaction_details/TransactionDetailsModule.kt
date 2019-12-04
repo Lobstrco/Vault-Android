@@ -1,5 +1,6 @@
 package com.lobstr.stellar.vault.presentation.dagger.module.transaction_details
 
+import com.lobstr.stellar.vault.domain.account.AccountRepository
 import com.lobstr.stellar.vault.domain.key_store.KeyStoreRepository
 import com.lobstr.stellar.vault.domain.stellar.StellarRepository
 import com.lobstr.stellar.vault.domain.transaction.TransactionRepository
@@ -14,12 +15,19 @@ import dagger.Provides
 class TransactionDetailsModule {
     @Provides
     @HomeScope
-     fun provideTransactionDetailsInteractor(
+    fun provideTransactionDetailsInteractor(
+        accountRepository: AccountRepository,
         transactionRepository: TransactionRepository,
         stellarRepository: StellarRepository,
         keyStoreRepository: KeyStoreRepository,
         prefsUtil: PrefsUtil
     ): TransactionDetailsInteractor {
-        return TransactionDetailsInteractorImpl(transactionRepository, stellarRepository, keyStoreRepository, prefsUtil)
+        return TransactionDetailsInteractorImpl(
+            accountRepository,
+            transactionRepository,
+            stellarRepository,
+            keyStoreRepository,
+            prefsUtil
+        )
     }
 }

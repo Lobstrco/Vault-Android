@@ -147,7 +147,7 @@ class KeyStoreRepositoryImpl(
     }
 
     /**
-     * Clears all aliases in the Android Key Store
+     * Clears all aliases in the Android Key Store.
      */
     override fun clearAll() {
         val aliases = keyStore.aliases()

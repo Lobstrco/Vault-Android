@@ -6,7 +6,7 @@ import com.lobstr.stellar.vault.presentation.entities.fcm.FcmResult
 
 class FcmEntityMapper {
     fun transformFcmResponse(apiFcmResult: ApiFcmResult): FcmResult {
-        // Get FCM info
+        // Get FCM info.
         val id = apiFcmResult.id
         val name = apiFcmResult.name
         val token = apiFcmResult.token

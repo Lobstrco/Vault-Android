@@ -1,7 +1,7 @@
 package com.lobstr.stellar.vault.presentation.home.settings.show_public_key
 
-import com.arellomobile.mvp.InjectViewState
-import com.arellomobile.mvp.MvpPresenter
+import moxy.InjectViewState
+import moxy.MvpPresenter
 
 @InjectViewState
 class ShowPublicKeyPresenter(private val publicKey: String) : MvpPresenter<ShowPublicKeyView>() {

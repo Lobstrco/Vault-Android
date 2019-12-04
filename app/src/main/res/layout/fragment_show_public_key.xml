@@ -27,11 +27,14 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
             android:gravity="center"
+            android:ellipsize="middle"
+            android:singleLine="true"
+            android:layout_marginStart="36dp"
+            android:layout_marginEnd="36dp"
             android:layout_gravity="center"
             android:textColor="@color/color_4D000000"
             android:textSize="14sp"
             android:textAllCaps="true"
-            android:lineSpacingExtra="14sp"
             android:textAppearance="?android:textAppearanceMedium"/>
 
     <ImageView

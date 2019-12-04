@@ -1,6 +1,5 @@
 package com.lobstr.stellar.vault.presentation.vault_auth
 
-import com.arellomobile.mvp.InjectViewState
 import com.lobstr.stellar.vault.R
 import com.lobstr.stellar.vault.data.error.exeption.DefaultException
 import com.lobstr.stellar.vault.data.error.exeption.NoInternetConnectionException
@@ -14,6 +13,7 @@ import com.lobstr.stellar.vault.presentation.application.LVApplication
 import com.lobstr.stellar.vault.presentation.dagger.module.vault_auth.VaultAuthModule
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
+import moxy.InjectViewState
 import javax.inject.Inject
 
 @InjectViewState
@@ -50,7 +50,7 @@ class VaultAuthPresenter : BasePresenter<VaultAuthView>() {
         } else {
             interactor.registerFcm()
             viewState.showSignerInfoFragment()
-            // silent recheck signers for first view attach
+            // Silent recheck signers for first view attach.
             recheckSigners(userToken)
         }
     }
@@ -78,8 +78,7 @@ class VaultAuthPresenter : BasePresenter<VaultAuthView>() {
                             if (needCheckConnectionState) {
                                 tryAuthorizeVault()
                             }
-                            needCheckConnectionState = false
-                            cancelNetworkWorker()
+                            cancelNetworkWorker(false)
                         }
                     }
                 }, {

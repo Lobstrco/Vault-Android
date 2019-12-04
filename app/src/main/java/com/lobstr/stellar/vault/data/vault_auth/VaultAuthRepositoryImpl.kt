@@ -12,7 +12,9 @@ class VaultAuthRepositoryImpl(
 
     override fun getChallenge(account: String): Single<String> {
         return vaultAuthApi.getChallenge(account)
-            .onErrorResumeNext { rxErrorUtils.handleSingleRequestHttpError(it) }
+            .onErrorResumeNext {
+                rxErrorUtils.handleSingleRequestHttpError(it)
+            }
             .map {
                 it.transaction!!
             }

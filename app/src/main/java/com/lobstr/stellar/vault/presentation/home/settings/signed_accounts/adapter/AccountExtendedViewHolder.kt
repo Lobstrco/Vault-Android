@@ -23,7 +23,10 @@ class AccountExtendedViewHolder(itemView: View, private val listener: OnAccountI
             .placeholder(R.drawable.ic_person)
             .into(itemView.ivIdentity)
 
+        itemView.tvAccount.visibility = if(account.federation.isNullOrEmpty()) View.GONE else View.VISIBLE
         itemView.tvAccount.text = account.address
+        itemView.tvAccountFederation.text = if(account.federation.isNullOrEmpty()) account.address else account.federation
+
         itemView.setOnClickListener {
             val position = this@AccountExtendedViewHolder.adapterPosition
             if (position == RecyclerView.NO_POSITION) {
@@ -32,12 +35,23 @@ class AccountExtendedViewHolder(itemView: View, private val listener: OnAccountI
 
             listener.onAccountItemClick(account)
         }
+
+        itemView.setOnLongClickListener {
+            val position = this@AccountExtendedViewHolder.adapterPosition
+            if (position == RecyclerView.NO_POSITION) {
+                return@setOnLongClickListener false
+            }
+
+            listener.onAccountItemLongClick(account)
+
+            true
+        }
     }
 
     /**
-     * Don't show divider for last ore one item
-     * @param itemsCount count of items
-     * @return visibility
+     * Don't show divider for last ore one item.
+     * @param itemsCount Count of items.
+     * @return Visibility.
      */
     private fun calculateDividerVisibility(itemsCount: Int): Int {
         return if (itemsCount == 1 || adapterPosition == itemsCount - 1) {

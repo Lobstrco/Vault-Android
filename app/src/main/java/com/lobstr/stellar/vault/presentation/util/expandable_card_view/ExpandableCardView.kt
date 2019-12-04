@@ -96,7 +96,7 @@ class ExpandableCardView @JvmOverloads constructor(
     }
 
     private fun initView(context: Context) {
-        //Inflating View
+        // Inflating View.
         LayoutInflater.from(context).inflate(R.layout.expandable_cardview, this)
     }
 
@@ -117,7 +117,7 @@ class ExpandableCardView @JvmOverloads constructor(
     override fun onFinishInflate() {
         super.onFinishInflate()
 
-        //Setting attributes
+        // Setting attributes.
         if (title != View.NO_ID) card_title.setText(title)
 
         iconDrawable?.let { drawable ->
@@ -187,7 +187,7 @@ class ExpandableCardView @JvmOverloads constructor(
         val expandAnimation = object : Animation() {
             override fun applyTransformation(interpolatedTime: Float, t: Transformation) {
                 if (interpolatedTime == 1f) {
-                    //Setting isExpanding/isCollapsing to false
+                    // Setting isExpanding/isCollapsing to false.
                     isExpanding = false
                     isCollapsing = false
 

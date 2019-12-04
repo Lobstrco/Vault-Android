@@ -2,52 +2,53 @@ package com.lobstr.stellar.vault.presentation
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
-import com.arellomobile.mvp.MvpDelegate
+import moxy.MvpDelegate
+import moxy.MvpDelegateHolder
 
 
-open class BaseMvpAppCompatFragment : Fragment() {
+open class BaseMvpAppCompatFragment : Fragment(), MvpDelegateHolder {
     private var mIsStateSaved: Boolean = false
     private var mMvpDelegate: MvpDelegate<out BaseMvpAppCompatFragment>? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        this.getMvpDelegate().onCreate(savedInstanceState)
+        this.mvpDelegate.onCreate(savedInstanceState)
     }
 
     override fun onStart() {
         super.onStart()
         this.mIsStateSaved = false
-        this.getMvpDelegate().onAttach()
+        this.mvpDelegate.onAttach()
     }
 
     override fun onResume() {
         super.onResume()
         this.mIsStateSaved = false
-        this.getMvpDelegate().onAttach()
+        this.mvpDelegate.onAttach()
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         this.mIsStateSaved = true
-        this.getMvpDelegate().onSaveInstanceState(outState)
-        this.getMvpDelegate().onDetach()
+        this.mvpDelegate.onSaveInstanceState(outState)
+        this.mvpDelegate.onDetach()
     }
 
     override fun onStop() {
         super.onStop()
-        this.getMvpDelegate().onDetach()
+        this.mvpDelegate.onDetach()
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
-        this.getMvpDelegate().onDetach()
-        this.getMvpDelegate().onDestroyView()
+        this.mvpDelegate.onDetach()
+        this.mvpDelegate.onDestroyView()
     }
 
     override fun onDestroy() {
         super.onDestroy()
         if (this.activity!!.isFinishing) {
-            this.getMvpDelegate().onDestroy()
+            this.mvpDelegate.onDestroy()
         } else if (this.mIsStateSaved) {
             this.mIsStateSaved = false
         } else {
@@ -60,12 +61,12 @@ open class BaseMvpAppCompatFragment : Fragment() {
             }
 
             if (this.isRemoving || anyParentIsRemoving) {
-                this.getMvpDelegate().onDestroy()
+                this.mvpDelegate.onDestroy()
             }
         }
     }
 
-    fun getMvpDelegate(): MvpDelegate<*> {
+    override fun getMvpDelegate(): MvpDelegate<*> {
         if (this.mMvpDelegate == null) {
             this.mMvpDelegate = MvpDelegate(this)
         }

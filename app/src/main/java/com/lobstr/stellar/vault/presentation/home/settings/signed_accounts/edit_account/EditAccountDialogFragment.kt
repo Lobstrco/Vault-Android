@@ -4,13 +4,13 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.arellomobile.mvp.presenter.InjectPresenter
-import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.lobstr.stellar.vault.R
 import com.lobstr.stellar.vault.presentation.BaseBottomSheetDialog
 import com.lobstr.stellar.vault.presentation.util.AppUtil
 import com.lobstr.stellar.vault.presentation.util.Constant
 import kotlinx.android.synthetic.main.fragment_edit_account.*
+import moxy.presenter.InjectPresenter
+import moxy.presenter.ProvidePresenter
 
 
 class EditAccountDialogFragment : BaseBottomSheetDialog(), EditAccountView, View.OnClickListener {

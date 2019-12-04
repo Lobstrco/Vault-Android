@@ -69,10 +69,10 @@ object AppUtil {
         Toast.makeText(context, R.string.msg_successfully_copied, Toast.LENGTH_SHORT).show()
     }
 
-    fun pasteFromClipboard(context: Context): String? {
-        val clipboard = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+    fun pasteFromClipboard(context: Context?): String? {
+        val clipboard = context?.getSystemService(Context.CLIPBOARD_SERVICE) as? ClipboardManager
 
-        val item = clipboard.primaryClip?.getItemAt(0)
+        val item = clipboard?.primaryClip?.getItemAt(0)
 
         return if (item == null || item.text == null) {
             null
@@ -91,16 +91,6 @@ object AppUtil {
         } catch (e: PackageManager.NameNotFoundException) {
             Log.e("NameNotFoundException", "Could not get package name:$e")
             -1
-        }
-    }
-
-    fun getAppVersionName(context: Context?): String? {
-        return try {
-            val packageInfo = context?.packageManager?.getPackageInfo(context.packageName, 0)
-            packageInfo?.versionName
-        } catch (e: PackageManager.NameNotFoundException) {
-            Log.e("NameNotFoundException", "Could not get package name:$e")
-            null
         }
     }
 

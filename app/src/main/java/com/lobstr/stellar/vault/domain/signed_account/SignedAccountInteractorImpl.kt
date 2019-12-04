@@ -15,4 +15,8 @@ class SignedAccountInteractorImpl(
         return accountRepository.getSignedAccounts(AppUtil.getJwtToken(prefUtil.authToken))
             .doOnSuccess { prefUtil.accountSignersCount = it.size }
     }
+
+    override fun getStellarAccount(stellarAddress: String): Single<Account> {
+        return accountRepository.getStellarAccount(stellarAddress, "id")
+    }
 }

@@ -1,10 +1,10 @@
 package com.lobstr.stellar.vault.presentation.home.rate_us
 
 import android.content.DialogInterface
-import com.arellomobile.mvp.presenter.InjectPresenter
-import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.lobstr.stellar.vault.presentation.dialog.alert.base.AlertDialogFragment
 import com.lobstr.stellar.vault.presentation.util.AppUtil
+import moxy.presenter.InjectPresenter
+import moxy.presenter.ProvidePresenter
 
 
 class RateUsDialogFragment : AlertDialogFragment(), RateUsView {

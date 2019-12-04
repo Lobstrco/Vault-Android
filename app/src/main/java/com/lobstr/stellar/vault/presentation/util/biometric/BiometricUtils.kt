@@ -38,7 +38,7 @@ object BiometricUtils {
     /*
      * Condition III: Biometric authentication can be matched with a
      * registered biometric of the user. So we need to perform this check
-     * in order to enable biometric authentication
+     * in order to enable biometric authentication.
      *
      * */
     fun isBiometricAvailable(context: Context): Boolean {

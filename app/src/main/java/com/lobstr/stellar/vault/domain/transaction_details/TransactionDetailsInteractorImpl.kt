@@ -1,5 +1,6 @@
 package com.lobstr.stellar.vault.domain.transaction_details
 
+import com.lobstr.stellar.vault.domain.account.AccountRepository
 import com.lobstr.stellar.vault.domain.key_store.KeyStoreRepository
 import com.lobstr.stellar.vault.domain.stellar.StellarRepository
 import com.lobstr.stellar.vault.domain.transaction.TransactionRepository
@@ -14,6 +15,7 @@ import org.stellar.sdk.responses.SubmitTransactionResponse
 
 
 class TransactionDetailsInteractorImpl(
+    private val accountRepository: AccountRepository,
     private val transactionRepository: TransactionRepository,
     private val stellarRepository: StellarRepository,
     private val keyStoreRepository: KeyStoreRepository,
@@ -21,10 +23,10 @@ class TransactionDetailsInteractorImpl(
 ) : TransactionDetailsInteractor {
 
     /**
-     * Used for retrieve actual transaction XDR for send it to Horizon
-     * In some cases (when used >1 vault accounts) need retrieve actual XDR
+     * Used for retrieve actual transaction XDR for send it to Horizon.
+     * In some cases (when used >1 vault accounts) need retrieve actual XDR.
      *
-     * For case when transaction status = IMPORT_XDR - return existing transactionItem
+     * For case when transaction status = IMPORT_XDR - return existing transactionItem.
      * @see Constant.Transaction.IMPORT_XDR
      */
     override fun retrieveActualTransaction(transactionItem: TransactionItem): Single<TransactionItem> {
@@ -43,7 +45,7 @@ class TransactionDetailsInteractorImpl(
     }
 
     /**
-     * For case when transaction status = IMPORT_XDR - ignore server confirmation errors and return existing transaction xdr
+     * For case when transaction status = IMPORT_XDR - ignore server confirmation errors and return existing transaction xdr.
      * @see Constant.Transaction.IMPORT_XDR
      */
     override fun confirmTransactionOnServer(
@@ -94,5 +96,9 @@ class TransactionDetailsInteractorImpl(
 
     override fun getTransactionSigners(xdr: String, sourceAccount: String): Single<List<Account>> {
         return stellarRepository.getTransactionSigners(xdr, sourceAccount)
+    }
+
+    override fun getStellarAccount(stellarAddress: String): Single<Account> {
+        return accountRepository.getStellarAccount(stellarAddress, "id")
     }
 }

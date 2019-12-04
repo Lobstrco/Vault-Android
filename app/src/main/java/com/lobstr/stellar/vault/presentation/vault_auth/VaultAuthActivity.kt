@@ -6,8 +6,6 @@ import android.view.View
 import android.widget.Toast
 import androidx.annotation.ColorRes
 import androidx.annotation.DrawableRes
-import com.arellomobile.mvp.presenter.InjectPresenter
-import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.lobstr.stellar.vault.R
 import com.lobstr.stellar.vault.presentation.base.activity.BaseActivity
 import com.lobstr.stellar.vault.presentation.container.fragment.ContainerFragment
@@ -16,6 +14,8 @@ import com.lobstr.stellar.vault.presentation.util.Constant
 import com.lobstr.stellar.vault.presentation.util.manager.FragmentTransactionManager
 import com.lobstr.stellar.vault.presentation.util.manager.ProgressManager
 import kotlinx.android.synthetic.main.activity_vault_auth.*
+import moxy.presenter.InjectPresenter
+import moxy.presenter.ProvidePresenter
 
 class VaultAuthActivity : BaseActivity(), VaultAuthView, View.OnClickListener {
 

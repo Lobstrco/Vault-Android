@@ -2,47 +2,48 @@ package com.lobstr.stellar.vault.presentation
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatDialogFragment
-import com.arellomobile.mvp.MvpDelegate
+import moxy.MvpDelegate
+import moxy.MvpDelegateHolder
 
 
-open class BaseMvpAppCompatDialogFragment : AppCompatDialogFragment() {
+open class BaseMvpAppCompatDialogFragment : AppCompatDialogFragment(), MvpDelegateHolder {
 
     private var mIsStateSaved: Boolean = false
     private var mMvpDelegate: MvpDelegate<out BaseMvpAppCompatDialogFragment>? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        this.getMvpDelegate().onCreate(savedInstanceState)
+        this.mvpDelegate.onCreate(savedInstanceState)
     }
 
     override fun onResume() {
         super.onResume()
         this.mIsStateSaved = false
-        this.getMvpDelegate().onAttach()
+        this.mvpDelegate.onAttach()
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         this.mIsStateSaved = true
-        this.getMvpDelegate().onSaveInstanceState(outState)
-        this.getMvpDelegate().onDetach()
+        this.mvpDelegate.onSaveInstanceState(outState)
+        this.mvpDelegate.onDetach()
     }
 
     override fun onStop() {
         super.onStop()
-        this.getMvpDelegate().onDetach()
+        this.mvpDelegate.onDetach()
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
-        this.getMvpDelegate().onDetach()
-        this.getMvpDelegate().onDestroyView()
+        this.mvpDelegate.onDetach()
+        this.mvpDelegate.onDestroyView()
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        if (this.activity!!.isFinishing()) {
-            this.getMvpDelegate().onDestroy()
+        if (this.activity!!.isFinishing) {
+            this.mvpDelegate.onDestroy()
         } else if (this.mIsStateSaved) {
             this.mIsStateSaved = false
         } else {
@@ -61,7 +62,7 @@ open class BaseMvpAppCompatDialogFragment : AppCompatDialogFragment() {
         }
     }
 
-    fun getMvpDelegate(): MvpDelegate<*> {
+    override fun getMvpDelegate(): MvpDelegate<*> {
         if (this.mMvpDelegate == null) {
             this.mMvpDelegate = MvpDelegate(this)
         }

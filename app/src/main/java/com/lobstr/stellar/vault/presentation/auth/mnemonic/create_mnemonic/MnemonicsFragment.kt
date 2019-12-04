@@ -5,8 +5,6 @@ import android.content.DialogInterface
 import android.os.Bundle
 import android.view.*
 import androidx.fragment.app.FragmentManager
-import com.arellomobile.mvp.presenter.InjectPresenter
-import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.lobstr.stellar.vault.R
 import com.lobstr.stellar.vault.presentation.auth.AuthActivity
 import com.lobstr.stellar.vault.presentation.auth.mnemonic.confirm_mnemonic.ConfirmMnemonicsFragment
@@ -18,6 +16,8 @@ import com.lobstr.stellar.vault.presentation.util.AppUtil
 import com.lobstr.stellar.vault.presentation.util.Constant
 import com.lobstr.stellar.vault.presentation.util.manager.FragmentTransactionManager
 import kotlinx.android.synthetic.main.fragment_mnemonics.*
+import moxy.presenter.InjectPresenter
+import moxy.presenter.ProvidePresenter
 
 /**
  * Used for show or generate mnemonics
@@ -94,7 +94,7 @@ class MnemonicsFragment : BaseFragment(),
     }
 
     override fun onBackPressed(): Boolean {
-        // handle back press only for mnemonics in authentication container
+        // Handle back press only for mnemonics in authentication container.
         if (activity is AuthActivity) {
             mPresenter.backPressed()
             return true
@@ -130,7 +130,7 @@ class MnemonicsFragment : BaseFragment(),
     }
 
     override fun showConfirmationScreen(mnemonics: ArrayList<MnemonicItem>) {
-        // Pass created mnemonics to confirmation screen
+        // Pass created mnemonics to confirmation screen.
         val bundle = Bundle()
         bundle.putParcelableArrayList(Constant.Bundle.BUNDLE_MNEMONICS_ARRAY, mnemonics)
         val fragment = parentFragment!!.childFragmentManager.fragmentFactory.instantiate(context!!.classLoader, ConfirmMnemonicsFragment::class.qualifiedName!!)
@@ -171,19 +171,19 @@ class MnemonicsFragment : BaseFragment(),
     }
 
     override fun onNegativeBtnClick(tag: String?, dialogInterface: DialogInterface) {
-        // add logic if needed
+        // Add logic if needed.
     }
 
     override fun onNeutralBtnClick(tag: String?, dialogInterface: DialogInterface) {
-        // add logic if needed
+        // Add logic if needed.
     }
 
     override fun onCancel(tag: String?, dialogInterface: DialogInterface) {
-        // add logic if needed
+        // Add logic if needed.
     }
 
     override fun showAuthFr() {
-        // show first fragment in container - AuthFragment
+        // Show first fragment in container - AuthFragment.
         val containerFragmentManager = parentFragment?.childFragmentManager
 
         containerFragmentManager?.popBackStack(

@@ -1,8 +1,8 @@
 package com.lobstr.stellar.vault.presentation.home.settings.signed_accounts.edit_account
 
-import com.arellomobile.mvp.MvpView
-import com.arellomobile.mvp.viewstate.strategy.SkipStrategy
-import com.arellomobile.mvp.viewstate.strategy.StateStrategyType
+import moxy.MvpView
+import moxy.viewstate.strategy.SkipStrategy
+import moxy.viewstate.strategy.StateStrategyType
 
 @StateStrategyType(SkipStrategy::class)
 interface EditAccountView : MvpView {

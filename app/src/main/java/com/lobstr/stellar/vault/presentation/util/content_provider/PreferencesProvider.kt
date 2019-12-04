@@ -11,8 +11,8 @@ import com.lobstr.stellar.vault.R
 import com.lobstr.stellar.vault.presentation.util.PrefsUtil
 
 /**
- * Used for pass Public Shared Preferences data to other apps
- * Use URI pattern: content://public.shared.data.preference/{path}
+ * Used for pass Public Shared Preferences data to other apps.
+ * Use URI pattern: content://public.shared.data.preference/{path}.
  */
 class PreferencesProvider : ContentProvider() {
 
@@ -27,7 +27,7 @@ class PreferencesProvider : ContentProvider() {
 
     override fun onCreate(): Boolean {
         prefsUtil = PrefsUtil(PreferenceManager.getDefaultSharedPreferences(context))
-        // see authority in product flavor resValue
+        // See authority in product flavor resValue.
         uriMatcher.addURI(context?.getString(R.string.authority), PUBLIC_KEY_PATH, PUBLIC_KEY_CODE)
         return true
     }
@@ -41,7 +41,7 @@ class PreferencesProvider : ContentProvider() {
     ): Cursor? {
         return when (uriMatcher.match(uri)) {
             PUBLIC_KEY_CODE -> {
-                // user was authorized when token!=null and public key was created
+                // User was authorized when token!=null and public key was created.
                 if (prefsUtil.authToken.isNullOrEmpty()) {
                     return null
                 }

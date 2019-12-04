@@ -2,6 +2,7 @@ package com.lobstr.stellar.vault.data.account
 
 import com.lobstr.stellar.vault.data.net.entities.account.ApiAccount
 import com.lobstr.stellar.vault.data.net.entities.account.ApiSignedAccountsResponse
+import com.lobstr.stellar.vault.data.net.entities.account.ApiStellarAccount
 import com.lobstr.stellar.vault.presentation.entities.account.Account
 
 class AccountEntityMapper {
@@ -23,5 +24,12 @@ class AccountEntityMapper {
         }
 
         return accounts
+    }
+
+    fun transformStellarAccount(apiStellarAccount: ApiStellarAccount): Account {
+        return Account(
+            apiStellarAccount.accountId,
+            apiStellarAccount.stellarAddress
+        )
     }
 }

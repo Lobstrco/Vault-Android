@@ -6,8 +6,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.*
 import android.widget.Toast
-import com.arellomobile.mvp.presenter.InjectPresenter
-import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.lobstr.stellar.vault.R
 import com.lobstr.stellar.vault.presentation.auth.AuthActivity
 import com.lobstr.stellar.vault.presentation.base.fragment.BaseFragment
@@ -17,6 +15,8 @@ import com.lobstr.stellar.vault.presentation.home.HomeActivity
 import com.lobstr.stellar.vault.presentation.util.Constant
 import com.lobstr.stellar.vault.presentation.util.manager.ProgressManager
 import kotlinx.android.synthetic.main.fragment_recheck_signer.*
+import moxy.presenter.InjectPresenter
+import moxy.presenter.ProvidePresenter
 
 
 class RecheckSignerFragment : BaseFragment(),
@@ -124,22 +124,22 @@ class RecheckSignerFragment : BaseFragment(),
         startActivity(intent)
     }
 
-    // Dialogs
+    // Dialogs.
 
     override fun onPositiveBtnClick(tag: String?, dialogInterface: DialogInterface) {
         mPresenter.onAlertDialogPositiveButtonClicked(tag)
     }
 
     override fun onNegativeBtnClick(tag: String?, dialogInterface: DialogInterface) {
-        // add logic if needed
+        // Add logic if needed.
     }
 
     override fun onNeutralBtnClick(tag: String?, dialogInterface: DialogInterface) {
-        // add logic if needed
+        // Add logic if needed.
     }
 
     override fun onCancel(tag: String?, dialogInterface: DialogInterface) {
-        // add logic if needed
+        // Add logic if needed.
     }
 
     override fun showLogOutDialog() {

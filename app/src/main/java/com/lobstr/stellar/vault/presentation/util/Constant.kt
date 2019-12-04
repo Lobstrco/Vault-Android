@@ -1,5 +1,7 @@
 package com.lobstr.stellar.vault.presentation.util
 
+import com.lobstr.stellar.vault.BuildConfig
+
 
 object Constant {
 
@@ -50,7 +52,7 @@ object Constant {
         const val CANCELLED = 2
         const val SIGNED = 3
 
-        // when transaction created from entered XDR
+        // When transaction created from entered XDR.
         const val IMPORT_XDR = 4
     }
 
@@ -115,7 +117,7 @@ object Constant {
     }
 
     /**
-     * UNKNOWN - the user doesn't see Biometric setup screen
+     * UNKNOWN - the user doesn't see Biometric setup screen.
      * @see com.lobstr.stellar.vault.presentation.auth.biometric.BiometricSetUpFragment
      */
     object BiometricState {
@@ -125,7 +127,7 @@ object Constant {
     }
 
     /**
-     * UNKNOWN - the user doesn't see Rate Us dialog
+     * UNKNOWN - the user doesn't see Rate Us dialog.
      * @see com.lobstr.stellar.vault.presentation.home.rate_us.RateUsDialogFragment
      */
     object RateUsState {
@@ -141,8 +143,13 @@ object Constant {
         const val TRANSACTION = URL.plus("/tx/")
     }
 
+    object LobstrWallet {
+        val PACKAGE_NAME = if(BuildConfig.FLAVOR.equals(Flavor.VAULT)) "com.lobstr.client" else "com.lobstr.staging"
+        const val DEEP_LINK_MULTISIG_SETUP = "lobstr://wallet/multisignature/setup"
+    }
+
     object Social {
-        const val STORE_URL = "https://play.google.com/store/apps/details?id=com.lobstr.stellar.vault"
+        const val STORE_URL = "https://play.google.com/store/apps/details?id="
         const val USER_ICON_LINK = "https://id.lobstr.co/"
     }
 }

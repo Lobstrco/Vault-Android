@@ -1,6 +1,5 @@
 package com.lobstr.stellar.vault.presentation.home.dashboard
 
-import com.arellomobile.mvp.InjectViewState
 import com.lobstr.stellar.vault.data.error.exeption.DefaultException
 import com.lobstr.stellar.vault.data.error.exeption.NoInternetConnectionException
 import com.lobstr.stellar.vault.data.error.exeption.UserNotAuthorizedException
@@ -12,8 +11,11 @@ import com.lobstr.stellar.vault.presentation.BasePresenter
 import com.lobstr.stellar.vault.presentation.application.LVApplication
 import com.lobstr.stellar.vault.presentation.dagger.module.dashboard.DashboardModule
 import com.lobstr.stellar.vault.presentation.entities.account.Account
+import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
+import moxy.InjectViewState
 import javax.inject.Inject
 
 @InjectViewState
@@ -24,6 +26,9 @@ class DashboardPresenter : BasePresenter<DashboardView>() {
 
     @Inject
     lateinit var interactor: DashboardInteractor
+
+    private var stellarAccountsSubscription: Disposable? = null
+    private val cashedStellarAccounts: MutableList<Account> = mutableListOf()
 
     init {
         LVApplication.appComponent.plusDashboardComponent(DashboardModule()).inject(this)
@@ -50,8 +55,7 @@ class DashboardPresenter : BasePresenter<DashboardView>() {
                                 loadPendingTransactions()
                                 loadSignedAccountsList()
                             }
-                            needCheckConnectionState = false
-                            cancelNetworkWorker()
+                            cancelNetworkWorker(false)
                         }
                     }
                 }, {
@@ -116,7 +120,19 @@ class DashboardPresenter : BasePresenter<DashboardView>() {
                 .doOnEvent { _, _ -> viewState.showSignersProgress(false) }
                 .subscribe({
                     viewState.showSignersCount(interactor.getSignersCount())
+
+                    // check cashed federation items
+                    it.forEachIndexed { index, accountItem ->
+                        val federation =
+                            cashedStellarAccounts.find { account -> account.address == accountItem.address }
+                                ?.federation
+                        it[index].federation = federation
+                    }
+
                     viewState.notifySignedAccountsAdapter(it)
+
+                    // try receive federations for accounts
+                    getStellarAccounts(it)
                 }, {
                     viewState.showSignersCount(interactor.getSignersCount())
 
@@ -139,6 +155,46 @@ class DashboardPresenter : BasePresenter<DashboardView>() {
         )
     }
 
+    /**
+     * Used for receive federation by account id
+     */
+    private fun getStellarAccounts(accounts: List<Account>) {
+        stellarAccountsSubscription?.dispose()
+        stellarAccountsSubscription = Observable.fromIterable(accounts)
+            .subscribeOn(Schedulers.io())
+            .filter { account: Account ->
+                cashedStellarAccounts
+                    .find { cashedAccount -> cashedAccount.address == account.address } == null
+            }
+            .flatMapSingle {
+                interactor.getStellarAccount(it.address).onErrorReturnItem(it)
+            }
+            .filter { it.federation != null }
+            .toList()
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({
+                it.forEach { account ->
+                    if (cashedStellarAccounts.find { cashedAccount -> cashedAccount.address == account.address } == null) {
+                        cashedStellarAccounts.add(account)
+                    }
+                }
+
+                // check cashed federation items
+                accounts.forEachIndexed { index, accountItem ->
+                    val federation =
+                        cashedStellarAccounts.find { account -> account.address == accountItem.address }
+                            ?.federation
+                    accounts[index].federation = federation
+                }
+
+                viewState.notifySignedAccountsAdapter(accounts)
+            }, {
+                // ignore
+            })
+
+        unsubscribeOnDestroy(stellarAccountsSubscription!!)
+    }
+
     fun transactionCountClicked() {
         viewState.navigateToTransactionList()
     }
@@ -148,7 +204,7 @@ class DashboardPresenter : BasePresenter<DashboardView>() {
     }
 
     fun copyKeyClicked() {
-        viewState.copyData(interactor.getUserPublicKey())
+        viewState.copyToClipBoard(interactor.getUserPublicKey())
     }
 
     fun userVisibleHintCalled(visible: Boolean) {
@@ -164,7 +220,11 @@ class DashboardPresenter : BasePresenter<DashboardView>() {
         }
     }
 
-    fun copySignedAccountClicked(account: Account) {
-        viewState.copyData(account.address)
+    fun signedAccountItemClicked(account: Account) {
+        viewState.showEditAccountDialog(account.address)
+    }
+
+    fun signedAccountItemLongClicked(account: Account) {
+        viewState.copyToClipBoard(account.address)
     }
 }

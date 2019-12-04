@@ -7,8 +7,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import com.arellomobile.mvp.presenter.InjectPresenter
-import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.lobstr.stellar.vault.R
 import com.lobstr.stellar.vault.presentation.base.fragment.BaseFragment
 import com.lobstr.stellar.vault.presentation.dialog.alert.base.AlertDialogFragment
@@ -16,6 +14,8 @@ import com.lobstr.stellar.vault.presentation.util.biometric.BiometricListener
 import com.lobstr.stellar.vault.presentation.util.biometric.BiometricManager
 import com.lobstr.stellar.vault.presentation.vault_auth.VaultAuthActivity
 import kotlinx.android.synthetic.main.fragment_biometric_set_up.*
+import moxy.presenter.InjectPresenter
+import moxy.presenter.ProvidePresenter
 
 class BiometricSetUpFragment : BaseFragment(), BiometricSetUpView, BiometricListener, View.OnClickListener {
 
@@ -88,7 +88,7 @@ class BiometricSetUpFragment : BaseFragment(), BiometricSetUpView, BiometricList
         startActivity(intent)
     }
 
-    // Biometric
+    // Biometric.
 
     override fun showBiometricInfoDialog(titleRes: Int, messageRes: Int) {
         AlertDialogFragment.Builder(true)
@@ -126,7 +126,7 @@ class BiometricSetUpFragment : BaseFragment(), BiometricSetUpView, BiometricList
     }
 
     override fun onAuthenticationFailed() {
-        // Toast.makeText(applicationContext, getString(R.string.biometric_failure), Toast.LENGTH_LONG).show();
+        // Show message if needed.
     }
 
     override fun onAuthenticationSuccessful() {
@@ -134,7 +134,7 @@ class BiometricSetUpFragment : BaseFragment(), BiometricSetUpView, BiometricList
     }
 
     override fun onAuthenticationError(errorCode: Int, errString: CharSequence?) {
-        // Toast.makeText(applicationContext, errString, Toast.LENGTH_LONG).show();
+        // Show message if needed.
     }
 
     // ===========================================================

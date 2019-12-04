@@ -10,8 +10,6 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.arellomobile.mvp.presenter.InjectPresenter
-import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.lobstr.stellar.vault.R
 import com.lobstr.stellar.vault.presentation.base.fragment.BaseFragment
 import com.lobstr.stellar.vault.presentation.dialog.alert.base.AlertDialogFragment
@@ -33,6 +31,8 @@ import com.lobstr.stellar.vault.presentation.util.Constant.Extra.EXTRA_TRANSACTI
 import com.lobstr.stellar.vault.presentation.util.manager.FragmentTransactionManager
 import com.lobstr.stellar.vault.presentation.util.manager.ProgressManager
 import kotlinx.android.synthetic.main.fragment_transaction_details.*
+import moxy.presenter.InjectPresenter
+import moxy.presenter.ProvidePresenter
 
 
 class TransactionDetailsFragment : BaseFragment(), TransactionDetailsView, View.OnClickListener,
@@ -102,7 +102,7 @@ class TransactionDetailsFragment : BaseFragment(), TransactionDetailsView, View.
             return true
         }
 
-        // when operations container backStack has one item - handle backStack through base container
+        // When operations container backStack has one item - handle backStack through base container.
         return super.onBackPressed()
     }
 
@@ -141,19 +141,19 @@ class TransactionDetailsFragment : BaseFragment(), TransactionDetailsView, View.
     }
 
     override fun onAccountItemClick(account: Account) {
-        // implement logic if needed
+        // Implement logic if needed.
     }
 
     override fun onAccountItemLongClick(account: Account) {
-        AppUtil.copyToClipboard(context, account.address)
+        mPresenter.signedAccountItemLongClicked(account)
     }
 
     override fun showOperationList(transactionItem: TransactionItem) {
-        // reset backStack after resetup operations
+        // Reset backStack after resetup operations.
         childFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
 
         val bundle = Bundle()
-        bundle.putParcelable(Constant.Bundle.BUNDLE_TRANSACTION_ITEM, transactionItem)
+        bundle.putParcelable(BUNDLE_TRANSACTION_ITEM, transactionItem)
         val fragment = childFragmentManager.fragmentFactory.instantiate(
             context!!.classLoader,
             OperationListFragment::class.qualifiedName!!
@@ -168,11 +168,11 @@ class TransactionDetailsFragment : BaseFragment(), TransactionDetailsView, View.
     }
 
     override fun showOperationDetailsScreen(transactionItem: TransactionItem, position: Int) {
-        // reset backStack after resetup operations
+        // Reset backStack after resetup operations.
         childFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
 
         val bundle = Bundle()
-        bundle.putParcelable(Constant.Bundle.BUNDLE_TRANSACTION_ITEM, transactionItem)
+        bundle.putParcelable(BUNDLE_TRANSACTION_ITEM, transactionItem)
         bundle.putInt(Constant.Bundle.BUNDLE_OPERATION_POSITION, position)
         val fragment = childFragmentManager.fragmentFactory.instantiate(
             context!!.classLoader,
@@ -208,14 +208,14 @@ class TransactionDetailsFragment : BaseFragment(), TransactionDetailsView, View.
     override fun successDenyTransaction(transactionItem: TransactionItem) {
         showMessage(getString(R.string.msg_transaction_denied))
 
-        // notify target about changes
+        // Notify target about changes.
         val intent = Intent()
         intent.putExtra(EXTRA_TRANSACTION_ITEM, transactionItem)
         intent.putExtra(EXTRA_TRANSACTION_STATUS, Constant.Transaction.CANCELLED)
         activity?.setResult(Activity.RESULT_OK, intent)
         targetFragment?.onActivityResult(targetRequestCode, Activity.RESULT_OK, intent)
 
-        // close screen
+        // Close screen.
         activity?.onBackPressed()
     }
 
@@ -224,17 +224,17 @@ class TransactionDetailsFragment : BaseFragment(), TransactionDetailsView, View.
         needAdditionalSignatures: Boolean,
         transactionItem: TransactionItem
     ) {
-        // notify target about changes
+        // Notify target about changes.
         val intent = Intent()
         intent.putExtra(EXTRA_TRANSACTION_ITEM, transactionItem)
         intent.putExtra(EXTRA_TRANSACTION_STATUS, Constant.Transaction.SIGNED)
         activity?.setResult(Activity.RESULT_OK, intent)
         targetFragment?.onActivityResult(targetRequestCode, Activity.RESULT_OK, intent)
 
-        // close screen
+        // Close screen.
         parentFragment?.childFragmentManager?.popBackStack()
 
-        // show success screen
+        // Show success screen.
         val bundle = Bundle()
         bundle.putString(Constant.Bundle.BUNDLE_ENVELOPE_XDR, envelopeXdr)
         bundle.putBoolean(
@@ -255,14 +255,14 @@ class TransactionDetailsFragment : BaseFragment(), TransactionDetailsView, View.
     }
 
     override fun errorConfirmTransaction(errorMessage: String) {
-        // notify target about changes
+        // Notify target about changes.
         activity?.setResult(Activity.RESULT_OK)
         targetFragment?.onActivityResult(targetRequestCode, Activity.RESULT_OK, null)
 
-        // close screen
+        // Close screen.
         parentFragment?.childFragmentManager?.popBackStack()
 
-        // show error screen
+        // Show error screen.
         val bundle = Bundle()
         bundle.putString(Constant.Bundle.BUNDLE_ERROR_MESSAGE, errorMessage)
         val fragment = parentFragment!!.childFragmentManager.fragmentFactory.instantiate(
@@ -305,15 +305,19 @@ class TransactionDetailsFragment : BaseFragment(), TransactionDetailsView, View.
     }
 
     override fun onNegativeBtnClick(tag: String?, dialogInterface: DialogInterface) {
-        // add logic if needed
+        // Add logic if needed.
     }
 
     override fun onNeutralBtnClick(tag: String?, dialogInterface: DialogInterface) {
-        // add logic if needed
+        // Add logic if needed.
     }
 
     override fun onCancel(tag: String?, dialogInterface: DialogInterface) {
-        // add logic if needed
+        // Add logic if needed.
+    }
+
+    override fun copyToClipBoard(text: String) {
+        AppUtil.copyToClipboard(context, text)
     }
 
     // ===========================================================
