@@ -18,6 +18,7 @@ import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
 import android.widget.TextView
 import android.widget.Toast
+import androidx.annotation.StringRes
 import androidx.browser.customtabs.CustomTabsIntent
 import androidx.core.content.ContextCompat
 import com.google.gson.Gson
@@ -25,6 +26,7 @@ import com.google.gson.JsonIOException
 import com.google.gson.JsonSyntaxException
 import com.google.gson.internal.Primitives
 import com.lobstr.stellar.vault.R
+import com.lobstr.stellar.vault.presentation.application.LVApplication
 import com.lobstr.stellar.vault.presentation.entities.transaction.operation.*
 import com.lobstr.stellar.vault.presentation.entities.transaction.operation.offer.CancelSellOfferOperation
 import com.lobstr.stellar.vault.presentation.entities.transaction.operation.offer.CreatePassiveSellOfferOperation
@@ -163,7 +165,8 @@ object AppUtil {
     }
 
     fun getTextHeight(t: TextView): Int {
-        val widthMeasureSpec = View.MeasureSpec.makeMeasureSpec(screenWidth(t.context), View.MeasureSpec.AT_MOST)
+        val widthMeasureSpec =
+            View.MeasureSpec.makeMeasureSpec(screenWidth(t.context), View.MeasureSpec.AT_MOST)
         val heightMeasureSpec = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED)
         t.measure(widthMeasureSpec, heightMeasureSpec)
         return t.measuredHeight
@@ -214,4 +217,9 @@ object AppUtil {
             builder.toString()
         }
     }
+
+    fun getString(@StringRes resId: Int): String =
+        getAppContext().getString(resId)
+
+    fun getAppContext(): Context = LVApplication.appComponent.context
 }

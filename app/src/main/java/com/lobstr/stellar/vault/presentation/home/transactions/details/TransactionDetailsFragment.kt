@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -140,6 +141,10 @@ class TransactionDetailsFragment : BaseFragment(), TransactionDetailsView, View.
         llSignersContainer.visibility = if (show) View.VISIBLE else View.GONE
     }
 
+    override fun showSignersCount(count: String?) {
+        tvSignersCount.text = count
+    }
+
     override fun onAccountItemClick(account: Account) {
         // Implement logic if needed.
     }
@@ -185,6 +190,25 @@ class TransactionDetailsFragment : BaseFragment(), TransactionDetailsView, View.
             fragment,
             R.id.fl_container
         )
+    }
+
+    override fun setupAdditionalInfo(map: Map<String, String>) {
+        for ((key, value) in map) {
+            val root =
+                layoutInflater.inflate(R.layout.layout_additional_value, view as ViewGroup, false)
+            val fieldName = root.findViewById<TextView>(R.id.tvFieldName)
+            val fieldValue = root.findViewById<TextView>(R.id.tvFieldValue)
+            fieldName.text = key
+            fieldValue.text = value
+
+            // Show divider only fo first value.
+            if (llAdditionalInfo.childCount == 0) {
+                val divider = root.findViewById<View>(R.id.divider)
+                divider.visibility = View.VISIBLE
+            }
+
+            llAdditionalInfo.addView(root)
+        }
     }
 
     override fun setActionBtnVisibility(isConfirmVisible: Boolean, isDenyVisible: Boolean) {

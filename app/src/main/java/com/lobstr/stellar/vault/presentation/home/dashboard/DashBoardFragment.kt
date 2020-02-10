@@ -1,6 +1,7 @@
 package com.lobstr.stellar.vault.presentation.home.dashboard
 
 
+import android.animation.ObjectAnimator
 import android.content.Intent
 import android.graphics.Typeface
 import android.os.Bundle
@@ -9,9 +10,8 @@ import android.text.Spanned
 import android.text.style.ForegroundColorSpan
 import android.text.style.RelativeSizeSpan
 import android.text.style.StyleSpan
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
+import android.view.animation.LinearInterpolator
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -50,6 +50,8 @@ class DashboardFragment : BaseFragment(), DashboardView, View.OnClickListener,
     lateinit var mPresenter: DashboardPresenter
 
     private var mView: View? = null
+
+    private var mRefreshAnimation: ObjectAnimator? = null
 
     // ===========================================================
     // Constructors
@@ -96,6 +98,32 @@ class DashboardFragment : BaseFragment(), DashboardView, View.OnClickListener,
         tvDashboardCopyPublicKey.setOnClickListener(this)
         tvDashboardTransactionCount.setOnClickListener(this)
         tvDashboardSignersCount.setOnClickListener(this)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.dashboard, menu)
+        val refreshView = menu.findItem(R.id.action_refresh).actionView
+
+        mRefreshAnimation = ObjectAnimator.ofFloat(refreshView, View.ROTATION, 0.0f, 360.0f)
+        mRefreshAnimation?.duration = 800
+        mRefreshAnimation?.repeatCount = 1
+        mRefreshAnimation?.interpolator = LinearInterpolator()
+
+        refreshView?.setOnClickListener {
+            mPresenter.refreshClicked()
+        }
+
+        super.onCreateOptionsMenu(menu, inflater)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.action_refresh -> {
+                mPresenter.refreshClicked()
+            }
+        }
+
+        return super.onOptionsItemSelected(item)
     }
 
     // ===========================================================
@@ -180,8 +208,11 @@ class DashboardFragment : BaseFragment(), DashboardView, View.OnClickListener,
         tvDashboardSignersCount.visibility = View.VISIBLE
     }
 
-    override fun showDashboardInfo(count: Int) {
-        tvDashboardTransactionCount.text = count.toString()
+    override fun showDashboardInfo(count: Int?) {
+        // Nullable value mean undefined value.
+        if (count != null) {
+            tvDashboardTransactionCount.text = count.toString()
+        }
         pbDashboardTransactions.visibility = View.GONE
         llDashboardTransactionToSignContainer.visibility = View.VISIBLE
     }
@@ -219,6 +250,15 @@ class DashboardFragment : BaseFragment(), DashboardView, View.OnClickListener,
 
     override fun showSignersProgress(show: Boolean) {
         pbDashboardSigners.visibility = if (show) View.VISIBLE else View.GONE
+    }
+
+    override fun showRefreshAnimation(show: Boolean) {
+        if (show) {
+            mRefreshAnimation?.start()
+        } else {
+            mRefreshAnimation?.end()
+            mRefreshAnimation?.cancel()
+        }
     }
 
     // ===========================================================

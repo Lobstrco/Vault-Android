@@ -11,6 +11,7 @@ import com.lobstr.stellar.vault.presentation.BasePresenter
 import com.lobstr.stellar.vault.presentation.application.LVApplication
 import com.lobstr.stellar.vault.presentation.dagger.module.settings.SettingsModule
 import com.lobstr.stellar.vault.presentation.dialog.alert.base.AlertDialogFragment
+import com.lobstr.stellar.vault.presentation.util.AppUtil
 import com.lobstr.stellar.vault.presentation.util.Constant
 import com.lobstr.stellar.vault.presentation.util.Constant.Social.STORE_URL
 import com.lobstr.stellar.vault.presentation.util.biometric.BiometricUtils
@@ -28,6 +29,8 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
     @Inject
     lateinit var interactor: SettingsInteractor
 
+    private var loadSignedAccountsInProcess = false
+
     init {
         LVApplication.appComponent.plusSettingsComponent(SettingsModule()).inject(this)
     }
@@ -38,11 +41,11 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
         registerEventProvider()
         viewState.setupSettingsData(
             "${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE})",
-            BiometricUtils.isBiometricSupported(LVApplication.appComponent.context)
+            BiometricUtils.isBiometricSupported(AppUtil.getAppContext())
         )
         viewState.setBiometricChecked(
             interactor.isBiometricEnabled()
-                    && BiometricUtils.isBiometricAvailable(LVApplication.appComponent.context)
+                    && BiometricUtils.isBiometricAvailable(AppUtil.getAppContext())
         )
         viewState.setNotificationsChecked(interactor.isNotificationsEnabled())
         viewState.setTrConfirmationChecked(interactor.isTrConfirmationEnabled())
@@ -104,7 +107,7 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
     fun biometricSwitched(checked: Boolean) {
         when {
             checked -> {
-                if (BiometricUtils.isBiometricAvailable(LVApplication.appComponent.context)) {
+                if (BiometricUtils.isBiometricAvailable(AppUtil.getAppContext())) {
                     // Add additional logic if needed
                     interactor.setBiometricEnabled(true)
                     viewState.setBiometricChecked(true)
@@ -154,10 +157,15 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
 
     fun userVisibleHintCalled(visible: Boolean) {
         if (visible) {
+            if (loadSignedAccountsInProcess) {
+                return
+            }
             unsubscribeOnDestroy(
                 interactor.getSignedAccounts()
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
+                    .doOnSubscribe { loadSignedAccountsInProcess = true }
+                    .doOnEvent { _, _ -> loadSignedAccountsInProcess = false }
                     .subscribe({
                         viewState.setupSignersCount(it.size)
                     }, {})

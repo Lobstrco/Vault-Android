@@ -22,7 +22,7 @@ abstract class BaseFragment : BaseMvpAppCompatFragment(), BaseFragmentView {
         setHasOptionsMenu(menuVisible)
 
         if (isAdded) {
-            getMvpDelegate().onAttach()
+            mvpDelegate.onAttach()
             mBasePresenter.setToolbarTitle()
 
             if (menuVisible) {
@@ -40,7 +40,7 @@ abstract class BaseFragment : BaseMvpAppCompatFragment(), BaseFragmentView {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (isAdded) {
-            getMvpDelegate().onAttach()
+            mvpDelegate.onAttach()
         }
     }
 
@@ -74,7 +74,7 @@ abstract class BaseFragment : BaseMvpAppCompatFragment(), BaseFragmentView {
             return
         }
 
-        (activity as? BaseActivity)?.getMvpDelegate()?.onAttach()
+        (activity as? BaseActivity)?.mvpDelegate?.onAttach()
         (activity as? BaseActivity)?.mPresenter?.setActionBarTitle(title)
     }
 

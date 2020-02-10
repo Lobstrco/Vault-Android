@@ -9,9 +9,10 @@
 
     <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="0dp"
             android:layout_weight="1"
             android:fillViewport="true"
+            android:background="@color/color_f9f9ff"
             android:layout_marginBottom="16dp"
             android:scrollbars="vertical">
 
@@ -24,6 +25,12 @@
                     android:id="@+id/fl_container"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
+
+            <LinearLayout
+                    android:id="@+id/llAdditionalInfo"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical" />
 
             <FrameLayout
                     android:layout_width="match_parent"
@@ -38,14 +45,28 @@
                         android:orientation="vertical"
                         android:visibility="gone">
 
-                    <TextView
-                            android:layout_width="wrap_content"
+                    <FrameLayout
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_margin="16dp"
-                            android:fontFamily="sans-serif-medium"
-                            android:text="@string/text_tv_signers"
-                            android:textColor="@color/color_primary"
-                            android:textSize="14sp" />
+                            android:layout_margin="16dp">
+
+                        <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="sans-serif-medium"
+                                android:text="@string/text_tv_signers"
+                                android:layout_gravity="start|center"
+                                android:textColor="@color/color_primary"
+                                android:textSize="14sp" />
+
+                        <TextView
+                                android:id="@+id/tvSignersCount"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="end|center"
+                                android:textColor="@color/color_9b9b9b"
+                                android:textSize="14sp" />
+                    </FrameLayout>
 
                     <androidx.recyclerview.widget.RecyclerView
                             android:id="@+id/rvSigners"
@@ -82,33 +103,40 @@
             android:textSize="14sp"
             android:visibility="gone" />
 
-    <Button
-            android:id="@+id/btnConfirm"
-            style="@style/Base.Widget.AppCompat.Button.Borderless.Colored"
+    <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="16dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginRight="16dp"
-            android:layout_marginBottom="5dp"
-            android:layout_weight="0"
-            android:background="@drawable/selector_default_button_with_round"
-            android:text="@string/text_btn_confirm"
-            android:textAllCaps="false"
-            android:textColor="@android:color/white"
-            android:textSize="14sp" />
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:paddingTop="8dp"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            android:paddingBottom="16dp">
 
-    <Button
-            android:id="@+id/btnDeny"
-            style="@style/Base.Widget.AppCompat.Button.Borderless.Colored"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp"
-            android:layout_weight="0"
-            android:background="@android:color/transparent"
-            android:text="@string/text_btn_deny"
-            android:textAllCaps="false"
-            android:textColor="@color/color_d9534f"
-            android:textSize="14sp" />
+        <Button
+                android:id="@+id/btnDeny"
+                style="@style/Base.Widget.AppCompat.Button.Borderless.Colored"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:layout_weight="1"
+                android:background="@drawable/selector_default_button_with_round_stroked_red"
+                android:text="@string/text_btn_deny"
+                android:textAllCaps="false"
+                android:textColor="@color/color_d9534f"
+                android:textSize="14sp" />
+
+        <Button
+                android:id="@+id/btnConfirm"
+                style="@style/Base.Widget.AppCompat.Button.Borderless.Colored"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_weight="1"
+                android:background="@drawable/selector_default_button_with_round"
+                android:text="@string/text_btn_confirm"
+                android:textAllCaps="false"
+                android:textColor="@android:color/white"
+                android:textSize="14sp" />
+    </LinearLayout>
 </LinearLayout>

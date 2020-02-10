@@ -1,5 +1,6 @@
 <resources>
-    <style name="BaseTheme" parent="Theme.AppCompat.Light.NoActionBar">
+
+    <style name="BaseTheme" parent="Theme.MaterialComponents.Light.NoActionBar.Bridge">
         <item name="colorPrimaryDark">@color/color_primary</item>
         <item name="colorPrimary">@color/color_primary</item>
         <item name="colorAccent">@color/color_primary</item>
@@ -7,26 +8,23 @@
         <item name="colorControlActivated">@color/color_primary</item>
         <item name="alertDialogTheme">@style/AlertDialog</item>
         <item name="android:splitMotionEvents">false</item>
-    </style>
-
-    <style name="AppTheme" parent="BaseTheme">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
+        <item name="android:windowBackground">@android:color/white</item>
     </style>
 
-    <style name="SplashTheme" parent="BaseTheme">
-        <item name="android:windowNoTitle">true</item>
-        <item name="android:windowActionBar">false</item>
+    <style name="AppTheme" parent="BaseTheme"/>
+
+    <style name="SplashTheme" parent="AppTheme">
         <item name="android:windowFullscreen">true</item>
         <item name="android:windowContentOverlay">@null</item>
         <item name="android:windowBackground">@drawable/bg_splash</item>
     </style>
 
-    <style name="HomeTheme" parent="BaseTheme">
-        <item name="android:windowBackground">@color/color_f9f9ff</item>
-    </style>
+    <!-- Used for setup light navigation bar buttons on v27 (screens with dark background) -->
+    <style name="DarkAppTheme" parent="AppTheme" />
 
-    <style name="Toolbar" parent="Theme.AppCompat.Light.NoActionBar">
+    <style name="Toolbar" parent="BaseTheme">
         <item name="colorPrimary">@color/color_primary</item>
         <item name="colorPrimaryDark">@color/color_primary</item>
         <item name="colorControlNormal">@android:color/white</item>
@@ -46,16 +44,17 @@
         <item name="android:textColor">@android:color/black</item>
     </style>
 
-    <style name="Widget.AppTheme.Toolbar" parent="Theme.AppCompat.Light.NoActionBar">
+    <style name="Widget.AppTheme.Toolbar" parent="BaseTheme">
         <!-- colorControlNormal is used for the toggle btn color -->
         <item name="colorControlNormal">@android:color/white</item>
         <item name="actionMenuTextColor">@android:color/white</item>
     </style>
 
-    <style name="Widget.AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>
+    <style name="Widget.AppTheme.AppBarOverlay" parent="ThemeOverlay.MaterialComponents.Dark.ActionBar"/>
 
     <!-- Biometric -->
-    <style name="BottomSheetDialogTheme" parent="BaseBottomSheetDialog"/>
+    <style name="BottomSheetDialogTheme" parent="BaseBottomSheetDialog" />
+
     <style name="BaseBottomSheetDialog" parent="@style/Theme.Design.Light.BottomSheetDialog">
         <item name="android:windowIsFloating">true</item>
         <item name="bottomSheetStyle">@style/BottomSheet</item>

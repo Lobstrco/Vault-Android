@@ -1,72 +1,75 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:tools="http://schemas.android.com/tools"
-              xmlns:app="http://schemas.android.com/apk/res-auto"
-              android:layout_width="match_parent" android:layout_height="match_parent"
-              android:orientation="vertical"
-              android:layout_marginLeft="16dp"
-              android:layout_marginRight="16dp"
-              android:layout_marginBottom="16dp"
-              tools:context=".presentation.auth.mnemonic.create_mnemonic.MnemonicsFragment">
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        android:paddingBottom="16dp"
+        android:orientation="vertical"
+        tools:context=".presentation.auth.mnemonic.create_mnemonic.MnemonicsFragment">
 
     <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="start"
-            android:textStyle="bold"
             android:layout_marginBottom="8dp"
-            android:textSize="20sp"
+            android:gravity="start"
+            android:text="@string/text_tv_mnemonics_title"
             android:textColor="@android:color/black"
-            android:text="@string/text_tv_mnemonics_title"/>
+            android:textSize="20sp"
+            android:textStyle="bold" />
 
     <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="start"
-            android:textSize="14sp"
             android:layout_marginBottom="25dp"
             android:alpha="0.6"
+            android:gravity="start"
+            android:text="@string/text_tv_mnemonics_description"
             android:textColor="@color/color_071c33"
-            android:text="@string/text_tv_mnemonics_description"/>
+            android:textSize="14sp" />
 
-    <LinearLayout android:layout_width="match_parent"
-                  android:layout_height="0dp"
-                  android:orientation="vertical"
-                  android:layout_weight="1">
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:orientation="vertical">
 
         <com.lobstr.stellar.vault.presentation.auth.mnemonic.MnemonicsContainerView
                 android:id="@+id/mnemonicContainerView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/bg_mnemonics"
                 android:layout_marginBottom="12dp"
-                app:itemTextColor="@android:color/black"/>
+                android:background="@drawable/bg_mnemonics"
+                app:itemTextColor="@android:color/black" />
 
-        <LinearLayout android:layout_width="match_parent"
-                      android:layout_height="wrap_content"
-                      android:orientation="horizontal"
-                      android:gravity="center">
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="horizontal">
 
             <TextView
                     android:id="@+id/tvMnemonicsInstruction"
                     android:layout_width="0dp"
-                      android:layout_height="wrap_content"
-                      android:layout_weight="1"
-                      android:textSize="12sp"
-                      android:textColor="@color/color_994A4A4A"
-                      android:text="@string/text_tv_mnemonics_instruction"/>
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/text_tv_mnemonics_instruction"
+                    android:textColor="@color/color_994A4A4A"
+                    android:textSize="12sp" />
 
             <Button
                     android:id="@+id/btnClipToBoard"
+                    style="@style/Base.Widget.AppCompat.Button.Borderless.Colored"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/text_btn_clip_to_board"
-                    android:textColor="@color/color_primary"
                     android:drawableStart="@drawable/ic_content_copy_purple"
                     android:fontFamily="sans-serif"
-                    style="@style/Base.Widget.AppCompat.Button.Borderless.Colored"
-                    android:textSize="14sp"
-                    android:textAllCaps="false"/>
+                    android:text="@string/text_btn_clip_to_board"
+                    android:textAllCaps="false"
+                    android:textColor="@color/color_primary"
+                    android:textSize="14sp" />
         </LinearLayout>
 
     </LinearLayout>
@@ -76,19 +79,20 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
+            android:layout_marginBottom="16dp"
+            android:text="@string/text_tv_mnemonics_confirmation"
             android:textAppearance="?android:textAppearanceSmall"
             android:textColor="@color/color_994A4A4A"
-            android:textSize="12sp"
-            android:text="@string/text_tv_mnemonics_confirmation"
-            android:layout_marginBottom="16dp"/>
+            android:textSize="12sp" />
 
-    <Button android:id="@+id/btnNext"
+    <Button
+            android:id="@+id/btnNext"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/selector_default_button_with_round"
-            android:textColor="@android:color/white"
-            android:textSize="14sp"
+            android:text="@string/text_btn_next"
             android:textAllCaps="false"
-            android:text="@string/text_btn_next"/>
+            android:textColor="@android:color/white"
+            android:textSize="14sp" />
 
 </LinearLayout>

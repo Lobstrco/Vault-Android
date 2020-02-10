@@ -13,11 +13,11 @@ import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.FragmentManager
 import com.lobstr.stellar.vault.R
 import com.lobstr.stellar.vault.presentation.BaseMvpAppCompatDialogFragment
-import com.lobstr.stellar.vault.presentation.application.LVApplication
 import com.lobstr.stellar.vault.presentation.dialog.alert.base.AlertDialogFragment.DialogIdentifier.PROGRESS
 import com.lobstr.stellar.vault.presentation.dialog.alert.base.AlertDialogFragment.DialogIdentifier.RATE_US
 import com.lobstr.stellar.vault.presentation.dialog.alert.progress.ProgressDialog
 import com.lobstr.stellar.vault.presentation.home.rate_us.RateUsDialogFragment
+import com.lobstr.stellar.vault.presentation.util.AppUtil
 
 
 open class AlertDialogFragment : BaseMvpAppCompatDialogFragment() {
@@ -285,7 +285,7 @@ open class AlertDialogFragment : BaseMvpAppCompatDialogFragment() {
         }
 
         fun setTitle(@StringRes title: Int): Builder {
-            this.title = LVApplication.appComponent.context.getText(title)
+            this.title = AppUtil.getString(title)
             return this
         }
 
@@ -295,7 +295,7 @@ open class AlertDialogFragment : BaseMvpAppCompatDialogFragment() {
         }
 
         fun setMessage(@StringRes message: Int): Builder {
-            this.message = LVApplication.appComponent.context.getText(message)
+            this.message = AppUtil.getString(message)
             return this
         }
 
@@ -316,7 +316,7 @@ open class AlertDialogFragment : BaseMvpAppCompatDialogFragment() {
         }
 
         fun setNegativeBtnText(@StringRes negativeBtnText: Int): Builder {
-            this.negativeBtnText = LVApplication.appComponent.context.getText(negativeBtnText)
+            this.negativeBtnText = AppUtil.getString(negativeBtnText)
             return this
         }
 
@@ -326,7 +326,7 @@ open class AlertDialogFragment : BaseMvpAppCompatDialogFragment() {
         }
 
         fun setPositiveBtnText(@StringRes positiveBtnText: Int): Builder {
-            this.positiveBtnText = LVApplication.appComponent.context.getText(positiveBtnText)
+            this.positiveBtnText = AppUtil.getString(positiveBtnText)
             return this
         }
 
@@ -336,7 +336,7 @@ open class AlertDialogFragment : BaseMvpAppCompatDialogFragment() {
         }
 
         fun setNeutralBtnText(@StringRes neutralBtnText: Int): Builder {
-            this.neutralBtnText = LVApplication.appComponent.context.getText(neutralBtnText)
+            this.neutralBtnText = AppUtil.getString(neutralBtnText)
             return this
         }
 

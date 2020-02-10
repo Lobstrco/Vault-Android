@@ -33,6 +33,8 @@ class AccountWithStatusViewHolder(
         itemView.tvAccount.text = account.address
         itemView.tvAccountFederation.text = if(account.federation.isNullOrEmpty()) account.address else account.federation
 
+        itemView.tvVaultAccountMarker.visibility = if(account.isVaultAccount == true) View.VISIBLE else View.INVISIBLE
+
         itemView.tvStatus.text =
             if (account.signed == true) {
                 itemView.context.getString(R.string.text_tv_status_signed)

@@ -1,11 +1,12 @@
 package com.lobstr.stellar.vault.data.stellar
 
-import android.content.Context
 import com.lobstr.stellar.vault.data.mnemonic.MnemonicsMapper
 import com.lobstr.stellar.vault.data.transaction.TransactionEntityMapper
 import com.lobstr.stellar.vault.domain.stellar.StellarRepository
 import com.lobstr.stellar.vault.presentation.application.LVApplication
 import com.lobstr.stellar.vault.presentation.entities.account.Account
+import com.lobstr.stellar.vault.presentation.entities.account.AccountResult
+import com.lobstr.stellar.vault.presentation.entities.account.Thresholds
 import com.lobstr.stellar.vault.presentation.entities.mnemonic.MnemonicItem
 import com.lobstr.stellar.vault.presentation.entities.transaction.TransactionItem
 import com.soneso.stellarmnemonics.Wallet
@@ -20,7 +21,6 @@ import org.stellar.sdk.responses.SubmitTransactionResponse
 import java.util.concurrent.Callable
 
 class StellarRepositoryImpl(
-    private val context: Context,
     private val network: Network,
     private val server: Server,
     private val mnemonicsMapper: MnemonicsMapper,
@@ -83,12 +83,12 @@ class StellarRepositoryImpl(
     }
 
     /**
-     * Used for get transaction signers list (exclude VAULT marker key).
+     * Used for get transaction signers info (exclude VAULT marker key).
      */
     override fun getTransactionSigners(
         envelopXdr: String,
         sourceAccount: String
-    ): Single<List<Account>> {
+    ): Single<AccountResult> {
         return Single.create<AccountResponse> {
             try {
                 it.onSuccess(server.accounts().account(sourceAccount))
@@ -101,24 +101,28 @@ class StellarRepositoryImpl(
 
                 val accountsList: MutableList<Account> = mutableListOf()
 
-                val signatures = transaction.signatures
+                val accountResult = AccountResult(
+                    Thresholds(
+                        accountResponse.thresholds.lowThreshold,
+                        accountResponse.thresholds.medThreshold,
+                        accountResponse.thresholds.highThreshold
+                    ),
+                    accountsList
+                )
 
-                // Check signatures list.
-                if (signatures.isNullOrEmpty()) {
-                    return@map accountsList
-                }
+                val signatures = transaction.signatures ?: return@map accountResult
 
                 // Exclude marker key (VAULT).
                 val listOfTargetSigners = accountResponse.signers
                     .filter { !it.key.contains("VAULT") }
-                    .map { it.key }
+
 
                 // Check verification for each key.
-                for (key in listOfTargetSigners) {
+                for (signer in listOfTargetSigners) {
                     var signed = false
 
                     for (signature in signatures) {
-                        if (KeyPair.fromAccountId(key).verify(
+                        if (KeyPair.fromAccountId(signer.key).verify(
                                 transaction.hash(),
                                 signature.signature.signature
                             )
@@ -128,10 +132,11 @@ class StellarRepositoryImpl(
                         }
                     }
 
-                    accountsList.add(Account(key, signed = signed))
+                    accountsList.add(Account(signer.key, weight = signer.weight, signed = signed))
                 }
 
-                return@map accountsList.sortedBy { it.signed == true }
+                accountResult.signers = accountsList.sortedBy { it.signed == true }
+                return@map accountResult
             }
             .onErrorResumeNext {
                 LVApplication.appComponent.rxErrorUtils.handleSingleRequestHttpError(it)

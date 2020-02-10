@@ -10,11 +10,12 @@ import androidx.annotation.StringRes
 import androidx.core.content.ContextCompat
 import com.andrognito.pinlockview.PinLockListener
 import com.lobstr.stellar.vault.R
-import com.lobstr.stellar.vault.presentation.BaseMvpAppCompatActivity
 import com.lobstr.stellar.vault.presentation.auth.AuthActivity
+import com.lobstr.stellar.vault.presentation.base.activity.BaseActivity
 import com.lobstr.stellar.vault.presentation.dialog.alert.base.AlertDialogFragment
 import com.lobstr.stellar.vault.presentation.fcm.NotificationsManager
 import com.lobstr.stellar.vault.presentation.home.HomeActivity
+import com.lobstr.stellar.vault.presentation.util.AppUtil
 import com.lobstr.stellar.vault.presentation.util.Constant
 import com.lobstr.stellar.vault.presentation.util.biometric.BiometricListener
 import com.lobstr.stellar.vault.presentation.util.biometric.BiometricManager
@@ -24,7 +25,7 @@ import kotlinx.android.synthetic.main.activity_pin.*
 import moxy.presenter.InjectPresenter
 import moxy.presenter.ProvidePresenter
 
-class PinActivity : BaseMvpAppCompatActivity(), PinView, PinLockListener,
+class PinActivity : BaseActivity(), PinView, PinLockListener,
     BiometricListener, View.OnClickListener, AlertDialogFragment.OnDefaultAlertDialogListener {
 
     // ===========================================================
@@ -42,7 +43,7 @@ class PinActivity : BaseMvpAppCompatActivity(), PinView, PinLockListener,
     // ===========================================================
 
     @InjectPresenter
-    lateinit var mPresenter: PinPresenter
+    lateinit var mPinPresenter: PinPresenter
 
     private var mBiometricManager: BiometricManager? = null
 
@@ -65,10 +66,24 @@ class PinActivity : BaseMvpAppCompatActivity(), PinView, PinLockListener,
     // Methods for/from SuperClass
     // ===========================================================
 
+    override fun getLayoutResource(): Int {
+        return R.layout.activity_pin
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
+        setStyleForEnterPinIfNeeded()
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_pin)
         setListeners()
+    }
+
+    private fun setStyleForEnterPinIfNeeded() {
+        // Set transparent and light navigation bar for dark pin theme.
+        if (!intent?.getBooleanExtra(Constant.Extra.EXTRA_CREATE_PIN, false)!! &&
+            !intent?.getBooleanExtra(Constant.Extra.EXTRA_CHANGE_PIN, false)!! &&
+            !intent?.getBooleanExtra(Constant.Extra.EXTRA_CONFIRM_PIN, false)!!
+        ) {
+            setTheme(R.style.DarkAppTheme)
+        }
     }
 
     private fun setListeners() {
@@ -78,7 +93,7 @@ class PinActivity : BaseMvpAppCompatActivity(), PinView, PinLockListener,
 
     override fun onClick(v: View?) {
         when (v?.id) {
-            tvPinLogOut.id -> mPresenter.logoutClicked()
+            tvPinLogOut.id -> mPinPresenter.logoutClicked()
         }
     }
 
@@ -92,7 +107,7 @@ class PinActivity : BaseMvpAppCompatActivity(), PinView, PinLockListener,
         if (style == STYLE_ENTER_PIN) {
             indicatorDotsWhite.pinLength = 6
             pinLockView.attachIndicatorDots(indicatorDotsWhite)
-            llPinContainer.setBackgroundColor(ContextCompat.getColor(this, R.color.color_primary))
+            content.setBackgroundColor(ContextCompat.getColor(this, R.color.color_primary))
             pinLockView.textColor = ContextCompat.getColor(this, android.R.color.white)
 
             tvPinTitle.visibility = View.GONE
@@ -103,7 +118,7 @@ class PinActivity : BaseMvpAppCompatActivity(), PinView, PinLockListener,
         } else {
             indicatorDots.pinLength = 6
             pinLockView.attachIndicatorDots(indicatorDots)
-            llPinContainer.setBackgroundColor(ContextCompat.getColor(this, android.R.color.white))
+            content.setBackgroundColor(ContextCompat.getColor(this, android.R.color.white))
             pinLockView.textColor = ContextCompat.getColor(this, android.R.color.black)
 
             tvPinTitle.visibility = View.VISIBLE
@@ -165,26 +180,29 @@ class PinActivity : BaseMvpAppCompatActivity(), PinView, PinLockListener,
     // Pin Lock listeners callbacks.
 
     override fun onComplete(pin: String?) {
+        AppUtil.vibrate(this, longArrayOf(0, 8, 0, 0))
         Log.i(LOG_TAG, "Pin complete: $pin")
-        mPresenter.onPinComplete(pin)
+        mPinPresenter.onPinComplete(pin)
     }
 
     override fun onEmpty() {
+        AppUtil.vibrate(this, longArrayOf(0, 8, 0, 0))
         Log.i(LOG_TAG, "Pin empty")
     }
 
     override fun onPinChange(pinLength: Int, intermediatePin: String?) {
+        AppUtil.vibrate(this, longArrayOf(0, 8, 0, 0))
         Log.i(LOG_TAG, "Pin changed, new length $pinLength with intermediate pin $intermediatePin")
     }
 
     // Dialogs.
 
     override fun onPositiveBtnClick(tag: String?, dialogInterface: DialogInterface) {
-        mPresenter.onAlertDialogPositiveButtonClicked(tag)
+        mPinPresenter.onAlertDialogPositiveButtonClicked(tag)
     }
 
     override fun onNegativeBtnClick(tag: String?, dialogInterface: DialogInterface) {
-        mPresenter.onAlertDialogNegativeButtonClicked(tag)
+        mPinPresenter.onAlertDialogNegativeButtonClicked(tag)
     }
 
     override fun onNeutralBtnClick(tag: String?, dialogInterface: DialogInterface) {
@@ -214,7 +232,10 @@ class PinActivity : BaseMvpAppCompatActivity(), PinView, PinLockListener,
             .setNegativeBtnText(R.string.text_btn_continue)
             .setPositiveBtnText(R.string.text_btn_change_pin)
             .create()
-            .show(supportFragmentManager, AlertDialogFragment.DialogFragmentIdentifier.COMMON_PIN_PATTERN)
+            .show(
+                supportFragmentManager,
+                AlertDialogFragment.DialogFragmentIdentifier.COMMON_PIN_PATTERN
+            )
     }
 
     // Biometric.
@@ -249,7 +270,7 @@ class PinActivity : BaseMvpAppCompatActivity(), PinView, PinLockListener,
     }
 
     override fun onAuthenticationSuccessful() {
-        mPresenter.biometricAuthenticationSuccessful()
+        mPinPresenter.biometricAuthenticationSuccessful()
     }
 
     override fun onAuthenticationError(errorCode: Int, errString: CharSequence?) {

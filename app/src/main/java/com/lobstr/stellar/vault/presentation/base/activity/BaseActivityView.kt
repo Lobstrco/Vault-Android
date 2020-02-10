@@ -12,6 +12,9 @@ import moxy.viewstate.strategy.StateStrategyType
 interface BaseActivityView : MvpView {
 
     @StateStrategyType(SkipStrategy::class)
+    fun setWindowInset()
+
+    @StateStrategyType(SkipStrategy::class)
     fun setActionBarTitle(title: String?)
 
     @StateStrategyType(SkipStrategy::class)

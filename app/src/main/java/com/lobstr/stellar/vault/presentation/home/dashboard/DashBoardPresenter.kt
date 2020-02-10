@@ -30,6 +30,9 @@ class DashboardPresenter : BasePresenter<DashboardView>() {
     private var stellarAccountsSubscription: Disposable? = null
     private val cashedStellarAccounts: MutableList<Account> = mutableListOf()
 
+    private var loadSignedAccountsInProcess = false
+    private var loadTransactionsInProcess = false
+
     init {
         LVApplication.appComponent.plusDashboardComponent(DashboardModule()).inject(this)
     }
@@ -40,8 +43,13 @@ class DashboardPresenter : BasePresenter<DashboardView>() {
         viewState.initSignedAccountsRecycledView()
         viewState.showPublicKey(interactor.getUserPublicKey())
         registerEventProvider()
-        loadPendingTransactions()
+        loadSignedAccountsAndTransactions()
+    }
+
+    private fun loadSignedAccountsAndTransactions() {
+        viewState.showRefreshAnimation(true)
         loadSignedAccountsList()
+        loadPendingTransactions()
     }
 
     private fun registerEventProvider() {
@@ -52,8 +60,7 @@ class DashboardPresenter : BasePresenter<DashboardView>() {
                     when (it.type) {
                         Network.Type.CONNECTED -> {
                             if (needCheckConnectionState) {
-                                loadPendingTransactions()
-                                loadSignedAccountsList()
+                                loadSignedAccountsAndTransactions()
                             }
                             cancelNetworkWorker(false)
                         }
@@ -74,8 +81,7 @@ class DashboardPresenter : BasePresenter<DashboardView>() {
                             loadPendingTransactions()
                         }
                         Notification.Type.SIGNED_NEW_ACCOUNT, Notification.Type.REMOVED_SIGNER -> {
-                            loadSignedAccountsList()
-                            loadPendingTransactions()
+                            loadSignedAccountsAndTransactions()
                         }
                     }
                 }, {
@@ -85,14 +91,20 @@ class DashboardPresenter : BasePresenter<DashboardView>() {
     }
 
     private fun loadPendingTransactions() {
+        if (loadTransactionsInProcess) {
+            return
+        }
+
         unsubscribeOnDestroy(
             interactor.getPendingTransactionList(null)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
+                .doOnSubscribe { loadTransactionsInProcess = true }
+                .doOnEvent { _, _ -> loadTransactionsInProcess = false }
                 .subscribe({
                     viewState.showDashboardInfo(it.count)
                 }, {
-                    viewState.showDashboardInfo(0)
+                    viewState.showDashboardInfo(null)
                     when (it) {
                         is NoInternetConnectionException -> {
                             viewState.showErrorMessage(it.details)
@@ -113,11 +125,19 @@ class DashboardPresenter : BasePresenter<DashboardView>() {
     }
 
     private fun loadSignedAccountsList() {
+        if (loadSignedAccountsInProcess) {
+            return
+        }
+
         unsubscribeOnDestroy(
             interactor.getSignedAccounts()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .doOnEvent { _, _ -> viewState.showSignersProgress(false) }
+                .doOnSubscribe { loadSignedAccountsInProcess = true }
+                .doOnEvent { _, _ ->
+                    loadSignedAccountsInProcess = false
+                    viewState.showSignersProgress(false)
+                }
                 .subscribe({
                     viewState.showSignersCount(interactor.getSignersCount())
 
@@ -209,8 +229,7 @@ class DashboardPresenter : BasePresenter<DashboardView>() {
 
     fun userVisibleHintCalled(visible: Boolean) {
         if (visible) {
-            loadPendingTransactions()
-            loadSignedAccountsList()
+            loadSignedAccountsAndTransactions()
         }
     }
 
@@ -226,5 +245,9 @@ class DashboardPresenter : BasePresenter<DashboardView>() {
 
     fun signedAccountItemLongClicked(account: Account) {
         viewState.copyToClipBoard(account.address)
+    }
+
+    fun refreshClicked() {
+        loadSignedAccountsAndTransactions()
     }
 }

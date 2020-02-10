@@ -9,10 +9,6 @@
         <attr name="itemTextColor" format="color"/>
     </declare-styleable>
 
-    <declare-styleable name="SwipeDisablingViewPager">
-        <attr name="isSwipeEnabled" format="boolean"/>
-    </declare-styleable>
-
     <declare-styleable name="ExpandableCardView">
         <attr name="titleText" format="reference"/>
         <attr name="contentText" format="reference"/>

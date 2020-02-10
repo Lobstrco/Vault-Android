@@ -36,8 +36,8 @@ class RepositoryModule {
 
     @Singleton
     @Provides
-    fun provideStellarRepository(context: Context, network: Network, server: Server): StellarRepository {
-        return StellarRepositoryImpl(context, network, server, MnemonicsMapper(), TransactionEntityMapper(network))
+    fun provideStellarRepository(network: Network, server: Server): StellarRepository {
+        return StellarRepositoryImpl(network, server, MnemonicsMapper(), TransactionEntityMapper(network))
     }
 
     @Singleton

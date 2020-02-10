@@ -161,8 +161,12 @@
         invalid.
     </string>
     <string name="text_tv_signers">Signers</string>
+    <string name="text_tv_vault_account_marker">(You)</string>
+    <string name="text_tv_of">of</string>
     <string name="text_tv_status_signed">Signed</string>
     <string name="text_tv_status_pending">Pending</string>
+    <string name="text_tv_source_account">Source Account</string>
+    <string name="text_tv_added_at">Added At</string>
 
     <!-- Add XDR screen -->
     <string name="text_tv_import_xdr_subtitle">To submit transaction enter its XDR below</string>
@@ -205,7 +209,7 @@
     <!-- Biometric prompt -->
     <string name="biometric_error_permission_not_granted">Permission is not granted by user</string>
     <string name="biometric_title">Biometric Login</string>
-    <string name="biometric_subtitle">Confirm your Biometric credential to continue.</string>
+    <string name="biometric_subtitle">Confirm Biometric credential to continue.</string>
 
     <!-- Errors and other UI messages -->
     <string name="text_error_invalid_token">Invalid token.</string>
@@ -261,7 +265,7 @@
     <!-- Menu action titles -->
     <string name="text_action_info">help</string>
     <string name="text_action_log_out">log out</string>
+    <string name="text_action_refresh">update</string>
 
     <!-- Other -->
-
 </resources>

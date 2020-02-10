@@ -56,7 +56,7 @@ open class BaseMvpAppCompatDialogFragment : AppCompatDialogFragment(), MvpDelega
             }
 
             if (this.isRemoving || anyParentIsRemoving) {
-                this.getMvpDelegate().onDestroy()
+                this.mvpDelegate.onDestroy()
             }
 
         }

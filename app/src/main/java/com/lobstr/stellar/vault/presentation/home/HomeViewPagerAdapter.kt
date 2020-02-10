@@ -1,10 +1,10 @@
 package com.lobstr.stellar.vault.presentation.home
 
-import android.content.Context
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
-import androidx.fragment.app.FragmentStatePagerAdapter
+import androidx.lifecycle.Lifecycle
+import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.lobstr.stellar.vault.presentation.container.fragment.ContainerFragment
 import com.lobstr.stellar.vault.presentation.util.Constant.Bundle.BUNDLE_NAVIGATION_FR
 import com.lobstr.stellar.vault.presentation.util.Constant.Navigation.DASHBOARD
@@ -12,7 +12,8 @@ import com.lobstr.stellar.vault.presentation.util.Constant.Navigation.SETTINGS
 import com.lobstr.stellar.vault.presentation.util.Constant.Navigation.TRANSACTIONS
 
 
-class HomeViewPagerAdapter(private val context: Context, fm: FragmentManager) : FragmentStatePagerAdapter(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
+class HomeViewPagerAdapter(fm: FragmentManager, lifecycle: Lifecycle) :
+    FragmentStateAdapter(fm, lifecycle) {
 
     // ===========================================================
     // Constants
@@ -45,7 +46,7 @@ class HomeViewPagerAdapter(private val context: Context, fm: FragmentManager) : 
     // Methods for/from SuperClass/Interfaces
     // ===========================================================
 
-    override fun getItem(position: Int): Fragment {
+    override fun createFragment(position: Int): Fragment {
         val bundle = Bundle()
 
         when (position) {
@@ -64,12 +65,12 @@ class HomeViewPagerAdapter(private val context: Context, fm: FragmentManager) : 
 
         val fragment = ContainerFragment()
         fragment.arguments = bundle
-
+        // Used for setup default user visibility hint.
+        fragment.setMenuVisibility(false)
         return fragment
     }
 
-
-    override fun getCount() = VIEW_PAGER_COUNT
+    override fun getItemCount() = VIEW_PAGER_COUNT
 
     // ===========================================================
     // Methods

@@ -1,56 +1,61 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:tools="http://schemas.android.com/tools"
-              xmlns:app="http://schemas.android.com/apk/res-auto"
-              android:layout_width="match_parent" android:layout_height="match_parent"
-              android:layout_margin="16dp"
-              android:orientation="vertical"
-              tools:context=".presentation.home.transactions.submit_success.SuccessFragment">
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="16dp"
+        android:background="@android:color/white"
+        android:orientation="vertical"
+        tools:context=".presentation.home.transactions.submit_success.SuccessFragment">
 
-    <LinearLayout android:layout_width="match_parent"
-                  android:layout_height="0dp"
-                  android:orientation="vertical"
-                  android:layout_weight="1"
-                  android:layout_gravity="center"
-                  android:gravity="center">
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
 
         <com.airbnb.lottie.LottieAnimationView
                 android:id="@+id/iv_transaction_summary_status"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
                 app:lottie_autoPlay="true"
                 app:lottie_loop="false"
-                app:lottie_rawRes="@raw/error"
-                android:layout_marginBottom="16dp"/>
+                app:lottie_rawRes="@raw/error" />
 
-        <TextView android:layout_width="wrap_content"
-                  android:layout_height="wrap_content"
-                  android:textColor="@android:color/black"
-                  android:textStyle="bold"
-                  android:text="@string/text_tv_error"
-                  android:layout_gravity="center"
-                  android:textSize="20sp"
-                  android:layout_marginBottom="8dp"/>
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginBottom="8dp"
+                android:text="@string/text_tv_error"
+                android:textColor="@android:color/black"
+                android:textSize="20sp"
+                android:textStyle="bold" />
 
         <TextView
                 android:id="@+id/tvErrorDescription"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center"
-                android:textSize="14sp"
-                android:textAppearance="?android:textAppearanceMedium"
                 android:layout_gravity="center"
-                android:textColor="@color/color_d9534f"/>
+                android:gravity="center"
+                android:textAppearance="?android:textAppearanceMedium"
+                android:textColor="@color/color_d9534f"
+                android:textSize="14sp" />
     </LinearLayout>
 
 
-    <Button android:id="@+id/btnDone"
+    <Button
+            android:id="@+id/btnDone"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/selector_default_button_with_round"
-            android:textColor="@android:color/white"
-            android:textAllCaps="false"
-            android:textSize="14sp"
             android:layout_gravity="bottom"
-            android:text="@string/text_btn_done"/>
+            android:background="@drawable/selector_default_button_with_round"
+            android:text="@string/text_btn_done"
+            android:textAllCaps="false"
+            android:textColor="@android:color/white"
+            android:textSize="14sp" />
 </LinearLayout>

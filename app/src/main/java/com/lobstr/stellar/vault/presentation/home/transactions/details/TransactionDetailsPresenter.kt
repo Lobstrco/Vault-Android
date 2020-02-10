@@ -1,5 +1,6 @@
 package com.lobstr.stellar.vault.presentation.home.transactions.details
 
+import android.text.format.DateFormat
 import com.lobstr.stellar.vault.R
 import com.lobstr.stellar.vault.data.error.exeption.*
 import com.lobstr.stellar.vault.domain.transaction_details.TransactionDetailsInteractor
@@ -12,7 +13,10 @@ import com.lobstr.stellar.vault.presentation.dagger.module.transaction_details.T
 import com.lobstr.stellar.vault.presentation.dialog.alert.base.AlertDialogFragment.DialogFragmentIdentifier.CONFIRM_TRANSACTION
 import com.lobstr.stellar.vault.presentation.dialog.alert.base.AlertDialogFragment.DialogFragmentIdentifier.DENY_TRANSACTION
 import com.lobstr.stellar.vault.presentation.entities.account.Account
+import com.lobstr.stellar.vault.presentation.entities.account.AccountResult
 import com.lobstr.stellar.vault.presentation.entities.transaction.TransactionItem
+import com.lobstr.stellar.vault.presentation.util.AppUtil
+import com.lobstr.stellar.vault.presentation.util.Constant
 import com.lobstr.stellar.vault.presentation.util.Constant.Transaction.CANCELLED
 import com.lobstr.stellar.vault.presentation.util.Constant.Transaction.IMPORT_XDR
 import com.lobstr.stellar.vault.presentation.util.Constant.Transaction.PENDING
@@ -22,6 +26,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import moxy.InjectViewState
+import org.joda.time.DateTime
 import javax.inject.Inject
 
 @InjectViewState
@@ -90,19 +95,20 @@ class TransactionDetailsPresenter(private var transactionItem: TransactionItem) 
                     viewState.showSignersProgress(false)
                 }
                 .subscribe({
-                    viewState.showSignersContainer(it.isNotEmpty())
+                    viewState.showSignersContainer(it.signers.isNotEmpty())
+                    viewState.showSignersCount(calculateSignersCount(it))
 
                     // check cashed federation items
-                    it.forEachIndexed { index, accountItem ->
+                    it.signers.forEachIndexed { index, accountItem ->
                         val federation =
                             cashedStellarAccounts.find { account -> account.address == accountItem.address }
                                 ?.federation
-                        it[index].federation = federation
+                        it.signers[index].federation = federation
                     }
-                    viewState.notifySignersAdapter(it)
+                    viewState.notifySignersAdapter(it.signers)
 
                     // try receive federations for accounts
-                    getStellarAccounts(it)
+                    getStellarAccounts(it.signers)
                 }, {
                     when (it) {
                         is NoInternetConnectionException -> {
@@ -119,6 +125,31 @@ class TransactionDetailsPresenter(private var transactionItem: TransactionItem) 
                     }
                 })
         )
+    }
+
+    private fun calculateSignersCount(accountResult: AccountResult): String? {
+        when {
+            accountResult.signers.isNotEmpty() -> {
+
+                // Only check the case when thresholds and weights is the same and don't equals 0.
+
+                val lowThreshold = accountResult.thresholds.lowThreshold
+                val medThreshold = accountResult.thresholds.medThreshold
+                val highThreshold = accountResult.thresholds.highThreshold
+
+                val isThresholdsSameAndNotZero = (lowThreshold != 0) && (lowThreshold == medThreshold) && (lowThreshold == highThreshold)
+                val isWeightsSameAndNotZero = accountResult.signers.first().weight != 0 && accountResult.signers.filter { it.weight == accountResult.signers.first().weight}.size == accountResult.signers.size
+
+                return if(isThresholdsSameAndNotZero and isWeightsSameAndNotZero){
+                    "${accountResult.signers.filter { it.signed == true }.size} ${AppUtil.getString(R.string.text_tv_of)} ${kotlin.math.ceil((highThreshold.toFloat()/ accountResult.signers.first().weight!!.toFloat())).toInt()}"
+                } else{
+                    null
+                }
+            }
+            else -> {
+                return null
+            }
+        }
     }
 
     /**
@@ -180,6 +211,31 @@ class TransactionDetailsPresenter(private var transactionItem: TransactionItem) 
         } else {
             viewState.showOperationDetailsScreen(transactionItem, 0)
         }
+
+        // Check and setup additional info like Source Account and date.
+        checkAdditionalInfo()
+    }
+
+    private fun checkAdditionalInfo() {
+        val map: MutableMap<String, String> = mutableMapOf()
+
+        val sourceAccount = transactionItem.transaction.sourceAccount
+        val addedAt = transactionItem.addedAt
+
+        if (!sourceAccount.isNullOrEmpty()) {
+            map[AppUtil.getString(R.string.text_tv_source_account).plus(Constant.Symbol.COLON)] =
+                sourceAccount
+        }
+
+        if (!addedAt.isNullOrEmpty()) {
+            map[AppUtil.getString(R.string.text_tv_added_at).plus(Constant.Symbol.COLON)] =
+                AppUtil.formatDate(
+                    DateTime(addedAt).toDate().time,
+                    if (DateFormat.is24HourFormat(AppUtil.getAppContext())) "MMM dd yyyy HH:mm" else "MMM dd yyyy h:mm a"
+                )
+        }
+
+        viewState.setupAdditionalInfo(map)
     }
 
     fun btnConfirmClicked() {
@@ -282,7 +338,7 @@ class TransactionDetailsPresenter(private var transactionItem: TransactionItem) 
                             confirmTransaction()
                         }
                         is InternalException -> viewState.showMessage(
-                            LVApplication.appComponent.context.getString(
+                            AppUtil.getString(
                                 R.string.api_error_internal_submit_transaction
                             )
                         )
@@ -341,7 +397,7 @@ class TransactionDetailsPresenter(private var transactionItem: TransactionItem) 
                                     denyTransaction()
                                 }
                                 is InternalException -> viewState.showMessage(
-                                    LVApplication.appComponent.context.getString(
+                                    AppUtil.getString(
                                         R.string.api_error_internal_submit_transaction
                                     )
                                 )

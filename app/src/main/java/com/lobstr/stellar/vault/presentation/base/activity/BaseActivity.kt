@@ -2,18 +2,22 @@ package com.lobstr.stellar.vault.presentation.base.activity
 
 import android.graphics.PorterDuff
 import android.graphics.PorterDuffColorFilter
+import android.os.Build
 import android.os.Bundle
 import android.text.TextUtils
+import android.view.View
 import android.widget.TextView
 import androidx.annotation.ColorRes
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
+import androidx.core.view.updatePadding
 import androidx.fragment.app.Fragment
 import com.lobstr.stellar.vault.R
 import com.lobstr.stellar.vault.presentation.BaseMvpAppCompatActivity
 import com.lobstr.stellar.vault.presentation.base.fragment.BaseFragment
+import com.lobstr.stellar.vault.presentation.util.doOnApplyWindowInsets
 import moxy.presenter.InjectPresenter
 import moxy.presenter.ProvidePresenter
 
@@ -63,6 +67,8 @@ abstract class BaseActivity : BaseMvpAppCompatActivity(),
         setContentView(getLayoutResource())
         findViews()
         setupToolbar()
+        // Used for setup padding after change gestures type.
+        setWindowInset()
     }
 
     override fun onBackPressed() {
@@ -102,6 +108,21 @@ abstract class BaseActivity : BaseMvpAppCompatActivity(),
     // ===========================================================
     // Listeners, methods for/from Interfaces
     // ===========================================================
+
+    override fun setWindowInset() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            findViewById<View>(R.id.content)?.systemUiVisibility =
+                View.SYSTEM_UI_FLAG_LAYOUT_STABLE or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+
+            findViewById<View>(R.id.content)?.doOnApplyWindowInsets { view, insets, padding ->
+                // padding contains the original padding values after inflation
+                view.updatePadding(
+                    bottom = padding.bottom + insets.systemWindowInsetBottom,
+                    top = padding.top + insets.systemWindowInsetTop
+                )
+            }
+        }
+    }
 
     // ===========================================================
     // Methods
@@ -162,7 +183,8 @@ abstract class BaseActivity : BaseMvpAppCompatActivity(),
 
     override fun setHomeAsUpIndicator(@DrawableRes image: Int, @ColorRes color: Int) {
         val upArrow = ContextCompat.getDrawable(this, image)
-        upArrow?.colorFilter = PorterDuffColorFilter(ContextCompat.getColor(this, color), PorterDuff.Mode.SRC_ATOP)
+        upArrow?.colorFilter =
+            PorterDuffColorFilter(ContextCompat.getColor(this, color), PorterDuff.Mode.SRC_ATOP)
         supportActionBar?.setHomeAsUpIndicator(upArrow)
     }
 }

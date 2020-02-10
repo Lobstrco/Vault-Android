@@ -1,7 +1,7 @@
 package com.lobstr.stellar.vault.presentation.home.transactions.submit_error
 
 import com.lobstr.stellar.vault.R
-import com.lobstr.stellar.vault.presentation.application.LVApplication
+import com.lobstr.stellar.vault.presentation.util.AppUtil
 import moxy.InjectViewState
 import moxy.MvpPresenter
 
@@ -33,7 +33,7 @@ class ErrorPresenter(private val error: String) : MvpPresenter<ErrorView>() {
             else -> 0
         }
 
-        return if (resValue == 0) error else LVApplication.appComponent.context.getString(resValue)
+        return if (resValue == 0) error else AppUtil.getString(resValue)
     }
 
     fun infoClicked() {

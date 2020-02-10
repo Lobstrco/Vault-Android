@@ -25,7 +25,7 @@ class ApiModule {
     private val BASE_STAGING_URL = "https://vault-staging.lobstr.co/api/"
     private val BASE_PRODUCTION_URL = "https://vault.lobstr.co/api/"
 
-    // Horizon server
+    // Horizon server.
     private val HOST_HORIZON_PRODUCTION = "https://horizon.stellar.lobstr.co/"
 
     @Provides

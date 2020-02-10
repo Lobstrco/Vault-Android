@@ -26,6 +26,9 @@ interface TransactionDetailsView : MvpView {
     @StateStrategyType(AddToEndSingleStrategy::class)
     fun showSignersContainer(show: Boolean)
 
+    @StateStrategyType(AddToEndSingleStrategy::class)
+    fun showSignersCount(count: String?)
+
     @StateStrategyType(SkipStrategy::class)
     fun showOperationList(transactionItem: TransactionItem)
 
@@ -54,8 +57,11 @@ interface TransactionDetailsView : MvpView {
     @StateStrategyType(AddToEndSingleStrategy::class)
     fun errorConfirmTransaction(errorMessage: String)
 
-    @StateStrategyType(SkipStrategy::class)
+    @StateStrategyType(AddToEndSingleStrategy::class)
     fun showOperationDetailsScreen(transactionItem: TransactionItem, position: Int)
+
+    @StateStrategyType(AddToEndSingleStrategy::class)
+    fun setupAdditionalInfo(map: Map<String, String>)
 
     @StateStrategyType(SkipStrategy::class)
     fun showConfirmTransactionDialog()

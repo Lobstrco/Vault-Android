@@ -6,6 +6,7 @@ import com.lobstr.stellar.vault.domain.util.EventProviderModule
 import com.lobstr.stellar.vault.presentation.BasePresenter
 import com.lobstr.stellar.vault.presentation.application.LVApplication
 import com.lobstr.stellar.vault.presentation.dagger.module.import_xdr.ImportXdrModule
+import com.lobstr.stellar.vault.presentation.util.AppUtil
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import moxy.InjectViewState
@@ -63,7 +64,7 @@ class ImportXdrPresenter : BasePresenter<ImportXdrView>() {
                 }, {
                     viewState.showFormError(
                         true,
-                        LVApplication.appComponent.context.getString(R.string.msg_bad_xdr)
+                        AppUtil.getString(R.string.msg_bad_xdr)
                     )
                 })
         )

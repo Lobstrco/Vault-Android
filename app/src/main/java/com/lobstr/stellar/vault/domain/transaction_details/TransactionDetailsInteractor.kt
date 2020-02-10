@@ -1,6 +1,7 @@
 package com.lobstr.stellar.vault.domain.transaction_details
 
 import com.lobstr.stellar.vault.presentation.entities.account.Account
+import com.lobstr.stellar.vault.presentation.entities.account.AccountResult
 import com.lobstr.stellar.vault.presentation.entities.transaction.TransactionItem
 import io.reactivex.Single
 import org.stellar.sdk.responses.SubmitTransactionResponse
@@ -30,7 +31,7 @@ interface TransactionDetailsInteractor {
     fun getTransactionSigners(
         xdr: String,
         sourceAccount: String
-    ): Single<List<Account>>
+    ): Single<AccountResult>
 
     fun getStellarAccount(stellarAddress: String): Single<Account>
 }

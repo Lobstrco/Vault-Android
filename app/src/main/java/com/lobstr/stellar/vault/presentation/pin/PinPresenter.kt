@@ -7,6 +7,7 @@ import com.lobstr.stellar.vault.presentation.BasePresenter
 import com.lobstr.stellar.vault.presentation.application.LVApplication
 import com.lobstr.stellar.vault.presentation.dagger.module.pin.PinModule
 import com.lobstr.stellar.vault.presentation.dialog.alert.base.AlertDialogFragment
+import com.lobstr.stellar.vault.presentation.util.AppUtil
 import com.lobstr.stellar.vault.presentation.util.biometric.BiometricUtils
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
@@ -71,7 +72,7 @@ class PinPresenter(
 
         // logic for show biometric
         if (!needChangePin!! && !needCreatePin!! && interactor.isTouchIdEnabled() &&
-            BiometricUtils.isBiometricAvailable(LVApplication.appComponent.context)
+            BiometricUtils.isBiometricAvailable(AppUtil.getAppContext())
         ) {
             viewState.showBiometricDialog(true)
         }
@@ -213,7 +214,7 @@ class PinPresenter(
             interactor.accountHasSigners() -> viewState.showHomeScreen()
             else -> {
                 when {
-                    !interactor.isTouchIdSetUp() && BiometricUtils.isBiometricSupported(LVApplication.appComponent.context) -> viewState.showBiometricSetUpScreen()
+                    !interactor.isTouchIdSetUp() && BiometricUtils.isBiometricSupported(AppUtil.getAppContext()) -> viewState.showBiometricSetUpScreen()
                     else -> viewState.showVaultAuthScreen()
                 }
             }

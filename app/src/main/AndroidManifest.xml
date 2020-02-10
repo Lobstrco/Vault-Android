@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="com.lobstr.stellar.vault">
+        package="com.lobstr.stellar.vault">
 
-    <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
-    <uses-permission android:name="android.permission.USE_BIOMETRIC"/>
-    <uses-permission android:name="android.permission.VIBRATE"/>
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.USE_BIOMETRIC" />
+    <uses-permission android:name="android.permission.VIBRATE" />
     <!-- Step 2: This permission is depreciated in Android P  -->
-    <uses-permission android:name="android.permission.USE_FINGERPRINT"/>
+    <uses-permission android:name="android.permission.USE_FINGERPRINT" />
 
     <application
             android:name=".presentation.application.LVApplication"
@@ -22,7 +22,7 @@
                 android:exported="false"
                 android:stopWithTask="false">
             <intent-filter>
-                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
 
@@ -32,42 +32,42 @@
                 android:screenOrientation="portrait"
                 android:theme="@style/SplashTheme">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-                <action android:name="android.intent.action.VIEW"/>
+                <action android:name="android.intent.action.MAIN" />
+                <action android:name="android.intent.action.VIEW" />
 
-                <category android:name="android.intent.category.LAUNCHER"/>
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
                 android:name=".presentation.home.HomeActivity"
                 android:launchMode="singleTop"
                 android:screenOrientation="portrait"
-                android:theme="@style/HomeTheme"
-                android:windowSoftInputMode="adjustPan|stateAlwaysHidden"/>
+                android:windowSoftInputMode="adjustPan|stateAlwaysHidden" />
         <activity
                 android:name=".presentation.auth.AuthActivity"
                 android:screenOrientation="portrait"
-                android:windowSoftInputMode="adjustResize|stateAlwaysHidden"/>
+                android:windowSoftInputMode="adjustResize|stateAlwaysHidden" />
         <activity
                 android:name=".presentation.pin.PinActivity"
                 android:screenOrientation="portrait"/>
         <activity
                 android:name=".presentation.vault_auth.VaultAuthActivity"
                 android:screenOrientation="portrait"
-                android:windowSoftInputMode="adjustResize|stateAlwaysHidden"/>
+                android:windowSoftInputMode="adjustResize|stateAlwaysHidden" />
 
-        <activity android:name="com.lobstr.stellar.vault.presentation.container.activity.ContainerActivity"
-                  android:screenOrientation="portrait"
-                  android:windowSoftInputMode="adjustResize|stateAlwaysHidden">
+        <activity
+                android:name="com.lobstr.stellar.vault.presentation.container.activity.ContainerActivity"
+                android:screenOrientation="portrait"
+                android:windowSoftInputMode="adjustResize|stateAlwaysHidden">
             <meta-data
                     android:name="android.support.PARENT_ACTIVITY"
-                    android:value=".presentation.home.HomeActivity"/>
+                    android:value=".presentation.home.HomeActivity" />
         </activity>
 
         <provider
-                android:authorities="@string/authority"
                 android:name=".presentation.util.content_provider.PreferencesProvider"
-                android:exported="true"/>
+                android:authorities="@string/authority"
+                android:exported="true" />
     </application>
 
 </manifest>

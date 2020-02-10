@@ -73,7 +73,8 @@ class HomeActivity : BaseActivity(), HomeActivityView,
 
     override fun setupViewPager() {
         vpHome.offscreenPageLimit = 4
-        vpHome.adapter = HomeViewPagerAdapter(this, supportFragmentManager)
+        vpHome.isUserInputEnabled = false
+        vpHome.adapter = HomeViewPagerAdapter(supportFragmentManager, lifecycle)
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
@@ -82,11 +83,11 @@ class HomeActivity : BaseActivity(), HomeActivityView,
         }
 
         when (item.itemId) {
-            R.id.action_dashboard -> vpHome.currentItem = DASHBOARD
+            R.id.action_dashboard -> vpHome.setCurrentItem(DASHBOARD, false)
 
-            R.id.action_transactions -> vpHome.currentItem = TRANSACTIONS
+            R.id.action_transactions -> vpHome.setCurrentItem(TRANSACTIONS, false)
 
-            R.id.action_settings -> vpHome.currentItem = SETTINGS
+            R.id.action_settings -> vpHome.setCurrentItem(SETTINGS, false)
         }
 
         return true
@@ -140,7 +141,7 @@ class HomeActivity : BaseActivity(), HomeActivityView,
     }
 
     override fun checkRateUsDialog() {
-        getMvpDelegate().onAttach()
+        mvpDelegate.onAttach()
         mHomePresenter.checkRateUsDialog()
     }
 

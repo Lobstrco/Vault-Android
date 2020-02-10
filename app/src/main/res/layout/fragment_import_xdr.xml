@@ -1,60 +1,60 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:layout_marginLeft="16dp"
-              android:layout_marginRight="16dp"
-              android:layout_marginBottom="16dp">
-
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        android:paddingBottom="16dp"
+        android:background="@android:color/white"
+        android:orientation="vertical">
 
     <TextView
             android:id="@+id/tvSubtitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:textColor="@color/color_071c33"
-            android:alpha="0.6"
-            android:textSize="14sp"
             android:layout_marginBottom="16dp"
+            android:alpha="0.6"
             android:text="@string/text_tv_import_xdr_subtitle"
-            android:textAppearance="?android:textAppearanceMedium"/>
+            android:textAppearance="?android:textAppearanceMedium"
+            android:textColor="@color/color_071c33"
+            android:textSize="14sp" />
 
     <EditText
             android:id="@+id/etImportXdr"
             android:layout_width="match_parent"
             android:layout_height="167dp"
-            android:gravity="top"
             android:layout_marginBottom="8dp"
-            android:padding="17dp"
-            android:textSize="14sp"
+            android:background="@drawable/shape_input_edit_text"
+            android:gravity="top"
+            android:hint="@string/hint_et_import_xdr"
             android:inputType="textNoSuggestions|textMultiLine"
+            android:padding="17dp"
             android:scrollbars="vertical"
             android:textColorHint="@color/color_4D000000"
-            android:hint="@string/hint_et_import_xdr"
-            android:background="@drawable/shape_input_edit_text"/>
+            android:textSize="14sp" />
 
     <TextView
             android:id="@+id/tvError"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="center"
             android:layout_gravity="center"
-            android:textColor="@color/color_d9534f"
-            android:textSize="12sp"
-            android:maxLines="1"
+            android:layout_marginBottom="19dp"
             android:ellipsize="end"
-            android:layout_marginBottom="19dp"/>
+            android:gravity="center"
+            android:maxLines="1"
+            android:textColor="@color/color_d9534f"
+            android:textSize="12sp" />
 
     <Button
             android:id="@+id/btnNext"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="@android:color/white"
-            android:textSize="14sp"
-            android:textAllCaps="false"
-            android:enabled="false"
             android:background="@drawable/selector_default_button_with_round"
-            android:text="@string/text_btn_import_xdr_next"/>
+            android:enabled="false"
+            android:text="@string/text_btn_import_xdr_next"
+            android:textAllCaps="false"
+            android:textColor="@android:color/white"
+            android:textSize="14sp" />
 
 </LinearLayout>

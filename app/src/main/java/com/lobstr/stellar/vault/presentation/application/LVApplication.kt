@@ -36,6 +36,13 @@ class LVApplication : MultiDexApplication() {
     // Constructors
     // ===========================================================
 
+    init {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            // First setup BouncyCastle. For avoiding load data issues.
+            setupBouncyCastle()
+        }
+    }
+
     // ===========================================================
     // Getter & Setter
     // ===========================================================
@@ -47,7 +54,10 @@ class LVApplication : MultiDexApplication() {
     override fun onCreate() {
         super.onCreate()
         upgradeSecurityProvider()
-        setupBouncyCastle()
+        // For pre-lollipop versions - setup BouncyCastle later.
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+            setupBouncyCastle()
+        }
         enableStrictMode()
         FirebaseAnalytics.getInstance(this)
             .setAnalyticsCollectionEnabled(BuildConfig.BUILD_TYPE != Constant.BuildType.DEBUG)
@@ -67,15 +77,20 @@ class LVApplication : MultiDexApplication() {
     private fun upgradeSecurityProvider() {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
             try {
-                ProviderInstaller.installIfNeededAsync(this, object : ProviderInstaller.ProviderInstallListener {
-                    override fun onProviderInstallFailed(errorCode: Int, recoveryIntent: Intent?) {
-                        Log.e(LOG_TAG, "New security provider install failed.")
-                    }
+                ProviderInstaller.installIfNeededAsync(
+                    this,
+                    object : ProviderInstaller.ProviderInstallListener {
+                        override fun onProviderInstallFailed(
+                            errorCode: Int,
+                            recoveryIntent: Intent?
+                        ) {
+                            Log.e(LOG_TAG, "New security provider install failed.")
+                        }
 
-                    override fun onProviderInstalled() {
-                        Log.e(LOG_TAG, "New security provider installed.")
-                    }
-                })
+                        override fun onProviderInstalled() {
+                            Log.e(LOG_TAG, "New security provider installed.")
+                        }
+                    })
             } catch (ex: Exception) {
                 Log.e(LOG_TAG, "Unknown issue trying to install a new security provider", ex)
             }
@@ -88,7 +103,9 @@ class LVApplication : MultiDexApplication() {
      * the library are supported starting with Java 1.8 only.
      */
     private fun setupBouncyCastle() {
-        Security.removeProvider("BC")
+        // Remove default android BC provider.
+        Security.removeProvider(BouncyCastleProvider.PROVIDER_NAME)
+        // Add new BC provider.
         Security.addProvider(BouncyCastleProvider() as Provider?)
     }
 

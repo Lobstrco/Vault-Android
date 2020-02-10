@@ -1,6 +1,6 @@
 package com.lobstr.stellar.vault.domain.stellar
 
-import com.lobstr.stellar.vault.presentation.entities.account.Account
+import com.lobstr.stellar.vault.presentation.entities.account.AccountResult
 import com.lobstr.stellar.vault.presentation.entities.mnemonic.MnemonicItem
 import com.lobstr.stellar.vault.presentation.entities.transaction.TransactionItem
 import io.reactivex.Single
@@ -21,5 +21,5 @@ interface StellarRepository {
 
     fun generate24WordMnemonic(): ArrayList<MnemonicItem>
 
-    fun getTransactionSigners(envelopXdr: String, sourceAccount: String): Single<List<Account>>
+    fun getTransactionSigners(envelopXdr: String, sourceAccount: String): Single<AccountResult>
 }

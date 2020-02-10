@@ -22,7 +22,7 @@ interface DashboardView : MvpView {
     fun showSignersCount(count: Int)
 
     @StateStrategyType(AddToEndSingleStrategy::class)
-    fun showDashboardInfo(count: Int)
+    fun showDashboardInfo(count: Int?)
 
     @StateStrategyType(SkipStrategy::class)
     fun showSignersScreen()
@@ -41,4 +41,7 @@ interface DashboardView : MvpView {
 
     @StateStrategyType(AddToEndSingleStrategy::class)
     fun showSignersProgress(show: Boolean)
+
+    @StateStrategyType(SkipStrategy::class)
+    fun showRefreshAnimation(show: Boolean)
 }
