@@ -1,9 +1,11 @@
 package com.lobstr.stellar.vault.data.account
 
 import com.lobstr.stellar.vault.data.net.entities.account.ApiAccount
+import com.lobstr.stellar.vault.data.net.entities.account.ApiAccountConfig
 import com.lobstr.stellar.vault.data.net.entities.account.ApiSignedAccountsResponse
 import com.lobstr.stellar.vault.data.net.entities.account.ApiStellarAccount
 import com.lobstr.stellar.vault.presentation.entities.account.Account
+import com.lobstr.stellar.vault.presentation.entities.account.AccountConfig
 
 class AccountEntityMapper {
 
@@ -30,6 +32,12 @@ class AccountEntityMapper {
         return Account(
             apiStellarAccount.accountId,
             apiStellarAccount.stellarAddress
+        )
+    }
+
+    fun transformAccountConfig(apiAccountConfig: ApiAccountConfig): AccountConfig {
+        return AccountConfig(
+            apiAccountConfig.spamProtectionEnabled
         )
     }
 }

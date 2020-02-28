@@ -4,6 +4,7 @@ import com.lobstr.stellar.vault.data.net.AccountApi
 import com.lobstr.stellar.vault.domain.account.AccountRepository
 import com.lobstr.stellar.vault.domain.error.RxErrorUtils
 import com.lobstr.stellar.vault.presentation.entities.account.Account
+import com.lobstr.stellar.vault.presentation.entities.account.AccountConfig
 import io.reactivex.Completable
 import io.reactivex.Single
 
@@ -28,6 +29,21 @@ class AccountRepositoryImpl(
     override fun getStellarAccount(accountId: String, type: String): Single<Account> {
         return accountApi.getStellarAccount(accountId, type)
             .map { accountEntityMapper.transformStellarAccount(it) }
+            .onErrorResumeNext { rxErrorUtils.handleSingleRequestHttpError(it) }
+    }
+
+    override fun getAccountConfig(token: String): Single<AccountConfig> {
+        return accountApi.getAccountConfig(token)
+            .map { accountEntityMapper.transformAccountConfig(it) }
+            .onErrorResumeNext { rxErrorUtils.handleSingleRequestHttpError(it) }
+    }
+
+    override fun updateAccountConfig(
+        token: String,
+        spamProtectionEnabled: Boolean
+    ): Single<AccountConfig> {
+        return accountApi.updateAccountConfig(token, spamProtectionEnabled)
+            .map { accountEntityMapper.transformAccountConfig(it) }
             .onErrorResumeNext { rxErrorUtils.handleSingleRequestHttpError(it) }
     }
 }

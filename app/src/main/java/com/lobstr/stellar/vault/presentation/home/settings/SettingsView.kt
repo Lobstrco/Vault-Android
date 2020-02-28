@@ -50,6 +50,9 @@ interface SettingsView : MvpView {
     @StateStrategyType(AddToEndSingleStrategy::class)
     fun setBiometricChecked(checked: Boolean)
 
+    @StateStrategyType(AddToEndSingleStrategy::class)
+    fun setSpamProtectionChecked(checked: Boolean)
+
     @StateStrategyType(SkipStrategy::class)
     fun setNotificationsChecked(checked: Boolean)
 
@@ -70,4 +73,10 @@ interface SettingsView : MvpView {
 
     @StateStrategyType(SkipStrategy::class)
     fun showStore(storeUrl: String)
+
+    @StateStrategyType(AddToEndSingleStrategy::class)
+    fun showProgressDialog(show: Boolean)
+
+    @StateStrategyType(SkipStrategy::class)
+    fun showErrorMessage(message: String)
 }

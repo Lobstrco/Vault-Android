@@ -22,6 +22,7 @@ class PrefsUtil(private val sharedPreferences: SharedPreferences) {
         const val PREF_IS_NOTIFICATIONS_ENABLED = "PREF_IS_NOTIFICATIONS_ENABLED"
         const val PREF_IS_TR_CONFIRMATION_ENABLED = "PREF_IS_TR_CONFIRMATION_ENABLED"
         const val PREF_ACCOUNT_SIGNERS_COUNT = "PREF_ACCOUNT_SIGNERS_COUNT"
+        const val PREF_IS_SPAM_PROTECTION_ENABLED = "PREF_IS_SPAM_PROTECTION_ENABLED"
     }
 
     var authToken: String?
@@ -77,6 +78,10 @@ class PrefsUtil(private val sharedPreferences: SharedPreferences) {
     var rateUsState: Int
         get() = getInt(PREF_RATE_US_STATE)
         set(state) = set(PREF_RATE_US_STATE, state)
+
+    var isSpamProtectionEnabled: Boolean
+        get() = getBoolean(PREF_IS_SPAM_PROTECTION_ENABLED)
+        set(enabled) = set(PREF_IS_SPAM_PROTECTION_ENABLED, enabled)
 
     var isNotificationsEnabled: Boolean
         get() = getBoolean(PREF_IS_NOTIFICATIONS_ENABLED)
@@ -148,6 +153,7 @@ class PrefsUtil(private val sharedPreferences: SharedPreferences) {
         editor.remove(PREF_IS_FCM_REGISTERED_SUCCESSFULLY)
         editor.remove(PREF_ACCOUNT_HAS_SIGNERS)
         editor.remove(PREF_BIOMETRIC_STATE)
+        editor.remove(PREF_IS_SPAM_PROTECTION_ENABLED)
         editor.remove(PREF_IS_NOTIFICATIONS_ENABLED)
         editor.remove(PREF_IS_TR_CONFIRMATION_ENABLED)
         editor.remove(PREF_ACCOUNT_SIGNERS_COUNT)

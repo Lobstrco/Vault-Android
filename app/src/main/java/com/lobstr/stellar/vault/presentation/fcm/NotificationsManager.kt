@@ -5,12 +5,12 @@ import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
-import android.graphics.Color
 import android.media.RingtoneManager
 import android.os.Build
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.app.TaskStackBuilder
+import androidx.core.content.ContextCompat
 import com.lobstr.stellar.vault.R
 import com.lobstr.stellar.vault.presentation.fcm.NotificationsManager.ChannelId.AUTHORIZED_TRANSACTIONS
 import com.lobstr.stellar.vault.presentation.fcm.NotificationsManager.ChannelId.INCOMING_TRANSACTIONS
@@ -85,7 +85,8 @@ class NotificationsManager(private val context: Context) {
         val notificationBuilder =
             NotificationCompat.Builder(context, createNotificationChannel(channelId))
                 .setSmallIcon(R.drawable.ic_stat_notif)
-                .setLights(Color.BLUE, 500, 500)
+                .setColor(ContextCompat.getColor(context, R.color.color_primary))
+                .setLights(ContextCompat.getColor(context, R.color.color_primary), 500, 500)
                 .setContentTitle(notificationTitle)
                 .setStyle(NotificationCompat.BigTextStyle().bigText(notificationMessage))
                 .setContentText(notificationMessage)
@@ -103,7 +104,8 @@ class NotificationsManager(private val context: Context) {
                     createNotificationChannel(channelId)
                 )
                     .setSmallIcon(R.drawable.ic_stat_notif)
-                    .setLights(Color.BLUE, 500, 500)
+                    .setColor(ContextCompat.getColor(context, R.color.color_primary))
+                    .setLights(ContextCompat.getColor(context, R.color.color_primary), 500, 500)
                     .setContentTitle(notificationTitle)
                     .setStyle(NotificationCompat.InboxStyle())
                     .setContentText(notificationMessage)
@@ -137,7 +139,8 @@ class NotificationsManager(private val context: Context) {
             createNotificationChannel(channelId)
         )
             .setSmallIcon(R.drawable.ic_stat_notif)
-            .setLights(Color.BLUE, 500, 500)
+            .setColor(ContextCompat.getColor(context, R.color.color_primary))
+            .setLights(ContextCompat.getColor(context, R.color.color_primary), 500, 500)
             .setContentTitle(notificationTitle)
             .setStyle(NotificationCompat.BigTextStyle().bigText(notificationMessage))
             .setContentText(notificationMessage)
@@ -161,7 +164,8 @@ class NotificationsManager(private val context: Context) {
                     createNotificationChannel(channelId)
                 )
                     .setSmallIcon(R.drawable.ic_stat_notif)
-                    .setLights(Color.BLUE, 500, 500)
+                    .setColor(ContextCompat.getColor(context, R.color.color_primary))
+                    .setLights(ContextCompat.getColor(context, R.color.color_primary), 500, 500)
                     .setContentTitle(notificationTitle)
                     .setStyle(NotificationCompat.InboxStyle())
                     .setContentText(notificationMessage)

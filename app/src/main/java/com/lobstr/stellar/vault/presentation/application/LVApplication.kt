@@ -37,10 +37,7 @@ class LVApplication : MultiDexApplication() {
     // ===========================================================
 
     init {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            // First setup BouncyCastle. For avoiding load data issues.
-            setupBouncyCastle()
-        }
+        setupBouncyCastle()
     }
 
     // ===========================================================
@@ -54,10 +51,6 @@ class LVApplication : MultiDexApplication() {
     override fun onCreate() {
         super.onCreate()
         upgradeSecurityProvider()
-        // For pre-lollipop versions - setup BouncyCastle later.
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
-            setupBouncyCastle()
-        }
         enableStrictMode()
         FirebaseAnalytics.getInstance(this)
             .setAnalyticsCollectionEnabled(BuildConfig.BUILD_TYPE != Constant.BuildType.DEBUG)

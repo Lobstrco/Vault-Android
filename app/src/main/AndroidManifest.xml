@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-        package="com.lobstr.stellar.vault">
+        xmlns:tools="http://schemas.android.com/tools"
+        package="com.lobstr.stellar.vault"
+        tools:ignore="LockedOrientationActivity">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -49,7 +51,7 @@
                 android:windowSoftInputMode="adjustResize|stateAlwaysHidden" />
         <activity
                 android:name=".presentation.pin.PinActivity"
-                android:screenOrientation="portrait"/>
+                android:screenOrientation="portrait" />
         <activity
                 android:name=".presentation.vault_auth.VaultAuthActivity"
                 android:screenOrientation="portrait"

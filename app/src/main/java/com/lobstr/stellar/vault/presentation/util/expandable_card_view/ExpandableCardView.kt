@@ -4,7 +4,6 @@ package com.lobstr.stellar.vault.presentation.util.expandable_card_view
 import android.content.Context
 import android.content.res.TypedArray
 import android.graphics.drawable.Drawable
-import android.os.Build
 import android.os.Handler
 import android.text.method.LinkMovementMethod
 import android.util.AttributeSet
@@ -106,10 +105,14 @@ class ExpandableCardView @JvmOverloads constructor(
         title = typedArray.getResourceId(R.styleable.ExpandableCardView_titleText, View.NO_ID)
         content = typedArray.getResourceId(R.styleable.ExpandableCardView_contentText, View.NO_ID)
         iconDrawable = typedArray.getDrawable(R.styleable.ExpandableCardView_icon)
-        innerViewRes = typedArray.getResourceId(R.styleable.ExpandableCardView_inner_view, View.NO_ID)
+        innerViewRes =
+            typedArray.getResourceId(R.styleable.ExpandableCardView_inner_view, View.NO_ID)
         expandOnClick = typedArray.getBoolean(R.styleable.ExpandableCardView_expandOnClick, false)
         animDuration =
-            typedArray.getInteger(R.styleable.ExpandableCardView_animationDuration, DEFAULT_ANIM_DURATION).toLong()
+            typedArray.getInteger(
+                R.styleable.ExpandableCardView_animationDuration,
+                DEFAULT_ANIM_DURATION
+            ).toLong()
         startExpanded = typedArray.getBoolean(R.styleable.ExpandableCardView_startExpanded, false)
         typedArray.recycle()
     }
@@ -129,9 +132,7 @@ class ExpandableCardView @JvmOverloads constructor(
 
         expandHeight = card_layout.measuredHeight
 
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
-            elevation = convertDpToPixels(context, 4f)
+        elevation = convertDpToPixels(context, 4f)
 
         if (startExpanded) {
             animDuration = 0
@@ -239,7 +240,10 @@ class ExpandableCardView @JvmOverloads constructor(
         isCollapsing = animationType == COLLAPSING
 
         startAnimation(expandAnimation)
-        Log.d("SO", "Started animation: " + if (animationType == EXPANDING) "Expanding" else "Collapsing")
+        Log.d(
+            "SO",
+            "Started animation: " + if (animationType == EXPANDING) "Expanding" else "Collapsing"
+        )
         card_arrow.startAnimation(arrowAnimation)
         isExpanded = animationType == EXPANDING
 

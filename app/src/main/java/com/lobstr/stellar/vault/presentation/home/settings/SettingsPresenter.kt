@@ -4,8 +4,12 @@ import android.app.Activity
 import android.content.Intent
 import com.lobstr.stellar.vault.BuildConfig
 import com.lobstr.stellar.vault.R
+import com.lobstr.stellar.vault.data.error.exeption.DefaultException
+import com.lobstr.stellar.vault.data.error.exeption.NoInternetConnectionException
+import com.lobstr.stellar.vault.data.error.exeption.UserNotAuthorizedException
 import com.lobstr.stellar.vault.domain.settings.SettingsInteractor
 import com.lobstr.stellar.vault.domain.util.EventProviderModule
+import com.lobstr.stellar.vault.domain.util.event.Network
 import com.lobstr.stellar.vault.domain.util.event.Notification
 import com.lobstr.stellar.vault.presentation.BasePresenter
 import com.lobstr.stellar.vault.presentation.application.LVApplication
@@ -31,6 +35,10 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
 
     private var loadSignedAccountsInProcess = false
 
+    private var loadAccountConfigInProcess = false
+
+    private var updateAccountConfigInProcess = false
+
     init {
         LVApplication.appComponent.plusSettingsComponent(SettingsModule()).inject(this)
     }
@@ -47,12 +55,31 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
             interactor.isBiometricEnabled()
                     && BiometricUtils.isBiometricAvailable(AppUtil.getAppContext())
         )
+        getAccountConfig()
+        viewState.setSpamProtectionChecked(!interactor.isSpamProtectionEnabled())
         viewState.setNotificationsChecked(interactor.isNotificationsEnabled())
         viewState.setTrConfirmationChecked(interactor.isTrConfirmationEnabled())
         viewState.setupPolicyYear(R.string.text_all_rights_reserved)
     }
 
     private fun registerEventProvider() {
+        unsubscribeOnDestroy(
+            eventProviderModule.networkEventSubject
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({
+                    when (it.type) {
+                        Network.Type.CONNECTED -> {
+                            if (needCheckConnectionState) {
+                                getAccountConfig()
+                            }
+                            cancelNetworkWorker(false)
+                        }
+                    }
+                }, {
+                    it.printStackTrace()
+                })
+        )
+
         unsubscribeOnDestroy(
             eventProviderModule.notificationEventSubject
                 .observeOn(AndroidSchedulers.mainThread())
@@ -126,6 +153,10 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
         }
     }
 
+    fun spamProtectionSwitched(checked: Boolean) {
+        updateAccountConfig(!checked)
+    }
+
     fun notificationsSwitched(checked: Boolean) {
         interactor.setNotificationsEnabled(checked)
     }
@@ -170,6 +201,83 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
                         viewState.setupSignersCount(it.size)
                     }, {})
             )
+
+            getAccountConfig()
         }
+    }
+
+    private fun getAccountConfig() {
+        if (loadAccountConfigInProcess) {
+            return
+        }
+
+        unsubscribeOnDestroy(
+            interactor.getAccountConfig()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnSubscribe { loadAccountConfigInProcess = true }
+                .doOnEvent { _, _ -> loadAccountConfigInProcess = false }
+                .subscribe({
+                    interactor.setSpamProtectionEnabled(it.spamProtectionEnabled)
+                    viewState.setSpamProtectionChecked(!it.spamProtectionEnabled)
+                }, {
+                    viewState.setSpamProtectionChecked(!interactor.isSpamProtectionEnabled())
+                    when (it) {
+                        is NoInternetConnectionException -> {
+                            viewState.showErrorMessage(it.details)
+                            handleNoInternetConnection()
+                        }
+                        is UserNotAuthorizedException -> {
+                            getAccountConfig()
+                        }
+                        is DefaultException -> {
+                            viewState.showErrorMessage(it.details)
+                        }
+                        else -> {
+                            viewState.showErrorMessage(it.message ?: "")
+                        }
+                    }
+                })
+        )
+    }
+
+    private fun updateAccountConfig(spamProtectionEnabled: Boolean) {
+        if (updateAccountConfigInProcess) {
+            return
+        }
+
+        unsubscribeOnDestroy(
+            interactor.updatedAccountConfig(spamProtectionEnabled)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnSubscribe {
+                    updateAccountConfigInProcess = true
+                    viewState.showProgressDialog(true)
+                }
+                .doOnEvent { _, _ ->
+                    viewState.showProgressDialog(false)
+                    updateAccountConfigInProcess = false
+                }
+                .subscribe({
+                    interactor.setSpamProtectionEnabled(it.spamProtectionEnabled)
+                    viewState.setSpamProtectionChecked(!it.spamProtectionEnabled)
+                }, {
+                    viewState.setSpamProtectionChecked(!interactor.isSpamProtectionEnabled())
+                    when (it) {
+                        is NoInternetConnectionException -> {
+                            viewState.showErrorMessage(it.details)
+                        }
+                        is UserNotAuthorizedException -> {
+                            updateAccountConfig(spamProtectionEnabled)
+                        }
+                        is DefaultException -> {
+                            viewState.showErrorMessage(it.details)
+                        }
+                        else -> {
+                            viewState.showErrorMessage(it.message ?: "")
+                        }
+                    }
+                })
+        )
     }
 }

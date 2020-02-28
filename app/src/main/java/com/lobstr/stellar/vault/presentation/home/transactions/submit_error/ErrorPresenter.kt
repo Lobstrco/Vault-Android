@@ -17,7 +17,7 @@ class ErrorPresenter(private val error: String) : MvpPresenter<ErrorView>() {
     }
 
     private fun handleErrorMessage(error: String): String {
-        // add here specific errors
+        // Add here specific errors.
         val resValue = when (error) {
             "tx_bad_seq" -> R.string.text_tv_tx_bad_seq
             "tx_failed" -> R.string.text_tv_tx_failed
@@ -30,6 +30,7 @@ class ErrorPresenter(private val error: String) : MvpPresenter<ErrorView>() {
             "tx_insufficient_fee" -> R.string.text_tv_tx_insufficient_fee
             "tx_bad_auth_extra" -> R.string.text_tv_tx_bad_auth_extra
             "tx_internal_error" -> R.string.text_tv_tx_internal_error
+            "op_underfunded" -> R.string.text_tv_op_underfunded
             else -> 0
         }
 

@@ -1,6 +1,7 @@
 package com.lobstr.stellar.vault.domain.account
 
 import com.lobstr.stellar.vault.presentation.entities.account.Account
+import com.lobstr.stellar.vault.presentation.entities.account.AccountConfig
 import io.reactivex.Completable
 import io.reactivex.Single
 
@@ -12,4 +13,8 @@ interface AccountRepository {
     fun getSignedAccounts(token: String): Single<List<Account>>
 
     fun getStellarAccount(accountId: String, type: String): Single<Account>
+
+    fun getAccountConfig(token: String): Single<AccountConfig>
+
+    fun updateAccountConfig(token: String, spamProtectionEnabled: Boolean): Single<AccountConfig>
 }

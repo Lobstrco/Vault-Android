@@ -3,6 +3,7 @@ package com.lobstr.stellar.vault.domain.settings
 import com.lobstr.stellar.vault.domain.account.AccountRepository
 import com.lobstr.stellar.vault.domain.key_store.KeyStoreRepository
 import com.lobstr.stellar.vault.presentation.entities.account.Account
+import com.lobstr.stellar.vault.presentation.entities.account.AccountConfig
 import com.lobstr.stellar.vault.presentation.util.AppUtil
 import com.lobstr.stellar.vault.presentation.util.Constant.BiometricState.DISABLED
 import com.lobstr.stellar.vault.presentation.util.Constant.BiometricState.ENABLED
@@ -24,6 +25,17 @@ class SettingsInteractorImpl(
         return prefsUtil.accountSignersCount
     }
 
+    override fun getAccountConfig(): Single<AccountConfig> {
+        return accountRepository.getAccountConfig(AppUtil.getJwtToken(prefsUtil.authToken))
+    }
+
+    override fun updatedAccountConfig(spamProtectionEnabled: Boolean): Single<AccountConfig> {
+        return accountRepository.updateAccountConfig(
+            AppUtil.getJwtToken(prefsUtil.authToken),
+            spamProtectionEnabled
+        )
+    }
+
     override fun clearUserData() {
         prefsUtil.clearUserPrefs()
         keyStoreRepository.clearAll()
@@ -31,6 +43,10 @@ class SettingsInteractorImpl(
 
     override fun isBiometricEnabled(): Boolean {
         return prefsUtil.biometricState == ENABLED
+    }
+
+    override fun isSpamProtectionEnabled(): Boolean {
+        return prefsUtil.isSpamProtectionEnabled
     }
 
     override fun isNotificationsEnabled(): Boolean {
@@ -43,6 +59,10 @@ class SettingsInteractorImpl(
 
     override fun setBiometricEnabled(enabled: Boolean) {
         prefsUtil.biometricState = if (enabled) ENABLED else DISABLED
+    }
+
+    override fun setSpamProtectionEnabled(enabled: Boolean) {
+        prefsUtil.isSpamProtectionEnabled = enabled
     }
 
     override fun setNotificationsEnabled(enabled: Boolean) {

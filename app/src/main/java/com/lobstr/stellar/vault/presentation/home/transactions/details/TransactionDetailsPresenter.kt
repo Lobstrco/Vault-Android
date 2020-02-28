@@ -137,12 +137,16 @@ class TransactionDetailsPresenter(private var transactionItem: TransactionItem) 
                 val medThreshold = accountResult.thresholds.medThreshold
                 val highThreshold = accountResult.thresholds.highThreshold
 
-                val isThresholdsSameAndNotZero = (lowThreshold != 0) && (lowThreshold == medThreshold) && (lowThreshold == highThreshold)
-                val isWeightsSameAndNotZero = accountResult.signers.first().weight != 0 && accountResult.signers.filter { it.weight == accountResult.signers.first().weight}.size == accountResult.signers.size
+                val isThresholdsSameAndNotZero =
+                    (lowThreshold != 0) && (lowThreshold == medThreshold) && (lowThreshold == highThreshold)
+                val isWeightsSameAndNotZero =
+                    accountResult.signers.first().weight != 0 && accountResult.signers.filter { it.weight == accountResult.signers.first().weight }.size == accountResult.signers.size
 
-                return if(isThresholdsSameAndNotZero and isWeightsSameAndNotZero){
-                    "${accountResult.signers.filter { it.signed == true }.size} ${AppUtil.getString(R.string.text_tv_of)} ${kotlin.math.ceil((highThreshold.toFloat()/ accountResult.signers.first().weight!!.toFloat())).toInt()}"
-                } else{
+                return if (isThresholdsSameAndNotZero and isWeightsSameAndNotZero) {
+                    "${accountResult.signers.filter { it.signed == true }.size} ${AppUtil.getString(
+                        R.string.text_tv_of
+                    )} ${kotlin.math.ceil((highThreshold.toFloat() / accountResult.signers.first().weight!!.toFloat())).toInt()}"
+                } else {
                     null
                 }
             }
@@ -274,14 +278,26 @@ class TransactionDetailsPresenter(private var transactionItem: TransactionItem) 
                 .flatMap {
                     val envelopXdr = it.envelopeXdr.get()
                     val extras = it.extras
+
                     val transactionResultCode = extras?.resultCodes?.transactionResultCode
+
+                    val operationResultCodes = extras?.resultCodes?.operationsResultCodes
+
+                    val errorToShow =
+                        when (val operationResultCode =
+                            if (operationResultCodes.isNullOrEmpty()) null else operationResultCodes.first()) {
+                            // Handle specific operation result code:
+                            // op_underfunded - used to specify the operation failed due to a lack of funds.
+                            "op_underfunded" -> operationResultCode
+                            else -> transactionResultCode
+                        }
 
                     when {
                         envelopXdr == null -> throw HorizonException(
-                            transactionResultCode!!
+                            errorToShow!!
                         )
                         transactionResultCode != null && transactionResultCode != "tx_bad_auth" -> throw HorizonException(
-                            transactionResultCode
+                            errorToShow!!
                         )
                         transactionResultCode != null && transactionResultCode == "tx_bad_auth" -> needAdditionalSignatures =
                             true

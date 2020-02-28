@@ -12,10 +12,10 @@ android {
     compileSdkVersion 29
     defaultConfig {
         applicationId "com.lobstr.stellar.vault"
-        minSdkVersion 19
+        minSdkVersion 21
         targetSdkVersion 29
-        versionCode 16
-        versionName "1.3.1"
+        versionCode 17
+        versionName "1.3.2"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
     }
@@ -40,6 +40,10 @@ android {
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    kotlinOptions {
+        jvmTarget = "1.8"
     }
 
     signingConfigs {
@@ -117,28 +121,25 @@ static def generateApkName(variant) {
 }
 
 ext {
-    dagger = '2.25.4'
+    dagger = '2.26'
     rx_java = "2.2.4"
     rx_android = "2.1.0"
     rx_kotlin = "2.3.0"
-
-    // Don't update for pre-lollipop compatibility.
-    retrofit = '2.6.2'
-    okhttp = '3.12.6'
-
+    retrofit = '2.7.1'
+    okhttp = '4.4.0'
     moxy = "2.0.2"
     leakcanary = "1.5.4"
     joda_time = "2.10.5"
-    glide = "4.10.0"
+    glide = '4.11.0'
     flexbox = "2.0.0"
     pin = "2.1.0"
-    material = "1.0.0"
+    material = "1.1.0"
     browser = "1.2.0"
-    firebase_messaging = '20.1.0'
-    firebase_core = '17.2.2'
+    firebase_messaging = '20.1.1'
+    firebase_core = '17.2.3'
     firebase_crashlytics = "2.10.1"
     javax_annotation = "10.0-b28"
-    androidx_core = "1.1.0"
+    androidx_core = '1.2.0'
     androidx_appcompat = "1.1.0"
     androidx_multidex = "2.0.1"
     androidx_preference = "1.1.0"
@@ -147,8 +148,8 @@ ext {
     junit = '4.13'
     runner = "1.2.0"
     espresso_core = "3.2.0"
-    stellar_sdk = "0.13.0"
-    work_manager = "2.3.0"
+    stellar_sdk = "0.14.0"
+    work_manager = '2.3.2'
     biometric = '1.0.1'
     lottieVersion = '3.3.1'
     qr_gen = "2.6.0"

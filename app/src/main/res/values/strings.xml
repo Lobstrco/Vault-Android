@@ -122,15 +122,16 @@
     <string name="text_settings_mnemonic_code">Recovery Phrase</string>
     <string name="text_settings_change_pin">Change PIN</string>
     <string name="text_settings_biometric_login">Biometric Login</string>
-    <string name="text_tv_settings_notifications">Notifications</string>
+    <string name="text_settings_spam_protection">Allow Unsigned Transactions</string>
+    <string name="text_settings_notifications">Notifications</string>
     <string name="text_settings_version">Version</string>
     <string name="text_settings_help">Help</string>
     <string name="text_settings_license">Licenses</string>
     <string name="text_settings_rate_us">Rate Us</string>
     <string name="text_settings_log_out">Log Out</string>
-    <string name="text_tv_settings_show">Show</string>
+    <string name="text_settings_show">Show</string>
     <string name="text_all_rights_reserved">©%s. All rights reserved</string>
-    <string name="text_tv_settings_transaction_confirmation">Prompt for Transaction Decisions</string>
+    <string name="text_settings_transaction_confirmation">Transaction Confirmations</string>
 
     <!-- Signed Accounts screen -->
     <string name="text_signed_account_empty_state">Protected accounts not found</string>
@@ -254,6 +255,7 @@
     <string name="text_tv_tx_insufficient_fee">Fee is too small.</string>
     <string name="text_tv_tx_bad_auth_extra">Unused signatures attached to transaction.</string>
     <string name="text_tv_tx_internal_error">An unknown error occurred.</string>
+    <string name="text_tv_op_underfunded">Not enough funds.</string>
 
     <!-- Notifications channels -->
     <string name="channel_signer_status">Signer status</string>

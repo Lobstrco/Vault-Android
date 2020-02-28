@@ -43,6 +43,8 @@
                 android:alpha="0.3"
                 android:lineSpacingExtra="8sp"
                 android:textSize="14sp"
+                android:ellipsize="middle"
+                android:singleLine="true"
                 android:textColor="@color/color_071c33"/>
 
     </LinearLayout>

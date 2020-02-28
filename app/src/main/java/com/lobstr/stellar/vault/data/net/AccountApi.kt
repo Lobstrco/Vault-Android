@@ -1,13 +1,11 @@
 package com.lobstr.stellar.vault.data.net
 
+import com.lobstr.stellar.vault.data.net.entities.account.ApiAccountConfig
 import com.lobstr.stellar.vault.data.net.entities.account.ApiSignedAccountsResponse
 import com.lobstr.stellar.vault.data.net.entities.account.ApiStellarAccount
 import io.reactivex.Completable
 import io.reactivex.Single
-import retrofit2.http.Field
-import retrofit2.http.GET
-import retrofit2.http.Header
-import retrofit2.http.Query
+import retrofit2.http.*
 
 
 interface AccountApi {
@@ -27,4 +25,16 @@ interface AccountApi {
         @Query("q") accountId: String,
         @Query("type") type: String
     ): Single<ApiStellarAccount>
+
+    @GET("account/config/")
+    fun getAccountConfig(
+        @Header("Authorization") token: String
+    ): Single<ApiAccountConfig>
+
+    @FormUrlEncoded
+    @PUT("account/config/")
+    fun updateAccountConfig(
+        @Header("Authorization") token: String,
+        @Field("spam_protection_enabled") spamProtectionEnabled: Boolean
+    ): Single<ApiAccountConfig>
 }

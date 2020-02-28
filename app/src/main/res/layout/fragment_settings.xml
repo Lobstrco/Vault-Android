@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
-        xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -10,52 +9,51 @@
     <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_marginBottom="70dp">
+            android:orientation="vertical">
 
         <!-- Account -->
-        <LinearLayout android:layout_width="match_parent"
-                      android:layout_height="wrap_content"
-                      android:background="@android:color/white"
-                      android:orientation="vertical">
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@android:color/white"
+                android:orientation="vertical">
 
             <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/title_settings_wallet"
+                    android:fontFamily="sans-serif-medium"
                     android:padding="16dp"
+                    android:text="@string/title_settings_wallet"
                     android:textColor="@color/color_primary"
-                    android:textSize="14sp"
-                    android:fontFamily="sans-serif-medium"/>
+                    android:textSize="14sp" />
 
             <LinearLayout
                     android:id="@+id/llPublicKey"
                     android:layout_width="match_parent"
-                    android:layout_height="57dp"
-                    android:orientation="horizontal"
+                    android:layout_height="wrap_content"
+                    android:background="?android:attr/selectableItemBackground"
                     android:gravity="center_vertical"
-                    android:paddingStart="16dp"
-                    android:paddingEnd="16dp"
-                    android:background="?android:attr/selectableItemBackground">
+                    android:orientation="horizontal"
+                    android:padding="16dp">
 
                 <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:textSize="16sp"
+                        android:text="@string/text_settings_public_key"
                         android:textColor="@android:color/black"
-                        android:text="@string/text_settings_public_key"/>
+                        android:textSize="16sp" />
 
                 <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:maxWidth="150dp"
-                        android:gravity="center"
-                        android:textColor="@color/color_primary"
-                        android:textSize="14sp"
-                        android:text="@string/text_tv_settings_show"
                         android:layout_weight="0"
-                        android:singleLine="true"/>
+                        android:gravity="center"
+                        android:maxWidth="150dp"
+                        android:singleLine="true"
+                        android:text="@string/text_settings_show"
+                        android:textColor="@color/color_primary"
+                        android:textSize="14sp" />
             </LinearLayout>
 
             <View
@@ -63,110 +61,66 @@
                     android:layout_height="1dp"
                     android:layout_marginStart="16dp"
                     android:layout_marginEnd="0dp"
-                    android:background="@color/color_33979797"/>
+                    android:background="@color/color_33979797" />
 
-            <LinearLayout
-                    android:id="@+id/llSettingsSigners"
+            <TextView
+                    android:id="@+id/tvSettingsSigners"
                     android:layout_width="match_parent"
-                    android:layout_height="57dp"
-                    android:paddingStart="16dp"
-                    android:paddingEnd="16dp"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical"
-                    android:background="?android:attr/selectableItemBackground">
-
-                <TextView
-                        android:id="@+id/tvSettingsSigners"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:textSize="16sp"
-                        android:textColor="@android:color/black"
-                        android:text="@string/text_settings_signer"/>
-
-                <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="0"
-                        android:src="@drawable/ic_arrow_right"
-                        tools:ignore="ContentDescription"/>
-            </LinearLayout>
+                    android:layout_height="wrap_content"
+                    android:background="?android:attr/selectableItemBackground"
+                    android:drawableEnd="@drawable/ic_arrow_right"
+                    android:padding="16dp"
+                    android:text="@string/text_settings_signer"
+                    android:textColor="@android:color/black"
+                    android:textSize="16sp" />
 
         </LinearLayout>
 
         <!-- Security -->
-        <LinearLayout android:layout_width="match_parent"
-                      android:layout_height="wrap_content"
-                      android:background="@android:color/white"
-                      android:orientation="vertical"
-                      android:layout_marginTop="8dp">
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:background="@android:color/white"
+                android:orientation="vertical">
+
             <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/title_settings_security"
+                    android:fontFamily="sans-serif-medium"
                     android:padding="16dp"
-                    android:textSize="14sp"
+                    android:text="@string/title_settings_security"
                     android:textColor="@color/color_primary"
-                    android:fontFamily="sans-serif-medium"/>
+                    android:textSize="14sp" />
 
-            <LinearLayout
-                    android:id="@+id/llSettingsMnemonics"
+            <TextView
+                    android:id="@+id/tvSettingsMnemonics"
                     android:layout_width="match_parent"
-                    android:layout_height="57dp"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical"
-                    android:paddingStart="16dp"
-                    android:paddingEnd="16dp"
-                    android:background="?android:attr/selectableItemBackground">
-
-                <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:textSize="16sp"
-                        android:textColor="@android:color/black"
-                        android:text="@string/text_settings_mnemonic_code"/>
-
-                <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="0"
-                        android:src="@drawable/ic_arrow_right"
-                        tools:ignore="ContentDescription"/>
-            </LinearLayout>
+                    android:layout_height="wrap_content"
+                    android:background="?android:attr/selectableItemBackground"
+                    android:drawableEnd="@drawable/ic_arrow_right"
+                    android:padding="16dp"
+                    android:text="@string/text_settings_mnemonic_code"
+                    android:textColor="@android:color/black"
+                    android:textSize="16sp" />
 
             <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
                     android:layout_marginStart="16dp"
                     android:layout_marginEnd="0dp"
-                    android:background="@color/color_33979797"/>
+                    android:background="@color/color_33979797" />
 
-            <LinearLayout
-                    android:id="@+id/llSettingsChangePin"
+            <TextView
+                    android:id="@+id/tvSettingsChangePin"
                     android:layout_width="match_parent"
-                    android:layout_height="57dp"
-                    android:paddingStart="16dp"
-                    android:paddingEnd="16dp"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical"
-                    android:background="?android:attr/selectableItemBackground">
-
-                <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:textSize="16sp"
-                        android:textColor="@android:color/black"
-                        android:text="@string/text_settings_change_pin"/>
-
-                <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="0"
-                        android:src="@drawable/ic_arrow_right"
-                        tools:ignore="ContentDescription"/>
-            </LinearLayout>
+                    android:layout_height="wrap_content"
+                    android:background="?android:attr/selectableItemBackground"
+                    android:drawableEnd="@drawable/ic_arrow_right"
+                    android:padding="16dp"
+                    android:text="@string/text_settings_change_pin"
+                    android:textColor="@android:color/black"
+                    android:textSize="16sp" />
 
             <LinearLayout
                     android:id="@+id/llBiometric"
@@ -179,233 +133,176 @@
                         android:layout_height="1dp"
                         android:layout_marginStart="16dp"
                         android:layout_marginEnd="0dp"
-                        android:background="@color/color_33979797"/>
+                        android:background="@color/color_33979797" />
 
-                <LinearLayout
+                <androidx.appcompat.widget.SwitchCompat
+                        android:id="@+id/swSettingsBiometric"
                         android:layout_width="match_parent"
-                        android:layout_height="57dp"
+                        android:layout_height="wrap_content"
                         android:paddingStart="16dp"
                         android:paddingEnd="16dp"
-                        android:orientation="horizontal"
-                        android:gravity="center_vertical">
-
-                    <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:textSize="16sp"
-                            android:textColor="@android:color/black"
-                            android:text="@string/text_settings_biometric_login"/>
-
-                    <androidx.appcompat.widget.SwitchCompat
-                            android:layout_weight="0"
-                            android:id="@+id/swSettingsBiometric"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"/>
-                </LinearLayout>
+                        android:paddingTop="18dp"
+                        android:paddingBottom="18dp"                        android:text="@string/text_settings_biometric_login"
+                        android:textColor="@android:color/black"
+                        android:textSize="16sp" />
 
             </LinearLayout>
 
+            <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="0dp"
+                    android:background="@color/color_33979797" />
+
+            <androidx.appcompat.widget.SwitchCompat
+                    android:id="@+id/swSpamProtection"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="16dp"
+                    android:paddingTop="18dp"
+                    android:paddingBottom="18dp"
+                    android:text="@string/text_settings_spam_protection"
+                    android:textColor="@android:color/black"
+                    android:textSize="16sp" />
         </LinearLayout>
 
         <!-- Other -->
-        <LinearLayout android:layout_width="match_parent"
-                      android:layout_height="wrap_content"
-                      android:background="@android:color/white"
-                      android:orientation="vertical"
-                      android:layout_marginTop="8dp">
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:background="@android:color/white"
+                android:orientation="vertical">
+
             <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/title_settings_other"
+                    android:fontFamily="sans-serif-medium"
                     android:padding="16dp"
+                    android:text="@string/title_settings_other"
                     android:textColor="@color/color_primary"
-                    android:textSize="14sp"
-                    android:fontFamily="sans-serif-medium"/>
+                    android:textSize="14sp" />
 
-            <LinearLayout
-                    android:id="@+id/llSettingsHelp"
+            <TextView
+                    android:id="@+id/tvSettingsHelp"
                     android:layout_width="match_parent"
-                    android:layout_height="57dp"
+                    android:layout_height="wrap_content"
+                    android:background="?android:attr/selectableItemBackground"
+                    android:drawableEnd="@drawable/ic_arrow_right"
+                    android:padding="16dp"
+                    android:text="@string/text_settings_help"
+                    android:textColor="@android:color/black"
+                    android:textSize="16sp" />
+
+            <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="0dp"
+                    android:background="@color/color_33979797" />
+
+            <androidx.appcompat.widget.SwitchCompat
+                    android:id="@+id/swSettingsNotifications"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
                     android:paddingStart="16dp"
                     android:paddingEnd="16dp"
-                    android:orientation="horizontal"
+                    android:paddingTop="18dp"
+                    android:paddingBottom="18dp"
+                    android:text="@string/text_settings_notifications"
+                    android:textColor="@android:color/black"
+                    android:textSize="16sp" />
+
+            <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="0dp"
+                    android:background="@color/color_33979797" />
+
+
+            <androidx.appcompat.widget.SwitchCompat
+                    android:id="@+id/swSettingsTrConfirmation"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="16dp"
+                    android:paddingTop="18dp"
+                    android:paddingBottom="18dp"
+                    android:text="@string/text_settings_transaction_confirmation"
+                    android:textColor="@android:color/black"
+                    android:textSize="16sp" />
+
+            <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="0dp"
+                    android:background="@color/color_33979797" />
+
+            <TextView
+                    android:id="@+id/tvSettingsRateUs"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="?android:attr/selectableItemBackground"
+                    android:drawableEnd="@drawable/ic_arrow_right"
+                    android:padding="16dp"
+                    android:text="@string/text_settings_rate_us"
+                    android:textColor="@android:color/black"
+                    android:textSize="16sp" />
+
+            <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="0dp"
+                    android:background="@color/color_33979797" />
+
+            <TextView
+                    android:id="@+id/tvSettingsLicense"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="?android:attr/selectableItemBackground"
+                    android:drawableEnd="@drawable/ic_arrow_right"
+                    android:padding="16dp"
+                    android:text="@string/text_settings_license"
+                    android:textColor="@android:color/black"
+                    android:textSize="16sp" />
+
+            <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="0dp"
+                    android:background="@color/color_33979797" />
+
+            <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
                     android:gravity="center_vertical"
-                    android:background="?android:attr/selectableItemBackground">
-
-                <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:textSize="16sp"
-                        android:textColor="@android:color/black"
-                        android:text="@string/text_settings_help"/>
-
-                <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="0"
-                        android:src="@drawable/ic_arrow_right"
-                        tools:ignore="ContentDescription"/>
-            </LinearLayout>
-
-            <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginEnd="0dp"
-                    android:background="@color/color_33979797"/>
-
-            <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="57dp"
-                    android:paddingStart="16dp"
-                    android:paddingEnd="16dp"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical">
-
-                <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:textSize="16sp"
-                        android:textColor="@android:color/black"
-                        android:text="@string/text_tv_settings_notifications"/>
-
-                <androidx.appcompat.widget.SwitchCompat
-                        android:layout_weight="0"
-                        android:id="@+id/swSettingsNotifications"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"/>
-            </LinearLayout>
-
-            <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginEnd="0dp"
-                    android:background="@color/color_33979797"/>
-
-            <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="57dp"
-                    android:paddingStart="16dp"
-                    android:paddingEnd="16dp"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical">
-
-                <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:textSize="16sp"
-                        android:textColor="@android:color/black"
-                        android:text="@string/text_tv_settings_transaction_confirmation"/>
-
-                <androidx.appcompat.widget.SwitchCompat
-                        android:layout_weight="0"
-                        android:id="@+id/swSettingsTrConfirmation"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"/>
-            </LinearLayout>
-
-            <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginEnd="0dp"
-                    android:background="@color/color_33979797"/>
-
-            <LinearLayout
-                    android:id="@+id/llSettingsRateUs"
-                    android:layout_width="match_parent"
-                    android:layout_height="57dp"
-                    android:paddingStart="16dp"
-                    android:paddingEnd="16dp"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical"
-                    android:background="?android:attr/selectableItemBackground">
-
-                <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:textSize="16sp"
-                        android:textColor="@android:color/black"
-                        android:text="@string/text_settings_rate_us"/>
-
-                <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="0"
-                        android:src="@drawable/ic_arrow_right"
-                        tools:ignore="ContentDescription"/>
-            </LinearLayout>
-
-            <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginEnd="0dp"
-                    android:background="@color/color_33979797"/>
-
-            <LinearLayout
-                    android:id="@+id/llSettingsLicense"
-                    android:layout_width="match_parent"
-                    android:layout_height="57dp"
-                    android:paddingStart="16dp"
-                    android:paddingEnd="16dp"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical"
-                    android:background="?android:attr/selectableItemBackground">
-
-                <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:textSize="16sp"
-                        android:textColor="@android:color/black"
-                        android:text="@string/text_settings_license"/>
-
-                <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="0"
-                        android:src="@drawable/ic_arrow_right"
-                        tools:ignore="ContentDescription"/>
-            </LinearLayout>
-
-            <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginEnd="0dp"
-                    android:background="@color/color_33979797"/>
-
-            <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="57dp"
                     android:orientation="horizontal"
                     android:paddingStart="16dp"
                     android:paddingEnd="16dp"
-                    android:gravity="center_vertical">
+                    android:paddingTop="18dp"
+                    android:paddingBottom="18dp">
 
                 <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:textSize="16sp"
+                        android:text="@string/text_settings_version"
                         android:textColor="@android:color/black"
-                        android:text="@string/text_settings_version"/>
+                        android:textSize="16sp" />
 
                 <TextView
                         android:id="@+id/tvSettingsVersion"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_weight="0"
                         android:textColor="@color/color_8a000000"
-                        android:textSize="14sp"
-                        android:padding="10dp"
-                        android:layout_weight="0"/>
+                        android:textSize="14sp" />
             </LinearLayout>
 
             <View
@@ -413,33 +310,32 @@
                     android:layout_height="1dp"
                     android:layout_marginStart="16dp"
                     android:layout_marginEnd="0dp"
-                    android:background="@color/color_33979797"/>
+                    android:background="@color/color_33979797" />
 
             <TextView
                     android:id="@+id/tvLogOut"
                     android:layout_width="match_parent"
                     android:layout_height="57dp"
-                    android:gravity="center_vertical"
                     android:background="?android:attr/selectableItemBackground"
-                    android:textSize="16sp"
-                    android:textColor="@color/color_d9534f"
-                    android:text="@string/text_settings_log_out"
+                    android:gravity="center_vertical"
                     android:paddingStart="16dp"
-                    android:paddingEnd="16dp"/>
+                    android:paddingEnd="16dp"
+                    android:text="@string/text_settings_log_out"
+                    android:textColor="@color/color_d9534f"
+                    android:textSize="16sp" />
         </LinearLayout>
 
         <TextView
                 android:id="@+id/tvCurrentPolicyDate"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingTop="16dp"
-                android:paddingBottom="16dp"
-                android:gravity="center"
-                android:drawablePadding="8dp"
                 android:layout_gravity="bottom"
-                android:textSize="10sp"
                 android:drawableTop="@drawable/ic_gray_logo"
+                android:drawablePadding="8dp"
+                android:gravity="center"
+                android:padding="16dp"
+                android:text="@string/text_all_rights_reserved"
                 android:textColor="@color/color_999b9b9b"
-                android:text="@string/text_all_rights_reserved"/>
+                android:textSize="10sp" />
     </LinearLayout>
 </ScrollView>
