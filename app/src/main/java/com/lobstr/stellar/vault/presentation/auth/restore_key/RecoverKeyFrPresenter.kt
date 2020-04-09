@@ -13,10 +13,8 @@ import com.soneso.stellarmnemonics.mnemonic.MnemonicException
 import com.soneso.stellarmnemonics.mnemonic.WordList
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
-import moxy.InjectViewState
 import javax.inject.Inject
 
-@InjectViewState
 class RecoverKeyFrPresenter : BasePresenter<RecoverKeyFrView>() {
 
     @Inject

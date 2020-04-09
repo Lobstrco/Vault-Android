@@ -6,11 +6,9 @@ import com.lobstr.stellar.vault.presentation.application.LVApplication
 import com.lobstr.stellar.vault.presentation.dagger.module.biometric.BiometricSetUpModule
 import com.lobstr.stellar.vault.presentation.util.AppUtil
 import com.lobstr.stellar.vault.presentation.util.biometric.BiometricUtils
-import moxy.InjectViewState
 import moxy.MvpPresenter
 import javax.inject.Inject
 
-@InjectViewState
 class BiometricSetUpPresenter : MvpPresenter<BiometricSetUpView>() {
 
     @Inject

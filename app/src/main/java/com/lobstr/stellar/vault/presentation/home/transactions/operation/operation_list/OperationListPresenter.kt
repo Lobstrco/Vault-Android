@@ -3,10 +3,8 @@ package com.lobstr.stellar.vault.presentation.home.transactions.operation.operat
 import com.lobstr.stellar.vault.R
 import com.lobstr.stellar.vault.presentation.entities.transaction.TransactionItem
 import com.lobstr.stellar.vault.presentation.util.AppUtil
-import moxy.InjectViewState
 import moxy.MvpPresenter
 
-@InjectViewState
 class OperationListPresenter(private val transactionItem: TransactionItem) : MvpPresenter<OperationListView>() {
 
     private var operationList: MutableList<Int> = mutableListOf()

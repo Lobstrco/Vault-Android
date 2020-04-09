@@ -2,10 +2,8 @@ package com.lobstr.stellar.vault.presentation.auth
 
 import com.lobstr.stellar.vault.R
 import com.lobstr.stellar.vault.presentation.util.Constant
-import moxy.InjectViewState
 import moxy.MvpPresenter
 
-@InjectViewState
 class AuthPresenter(private val targetFr: Int) : MvpPresenter<AuthView>() {
 
     override fun onFirstViewAttach() {

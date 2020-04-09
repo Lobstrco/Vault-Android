@@ -3,28 +3,27 @@ package com.lobstr.stellar.vault.presentation.home.transactions.import_xdr
 import androidx.annotation.StringRes
 import com.lobstr.stellar.vault.presentation.entities.transaction.TransactionItem
 import moxy.MvpView
-import moxy.viewstate.strategy.AddToEndSingleStrategy
-import moxy.viewstate.strategy.SkipStrategy
-import moxy.viewstate.strategy.StateStrategyType
+import moxy.viewstate.strategy.alias.AddToEndSingle
+import moxy.viewstate.strategy.alias.Skip
 
 
 interface ImportXdrView : MvpView {
 
-    @StateStrategyType(AddToEndSingleStrategy::class)
+    @AddToEndSingle
     fun setupToolbarTitle(@StringRes titleRes: Int)
 
-    @StateStrategyType(SkipStrategy::class)
+    @Skip
     fun showMessage(message: String?)
 
-    @StateStrategyType(AddToEndSingleStrategy::class)
+    @AddToEndSingle
     fun showProgressDialog(show: Boolean)
 
-    @StateStrategyType(SkipStrategy::class)
+    @Skip
     fun showTransactionDetails(transactionItem: TransactionItem)
 
-    @StateStrategyType(AddToEndSingleStrategy::class)
+    @AddToEndSingle
     fun setSubmitEnabled(enabled: Boolean)
 
-    @StateStrategyType(AddToEndSingleStrategy::class)
+    @AddToEndSingle
     fun showFormError(show: Boolean, error: String?)
 }

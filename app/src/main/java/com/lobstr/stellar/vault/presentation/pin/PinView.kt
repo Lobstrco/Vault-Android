@@ -2,49 +2,48 @@ package com.lobstr.stellar.vault.presentation.pin
 
 import androidx.annotation.StringRes
 import moxy.MvpView
-import moxy.viewstate.strategy.AddToEndSingleStrategy
-import moxy.viewstate.strategy.SkipStrategy
-import moxy.viewstate.strategy.StateStrategyType
+import moxy.viewstate.strategy.alias.AddToEndSingle
+import moxy.viewstate.strategy.alias.Skip
 
 
 interface PinView : MvpView {
 
-    @StateStrategyType(AddToEndSingleStrategy::class)
+    @AddToEndSingle
     fun showTitle(@StringRes title: Int)
 
-    @StateStrategyType(AddToEndSingleStrategy::class)
+    @AddToEndSingle
     fun setScreenStyle(style: Int)
 
-    @StateStrategyType(SkipStrategy::class)
+    @Skip
     fun resetPin()
 
-    @StateStrategyType(SkipStrategy::class)
+    @Skip
     fun showHomeScreen()
 
-    @StateStrategyType(SkipStrategy::class)
+    @Skip
     fun showVaultAuthScreen()
 
-    @StateStrategyType(SkipStrategy::class)
+    @Skip
     fun showBiometricSetUpScreen()
 
-    @StateStrategyType(SkipStrategy::class)
+    @Skip
     fun showErrorMessage(@StringRes message: Int)
 
-    @StateStrategyType(SkipStrategy::class)
+    @Skip
     fun finishScreenWithResult(resultCode: Int)
 
-    @StateStrategyType(AddToEndSingleStrategy::class)
+    @AddToEndSingle
     fun showProgressDialog(show: Boolean)
 
-    @StateStrategyType(SkipStrategy::class)
+    @Skip
     fun showBiometricDialog(show: Boolean)
 
-    @StateStrategyType(SkipStrategy::class)
+    @Skip
     fun showAuthScreen()
 
-    @StateStrategyType(SkipStrategy::class)
+    @Skip
     fun showLogOutDialog()
 
-    @StateStrategyType(SkipStrategy::class)
+    @Skip
     fun showCommonPinPatternDialog()
 }

@@ -21,15 +21,14 @@ import com.lobstr.stellar.vault.presentation.util.Constant.Transaction.CANCELLED
 import com.lobstr.stellar.vault.presentation.util.Constant.Transaction.IMPORT_XDR
 import com.lobstr.stellar.vault.presentation.util.Constant.Transaction.PENDING
 import com.lobstr.stellar.vault.presentation.util.Constant.Transaction.SIGNED
+import com.lobstr.stellar.vault.presentation.util.Constant.Util.PK_TRUNCATE_COUNT
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
-import moxy.InjectViewState
 import org.joda.time.DateTime
 import javax.inject.Inject
 
-@InjectViewState
 class TransactionDetailsPresenter(private var transactionItem: TransactionItem) :
     BasePresenter<TransactionDetailsView>() {
 
@@ -228,7 +227,7 @@ class TransactionDetailsPresenter(private var transactionItem: TransactionItem) 
 
         if (!sourceAccount.isNullOrEmpty()) {
             map[AppUtil.getString(R.string.text_tv_source_account).plus(Constant.Symbol.COLON)] =
-                sourceAccount
+                AppUtil.ellipsizeStrInMiddle(sourceAccount, PK_TRUNCATE_COUNT)!!
         }
 
         if (!addedAt.isNullOrEmpty()) {

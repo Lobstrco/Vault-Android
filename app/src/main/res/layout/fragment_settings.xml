@@ -48,7 +48,6 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="0"
-                        android:gravity="center"
                         android:maxWidth="150dp"
                         android:singleLine="true"
                         android:text="@string/text_settings_show"
@@ -140,9 +139,11 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:paddingStart="16dp"
-                        android:paddingEnd="16dp"
                         android:paddingTop="18dp"
-                        android:paddingBottom="18dp"                        android:text="@string/text_settings_biometric_login"
+                        android:paddingEnd="16dp"
+                        android:paddingBottom="18dp"
+                        android:saveEnabled="false"
+                        android:text="@string/text_settings_biometric_login"
                         android:textColor="@android:color/black"
                         android:textSize="16sp" />
 
@@ -155,17 +156,46 @@
                     android:layout_marginEnd="0dp"
                     android:background="@color/color_33979797" />
 
-            <androidx.appcompat.widget.SwitchCompat
-                    android:id="@+id/swSpamProtection"
+            <LinearLayout
+                    android:id="@+id/llSettingsSpamProtection"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:paddingStart="16dp"
-                    android:paddingEnd="16dp"
-                    android:paddingTop="18dp"
-                    android:paddingBottom="18dp"
-                    android:text="@string/text_settings_spam_protection"
-                    android:textColor="@android:color/black"
-                    android:textSize="16sp" />
+                    android:background="?android:attr/selectableItemBackground"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:padding="16dp">
+
+                <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="8dp"
+                        android:layout_weight="1"
+                        android:ellipsize="end"
+                        android:maxLines="1"
+                        android:singleLine="true"
+                        android:text="@string/text_settings_spam_protection"
+                        android:textColor="@android:color/black"
+                        android:textSize="16sp" />
+
+                <TextView
+                        android:id="@+id/tvSpamProtectionConfig"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="4dp"
+                        android:layout_weight="0"
+                        android:gravity="center"
+                        android:paddingBottom="2dp"
+                        android:singleLine="true"
+                        android:textColor="@color/color_99000000"
+                        android:textSize="16sp" />
+
+                <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_arrow_right"
+                        tools:ignore="ContentDescription" />
+
+            </LinearLayout>
         </LinearLayout>
 
         <!-- Other -->
@@ -208,9 +238,10 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:paddingStart="16dp"
-                    android:paddingEnd="16dp"
                     android:paddingTop="18dp"
+                    android:paddingEnd="16dp"
                     android:paddingBottom="18dp"
+                    android:saveEnabled="false"
                     android:text="@string/text_settings_notifications"
                     android:textColor="@android:color/black"
                     android:textSize="16sp" />
@@ -222,18 +253,45 @@
                     android:layout_marginEnd="0dp"
                     android:background="@color/color_33979797" />
 
-
-            <androidx.appcompat.widget.SwitchCompat
-                    android:id="@+id/swSettingsTrConfirmation"
+            <LinearLayout
+                    android:id="@+id/llSettingsTrConfirmation"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:paddingStart="16dp"
-                    android:paddingEnd="16dp"
-                    android:paddingTop="18dp"
-                    android:paddingBottom="18dp"
-                    android:text="@string/text_settings_transaction_confirmation"
-                    android:textColor="@android:color/black"
-                    android:textSize="16sp" />
+                    android:background="?android:attr/selectableItemBackground"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:padding="16dp">
+
+                <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="8dp"
+                        android:layout_weight="1"
+                        android:ellipsize="end"
+                        android:maxLines="1"
+                        android:singleLine="true"
+                        android:text="@string/text_settings_transaction_confirmation"
+                        android:textColor="@android:color/black"
+                        android:textSize="16sp" />
+
+                <TextView
+                        android:id="@+id/tvTrConfirmationConfig"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="4dp"
+                        android:layout_weight="0"
+                        android:gravity="center"
+                        android:paddingBottom="2dp"
+                        android:singleLine="true"
+                        android:textColor="@color/color_99000000"
+                        android:textSize="16sp" />
+
+                <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_arrow_right"
+                        tools:ignore="ContentDescription" />
+            </LinearLayout>
 
             <View
                     android:layout_width="match_parent"
@@ -284,8 +342,8 @@
                     android:gravity="center_vertical"
                     android:orientation="horizontal"
                     android:paddingStart="16dp"
-                    android:paddingEnd="16dp"
                     android:paddingTop="18dp"
+                    android:paddingEnd="16dp"
                     android:paddingBottom="18dp">
 
                 <TextView

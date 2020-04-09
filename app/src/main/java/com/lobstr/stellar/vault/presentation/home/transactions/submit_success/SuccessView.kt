@@ -1,27 +1,26 @@
 package com.lobstr.stellar.vault.presentation.home.transactions.submit_success
 
 import moxy.MvpView
-import moxy.viewstate.strategy.AddToEndSingleStrategy
-import moxy.viewstate.strategy.SkipStrategy
-import moxy.viewstate.strategy.StateStrategyType
+import moxy.viewstate.strategy.alias.AddToEndSingle
+import moxy.viewstate.strategy.alias.Skip
 
 interface SuccessView : MvpView {
 
-    @StateStrategyType(SkipStrategy::class)
+    @Skip
     fun vibrate(pattern: LongArray)
 
-    @StateStrategyType(AddToEndSingleStrategy::class)
+    @AddToEndSingle
     fun setupXdr(xdr: String)
 
-    @StateStrategyType(SkipStrategy::class)
+    @Skip
     fun finishScreen()
 
-    @StateStrategyType(AddToEndSingleStrategy::class)
+    @AddToEndSingle
     fun setAdditionalSignaturesInfoEnabled(enabled: Boolean)
 
-    @StateStrategyType(SkipStrategy::class)
+    @Skip
     fun copyToClipBoard(text: String)
 
-    @StateStrategyType(SkipStrategy::class)
+    @Skip
     fun showHelpScreen()
 }

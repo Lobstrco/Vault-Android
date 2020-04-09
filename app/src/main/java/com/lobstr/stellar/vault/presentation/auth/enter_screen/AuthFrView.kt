@@ -1,21 +1,20 @@
 package com.lobstr.stellar.vault.presentation.auth.enter_screen
 
 import moxy.MvpView
-import moxy.viewstate.strategy.AddToEndSingleStrategy
-import moxy.viewstate.strategy.SkipStrategy
-import moxy.viewstate.strategy.StateStrategyType
+import moxy.viewstate.strategy.alias.AddToEndSingle
+import moxy.viewstate.strategy.alias.Skip
 
 interface AuthFrView : MvpView {
 
-    @StateStrategyType(AddToEndSingleStrategy::class)
+    @AddToEndSingle
     fun setMovementMethods()
 
-    @StateStrategyType(SkipStrategy::class)
+    @Skip
     fun showBackUpScreen()
 
-    @StateStrategyType(SkipStrategy::class)
+    @Skip
     fun showRestoreScreen()
 
-    @StateStrategyType(SkipStrategy::class)
+    @Skip
     fun showHelpScreen()
 }

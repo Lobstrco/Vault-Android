@@ -2,31 +2,30 @@ package com.lobstr.stellar.vault.presentation.vault_auth.recheck_signer
 
 import androidx.annotation.StringRes
 import moxy.MvpView
-import moxy.viewstate.strategy.AddToEndSingleStrategy
-import moxy.viewstate.strategy.SkipStrategy
-import moxy.viewstate.strategy.StateStrategyType
+import moxy.viewstate.strategy.alias.AddToEndSingle
+import moxy.viewstate.strategy.alias.Skip
 
 
 interface RecheckSignerView : MvpView {
 
-    @StateStrategyType(AddToEndSingleStrategy::class)
+    @AddToEndSingle
     fun setupUserPublicKey(userPublicKey: String?)
 
-    @StateStrategyType(AddToEndSingleStrategy::class)
+    @AddToEndSingle
     fun showProgressDialog(show: Boolean)
 
-    @StateStrategyType(SkipStrategy::class)
+    @Skip
     fun showMessage(message: String?)
 
-    @StateStrategyType(SkipStrategy::class)
+    @Skip
     fun showMessage(@StringRes messageRes: Int)
 
-    @StateStrategyType(AddToEndSingleStrategy::class)
+    @AddToEndSingle
     fun showHomeScreen()
 
-    @StateStrategyType(SkipStrategy::class)
+    @Skip
     fun showAuthScreen()
 
-    @StateStrategyType(SkipStrategy::class)
+    @Skip
     fun showLogOutDialog()
 }

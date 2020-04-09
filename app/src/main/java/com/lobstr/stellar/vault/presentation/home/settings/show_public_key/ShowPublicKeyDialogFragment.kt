@@ -10,13 +10,15 @@ import com.lobstr.stellar.vault.presentation.BaseBottomSheetDialog
 import com.lobstr.stellar.vault.presentation.dialog.alert.base.AlertDialogFragment
 import com.lobstr.stellar.vault.presentation.util.AppUtil
 import com.lobstr.stellar.vault.presentation.util.Constant
+import com.lobstr.stellar.vault.presentation.util.Constant.Util.PK_TRUNCATE_COUNT
 import kotlinx.android.synthetic.main.fragment_show_public_key.*
 import moxy.presenter.InjectPresenter
 import moxy.presenter.ProvidePresenter
 import net.glxn.qrgen.android.QRCode
 
 
-class ShowPublicKeyDialogFragment : BaseBottomSheetDialog(), ShowPublicKeyView, View.OnClickListener {
+class ShowPublicKeyDialogFragment : BaseBottomSheetDialog(), ShowPublicKeyView,
+    View.OnClickListener {
 
     // ===========================================================
     // Constants
@@ -62,7 +64,11 @@ class ShowPublicKeyDialogFragment : BaseBottomSheetDialog(), ShowPublicKeyView, 
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        mView = if (mView == null) inflater.inflate(R.layout.fragment_show_public_key, container, false) else mView
+        mView = if (mView == null) inflater.inflate(
+            R.layout.fragment_show_public_key,
+            container,
+            false
+        ) else mView
         return mView
     }
 
@@ -96,7 +102,7 @@ class ShowPublicKeyDialogFragment : BaseBottomSheetDialog(), ShowPublicKeyView, 
 
         ivUserPublicKeyQrCode.setImageBitmap(qrCodeImage)
 
-        tvPublicKey.text = publicKey
+        tvPublicKey.text = AppUtil.ellipsizeStrInMiddle(publicKey, PK_TRUNCATE_COUNT)
     }
 
     override fun copyToClipBoard(text: String) {

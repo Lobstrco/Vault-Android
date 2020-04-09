@@ -47,7 +47,7 @@ open class BaseMvpAppCompatActivity : AppCompatActivity(), MvpDelegateHolder {
 
     override fun getMvpDelegate(): MvpDelegate<*> {
         if (mMvpDelegate == null) {
-            mMvpDelegate = MvpDelegate<BaseMvpAppCompatActivity>(this)
+            mMvpDelegate = MvpDelegate(this)
         }
         return mMvpDelegate as MvpDelegate<out BaseMvpAppCompatActivity>
     }

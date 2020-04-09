@@ -3,34 +3,33 @@ package com.lobstr.stellar.vault.presentation.auth.mnemonic.confirm_mnemonic
 import androidx.annotation.StringRes
 import com.lobstr.stellar.vault.presentation.entities.mnemonic.MnemonicItem
 import moxy.MvpView
-import moxy.viewstate.strategy.AddToEndSingleStrategy
-import moxy.viewstate.strategy.SkipStrategy
-import moxy.viewstate.strategy.StateStrategyType
+import moxy.viewstate.strategy.alias.AddToEndSingle
+import moxy.viewstate.strategy.alias.Skip
 
 
 interface ConfirmMnemonicsView : MvpView {
 
-    @StateStrategyType(AddToEndSingleStrategy::class)
+    @AddToEndSingle
     fun setupMnemonicsToSelect(mnemonics: List<MnemonicItem>)
 
-    @StateStrategyType(AddToEndSingleStrategy::class)
+    @AddToEndSingle
     fun setupMnemonicsToConfirm(mnemonics: List<MnemonicItem>)
 
-    @StateStrategyType(SkipStrategy::class)
+    @Skip
     fun showMessage(message: String)
 
-    @StateStrategyType(SkipStrategy::class)
+    @Skip
     fun showMessage(@StringRes message: Int)
 
-    @StateStrategyType(SkipStrategy::class)
+    @Skip
     fun showPinScreen()
 
-    @StateStrategyType(AddToEndSingleStrategy::class)
+    @AddToEndSingle
     fun showProgressDialog(show: Boolean)
 
-    @StateStrategyType(SkipStrategy::class)
+    @Skip
     fun showHelpScreen()
 
-    @StateStrategyType(AddToEndSingleStrategy::class)
+    @AddToEndSingle
     fun setActionButtonEnabled(enabled: Boolean)
 }

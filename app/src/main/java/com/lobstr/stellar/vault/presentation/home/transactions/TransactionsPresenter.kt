@@ -22,10 +22,8 @@ import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
-import moxy.InjectViewState
 import javax.inject.Inject
 
-@InjectViewState
 class TransactionsPresenter : BasePresenter<TransactionsView>() {
 
     companion object {

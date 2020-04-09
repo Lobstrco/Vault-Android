@@ -43,7 +43,7 @@ class ProgressDialog : AlertDialogFragment(), ProgressDialogView {
 
     override fun setTransparentBackground() {
         val alertDialog = dialog
-        alertDialog?.window!!.setBackgroundDrawableResource(android.R.color.transparent)
+        alertDialog?.window?.setBackgroundDrawableResource(android.R.color.transparent)
     }
 
     // ===========================================================

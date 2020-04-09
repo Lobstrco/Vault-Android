@@ -6,11 +6,9 @@ import com.lobstr.stellar.vault.presentation.application.LVApplication
 import com.lobstr.stellar.vault.presentation.dagger.module.rate_us.RateUsModule
 import com.lobstr.stellar.vault.presentation.util.Constant
 import com.lobstr.stellar.vault.presentation.util.Constant.Social.STORE_URL
-import moxy.InjectViewState
 import moxy.MvpPresenter
 import javax.inject.Inject
 
-@InjectViewState
 class RateUsPresenter : MvpPresenter<RateUsView>() {
 
     @Inject

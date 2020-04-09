@@ -1,18 +1,17 @@
 package com.lobstr.stellar.vault.presentation.splash
 
 import moxy.MvpView
-import moxy.viewstate.strategy.AddToEndSingleStrategy
-import moxy.viewstate.strategy.SkipStrategy
-import moxy.viewstate.strategy.StateStrategyType
+import moxy.viewstate.strategy.alias.AddToEndSingle
+import moxy.viewstate.strategy.alias.Skip
 
 interface SplashView : MvpView {
 
-    @StateStrategyType(SkipStrategy::class)
+    @Skip
     fun setWindowInset()
 
-    @StateStrategyType(AddToEndSingleStrategy::class)
+    @AddToEndSingle
     fun showAuthScreen()
 
-    @StateStrategyType(AddToEndSingleStrategy::class)
+    @AddToEndSingle
     fun showPinScreen()
 }

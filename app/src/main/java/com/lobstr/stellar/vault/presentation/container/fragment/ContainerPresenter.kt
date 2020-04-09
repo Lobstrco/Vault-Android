@@ -3,6 +3,7 @@ package com.lobstr.stellar.vault.presentation.container.fragment
 import com.lobstr.stellar.vault.presentation.entities.transaction.TransactionItem
 import com.lobstr.stellar.vault.presentation.util.Constant.Navigation.AUTH
 import com.lobstr.stellar.vault.presentation.util.Constant.Navigation.BIOMETRIC_SET_UP
+import com.lobstr.stellar.vault.presentation.util.Constant.Navigation.CONFIG
 import com.lobstr.stellar.vault.presentation.util.Constant.Navigation.DASHBOARD
 import com.lobstr.stellar.vault.presentation.util.Constant.Navigation.ERROR
 import com.lobstr.stellar.vault.presentation.util.Constant.Navigation.IMPORT_XDR
@@ -13,16 +14,15 @@ import com.lobstr.stellar.vault.presentation.util.Constant.Navigation.SIGNER_INF
 import com.lobstr.stellar.vault.presentation.util.Constant.Navigation.SUCCESS
 import com.lobstr.stellar.vault.presentation.util.Constant.Navigation.TRANSACTIONS
 import com.lobstr.stellar.vault.presentation.util.Constant.Navigation.TRANSACTION_DETAILS
-import moxy.InjectViewState
 import moxy.MvpPresenter
 
-@InjectViewState
 class ContainerPresenter(
     private val targetFr: Int,
     private val transactionItem: TransactionItem?,
     private val envelopeXdr: String?,
     private val needAdditionalSignatures: Boolean?,
-    private val errorMessage: String?
+    private val errorMessage: String?,
+    private val config: Int
 ) : MvpPresenter<ContainerView>() {
 
     override fun onFirstViewAttach() {
@@ -55,6 +55,8 @@ class ContainerPresenter(
             ERROR -> viewState.showErrorFr(errorMessage!!)
 
             SIGNED_ACCOUNTS -> viewState.showSignedAccountsFr()
+
+            CONFIG -> viewState.showConfigFr(config)
         }
     }
 }

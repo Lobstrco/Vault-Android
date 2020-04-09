@@ -4,95 +4,114 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:paddingStart="16dp"
-        android:paddingEnd="16dp"
-        android:paddingBottom="16dp"
         android:orientation="vertical"
         tools:context=".presentation.auth.mnemonic.create_mnemonic.MnemonicsFragment">
 
-    <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:gravity="start"
-            android:text="@string/text_tv_mnemonics_title"
-            android:textColor="@android:color/black"
-            android:textSize="20sp"
-            android:textStyle="bold" />
-
-    <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="25dp"
-            android:alpha="0.6"
-            android:gravity="start"
-            android:text="@string/text_tv_mnemonics_description"
-            android:textColor="@color/color_071c33"
-            android:textSize="14sp" />
-
-    <LinearLayout
+    <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            android:orientation="vertical">
-
-        <com.lobstr.stellar.vault.presentation.auth.mnemonic.MnemonicsContainerView
-                android:id="@+id/mnemonicContainerView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="12dp"
-                android:background="@drawable/bg_mnemonics"
-                app:itemTextColor="@android:color/black" />
+            android:fillViewport="true"
+            android:overScrollMode="never"
+            android:scrollbars="vertical">
 
         <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:orientation="horizontal">
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp">
 
             <TextView
-                    android:id="@+id/tvMnemonicsInstruction"
-                    android:layout_width="0dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="@string/text_tv_mnemonics_instruction"
-                    android:textColor="@color/color_994A4A4A"
-                    android:textSize="12sp" />
+                    android:layout_marginBottom="8dp"
+                    android:gravity="start"
+                    android:text="@string/text_tv_mnemonics_title"
+                    android:textColor="@android:color/black"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
 
-            <Button
-                    android:id="@+id/btnClipToBoard"
-                    style="@style/Base.Widget.AppCompat.Button.Borderless.Colored"
-                    android:layout_width="wrap_content"
+            <TextView
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:drawableStart="@drawable/ic_content_copy_purple"
-                    android:fontFamily="sans-serif"
-                    android:text="@string/text_btn_clip_to_board"
-                    android:textAllCaps="false"
-                    android:textColor="@color/color_primary"
+                    android:layout_marginBottom="25dp"
+                    android:alpha="0.6"
+                    android:gravity="start"
+                    android:text="@string/text_tv_mnemonics_description"
+                    android:textColor="@color/color_071c33"
                     android:textSize="14sp" />
+
+            <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+
+                <com.lobstr.stellar.vault.presentation.auth.mnemonic.MnemonicsContainerView
+                        android:id="@+id/mnemonicContainerView"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="12dp"
+                        android:background="@drawable/bg_mnemonics"
+                        app:itemTextColor="@android:color/black" />
+
+                <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:orientation="horizontal">
+
+                    <TextView
+                            android:id="@+id/tvMnemonicsInstruction"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/text_tv_mnemonics_instruction"
+                            android:textColor="@color/color_994A4A4A"
+                            android:textSize="12sp" />
+
+                    <Button
+                            android:id="@+id/btnClipToBoard"
+                            style="@style/Base.Widget.AppCompat.Button.Borderless.Colored"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:drawableStart="@drawable/ic_content_copy_purple"
+                            android:fontFamily="sans-serif"
+                            android:text="@string/text_btn_clip_to_board"
+                            android:textAllCaps="false"
+                            android:textColor="@color/color_primary"
+                            android:textSize="14sp" />
+                </LinearLayout>
+
+            </LinearLayout>
         </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
 
-    </LinearLayout>
-
-    <TextView
-            android:id="@+id/tvNextScreenInfo"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginBottom="16dp"
-            android:text="@string/text_tv_mnemonics_confirmation"
-            android:textAppearance="?android:textAppearanceSmall"
-            android:textColor="@color/color_994A4A4A"
-            android:textSize="12sp" />
-
-    <Button
-            android:id="@+id/btnNext"
+    <LinearLayout
+            android:id="@+id/llActionLayer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/selector_default_button_with_round"
-            android:text="@string/text_btn_next"
-            android:textAllCaps="false"
-            android:textColor="@android:color/white"
-            android:textSize="14sp" />
+            android:orientation="vertical"
+            android:padding="16dp">
 
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginBottom="16dp"
+                android:text="@string/text_tv_mnemonics_confirmation"
+                android:textAppearance="?android:textAppearanceSmall"
+                android:textColor="@color/color_994A4A4A"
+                android:textSize="12sp" />
+
+        <Button
+                android:id="@+id/btnNext"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/selector_default_button_with_round"
+                android:text="@string/text_btn_next"
+                android:textAllCaps="false"
+                android:textColor="@android:color/white"
+                android:textSize="14sp" />
+    </LinearLayout>
 </LinearLayout>

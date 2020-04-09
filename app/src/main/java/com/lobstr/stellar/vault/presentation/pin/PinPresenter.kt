@@ -11,13 +11,11 @@ import com.lobstr.stellar.vault.presentation.util.AppUtil
 import com.lobstr.stellar.vault.presentation.util.biometric.BiometricUtils
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
-import moxy.InjectViewState
 import javax.inject.Inject
 
 /**
  * Main IDEA - when secretKey was empty - confirmation action, else - save secret key.
  */
-@InjectViewState
 class PinPresenter(
     private var needCreatePin: Boolean?, private var needChangePin: Boolean?,
     private var needConfirmPin: Boolean?

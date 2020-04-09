@@ -13,10 +13,8 @@ import com.lobstr.stellar.vault.presentation.application.LVApplication
 import com.lobstr.stellar.vault.presentation.dagger.module.vault_auth.VaultAuthModule
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
-import moxy.InjectViewState
 import javax.inject.Inject
 
-@InjectViewState
 class VaultAuthPresenter : BasePresenter<VaultAuthView>() {
 
     @Inject

@@ -36,23 +36,24 @@ class StellarRepositoryImpl(
     }
 
     override fun createKeyPair(mnemonics: CharArray, index: Int): Single<KeyPair> {
-        return fromCallable(Callable<KeyPair> {
+        return fromCallable(Callable {
             return@Callable Wallet.createKeyPair(mnemonics, null, index)
         })
     }
 
     override fun submitTransaction(
         signer: KeyPair,
-        envelopXdr: String
+        envelopXdr: String,
+        skipMemoRequiredCheck: Boolean
     ): Single<SubmitTransactionResponse> {
-        return fromCallable(Callable<SubmitTransactionResponse> {
+        return fromCallable(Callable {
             val transaction: Transaction = Transaction.fromEnvelopeXdr(envelopXdr, network)
 
             // Sign the transaction to prove you are actually the person sending it.
             transaction.sign(signer)
 
             // And finally, send it off to Stellar!
-            return@Callable server.submitTransaction(transaction)
+            return@Callable server.submitTransaction(transaction, skipMemoRequiredCheck)
         }).onErrorResumeNext {
             LVApplication.appComponent.rxErrorUtils.handleSingleRequestHttpError(it)
         }

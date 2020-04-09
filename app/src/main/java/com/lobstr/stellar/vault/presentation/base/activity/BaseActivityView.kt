@@ -5,42 +5,41 @@ import androidx.annotation.ColorRes
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import moxy.MvpView
-import moxy.viewstate.strategy.AddToEndSingleStrategy
-import moxy.viewstate.strategy.SkipStrategy
-import moxy.viewstate.strategy.StateStrategyType
+import moxy.viewstate.strategy.alias.AddToEndSingle
+import moxy.viewstate.strategy.alias.Skip
 
 interface BaseActivityView : MvpView {
 
-    @StateStrategyType(SkipStrategy::class)
+    @Skip
     fun setWindowInset()
 
-    @StateStrategyType(SkipStrategy::class)
+    @Skip
     fun setActionBarTitle(title: String?)
 
-    @StateStrategyType(SkipStrategy::class)
+    @Skip
     fun setActionBarTitle(@StringRes title: Int)
 
-    @StateStrategyType(SkipStrategy::class)
+    @Skip
     fun setActionBarTitle(@StringRes title: Int, where: TextUtils.TruncateAt)
 
-    @StateStrategyType(SkipStrategy::class)
+    @Skip
     fun setActionBarTitle(title: String, where: TextUtils.TruncateAt)
 
-    @StateStrategyType(SkipStrategy::class)
+    @Skip
     fun setActionBarTitle(title: String, @ColorRes color: Int)
 
-    @StateStrategyType(SkipStrategy::class)
+    @Skip
     fun setActionBarTitleColor(@ColorRes color: Int)
 
-    @StateStrategyType(SkipStrategy::class)
+    @Skip
     fun setActionBarIcon(iconRes: Int)
 
-    @StateStrategyType(AddToEndSingleStrategy::class)
+    @AddToEndSingle
     fun changeActionBarIconVisibility(visible: Boolean)
 
-    @StateStrategyType(SkipStrategy::class)
+    @Skip
     fun setActionBarBackground(@DrawableRes background: Int)
 
-    @StateStrategyType(SkipStrategy::class)
+    @Skip
     fun setHomeAsUpIndicator(@DrawableRes image: Int, @ColorRes color: Int)
 }

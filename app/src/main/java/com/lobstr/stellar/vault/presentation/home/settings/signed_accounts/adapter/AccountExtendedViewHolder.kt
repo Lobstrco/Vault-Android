@@ -1,11 +1,14 @@
 package com.lobstr.stellar.vault.presentation.home.settings.signed_accounts.adapter
 
+import android.text.TextUtils
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.lobstr.stellar.vault.R
 import com.lobstr.stellar.vault.presentation.entities.account.Account
+import com.lobstr.stellar.vault.presentation.util.AppUtil
 import com.lobstr.stellar.vault.presentation.util.Constant
+import com.lobstr.stellar.vault.presentation.util.Constant.Util.PK_TRUNCATE_COUNT
 import kotlinx.android.synthetic.main.adapter_item_account_extended.view.*
 
 class AccountExtendedViewHolder(itemView: View, private val listener: OnAccountItemListener) :
@@ -13,7 +16,8 @@ class AccountExtendedViewHolder(itemView: View, private val listener: OnAccountI
 
     fun bind(account: Account, itemsCount: Int) {
         itemView.divider.visibility = calculateDividerVisibility(itemsCount)
-        // set user icon
+
+        // Set user icon.
         Glide.with(itemView.context)
             .load(
                 Constant.Social.USER_ICON_LINK
@@ -23,9 +27,34 @@ class AccountExtendedViewHolder(itemView: View, private val listener: OnAccountI
             .placeholder(R.drawable.ic_person)
             .into(itemView.ivIdentity)
 
-        itemView.tvAccount.visibility = if(account.federation.isNullOrEmpty()) View.GONE else View.VISIBLE
-        itemView.tvAccount.text = account.address
-        itemView.tvAccountFederation.text = if(account.federation.isNullOrEmpty()) account.address else account.federation
+        itemView.tvAccount.visibility =
+            if (account.federation.isNullOrEmpty()) {
+                View.GONE
+            } else {
+                View.VISIBLE
+            }
+
+        itemView.tvAccount.text = when {
+            !account.federation.isNullOrEmpty() -> AppUtil.ellipsizeStrInMiddle(
+                account.address,
+                PK_TRUNCATE_COUNT
+            )
+            else -> null
+        }
+
+        itemView.tvAccountFederation.ellipsize =
+            if (account.federation.isNullOrEmpty()) {
+                TextUtils.TruncateAt.MIDDLE
+            } else {
+                TextUtils.TruncateAt.END
+            }
+
+        itemView.tvAccountFederation.text =
+            if (account.federation.isNullOrEmpty()) {
+                AppUtil.ellipsizeStrInMiddle(account.address, PK_TRUNCATE_COUNT)
+            } else {
+                account.federation
+            }
 
         itemView.setOnClickListener {
             val position = this@AccountExtendedViewHolder.adapterPosition

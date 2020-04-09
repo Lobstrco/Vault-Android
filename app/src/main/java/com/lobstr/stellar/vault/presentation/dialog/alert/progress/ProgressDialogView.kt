@@ -1,10 +1,9 @@
 package com.lobstr.stellar.vault.presentation.dialog.alert.progress
 
 import moxy.MvpView
-import moxy.viewstate.strategy.AddToEndSingleStrategy
-import moxy.viewstate.strategy.StateStrategyType
+import moxy.viewstate.strategy.alias.AddToEndSingle
 
-@StateStrategyType(AddToEndSingleStrategy::class)
+@AddToEndSingle
 interface ProgressDialogView : MvpView {
     fun setTransparentBackground()
 }

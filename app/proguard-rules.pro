@@ -193,8 +193,8 @@
 
 # Get deobfuscated crash reports
 -keep public class * extends java.lang.Exception
--keep class com.crashlytics.** { *; }
--dontwarn com.crashlytics.**
+-keep class com.google.firebase.crashlytics.** { *; }
+-dontwarn com.google.firebase.crashlytics.**
 
 # Keeping Stellar SDK
 -keep class org.stellar.sdk.** { *; }

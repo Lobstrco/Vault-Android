@@ -32,7 +32,6 @@ import com.lobstr.stellar.vault.presentation.pin.PinActivity
 import com.lobstr.stellar.vault.presentation.util.AppUtil
 import com.lobstr.stellar.vault.presentation.util.Constant
 import com.lobstr.stellar.vault.presentation.util.manager.FragmentTransactionManager
-import com.lobstr.stellar.vault.presentation.util.manager.ProgressManager
 import kotlinx.android.synthetic.main.fragment_settings.*
 import moxy.presenter.InjectPresenter
 import moxy.presenter.ProvidePresenter
@@ -102,11 +101,11 @@ class SettingsFragment : BaseFragment(), SettingsView, View.OnClickListener,
         tvSettingsSigners.setOnClickListener(this)
         tvSettingsMnemonics.setOnClickListener(this)
         tvSettingsChangePin.setOnClickListener(this)
+        llSettingsSpamProtection.setOnClickListener(this)
         tvSettingsHelp.setOnClickListener(this)
         swSettingsBiometric.setOnCheckedChangeListener(this)
-        swSpamProtection.setOnCheckedChangeListener(this)
         swSettingsNotifications.setOnCheckedChangeListener(this)
-        swSettingsTrConfirmation.setOnCheckedChangeListener(this)
+        llSettingsTrConfirmation.setOnClickListener(this)
         tvSettingsLicense.setOnClickListener(this)
         tvSettingsRateUs.setOnClickListener(this)
         tvLogOut.setOnClickListener(this)
@@ -122,12 +121,14 @@ class SettingsFragment : BaseFragment(), SettingsView, View.OnClickListener,
     // ===========================================================
 
     override fun onClick(v: View?) {
-        when (v!!.id) {
+        when (v?.id) {
             R.id.llPublicKey -> mPresenter.publicKeyClicked()
             R.id.tvSettingsSigners -> mPresenter.signersClicked()
             R.id.tvSettingsMnemonics -> mPresenter.mnemonicsClicked()
             R.id.tvSettingsChangePin -> mPresenter.changePinClicked()
+            R.id.llSettingsSpamProtection -> mPresenter.spamProtectionClicked()
             R.id.tvSettingsHelp -> mPresenter.helpClicked()
+            R.id.llSettingsTrConfirmation -> mPresenter.trConfirmationClicked()
             R.id.tvSettingsLicense -> mPresenter.licenseClicked()
             R.id.tvSettingsRateUs -> mPresenter.rateUsClicked()
             R.id.tvLogOut -> mPresenter.logOutClicked()
@@ -135,11 +136,9 @@ class SettingsFragment : BaseFragment(), SettingsView, View.OnClickListener,
     }
 
     override fun onCheckedChanged(buttonView: CompoundButton?, isChecked: Boolean) {
-        when (buttonView!!.id) {
+        when (buttonView?.id) {
             R.id.swSettingsBiometric -> mPresenter.biometricSwitched(isChecked)
-            R.id.swSpamProtection -> mPresenter.spamProtectionSwitched(isChecked)
             R.id.swSettingsNotifications -> mPresenter.notificationsSwitched(isChecked)
-            R.id.swSettingsTrConfirmation -> mPresenter.trConfirmationSwitched(isChecked)
         }
     }
 
@@ -255,10 +254,8 @@ class SettingsFragment : BaseFragment(), SettingsView, View.OnClickListener,
         swSettingsBiometric.setOnCheckedChangeListener(this)
     }
 
-    override fun setSpamProtectionChecked(checked: Boolean) {
-        swSpamProtection.setOnCheckedChangeListener(null)
-        swSpamProtection.isChecked = checked
-        swSpamProtection.setOnCheckedChangeListener(this)
+    override fun setSpamProtection(config: String?) {
+        tvSpamProtectionConfig.text = config
     }
 
     override fun setNotificationsChecked(checked: Boolean) {
@@ -267,10 +264,8 @@ class SettingsFragment : BaseFragment(), SettingsView, View.OnClickListener,
         swSettingsNotifications.setOnCheckedChangeListener(this)
     }
 
-    override fun setTrConfirmationChecked(checked: Boolean) {
-        swSettingsTrConfirmation.setOnCheckedChangeListener(null)
-        swSettingsTrConfirmation.isChecked = checked
-        swSettingsTrConfirmation.setOnCheckedChangeListener(this)
+    override fun setTrConfirmation(config: String?) {
+        tvTrConfirmationConfig.text = config
     }
 
     override fun showBiometricInfoDialog(titleRes: Int, messageRes: Int) {
@@ -296,6 +291,13 @@ class SettingsFragment : BaseFragment(), SettingsView, View.OnClickListener,
 
     override fun showStore(storeUrl: String) {
         AppUtil.openWebPage(context, storeUrl)
+    }
+
+    override fun showConfigScreen(config: Int) {
+        val intent = Intent(context, ContainerActivity::class.java)
+        intent.putExtra(Constant.Extra.EXTRA_NAVIGATION_FR, Constant.Navigation.CONFIG)
+        intent.putExtra(Constant.Extra.EXTRA_CONFIG, config)
+        startActivityForResult(intent, config)
     }
 
     override fun setupPolicyYear(id: Int) {
@@ -328,10 +330,6 @@ class SettingsFragment : BaseFragment(), SettingsView, View.OnClickListener,
             .setPositiveBtnText(R.string.text_btn_log_out)
             .create()
             .show(childFragmentManager, AlertDialogFragment.DialogFragmentIdentifier.LOG_OUT)
-    }
-
-    override fun showProgressDialog(show: Boolean) {
-        ProgressManager.show(show, childFragmentManager)
     }
 
     override fun showErrorMessage(message: String) {

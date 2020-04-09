@@ -8,10 +8,8 @@ import com.lobstr.stellar.vault.presentation.dialog.alert.base.AlertDialogFragme
 import com.lobstr.stellar.vault.presentation.entities.mnemonic.MnemonicItem
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
-import moxy.InjectViewState
 import javax.inject.Inject
 
-@InjectViewState
 class MnemonicsPresenter(private val generate: Boolean) : BasePresenter<MnemonicsView>() {
 
     @Inject

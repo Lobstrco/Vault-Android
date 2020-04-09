@@ -1,44 +1,43 @@
 package com.lobstr.stellar.vault.presentation.home.settings.signed_accounts
 
 import androidx.annotation.StringRes
-
 import com.lobstr.stellar.vault.presentation.entities.account.Account
 import moxy.MvpView
-import moxy.viewstate.strategy.AddToEndSingleStrategy
-import moxy.viewstate.strategy.SkipStrategy
-import moxy.viewstate.strategy.StateStrategyType
+import moxy.viewstate.strategy.alias.AddToEndSingle
+import moxy.viewstate.strategy.alias.Skip
 
 interface SignedAccountsView : MvpView {
-    @StateStrategyType(AddToEndSingleStrategy::class)
+
+    @AddToEndSingle
     fun setupToolbarTitle(@StringRes titleRes: Int)
 
-    @StateStrategyType(AddToEndSingleStrategy::class)
+    @AddToEndSingle
     fun initRecycledView()
 
-    @StateStrategyType(AddToEndSingleStrategy::class)
+    @AddToEndSingle
     fun showProgress()
 
-    @StateStrategyType(AddToEndSingleStrategy::class)
+    @AddToEndSingle
     fun hideProgress()
 
-    @StateStrategyType(AddToEndSingleStrategy::class)
+    @AddToEndSingle
     fun showEmptyState()
 
-    @StateStrategyType(AddToEndSingleStrategy::class)
+    @AddToEndSingle
     fun hideEmptyState()
 
-    @StateStrategyType(AddToEndSingleStrategy::class)
+    @AddToEndSingle
     fun showErrorMessage(message: String)
 
-    @StateStrategyType(AddToEndSingleStrategy::class)
+    @AddToEndSingle
     fun notifyAdapter(accounts: List<Account>)
 
-    @StateStrategyType(SkipStrategy::class)
+    @Skip
     fun scrollListToPosition(position: Int)
 
-    @StateStrategyType(SkipStrategy::class)
+    @Skip
     fun showEditAccountDialog(address: String)
 
-    @StateStrategyType(SkipStrategy::class)
+    @Skip
     fun copyToClipBoard(text: String)
 }

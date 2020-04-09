@@ -6,8 +6,6 @@ import com.lobstr.stellar.vault.BuildConfig
 object Constant {
 
     object Extra {
-        const val EXTRA_ID = "EXTRA_ID"
-        const val EXTRA_QR_CODE_RESULT = "EXTRA_QR_CODE_RESULT"
         const val EXTRA_CREATE_PIN = "EXTRA_CREATE_PIN"
         const val EXTRA_CHANGE_PIN = "EXTRA_CHANGE_PIN"
         const val EXTRA_CONFIRM_PIN = "EXTRA_CONFIRM_PIN"
@@ -17,6 +15,7 @@ object Constant {
         const val EXTRA_ENVELOPE_XDR = "EXTRA_ENVELOPE_XDR"
         const val EXTRA_NEED_ADDITIONAL_SIGNATURES = "EXTRA_NEED_ADDITIONAL_SIGNATURES"
         const val EXTRA_ERROR_MESSAGE = "EXTRA_ERROR_MESSAGE"
+        const val EXTRA_CONFIG = "EXTRA_CONFIG"
     }
 
     object Bundle {
@@ -29,6 +28,7 @@ object Constant {
         const val BUNDLE_ENVELOPE_XDR = "BUNDLE_ENVELOPE_XDR"
         const val BUNDLE_NEED_ADDITIONAL_SIGNATURES = "BUNDLE_NEED_ADDITIONAL_SIGNATURES"
         const val BUNDLE_ERROR_MESSAGE = "BUNDLE_ERROR_MESSAGE"
+        const val BUNDLE_CONFIG = "BUNDLE_CONFIG"
     }
 
     object Navigation {
@@ -38,13 +38,13 @@ object Constant {
         const val SETTINGS = 3
         const val TRANSACTION_DETAILS = 4
         const val MNEMONICS = 5
-        const val OPERATION_DETAILS = 6
-        const val BIOMETRIC_SET_UP = 7
-        const val SIGNER_INFO = 8
-        const val SUCCESS = 9
-        const val ERROR = 10
-        const val IMPORT_XDR = 11
-        const val SIGNED_ACCOUNTS = 12
+        const val BIOMETRIC_SET_UP = 6
+        const val SIGNER_INFO = 7
+        const val SUCCESS = 8
+        const val ERROR = 9
+        const val IMPORT_XDR = 10
+        const val SIGNED_ACCOUNTS = 11
+        const val CONFIG = 12
     }
 
     object Transaction {
@@ -54,6 +54,11 @@ object Constant {
 
         // When transaction created from entered XDR.
         const val IMPORT_XDR = 4
+    }
+
+    object ConfigType {
+        const val NO: Byte = 0
+        const val YES: Byte = 1
     }
 
     object Symbol {
@@ -72,8 +77,6 @@ object Constant {
         const val SPACE_DASH = " - "
         const val AT = "@"
         const val AMPERSAND = "&"
-        const val REMOVE = "r_s"
-        const val EMPTY_CELL = "e_c"
     }
 
     object BuildType {
@@ -86,17 +89,20 @@ object Constant {
         const val VAULT = "vault"
     }
 
-    object Permission {
-        const val CAMERA = 1
-    }
-
     object Code {
-        const val DETECT_QR_CODE = 101
         const val TRANSACTION_DETAILS_FRAGMENT = 102
         const val OPERATION_DETAILS_FRAGMENT = 103
         const val CHANGE_PIN = 104
         const val CONFIRM_PIN_FOR_MNEMONIC = 105
         const val IMPORT_XDR_FRAGMENT = 106
+
+        /**
+         * Config screen identity.
+         */
+        object Config {
+            const val SPAM_PROTECTION = 107
+            const val TRANSACTION_CONFIRMATIONS = 108
+        }
     }
 
     object TransactionType {
@@ -107,6 +113,7 @@ object Constant {
     object Util {
         const val COUNT_MNEMONIC_WORDS_12 = 12
         const val COUNT_MNEMONIC_WORDS_24 = 24
+        const val PK_TRUNCATE_COUNT = 8
         const val UNDEFINED_VALUE = -1
     }
 
@@ -137,14 +144,15 @@ object Constant {
         const val RATED = 3
     }
 
-    object Explorer{
+    object Explorer {
         private const val URL = "https://stellar.expert/explorer/public"
         const val ACCOUNT = URL.plus("/account/")
         const val TRANSACTION = URL.plus("/tx/")
     }
 
     object LobstrWallet {
-        val PACKAGE_NAME = if(BuildConfig.FLAVOR.equals(Flavor.VAULT)) "com.lobstr.client" else "com.lobstr.staging"
+        val PACKAGE_NAME =
+            if (BuildConfig.FLAVOR.equals(Flavor.VAULT)) "com.lobstr.client" else "com.lobstr.staging"
         const val DEEP_LINK_MULTISIG_SETUP = "lobstr://wallet/multisignature/setup"
     }
 

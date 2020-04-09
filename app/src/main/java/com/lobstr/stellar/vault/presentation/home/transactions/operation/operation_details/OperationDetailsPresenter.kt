@@ -9,9 +9,7 @@ import com.lobstr.stellar.vault.presentation.entities.transaction.operation.offe
 import com.lobstr.stellar.vault.presentation.entities.transaction.operation.offer.ManageBuyOfferOperation
 import com.lobstr.stellar.vault.presentation.entities.transaction.operation.offer.SellOfferOperation
 import com.lobstr.stellar.vault.presentation.util.AppUtil
-import moxy.InjectViewState
 
-@InjectViewState
 class OperationDetailsPresenter(private val mTransactionItem: TransactionItem, private val mPosition: Int) :
     BasePresenter<OperationDetailsView>() {
 

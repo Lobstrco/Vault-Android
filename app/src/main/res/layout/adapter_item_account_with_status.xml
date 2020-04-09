@@ -30,60 +30,43 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="6dp"
-                android:layout_weight="0.5"
+                android:layout_marginEnd="32dp"
+                android:layout_weight="1"
                 android:gravity="center"
-                android:orientation="horizontal">
-
-            <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical">
-
-                <TextView
-                        android:id="@+id/tvAccountFederation"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:ellipsize="middle"
-                        android:fontFamily="sans-serif"
-                        android:gravity="start|center"
-                        android:singleLine="true"
-                        android:textColor="@android:color/black"
-                        android:textSize="14sp"
-                        android:textStyle="bold" />
-
-                <TextView
-                        android:id="@+id/tvAccount"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:alpha="0.3"
-                        android:ellipsize="middle"
-                        android:fontFamily="sans-serif"
-                        android:gravity="start|center"
-                        android:singleLine="true"
-                        android:textColor="@android:color/black"
-                        android:textSize="14sp" />
-            </LinearLayout>
+                android:orientation="vertical">
 
             <TextView
-                    android:id="@+id/tvVaultAccountMarker"
-                    android:layout_width="wrap_content"
+                    android:id="@+id/tvAccountFederation"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="4dp"
+                    android:layout_gravity="center_vertical"
+                    android:ellipsize="middle"
+                    android:fontFamily="sans-serif"
+                    android:gravity="start|center"
                     android:singleLine="true"
-                    android:text="@string/text_tv_vault_account_marker"
-                    android:textColor="@color/color_9b9b9b"
+                    android:textColor="@android:color/black"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+
+            <TextView
+                    android:id="@+id/tvAccount"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:alpha="0.3"
+                    android:ellipsize="middle"
+                    android:fontFamily="sans-serif"
+                    android:gravity="start|center"
+                    android:singleLine="true"
+                    android:textColor="@android:color/black"
                     android:textSize="14sp" />
         </LinearLayout>
 
-
         <TextView
                 android:id="@+id/tvStatus"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
+                android:layout_weight="0"
                 android:gravity="end"
                 android:singleLine="true"
                 android:textSize="14sp" />

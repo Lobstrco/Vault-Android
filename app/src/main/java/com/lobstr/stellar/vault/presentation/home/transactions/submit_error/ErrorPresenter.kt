@@ -2,10 +2,8 @@ package com.lobstr.stellar.vault.presentation.home.transactions.submit_error
 
 import com.lobstr.stellar.vault.R
 import com.lobstr.stellar.vault.presentation.util.AppUtil
-import moxy.InjectViewState
 import moxy.MvpPresenter
 
-@InjectViewState
 class ErrorPresenter(private val error: String) : MvpPresenter<ErrorView>() {
 
     override fun onFirstViewAttach() {

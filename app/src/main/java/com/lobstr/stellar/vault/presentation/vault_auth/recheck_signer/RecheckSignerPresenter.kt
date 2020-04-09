@@ -7,12 +7,12 @@ import com.lobstr.stellar.vault.presentation.BasePresenter
 import com.lobstr.stellar.vault.presentation.application.LVApplication
 import com.lobstr.stellar.vault.presentation.dagger.module.re_check_signer.RecheckSignerModule
 import com.lobstr.stellar.vault.presentation.dialog.alert.base.AlertDialogFragment
+import com.lobstr.stellar.vault.presentation.util.AppUtil
+import com.lobstr.stellar.vault.presentation.util.Constant.Util.PK_TRUNCATE_COUNT
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
-import moxy.InjectViewState
 import javax.inject.Inject
 
-@InjectViewState
 class RecheckSignerPresenter : BasePresenter<RecheckSignerView>() {
 
     @Inject
@@ -26,7 +26,7 @@ class RecheckSignerPresenter : BasePresenter<RecheckSignerView>() {
 
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
-        viewState.setupUserPublicKey(interactor.getUserPublicKey())
+        viewState.setupUserPublicKey(AppUtil.ellipsizeStrInMiddle(interactor.getUserPublicKey(), PK_TRUNCATE_COUNT))
     }
 
     fun recheckClicked() {

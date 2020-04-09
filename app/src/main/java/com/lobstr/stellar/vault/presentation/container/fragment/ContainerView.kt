@@ -3,10 +3,9 @@ package com.lobstr.stellar.vault.presentation.container.fragment
 import androidx.fragment.app.Fragment
 import com.lobstr.stellar.vault.presentation.entities.transaction.TransactionItem
 import moxy.MvpView
-import moxy.viewstate.strategy.SkipStrategy
-import moxy.viewstate.strategy.StateStrategyType
+import moxy.viewstate.strategy.alias.Skip
 
-@StateStrategyType(SkipStrategy::class)
+@Skip
 interface ContainerView : MvpView {
 
     fun showAuthFr()
@@ -32,4 +31,6 @@ interface ContainerView : MvpView {
     fun showErrorFr(errorMessage: String)
 
     fun showSignedAccountsFr()
+
+    fun showConfigFr(config: Int)
 }

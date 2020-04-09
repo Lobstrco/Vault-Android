@@ -2,46 +2,45 @@ package com.lobstr.stellar.vault.presentation.home.dashboard
 
 import com.lobstr.stellar.vault.presentation.entities.account.Account
 import moxy.MvpView
-import moxy.viewstate.strategy.AddToEndSingleStrategy
-import moxy.viewstate.strategy.SkipStrategy
-import moxy.viewstate.strategy.StateStrategyType
+import moxy.viewstate.strategy.alias.AddToEndSingle
+import moxy.viewstate.strategy.alias.Skip
 
 
 interface DashboardView : MvpView {
 
-    @StateStrategyType(AddToEndSingleStrategy::class)
+    @AddToEndSingle
     fun initSignedAccountsRecycledView()
 
-    @StateStrategyType(AddToEndSingleStrategy::class)
+    @AddToEndSingle
     fun notifySignedAccountsAdapter(accounts: List<Account>)
 
-    @StateStrategyType(AddToEndSingleStrategy::class)
-    fun showPublicKey(publicKey: String)
+    @AddToEndSingle
+    fun showVaultInfo(identityIconUrl: String, publicKey: String)
 
-    @StateStrategyType(AddToEndSingleStrategy::class)
+    @AddToEndSingle
     fun showSignersCount(count: Int)
 
-    @StateStrategyType(AddToEndSingleStrategy::class)
+    @AddToEndSingle
     fun showDashboardInfo(count: Int?)
 
-    @StateStrategyType(SkipStrategy::class)
+    @Skip
     fun showSignersScreen()
 
-    @StateStrategyType(SkipStrategy::class)
+    @Skip
     fun showErrorMessage(message: String)
 
-    @StateStrategyType(SkipStrategy::class)
+    @Skip
     fun navigateToTransactionList()
 
-    @StateStrategyType(SkipStrategy::class)
+    @Skip
     fun showEditAccountDialog(address: String)
 
-    @StateStrategyType(SkipStrategy::class)
+    @Skip
     fun copyToClipBoard(text: String)
 
-    @StateStrategyType(AddToEndSingleStrategy::class)
+    @AddToEndSingle
     fun showSignersProgress(show: Boolean)
 
-    @StateStrategyType(SkipStrategy::class)
+    @Skip
     fun showRefreshAnimation(show: Boolean)
 }

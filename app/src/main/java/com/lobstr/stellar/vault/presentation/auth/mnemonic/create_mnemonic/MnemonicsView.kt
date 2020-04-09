@@ -3,34 +3,33 @@ package com.lobstr.stellar.vault.presentation.auth.mnemonic.create_mnemonic
 import androidx.annotation.StringRes
 import com.lobstr.stellar.vault.presentation.entities.mnemonic.MnemonicItem
 import moxy.MvpView
-import moxy.viewstate.strategy.AddToEndSingleStrategy
-import moxy.viewstate.strategy.SkipStrategy
-import moxy.viewstate.strategy.StateStrategyType
+import moxy.viewstate.strategy.alias.AddToEndSingle
+import moxy.viewstate.strategy.alias.Skip
 
 
 interface MnemonicsView : MvpView {
 
-    @StateStrategyType(AddToEndSingleStrategy::class)
+    @AddToEndSingle
     fun setupToolbarTitle(@StringRes titleRes: Int)
 
-    @StateStrategyType(AddToEndSingleStrategy::class)
+    @AddToEndSingle
     fun setActionLayerVisibility(isVisible: Boolean)
 
-    @StateStrategyType(AddToEndSingleStrategy::class)
+    @AddToEndSingle
     fun setupMnemonics(mnemonicItems: List<MnemonicItem>)
 
-    @StateStrategyType(SkipStrategy::class)
+    @Skip
     fun showConfirmationScreen(mnemonics: ArrayList<MnemonicItem>)
 
-    @StateStrategyType(SkipStrategy::class)
+    @Skip
     fun copyToClipBoard(text: String)
 
-    @StateStrategyType(SkipStrategy::class)
+    @Skip
     fun showHelpScreen()
 
-    @StateStrategyType(SkipStrategy::class)
+    @Skip
     fun showDenyAccountCreationDialog()
 
-    @StateStrategyType(AddToEndSingleStrategy::class)
+    @AddToEndSingle
     fun showAuthFr()
 }

@@ -3,6 +3,7 @@ package com.lobstr.stellar.vault.presentation.home.transactions.adapter
 import android.content.Context
 import android.graphics.PorterDuff
 import android.graphics.PorterDuffColorFilter
+import android.text.TextUtils
 import android.text.format.DateFormat
 import android.view.View
 import androidx.core.content.ContextCompat
@@ -13,6 +14,7 @@ import com.lobstr.stellar.vault.presentation.entities.transaction.Transaction
 import com.lobstr.stellar.vault.presentation.entities.transaction.TransactionItem
 import com.lobstr.stellar.vault.presentation.util.AppUtil
 import com.lobstr.stellar.vault.presentation.util.Constant
+import com.lobstr.stellar.vault.presentation.util.Constant.Util.PK_TRUNCATE_COUNT
 import kotlinx.android.synthetic.main.adapter_item_transaction.view.*
 import org.joda.time.DateTime
 
@@ -53,7 +55,12 @@ class TransactionViewHolder(itemView: View, private val listener: OnTransactionI
             if(DateFormat.is24HourFormat(context)) "MMM dd yyyy HH:mm" else "MMM dd yyyy h:mm a"
         )
 
-        itemView.tvSourceAccount.text = if(item.transaction.federation.isNullOrEmpty()) item.transaction.sourceAccount else item.transaction.federation
+        itemView.tvSourceAccount.ellipsize = if (item.transaction.federation.isNullOrEmpty()) TextUtils.TruncateAt.MIDDLE else TextUtils.TruncateAt.END
+        itemView.tvSourceAccount.text =
+            if (item.transaction.federation.isNullOrEmpty()) AppUtil.ellipsizeStrInMiddle(
+                item.transaction.sourceAccount,
+                PK_TRUNCATE_COUNT
+            ) else item.transaction.federation
 
         itemView.tvTransactionItemOperation.text = getOperationName(item.transaction, context)
         itemView.setOnClickListener {

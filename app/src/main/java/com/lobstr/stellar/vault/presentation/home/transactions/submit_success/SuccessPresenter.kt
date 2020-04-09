@@ -1,9 +1,7 @@
 package com.lobstr.stellar.vault.presentation.home.transactions.submit_success
 
-import moxy.InjectViewState
 import moxy.MvpPresenter
 
-@InjectViewState
 class SuccessPresenter(
     private val envelopeXdr: String,
     private val needAdditionalSignatures: Boolean

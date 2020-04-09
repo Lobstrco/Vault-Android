@@ -2,34 +2,33 @@ package com.lobstr.stellar.vault.presentation.home
 
 import androidx.annotation.IdRes
 import moxy.MvpView
-import moxy.viewstate.strategy.AddToEndSingleStrategy
-import moxy.viewstate.strategy.SkipStrategy
-import moxy.viewstate.strategy.StateStrategyType
+import moxy.viewstate.strategy.alias.AddToEndSingle
+import moxy.viewstate.strategy.alias.Skip
 
 
 interface HomeActivityView : MvpView {
 
-    @StateStrategyType(AddToEndSingleStrategy::class)
+    @AddToEndSingle
     fun setupToolbar()
 
-    @StateStrategyType(AddToEndSingleStrategy::class)
+    @AddToEndSingle
     fun initBottomNavigationView()
 
-    @StateStrategyType(AddToEndSingleStrategy::class)
+    @AddToEndSingle
     fun showAuthScreen()
 
-    @StateStrategyType(AddToEndSingleStrategy::class)
+    @AddToEndSingle
     fun setupViewPager()
 
-    @StateStrategyType(SkipStrategy::class)
+    @Skip
     fun resetBackStack()
 
-    @StateStrategyType(SkipStrategy::class)
+    @Skip
     fun setSelectedBottomNavigationItem(@IdRes itemId: Int)
 
-    @StateStrategyType(SkipStrategy::class)
+    @Skip
     fun checkRateUsDialog()
 
-    @StateStrategyType(SkipStrategy::class)
+    @Skip
     fun showRateUsDialog()
 }

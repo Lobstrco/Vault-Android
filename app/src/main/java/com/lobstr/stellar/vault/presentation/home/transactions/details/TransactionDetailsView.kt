@@ -4,71 +4,70 @@ import androidx.annotation.StringRes
 import com.lobstr.stellar.vault.presentation.entities.account.Account
 import com.lobstr.stellar.vault.presentation.entities.transaction.TransactionItem
 import moxy.MvpView
-import moxy.viewstate.strategy.AddToEndSingleStrategy
-import moxy.viewstate.strategy.SkipStrategy
-import moxy.viewstate.strategy.StateStrategyType
+import moxy.viewstate.strategy.alias.AddToEndSingle
+import moxy.viewstate.strategy.alias.Skip
 
 
 interface TransactionDetailsView : MvpView {
 
-    @StateStrategyType(AddToEndSingleStrategy::class)
+    @AddToEndSingle
     fun setupToolbarTitle(@StringRes titleRes: Int)
 
-    @StateStrategyType(AddToEndSingleStrategy::class)
+    @AddToEndSingle
     fun initSignersRecycledView()
 
-    @StateStrategyType(AddToEndSingleStrategy::class)
+    @AddToEndSingle
     fun notifySignersAdapter(accounts: List<Account>)
 
-    @StateStrategyType(AddToEndSingleStrategy::class)
+    @AddToEndSingle
     fun showSignersProgress(show: Boolean)
 
-    @StateStrategyType(AddToEndSingleStrategy::class)
+    @AddToEndSingle
     fun showSignersContainer(show: Boolean)
 
-    @StateStrategyType(AddToEndSingleStrategy::class)
+    @AddToEndSingle
     fun showSignersCount(count: String?)
 
-    @StateStrategyType(SkipStrategy::class)
+    @Skip
     fun showOperationList(transactionItem: TransactionItem)
 
-    @StateStrategyType(SkipStrategy::class)
+    @Skip
     fun showMessage(message: String?)
 
-    @StateStrategyType(AddToEndSingleStrategy::class)
+    @AddToEndSingle
     fun showProgressDialog(show: Boolean)
 
-    @StateStrategyType(AddToEndSingleStrategy::class)
+    @AddToEndSingle
     fun setActionBtnVisibility(isConfirmVisible: Boolean, isDenyVisible: Boolean)
 
-    @StateStrategyType(AddToEndSingleStrategy::class)
+    @AddToEndSingle
     fun setTransactionValid(valid: Boolean)
 
-    @StateStrategyType(AddToEndSingleStrategy::class)
+    @AddToEndSingle
     fun successDenyTransaction(transactionItem: TransactionItem)
 
-    @StateStrategyType(AddToEndSingleStrategy::class)
+    @AddToEndSingle
     fun successConfirmTransaction(
         envelopeXdr: String,
         needAdditionalSignatures: Boolean,
         transactionItem: TransactionItem
     )
 
-    @StateStrategyType(AddToEndSingleStrategy::class)
+    @AddToEndSingle
     fun errorConfirmTransaction(errorMessage: String)
 
-    @StateStrategyType(AddToEndSingleStrategy::class)
+    @AddToEndSingle
     fun showOperationDetailsScreen(transactionItem: TransactionItem, position: Int)
 
-    @StateStrategyType(AddToEndSingleStrategy::class)
+    @AddToEndSingle
     fun setupAdditionalInfo(map: Map<String, String>)
 
-    @StateStrategyType(SkipStrategy::class)
+    @Skip
     fun showConfirmTransactionDialog()
 
-    @StateStrategyType(SkipStrategy::class)
+    @Skip
     fun showDenyTransactionDialog()
 
-    @StateStrategyType(SkipStrategy::class)
+    @Skip
     fun copyToClipBoard(text: String)
 }

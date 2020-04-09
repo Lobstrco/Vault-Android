@@ -5,11 +5,9 @@ import com.lobstr.stellar.vault.presentation.BasePresenter
 import com.lobstr.stellar.vault.presentation.application.LVApplication
 import com.lobstr.stellar.vault.presentation.dagger.module.splash.SplashModule
 import io.reactivex.Completable
-import moxy.InjectViewState
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
-@InjectViewState
 class SplashPresenter : BasePresenter<SplashView>() {
 
     companion object {

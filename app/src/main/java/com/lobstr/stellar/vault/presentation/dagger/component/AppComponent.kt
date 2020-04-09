@@ -3,6 +3,7 @@ package com.lobstr.stellar.vault.presentation.dagger.component
 import android.content.Context
 import com.lobstr.stellar.vault.domain.error.RxErrorUtils
 import com.lobstr.stellar.vault.presentation.dagger.component.biometric.BiometricSetUpComponent
+import com.lobstr.stellar.vault.presentation.dagger.component.config.ConfigComponent
 import com.lobstr.stellar.vault.presentation.dagger.component.confirm_mnemonics.ConfirmMnemonicsComponent
 import com.lobstr.stellar.vault.presentation.dagger.component.dashboard.DashboardComponent
 import com.lobstr.stellar.vault.presentation.dagger.component.fcm.FcmInternalComponent
@@ -26,6 +27,7 @@ import com.lobstr.stellar.vault.presentation.dagger.module.ApiModule
 import com.lobstr.stellar.vault.presentation.dagger.module.AppModule
 import com.lobstr.stellar.vault.presentation.dagger.module.RepositoryModule
 import com.lobstr.stellar.vault.presentation.dagger.module.biometric.BiometricSetUpModule
+import com.lobstr.stellar.vault.presentation.dagger.module.config.ConfigModule
 import com.lobstr.stellar.vault.presentation.dagger.module.confirm_mnemonics.ConfirmMnemonicsModule
 import com.lobstr.stellar.vault.presentation.dagger.module.dashboard.DashboardModule
 import com.lobstr.stellar.vault.presentation.dagger.module.fcm.FcmInternalModule
@@ -96,6 +98,8 @@ interface AppComponent {
     fun plusImportXdrComponent(module: ImportXdrModule): ImportXdrComponent
 
     fun plusRateUsComponent(module: RateUsModule): RateUsComponent
+
+    fun plusConfigComponent(module: ConfigModule): ConfigComponent
 
     fun inject(networkWorker: NetworkWorker)
 }

@@ -1,37 +1,36 @@
 package com.lobstr.stellar.vault.presentation.vault_auth.signer_info
 
 import moxy.MvpView
-import moxy.viewstate.strategy.AddToEndSingleStrategy
-import moxy.viewstate.strategy.SkipStrategy
-import moxy.viewstate.strategy.StateStrategyType
+import moxy.viewstate.strategy.alias.AddToEndSingle
+import moxy.viewstate.strategy.alias.Skip
 
 
 interface SignerInfoView : MvpView {
 
-    @StateStrategyType(AddToEndSingleStrategy::class)
+    @AddToEndSingle
     fun checkExistenceLobstrApp()
 
-    @StateStrategyType(SkipStrategy::class)
+    @Skip
     fun showRecheckSingerScreen()
 
-    @StateStrategyType(AddToEndSingleStrategy::class)
+    @AddToEndSingle
     fun setupUserPublicKey(userPublicKey: String?)
 
-    @StateStrategyType(SkipStrategy::class)
+    @Skip
     fun copyToClipBoard(text: String)
 
-    @StateStrategyType(SkipStrategy::class)
+    @Skip
     fun showHelpScreen()
 
-    @StateStrategyType(SkipStrategy::class)
+    @Skip
     fun showPublicKeyDialog(publicKey: String)
 
-    @StateStrategyType(SkipStrategy::class)
+    @Skip
     fun downloadLobstrApp()
 
-    @StateStrategyType(SkipStrategy::class)
+    @Skip
     fun openLobstrMultisigSetupScreen()
 
-    @StateStrategyType(SkipStrategy::class)
+    @Skip
     fun openLobstrApp()
 }

@@ -1,12 +1,15 @@
 package com.lobstr.stellar.vault.presentation.home.settings.signed_accounts.adapter
 
+import android.text.TextUtils
 import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.lobstr.stellar.vault.R
 import com.lobstr.stellar.vault.presentation.entities.account.Account
+import com.lobstr.stellar.vault.presentation.util.AppUtil
 import com.lobstr.stellar.vault.presentation.util.Constant
+import com.lobstr.stellar.vault.presentation.util.Constant.Util.PK_TRUNCATE_COUNT
 import kotlinx.android.synthetic.main.adapter_item_account_with_status.view.*
 
 class AccountWithStatusViewHolder(
@@ -16,10 +19,9 @@ class AccountWithStatusViewHolder(
     RecyclerView.ViewHolder(itemView) {
 
     fun bind(account: Account, itemsCount: Int) {
-
         itemView.divider.visibility = calculateDividerVisibility(itemsCount)
 
-        // set user icon
+        // Set user icon.
         Glide.with(itemView.context)
             .load(
                 Constant.Social.USER_ICON_LINK
@@ -29,11 +31,36 @@ class AccountWithStatusViewHolder(
             .placeholder(R.drawable.ic_person)
             .into(itemView.ivIdentity)
 
-        itemView.tvAccount.visibility = if(account.federation.isNullOrEmpty()) View.GONE else View.VISIBLE
-        itemView.tvAccount.text = account.address
-        itemView.tvAccountFederation.text = if(account.federation.isNullOrEmpty()) account.address else account.federation
+        // Show section for address with federation and vault account marker.
+        itemView.tvAccount.visibility =
+            if (!account.federation.isNullOrEmpty() || account.isVaultAccount == true) {
+                View.VISIBLE
+            } else {
+                View.GONE
+            }
 
-        itemView.tvVaultAccountMarker.visibility = if(account.isVaultAccount == true) View.VISIBLE else View.INVISIBLE
+        itemView.tvAccount.text = when {
+            !account.federation.isNullOrEmpty() -> AppUtil.ellipsizeStrInMiddle(
+                account.address,
+                PK_TRUNCATE_COUNT
+            )
+            account.isVaultAccount == true -> itemView.context.getString(R.string.text_tv_vault_account_marker)
+            else -> null
+        }
+
+        itemView.tvAccountFederation.ellipsize =
+            if (account.federation.isNullOrEmpty()) {
+                TextUtils.TruncateAt.MIDDLE
+            } else {
+                TextUtils.TruncateAt.END
+            }
+
+        itemView.tvAccountFederation.text =
+            if (account.federation.isNullOrEmpty()) {
+                AppUtil.ellipsizeStrInMiddle(account.address, PK_TRUNCATE_COUNT)
+            } else {
+                account.federation
+            }
 
         itemView.tvStatus.text =
             if (account.signed == true) {

@@ -2,81 +2,80 @@ package com.lobstr.stellar.vault.presentation.home.settings
 
 import androidx.annotation.StringRes
 import moxy.MvpView
-import moxy.viewstate.strategy.AddToEndSingleStrategy
-import moxy.viewstate.strategy.SkipStrategy
-import moxy.viewstate.strategy.StateStrategyType
+import moxy.viewstate.strategy.alias.AddToEndSingle
+import moxy.viewstate.strategy.alias.Skip
 
 
 interface SettingsView : MvpView {
 
-    @StateStrategyType(AddToEndSingleStrategy::class)
+    @AddToEndSingle
     fun setupToolbarTitle(@StringRes titleRes: Int)
 
-    @StateStrategyType(AddToEndSingleStrategy::class)
+    @AddToEndSingle
     fun setupSettingsData(
         buildVersion: String,
         isBiometricSupported: Boolean
     )
 
-    @StateStrategyType(AddToEndSingleStrategy::class)
+    @AddToEndSingle
     fun setupSignersCount(
         signersCount: Int
     )
 
-    @StateStrategyType(SkipStrategy::class)
+    @Skip
     fun showSuccessMessage(@StringRes message: Int)
 
-    @StateStrategyType(SkipStrategy::class)
+    @Skip
     fun showAuthScreen()
 
-    @StateStrategyType(SkipStrategy::class)
+    @Skip
     fun showPublicKeyDialog(publicKey: String)
 
-    @StateStrategyType(SkipStrategy::class)
+    @Skip
     fun showSignersScreen()
 
-    @StateStrategyType(SkipStrategy::class)
+    @Skip
     fun showMnemonicsScreen()
 
-    @StateStrategyType(SkipStrategy::class)
+    @Skip
     fun showConfirmPinCodeScreen()
 
-    @StateStrategyType(SkipStrategy::class)
+    @Skip
     fun showChangePinScreen()
 
-    @StateStrategyType(SkipStrategy::class)
+    @Skip
     fun showHelpScreen()
 
-    @StateStrategyType(AddToEndSingleStrategy::class)
+    @AddToEndSingle
     fun setBiometricChecked(checked: Boolean)
 
-    @StateStrategyType(AddToEndSingleStrategy::class)
-    fun setSpamProtectionChecked(checked: Boolean)
+    @AddToEndSingle
+    fun setSpamProtection(config: String?)
 
-    @StateStrategyType(SkipStrategy::class)
+    @AddToEndSingle
     fun setNotificationsChecked(checked: Boolean)
 
-    @StateStrategyType(SkipStrategy::class)
-    fun setTrConfirmationChecked(checked: Boolean)
+    @AddToEndSingle
+    fun setTrConfirmation(config: String?)
 
-    @StateStrategyType(SkipStrategy::class)
+    @Skip
     fun showBiometricInfoDialog(@StringRes titleRes: Int, @StringRes messageRes: Int)
 
-    @StateStrategyType(SkipStrategy::class)
+    @Skip
     fun showLicenseScreen()
 
-    @StateStrategyType(AddToEndSingleStrategy::class)
+    @AddToEndSingle
     fun setupPolicyYear(@StringRes id: Int)
 
-    @StateStrategyType(SkipStrategy::class)
+    @Skip
     fun showLogOutDialog()
 
-    @StateStrategyType(SkipStrategy::class)
+    @Skip
     fun showStore(storeUrl: String)
 
-    @StateStrategyType(AddToEndSingleStrategy::class)
-    fun showProgressDialog(show: Boolean)
+    @Skip
+    fun showConfigScreen(config: Int)
 
-    @StateStrategyType(SkipStrategy::class)
+    @Skip
     fun showErrorMessage(message: String)
 }

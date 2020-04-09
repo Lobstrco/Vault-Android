@@ -4,39 +4,46 @@ import androidx.annotation.ColorRes
 import androidx.annotation.DrawableRes
 import com.lobstr.stellar.vault.presentation.entities.transaction.TransactionItem
 import moxy.MvpView
-import moxy.viewstate.strategy.AddToEndSingleStrategy
-import moxy.viewstate.strategy.SkipStrategy
-import moxy.viewstate.strategy.StateStrategyType
+import moxy.viewstate.strategy.alias.AddToEndSingle
+import moxy.viewstate.strategy.alias.Skip
 
 interface ContainerView : MvpView {
 
-    @StateStrategyType(AddToEndSingleStrategy::class)
-    fun setupToolbar(@ColorRes toolbarColor: Int, @DrawableRes upArrow: Int, @ColorRes upArrowColor: Int, @ColorRes titleColor: Int)
+    @AddToEndSingle
+    fun setupToolbar(
+        @ColorRes toolbarColor: Int,
+        @DrawableRes upArrow: Int,
+        @ColorRes upArrowColor: Int,
+        @ColorRes titleColor: Int
+    )
 
-    @StateStrategyType(SkipStrategy::class)
+    @Skip
     fun showDashBoardFr()
 
-    @StateStrategyType(SkipStrategy::class)
+    @Skip
     fun showSettingsFr()
 
-    @StateStrategyType(SkipStrategy::class)
+    @Skip
     fun showTransactionsFr()
 
-    @StateStrategyType(SkipStrategy::class)
+    @Skip
     fun showTransactionDetails(transactionItem: TransactionItem)
 
-    @StateStrategyType(SkipStrategy::class)
+    @Skip
     fun showImportXdrFr()
 
-    @StateStrategyType(SkipStrategy::class)
+    @Skip
     fun showMnemonicsFr()
 
-    @StateStrategyType(SkipStrategy::class)
+    @Skip
     fun showSuccessFr(envelopeXdr: String, needAdditionalSignatures: Boolean)
 
-    @StateStrategyType(SkipStrategy::class)
+    @Skip
     fun showErrorFr(errorMessage: String)
 
-    @StateStrategyType(SkipStrategy::class)
+    @Skip
     fun showSignedAccountsFr()
+
+    @Skip
+    fun showConfigFr(config: Int)
 }

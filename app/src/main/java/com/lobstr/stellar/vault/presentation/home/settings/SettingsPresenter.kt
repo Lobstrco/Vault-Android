@@ -21,10 +21,8 @@ import com.lobstr.stellar.vault.presentation.util.Constant.Social.STORE_URL
 import com.lobstr.stellar.vault.presentation.util.biometric.BiometricUtils
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
-import moxy.InjectViewState
 import javax.inject.Inject
 
-@InjectViewState
 class SettingsPresenter : BasePresenter<SettingsView>() {
 
     @Inject
@@ -36,8 +34,6 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
     private var loadSignedAccountsInProcess = false
 
     private var loadAccountConfigInProcess = false
-
-    private var updateAccountConfigInProcess = false
 
     init {
         LVApplication.appComponent.plusSettingsComponent(SettingsModule()).inject(this)
@@ -56,9 +52,9 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
                     && BiometricUtils.isBiometricAvailable(AppUtil.getAppContext())
         )
         getAccountConfig()
-        viewState.setSpamProtectionChecked(!interactor.isSpamProtectionEnabled())
+        viewState.setSpamProtection(AppUtil.getConfigText(AppUtil.getConfigType(!interactor.isSpamProtectionEnabled())))
         viewState.setNotificationsChecked(interactor.isNotificationsEnabled())
-        viewState.setTrConfirmationChecked(interactor.isTrConfirmationEnabled())
+        viewState.setTrConfirmation(AppUtil.getConfigText(AppUtil.getConfigType(interactor.isTrConfirmationEnabled())))
         viewState.setupPolicyYear(R.string.text_all_rights_reserved)
     }
 
@@ -107,6 +103,14 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
             when (requestCode) {
                 Constant.Code.CHANGE_PIN -> viewState.showSuccessMessage(R.string.text_success_change_pin)
                 Constant.Code.CONFIRM_PIN_FOR_MNEMONIC -> viewState.showMnemonicsScreen()
+                Constant.Code.Config.SPAM_PROTECTION -> viewState.setSpamProtection(
+                    AppUtil.getConfigText(
+                        AppUtil.getConfigType(!interactor.isSpamProtectionEnabled())
+                    )
+                )
+                Constant.Code.Config.TRANSACTION_CONFIRMATIONS -> viewState.setTrConfirmation(
+                    AppUtil.getConfigText(AppUtil.getConfigType(interactor.isTrConfirmationEnabled()))
+                )
             }
         }
     }
@@ -125,6 +129,10 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
 
     fun changePinClicked() {
         viewState.showChangePinScreen()
+    }
+
+    fun spamProtectionClicked() {
+        viewState.showConfigScreen(Constant.Code.Config.SPAM_PROTECTION)
     }
 
     fun helpClicked() {
@@ -149,24 +157,22 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
             }
             else -> {
                 interactor.setBiometricEnabled(false)
+                viewState.setBiometricChecked(false)
             }
         }
     }
 
-    fun spamProtectionSwitched(checked: Boolean) {
-        updateAccountConfig(!checked)
-    }
-
     fun notificationsSwitched(checked: Boolean) {
         interactor.setNotificationsEnabled(checked)
-    }
-
-    fun trConfirmationSwitched(checked: Boolean) {
-        interactor.setTrConfirmationEnabled(checked)
+        viewState.setNotificationsChecked(checked)
     }
 
     fun publicKeyClicked() {
         viewState.showPublicKeyDialog(interactor.getUserPublicKey()!!)
+    }
+
+    fun trConfirmationClicked() {
+        viewState.showConfigScreen(Constant.Code.Config.TRANSACTION_CONFIRMATIONS)
     }
 
     fun licenseClicked() {
@@ -219,9 +225,9 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
                 .doOnEvent { _, _ -> loadAccountConfigInProcess = false }
                 .subscribe({
                     interactor.setSpamProtectionEnabled(it.spamProtectionEnabled)
-                    viewState.setSpamProtectionChecked(!it.spamProtectionEnabled)
+                    viewState.setSpamProtection(AppUtil.getConfigText(AppUtil.getConfigType(!it.spamProtectionEnabled)))
                 }, {
-                    viewState.setSpamProtectionChecked(!interactor.isSpamProtectionEnabled())
+                    viewState.setSpamProtection(AppUtil.getConfigText(AppUtil.getConfigType(!interactor.isSpamProtectionEnabled())))
                     when (it) {
                         is NoInternetConnectionException -> {
                             viewState.showErrorMessage(it.details)
@@ -229,46 +235,6 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
                         }
                         is UserNotAuthorizedException -> {
                             getAccountConfig()
-                        }
-                        is DefaultException -> {
-                            viewState.showErrorMessage(it.details)
-                        }
-                        else -> {
-                            viewState.showErrorMessage(it.message ?: "")
-                        }
-                    }
-                })
-        )
-    }
-
-    private fun updateAccountConfig(spamProtectionEnabled: Boolean) {
-        if (updateAccountConfigInProcess) {
-            return
-        }
-
-        unsubscribeOnDestroy(
-            interactor.updatedAccountConfig(spamProtectionEnabled)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .doOnSubscribe {
-                    updateAccountConfigInProcess = true
-                    viewState.showProgressDialog(true)
-                }
-                .doOnEvent { _, _ ->
-                    viewState.showProgressDialog(false)
-                    updateAccountConfigInProcess = false
-                }
-                .subscribe({
-                    interactor.setSpamProtectionEnabled(it.spamProtectionEnabled)
-                    viewState.setSpamProtectionChecked(!it.spamProtectionEnabled)
-                }, {
-                    viewState.setSpamProtectionChecked(!interactor.isSpamProtectionEnabled())
-                    when (it) {
-                        is NoInternetConnectionException -> {
-                            viewState.showErrorMessage(it.details)
-                        }
-                        is UserNotAuthorizedException -> {
-                            updateAccountConfig(spamProtectionEnabled)
                         }
                         is DefaultException -> {
                             viewState.showErrorMessage(it.details)

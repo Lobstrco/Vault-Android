@@ -2,15 +2,12 @@ package com.lobstr.stellar.vault.presentation.home.transactions.operation.operat
 
 import androidx.annotation.StringRes
 import moxy.MvpView
-import moxy.viewstate.strategy.AddToEndSingleStrategy
-import moxy.viewstate.strategy.StateStrategyType
+import moxy.viewstate.strategy.alias.AddToEndSingle
 
-
+@AddToEndSingle
 interface OperationDetailsView : MvpView {
 
-    @StateStrategyType(AddToEndSingleStrategy::class)
     fun setupToolbarTitle(@StringRes titleRes: Int)
 
-    @StateStrategyType(AddToEndSingleStrategy::class)
     fun initRecycledView(map: Map<String, String?>)
 }

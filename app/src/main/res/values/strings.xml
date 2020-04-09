@@ -10,6 +10,7 @@
     <string name="title_toolbar_settings">Settings</string>
     <string name="title_toolbar_license">Licenses</string>
     <string name="title_toolbar_import_xdr">Add Transaction XDR</string>
+    <string name="title_toolbar_spam_protection">Unsigned Transactions</string>
 
     <!-- Buttons -->
     <string name="text_btn_cancel">Cancel</string>
@@ -133,6 +134,13 @@
     <string name="text_all_rights_reserved">©%s. All rights reserved</string>
     <string name="text_settings_transaction_confirmation">Transaction Confirmations</string>
 
+    <!-- Settings config screen -->
+    <string name="text_config_no">No</string>
+    <string name="text_config_yes">Yes</string>
+    <string name="text_config_confirm_transactions_title">Confirm Transactions</string>
+    <string name="text_config_confirm_transactions_description">Show additional confirmation alert before signing  transaction requests to avoid mistakes.</string>
+    <string name="text_config_spam_protection_description">Select whether you want to receive transaction requests that don\'t contain any valid signatures from the protected account or other signers. Choose ‘No’ to protect your account from spam transactions.</string>
+
     <!-- Signed Accounts screen -->
     <string name="text_signed_account_empty_state">Protected accounts not found</string>
     <string name="text_btn_copy_public_key">Copy Public Key</string>
@@ -162,7 +170,7 @@
         invalid.
     </string>
     <string name="text_tv_signers">Signers</string>
-    <string name="text_tv_vault_account_marker">(You)</string>
+    <string name="text_tv_vault_account_marker">You</string>
     <string name="text_tv_of">of</string>
     <string name="text_tv_status_signed">Signed</string>
     <string name="text_tv_status_pending">Pending</string>

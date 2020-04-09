@@ -11,14 +11,15 @@ import com.lobstr.stellar.vault.presentation.BasePresenter
 import com.lobstr.stellar.vault.presentation.application.LVApplication
 import com.lobstr.stellar.vault.presentation.dagger.module.dashboard.DashboardModule
 import com.lobstr.stellar.vault.presentation.entities.account.Account
+import com.lobstr.stellar.vault.presentation.util.AppUtil
+import com.lobstr.stellar.vault.presentation.util.Constant
+import com.lobstr.stellar.vault.presentation.util.Constant.Util.PK_TRUNCATE_COUNT
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
-import moxy.InjectViewState
 import javax.inject.Inject
 
-@InjectViewState
 class DashboardPresenter : BasePresenter<DashboardView>() {
 
     @Inject
@@ -41,7 +42,13 @@ class DashboardPresenter : BasePresenter<DashboardView>() {
         super.onFirstViewAttach()
 
         viewState.initSignedAccountsRecycledView()
-        viewState.showPublicKey(interactor.getUserPublicKey())
+
+        val vaultPublicKey = interactor.getUserPublicKey()
+        viewState.showVaultInfo(
+            Constant.Social.USER_ICON_LINK.plus(vaultPublicKey).plus(".png"),
+            AppUtil.ellipsizeStrInMiddle(vaultPublicKey, PK_TRUNCATE_COUNT)!!
+        )
+
         registerEventProvider()
         loadSignedAccountsAndTransactions()
     }

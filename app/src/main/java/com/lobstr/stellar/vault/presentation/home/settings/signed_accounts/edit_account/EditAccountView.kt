@@ -1,10 +1,9 @@
 package com.lobstr.stellar.vault.presentation.home.settings.signed_accounts.edit_account
 
 import moxy.MvpView
-import moxy.viewstate.strategy.SkipStrategy
-import moxy.viewstate.strategy.StateStrategyType
+import moxy.viewstate.strategy.alias.Skip
 
-@StateStrategyType(SkipStrategy::class)
+@Skip
 interface EditAccountView : MvpView {
     fun copyToClipBoard(text: String)
     fun openExplorer(url: String)

@@ -119,8 +119,7 @@ class MnemonicsFragment : BaseFragment(),
     }
 
     override fun setActionLayerVisibility(isVisible: Boolean) {
-        tvNextScreenInfo.visibility = if (isVisible) View.VISIBLE else View.GONE
-        btnNext.visibility = if (isVisible) View.VISIBLE else View.GONE
+        llActionLayer.visibility = if (isVisible) View.VISIBLE else View.GONE
     }
 
     override fun setupMnemonics(mnemonicItems: List<MnemonicItem>) {

@@ -3,51 +3,51 @@ package com.lobstr.stellar.vault.presentation.home.transactions
 import androidx.annotation.StringRes
 import com.lobstr.stellar.vault.presentation.entities.transaction.TransactionItem
 import moxy.MvpView
-import moxy.viewstate.strategy.AddToEndSingleStrategy
-import moxy.viewstate.strategy.SkipStrategy
-import moxy.viewstate.strategy.StateStrategyType
+import moxy.viewstate.strategy.alias.AddToEndSingle
+import moxy.viewstate.strategy.alias.Skip
 
 
 interface TransactionsView : MvpView {
-    @StateStrategyType(AddToEndSingleStrategy::class)
+
+    @AddToEndSingle
     fun setupToolbarTitle(@StringRes titleRes: Int)
 
-    @StateStrategyType(AddToEndSingleStrategy::class)
+    @AddToEndSingle
     fun initRecycledView()
 
-    @StateStrategyType(SkipStrategy::class)
+    @Skip
     fun showTransactionDetails(transactionItem: TransactionItem)
 
-    @StateStrategyType(SkipStrategy::class)
+    @Skip
     fun showErrorMessage(message: String)
 
-    @StateStrategyType(AddToEndSingleStrategy::class)
+    @AddToEndSingle
     fun showTransactionList(items: MutableList<TransactionItem>, needShowProgress: Boolean?)
 
-    @StateStrategyType(SkipStrategy::class)
+    @Skip
     fun scrollListToPosition(position: Int)
 
-    @StateStrategyType(AddToEndSingleStrategy::class)
+    @AddToEndSingle
     fun showOptionsMenu(show: Boolean)
 
-    @StateStrategyType(AddToEndSingleStrategy::class)
+    @AddToEndSingle
     fun showPullToRefresh(show: Boolean)
 
-    @StateStrategyType(AddToEndSingleStrategy::class)
+    @AddToEndSingle
     fun showProgressDialog(show: Boolean)
 
-    @StateStrategyType(AddToEndSingleStrategy::class)
+    @AddToEndSingle
     fun showEmptyState()
 
-    @StateStrategyType(AddToEndSingleStrategy::class)
+    @AddToEndSingle
     fun hideEmptyState()
 
-    @StateStrategyType(SkipStrategy::class)
+    @Skip
     fun showImportXdrScreen()
 
-    @StateStrategyType(SkipStrategy::class)
+    @Skip
     fun checkRateUsDialog()
 
-    @StateStrategyType(SkipStrategy::class)
+    @Skip
     fun showClearInvalidTrDialog()
 }

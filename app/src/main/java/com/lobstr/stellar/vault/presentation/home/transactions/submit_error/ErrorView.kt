@@ -1,22 +1,21 @@
 package com.lobstr.stellar.vault.presentation.home.transactions.submit_error
 
 import moxy.MvpView
-import moxy.viewstate.strategy.AddToEndSingleStrategy
-import moxy.viewstate.strategy.SkipStrategy
-import moxy.viewstate.strategy.StateStrategyType
+import moxy.viewstate.strategy.alias.AddToEndSingle
+import moxy.viewstate.strategy.alias.Skip
 
 
 interface ErrorView : MvpView {
 
-    @StateStrategyType(SkipStrategy::class)
+    @Skip
     fun vibrate(pattern: LongArray)
 
-    @StateStrategyType(AddToEndSingleStrategy::class)
+    @AddToEndSingle
     fun setupErrorInfo(error: String)
 
-    @StateStrategyType(SkipStrategy::class)
+    @Skip
     fun finishScreen()
 
-    @StateStrategyType(SkipStrategy::class)
+    @Skip
     fun showHelpScreen()
 }

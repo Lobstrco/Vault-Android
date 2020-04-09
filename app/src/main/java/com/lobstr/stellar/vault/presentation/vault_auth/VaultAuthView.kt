@@ -3,28 +3,31 @@ package com.lobstr.stellar.vault.presentation.vault_auth
 import androidx.annotation.ColorRes
 import androidx.annotation.DrawableRes
 import moxy.MvpView
-import moxy.viewstate.strategy.AddToEndSingleStrategy
-import moxy.viewstate.strategy.SkipStrategy
-import moxy.viewstate.strategy.StateStrategyType
+import moxy.viewstate.strategy.alias.AddToEndSingle
+import moxy.viewstate.strategy.alias.Skip
 
 
 interface VaultAuthView : MvpView {
 
-    @StateStrategyType(AddToEndSingleStrategy::class)
-    fun setupToolbar(@ColorRes toolbarColor: Int, @DrawableRes upArrow: Int, @ColorRes upArrowColor: Int)
+    @AddToEndSingle
+    fun setupToolbar(
+        @ColorRes toolbarColor: Int,
+        @DrawableRes upArrow: Int,
+        @ColorRes upArrowColor: Int
+    )
 
-    @StateStrategyType(AddToEndSingleStrategy::class)
+    @AddToEndSingle
     fun setBtnRetryVisibility(visible: Boolean)
 
-    @StateStrategyType(AddToEndSingleStrategy::class)
+    @AddToEndSingle
     fun showProgressDialog(show: Boolean)
 
-    @StateStrategyType(AddToEndSingleStrategy::class)
+    @AddToEndSingle
     fun showSignerInfoFragment()
 
-    @StateStrategyType(AddToEndSingleStrategy::class)
+    @AddToEndSingle
     fun showHomeScreen()
 
-    @StateStrategyType(SkipStrategy::class)
+    @Skip
     fun showMessage(message: String?)
 }

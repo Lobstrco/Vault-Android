@@ -12,10 +12,8 @@ import com.lobstr.stellar.vault.presentation.util.Constant.Util.COUNT_MNEMONIC_W
 import com.soneso.stellarmnemonics.mnemonic.MnemonicException
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
-import moxy.InjectViewState
 import javax.inject.Inject
 
-@InjectViewState
 class ConfirmMnemonicsPresenter(private val mnemonicsInitialList: List<MnemonicItem>) :
     BasePresenter<ConfirmMnemonicsView>() {
 

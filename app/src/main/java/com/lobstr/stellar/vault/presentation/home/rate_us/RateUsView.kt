@@ -1,10 +1,9 @@
 package com.lobstr.stellar.vault.presentation.home.rate_us
 
 import moxy.MvpView
-import moxy.viewstate.strategy.SkipStrategy
-import moxy.viewstate.strategy.StateStrategyType
+import moxy.viewstate.strategy.alias.Skip
 
-@StateStrategyType(SkipStrategy::class)
+@Skip
 interface RateUsView : MvpView {
     fun showStore(storeUrl: String)
 }

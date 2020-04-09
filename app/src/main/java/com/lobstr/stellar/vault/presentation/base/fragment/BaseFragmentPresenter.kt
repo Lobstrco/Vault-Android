@@ -1,9 +1,7 @@
 package com.lobstr.stellar.vault.presentation.base.fragment
 
-import moxy.InjectViewState
 import moxy.MvpPresenter
 
-@InjectViewState
 class BaseFragmentPresenter : MvpPresenter<BaseFragmentView>() {
 
     // Set by default options menu visible.

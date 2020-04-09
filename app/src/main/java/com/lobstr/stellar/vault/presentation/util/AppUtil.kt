@@ -10,7 +10,6 @@ import android.net.Uri
 import android.os.Build
 import android.os.VibrationEffect
 import android.os.Vibrator
-import android.text.TextUtils
 import android.util.DisplayMetrics
 import android.util.Log
 import android.view.View
@@ -198,28 +197,49 @@ object AppUtil {
         }
     }
 
-    fun removeZeroInFractionalPart(price: String): String {
-        if (TextUtils.isEmpty(price)) {
-            return "0"
-        }
-
-        val builder = StringBuilder(price)
-        return if (builder.indexOf(".") != -1) {
-            while (builder.indexOf(".") != -1) {
-                if (builder[builder.length - 1] == '0' || builder[builder.length - 1] == '.') {
-                    builder.deleteCharAt(builder.length - 1)
-                } else {
-                    break
-                }
-            }
-            builder.toString()
-        } else {
-            builder.toString()
-        }
-    }
-
     fun getString(@StringRes resId: Int): String =
         getAppContext().getString(resId)
 
     fun getAppContext(): Context = LVApplication.appComponent.context
+
+    fun isPublicKey(value: String?): Boolean {
+        if (value.isNullOrEmpty() || value.length != 56) {
+            return false
+        }
+
+        if (value[0] != 'G') {
+            return false
+        }
+
+        for (element in value) {
+            val letterCode = element.toInt()
+            if (!(letterCode in 65..90 || letterCode in 48..57)) {
+                return false
+            }
+        }
+        return true
+    }
+
+    fun ellipsizeStrInMiddle(str: String?, count: Int): String? {
+        return if (str.isNullOrEmpty() || count >= (str.length / 2 - 1)) {
+            str
+        } else str.substring(0, count) + "…" + str.substring(str.length - count)
+    }
+
+    fun getConfigType(value: Boolean): Byte = if (value) {
+        Constant.ConfigType.YES
+    } else {
+        Constant.ConfigType.NO
+    }
+
+    fun getConfigValue(type: Byte): Boolean = when (type) {
+        Constant.ConfigType.YES -> true
+        else -> false
+    }
+
+    fun getConfigText(type: Byte): String? = when (type) {
+        Constant.ConfigType.YES -> getString(R.string.text_config_yes)
+        Constant.ConfigType.NO -> getString(R.string.text_config_no)
+        else -> null
+    }
 }

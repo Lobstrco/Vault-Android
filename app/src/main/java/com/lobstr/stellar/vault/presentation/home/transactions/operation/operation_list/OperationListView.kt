@@ -3,22 +3,21 @@ package com.lobstr.stellar.vault.presentation.home.transactions.operation.operat
 import androidx.annotation.StringRes
 import com.lobstr.stellar.vault.presentation.entities.transaction.TransactionItem
 import moxy.MvpView
-import moxy.viewstate.strategy.AddToEndSingleStrategy
-import moxy.viewstate.strategy.SkipStrategy
-import moxy.viewstate.strategy.StateStrategyType
+import moxy.viewstate.strategy.alias.AddToEndSingle
+import moxy.viewstate.strategy.alias.Skip
 
 
 interface OperationListView : MvpView {
 
-    @StateStrategyType(AddToEndSingleStrategy::class)
+    @AddToEndSingle
     fun setupToolbarTitle(@StringRes titleRes: Int)
 
-    @StateStrategyType(AddToEndSingleStrategy::class)
+    @AddToEndSingle
     fun initRecycledView()
 
-    @StateStrategyType(AddToEndSingleStrategy::class)
+    @AddToEndSingle
     fun setOperationsToList(operationList: MutableList<Int>)
 
-    @StateStrategyType(SkipStrategy::class)
+    @Skip
     fun showOperationDetailsScreen(transactionItem: TransactionItem, position: Int)
 }

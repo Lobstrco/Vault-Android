@@ -1,10 +1,8 @@
 package com.lobstr.stellar.vault.presentation.home.settings.license
 
 import com.lobstr.stellar.vault.R
-import moxy.InjectViewState
 import moxy.MvpPresenter
 
-@InjectViewState
 class LicensePresenter : MvpPresenter<LicenseView>() {
 
     companion object {

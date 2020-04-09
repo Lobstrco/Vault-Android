@@ -158,14 +158,10 @@ class DashboardFragment : BaseFragment(), DashboardView, View.OnClickListener,
         mPresenter.signedAccountItemLongClicked(account)
     }
 
-    override fun showPublicKey(publicKey: String) {
-        // set user icon
+    override fun showVaultInfo(identityIconUrl: String, publicKey: String) {
+        // Set user identity icon.
         Glide.with(context!!)
-            .load(
-                Constant.Social.USER_ICON_LINK
-                    .plus(publicKey)
-                    .plus(".png")
-            )
+            .load(identityIconUrl)
             .placeholder(R.drawable.ic_person)
             .into(ivIdentity)
 

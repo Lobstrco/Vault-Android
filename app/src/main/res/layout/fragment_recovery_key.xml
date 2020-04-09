@@ -21,7 +21,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="14sp"
-            android:layout_marginBottom="41dp"
+            android:layout_marginBottom="25dp"
             android:alpha="0.6"
             android:textColor="@color/color_071c33"
             android:text="@string/text_tv_recovery_phrase_description"/>
@@ -49,6 +49,7 @@
                 android:textColor="@android:color/white"
                 android:layout_gravity="bottom"
                 android:enabled="false"
+                android:layout_marginTop="24dp"
                 android:textSize="14sp"
                 android:textAllCaps="false"
                 android:background="@drawable/selector_default_button_with_round"

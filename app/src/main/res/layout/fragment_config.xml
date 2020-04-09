@@ -1,0 +1,41 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:background="@color/color_f9f9ff"
+        tools:context="com.lobstr.stellar.vault.presentation.home.settings.config.ConfigFragment">
+
+    <TextView
+            android:id="@+id/tvConfigTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="16dp"
+            android:fontFamily="sans-serif-medium"
+            android:background="@android:color/white"
+            android:textColor="@color/color_primary"
+            android:textSize="14sp"
+            android:singleLine="true"
+            android:ellipsize="end"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvConfig"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:overScrollMode="never"
+            android:clipToPadding="false"/>
+
+    <TextView
+            android:id="@+id/tvConfigDescription"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="12sp"
+            android:textColor="@color/color_99071c33"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            android:paddingBottom="16dp"
+            android:letterSpacing="0.03"
+            android:lineSpacingExtra="6sp"
+            android:paddingTop="9dp"/>
+
+</LinearLayout>

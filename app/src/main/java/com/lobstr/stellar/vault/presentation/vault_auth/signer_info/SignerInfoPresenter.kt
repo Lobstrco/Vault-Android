@@ -4,15 +4,15 @@ import com.lobstr.stellar.vault.domain.signer_info.SignerInfoInteractor
 import com.lobstr.stellar.vault.presentation.BasePresenter
 import com.lobstr.stellar.vault.presentation.application.LVApplication
 import com.lobstr.stellar.vault.presentation.dagger.module.signer_info.SignerInfoModule
+import com.lobstr.stellar.vault.presentation.util.AppUtil
+import com.lobstr.stellar.vault.presentation.util.Constant.Util.PK_TRUNCATE_COUNT
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
-import moxy.InjectViewState
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
-@InjectViewState
 class SignerInfoPresenter : BasePresenter<SignerInfoView>() {
 
     companion object {
@@ -30,7 +30,7 @@ class SignerInfoPresenter : BasePresenter<SignerInfoView>() {
 
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
-        viewState.setupUserPublicKey(interactor.getUserPublicKey())
+        viewState.setupUserPublicKey(AppUtil.ellipsizeStrInMiddle(interactor.getUserPublicKey(), PK_TRUNCATE_COUNT))
     }
 
     override fun attachView(view: SignerInfoView?) {

@@ -2,10 +2,9 @@ package com.lobstr.stellar.vault.presentation.base.fragment
 
 import androidx.annotation.StringRes
 import moxy.MvpView
-import moxy.viewstate.strategy.AddToEndSingleStrategy
-import moxy.viewstate.strategy.StateStrategyType
+import moxy.viewstate.strategy.alias.AddToEndSingle
 
-@StateStrategyType(AddToEndSingleStrategy::class)
+@AddToEndSingle
 interface BaseFragmentView : MvpView {
 
     fun saveOptionsMenuVisibility(visible: Boolean)
