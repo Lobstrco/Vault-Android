@@ -112,20 +112,12 @@ class SignedAccountsFragment : BaseFragment(), SignedAccountsView,
         rvSignedAccounts.adapter = AccountAdapter(ACCOUNT_EXTENDED, this)
     }
 
-    override fun showProgress() {
-        srlSignedAccounts.isRefreshing = true
+    override fun showProgress(show: Boolean) {
+        srlSignedAccounts.isRefreshing = show
     }
 
-    override fun hideProgress() {
-        srlSignedAccounts.isRefreshing = false
-    }
-
-    override fun showEmptyState() {
-        tvSignedAccountsEmptyState.visibility = View.VISIBLE
-    }
-
-    override fun hideEmptyState() {
-        tvSignedAccountsEmptyState.visibility = View.GONE
+    override fun showEmptyState(show: Boolean) {
+        tvSignedAccountsEmptyState.visibility = if (show) View.VISIBLE else View.GONE
     }
 
     override fun showErrorMessage(message: String) {

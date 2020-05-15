@@ -23,6 +23,7 @@ import com.lobstr.stellar.vault.presentation.util.Constant.Transaction.PENDING
 import com.lobstr.stellar.vault.presentation.util.Constant.Transaction.SIGNED
 import com.lobstr.stellar.vault.presentation.util.Constant.Util.PK_TRUNCATE_COUNT
 import io.reactivex.Observable
+import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
@@ -144,7 +145,8 @@ class TransactionDetailsPresenter(private var transactionItem: TransactionItem) 
                 return if (isThresholdsSameAndNotZero and isWeightsSameAndNotZero) {
                     "${accountResult.signers.filter { it.signed == true }.size} ${AppUtil.getString(
                         R.string.text_tv_of
-                    )} ${kotlin.math.ceil((highThreshold.toFloat() / accountResult.signers.first().weight!!.toFloat())).toInt()}"
+                    )} ${kotlin.math.ceil((highThreshold.toFloat() / accountResult.signers.first().weight!!.toFloat()))
+                        .toInt()}"
                 } else {
                     null
                 }
@@ -267,46 +269,57 @@ class TransactionDetailsPresenter(private var transactionItem: TransactionItem) 
 
         var needAdditionalSignatures = false
 
+        var hash: String? = transactionItem.hash
+
         unsubscribeOnDestroy(
             interactor.retrieveActualTransaction(transactionItem)
                 .subscribeOn(Schedulers.io())
                 .flatMap {
                     transactionItem = it
-                    interactor.confirmTransactionOnHorizon(it.xdr!!)
+                    interactor.signTransaction(it.xdr!!)
                 }
                 .flatMap {
-                    val envelopXdr = it.envelopeXdr.get()
-                    val extras = it.extras
+                    interactor.confirmTransactionOnHorizon(it)
+                        .flatMap { submitTransactionResponse ->
+                            val envelopXdr = submitTransactionResponse.envelopeXdr.get()
+                            val extras = submitTransactionResponse.extras
 
-                    val transactionResultCode = extras?.resultCodes?.transactionResultCode
+                            val transactionResultCode =
+                                extras?.resultCodes?.transactionResultCode
 
-                    val operationResultCodes = extras?.resultCodes?.operationsResultCodes
+                            val operationResultCodes =
+                                extras?.resultCodes?.operationsResultCodes
 
-                    val errorToShow =
-                        when (val operationResultCode =
-                            if (operationResultCodes.isNullOrEmpty()) null else operationResultCodes.first()) {
-                            // Handle specific operation result code:
-                            // op_underfunded - used to specify the operation failed due to a lack of funds.
-                            "op_underfunded" -> operationResultCode
-                            else -> transactionResultCode
+                            val errorToShow =
+                                when (val operationResultCode =
+                                    if (operationResultCodes.isNullOrEmpty()) null else operationResultCodes.first()) {
+                                    // Handle specific operation result code:
+                                    // op_underfunded - used to specify the operation failed due to a lack of funds.
+                                    "op_underfunded" -> operationResultCode
+                                    else -> transactionResultCode
+                                }
+
+                            when {
+                                envelopXdr == null -> throw HorizonException(
+                                    errorToShow!!
+                                )
+                                transactionResultCode != null && transactionResultCode != "tx_bad_auth" -> throw HorizonException(
+                                    errorToShow!!
+                                )
+                                transactionResultCode != null && transactionResultCode == "tx_bad_auth" -> needAdditionalSignatures =
+                                    true
+                            }
+
+                            hash = submitTransactionResponse.hash
+                            Single.fromCallable { envelopXdr }
                         }
-
-                    when {
-                        envelopXdr == null -> throw HorizonException(
-                            errorToShow!!
-                        )
-                        transactionResultCode != null && transactionResultCode != "tx_bad_auth" -> throw HorizonException(
-                            errorToShow!!
-                        )
-                        transactionResultCode != null && transactionResultCode == "tx_bad_auth" -> needAdditionalSignatures =
-                            true
-                    }
-
+                }
+                .flatMap {
                     interactor.confirmTransactionOnServer(
                         needAdditionalSignatures,
                         transactionItem.status,
-                        it.hash,
-                        envelopXdr
+                        hash,
+                        it
                     )
                 }
                 .observeOn(AndroidSchedulers.mainThread())
@@ -319,27 +332,13 @@ class TransactionDetailsPresenter(private var transactionItem: TransactionItem) 
                     confirmationInProcess = false
                 }
                 .subscribe({
-                    // update transaction status
-                    transactionItem = TransactionItem(
-                        transactionItem.cancelledAt,
-                        transactionItem.addedAt,
-                        transactionItem.xdr,
-                        transactionItem.signedAt,
-                        transactionItem.hash,
-                        transactionItem.getStatusDisplay,
-                        SIGNED,
-                        transactionItem.sequenceOutdatedAt,
-                        transactionItem.transaction
-                    )
-
+                    // Update transaction status.
+                    transactionItem.status = SIGNED
                     viewState.successConfirmTransaction(
                         it,
                         needAdditionalSignatures,
                         transactionItem
                     )
-
-                    // NOTE Update transaction screen after operation if needed: prepareUiAndOperationsList().
-
                     // Notify about transaction changed.
                     eventProviderModule.notificationEventSubject.onNext(
                         Notification(Notification.Type.TRANSACTION_COUNT_CHANGED, null)
@@ -397,14 +396,13 @@ class TransactionDetailsPresenter(private var transactionItem: TransactionItem) 
                         }
                         .subscribe({
                             transactionItem = it
-
-                            // NOTE Update transaction screen after operation if needed: prepareUiAndOperationsList().
-
                             viewState.successDenyTransaction(it)
-
                             // Notify about transaction changed.
                             eventProviderModule.notificationEventSubject.onNext(
-                                Notification(Notification.Type.TRANSACTION_COUNT_CHANGED, null)
+                                Notification(
+                                    Notification.Type.TRANSACTION_COUNT_CHANGED,
+                                    null
+                                )
                             )
                         }, {
                             when (it) {

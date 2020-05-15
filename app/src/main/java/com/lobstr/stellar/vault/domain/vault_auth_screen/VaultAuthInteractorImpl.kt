@@ -39,7 +39,7 @@ class VaultAuthInteractorImpl(
                 getPhrases().flatMap { stellarRepository.createKeyPair(it.toCharArray(), 0) }
                     .flatMap { stellarRepository.signTransaction(it, transaction) }
             }
-            .flatMap { submitChallenge(it) }
+            .flatMap { submitChallenge(it.toEnvelopeXdrBase64()) }
             .doOnSuccess { prefsUtil.authToken = it }
             .doOnSuccess { registerFcm() }
             .flatMap { getSignedAccounts(it) }

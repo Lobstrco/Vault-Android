@@ -1,8 +1,10 @@
 package com.lobstr.stellar.vault.presentation.home.settings
 
+import android.content.ActivityNotFoundException
 import android.content.DialogInterface
 import android.content.Intent
 import android.graphics.Typeface
+import android.net.Uri
 import android.os.Bundle
 import android.text.SpannableString
 import android.text.Spanned
@@ -108,6 +110,7 @@ class SettingsFragment : BaseFragment(), SettingsView, View.OnClickListener,
         llSettingsTrConfirmation.setOnClickListener(this)
         tvSettingsLicense.setOnClickListener(this)
         tvSettingsRateUs.setOnClickListener(this)
+        tvSettingsContactSupport.setOnClickListener(this)
         tvLogOut.setOnClickListener(this)
     }
 
@@ -122,16 +125,17 @@ class SettingsFragment : BaseFragment(), SettingsView, View.OnClickListener,
 
     override fun onClick(v: View?) {
         when (v?.id) {
-            R.id.llPublicKey -> mPresenter.publicKeyClicked()
-            R.id.tvSettingsSigners -> mPresenter.signersClicked()
-            R.id.tvSettingsMnemonics -> mPresenter.mnemonicsClicked()
-            R.id.tvSettingsChangePin -> mPresenter.changePinClicked()
-            R.id.llSettingsSpamProtection -> mPresenter.spamProtectionClicked()
-            R.id.tvSettingsHelp -> mPresenter.helpClicked()
-            R.id.llSettingsTrConfirmation -> mPresenter.trConfirmationClicked()
-            R.id.tvSettingsLicense -> mPresenter.licenseClicked()
-            R.id.tvSettingsRateUs -> mPresenter.rateUsClicked()
-            R.id.tvLogOut -> mPresenter.logOutClicked()
+            llPublicKey.id -> mPresenter.publicKeyClicked()
+            tvSettingsSigners.id -> mPresenter.signersClicked()
+            tvSettingsMnemonics.id -> mPresenter.mnemonicsClicked()
+            tvSettingsChangePin.id -> mPresenter.changePinClicked()
+            llSettingsSpamProtection.id -> mPresenter.spamProtectionClicked()
+            tvSettingsHelp.id -> mPresenter.helpClicked()
+            llSettingsTrConfirmation.id -> mPresenter.trConfirmationClicked()
+            tvSettingsLicense.id -> mPresenter.licenseClicked()
+            tvSettingsRateUs.id -> mPresenter.rateUsClicked()
+            tvSettingsContactSupport.id -> mPresenter.contactSupportClicked()
+            tvLogOut.id -> mPresenter.logOutClicked()
         }
     }
 
@@ -165,7 +169,7 @@ class SettingsFragment : BaseFragment(), SettingsView, View.OnClickListener,
 
         if (startPosition != Constant.Util.UNDEFINED_VALUE) {
             spannedText.setSpan(
-                ForegroundColorSpan(ContextCompat.getColor(this.context!!, R.color.color_primary)),
+                ForegroundColorSpan(ContextCompat.getColor(this.requireContext(), R.color.color_primary)),
                 startPosition,
                 endPosition,
                 Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
@@ -192,7 +196,7 @@ class SettingsFragment : BaseFragment(), SettingsView, View.OnClickListener,
     }
 
     override fun showAuthScreen() {
-        NotificationsManager.clearNotifications(context!!)
+        NotificationsManager.clearNotifications(requireContext())
         val intent = Intent(context, AuthActivity::class.java)
         intent.putExtra(Constant.Extra.EXTRA_NAVIGATION_FR, Constant.Navigation.AUTH)
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
@@ -210,9 +214,9 @@ class SettingsFragment : BaseFragment(), SettingsView, View.OnClickListener,
 
     override fun showSignersScreen() {
         FragmentTransactionManager.displayFragment(
-            parentFragment!!.childFragmentManager,
-            parentFragment!!.childFragmentManager.fragmentFactory.instantiate(
-                context!!.classLoader,
+            requireParentFragment().childFragmentManager,
+            requireParentFragment().childFragmentManager.fragmentFactory.instantiate(
+                requireContext().classLoader,
                 SignedAccountsFragment::class.qualifiedName!!
             ),
             R.id.fl_container
@@ -239,9 +243,9 @@ class SettingsFragment : BaseFragment(), SettingsView, View.OnClickListener,
 
     override fun showHelpScreen() {
         FragmentTransactionManager.displayFragment(
-            parentFragment!!.childFragmentManager,
-            parentFragment!!.childFragmentManager.fragmentFactory.instantiate(
-                context!!.classLoader,
+            requireParentFragment().childFragmentManager,
+            requireParentFragment().childFragmentManager.fragmentFactory.instantiate(
+                requireContext().classLoader,
                 FaqFragment::class.qualifiedName!!
             ),
             R.id.fl_container
@@ -280,9 +284,9 @@ class SettingsFragment : BaseFragment(), SettingsView, View.OnClickListener,
 
     override fun showLicenseScreen() {
         FragmentTransactionManager.displayFragment(
-            parentFragment!!.childFragmentManager,
-            parentFragment!!.childFragmentManager.fragmentFactory.instantiate(
-                context!!.classLoader,
+            requireParentFragment().childFragmentManager,
+            requireParentFragment().childFragmentManager.fragmentFactory.instantiate(
+                requireContext().classLoader,
                 LicenseFragment::class.qualifiedName!!
             ),
             R.id.fl_container
@@ -291,6 +295,19 @@ class SettingsFragment : BaseFragment(), SettingsView, View.OnClickListener,
 
     override fun showStore(storeUrl: String) {
         AppUtil.openWebPage(context, storeUrl)
+    }
+
+    override fun sendMail(mail: String, subject: String) {
+        val emailIntent = Intent(Intent.ACTION_SENDTO)
+        val uri = Uri.parse("mailto:" + Uri.encode(mail) + "?subject=" + Uri.encode(subject))
+        emailIntent.data = uri
+        emailIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+
+        try {
+            startActivity(emailIntent)
+        } catch (exc: ActivityNotFoundException) {
+            showMessage(getString(R.string.msg_mail_client_not_found))
+        }
     }
 
     override fun showConfigScreen(config: Int) {
@@ -332,11 +349,7 @@ class SettingsFragment : BaseFragment(), SettingsView, View.OnClickListener,
             .show(childFragmentManager, AlertDialogFragment.DialogFragmentIdentifier.LOG_OUT)
     }
 
-    override fun showErrorMessage(message: String) {
-        if (message.isEmpty()) {
-            return
-        }
-
+    override fun showMessage(message: String) {
         Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
     }
 

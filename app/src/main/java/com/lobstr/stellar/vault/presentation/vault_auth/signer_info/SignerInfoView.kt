@@ -11,7 +11,7 @@ interface SignerInfoView : MvpView {
     fun checkExistenceLobstrApp()
 
     @Skip
-    fun showRecheckSingerScreen()
+    fun showRecheckSignerScreen()
 
     @AddToEndSingle
     fun setupUserPublicKey(userPublicKey: String?)

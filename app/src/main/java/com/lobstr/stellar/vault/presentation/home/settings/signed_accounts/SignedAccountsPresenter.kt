@@ -25,7 +25,9 @@ class SignedAccountsPresenter : BasePresenter<SignedAccountsView>() {
     lateinit var eventProviderModule: EventProviderModule
 
     @Inject
-    lateinit var mInteractor: SignedAccountInteractor
+    lateinit var interactor: SignedAccountInteractor
+
+    private val accounts: MutableList<Account> = mutableListOf()
 
     // For restore RecycleView position after saveInstanceState (-1 - undefined state).
     private var savedRvPosition: Int = Constant.Util.UNDEFINED_VALUE
@@ -78,39 +80,36 @@ class SignedAccountsPresenter : BasePresenter<SignedAccountsView>() {
 
     private fun loadSignedAccountsList() {
         unsubscribeOnDestroy(
-            mInteractor.getSignedAccounts()
+            interactor.getSignedAccounts()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .doOnSubscribe { viewState.showProgress() }
-                .doOnEvent { _, _ -> viewState.hideProgress() }
+                .doOnSubscribe { viewState.showProgress(true) }
+                .doOnEvent { _, _ -> viewState.showProgress(false) }
                 .subscribe({
                     // reset saved scroll position for avoid scroll to wrong position after
                     // pagination action
                     savedRvPosition = Constant.Util.UNDEFINED_VALUE
 
-                    if (it.isEmpty()) {
-                        viewState.showEmptyState()
-                    } else {
-                        viewState.hideEmptyState()
-                    }
+                    accounts.clear()
+                    accounts.addAll(it)
+
+                    viewState.showEmptyState(accounts.isEmpty())
 
                     // check cashed federation items
-                    it.forEachIndexed { index, accountItem ->
+                    accounts.forEachIndexed { index, accountItem ->
                         val federation =
                             cashedStellarAccounts.find { account -> account.address == accountItem.address }
                                 ?.federation
-                        it[index].federation = federation
+                        accounts[index].federation = federation
                     }
-                    viewState.notifyAdapter(it)
+                    viewState.notifyAdapter(accounts)
 
                     // try receive federations for accounts
-                    getStellarAccounts(it)
+                    getStellarAccounts(accounts)
 
                     viewState.scrollListToPosition(0)
                 }, {
-                    viewState.showEmptyState()
-                    viewState.notifyAdapter(emptyList())
-
+                    viewState.showEmptyState(accounts.isEmpty())
                     when (it) {
                         is NoInternetConnectionException -> {
                             viewState.showErrorMessage(it.details)
@@ -131,7 +130,7 @@ class SignedAccountsPresenter : BasePresenter<SignedAccountsView>() {
     }
 
     /**
-     * Used for receive federation by account id
+     * Used for receive federation by account id.
      */
     private fun getStellarAccounts(accounts: List<Account>) {
         stellarAccountsSubscription?.dispose()
@@ -142,7 +141,7 @@ class SignedAccountsPresenter : BasePresenter<SignedAccountsView>() {
                     .find { cashedAccount -> cashedAccount.address == account.address } == null
             }
             .flatMapSingle {
-                mInteractor.getStellarAccount(it.address).onErrorReturnItem(it)
+                interactor.getStellarAccount(it.address).onErrorReturnItem(it)
             }
             .filter { it.federation != null }
             .toList()
@@ -164,7 +163,7 @@ class SignedAccountsPresenter : BasePresenter<SignedAccountsView>() {
 
                 viewState.notifyAdapter(accounts)
             }, {
-                // ignore
+                // Ignore.
             })
 
         unsubscribeOnDestroy(stellarAccountsSubscription!!)

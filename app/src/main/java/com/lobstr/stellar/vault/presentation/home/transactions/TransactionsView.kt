@@ -22,7 +22,7 @@ interface TransactionsView : MvpView {
     fun showErrorMessage(message: String)
 
     @AddToEndSingle
-    fun showTransactionList(items: MutableList<TransactionItem>, needShowProgress: Boolean?)
+    fun showTransactionList(items: List<TransactionItem>, needShowProgress: Boolean?)
 
     @Skip
     fun scrollListToPosition(position: Int)
@@ -37,10 +37,7 @@ interface TransactionsView : MvpView {
     fun showProgressDialog(show: Boolean)
 
     @AddToEndSingle
-    fun showEmptyState()
-
-    @AddToEndSingle
-    fun hideEmptyState()
+    fun showEmptyState(show: Boolean)
 
     @Skip
     fun showImportXdrScreen()

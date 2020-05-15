@@ -80,6 +80,6 @@ class SignerInfoPresenter : BasePresenter<SignerInfoView>() {
     }
 
     fun btnNextClicked() {
-        viewState.showRecheckSingerScreen()
+        viewState.showRecheckSignerScreen()
     }
 }

@@ -163,7 +163,7 @@ class TransactionsFragment : BaseFragment(), TransactionsView, SwipeRefreshLayou
     }
 
     override fun showTransactionList(
-        items: MutableList<TransactionItem>,
+        items: List<TransactionItem>,
         needShowProgress: Boolean?
     ) {
         (rvTransactions.adapter as? TransactionAdapter)?.setTransactionList(items, needShowProgress)
@@ -186,12 +186,8 @@ class TransactionsFragment : BaseFragment(), TransactionsView, SwipeRefreshLayou
         ProgressManager.show(show, childFragmentManager)
     }
 
-    override fun showEmptyState() {
-        tvTransactionEmptyState.visibility = View.VISIBLE
-    }
-
-    override fun hideEmptyState() {
-        tvTransactionEmptyState.visibility = View.GONE
+    override fun showEmptyState(show: Boolean) {
+        tvTransactionEmptyState.visibility = if (show) View.VISIBLE else View.GONE
     }
 
     override fun showImportXdrScreen() {

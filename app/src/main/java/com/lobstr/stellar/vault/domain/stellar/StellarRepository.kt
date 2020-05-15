@@ -4,6 +4,7 @@ import com.lobstr.stellar.vault.presentation.entities.account.AccountResult
 import com.lobstr.stellar.vault.presentation.entities.mnemonic.MnemonicItem
 import com.lobstr.stellar.vault.presentation.entities.transaction.TransactionItem
 import io.reactivex.Single
+import org.stellar.sdk.AbstractTransaction
 import org.stellar.sdk.KeyPair
 import org.stellar.sdk.responses.SubmitTransactionResponse
 
@@ -11,13 +12,14 @@ interface StellarRepository {
 
     fun createKeyPair(mnemonics: CharArray, index: Int): Single<KeyPair>
 
+    fun createTransaction(envelopXdr: String): Single<AbstractTransaction>
+
     fun submitTransaction(
-        signer: KeyPair,
-        envelopXdr: String,
+        transaction: AbstractTransaction,
         skipMemoRequiredCheck: Boolean = true
     ): Single<SubmitTransactionResponse>
 
-    fun signTransaction(signer: KeyPair, envelopXdr: String): Single<String>
+    fun signTransaction(signer: KeyPair, envelopXdr: String): Single<AbstractTransaction>
 
     fun createTransactionItem(envelopXdr: String): Single<TransactionItem>
 

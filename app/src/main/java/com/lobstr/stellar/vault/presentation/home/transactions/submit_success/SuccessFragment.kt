@@ -38,8 +38,8 @@ class SuccessFragment : BaseFragment(), SuccessView, View.OnClickListener {
 
     @ProvidePresenter
     fun provideSuccessPresenter() = SuccessPresenter(
-        arguments!!.getString(Constant.Bundle.BUNDLE_ENVELOPE_XDR)!!,
-        arguments!!.getBoolean(Constant.Bundle.BUNDLE_NEED_ADDITIONAL_SIGNATURES, false)
+        requireArguments().getString(Constant.Bundle.BUNDLE_ENVELOPE_XDR)!!,
+        requireArguments().getBoolean(Constant.Bundle.BUNDLE_NEED_ADDITIONAL_SIGNATURES, false)
     )
 
     // ===========================================================
@@ -86,14 +86,14 @@ class SuccessFragment : BaseFragment(), SuccessView, View.OnClickListener {
     // ===========================================================
 
     override fun onClick(v: View?) {
-        when (v!!.id) {
-            R.id.btnCopyXdr -> mPresenter.copyXdrClicked()
-            R.id.btnDone -> mPresenter.doneClicked()
+        when (v?.id) {
+            btnCopyXdr.id -> mPresenter.copyXdrClicked()
+            btnDone.id -> mPresenter.doneClicked()
         }
     }
 
     override fun vibrate(pattern: LongArray) {
-        AppUtil.vibrate(context!!, pattern)
+        AppUtil.vibrate(requireContext(), pattern)
     }
 
     override fun setupXdr(xdr: String) {
@@ -115,8 +115,8 @@ class SuccessFragment : BaseFragment(), SuccessView, View.OnClickListener {
 
     override fun showHelpScreen() {
         FragmentTransactionManager.displayFragment(
-            parentFragment!!.childFragmentManager,
-            parentFragment!!.childFragmentManager.fragmentFactory.instantiate(context!!.classLoader, FaqFragment::class.qualifiedName!!),
+            requireParentFragment().childFragmentManager,
+            requireParentFragment().childFragmentManager.fragmentFactory.instantiate(requireContext().classLoader, FaqFragment::class.qualifiedName!!),
             R.id.fl_container
         )
     }

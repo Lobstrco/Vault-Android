@@ -109,7 +109,6 @@ class TransactionsPresenter : BasePresenter<TransactionsView>() {
                 isLoading = true
                 if (newLoadTransactions) {
                     viewState.showPullToRefresh(true)
-                    viewState.hideEmptyState()
                 }
             }
             .doOnEvent { _, _ ->
@@ -126,11 +125,9 @@ class TransactionsPresenter : BasePresenter<TransactionsView>() {
                 }
 
                 transactions.addAll(result.results)
-                if (transactions.isEmpty()) {
-                    viewState.showEmptyState()
-                } else {
-                    viewState.hideEmptyState()
-                }
+
+                viewState.showEmptyState(transactions.isEmpty())
+
                 nextPageUrl = result.next
 
                 // check cashed federation items
@@ -153,11 +150,7 @@ class TransactionsPresenter : BasePresenter<TransactionsView>() {
                 viewState.showOptionsMenu(transactions.find { !it.sequenceOutdatedAt.isNullOrEmpty() } != null)
             }, { throwable ->
                 viewState.showOptionsMenu(transactions.find { !it.sequenceOutdatedAt.isNullOrEmpty() } != null)
-                if (transactions.isEmpty()) {
-                    viewState.showEmptyState()
-                } else {
-                    viewState.hideEmptyState()
-                }
+                viewState.showEmptyState(transactions.isEmpty())
                 when (throwable) {
                     is NoInternetConnectionException -> {
                         viewState.showErrorMessage(throwable.details)
@@ -229,10 +222,6 @@ class TransactionsPresenter : BasePresenter<TransactionsView>() {
 
         when (requestCode) {
             Constant.Code.TRANSACTION_DETAILS_FRAGMENT, Constant.Code.IMPORT_XDR_FRAGMENT -> {
-                // Handle transactionItem it if needed.
-                val transactionItem: TransactionItem? =
-                    data?.getParcelableExtra(Constant.Extra.EXTRA_TRANSACTION_ITEM)
-
                 when (data?.getIntExtra(Constant.Extra.EXTRA_TRANSACTION_STATUS, -1)) {
                     Constant.Transaction.SIGNED -> viewState.checkRateUsDialog()
                 }

@@ -5,7 +5,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:padding="16dp"
-        android:background="@android:color/white"
         android:orientation="vertical"
         tools:context=".presentation.home.transactions.submit_success.SuccessFragment">
 

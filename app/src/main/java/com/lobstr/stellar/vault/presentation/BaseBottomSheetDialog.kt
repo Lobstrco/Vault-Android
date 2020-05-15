@@ -9,7 +9,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 open class BaseBottomSheetDialog : BaseMvpAppCompatDialogFragment() {
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        return BottomSheetDialog(context!!, theme)
+        return BottomSheetDialog(requireContext(), theme)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {

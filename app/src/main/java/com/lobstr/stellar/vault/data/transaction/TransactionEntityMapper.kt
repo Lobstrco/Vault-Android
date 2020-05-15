@@ -6,13 +6,24 @@ import com.lobstr.stellar.vault.presentation.entities.transaction.Asset
 import com.lobstr.stellar.vault.presentation.entities.transaction.Transaction
 import com.lobstr.stellar.vault.presentation.entities.transaction.TransactionItem
 import com.lobstr.stellar.vault.presentation.entities.transaction.TransactionResult
-import com.lobstr.stellar.vault.presentation.entities.transaction.operation.*
+import com.lobstr.stellar.vault.presentation.entities.transaction.operation.AccountMergeOperation
+import com.lobstr.stellar.vault.presentation.entities.transaction.operation.AllowTrustOperation
+import com.lobstr.stellar.vault.presentation.entities.transaction.operation.BumpSequenceOperation
+import com.lobstr.stellar.vault.presentation.entities.transaction.operation.ChangeTrustOperation
+import com.lobstr.stellar.vault.presentation.entities.transaction.operation.CreateAccountOperation
+import com.lobstr.stellar.vault.presentation.entities.transaction.operation.InflationOperation
+import com.lobstr.stellar.vault.presentation.entities.transaction.operation.ManageDataOperation
+import com.lobstr.stellar.vault.presentation.entities.transaction.operation.Operation
+import com.lobstr.stellar.vault.presentation.entities.transaction.operation.PathPaymentStrictReceiveOperation
+import com.lobstr.stellar.vault.presentation.entities.transaction.operation.PathPaymentStrictSendOperation
+import com.lobstr.stellar.vault.presentation.entities.transaction.operation.PaymentOperation
+import com.lobstr.stellar.vault.presentation.entities.transaction.operation.SetOptionsOperation
 import com.lobstr.stellar.vault.presentation.entities.transaction.operation.offer.*
+import com.lobstr.stellar.vault.presentation.entities.transaction.operation.offer.CreatePassiveSellOfferOperation
+import com.lobstr.stellar.vault.presentation.entities.transaction.operation.offer.ManageBuyOfferOperation
+import com.lobstr.stellar.vault.presentation.entities.transaction.operation.offer.ManageSellOfferOperation
 import com.lobstr.stellar.vault.presentation.util.Constant.Transaction.IMPORT_XDR
-import org.stellar.sdk.AssetTypeCreditAlphaNum12
-import org.stellar.sdk.AssetTypeCreditAlphaNum4
-import org.stellar.sdk.Memo
-import org.stellar.sdk.Network
+import org.stellar.sdk.*
 import java.math.BigDecimal
 
 class TransactionEntityMapper(private val network: Network) {
@@ -53,12 +64,12 @@ class TransactionEntityMapper(private val network: Network) {
             apiTransactionItem.status,
             apiTransactionItem.sequenceOutdatedAt,
             getTransaction(
-                org.stellar.sdk.Transaction.fromEnvelopeXdr(apiTransactionItem.xdr, network)
+                AbstractTransaction.fromEnvelopeXdr(apiTransactionItem.xdr, network)
             )
         )
     }
 
-    fun transformTransactionItem(transaction: org.stellar.sdk.Transaction): TransactionItem {
+    fun transformTransactionItem(transaction: AbstractTransaction): TransactionItem {
         return TransactionItem(
             "",
             "",
@@ -72,12 +83,18 @@ class TransactionEntityMapper(private val network: Network) {
         )
     }
 
-    private fun getTransaction(transaction: org.stellar.sdk.Transaction): Transaction {
+    private fun getTransaction(transaction: AbstractTransaction): Transaction {
         val operations: MutableList<Operation> = mutableListOf()
 
-        transaction.operations.forEach {
+        val targetTx = when(transaction){
+            is FeeBumpTransaction -> transaction.innerTransaction
+            is org.stellar.sdk.Transaction -> transaction
+            else -> throw Exception("Unknown transaction type.")
+        }
+
+        targetTx.operations.forEach {
             when (it) {
-                is org.stellar.sdk.PaymentOperation -> operations.add(mapPaymentOperation(transaction.memo, it))
+                is org.stellar.sdk.PaymentOperation -> operations.add(mapPaymentOperation(targetTx.memo, it))
                 is org.stellar.sdk.CreateAccountOperation -> operations.add(mapCreateAccountOperation(it))
                 is org.stellar.sdk.PathPaymentStrictSendOperation -> operations.add(mapPathPaymentStrictSendOperation(it))
                 is org.stellar.sdk.PathPaymentStrictReceiveOperation -> operations.add(mapPathPaymentStrictReceiveOperation(it))
@@ -99,9 +116,9 @@ class TransactionEntityMapper(private val network: Network) {
         }
 
         return Transaction(
-            transaction.sourceAccount,
+            targetTx.sourceAccount,
             operations,
-            transaction.sequenceNumber
+            targetTx.sequenceNumber
         )
     }
 
@@ -162,7 +179,7 @@ class TransactionEntityMapper(private val network: Network) {
     }
 
     private fun mapManageSellOfferOperation(operation: org.stellar.sdk.ManageSellOfferOperation): ManageSellOfferOperation {
-        // determine sell offer operation type: SellOfferOperation or CancelSellOfferOperation
+        // Determine sell offer operation type: SellOfferOperation or CancelSellOfferOperation.
         return if (operation.amount.isEmpty() || operation.amount == "0") {
             CancelSellOfferOperation(
                 (operation as org.stellar.sdk.Operation).sourceAccount,

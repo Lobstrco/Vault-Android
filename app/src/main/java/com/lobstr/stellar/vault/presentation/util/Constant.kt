@@ -91,17 +91,16 @@ object Constant {
 
     object Code {
         const val TRANSACTION_DETAILS_FRAGMENT = 102
-        const val OPERATION_DETAILS_FRAGMENT = 103
-        const val CHANGE_PIN = 104
-        const val CONFIRM_PIN_FOR_MNEMONIC = 105
-        const val IMPORT_XDR_FRAGMENT = 106
+        const val CHANGE_PIN = 103
+        const val CONFIRM_PIN_FOR_MNEMONIC = 104
+        const val IMPORT_XDR_FRAGMENT = 105
 
         /**
          * Config screen identity.
          */
         object Config {
-            const val SPAM_PROTECTION = 107
-            const val TRANSACTION_CONFIRMATIONS = 108
+            const val SPAM_PROTECTION = 106
+            const val TRANSACTION_CONFIRMATIONS = 107
         }
     }
 
@@ -153,11 +152,12 @@ object Constant {
     object LobstrWallet {
         val PACKAGE_NAME =
             if (BuildConfig.FLAVOR.equals(Flavor.VAULT)) "com.lobstr.client" else "com.lobstr.staging"
-        const val DEEP_LINK_MULTISIG_SETUP = "lobstr://wallet/multisignature/setup"
+        const val DEEP_LINK_MULTISIG_SETUP = "lobstr_app://wallet/multisignature/setup"
     }
 
     object Social {
         const val STORE_URL = "https://play.google.com/store/apps/details?id="
         const val USER_ICON_LINK = "https://id.lobstr.co/"
+        const val SUPPORT_MAIL= "support@lobstr.co"
     }
 }

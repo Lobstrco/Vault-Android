@@ -11,24 +11,29 @@
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
         <item name="android:windowBackground">@android:color/white</item>
+        <item name="bottomSheetDialogTheme">@style/BottomSheetDialogTheme</item>
     </style>
 
-    <style name="AppTheme" parent="BaseTheme"/>
+    <style name="AppTheme" parent="LightAppTheme" />
 
-    <style name="SplashTheme" parent="AppTheme">
+    <style name="BaseSplashTheme" parent="DarkAppTheme">
         <item name="android:windowFullscreen">true</item>
         <item name="android:windowContentOverlay">@null</item>
         <item name="android:windowBackground">@drawable/bg_splash</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
+    </style>
+
+    <style name="SplashTheme" parent="BaseSplashTheme" />
+
+    <style name="PinDarkTheme" parent="DarkAppTheme">
+        <item name="android:navigationBarColor">@android:color/transparent</item>
     </style>
 
     <!-- Used for setup light navigation bar buttons on v27 (screens with dark background) -->
-    <style name="DarkAppTheme" parent="AppTheme" />
+    <style name="DarkAppTheme" parent="BaseTheme" />
 
-    <style name="Toolbar" parent="BaseTheme">
-        <item name="colorPrimary">@color/color_primary</item>
-        <item name="colorPrimaryDark">@color/color_primary</item>
-        <item name="colorControlNormal">@android:color/white</item>
-    </style>
+    <!-- Used for setup dark navigation bar buttons on v27 (screens with light background) -->
+    <style name="LightAppTheme" parent="BaseTheme"/>
 
     <style name="AlertDialog" parent="Theme.AppCompat.Light.Dialog.Alert">
         <!-- Buttons color -->
@@ -47,22 +52,19 @@
     <style name="Widget.AppTheme.Toolbar" parent="BaseTheme">
         <!-- colorControlNormal is used for the toggle btn color -->
         <item name="colorControlNormal">@android:color/white</item>
-        <item name="actionMenuTextColor">@android:color/white</item>
     </style>
-
-    <style name="Widget.AppTheme.AppBarOverlay" parent="ThemeOverlay.MaterialComponents.Dark.ActionBar"/>
-
-    <!-- Biometric -->
-    <style name="BottomSheetDialogTheme" parent="BaseBottomSheetDialog" />
 
     <style name="BaseBottomSheetDialog" parent="@style/Theme.Design.Light.BottomSheetDialog">
         <item name="android:windowIsFloating">true</item>
         <item name="bottomSheetStyle">@style/BottomSheet</item>
     </style>
+
     <!-- Set the rounded drawable as background to your bottom sheet -->
     <style name="BottomSheet" parent="@style/Widget.Design.BottomSheet.Modal">
         <item name="android:background">@drawable/bg_bottom_sheet</item>
     </style>
+
+    <style name="BottomSheetDialogTheme" parent="BaseBottomSheetDialog" />
 
     <style name="ProgressBarWhite" parent="Widget.AppCompat.ProgressBar">
         <item name="colorControlActivated">@android:color/white</item>

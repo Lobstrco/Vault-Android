@@ -82,7 +82,7 @@ class PinActivity : BaseActivity(), PinView, PinLockListener,
             !intent?.getBooleanExtra(Constant.Extra.EXTRA_CHANGE_PIN, false)!! &&
             !intent?.getBooleanExtra(Constant.Extra.EXTRA_CONFIRM_PIN, false)!!
         ) {
-            setTheme(R.style.DarkAppTheme)
+            setTheme(R.style.PinDarkTheme)
         }
     }
 

@@ -109,8 +109,8 @@ class ImportXdrFragment : BaseFragment(), ImportXdrView, View.OnClickListener {
     // ===========================================================
 
     override fun onClick(v: View?) {
-        when (v!!.id) {
-            R.id.btnNext -> {
+        when (v?.id) {
+            btnNext.id -> {
                 AppUtil.closeKeyboard(activity)
                 mPresenter.nextClicked(etImportXdr.text.toString().trim())
             }
@@ -132,13 +132,13 @@ class ImportXdrFragment : BaseFragment(), ImportXdrView, View.OnClickListener {
     override fun showTransactionDetails(transactionItem: TransactionItem) {
         val bundle = Bundle()
         bundle.putParcelable(Constant.Bundle.BUNDLE_TRANSACTION_ITEM, transactionItem)
-        val fragment = parentFragment!!.childFragmentManager.fragmentFactory.instantiate(context!!.classLoader, TransactionDetailsFragment::class.qualifiedName!!)
+        val fragment = requireParentFragment().childFragmentManager.fragmentFactory.instantiate(requireContext().classLoader, TransactionDetailsFragment::class.qualifiedName!!)
         fragment.arguments = bundle
 
         fragment.setTargetFragment(this, Constant.Code.TRANSACTION_DETAILS_FRAGMENT)
 
         FragmentTransactionManager.displayFragment(
-            parentFragment!!.childFragmentManager,
+            requireParentFragment().childFragmentManager,
             fragment,
             R.id.fl_container
         )

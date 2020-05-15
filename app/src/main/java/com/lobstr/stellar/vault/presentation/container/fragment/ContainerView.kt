@@ -1,6 +1,5 @@
 package com.lobstr.stellar.vault.presentation.container.fragment
 
-import androidx.fragment.app.Fragment
 import com.lobstr.stellar.vault.presentation.entities.transaction.TransactionItem
 import moxy.MvpView
 import moxy.viewstate.strategy.alias.Skip
@@ -20,7 +19,7 @@ interface ContainerView : MvpView {
 
     fun showTransactionsFr()
 
-    fun showTransactionDetails(target: Fragment?, transactionItem: TransactionItem)
+    fun showTransactionDetails(transactionItem: TransactionItem)
 
     fun showImportXdrFr()
 

@@ -15,16 +15,10 @@ interface SignedAccountsView : MvpView {
     fun initRecycledView()
 
     @AddToEndSingle
-    fun showProgress()
+    fun showProgress(show: Boolean)
 
     @AddToEndSingle
-    fun hideProgress()
-
-    @AddToEndSingle
-    fun showEmptyState()
-
-    @AddToEndSingle
-    fun hideEmptyState()
+    fun showEmptyState(show: Boolean)
 
     @AddToEndSingle
     fun showErrorMessage(message: String)

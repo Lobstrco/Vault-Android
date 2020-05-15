@@ -130,17 +130,17 @@ class RecoverKeyFragment : BaseFragment(), RecoverKeyFrView, View.OnClickListene
     // ===========================================================
 
     override fun onClick(v: View?) {
-        when (v!!.id) {
-            R.id.btnRecoverKey -> mPresenter.btnRecoverClicked()
+        when (v?.id) {
+            btnRecoverKey.id -> mPresenter.btnRecoverClicked()
         }
     }
 
     override fun showInputErrorIfNeeded(recoveryPhrasesInfo: List<RecoveryPhraseInfo>, phrases: String) {
         for (phrasesInfo in recoveryPhrasesInfo) {
             val color = if (phrasesInfo.incorrect) {
-                ForegroundColorSpan(ContextCompat.getColor(context!!, android.R.color.holo_red_light))
+                ForegroundColorSpan(ContextCompat.getColor(requireContext(), android.R.color.holo_red_light))
             } else {
-                ForegroundColorSpan(ContextCompat.getColor(context!!, android.R.color.black))
+                ForegroundColorSpan(ContextCompat.getColor(requireContext(), android.R.color.black))
             }
 
             etRecoveryPhrase.text.setSpan(
@@ -181,8 +181,8 @@ class RecoverKeyFragment : BaseFragment(), RecoverKeyFrView, View.OnClickListene
 
     override fun showHelpScreen() {
         FragmentTransactionManager.displayFragment(
-            parentFragment!!.childFragmentManager,
-            parentFragment!!.childFragmentManager.fragmentFactory.instantiate(context!!.classLoader, FaqFragment::class.qualifiedName!!),
+            requireParentFragment().childFragmentManager,
+            requireParentFragment().childFragmentManager.fragmentFactory.instantiate(requireContext().classLoader, FaqFragment::class.qualifiedName!!),
             R.id.fl_container
         )
     }

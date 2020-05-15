@@ -57,6 +57,10 @@ class ExceptionMapper(private val context: Context) {
             error == null -> DefaultException(throwable.message!!)
             !error.detail.isNullOrEmpty() && error.detail.contains(context.getString(R.string.text_error_invalid_token)) ->
                 UserNotAuthorizedException(context.getString(R.string.api_error_user_not_authorized))
+            !error.message.isNullOrEmpty() -> ForbiddenException(error.message)
+            !error.detail.isNullOrEmpty() -> ForbiddenException(error.detail)
+            !error.error.isNullOrEmpty() -> ForbiddenException(error.error)
+            !error.nonFieldErrors.isNullOrEmpty() -> ForbiddenException(error.nonFieldErrors[0])
             else -> DefaultException(throwable.message!!)
         }
     }

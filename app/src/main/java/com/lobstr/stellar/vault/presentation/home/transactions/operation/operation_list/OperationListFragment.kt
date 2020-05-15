@@ -92,13 +92,11 @@ class OperationListFragment : BaseFragment(),
         bundle.putParcelable(Constant.Bundle.BUNDLE_TRANSACTION_ITEM, transactionItem)
         bundle.putInt(Constant.Bundle.BUNDLE_OPERATION_POSITION, position)
 
-        val fragment = parentFragment!!.childFragmentManager.fragmentFactory.instantiate(context!!.classLoader, OperationDetailsFragment::class.qualifiedName!!)
+        val fragment = requireParentFragment().childFragmentManager.fragmentFactory.instantiate(requireContext().classLoader, OperationDetailsFragment::class.qualifiedName!!)
         fragment.arguments = bundle
 
-        fragment.setTargetFragment(this, Constant.Code.OPERATION_DETAILS_FRAGMENT)
-
         FragmentTransactionManager.displayFragment(
-            parentFragment!!.childFragmentManager,
+            requireParentFragment().childFragmentManager,
             fragment,
             R.id.fl_container
         )

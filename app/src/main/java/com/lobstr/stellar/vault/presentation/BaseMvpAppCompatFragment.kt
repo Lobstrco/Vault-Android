@@ -47,7 +47,7 @@ open class BaseMvpAppCompatFragment : Fragment(), MvpDelegateHolder {
 
     override fun onDestroy() {
         super.onDestroy()
-        if (this.activity!!.isFinishing) {
+        if (this.requireActivity().isFinishing) {
             this.mvpDelegate.onDestroy()
         } else if (this.mIsStateSaved) {
             this.mIsStateSaved = false

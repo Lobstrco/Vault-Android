@@ -140,23 +140,21 @@ class PrefsUtil(private val sharedPreferences: SharedPreferences) {
         return sharedPreferences.getLong(key, 0)
     }
 
+    /**
+     * Clear user authentication prefs exclude some keys.
+     */
     fun clearUserPrefs(): Boolean {
         val editor = sharedPreferences.edit()
-        editor.remove(PREF_AUTH_TOKEN)
-        editor.remove(PREF_PUBLIC_KEY)
-        editor.remove(PREF_ENCRYPTED_PHRASES)
-        editor.remove(PREF_ENCRYPTED_PIN)
-        editor.remove(PREF_PHRASES_IV)
-        editor.remove(PREF_PIN_IV)
-        editor.remove(PREF_FCM_TOKEN)
-        editor.remove(PREF_APP_VERSION)
-        editor.remove(PREF_IS_FCM_REGISTERED_SUCCESSFULLY)
-        editor.remove(PREF_ACCOUNT_HAS_SIGNERS)
-        editor.remove(PREF_BIOMETRIC_STATE)
-        editor.remove(PREF_IS_SPAM_PROTECTION_ENABLED)
-        editor.remove(PREF_IS_NOTIFICATIONS_ENABLED)
-        editor.remove(PREF_IS_TR_CONFIRMATION_ENABLED)
-        editor.remove(PREF_ACCOUNT_SIGNERS_COUNT)
+        for (key in sharedPreferences.all.keys) {
+            when (key) {
+                // Put here excluded keys.
+                PREF_RATE_US_STATE -> {
+                    /* do nothing*/
+                }
+                else -> editor.remove(key)
+            }
+        }
+
         return editor.commit()
     }
 }

@@ -108,9 +108,9 @@ class ConfirmMnemonicsFragment : BaseFragment(), ConfirmMnemonicsView, View.OnCl
     }
 
     override fun onClick(v: View?) {
-        when (v!!.id) {
-            R.id.btnClear -> mPresenter.btnClearClicked()
-            R.id.btnNext -> mPresenter.btnNextClicked()
+        when (v?.id) {
+            btnClear.id -> mPresenter.btnClearClicked()
+            btnNext.id -> mPresenter.btnNextClicked()
         }
     }
 
@@ -146,8 +146,8 @@ class ConfirmMnemonicsFragment : BaseFragment(), ConfirmMnemonicsView, View.OnCl
 
     override fun showHelpScreen() {
         FragmentTransactionManager.displayFragment(
-            parentFragment!!.childFragmentManager,
-            parentFragment!!.childFragmentManager.fragmentFactory.instantiate(context!!.classLoader, FaqFragment::class.qualifiedName!!),
+            requireParentFragment().childFragmentManager,
+            requireParentFragment().childFragmentManager.fragmentFactory.instantiate(requireContext().classLoader, FaqFragment::class.qualifiedName!!),
             R.id.fl_container
         )
     }

@@ -108,9 +108,9 @@ class MnemonicsFragment : BaseFragment(),
     // ===========================================================
 
     override fun onClick(v: View?) {
-        when (v!!.id) {
-            R.id.btnNext -> mPresenter.nextClicked()
-            R.id.btnClipToBoard -> mPresenter.clipToBordClicked()
+        when (v?.id) {
+            btnNext.id -> mPresenter.nextClicked()
+            btnClipToBoard.id -> mPresenter.clipToBordClicked()
         }
     }
 
@@ -132,11 +132,11 @@ class MnemonicsFragment : BaseFragment(),
         // Pass created mnemonics to confirmation screen.
         val bundle = Bundle()
         bundle.putParcelableArrayList(Constant.Bundle.BUNDLE_MNEMONICS_ARRAY, mnemonics)
-        val fragment = parentFragment!!.childFragmentManager.fragmentFactory.instantiate(context!!.classLoader, ConfirmMnemonicsFragment::class.qualifiedName!!)
+        val fragment = requireParentFragment().childFragmentManager.fragmentFactory.instantiate(requireContext().classLoader, ConfirmMnemonicsFragment::class.qualifiedName!!)
         fragment.arguments = bundle
 
         FragmentTransactionManager.displayFragment(
-            parentFragment!!.childFragmentManager,
+            requireParentFragment().childFragmentManager,
             fragment,
             R.id.fl_container
         )
@@ -148,8 +148,8 @@ class MnemonicsFragment : BaseFragment(),
 
     override fun showHelpScreen() {
         FragmentTransactionManager.displayFragment(
-            parentFragment!!.childFragmentManager,
-            parentFragment!!.childFragmentManager.fragmentFactory.instantiate(context!!.classLoader, FaqFragment::class.qualifiedName!!),
+            requireParentFragment().childFragmentManager,
+            requireParentFragment().childFragmentManager.fragmentFactory.instantiate(requireContext().classLoader, FaqFragment::class.qualifiedName!!),
             R.id.fl_container
         )
     }

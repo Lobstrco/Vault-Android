@@ -76,9 +76,9 @@ class BiometricSetUpFragment : BaseFragment(), BiometricSetUpView, BiometricList
     // ===========================================================
 
     override fun onClick(v: View?) {
-        when (v!!.id) {
-            R.id.btnTurOn -> mPresenter.turnOnClicked()
-            R.id.btnSkip -> mPresenter.skipClicked()
+        when (v?.id) {
+            btnTurOn.id -> mPresenter.turnOnClicked()
+            btnSkip.id -> mPresenter.skipClicked()
         }
     }
 
@@ -104,7 +104,7 @@ class BiometricSetUpFragment : BaseFragment(), BiometricSetUpView, BiometricList
         mBiometricManager?.cancelAuthentication()
 
         if (show) {
-            mBiometricManager = BiometricManager.BiometricBuilder(context!!, this)
+            mBiometricManager = BiometricManager.BiometricBuilder(requireContext(), this)
                 .setTitle(getString(R.string.biometric_title))
                 .setSubtitle(getString(R.string.biometric_subtitle))
                 .setNegativeButtonText(getString(R.string.text_btn_cancel).toUpperCase())

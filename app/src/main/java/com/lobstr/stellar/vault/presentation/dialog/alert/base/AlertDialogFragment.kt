@@ -132,7 +132,7 @@ open class AlertDialogFragment : BaseMvpAppCompatDialogFragment() {
 
         isCancelable = cancelableOf
 
-        return AlertDialog.Builder(activity!!, R.style.AlertDialog)
+        return AlertDialog.Builder(requireActivity(), R.style.AlertDialog)
             .setTitle(mTitle)
             .setMessage(mMessage)
             .setView(mContentView)
@@ -180,9 +180,7 @@ open class AlertDialogFragment : BaseMvpAppCompatDialogFragment() {
     override fun onDismiss(dialog: DialogInterface) {
         super.onDismiss(dialog)
         // Dismiss dialog for all specific cases.
-        if (fragmentManager != null) {
-            dismissAllowingStateLoss()
-        }
+        dismissAllowingStateLoss()
     }
 
     // ===========================================================
@@ -198,14 +196,14 @@ open class AlertDialogFragment : BaseMvpAppCompatDialogFragment() {
             return
         }
 
-        isCalledInFragment = arguments!!.getBoolean(ARGUMENT_DIALOG_IS_CALLED_IN_FRAGMENT)
-        cancelableOf = arguments!!.getBoolean(ARGUMENT_DIALOG_IS_CANCELABLE)
-        mView = arguments!!.getInt(ARGUMENT_DIALOG_VIEW)
-        mTitle = arguments!!.getCharSequence(ARGUMENT_DIALOG_TITLE)
-        mMessage = arguments!!.getCharSequence(ARGUMENT_DIALOG_MESSAGE)
-        mNegativeBtnText = arguments!!.getCharSequence(ARGUMENT_DIALOG_NEGATIVE_BTN_TEXT)
-        mPositiveBtnText = arguments!!.getCharSequence(ARGUMENT_DIALOG_POSITIVE_BTN_TEXT)
-        mNeutralBtnText = arguments!!.getCharSequence(ARGUMENT_DIALOG_NEUTRAL_BTN_TEXT)
+        isCalledInFragment = requireArguments().getBoolean(ARGUMENT_DIALOG_IS_CALLED_IN_FRAGMENT)
+        cancelableOf = requireArguments().getBoolean(ARGUMENT_DIALOG_IS_CANCELABLE)
+        mView = requireArguments().getInt(ARGUMENT_DIALOG_VIEW)
+        mTitle = requireArguments().getCharSequence(ARGUMENT_DIALOG_TITLE)
+        mMessage = requireArguments().getCharSequence(ARGUMENT_DIALOG_MESSAGE)
+        mNegativeBtnText = requireArguments().getCharSequence(ARGUMENT_DIALOG_NEGATIVE_BTN_TEXT)
+        mPositiveBtnText = requireArguments().getCharSequence(ARGUMENT_DIALOG_POSITIVE_BTN_TEXT)
+        mNeutralBtnText = requireArguments().getCharSequence(ARGUMENT_DIALOG_NEUTRAL_BTN_TEXT)
 
         mOnBaseAlertDialogListener = if (isCalledInFragment)
             if (parentFragment is OnBaseAlertDialogListener) parentFragment as OnBaseAlertDialogListener? else null
@@ -216,7 +214,7 @@ open class AlertDialogFragment : BaseMvpAppCompatDialogFragment() {
         mContentView = if (getContentView() == 0)
             null
         else
-            activity!!.layoutInflater.inflate(getContentView(), null)
+            requireActivity().layoutInflater.inflate(getContentView(), null)
     }
 
     protected open fun getContentView(): Int {

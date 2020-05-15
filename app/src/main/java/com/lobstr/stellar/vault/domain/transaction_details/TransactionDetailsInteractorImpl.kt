@@ -12,6 +12,7 @@ import com.lobstr.stellar.vault.presentation.util.Constant
 import com.lobstr.stellar.vault.presentation.util.Constant.Transaction.IMPORT_XDR
 import com.lobstr.stellar.vault.presentation.util.PrefsUtil
 import io.reactivex.Single
+import org.stellar.sdk.AbstractTransaction
 import org.stellar.sdk.responses.SubmitTransactionResponse
 
 
@@ -40,14 +41,14 @@ class TransactionDetailsInteractorImpl(
         }
     }
 
-    override fun confirmTransactionOnHorizon(transaction: String): Single<SubmitTransactionResponse> {
-        return getPhrases().flatMap { stellarRepository.createKeyPair(it.toCharArray(), 0) }
-            .flatMap { stellarRepository.submitTransaction(it, transaction) }
+    override fun confirmTransactionOnHorizon(transaction: AbstractTransaction): Single<SubmitTransactionResponse> {
+        return stellarRepository.submitTransaction(transaction)
     }
 
     /**
      * For case when transaction status = IMPORT_XDR - ignore server confirmation errors and return existing transaction xdr.
      * @see Constant.Transaction.IMPORT_XDR
+     * @param needAdditionalSignatures For handle transaction confirmation flow.
      */
     override fun confirmTransactionOnServer(
         needAdditionalSignatures: Boolean,
@@ -66,7 +67,7 @@ class TransactionDetailsInteractorImpl(
                 transaction
             )
         }.onErrorResumeNext {
-            // ignore errors from Vault server for IMPORT_XDR transaction status
+            // Ignore errors from Vault server for IMPORT_XDR transaction status.
             when (transactionStatus) {
                 IMPORT_XDR -> {
                     Single.fromCallable { transaction }
@@ -109,5 +110,10 @@ class TransactionDetailsInteractorImpl(
 
     override fun getStellarAccount(stellarAddress: String): Single<Account> {
         return accountRepository.getStellarAccount(stellarAddress, "id")
+    }
+
+    override fun signTransaction(transaction: String): Single<AbstractTransaction> {
+        return getPhrases().flatMap { stellarRepository.createKeyPair(it.toCharArray(), 0) }
+            .flatMap { stellarRepository.signTransaction(it, transaction) }
     }
 }

@@ -82,19 +82,19 @@ class BackUpFragment : BaseFragment(), BackUpView, View.OnClickListener {
     // ===========================================================
 
     override fun onClick(v: View?) {
-        when (v!!.id) {
-            R.id.btnNext -> mPresenter.nextClicked()
+        when (v?.id) {
+            btnNext.id -> mPresenter.nextClicked()
         }
     }
 
     override fun showCreateMnemonicsScreen() {
         val bundle = Bundle()
         bundle.putBoolean(Constant.Bundle.BUNDLE_GENERATE_MNEMONICS, true)
-        val fragment = parentFragment!!.childFragmentManager.fragmentFactory.instantiate(context!!.classLoader, MnemonicsFragment::class.qualifiedName!!)
+        val fragment = requireParentFragment().childFragmentManager.fragmentFactory.instantiate(requireContext().classLoader, MnemonicsFragment::class.qualifiedName!!)
         fragment.arguments = bundle
 
         FragmentTransactionManager.displayFragment(
-            parentFragment!!.childFragmentManager,
+            requireParentFragment().childFragmentManager,
             fragment,
             R.id.fl_container
         )
@@ -102,8 +102,8 @@ class BackUpFragment : BaseFragment(), BackUpView, View.OnClickListener {
 
     override fun showHelpScreen() {
         FragmentTransactionManager.displayFragment(
-            parentFragment!!.childFragmentManager,
-            parentFragment!!.childFragmentManager.fragmentFactory.instantiate(context!!.classLoader, FaqFragment::class.qualifiedName!!),
+            requireParentFragment().childFragmentManager,
+            requireParentFragment().childFragmentManager.fragmentFactory.instantiate(requireContext().classLoader, FaqFragment::class.qualifiedName!!),
             R.id.fl_container
         )
     }

@@ -12,7 +12,6 @@
             android:layout_height="0dp"
             android:layout_weight="1"
             android:fillViewport="true"
-            android:background="@color/color_f9f9ff"
             android:layout_marginBottom="16dp"
             android:scrollbars="vertical">
 

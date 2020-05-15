@@ -38,7 +38,7 @@ class ErrorFragment : BaseFragment(), ErrorView, View.OnClickListener {
 
     @ProvidePresenter
     fun provideErrorPresenter() = ErrorPresenter(
-        arguments!!.getString(Constant.Bundle.BUNDLE_ERROR_MESSAGE)!!
+        requireArguments().getString(Constant.Bundle.BUNDLE_ERROR_MESSAGE)!!
     )
 
     // ===========================================================
@@ -84,13 +84,13 @@ class ErrorFragment : BaseFragment(), ErrorView, View.OnClickListener {
     // ===========================================================
 
     override fun onClick(v: View?) {
-        when (v!!.id) {
-            R.id.btnDone -> mPresenter.doneClicked()
+        when (v?.id) {
+            btnDone.id -> mPresenter.doneClicked()
         }
     }
 
     override fun vibrate(pattern: LongArray) {
-        AppUtil.vibrate(context!!, pattern)
+        AppUtil.vibrate(requireContext(), pattern)
     }
 
     override fun setupErrorInfo(error: String) {
@@ -103,8 +103,8 @@ class ErrorFragment : BaseFragment(), ErrorView, View.OnClickListener {
 
     override fun showHelpScreen() {
         FragmentTransactionManager.displayFragment(
-            parentFragment!!.childFragmentManager,
-            parentFragment!!.childFragmentManager.fragmentFactory.instantiate(context!!.classLoader, FaqFragment::class.qualifiedName!!),
+            requireParentFragment().childFragmentManager,
+            requireParentFragment().childFragmentManager.fragmentFactory.instantiate(requireContext().classLoader, FaqFragment::class.qualifiedName!!),
             R.id.fl_container
         )
     }

@@ -49,10 +49,6 @@ class EditAccountDialogFragment : BaseBottomSheetDialog(), EditAccountView, View
     // Methods for/from SuperClass
     // ===========================================================
 
-    override fun getTheme(): Int {
-        return R.style.BottomSheetDialogTheme
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -76,9 +72,9 @@ class EditAccountDialogFragment : BaseBottomSheetDialog(), EditAccountView, View
     // ===========================================================
 
     override fun onClick(v: View?) {
-        when (v!!.id) {
-            R.id.btnCopyPublicKey -> mPresenter.copyPublicKeyClicked()
-            R.id.btnOpenExplorer -> mPresenter.openExplorerClicked()
+        when (v?.id) {
+            btnCopyPublicKey.id -> mPresenter.copyPublicKeyClicked()
+            btnOpenExplorer.id -> mPresenter.openExplorerClicked()
         }
     }
 

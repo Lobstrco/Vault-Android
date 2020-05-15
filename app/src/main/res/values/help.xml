@@ -38,7 +38,7 @@ A transaction with an attached signature is considered to have authorization fro
 In two cases, a transaction may need more than one signature:
 
 - If the transaction has operations that affect more than one account, it will need authorization from every account in question.
-- A transaction will also need additional signatures if the account associated with the transaction has multiple singers. That is where the multisignature comes in.
+- A transaction will also need additional signatures if the account associated with the transaction has multiple signers. That is where the multisignature comes in.
 
 
 Multisignature (or \"multisig\") concept presumes that account requires two or more secret key signatures before allowing a transaction to occur on the account.
@@ -88,7 +88,7 @@ LOBSTR and StellarTerm currently use the following values when setting up 2-of-2
 
 - Low, medium and high operation thresholds are set to 20.
 - The weight of the master signing key is set to 10.
-- The weight of the LOBSTR Vault singer key is set to 10.
+- The weight of the LOBSTR Vault signer key is set to 10.
 - The weight of the LOBSTR Vault marker key is set to 1.
 
 If you add another LOBSTR Vault signer to your wallet (3-of-3 multisig), all operation thresholds will be set to 30 and the new signer will be added with the signing key weight set to 10.
@@ -314,7 +314,7 @@ To enable the multisig solution for your Stellar account in LOBSTR wallet using 
 11. LOBSTR wallet should detect LOBSTR Vault account automatically and prompt to use it.
 12. Tap \'Yes, Use This Device\' button.
 13. At this step, you will need to confirm that you want to add a new signer to your Stellar account. Carefully read the description and tap the \'Continue\' button.
-14. If the \'Multisig enabled\' screen is displayed, the singer account should be successfully added to your Stellar account.
+14. If the \'Multisig enabled\' screen is displayed, the signer account should be successfully added to your Stellar account.
 15. To complete the setup at LOBSTR Vault side, open the app and tap the \'Next\' button at the screen with your Vault public key.
 16. If required, tap the \'Re-Check\' button at the next screen.
 17. You will be transitioned to the '\Home\' screen of LOBSTR Vault app.

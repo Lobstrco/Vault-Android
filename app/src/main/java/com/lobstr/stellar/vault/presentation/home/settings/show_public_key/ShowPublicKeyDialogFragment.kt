@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import com.lobstr.stellar.vault.R
 import com.lobstr.stellar.vault.presentation.BaseBottomSheetDialog
-import com.lobstr.stellar.vault.presentation.dialog.alert.base.AlertDialogFragment
 import com.lobstr.stellar.vault.presentation.util.AppUtil
 import com.lobstr.stellar.vault.presentation.util.Constant
 import com.lobstr.stellar.vault.presentation.util.Constant.Util.PK_TRUNCATE_COUNT
@@ -37,8 +36,6 @@ class ShowPublicKeyDialogFragment : BaseBottomSheetDialog(), ShowPublicKeyView,
 
     private var mView: View? = null
 
-    private var mProgressDialog: AlertDialogFragment? = null
-
     // ===========================================================
     // Constructors
     // ===========================================================
@@ -55,10 +52,6 @@ class ShowPublicKeyDialogFragment : BaseBottomSheetDialog(), ShowPublicKeyView,
     // ===========================================================
     // Methods for/from SuperClass
     // ===========================================================
-
-    override fun getTheme(): Int {
-        return R.style.BottomSheetDialogTheme
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -86,8 +79,8 @@ class ShowPublicKeyDialogFragment : BaseBottomSheetDialog(), ShowPublicKeyView,
     // ===========================================================
 
     override fun onClick(v: View?) {
-        when (v!!.id) {
-            R.id.btnCopyKey -> {
+        when (v?.id) {
+            btnCopyKey.id -> {
                 AppUtil.closeKeyboard(activity)
                 mPresenter.copyPublicKeyClicked()
             }
@@ -96,8 +89,8 @@ class ShowPublicKeyDialogFragment : BaseBottomSheetDialog(), ShowPublicKeyView,
 
     override fun setupPublicKey(publicKey: String) {
         val qrCodeImage = QRCode.from(publicKey).withColor(
-            ContextCompat.getColor(context!!, R.color.color_primary),
-            ContextCompat.getColor(context!!, android.R.color.transparent)
+            ContextCompat.getColor(requireContext(), R.color.color_primary),
+            ContextCompat.getColor(requireContext(), android.R.color.transparent)
         ).bitmap()
 
         ivUserPublicKeyQrCode.setImageBitmap(qrCodeImage)

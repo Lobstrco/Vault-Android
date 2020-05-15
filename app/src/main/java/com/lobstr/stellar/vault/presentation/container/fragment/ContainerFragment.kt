@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
 import com.lobstr.stellar.vault.R
 import com.lobstr.stellar.vault.presentation.auth.biometric.BiometricSetUpFragment
 import com.lobstr.stellar.vault.presentation.auth.enter_screen.AuthFragment
@@ -92,7 +91,7 @@ class ContainerFragment : BaseContainerFragment(),
         FragmentTransactionManager.displayFragment(
             childFragmentManager,
             childFragmentManager.fragmentFactory.instantiate(
-                context!!.classLoader,
+                requireContext().classLoader,
                 AuthFragment::class.qualifiedName!!
             ),
             R.id.fl_container
@@ -103,7 +102,7 @@ class ContainerFragment : BaseContainerFragment(),
         FragmentTransactionManager.displayFragment(
             childFragmentManager,
             childFragmentManager.fragmentFactory.instantiate(
-                context!!.classLoader,
+                requireContext().classLoader,
                 SignerInfoFragment::class.qualifiedName!!
             ),
             R.id.fl_container
@@ -114,7 +113,7 @@ class ContainerFragment : BaseContainerFragment(),
         FragmentTransactionManager.displayFragment(
             childFragmentManager,
             childFragmentManager.fragmentFactory.instantiate(
-                context!!.classLoader,
+                requireContext().classLoader,
                 BiometricSetUpFragment::class.qualifiedName!!
             ),
             R.id.fl_container
@@ -128,7 +127,7 @@ class ContainerFragment : BaseContainerFragment(),
         FragmentTransactionManager.displayFragment(
             childFragmentManager,
             childFragmentManager.fragmentFactory.instantiate(
-                context!!.classLoader,
+                requireContext().classLoader,
                 DashboardFragment::class.qualifiedName!!
             ),
             R.id.fl_container
@@ -142,7 +141,7 @@ class ContainerFragment : BaseContainerFragment(),
         FragmentTransactionManager.displayFragment(
             childFragmentManager,
             childFragmentManager.fragmentFactory.instantiate(
-                context!!.classLoader,
+                requireContext().classLoader,
                 SettingsFragment::class.qualifiedName!!
             ),
             R.id.fl_container
@@ -156,25 +155,21 @@ class ContainerFragment : BaseContainerFragment(),
         FragmentTransactionManager.displayFragment(
             childFragmentManager,
             childFragmentManager.fragmentFactory.instantiate(
-                context!!.classLoader,
+                requireContext().classLoader,
                 TransactionsFragment::class.qualifiedName!!
             ),
             R.id.fl_container
         )
     }
 
-    override fun showTransactionDetails(target: Fragment?, transactionItem: TransactionItem) {
+    override fun showTransactionDetails(transactionItem: TransactionItem) {
         val bundle = Bundle()
         bundle.putParcelable(Constant.Bundle.BUNDLE_TRANSACTION_ITEM, transactionItem)
         val fragment = childFragmentManager.fragmentFactory.instantiate(
-            context!!.classLoader,
+            requireContext().classLoader,
             TransactionDetailsFragment::class.qualifiedName!!
         )
         fragment.arguments = bundle
-
-        if (target != null) {
-            fragment.setTargetFragment(target, Constant.Code.TRANSACTION_DETAILS_FRAGMENT)
-        }
 
         FragmentTransactionManager.displayFragment(
             childFragmentManager,
@@ -187,7 +182,7 @@ class ContainerFragment : BaseContainerFragment(),
         FragmentTransactionManager.displayFragment(
             childFragmentManager,
             childFragmentManager.fragmentFactory.instantiate(
-                context!!.classLoader,
+                requireContext().classLoader,
                 ImportXdrFragment::class.qualifiedName!!
             ),
             R.id.fl_container
@@ -198,7 +193,7 @@ class ContainerFragment : BaseContainerFragment(),
         FragmentTransactionManager.displayFragment(
             childFragmentManager,
             childFragmentManager.fragmentFactory.instantiate(
-                context!!.classLoader,
+                requireContext().classLoader,
                 MnemonicsFragment::class.qualifiedName!!
             ),
             R.id.fl_container
@@ -213,7 +208,7 @@ class ContainerFragment : BaseContainerFragment(),
             needAdditionalSignatures
         )
         val fragment = childFragmentManager.fragmentFactory.instantiate(
-            context!!.classLoader,
+            requireContext().classLoader,
             SuccessFragment::class.qualifiedName!!
         )
         fragment.arguments = bundle
@@ -229,7 +224,7 @@ class ContainerFragment : BaseContainerFragment(),
         val bundle = Bundle()
         bundle.putString(Constant.Bundle.BUNDLE_ERROR_MESSAGE, errorMessage)
         val fragment = childFragmentManager.fragmentFactory.instantiate(
-            context!!.classLoader,
+            requireContext().classLoader,
             ErrorFragment::class.qualifiedName!!
         )
         fragment.arguments = bundle
@@ -245,7 +240,7 @@ class ContainerFragment : BaseContainerFragment(),
         FragmentTransactionManager.displayFragment(
             childFragmentManager,
             childFragmentManager.fragmentFactory.instantiate(
-                context!!.classLoader,
+                requireContext().classLoader,
                 SignedAccountsFragment::class.qualifiedName!!
             ),
             R.id.fl_container
@@ -256,7 +251,7 @@ class ContainerFragment : BaseContainerFragment(),
         val bundle = Bundle()
         bundle.putInt(Constant.Bundle.BUNDLE_CONFIG, config)
         val fragment = childFragmentManager.fragmentFactory.instantiate(
-            context!!.classLoader,
+            requireContext().classLoader,
             ConfigFragment::class.qualifiedName!!
         )
         fragment.arguments = bundle

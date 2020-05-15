@@ -45,7 +45,7 @@ class RxErrorUtilsImpl(
                 getPhrases().flatMap { stellarRepository.createKeyPair(it.toCharArray(), 0) }
                     .flatMap { stellarRepository.signTransaction(it, apiGetChallenge.transaction!!) }
             }
-            .flatMap { vaultAuthApi.submitChallenge(it) }
+            .flatMap { vaultAuthApi.submitChallenge(it.toEnvelopeXdrBase64()) }
             .doOnSuccess {
                 prefsUtil.authToken = it.token
                 throw UserNotAuthorizedException("User Not Authorized")
@@ -84,7 +84,7 @@ class RxErrorUtilsImpl(
                 getPhrases().flatMap { stellarRepository.createKeyPair(it.toCharArray(), 0) }
                     .flatMap { stellarRepository.signTransaction(it, apiGetChallenge.transaction!!) }
             }
-            .flatMap { vaultAuthApi.submitChallenge(it) }
+            .flatMap { vaultAuthApi.submitChallenge(it.toEnvelopeXdrBase64()) }
             .doOnSuccess {
                 prefsUtil.authToken = it.token
                 throw UserNotAuthorizedException("User Not Authorized")
@@ -126,7 +126,7 @@ class RxErrorUtilsImpl(
                 getPhrases().flatMap { stellarRepository.createKeyPair(it.toCharArray(), 0) }
                     .flatMap { stellarRepository.signTransaction(it, apiGetChallenge.transaction!!) }
             }
-            .flatMap { vaultAuthApi.submitChallenge(it) }
+            .flatMap { vaultAuthApi.submitChallenge(it.toEnvelopeXdrBase64()) }
             .doOnSuccess {
                 prefsUtil.authToken = it.token
                 throw UserNotAuthorizedException("User Not Authorized")

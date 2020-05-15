@@ -109,7 +109,7 @@
     <string name="text_title_dashboard_signers">Signer For</string>
 
     <!-- Transactions screen -->
-    <string name="text_empty_state_transactions_list">Transactions not found</string>
+    <string name="text_empty_state_transactions_list">No transactions to sign</string>
     <string name="text_tv_sequence_number_invalid">Invalid</string>
     <string name="text_tv_transactions_clear">Clear</string>
 
@@ -129,6 +129,7 @@
     <string name="text_settings_help">Help</string>
     <string name="text_settings_license">Licenses</string>
     <string name="text_settings_rate_us">Rate Us</string>
+    <string name="text_settings_contact_support">Contact Support</string>
     <string name="text_settings_log_out">Log Out</string>
     <string name="text_settings_show">Show</string>
     <string name="text_all_rights_reserved">©%s. All rights reserved</string>
@@ -142,7 +143,7 @@
     <string name="text_config_spam_protection_description">Select whether you want to receive transaction requests that don\'t contain any valid signatures from the protected account or other signers. Choose ‘No’ to protect your account from spam transactions.</string>
 
     <!-- Signed Accounts screen -->
-    <string name="text_signed_account_empty_state">Protected accounts not found</string>
+    <string name="text_signed_account_empty_state">No signed accounts</string>
     <string name="text_btn_copy_public_key">Copy Public Key</string>
     <string name="text_btn_open_explorer">Open Explorer</string>
 
@@ -278,4 +279,7 @@
     <string name="text_action_refresh">update</string>
 
     <!-- Other -->
+    <string name="msg_mail_client_not_found">There are no email clients installed</string>
+    <string name="text_mail_support_subject" translatable="false">LOBSTR Vault feedback</string>
+    <string name="text_app_name_vault" translatable="false">Vault</string>
 </resources>

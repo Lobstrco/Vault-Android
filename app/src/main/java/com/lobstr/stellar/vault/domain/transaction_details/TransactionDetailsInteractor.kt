@@ -4,6 +4,7 @@ import com.lobstr.stellar.vault.presentation.entities.account.Account
 import com.lobstr.stellar.vault.presentation.entities.account.AccountResult
 import com.lobstr.stellar.vault.presentation.entities.transaction.TransactionItem
 import io.reactivex.Single
+import org.stellar.sdk.AbstractTransaction
 import org.stellar.sdk.responses.SubmitTransactionResponse
 
 
@@ -12,7 +13,7 @@ interface TransactionDetailsInteractor {
     fun retrieveActualTransaction(transactionItem: TransactionItem): Single<TransactionItem>
 
     fun confirmTransactionOnHorizon(
-        transaction: String
+        transaction: AbstractTransaction
     ): Single<SubmitTransactionResponse>
 
     fun confirmTransactionOnServer(
@@ -34,4 +35,6 @@ interface TransactionDetailsInteractor {
     ): Single<AccountResult>
 
     fun getStellarAccount(stellarAddress: String): Single<Account>
+
+    fun signTransaction(transaction: String): Single<AbstractTransaction>
 }

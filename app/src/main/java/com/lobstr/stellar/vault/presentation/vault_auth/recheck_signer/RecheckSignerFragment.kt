@@ -89,8 +89,8 @@ class RecheckSignerFragment : BaseFragment(),
     // ===========================================================
 
     override fun onClick(v: View?) {
-        when (v!!.id) {
-            R.id.btnRecheck -> mPresenter.recheckClicked()
+        when (v?.id) {
+            btnRecheck.id -> mPresenter.recheckClicked()
         }
     }
 
@@ -117,7 +117,7 @@ class RecheckSignerFragment : BaseFragment(),
     }
 
     override fun showAuthScreen() {
-        NotificationsManager.clearNotifications(context!!)
+        NotificationsManager.clearNotifications(requireContext())
         val intent = Intent(context, AuthActivity::class.java)
         intent.putExtra(Constant.Extra.EXTRA_NAVIGATION_FR, Constant.Navigation.AUTH)
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK

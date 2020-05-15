@@ -74,10 +74,10 @@ class AuthFragment : BaseFragment(), AuthFrView, View.OnClickListener {
     // ===========================================================
 
     override fun onClick(v: View?) {
-        when (v!!.id) {
-            R.id.btnAuthNew -> mPresenter.newClicked()
-            R.id.btnAuthRestore -> mPresenter.restoreClicked()
-            R.id.tvHelp -> mPresenter.helpClicked()
+        when (v?.id) {
+            btnAuthNew.id -> mPresenter.newClicked()
+            btnAuthRestore.id -> mPresenter.restoreClicked()
+            tvHelp.id -> mPresenter.helpClicked()
         }
     }
 
@@ -87,24 +87,24 @@ class AuthFragment : BaseFragment(), AuthFrView, View.OnClickListener {
 
     override fun showBackUpScreen() {
         FragmentTransactionManager.displayFragment(
-            parentFragment!!.childFragmentManager,
-            parentFragment!!.childFragmentManager.fragmentFactory.instantiate(context!!.classLoader, BackUpFragment::class.qualifiedName!!),
+            requireParentFragment().childFragmentManager,
+            requireParentFragment().childFragmentManager.fragmentFactory.instantiate(requireContext().classLoader, BackUpFragment::class.qualifiedName!!),
             R.id.fl_container
         )
     }
 
     override fun showRestoreScreen() {
         FragmentTransactionManager.displayFragment(
-            parentFragment!!.childFragmentManager,
-            parentFragment!!.childFragmentManager.fragmentFactory.instantiate(context!!.classLoader, RecoverKeyFragment::class.qualifiedName!!),
+            requireParentFragment().childFragmentManager,
+            requireParentFragment().childFragmentManager.fragmentFactory.instantiate(requireContext().classLoader, RecoverKeyFragment::class.qualifiedName!!),
             R.id.fl_container
         )
     }
 
     override fun showHelpScreen() {
         FragmentTransactionManager.displayFragment(
-            parentFragment!!.childFragmentManager,
-            parentFragment!!.childFragmentManager.fragmentFactory.instantiate(context!!.classLoader, FaqFragment::class.qualifiedName!!),
+            requireParentFragment().childFragmentManager,
+            requireParentFragment().childFragmentManager.fragmentFactory.instantiate(requireContext().classLoader, FaqFragment::class.qualifiedName!!),
             R.id.fl_container
         )
     }

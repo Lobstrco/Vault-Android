@@ -18,6 +18,7 @@ import com.lobstr.stellar.vault.presentation.dialog.alert.base.AlertDialogFragme
 import com.lobstr.stellar.vault.presentation.util.AppUtil
 import com.lobstr.stellar.vault.presentation.util.Constant
 import com.lobstr.stellar.vault.presentation.util.Constant.Social.STORE_URL
+import com.lobstr.stellar.vault.presentation.util.Constant.Social.SUPPORT_MAIL
 import com.lobstr.stellar.vault.presentation.util.biometric.BiometricUtils
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
@@ -101,7 +102,7 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
     fun handleOnActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (resultCode == Activity.RESULT_OK) {
             when (requestCode) {
-                Constant.Code.CHANGE_PIN -> viewState.showSuccessMessage(R.string.text_success_change_pin)
+                Constant.Code.CHANGE_PIN -> viewState.showMessage(AppUtil.getString(R.string.text_success_change_pin))
                 Constant.Code.CONFIRM_PIN_FOR_MNEMONIC -> viewState.showMnemonicsScreen()
                 Constant.Code.Config.SPAM_PROTECTION -> viewState.setSpamProtection(
                     AppUtil.getConfigText(
@@ -183,6 +184,10 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
         viewState.showStore(STORE_URL.plus(BuildConfig.APPLICATION_ID))
     }
 
+    fun contactSupportClicked() {
+        viewState.sendMail(SUPPORT_MAIL, AppUtil.getString(R.string.text_mail_support_subject))
+    }
+
     fun onAlertDialogPositiveButtonClicked(tag: String?) {
         when (tag) {
             AlertDialogFragment.DialogFragmentIdentifier.LOG_OUT -> {
@@ -230,17 +235,17 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
                     viewState.setSpamProtection(AppUtil.getConfigText(AppUtil.getConfigType(!interactor.isSpamProtectionEnabled())))
                     when (it) {
                         is NoInternetConnectionException -> {
-                            viewState.showErrorMessage(it.details)
+                            viewState.showMessage(it.details)
                             handleNoInternetConnection()
                         }
                         is UserNotAuthorizedException -> {
                             getAccountConfig()
                         }
                         is DefaultException -> {
-                            viewState.showErrorMessage(it.details)
+                            viewState.showMessage(it.details)
                         }
                         else -> {
-                            viewState.showErrorMessage(it.message ?: "")
+                            viewState.showMessage(it.message ?: "")
                         }
                     }
                 })

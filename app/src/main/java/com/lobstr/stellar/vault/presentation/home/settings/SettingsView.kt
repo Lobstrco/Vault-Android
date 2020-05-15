@@ -74,8 +74,11 @@ interface SettingsView : MvpView {
     fun showStore(storeUrl: String)
 
     @Skip
+    fun sendMail(mail: String, subject: String)
+
+    @Skip
     fun showConfigScreen(config: Int)
 
     @Skip
-    fun showErrorMessage(message: String)
+    fun showMessage(message: String)
 }

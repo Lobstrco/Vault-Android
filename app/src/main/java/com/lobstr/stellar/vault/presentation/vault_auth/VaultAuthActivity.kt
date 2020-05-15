@@ -67,8 +67,8 @@ class VaultAuthActivity : BaseActivity(), VaultAuthView, View.OnClickListener {
     // ===========================================================
 
     override fun onClick(v: View?) {
-        when (v!!.id) {
-            R.id.btnRetry -> mVaultAuthPresenter.tryAuthorizeVault()
+        when (v?.id) {
+            btnRetry.id -> mVaultAuthPresenter.tryAuthorizeVault()
         }
     }
 

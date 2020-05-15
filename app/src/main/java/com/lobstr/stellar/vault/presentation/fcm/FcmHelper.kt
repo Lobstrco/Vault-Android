@@ -32,8 +32,7 @@ class FcmHelper(private val context: Context, private val fcmInteractor: FcmInte
 
     fun checkIfFcmRegisteredSuccessfully() {
         if (!fcmInteractor.isFcmRegistered()) {
-            val registrationStatus = requestFcmToken()
-            when (registrationStatus) {
+            when (requestFcmToken()) {
                 FcmRegStatus.TRYING_REGISTER_FCM, FcmRegStatus.DEVICE_ALREADY_REGISTERED -> {
                     val fcmDeviceId = getSavedFcmToken()
                     if (fcmDeviceId.isNotEmpty()) {

@@ -113,7 +113,7 @@ class SignerInfoFragment : BaseFragment(),
     }
 
     override fun checkExistenceLobstrApp() {
-        val packageManager = activity!!.packageManager
+        val packageManager = requireActivity().packageManager
         var applicationInfo: ApplicationInfo? = null
         try {
             applicationInfo = packageManager.getApplicationInfo(PACKAGE_NAME, 0)
@@ -136,11 +136,11 @@ class SignerInfoFragment : BaseFragment(),
         AppUtil.copyToClipboard(context, text)
     }
 
-    override fun showRecheckSingerScreen() {
+    override fun showRecheckSignerScreen() {
         FragmentTransactionManager.displayFragment(
-            parentFragment!!.childFragmentManager,
-            parentFragment!!.childFragmentManager.fragmentFactory.instantiate(
-                context!!.classLoader,
+            requireParentFragment().childFragmentManager,
+            requireParentFragment().childFragmentManager.fragmentFactory.instantiate(
+                requireContext().classLoader,
                 RecheckSignerFragment::class.qualifiedName!!
             ),
             R.id.fl_container
@@ -149,9 +149,9 @@ class SignerInfoFragment : BaseFragment(),
 
     override fun showHelpScreen() {
         FragmentTransactionManager.displayFragment(
-            parentFragment!!.childFragmentManager,
-            parentFragment!!.childFragmentManager.fragmentFactory.instantiate(
-                context!!.classLoader,
+            requireParentFragment().childFragmentManager,
+            requireParentFragment().childFragmentManager.fragmentFactory.instantiate(
+                requireContext().classLoader,
                 FaqFragment::class.qualifiedName!!
             ),
             R.id.fl_container
@@ -188,8 +188,8 @@ class SignerInfoFragment : BaseFragment(),
 
     override fun openLobstrApp() {
         try {
-            startActivity(activity!!.packageManager.getLaunchIntentForPackage(PACKAGE_NAME))
-        } catch (exc: ActivityNotFoundException) {
+            startActivity(requireActivity().packageManager.getLaunchIntentForPackage(PACKAGE_NAME))
+        } catch (exc: Exception) {
             Toast.makeText(context, R.string.msg_no_app_found, Toast.LENGTH_SHORT).show()
         }
     }

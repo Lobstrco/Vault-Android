@@ -160,7 +160,7 @@ class DashboardFragment : BaseFragment(), DashboardView, View.OnClickListener,
 
     override fun showVaultInfo(identityIconUrl: String, publicKey: String) {
         // Set user identity icon.
-        Glide.with(context!!)
+        Glide.with(requireContext())
             .load(identityIconUrl)
             .placeholder(R.drawable.ic_person)
             .into(ivIdentity)
@@ -180,7 +180,7 @@ class DashboardFragment : BaseFragment(), DashboardView, View.OnClickListener,
 
         if (startPosition != Constant.Util.UNDEFINED_VALUE) {
             spannedText.setSpan(
-                ForegroundColorSpan(ContextCompat.getColor(this.context!!, R.color.color_primary)),
+                ForegroundColorSpan(ContextCompat.getColor(this.requireContext(), R.color.color_primary)),
                 startPosition,
                 endPosition,
                 Spanned.SPAN_EXCLUSIVE_EXCLUSIVE

@@ -112,9 +112,9 @@ class TransactionDetailsFragment : BaseFragment(), TransactionDetailsView, View.
     // ===========================================================
 
     override fun onClick(v: View?) {
-        when (v!!.id) {
-            R.id.btnConfirm -> mPresenter.btnConfirmClicked()
-            R.id.btnDeny -> mPresenter.btnDenyClicked()
+        when (v?.id) {
+            btnConfirm.id -> mPresenter.btnConfirmClicked()
+            btnDeny.id -> mPresenter.btnDenyClicked()
         }
     }
 
@@ -160,7 +160,7 @@ class TransactionDetailsFragment : BaseFragment(), TransactionDetailsView, View.
         val bundle = Bundle()
         bundle.putParcelable(BUNDLE_TRANSACTION_ITEM, transactionItem)
         val fragment = childFragmentManager.fragmentFactory.instantiate(
-            context!!.classLoader,
+            requireContext().classLoader,
             OperationListFragment::class.qualifiedName!!
         )
         fragment.arguments = bundle
@@ -180,7 +180,7 @@ class TransactionDetailsFragment : BaseFragment(), TransactionDetailsView, View.
         bundle.putParcelable(BUNDLE_TRANSACTION_ITEM, transactionItem)
         bundle.putInt(Constant.Bundle.BUNDLE_OPERATION_POSITION, position)
         val fragment = childFragmentManager.fragmentFactory.instantiate(
-            context!!.classLoader,
+            requireContext().classLoader,
             OperationDetailsFragment::class.qualifiedName!!
         )
         fragment.arguments = bundle
@@ -265,16 +265,17 @@ class TransactionDetailsFragment : BaseFragment(), TransactionDetailsView, View.
             Constant.Bundle.BUNDLE_NEED_ADDITIONAL_SIGNATURES,
             needAdditionalSignatures
         )
-        val fragment = parentFragment!!.childFragmentManager.fragmentFactory.instantiate(
-            context!!.classLoader,
+        val fragment = requireParentFragment().childFragmentManager.fragmentFactory.instantiate(
+            requireContext().classLoader,
             SuccessFragment::class.qualifiedName!!
         )
         fragment.arguments = bundle
 
         FragmentTransactionManager.displayFragment(
-            parentFragment!!.childFragmentManager,
+            requireParentFragment().childFragmentManager,
             fragment,
-            R.id.fl_container
+            R.id.fl_container,
+            true
         )
     }
 
@@ -289,14 +290,14 @@ class TransactionDetailsFragment : BaseFragment(), TransactionDetailsView, View.
         // Show error screen.
         val bundle = Bundle()
         bundle.putString(Constant.Bundle.BUNDLE_ERROR_MESSAGE, errorMessage)
-        val fragment = parentFragment!!.childFragmentManager.fragmentFactory.instantiate(
-            context!!.classLoader,
+        val fragment = requireParentFragment().childFragmentManager.fragmentFactory.instantiate(
+            requireContext().classLoader,
             ErrorFragment::class.qualifiedName!!
         )
         fragment.arguments = bundle
 
         FragmentTransactionManager.displayFragment(
-            parentFragment!!.childFragmentManager,
+            requireParentFragment().childFragmentManager,
             fragment,
             R.id.fl_container
         )

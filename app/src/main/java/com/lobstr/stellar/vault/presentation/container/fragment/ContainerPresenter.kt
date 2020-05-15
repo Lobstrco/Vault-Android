@@ -44,7 +44,7 @@ class ContainerPresenter(
 
             SETTINGS -> viewState.showSettingsFr()
 
-            TRANSACTION_DETAILS -> viewState.showTransactionDetails(null, transactionItem!!)
+            TRANSACTION_DETAILS -> viewState.showTransactionDetails(transactionItem!!)
 
             IMPORT_XDR -> viewState.showImportXdrFr()
 
