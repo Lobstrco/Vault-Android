@@ -7,7 +7,12 @@ import io.reactivex.Single
 
 interface FcmRepository {
 
-    fun fcmDeviceRegistration(token: String, type: String, registrationId: String): Single<FcmResult>
+    fun fcmDeviceRegistration(
+        token: String,
+        type: String,
+        registrationId: String,
+        active: Boolean
+    ): Single<FcmResult>
 
     fun transformApiAccountResponse(apiAccountStr: String): Account
 

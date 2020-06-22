@@ -6,6 +6,7 @@ import com.lobstr.stellar.vault.data.error.exeption.NoInternetConnectionExceptio
 import com.lobstr.stellar.vault.data.error.exeption.UserNotAuthorizedException
 import com.lobstr.stellar.vault.domain.signed_account.SignedAccountInteractor
 import com.lobstr.stellar.vault.domain.util.EventProviderModule
+import com.lobstr.stellar.vault.domain.util.event.Auth
 import com.lobstr.stellar.vault.domain.util.event.Network
 import com.lobstr.stellar.vault.domain.util.event.Notification
 import com.lobstr.stellar.vault.presentation.BasePresenter
@@ -33,7 +34,7 @@ class SignedAccountsPresenter : BasePresenter<SignedAccountsView>() {
     private var savedRvPosition: Int = Constant.Util.UNDEFINED_VALUE
 
     private var stellarAccountsSubscription: Disposable? = null
-    private val cashedStellarAccounts: MutableList<Account> = mutableListOf()
+    private val cachedStellarAccounts: MutableList<Account> = mutableListOf()
 
     init {
         LVApplication.appComponent.plusSignedAccountComponent(SignedAccountModule()).inject(this)
@@ -76,6 +77,15 @@ class SignedAccountsPresenter : BasePresenter<SignedAccountsView>() {
                     it.printStackTrace()
                 })
         )
+        unsubscribeOnDestroy(
+            eventProviderModule.updateEventSubject
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({
+                    loadSignedAccountsList()
+                }, {
+                    it.printStackTrace()
+                })
+        )
     }
 
     private fun loadSignedAccountsList() {
@@ -86,8 +96,8 @@ class SignedAccountsPresenter : BasePresenter<SignedAccountsView>() {
                 .doOnSubscribe { viewState.showProgress(true) }
                 .doOnEvent { _, _ -> viewState.showProgress(false) }
                 .subscribe({
-                    // reset saved scroll position for avoid scroll to wrong position after
-                    // pagination action
+                    // Reset saved scroll position for avoid scroll to wrong position after
+                    // pagination action.
                     savedRvPosition = Constant.Util.UNDEFINED_VALUE
 
                     accounts.clear()
@@ -95,16 +105,16 @@ class SignedAccountsPresenter : BasePresenter<SignedAccountsView>() {
 
                     viewState.showEmptyState(accounts.isEmpty())
 
-                    // check cashed federation items
+                    // check cached federation items
                     accounts.forEachIndexed { index, accountItem ->
                         val federation =
-                            cashedStellarAccounts.find { account -> account.address == accountItem.address }
+                            cachedStellarAccounts.find { account -> account.address == accountItem.address }
                                 ?.federation
                         accounts[index].federation = federation
                     }
                     viewState.notifyAdapter(accounts)
 
-                    // try receive federations for accounts
+                    // Try receive federations for accounts.
                     getStellarAccounts(accounts)
 
                     viewState.scrollListToPosition(0)
@@ -116,7 +126,10 @@ class SignedAccountsPresenter : BasePresenter<SignedAccountsView>() {
                             handleNoInternetConnection()
                         }
                         is UserNotAuthorizedException -> {
-                            loadSignedAccountsList()
+                            when (it.action) {
+                                UserNotAuthorizedException.Action.AUTH_REQUIRED -> eventProviderModule.authEventSubject.onNext(Auth())
+                                else -> loadSignedAccountsList()
+                            }
                         }
                         is DefaultException -> {
                             viewState.showErrorMessage(it.details)
@@ -137,8 +150,8 @@ class SignedAccountsPresenter : BasePresenter<SignedAccountsView>() {
         stellarAccountsSubscription = Observable.fromIterable(accounts)
             .subscribeOn(Schedulers.io())
             .filter { account: Account ->
-                cashedStellarAccounts
-                    .find { cashedAccount -> cashedAccount.address == account.address } == null
+                cachedStellarAccounts
+                    .find { cachedAccount -> cachedAccount.address == account.address } == null
             }
             .flatMapSingle {
                 interactor.getStellarAccount(it.address).onErrorReturnItem(it)
@@ -148,15 +161,15 @@ class SignedAccountsPresenter : BasePresenter<SignedAccountsView>() {
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
                 it.forEach { account ->
-                    if (cashedStellarAccounts.find { cashedAccount -> cashedAccount.address == account.address } == null) {
-                        cashedStellarAccounts.add(account)
+                    if (cachedStellarAccounts.find { cachedAccount -> cachedAccount.address == account.address } == null) {
+                        cachedStellarAccounts.add(account)
                     }
                 }
 
-                // check cashed federation items
+                // Check cached federation items
                 accounts.forEachIndexed { index, accountItem ->
                     val federation =
-                        cashedStellarAccounts.find { account -> account.address == accountItem.address }
+                        cachedStellarAccounts.find { account -> account.address == accountItem.address }
                             ?.federation
                     accounts[index].federation = federation
                 }

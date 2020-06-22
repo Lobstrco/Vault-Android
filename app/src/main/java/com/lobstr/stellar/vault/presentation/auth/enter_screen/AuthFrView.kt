@@ -16,5 +16,11 @@ interface AuthFrView : MvpView {
     fun showRestoreScreen()
 
     @Skip
+    fun showTangemSetupScreen()
+
+    @Skip
     fun showHelpScreen()
+
+    @Skip
+    fun showMessage(message: String?)
 }

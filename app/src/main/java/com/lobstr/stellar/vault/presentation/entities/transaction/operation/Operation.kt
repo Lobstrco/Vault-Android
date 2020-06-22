@@ -4,4 +4,6 @@ import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
 
 @Parcelize
-open class Operation(open val sourceAccount: String?) : Parcelable
+open class Operation(open val sourceAccount: String?) : Parcelable {
+    open fun getFields(): MutableList<OperationField> = mutableListOf()
+}

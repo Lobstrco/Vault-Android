@@ -92,40 +92,22 @@
                     android:textColor="@color/color_primary"
                     android:textSize="14sp" />
 
-            <TextView
-                    android:id="@+id/tvSettingsMnemonics"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="?android:attr/selectableItemBackground"
-                    android:drawableEnd="@drawable/ic_arrow_right"
-                    android:padding="16dp"
-                    android:text="@string/text_settings_mnemonic_code"
-                    android:textColor="@android:color/black"
-                    android:textSize="16sp" />
-
-            <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginEnd="0dp"
-                    android:background="@color/color_33979797" />
-
-            <TextView
-                    android:id="@+id/tvSettingsChangePin"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="?android:attr/selectableItemBackground"
-                    android:drawableEnd="@drawable/ic_arrow_right"
-                    android:padding="16dp"
-                    android:text="@string/text_settings_change_pin"
-                    android:textColor="@android:color/black"
-                    android:textSize="16sp" />
-
             <LinearLayout
-                    android:id="@+id/llBiometric"
+                    android:id="@+id/llSettingsMnemonicsContainer"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
+
+                <TextView
+                        android:id="@+id/tvSettingsMnemonics"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="?android:attr/selectableItemBackground"
+                        android:drawableEnd="@drawable/ic_arrow_right"
+                        android:padding="16dp"
+                        android:text="@string/text_settings_mnemonic_code"
+                        android:textColor="@android:color/black"
+                        android:textSize="16sp" />
 
                 <View
                         android:layout_width="match_parent"
@@ -133,6 +115,38 @@
                         android:layout_marginStart="16dp"
                         android:layout_marginEnd="0dp"
                         android:background="@color/color_33979797" />
+            </LinearLayout>
+
+            <LinearLayout
+                    android:id="@+id/llSettingsChangePinContainer"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                <TextView
+                        android:id="@+id/tvSettingsChangePin"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="?android:attr/selectableItemBackground"
+                        android:drawableEnd="@drawable/ic_arrow_right"
+                        android:padding="16dp"
+                        android:text="@string/text_settings_change_pin"
+                        android:textColor="@android:color/black"
+                        android:textSize="16sp" />
+
+                <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginEnd="0dp"
+                        android:background="@color/color_33979797" />
+            </LinearLayout>
+
+            <LinearLayout
+                    android:id="@+id/llBiometricContainer"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
 
                 <androidx.appcompat.widget.SwitchCompat
                         android:id="@+id/swSettingsBiometric"
@@ -147,14 +161,13 @@
                         android:textColor="@android:color/black"
                         android:textSize="16sp" />
 
+                <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginEnd="0dp"
+                        android:background="@color/color_33979797" />
             </LinearLayout>
-
-            <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginEnd="0dp"
-                    android:background="@color/color_33979797" />
 
             <LinearLayout
                     android:id="@+id/llSettingsSpamProtection"
@@ -272,51 +285,82 @@
                     android:background="@color/color_33979797" />
 
             <LinearLayout
-                    android:id="@+id/llSettingsTrConfirmation"
+                    android:id="@+id/llSettingsSignerCardInfoContainer"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="?android:attr/selectableItemBackground"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal"
-                    android:padding="16dp">
+                    android:orientation="vertical">
 
                 <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginEnd="8dp"
-                        android:layout_weight="1"
-                        android:ellipsize="end"
-                        android:maxLines="1"
-                        android:singleLine="true"
-                        android:text="@string/text_settings_transaction_confirmation"
+                        android:background="?android:attr/selectableItemBackground"
+                        android:drawableEnd="@drawable/ic_arrow_right"
+                        android:padding="16dp"
+                        android:text="@string/text_settings_signer_card_info"
                         android:textColor="@android:color/black"
                         android:textSize="16sp" />
 
-                <TextView
-                        android:id="@+id/tvTrConfirmationConfig"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="4dp"
-                        android:layout_weight="0"
-                        android:gravity="center"
-                        android:paddingBottom="2dp"
-                        android:singleLine="true"
-                        android:textColor="@color/color_99000000"
-                        android:textSize="16sp" />
-
-                <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:src="@drawable/ic_arrow_right"
-                        tools:ignore="ContentDescription" />
+                <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginEnd="0dp"
+                        android:background="@color/color_33979797" />
             </LinearLayout>
 
-            <View
+            <LinearLayout
+                    android:id="@+id/llSettingsTrConfirmationContainer"
                     android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginEnd="0dp"
-                    android:background="@color/color_33979797" />
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                <LinearLayout
+                        android:id="@+id/llSettingsTrConfirmation"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="?android:attr/selectableItemBackground"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:padding="16dp">
+
+                    <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="8dp"
+                            android:layout_weight="1"
+                            android:ellipsize="end"
+                            android:maxLines="1"
+                            android:singleLine="true"
+                            android:text="@string/text_settings_transaction_confirmation"
+                            android:textColor="@android:color/black"
+                            android:textSize="16sp" />
+
+                    <TextView
+                            android:id="@+id/tvTrConfirmationConfig"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="4dp"
+                            android:layout_weight="0"
+                            android:gravity="center"
+                            android:paddingBottom="2dp"
+                            android:singleLine="true"
+                            android:textColor="@color/color_99000000"
+                            android:textSize="16sp" />
+
+                    <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/ic_arrow_right"
+                            tools:ignore="ContentDescription" />
+                </LinearLayout>
+
+                <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginEnd="0dp"
+                        android:background="@color/color_33979797" />
+            </LinearLayout>
 
             <TextView
                     android:id="@+id/tvSettingsRateUs"

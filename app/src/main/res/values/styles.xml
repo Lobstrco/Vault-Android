@@ -17,17 +17,11 @@
     <style name="AppTheme" parent="LightAppTheme" />
 
     <style name="BaseSplashTheme" parent="DarkAppTheme">
-        <item name="android:windowFullscreen">true</item>
-        <item name="android:windowContentOverlay">@null</item>
         <item name="android:windowBackground">@drawable/bg_splash</item>
         <item name="android:navigationBarColor">@android:color/transparent</item>
     </style>
 
     <style name="SplashTheme" parent="BaseSplashTheme" />
-
-    <style name="PinDarkTheme" parent="DarkAppTheme">
-        <item name="android:navigationBarColor">@android:color/transparent</item>
-    </style>
 
     <!-- Used for setup light navigation bar buttons on v27 (screens with dark background) -->
     <style name="DarkAppTheme" parent="BaseTheme" />

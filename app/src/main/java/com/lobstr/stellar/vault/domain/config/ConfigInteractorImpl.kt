@@ -34,4 +34,8 @@ class ConfigInteractorImpl(
             spamProtectionEnabled
         )
     }
+
+    override fun getUserPublicKey(): String? {
+        return prefsUtil.publicKey
+    }
 }

@@ -2,13 +2,13 @@ package com.lobstr.stellar.vault.presentation.home.transactions.submit_success
 
 
 import android.os.Bundle
-import android.view.*
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import com.lobstr.stellar.vault.R
 import com.lobstr.stellar.vault.presentation.base.fragment.BaseFragment
-import com.lobstr.stellar.vault.presentation.faq.FaqFragment
 import com.lobstr.stellar.vault.presentation.util.AppUtil
 import com.lobstr.stellar.vault.presentation.util.Constant
-import com.lobstr.stellar.vault.presentation.util.manager.FragmentTransactionManager
 import kotlinx.android.synthetic.main.fragment_success.*
 import moxy.presenter.InjectPresenter
 import moxy.presenter.ProvidePresenter
@@ -68,19 +68,6 @@ class SuccessFragment : BaseFragment(), SuccessView, View.OnClickListener {
         btnDone.setOnClickListener(this)
     }
 
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.success, menu)
-        super.onCreateOptionsMenu(menu, inflater)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.action_info -> mPresenter.infoClicked()
-        }
-
-        return super.onOptionsItemSelected(item)
-    }
-
     // ===========================================================
     // Listeners, methods for/from Interfaces
     // ===========================================================
@@ -111,14 +98,6 @@ class SuccessFragment : BaseFragment(), SuccessView, View.OnClickListener {
 
     override fun copyToClipBoard(text: String) {
         AppUtil.copyToClipboard(context, text)
-    }
-
-    override fun showHelpScreen() {
-        FragmentTransactionManager.displayFragment(
-            requireParentFragment().childFragmentManager,
-            requireParentFragment().childFragmentManager.fragmentFactory.instantiate(requireContext().classLoader, FaqFragment::class.qualifiedName!!),
-            R.id.fl_container
-        )
     }
 
     // ===========================================================

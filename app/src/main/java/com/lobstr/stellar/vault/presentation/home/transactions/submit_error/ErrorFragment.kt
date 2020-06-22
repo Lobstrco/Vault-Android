@@ -5,10 +5,9 @@ import android.os.Bundle
 import android.view.*
 import com.lobstr.stellar.vault.R
 import com.lobstr.stellar.vault.presentation.base.fragment.BaseFragment
-import com.lobstr.stellar.vault.presentation.faq.FaqFragment
 import com.lobstr.stellar.vault.presentation.util.AppUtil
 import com.lobstr.stellar.vault.presentation.util.Constant
-import com.lobstr.stellar.vault.presentation.util.manager.FragmentTransactionManager
+import com.lobstr.stellar.vault.presentation.util.manager.SupportManager
 import kotlinx.android.synthetic.main.fragment_error.*
 import moxy.presenter.InjectPresenter
 import moxy.presenter.ProvidePresenter
@@ -67,7 +66,7 @@ class ErrorFragment : BaseFragment(), ErrorView, View.OnClickListener {
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.success, menu)
+        inflater.inflate(R.menu.error, menu)
         super.onCreateOptionsMenu(menu, inflater)
     }
 
@@ -101,12 +100,8 @@ class ErrorFragment : BaseFragment(), ErrorView, View.OnClickListener {
         activity?.onBackPressed()
     }
 
-    override fun showHelpScreen() {
-        FragmentTransactionManager.displayFragment(
-            requireParentFragment().childFragmentManager,
-            requireParentFragment().childFragmentManager.fragmentFactory.instantiate(requireContext().classLoader, FaqFragment::class.qualifiedName!!),
-            R.id.fl_container
-        )
+    override fun showHelpScreen(userId: String?) {
+        SupportManager.showZendeskHelpCenter(requireContext(), userId = userId)
     }
 
     // ===========================================================

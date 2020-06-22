@@ -6,9 +6,17 @@ import io.reactivex.Single
 
 interface VaultAuthInteractor {
 
+    fun hasMnemonics(): Boolean
+
+    fun hasTangem(): Boolean
+
+    fun getTangemCardId(): String?
+
     fun getUserToken(): String?
 
-    fun authorizeVault(): Single<List<Account>>
+    fun authorizeVault(transaction: String): Single<String>
+
+    fun authorizeVault(): Single<String>
 
     fun registerFcm()
 
@@ -23,4 +31,6 @@ interface VaultAuthInteractor {
     fun confirmAccountHasSigners()
 
     fun getSignedAccounts(token: String): Single<List<Account>>
+
+    fun clearUserData()
 }

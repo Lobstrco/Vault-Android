@@ -7,6 +7,7 @@ import com.lobstr.stellar.vault.presentation.BasePresenter
 import com.lobstr.stellar.vault.presentation.application.LVApplication
 import com.lobstr.stellar.vault.presentation.auth.restore_key.entities.RecoveryPhraseInfo
 import com.lobstr.stellar.vault.presentation.dagger.module.recovery_key.RecoveryKeyModule
+import com.lobstr.stellar.vault.presentation.util.Constant.Support.RECOVER_ACCOUNT
 import com.lobstr.stellar.vault.presentation.util.Constant.Util.COUNT_MNEMONIC_WORDS_12
 import com.lobstr.stellar.vault.presentation.util.Constant.Util.COUNT_MNEMONIC_WORDS_24
 import com.soneso.stellarmnemonics.mnemonic.MnemonicException
@@ -33,7 +34,7 @@ class RecoverKeyFrPresenter : BasePresenter<RecoverKeyFrView>() {
     }
 
     fun infoClicked() {
-        viewState.showHelpScreen()
+        viewState.showHelpScreen(RECOVER_ACCOUNT)
     }
 
     fun phrasesChanged(phrases: String) {

@@ -6,6 +6,8 @@ import io.reactivex.Single
 
 interface SettingsInteractor {
 
+    fun hasMnemonics(): Boolean
+
     fun clearUserData()
 
     fun getUserPublicKey(): String?

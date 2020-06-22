@@ -5,6 +5,8 @@ import com.lobstr.stellar.vault.data.error.exeption.DefaultException
 import com.lobstr.stellar.vault.data.error.exeption.NoInternetConnectionException
 import com.lobstr.stellar.vault.data.error.exeption.UserNotAuthorizedException
 import com.lobstr.stellar.vault.domain.config.ConfigInteractor
+import com.lobstr.stellar.vault.domain.util.EventProviderModule
+import com.lobstr.stellar.vault.domain.util.event.Auth
 import com.lobstr.stellar.vault.presentation.BasePresenter
 import com.lobstr.stellar.vault.presentation.application.LVApplication
 import com.lobstr.stellar.vault.presentation.dagger.module.config.ConfigModule
@@ -22,6 +24,9 @@ class ConfigPresenter(private val config: Int) : BasePresenter<ConfigView>() {
 
     @Inject
     lateinit var interactor: ConfigInteractor
+
+    @Inject
+    lateinit var eventProviderModule: EventProviderModule
 
     private var updateAccountConfigInProcess = false
 
@@ -121,7 +126,12 @@ class ConfigPresenter(private val config: Int) : BasePresenter<ConfigView>() {
                             viewState.showErrorMessage(it.details)
                         }
                         is UserNotAuthorizedException -> {
-                            updateAccountConfig(spamProtectionEnabled)
+                            when (it.action) {
+                                UserNotAuthorizedException.Action.AUTH_REQUIRED -> eventProviderModule.authEventSubject.onNext(
+                                    Auth()
+                                )
+                                else -> updateAccountConfig(spamProtectionEnabled)
+                            }
                         }
                         is DefaultException -> {
                             viewState.showErrorMessage(it.details)
@@ -131,6 +141,16 @@ class ConfigPresenter(private val config: Int) : BasePresenter<ConfigView>() {
                         }
                     }
                 })
+        )
+    }
+
+    fun infoClicked() {
+        viewState.showHelpScreen(
+            when (config) {
+                TRANSACTION_CONFIRMATIONS -> Constant.Support.TRANSACTION_CONFIRMATIONS
+                else -> -1
+            },
+            interactor.getUserPublicKey()
         )
     }
 }

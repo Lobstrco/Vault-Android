@@ -1,6 +1,8 @@
 package com.lobstr.stellar.vault.presentation.entities.transaction.operation
 
 import android.os.Parcelable
+import com.lobstr.stellar.vault.R
+import com.lobstr.stellar.vault.presentation.util.AppUtil
 import kotlinx.android.parcel.Parcelize
 
 @Parcelize
@@ -9,10 +11,10 @@ data class AccountMergeOperation(
     val destination: String
 ) : Operation(sourceAccount), Parcelable {
 
-    fun getFieldsMap(): Map<String, String?> {
-        val map: MutableMap<String, String?> = mutableMapOf()
-        if (destination.isNotEmpty()) map["destination"] = destination
+    override fun getFields(): MutableList<OperationField> {
+        val fields: MutableList<OperationField> = mutableListOf()
+        if (destination.isNotEmpty()) fields.add(OperationField(AppUtil.getString(R.string.op_field_destination), destination))
 
-        return map
+        return fields
     }
 }

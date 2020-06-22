@@ -2,9 +2,7 @@ package com.lobstr.stellar.vault.presentation.home.settings.config
 
 import android.app.Activity
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.lobstr.stellar.vault.R
@@ -14,6 +12,7 @@ import com.lobstr.stellar.vault.presentation.home.settings.config.adapter.Config
 import com.lobstr.stellar.vault.presentation.home.settings.config.adapter.OnConfigItemListener
 import com.lobstr.stellar.vault.presentation.util.Constant
 import com.lobstr.stellar.vault.presentation.util.manager.ProgressManager
+import com.lobstr.stellar.vault.presentation.util.manager.SupportManager
 import kotlinx.android.synthetic.main.fragment_config.*
 import moxy.presenter.InjectPresenter
 import moxy.presenter.ProvidePresenter
@@ -66,6 +65,19 @@ class ConfigFragment : BaseFragment(), ConfigView, OnConfigItemListener {
         return mView
     }
 
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.config, menu)
+        super.onCreateOptionsMenu(menu, inflater)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.action_info -> mPresenter.infoClicked()
+        }
+
+        return super.onOptionsItemSelected(item)
+    }
+
     // ===========================================================
     // Listeners, methods for/from Interfaces
     // ===========================================================
@@ -110,6 +122,14 @@ class ConfigFragment : BaseFragment(), ConfigView, OnConfigItemListener {
         }
 
         Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+    }
+
+    override fun showHelpScreen(articleId: Long, userId: String?) {
+        if (articleId != -1L) {
+            SupportManager.showZendeskArticle(requireContext(), articleId, userId)
+        } else {
+            SupportManager.showZendeskHelpCenter(requireContext())
+        }
     }
 
     // ===========================================================

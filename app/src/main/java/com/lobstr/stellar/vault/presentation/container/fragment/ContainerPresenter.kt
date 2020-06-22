@@ -2,7 +2,6 @@ package com.lobstr.stellar.vault.presentation.container.fragment
 
 import com.lobstr.stellar.vault.presentation.entities.transaction.TransactionItem
 import com.lobstr.stellar.vault.presentation.util.Constant.Navigation.AUTH
-import com.lobstr.stellar.vault.presentation.util.Constant.Navigation.BIOMETRIC_SET_UP
 import com.lobstr.stellar.vault.presentation.util.Constant.Navigation.CONFIG
 import com.lobstr.stellar.vault.presentation.util.Constant.Navigation.DASHBOARD
 import com.lobstr.stellar.vault.presentation.util.Constant.Navigation.ERROR
@@ -14,6 +13,7 @@ import com.lobstr.stellar.vault.presentation.util.Constant.Navigation.SIGNER_INF
 import com.lobstr.stellar.vault.presentation.util.Constant.Navigation.SUCCESS
 import com.lobstr.stellar.vault.presentation.util.Constant.Navigation.TRANSACTIONS
 import com.lobstr.stellar.vault.presentation.util.Constant.Navigation.TRANSACTION_DETAILS
+import com.lobstr.stellar.vault.presentation.util.Constant.Navigation.VAULT_AUTH
 import moxy.MvpPresenter
 
 class ContainerPresenter(
@@ -34,9 +34,9 @@ class ContainerPresenter(
         when (targetFr) {
             AUTH -> viewState.showAuthFr()
 
-            SIGNER_INFO -> viewState.showSignerInfoFr()
+            VAULT_AUTH -> viewState.showVaultAuthFr()
 
-            BIOMETRIC_SET_UP -> viewState.showBiometricSetUpFr()
+            SIGNER_INFO -> viewState.showSignerInfoFr()
 
             DASHBOARD -> viewState.showDashBoardFr()
 

@@ -14,7 +14,11 @@ interface SettingsView : MvpView {
     @AddToEndSingle
     fun setupSettingsData(
         buildVersion: String,
-        isBiometricSupported: Boolean
+        isBiometricSupported: Boolean,
+        isRecoveryCodeAvailable: Boolean,
+        isSignerCardInfoAvailable: Boolean,
+        isTransactionConfirmationAvailable: Boolean,
+        isChangePinAvailable: Boolean
     )
 
     @AddToEndSingle
@@ -44,7 +48,7 @@ interface SettingsView : MvpView {
     fun showChangePinScreen()
 
     @Skip
-    fun showHelpScreen()
+    fun showHelpScreen(userId: String?)
 
     @AddToEndSingle
     fun setBiometricChecked(checked: Boolean)
@@ -68,13 +72,13 @@ interface SettingsView : MvpView {
     fun setupPolicyYear(@StringRes id: Int)
 
     @Skip
-    fun showLogOutDialog()
+    fun showLogOutDialog(title: String?, message: String?)
 
     @Skip
-    fun showStore(storeUrl: String)
+    fun showWebPage(storeUrl: String)
 
     @Skip
-    fun sendMail(mail: String, subject: String)
+    fun sendMail(mail: String, subject: String, body: String? = null)
 
     @Skip
     fun showConfigScreen(config: Int)

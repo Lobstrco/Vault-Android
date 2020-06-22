@@ -10,11 +10,14 @@ import com.lobstr.stellar.vault.presentation.entities.account.Thresholds
 import com.lobstr.stellar.vault.presentation.entities.mnemonic.MnemonicItem
 import com.lobstr.stellar.vault.presentation.entities.transaction.TransactionItem
 import com.soneso.stellarmnemonics.Wallet
+import com.tangem.commands.SignResponse
 import io.reactivex.Single
 import io.reactivex.Single.fromCallable
 import org.stellar.sdk.*
 import org.stellar.sdk.responses.AccountResponse
 import org.stellar.sdk.responses.SubmitTransactionResponse
+import org.stellar.sdk.xdr.DecoratedSignature
+import org.stellar.sdk.xdr.Signature
 import java.util.concurrent.Callable
 
 class StellarRepositoryImpl(
@@ -141,5 +144,33 @@ class StellarRepositoryImpl(
             .onErrorResumeNext {
                 LVApplication.appComponent.rxErrorUtils.handleSingleRequestHttpError(it)
             }
+    }
+
+    override fun getPublicKeyFromKeyPair(walletPublicKey: ByteArray?): String? {
+        val keyPair = KeyPair.fromPublicKey(walletPublicKey)
+        return keyPair.accountId
+    }
+
+    override fun getTransactionFromXDR(xdr: String): AbstractTransaction {
+        return AbstractTransaction.fromEnvelopeXdr(xdr, Network.PUBLIC)
+    }
+
+    override fun signTransactionWithTangemCardData(
+        transaction: AbstractTransaction,
+        signResponse: SignResponse,
+        accountId: String
+    ): String? {
+        val signature = Signature()
+        signature.signature = signResponse.signature
+
+        val decoratedSignature = DecoratedSignature()
+
+        val keyPair = KeyPair.fromAccountId(accountId)
+        decoratedSignature.hint = keyPair.signatureHint
+        decoratedSignature.signature = signature
+
+        transaction.signatures.add(decoratedSignature)
+
+        return transaction.toEnvelopeXdrBase64()
     }
 }

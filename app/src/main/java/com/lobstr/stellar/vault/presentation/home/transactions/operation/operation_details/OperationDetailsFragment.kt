@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.lobstr.stellar.vault.R
 import com.lobstr.stellar.vault.presentation.base.fragment.BaseFragment
+import com.lobstr.stellar.vault.presentation.entities.transaction.operation.OperationField
 import com.lobstr.stellar.vault.presentation.home.transactions.operation.operation_list.adapter.OperationDetailsAdapter
 import com.lobstr.stellar.vault.presentation.util.Constant
 import kotlinx.android.synthetic.main.fragment_operation_details.*
@@ -69,11 +70,11 @@ class OperationDetailsFragment : BaseFragment(),
         saveActionBarTitle(titleRes)
     }
 
-    override fun initRecycledView(map: Map<String, String?>) {
+    override fun initRecycledView(fields: MutableList<OperationField>) {
         rvOperationDetails.layoutManager = LinearLayoutManager(activity)
         rvOperationDetails.itemAnimator = null
         rvOperationDetails.isNestedScrollingEnabled = false
-        rvOperationDetails.adapter = OperationDetailsAdapter(map)
+        rvOperationDetails.adapter = OperationDetailsAdapter(fields)
     }
 
     // ===========================================================

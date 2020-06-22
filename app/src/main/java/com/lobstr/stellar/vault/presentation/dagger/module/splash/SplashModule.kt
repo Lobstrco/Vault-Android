@@ -1,5 +1,6 @@
 package com.lobstr.stellar.vault.presentation.dagger.module.splash
 
+import com.lobstr.stellar.vault.domain.key_store.KeyStoreRepository
 import com.lobstr.stellar.vault.domain.splash.SplashInteractor
 import com.lobstr.stellar.vault.domain.splash.SplashInteractorImpl
 import com.lobstr.stellar.vault.presentation.dagger.scope.AuthScope
@@ -12,8 +13,9 @@ class SplashModule {
     @Provides
     @AuthScope
     internal fun provideSplashInteractor(
-        prefsUtil: PrefsUtil
+        prefsUtil: PrefsUtil,
+        keyStoreRepository: KeyStoreRepository
     ): SplashInteractor {
-        return SplashInteractorImpl(prefsUtil)
+        return SplashInteractorImpl(prefsUtil, keyStoreRepository)
     }
 }

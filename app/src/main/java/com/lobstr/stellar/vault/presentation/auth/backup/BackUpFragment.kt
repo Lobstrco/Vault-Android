@@ -6,9 +6,9 @@ import android.view.*
 import com.lobstr.stellar.vault.R
 import com.lobstr.stellar.vault.presentation.auth.mnemonic.create_mnemonic.MnemonicsFragment
 import com.lobstr.stellar.vault.presentation.base.fragment.BaseFragment
-import com.lobstr.stellar.vault.presentation.faq.FaqFragment
 import com.lobstr.stellar.vault.presentation.util.Constant
 import com.lobstr.stellar.vault.presentation.util.manager.FragmentTransactionManager
+import com.lobstr.stellar.vault.presentation.util.manager.SupportManager
 import kotlinx.android.synthetic.main.fragment_back_up.*
 import moxy.presenter.InjectPresenter
 import moxy.presenter.ProvidePresenter
@@ -51,7 +51,11 @@ class BackUpFragment : BaseFragment(), BackUpView, View.OnClickListener {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        mView = if (mView == null) inflater.inflate(R.layout.fragment_back_up, container, false) else mView
+        mView = if (mView == null) inflater.inflate(
+            R.layout.fragment_back_up,
+            container,
+            false
+        ) else mView
         return mView
     }
 
@@ -90,7 +94,10 @@ class BackUpFragment : BaseFragment(), BackUpView, View.OnClickListener {
     override fun showCreateMnemonicsScreen() {
         val bundle = Bundle()
         bundle.putBoolean(Constant.Bundle.BUNDLE_GENERATE_MNEMONICS, true)
-        val fragment = requireParentFragment().childFragmentManager.fragmentFactory.instantiate(requireContext().classLoader, MnemonicsFragment::class.qualifiedName!!)
+        val fragment = requireParentFragment().childFragmentManager.fragmentFactory.instantiate(
+            requireContext().classLoader,
+            MnemonicsFragment::class.qualifiedName!!
+        )
         fragment.arguments = bundle
 
         FragmentTransactionManager.displayFragment(
@@ -100,12 +107,8 @@ class BackUpFragment : BaseFragment(), BackUpView, View.OnClickListener {
         )
     }
 
-    override fun showHelpScreen() {
-        FragmentTransactionManager.displayFragment(
-            requireParentFragment().childFragmentManager,
-            requireParentFragment().childFragmentManager.fragmentFactory.instantiate(requireContext().classLoader, FaqFragment::class.qualifiedName!!),
-            R.id.fl_container
-        )
+    override fun showHelpScreen(articleId: Long) {
+        SupportManager.showZendeskArticle(requireContext(), articleId)
     }
 
     // ===========================================================

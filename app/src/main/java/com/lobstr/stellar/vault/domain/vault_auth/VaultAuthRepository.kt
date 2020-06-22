@@ -5,7 +5,7 @@ import io.reactivex.Single
 
 interface VaultAuthRepository {
 
-    fun getChallenge(account: String): Single<String>
+    fun getChallenge(account: String?): Single<String>
 
     fun submitChallenge(transaction: String): Single<String>
 }

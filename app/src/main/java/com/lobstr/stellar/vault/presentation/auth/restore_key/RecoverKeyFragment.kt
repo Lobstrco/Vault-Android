@@ -15,12 +15,11 @@ import androidx.core.content.ContextCompat
 import com.lobstr.stellar.vault.R
 import com.lobstr.stellar.vault.presentation.auth.restore_key.entities.RecoveryPhraseInfo
 import com.lobstr.stellar.vault.presentation.base.fragment.BaseFragment
-import com.lobstr.stellar.vault.presentation.faq.FaqFragment
 import com.lobstr.stellar.vault.presentation.pin.PinActivity
 import com.lobstr.stellar.vault.presentation.util.AppUtil
 import com.lobstr.stellar.vault.presentation.util.Constant
-import com.lobstr.stellar.vault.presentation.util.manager.FragmentTransactionManager
 import com.lobstr.stellar.vault.presentation.util.manager.ProgressManager
+import com.lobstr.stellar.vault.presentation.util.manager.SupportManager
 import kotlinx.android.synthetic.main.fragment_recovery_key.*
 import moxy.presenter.InjectPresenter
 import moxy.presenter.ProvidePresenter
@@ -165,10 +164,10 @@ class RecoverKeyFragment : BaseFragment(), RecoverKeyFrView, View.OnClickListene
     }
 
     override fun showPinScreen() {
-        val intent = Intent(activity, PinActivity::class.java)
-        intent.putExtra(Constant.Extra.EXTRA_CREATE_PIN, true)
-        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-        startActivity(intent)
+        startActivity(Intent(activity, PinActivity::class.java).apply {
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+            putExtra(Constant.Extra.EXTRA_PIN_MODE, Constant.PinMode.CREATE)
+        })
     }
 
     override fun showErrorMessage(@StringRes message: Int) {
@@ -179,12 +178,8 @@ class RecoverKeyFragment : BaseFragment(), RecoverKeyFrView, View.OnClickListene
         ProgressManager.show(show, childFragmentManager)
     }
 
-    override fun showHelpScreen() {
-        FragmentTransactionManager.displayFragment(
-            requireParentFragment().childFragmentManager,
-            requireParentFragment().childFragmentManager.fragmentFactory.instantiate(requireContext().classLoader, FaqFragment::class.qualifiedName!!),
-            R.id.fl_container
-        )
+    override fun showHelpScreen(articleId: Long) {
+        SupportManager.showZendeskArticle(requireContext(), articleId)
     }
 
     // ===========================================================

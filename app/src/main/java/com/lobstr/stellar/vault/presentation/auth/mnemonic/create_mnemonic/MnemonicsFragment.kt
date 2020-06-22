@@ -11,10 +11,10 @@ import com.lobstr.stellar.vault.presentation.auth.mnemonic.confirm_mnemonic.Conf
 import com.lobstr.stellar.vault.presentation.base.fragment.BaseFragment
 import com.lobstr.stellar.vault.presentation.dialog.alert.base.AlertDialogFragment
 import com.lobstr.stellar.vault.presentation.entities.mnemonic.MnemonicItem
-import com.lobstr.stellar.vault.presentation.faq.FaqFragment
 import com.lobstr.stellar.vault.presentation.util.AppUtil
 import com.lobstr.stellar.vault.presentation.util.Constant
 import com.lobstr.stellar.vault.presentation.util.manager.FragmentTransactionManager
+import com.lobstr.stellar.vault.presentation.util.manager.SupportManager
 import kotlinx.android.synthetic.main.fragment_mnemonics.*
 import moxy.presenter.InjectPresenter
 import moxy.presenter.ProvidePresenter
@@ -146,12 +146,8 @@ class MnemonicsFragment : BaseFragment(),
         AppUtil.copyToClipboard(context, text)
     }
 
-    override fun showHelpScreen() {
-        FragmentTransactionManager.displayFragment(
-            requireParentFragment().childFragmentManager,
-            requireParentFragment().childFragmentManager.fragmentFactory.instantiate(requireContext().classLoader, FaqFragment::class.qualifiedName!!),
-            R.id.fl_container
-        )
+    override fun showHelpScreen(articleId: Long, userId: String?) {
+        SupportManager.showZendeskArticle(requireContext(), articleId, userId)
     }
 
     override fun showDenyAccountCreationDialog() {

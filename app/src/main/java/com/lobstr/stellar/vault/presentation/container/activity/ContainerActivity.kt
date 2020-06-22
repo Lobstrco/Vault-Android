@@ -12,6 +12,7 @@ import com.lobstr.stellar.vault.presentation.util.Constant.Extra.EXTRA_NAVIGATIO
 import com.lobstr.stellar.vault.presentation.util.Constant.Navigation.DASHBOARD
 import com.lobstr.stellar.vault.presentation.util.Constant.Navigation.IMPORT_XDR
 import com.lobstr.stellar.vault.presentation.util.Constant.Navigation.SETTINGS
+import com.lobstr.stellar.vault.presentation.util.Constant.Navigation.SIGNER_INFO
 import com.lobstr.stellar.vault.presentation.util.Constant.Navigation.TRANSACTION_DETAILS
 import com.lobstr.stellar.vault.presentation.util.Constant.Util.UNDEFINED_VALUE
 import com.lobstr.stellar.vault.presentation.util.manager.FragmentTransactionManager
@@ -106,6 +107,22 @@ class ContainerActivity : BaseActivity(), ContainerView {
     override fun showImportXdrFr() {
         val bundle = Bundle()
         bundle.putInt(Constant.Bundle.BUNDLE_NAVIGATION_FR, IMPORT_XDR)
+        val fragment = supportFragmentManager.fragmentFactory.instantiate(
+            this.classLoader,
+            ContainerFragment::class.qualifiedName!!
+        )
+        fragment.arguments = bundle
+
+        FragmentTransactionManager.displayFragment(
+            supportFragmentManager,
+            fragment,
+            R.id.fl_container
+        )
+    }
+
+    override fun showSignerInfoFr() {
+        val bundle = Bundle()
+        bundle.putInt(Constant.Bundle.BUNDLE_NAVIGATION_FR, SIGNER_INFO)
         val fragment = supportFragmentManager.fragmentFactory.instantiate(
             this.classLoader,
             ContainerFragment::class.qualifiedName!!

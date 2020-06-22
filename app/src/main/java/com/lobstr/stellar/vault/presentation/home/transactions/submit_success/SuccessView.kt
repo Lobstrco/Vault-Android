@@ -20,7 +20,4 @@ interface SuccessView : MvpView {
 
     @Skip
     fun copyToClipBoard(text: String)
-
-    @Skip
-    fun showHelpScreen()
 }

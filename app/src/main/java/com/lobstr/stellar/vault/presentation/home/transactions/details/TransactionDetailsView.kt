@@ -2,6 +2,7 @@ package com.lobstr.stellar.vault.presentation.home.transactions.details
 
 import androidx.annotation.StringRes
 import com.lobstr.stellar.vault.presentation.entities.account.Account
+import com.lobstr.stellar.vault.presentation.entities.tangem.TangemInfo
 import com.lobstr.stellar.vault.presentation.entities.transaction.TransactionItem
 import moxy.MvpView
 import moxy.viewstate.strategy.alias.AddToEndSingle
@@ -41,6 +42,9 @@ interface TransactionDetailsView : MvpView {
     fun setActionBtnVisibility(isConfirmVisible: Boolean, isDenyVisible: Boolean)
 
     @AddToEndSingle
+    fun showActionContainer(show: Boolean)
+
+    @AddToEndSingle
     fun setTransactionValid(valid: Boolean)
 
     @AddToEndSingle
@@ -60,7 +64,7 @@ interface TransactionDetailsView : MvpView {
     fun showOperationDetailsScreen(transactionItem: TransactionItem, position: Int)
 
     @AddToEndSingle
-    fun setupAdditionalInfo(map: Map<String, String>)
+    fun setupAdditionalInfo(map: Map<String, String?>)
 
     @Skip
     fun showConfirmTransactionDialog()
@@ -70,4 +74,7 @@ interface TransactionDetailsView : MvpView {
 
     @Skip
     fun copyToClipBoard(text: String)
+
+    @Skip
+    fun showTangemScreen(tangemInfo: TangemInfo)
 }

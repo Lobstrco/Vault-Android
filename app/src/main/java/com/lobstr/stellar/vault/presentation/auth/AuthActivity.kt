@@ -33,9 +33,7 @@ class AuthActivity : BaseActivity(), AuthView {
     // ===========================================================
 
     @ProvidePresenter
-    fun provideAuthActivityPresenter() = AuthPresenter(
-        intent?.getIntExtra(Constant.Extra.EXTRA_NAVIGATION_FR, Constant.Navigation.AUTH)!!
-    )
+    fun provideAuthActivityPresenter() = AuthPresenter()
 
     // ===========================================================
     // Getter & Setter
@@ -63,19 +61,6 @@ class AuthActivity : BaseActivity(), AuthView {
     override fun showAuthFragment() {
         val bundle = Bundle()
         bundle.putInt(Constant.Bundle.BUNDLE_NAVIGATION_FR, Constant.Navigation.AUTH)
-        val fragment = supportFragmentManager.fragmentFactory.instantiate(this.classLoader, ContainerFragment::class.qualifiedName!!)
-        fragment.arguments = bundle
-
-        FragmentTransactionManager.displayFragment(
-            supportFragmentManager,
-            fragment,
-            R.id.fl_container
-        )
-    }
-
-    override fun showBiometricSetUpFragment() {
-        val bundle = Bundle()
-        bundle.putInt(Constant.Bundle.BUNDLE_NAVIGATION_FR, Constant.Navigation.BIOMETRIC_SET_UP)
         val fragment = supportFragmentManager.fragmentFactory.instantiate(this.classLoader, ContainerFragment::class.qualifiedName!!)
         fragment.arguments = bundle
 

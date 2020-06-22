@@ -98,6 +98,8 @@ class DashboardFragment : BaseFragment(), DashboardView, View.OnClickListener,
         tvDashboardCopyPublicKey.setOnClickListener(this)
         tvDashboardTransactionCount.setOnClickListener(this)
         tvDashboardSignersCount.setOnClickListener(this)
+        tvEmptyStateAction.setOnClickListener(this)
+        tvAddAccount.setOnClickListener(this)
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -136,6 +138,8 @@ class DashboardFragment : BaseFragment(), DashboardView, View.OnClickListener,
             tvDashboardShowList.id -> mPresenter.showTransactionListClicked()
             tvDashboardCopyPublicKey.id -> mPresenter.copyKeyClicked()
             tvDashboardSignersCount.id -> mPresenter.signersCountClicked()
+            tvAddAccount.id -> mPresenter.addAccountClicked()
+            tvEmptyStateAction.id -> mPresenter.addAccountClicked()
         }
     }
 
@@ -158,12 +162,17 @@ class DashboardFragment : BaseFragment(), DashboardView, View.OnClickListener,
         mPresenter.signedAccountItemLongClicked(account)
     }
 
-    override fun showVaultInfo(identityIconUrl: String, publicKey: String) {
-        // Set user identity icon.
-        Glide.with(requireContext())
-            .load(identityIconUrl)
-            .placeholder(R.drawable.ic_person)
-            .into(ivIdentity)
+    override fun showVaultInfo(hasTangem: Boolean, identityIconUrl: String, publicKey: String?) {
+        ivSignerCard.visibility = if(hasTangem) View.VISIBLE else View.GONE
+        flIdentityContainer.visibility = if(hasTangem) View.GONE else View.VISIBLE
+
+        if(!hasTangem) {
+            // Set user identity icon.
+            Glide.with(requireContext())
+                .load(identityIconUrl)
+                .placeholder(R.drawable.ic_person)
+                .into(ivIdentity)
+        }
 
         tvDashboardPublicKey.text = publicKey
     }
@@ -180,7 +189,12 @@ class DashboardFragment : BaseFragment(), DashboardView, View.OnClickListener,
 
         if (startPosition != Constant.Util.UNDEFINED_VALUE) {
             spannedText.setSpan(
-                ForegroundColorSpan(ContextCompat.getColor(this.requireContext(), R.color.color_primary)),
+                ForegroundColorSpan(
+                    ContextCompat.getColor(
+                        this.requireContext(),
+                        R.color.color_primary
+                    )
+                ),
                 startPosition,
                 endPosition,
                 Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
@@ -200,8 +214,6 @@ class DashboardFragment : BaseFragment(), DashboardView, View.OnClickListener,
         }
 
         tvDashboardSignersCount.text = spannedText
-
-        tvDashboardSignersCount.visibility = View.VISIBLE
     }
 
     override fun showDashboardInfo(count: Int?) {
@@ -216,6 +228,12 @@ class DashboardFragment : BaseFragment(), DashboardView, View.OnClickListener,
     override fun showSignersScreen() {
         val intent = Intent(context, ContainerActivity::class.java)
         intent.putExtra(Constant.Extra.EXTRA_NAVIGATION_FR, Constant.Navigation.SIGNED_ACCOUNTS)
+        startActivity(intent)
+    }
+
+    override fun showSignerInfoScreen() {
+        val intent = Intent(context, ContainerActivity::class.java)
+        intent.putExtra(Constant.Extra.EXTRA_NAVIGATION_FR, Constant.Navigation.SIGNER_INFO)
         startActivity(intent)
     }
 
@@ -246,6 +264,14 @@ class DashboardFragment : BaseFragment(), DashboardView, View.OnClickListener,
 
     override fun showSignersProgress(show: Boolean) {
         pbDashboardSigners.visibility = if (show) View.VISIBLE else View.GONE
+        tvAddAccount.visibility = if (show) View.GONE else View.VISIBLE
+        tvDashboardSignersCount.visibility = if (show) View.GONE else View.VISIBLE
+    }
+
+    override fun showSignersEmptyState(show: Boolean) {
+        cvDashboardSignersInfo.visibility = if (show) View.GONE else View.VISIBLE
+        cvDashboardSignersEmptyState.visibility = if (show) View.VISIBLE else View.GONE
+        svTransactions.visibility = if (show) View.GONE else View.VISIBLE
     }
 
     override fun showRefreshAnimation(show: Boolean) {

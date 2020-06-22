@@ -1,6 +1,8 @@
 package com.lobstr.stellar.vault.presentation.entities.transaction.operation
 
 import android.os.Parcelable
+import com.lobstr.stellar.vault.R
+import com.lobstr.stellar.vault.presentation.util.AppUtil
 import kotlinx.android.parcel.Parcelize
 
 @Parcelize
@@ -10,13 +12,13 @@ data class ManageDataOperation(
     val value: ByteArray?
 ) : Operation(sourceAccount), Parcelable {
 
-    fun getFieldsMap(): Map<String, String?> {
-        val map: MutableMap<String, String?> = mutableMapOf()
-        map["name"] = name
+    override fun getFields(): MutableList<OperationField> {
+        val fields: MutableList<OperationField> = mutableListOf()
+        fields.add(OperationField(AppUtil.getString(R.string.op_filed_name), name))
         value?.let {
-            map["value"] = String(it)
+            fields.add(OperationField(AppUtil.getString(R.string.op_field_value), String(it)))
         }
 
-        return map
+        return fields
     }
 }

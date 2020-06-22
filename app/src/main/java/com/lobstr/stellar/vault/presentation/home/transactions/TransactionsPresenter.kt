@@ -8,6 +8,7 @@ import com.lobstr.stellar.vault.data.error.exeption.NoInternetConnectionExceptio
 import com.lobstr.stellar.vault.data.error.exeption.UserNotAuthorizedException
 import com.lobstr.stellar.vault.domain.transaction.TransactionInteractor
 import com.lobstr.stellar.vault.domain.util.EventProviderModule
+import com.lobstr.stellar.vault.domain.util.event.Auth
 import com.lobstr.stellar.vault.domain.util.event.Network
 import com.lobstr.stellar.vault.domain.util.event.Notification
 import com.lobstr.stellar.vault.presentation.BasePresenter
@@ -46,7 +47,7 @@ class TransactionsPresenter : BasePresenter<TransactionsView>() {
     private val transactions: MutableList<TransactionItem> = mutableListOf()
 
     private var stellarAccountsSubscription: Disposable? = null
-    private val cashedStellarAccounts: MutableList<Account> = mutableListOf()
+    private val cachedStellarAccounts: MutableList<Account> = mutableListOf()
 
     init {
         LVApplication.appComponent.plusTransactionComponent(TransactionModule()).inject(this)
@@ -95,6 +96,16 @@ class TransactionsPresenter : BasePresenter<TransactionsView>() {
                     it.printStackTrace()
                 })
         )
+
+        unsubscribeOnDestroy(
+            eventProviderModule.updateEventSubject
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({
+                    refreshCalled()
+                }, {
+                    it.printStackTrace()
+                })
+        )
     }
 
     private fun loadTransactions() {
@@ -130,17 +141,17 @@ class TransactionsPresenter : BasePresenter<TransactionsView>() {
 
                 nextPageUrl = result.next
 
-                // check cashed federation items
+                // Check cached federation items.
                 transactions.forEachIndexed { index, transactionItem ->
                     val federation =
-                        cashedStellarAccounts.find { account -> account.address == transactionItem.transaction.sourceAccount }
+                        cachedStellarAccounts.find { account -> account.address == transactionItem.transaction.sourceAccount }
                             ?.federation
                     transactions[index].transaction.federation = federation
                 }
 
                 viewState.showTransactionList(transactions, !nextPageUrl.isNullOrEmpty())
 
-                // try receive federations for accounts in transaction
+                // Try receive federations for accounts in transaction.
                 getStellarAccounts(transactions)
 
                 if (newLoadTransactions) {
@@ -148,22 +159,25 @@ class TransactionsPresenter : BasePresenter<TransactionsView>() {
                 }
                 newLoadTransactions = false
                 viewState.showOptionsMenu(transactions.find { !it.sequenceOutdatedAt.isNullOrEmpty() } != null)
-            }, { throwable ->
+            }, {
                 viewState.showOptionsMenu(transactions.find { !it.sequenceOutdatedAt.isNullOrEmpty() } != null)
                 viewState.showEmptyState(transactions.isEmpty())
-                when (throwable) {
+                when (it) {
                     is NoInternetConnectionException -> {
-                        viewState.showErrorMessage(throwable.details)
+                        viewState.showErrorMessage(it.details)
                         handleNoInternetConnection()
                     }
                     is UserNotAuthorizedException -> {
-                        loadTransactions()
+                        when (it.action) {
+                            UserNotAuthorizedException.Action.AUTH_REQUIRED -> eventProviderModule.authEventSubject.onNext(Auth())
+                            else -> loadTransactions()
+                        }
                     }
                     is DefaultException -> {
-                        viewState.showErrorMessage(throwable.details)
+                        viewState.showErrorMessage(it.details)
                     }
                     else -> {
-                        viewState.showErrorMessage(throwable.message ?: "")
+                        viewState.showErrorMessage(it.message ?: "")
                     }
                 }
             })
@@ -176,10 +190,10 @@ class TransactionsPresenter : BasePresenter<TransactionsView>() {
      */
     private fun getStellarAccounts(transactions: MutableList<TransactionItem>) {
 
-        // first create list of unique accounts (don't existing in cashed list)
+        // First create list of unique accounts (don't existing in cached list).
         val accountList = mutableListOf<Account>()
         transactions.forEach {
-            if (cashedStellarAccounts.find { account -> account.address == it.transaction.sourceAccount } == null
+            if (cachedStellarAccounts.find { account -> account.address == it.transaction.sourceAccount } == null
                 && accountList.find { account -> account.address == it.transaction.sourceAccount } == null) {
                 accountList.add(Account(it.transaction.sourceAccount!!, it.transaction.federation))
             }
@@ -195,21 +209,21 @@ class TransactionsPresenter : BasePresenter<TransactionsView>() {
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
                 it.forEach { account ->
-                    if (cashedStellarAccounts.find { cashedAccount -> cashedAccount.address == account.address } == null) {
-                        cashedStellarAccounts.add(account)
+                    if (cachedStellarAccounts.find { cachedAccount -> cachedAccount.address == account.address } == null) {
+                        cachedStellarAccounts.add(account)
                     }
                 }
 
-                // check cashed federation items
+                // Check cached federation items.
                 transactions.forEachIndexed { index, transactionItem ->
                     val federation =
-                        cashedStellarAccounts.find { account -> account.address == transactionItem.transaction.sourceAccount }
+                        cachedStellarAccounts.find { account -> account.address == transactionItem.transaction.sourceAccount }
                             ?.federation
                     transactions[index].transaction.federation = federation
                 }
                 viewState.showTransactionList(transactions, null)
             }, {
-                // ignore
+                // Ignore.
             })
 
         unsubscribeOnDestroy(stellarAccountsSubscription!!)
@@ -278,7 +292,10 @@ class TransactionsPresenter : BasePresenter<TransactionsView>() {
                             viewState.showErrorMessage(it.details)
                         }
                         is UserNotAuthorizedException -> {
-                            clearInvalidTransactions()
+                            when (it.action) {
+                                UserNotAuthorizedException.Action.AUTH_REQUIRED -> eventProviderModule.authEventSubject.onNext(Auth())
+                                else -> clearInvalidTransactions()
+                            }
                         }
                         is DefaultException -> {
                             viewState.showErrorMessage(it.details)

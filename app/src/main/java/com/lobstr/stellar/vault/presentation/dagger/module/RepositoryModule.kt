@@ -14,6 +14,7 @@ import com.lobstr.stellar.vault.data.net.FcmApi
 import com.lobstr.stellar.vault.data.net.TransactionApi
 import com.lobstr.stellar.vault.data.net.VaultAuthApi
 import com.lobstr.stellar.vault.data.stellar.StellarRepositoryImpl
+import com.lobstr.stellar.vault.data.tangem.TangemRepositoryImpl
 import com.lobstr.stellar.vault.data.transaction.TransactionEntityMapper
 import com.lobstr.stellar.vault.data.transaction.TransactionRepositoryImpl
 import com.lobstr.stellar.vault.data.vault_auth.VaultAuthRepositoryImpl
@@ -22,6 +23,7 @@ import com.lobstr.stellar.vault.domain.error.RxErrorUtils
 import com.lobstr.stellar.vault.domain.fcm.FcmRepository
 import com.lobstr.stellar.vault.domain.key_store.KeyStoreRepository
 import com.lobstr.stellar.vault.domain.stellar.StellarRepository
+import com.lobstr.stellar.vault.domain.tangem.TangemRepository
 import com.lobstr.stellar.vault.domain.transaction.TransactionRepository
 import com.lobstr.stellar.vault.domain.vault_auth.VaultAuthRepository
 import com.lobstr.stellar.vault.presentation.util.PrefsUtil
@@ -38,6 +40,12 @@ class RepositoryModule {
     @Provides
     fun provideStellarRepository(network: Network, server: Server): StellarRepository {
         return StellarRepositoryImpl(network, server, MnemonicsMapper(), TransactionEntityMapper(network))
+    }
+
+    @Singleton
+    @Provides
+    fun provideTangemRepository(): TangemRepository {
+        return TangemRepositoryImpl()
     }
 
     @Singleton

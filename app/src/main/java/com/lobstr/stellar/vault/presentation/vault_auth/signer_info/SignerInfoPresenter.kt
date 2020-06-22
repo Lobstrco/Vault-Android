@@ -1,6 +1,8 @@
 package com.lobstr.stellar.vault.presentation.vault_auth.signer_info
 
 import com.lobstr.stellar.vault.domain.signer_info.SignerInfoInteractor
+import com.lobstr.stellar.vault.domain.util.EventProviderModule
+import com.lobstr.stellar.vault.domain.util.event.Notification
 import com.lobstr.stellar.vault.presentation.BasePresenter
 import com.lobstr.stellar.vault.presentation.application.LVApplication
 import com.lobstr.stellar.vault.presentation.dagger.module.signer_info.SignerInfoModule
@@ -20,6 +22,9 @@ class SignerInfoPresenter : BasePresenter<SignerInfoView>() {
     }
 
     @Inject
+    lateinit var eventProviderModule: EventProviderModule
+
+    @Inject
     lateinit var interactor: SignerInfoInteractor
 
     private var checkLobstrAppIntervalSubscription: Disposable? = null
@@ -30,7 +35,29 @@ class SignerInfoPresenter : BasePresenter<SignerInfoView>() {
 
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
-        viewState.setupUserPublicKey(AppUtil.ellipsizeStrInMiddle(interactor.getUserPublicKey(), PK_TRUNCATE_COUNT))
+        registerEventProvider()
+        viewState.setupUserPublicKey(
+            AppUtil.ellipsizeStrInMiddle(
+                interactor.getUserPublicKey(),
+                PK_TRUNCATE_COUNT
+            )
+        )
+    }
+
+    private fun registerEventProvider() {
+        unsubscribeOnDestroy(
+            eventProviderModule.notificationEventSubject
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({
+                    when (it.type) {
+                        Notification.Type.SIGNED_NEW_ACCOUNT-> {
+                            viewState.finishScreen()
+                        }
+                    }
+                }, {
+                    it.printStackTrace()
+                })
+        )
     }
 
     override fun attachView(view: SignerInfoView?) {
@@ -68,18 +95,14 @@ class SignerInfoPresenter : BasePresenter<SignerInfoView>() {
     }
 
     fun copyUserPublicKeyClicked() {
-        viewState.copyToClipBoard(interactor.getUserPublicKey()!!)
+        interactor.getUserPublicKey()?.let { viewState.copyToClipBoard(it) }
     }
 
     fun showQrClicked() {
-        viewState.showPublicKeyDialog(interactor.getUserPublicKey()!!)
+        interactor.getUserPublicKey()?.let { viewState.showPublicKeyDialog(it) }
     }
 
     fun infoClicked() {
-        viewState.showHelpScreen()
-    }
-
-    fun btnNextClicked() {
-        viewState.showRecheckSignerScreen()
+        viewState.showHelpScreen(interactor.getUserPublicKey())
     }
 }

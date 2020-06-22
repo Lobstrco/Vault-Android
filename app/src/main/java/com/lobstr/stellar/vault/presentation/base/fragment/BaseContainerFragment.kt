@@ -7,6 +7,7 @@ import com.lobstr.stellar.vault.presentation.BaseMvpAppCompatFragment
 import com.lobstr.stellar.vault.presentation.base.activity.BaseActivity
 import com.lobstr.stellar.vault.presentation.container.activity.ContainerActivity
 import com.lobstr.stellar.vault.presentation.util.AppUtil
+import com.lobstr.stellar.vault.presentation.vault_auth.VaultAuthActivity
 
 
 abstract class BaseContainerFragment : BaseMvpAppCompatFragment() {
@@ -56,6 +57,7 @@ abstract class BaseContainerFragment : BaseMvpAppCompatFragment() {
         when (childFragmentManager.backStackEntryCount) {
             1 -> when (activity) {
                 is ContainerActivity -> (activity as? BaseActivity)?.mPresenter?.changeHomeBtnVisibility(true)
+                is VaultAuthActivity -> (activity as? BaseActivity)?.mPresenter?.changeHomeBtnVisibility(true)
                 else -> (activity as? BaseActivity)?.mPresenter?.changeHomeBtnVisibility(false)
             }
             else -> (activity as? BaseActivity)?.mPresenter?.changeHomeBtnVisibility(true)

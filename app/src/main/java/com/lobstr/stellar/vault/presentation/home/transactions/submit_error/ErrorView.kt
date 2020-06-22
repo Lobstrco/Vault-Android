@@ -17,5 +17,5 @@ interface ErrorView : MvpView {
     fun finishScreen()
 
     @Skip
-    fun showHelpScreen()
+    fun showHelpScreen(userId: String?)
 }

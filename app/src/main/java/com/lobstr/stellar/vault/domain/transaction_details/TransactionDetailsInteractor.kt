@@ -10,7 +10,15 @@ import org.stellar.sdk.responses.SubmitTransactionResponse
 
 interface TransactionDetailsInteractor {
 
-    fun retrieveActualTransaction(transactionItem: TransactionItem): Single<TransactionItem>
+    fun hasMnemonics(): Boolean
+
+    fun hasTangem(): Boolean
+
+    fun getTangemCardId(): String?
+
+    fun getUserPublicKey(): String?
+
+    fun retrieveActualTransaction(transactionItem: TransactionItem, skip: Boolean = false): Single<TransactionItem>
 
     fun confirmTransactionOnHorizon(
         transaction: AbstractTransaction
@@ -37,4 +45,6 @@ interface TransactionDetailsInteractor {
     fun getStellarAccount(stellarAddress: String): Single<Account>
 
     fun signTransaction(transaction: String): Single<AbstractTransaction>
+
+    fun createTransaction(transaction: String): Single<AbstractTransaction>
 }

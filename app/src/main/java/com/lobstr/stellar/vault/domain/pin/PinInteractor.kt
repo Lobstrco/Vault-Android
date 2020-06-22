@@ -13,11 +13,13 @@ interface PinInteractor {
 
     fun getPhrases(): Single<String>
 
-    fun accountHasSigners(): Boolean
+    fun accountHasToken(): Boolean
 
     fun isTouchIdSetUp(): Boolean
 
     fun isTouchIdEnabled(): Boolean
+
+    fun getUserPublicKey(): String?
 
     fun clearUserData()
 }

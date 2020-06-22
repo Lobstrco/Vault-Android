@@ -6,9 +6,7 @@ import com.lobstr.stellar.vault.BuildConfig
 object Constant {
 
     object Extra {
-        const val EXTRA_CREATE_PIN = "EXTRA_CREATE_PIN"
-        const val EXTRA_CHANGE_PIN = "EXTRA_CHANGE_PIN"
-        const val EXTRA_CONFIRM_PIN = "EXTRA_CONFIRM_PIN"
+        const val EXTRA_PIN_MODE = "EXTRA_PIN_MODE"
         const val EXTRA_NAVIGATION_FR = "EXTRA_NAVIGATION_FR"
         const val EXTRA_TRANSACTION_ITEM = "EXTRA_TRANSACTION_ITEM"
         const val EXTRA_TRANSACTION_STATUS = "EXTRA_TRANSACTION_STATUS"
@@ -16,6 +14,7 @@ object Constant {
         const val EXTRA_NEED_ADDITIONAL_SIGNATURES = "EXTRA_NEED_ADDITIONAL_SIGNATURES"
         const val EXTRA_ERROR_MESSAGE = "EXTRA_ERROR_MESSAGE"
         const val EXTRA_CONFIG = "EXTRA_CONFIG"
+        const val EXTRA_TANGEM_INFO = "EXTRA_TANGEM_INFO"
     }
 
     object Bundle {
@@ -29,6 +28,7 @@ object Constant {
         const val BUNDLE_NEED_ADDITIONAL_SIGNATURES = "BUNDLE_NEED_ADDITIONAL_SIGNATURES"
         const val BUNDLE_ERROR_MESSAGE = "BUNDLE_ERROR_MESSAGE"
         const val BUNDLE_CONFIG = "BUNDLE_CONFIG"
+        const val BUNDLE_PIN_MODE = "BUNDLE_PIN_MODE"
     }
 
     object Navigation {
@@ -45,6 +45,7 @@ object Constant {
         const val IMPORT_XDR = 10
         const val SIGNED_ACCOUNTS = 11
         const val CONFIG = 12
+        const val VAULT_AUTH = 13
     }
 
     object Transaction {
@@ -89,6 +90,11 @@ object Constant {
         const val VAULT = "vault"
     }
 
+    object Behavior {
+        const val STAGING = "staging"
+        const val PRODUCTION = "production"
+    }
+
     object Code {
         const val TRANSACTION_DETAILS_FRAGMENT = 102
         const val CHANGE_PIN = 103
@@ -102,11 +108,22 @@ object Constant {
             const val SPAM_PROTECTION = 106
             const val TRANSACTION_CONFIRMATIONS = 107
         }
+
+        const val TANGEM_CREATE_WALLET = 108
     }
 
     object TransactionType {
         const val PENDING = "pending/"
         const val INACTIVE = "inactive/"
+
+        /**
+         * Inner Transaction Type:
+         * @see com.lobstr.stellar.vault.data.net.entities.transaction.ApiTransactionItem.transactionType
+         */
+        object Item {
+            const val AUTH_CHALLENGE = "auth_challenge"
+            const val TRANSACTION = "transaction"
+        }
     }
 
     object Util {
@@ -158,6 +175,43 @@ object Constant {
     object Social {
         const val STORE_URL = "https://play.google.com/store/apps/details?id="
         const val USER_ICON_LINK = "https://id.lobstr.co/"
-        const val SUPPORT_MAIL= "support@lobstr.co"
+        const val SUPPORT_MAIL = "support@lobstr.co"
+        const val SIGNER_CARD_INFO = "https://vault.lobstr.co/card"
+        const val SIGNER_CARD_BUY = "https://shop.tangem.com/products/tangem-for-lobstr-vault"
+    }
+
+    object TangemErrorMod {
+        const val ERROR_MOD_DEFAULT = -1
+        const val ERROR_MOD_ONLY_TEXT = 0
+        const val ERROR_MOD_FINISH_SCREEN = 1
+        const val ERROR_MOD_REPEAT_ACTION = 2
+    }
+
+    object TangemAction {
+        const val ACTION_DEFAULT = 0
+        const val ACTION_SCAN = 1
+        const val ACTION_SIGN = 2
+        const val ACTION_CREATE_WALLET = 3
+    }
+
+    object TangemCardStatus {
+        const val NOT_PERSONALIZED = 0
+        const val EMPTY = 1
+        const val LOADED = 2
+        const val PURGED = 3
+    }
+
+    object PinMode {
+        const val CREATE: Byte = 0
+        const val CHANGE: Byte = 1
+        const val CONFIRM: Byte = 2
+        const val ENTER: Byte = 3
+    }
+
+    object Support {
+        const val RECOVERY_PHRASE = 360013259599L
+        const val RECOVER_ACCOUNT = 360013243520L
+        const val SIGNING_WITH_VAULT_SIGNER_CARD = 360013838099L
+        const val TRANSACTION_CONFIRMATIONS = 360013304739L
     }
 }

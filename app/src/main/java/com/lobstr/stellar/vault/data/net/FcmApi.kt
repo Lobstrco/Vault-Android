@@ -15,6 +15,7 @@ interface FcmApi {
     fun fcmDeviceRegistration(
         @Header("Authorization") token: String,
         @Field("type") type: String,
-        @Field("registration_id") registrationId: String
+        @Field("registration_id") registrationId: String,
+        @Field("active") active: Boolean
     ): Single<ApiFcmResult>
 }

@@ -10,9 +10,6 @@ interface SignerInfoView : MvpView {
     @AddToEndSingle
     fun checkExistenceLobstrApp()
 
-    @Skip
-    fun showRecheckSignerScreen()
-
     @AddToEndSingle
     fun setupUserPublicKey(userPublicKey: String?)
 
@@ -20,7 +17,7 @@ interface SignerInfoView : MvpView {
     fun copyToClipBoard(text: String)
 
     @Skip
-    fun showHelpScreen()
+    fun showHelpScreen(userId: String?)
 
     @Skip
     fun showPublicKeyDialog(publicKey: String)
@@ -33,4 +30,10 @@ interface SignerInfoView : MvpView {
 
     @Skip
     fun openLobstrApp()
+
+    @Skip
+    fun showMessage(message: String?)
+
+    @AddToEndSingle
+    fun finishScreen()
 }

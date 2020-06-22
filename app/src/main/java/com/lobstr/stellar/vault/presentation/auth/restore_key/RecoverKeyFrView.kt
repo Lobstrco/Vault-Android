@@ -27,5 +27,5 @@ interface RecoverKeyFrView : MvpView {
     fun showProgressDialog(show: Boolean)
 
     @Skip
-    fun showHelpScreen()
+    fun showHelpScreen(articleId: Long)
 }

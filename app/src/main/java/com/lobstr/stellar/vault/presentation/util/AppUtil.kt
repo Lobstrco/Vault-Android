@@ -4,9 +4,11 @@ import android.app.Activity
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Point
 import android.net.Uri
+import android.nfc.NfcAdapter
 import android.os.Build
 import android.os.VibrationEffect
 import android.os.Vibrator
@@ -20,10 +22,12 @@ import android.widget.Toast
 import androidx.annotation.StringRes
 import androidx.browser.customtabs.CustomTabsIntent
 import androidx.core.content.ContextCompat
+import androidx.core.content.pm.PackageInfoCompat
 import com.google.gson.Gson
 import com.google.gson.JsonIOException
 import com.google.gson.JsonSyntaxException
 import com.google.gson.internal.Primitives
+import com.lobstr.stellar.vault.BuildConfig
 import com.lobstr.stellar.vault.R
 import com.lobstr.stellar.vault.presentation.application.LVApplication
 import com.lobstr.stellar.vault.presentation.entities.transaction.operation.*
@@ -83,12 +87,7 @@ object AppUtil {
     fun getAppVersionCode(context: Context?): Long {
         return try {
             val packageInfo = context?.packageManager?.getPackageInfo(context.packageName, 0)
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-                packageInfo?.longVersionCode ?: -1
-            } else {
-                @Suppress("DEPRECATION")
-                packageInfo?.versionCode?.toLong() ?: -1
-            }
+            if (packageInfo != null) PackageInfoCompat.getLongVersionCode(packageInfo) else -1
         } catch (e: PackageManager.NameNotFoundException) {
             Log.e("NameNotFoundException", "Could not get package name:$e")
             -1
@@ -242,4 +241,31 @@ object AppUtil {
         Constant.ConfigType.NO -> getString(R.string.text_config_no)
         else -> null
     }
+
+    fun isNfcAvailable(): Boolean {
+        return NfcAdapter.getDefaultAdapter(getAppContext()) != null
+    }
+
+    fun isNvsEnabled(): Boolean {
+        return NfcAdapter.getDefaultAdapter(getAppContext())?.isEnabled ?: false
+    }
+
+    fun sendEmail(
+        context: Context,
+        mail: String,
+        subject: String,
+        body: String? = null
+    ) {
+        val emailIntent = Intent(Intent.ACTION_SENDTO)
+        val uri = Uri.parse(
+            "mailto:" + Uri.encode(mail) + "?subject=" + Uri.encode(subject) +
+                    "&body=" + Uri.encode(body ?: "")
+        )
+        emailIntent.data = uri
+        emailIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        context.startActivity(emailIntent)
+    }
+
+    fun getAppBehavior() =
+        if (BuildConfig.BUILD_TYPE == Constant.BuildType.RELEASE) Constant.Behavior.PRODUCTION else Constant.Behavior.STAGING
 }

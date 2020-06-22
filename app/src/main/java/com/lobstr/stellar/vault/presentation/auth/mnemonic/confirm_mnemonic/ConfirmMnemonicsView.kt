@@ -28,7 +28,7 @@ interface ConfirmMnemonicsView : MvpView {
     fun showProgressDialog(show: Boolean)
 
     @Skip
-    fun showHelpScreen()
+    fun showHelpScreen(articleId: Long)
 
     @AddToEndSingle
     fun setActionButtonEnabled(enabled: Boolean)

@@ -8,6 +8,7 @@
         tools:context=".presentation.home.dashboard.DashboardFragment">
 
     <androidx.core.widget.NestedScrollView
+            android:id="@+id/svTransactions"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="2"
@@ -23,19 +24,19 @@
                     android:id="@+id/llDashboardTransactionToSignContainer"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="center"
                     android:gravity="center_horizontal"
                     android:orientation="vertical"
-                    android:visibility="gone"
-                    android:layout_gravity="center">
+                    android:visibility="gone">
 
                 <TextView
                         android:id="@+id/tvDashboardTransactionCount"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:includeFontPadding="false"
                         android:layout_marginTop="-10dp"
                         android:layout_marginBottom="-10dp"
                         android:gravity="center"
+                        android:includeFontPadding="false"
                         android:text="0"
                         android:textColor="@android:color/white"
                         android:textSize="80sp"
@@ -120,7 +121,7 @@
                         <TextView
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_marginTop="32dp"
+                                android:layout_marginTop="34dp"
                                 android:layout_marginBottom="7dp"
                                 android:gravity="center_horizontal"
                                 android:text="@string/text_title_dashboard_public_key"
@@ -134,14 +135,13 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginStart="36dp"
                                 android:layout_marginEnd="36dp"
-                                android:layout_marginTop="11dp"
                                 android:layout_marginBottom="24dp"
-                                android:gravity="center_horizontal"
                                 android:ellipsize="middle"
+                                android:gravity="center_horizontal"
                                 android:singleLine="true"
                                 android:textAllCaps="true"
                                 android:textColor="@color/color_4D000000"
-                                android:textSize="12sp" />
+                                android:textSize="13sp" />
 
                         <TextView
                                 android:id="@+id/tvDashboardCopyPublicKey"
@@ -162,6 +162,7 @@
                 </androidx.cardview.widget.CardView>
 
                 <androidx.cardview.widget.CardView
+                        android:id="@+id/cvDashboardSignersInfo"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="16dp"
@@ -202,6 +203,23 @@
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content" />
 
+                            <TextView
+                                    android:id="@+id/tvAddAccount"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="32dp"
+                                    android:layout_gravity="center_horizontal"
+                                    android:layout_marginTop="16dp"
+                                    android:layout_marginBottom="16dp"
+                                    android:background="@drawable/selector_default_button_with_round_stroked"
+                                    android:gravity="center"
+                                    android:paddingLeft="20dp"
+                                    android:paddingRight="20dp"
+                                    android:text="@string/text_btn_add_account"
+                                    android:textColor="@color/color_primary"
+                                    android:textSize="14sp"
+                                    android:textStyle="bold"
+                                    android:visibility="gone" />
+
                         </LinearLayout>
 
                         <ProgressBar
@@ -211,10 +229,70 @@
                                 android:layout_gravity="center" />
                     </FrameLayout>
                 </androidx.cardview.widget.CardView>
+
+                <androidx.cardview.widget.CardView
+                        android:id="@+id/cvDashboardSignersEmptyState"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="16dp"
+                        android:layout_marginTop="12dp"
+                        android:layout_marginRight="16dp"
+                        android:layout_marginBottom="16dp"
+                        android:background="@android:color/white"
+                        android:visibility="gone"
+                        app:cardCornerRadius="5dp">
+
+                    <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:gravity="center"
+                            android:orientation="vertical"
+                            android:padding="16dp">
+
+                        <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginBottom="8dp"
+                                android:layout_gravity="center"
+                                android:drawableTop="@drawable/img_empty_signers"
+                                android:drawablePadding="24dp"
+                                android:gravity="center"
+                                android:text="@string/text_tv_dashboard_signers_empty_state_title"
+                                android:textColor="@android:color/black"
+                                android:textSize="16sp"
+                                android:textStyle="bold" />
+
+                        <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:alpha="0.6"
+                                android:text="@string/text_tv_dashboard_signers_empty_state_description"
+                                android:textColor="@color/color_071c33"
+                                android:textSize="14sp" />
+
+                        <TextView
+                                android:id="@+id/tvEmptyStateAction"
+                                android:layout_width="wrap_content"
+                                android:layout_height="32dp"
+                                android:layout_gravity="center_horizontal"
+                                android:layout_marginTop="24dp"
+                                android:background="@drawable/selector_default_button_with_round_stroked"
+                                android:gravity="center"
+                                android:paddingLeft="20dp"
+                                android:paddingRight="20dp"
+                                android:text="@string/text_btn_add_account"
+                                android:textColor="@color/color_primary"
+                                android:textSize="14sp"
+                                android:textStyle="bold" />
+                    </LinearLayout>
+
+                </androidx.cardview.widget.CardView>
+
             </LinearLayout>
 
             <!-- identity icon -->
             <FrameLayout
+                    android:id="@+id/flIdentityContainer"
                     android:layout_width="64dp"
                     android:layout_height="64dp"
                     android:layout_gravity="center|top"
@@ -227,6 +305,16 @@
                         android:layout_gravity="center"
                         tools:ignore="ContentDescription" />
             </FrameLayout>
+
+            <ImageView
+                    android:id="@+id/ivSignerCard"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_signer_card"
+                    android:layout_gravity="center|top"
+                    android:visibility="gone"
+                    tools:ignore="ContentDescription" />
+
         </FrameLayout>
     </androidx.core.widget.NestedScrollView>
 </LinearLayout>

@@ -12,31 +12,35 @@ import io.reactivex.Single
 class DashboardInteractorImpl(
     private val transactionRepository: TransactionRepository,
     private val accountRepository: AccountRepository,
-    private val prefUtil: PrefsUtil
+    private val prefsUtil: PrefsUtil
 ) : DashboardInteractor {
 
     override fun getPendingTransactionList(nextPageUrl: String?): Single<TransactionResult> {
         return transactionRepository.getTransactionList(
-            AppUtil.getJwtToken(prefUtil.authToken),
+            AppUtil.getJwtToken(prefsUtil.authToken),
             Constant.TransactionType.PENDING,
             nextPageUrl
         )
     }
 
-    override fun getUserPublicKey(): String {
-        return prefUtil.publicKey!!
+    override fun getUserPublicKey(): String? {
+        return prefsUtil.publicKey
     }
 
     override fun getSignedAccounts(): Single<List<Account>> {
-        return accountRepository.getSignedAccounts(AppUtil.getJwtToken(prefUtil.authToken))
-            .doOnSuccess { prefUtil.accountSignersCount = it.size }
+        return accountRepository.getSignedAccounts(AppUtil.getJwtToken(prefsUtil.authToken))
+            .doOnSuccess { prefsUtil.accountSignersCount = it.size }
     }
 
     override fun getSignersCount(): Int {
-        return prefUtil.accountSignersCount
+        return prefsUtil.accountSignersCount
     }
 
     override fun getStellarAccount(stellarAddress: String): Single<Account> {
         return accountRepository.getStellarAccount(stellarAddress, "id")
+    }
+
+    override fun hasTangem(): Boolean {
+        return !prefsUtil.tangemCardId.isNullOrEmpty()
     }
 }

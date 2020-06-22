@@ -1,28 +1,34 @@
 package com.lobstr.stellar.vault.presentation.base.activity
 
+import android.app.PendingIntent
+import android.content.Intent
 import android.graphics.PorterDuff
 import android.graphics.PorterDuffColorFilter
+import android.nfc.NfcAdapter
 import android.os.Bundle
 import android.text.TextUtils
-import android.view.View
 import android.widget.TextView
+import android.widget.Toast
 import androidx.annotation.ColorRes
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
-import androidx.core.view.updatePadding
 import androidx.fragment.app.Fragment
 import com.lobstr.stellar.vault.R
 import com.lobstr.stellar.vault.presentation.BaseMvpAppCompatActivity
 import com.lobstr.stellar.vault.presentation.base.fragment.BaseFragment
-import com.lobstr.stellar.vault.presentation.home.HomeActivity
-import com.lobstr.stellar.vault.presentation.util.doOnApplyWindowInsets
+import com.lobstr.stellar.vault.presentation.container.fragment.ContainerFragment
+import com.lobstr.stellar.vault.presentation.dialog.alert.base.AlertDialogFragment
+import com.lobstr.stellar.vault.presentation.entities.tangem.TangemInfo
+import com.lobstr.stellar.vault.presentation.tangem.dialog.TangemDialogFragment
+import com.lobstr.stellar.vault.presentation.util.Constant
+import com.lobstr.stellar.vault.presentation.util.manager.ProgressManager
 import moxy.presenter.InjectPresenter
 import moxy.presenter.ProvidePresenter
 
 abstract class BaseActivity : BaseMvpAppCompatActivity(),
-    BaseActivityView {
+    BaseActivityView, TangemDialogFragment.OnTangemDialogListener {
 
     // ===========================================================
     // Constants
@@ -47,6 +53,9 @@ abstract class BaseActivity : BaseMvpAppCompatActivity(),
 
     protected var mToolbar: Toolbar? = null
 
+    private var nfcAdapter: NfcAdapter? = null
+    private var nfcPendingIntent: PendingIntent? = null
+
     // ===========================================================
     // Constructors
     // ===========================================================
@@ -67,22 +76,44 @@ abstract class BaseActivity : BaseMvpAppCompatActivity(),
         setContentView(getLayoutResource())
         findViews()
         setupToolbar()
-        // Used for setup padding after change gestures type.
-        setWindowInset()
+
+        nfcAdapter = NfcAdapter.getDefaultAdapter(this)
+        nfcPendingIntent = PendingIntent.getActivity(
+            this,
+            0,
+            Intent(this, javaClass).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP),
+            0
+        )
+    }
+
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+
+    }
+
+    override fun onResume() {
+        super.onResume()
+        nfcAdapter?.enableForegroundDispatch(this, nfcPendingIntent, null, null)
+    }
+
+    override fun onPause() {
+        super.onPause()
+        nfcAdapter?.disableForegroundDispatch(this)
     }
 
     override fun onBackPressed() {
         val container = supportFragmentManager.findFragmentById(R.id.fl_container)
 
         // Handle back press in fragment if needed.
-        val childFragment = container?.childFragmentManager?.findFragmentById(R.id.fl_container)
+        val childFragment =
+            container?.childFragmentManager?.findFragmentById(R.id.fl_container) ?: container
         if ((childFragment as? BaseFragment)?.onBackPressed() == true) return
 
         checkBackPress(container)
     }
 
     fun checkBackPress(container: Fragment?) {
-        val fragmentManager = container?.childFragmentManager ?: supportFragmentManager
+        val fragmentManager = (container as? ContainerFragment)?.childFragmentManager ?: supportFragmentManager
         val backStackCount = fragmentManager.backStackEntryCount
 
         if (backStackCount > 1) {
@@ -108,22 +139,6 @@ abstract class BaseActivity : BaseMvpAppCompatActivity(),
     // ===========================================================
     // Listeners, methods for/from Interfaces
     // ===========================================================
-
-    override fun setWindowInset() {
-        findViewById<View>(R.id.content)?.systemUiVisibility =
-            View.SYSTEM_UI_FLAG_LAYOUT_STABLE or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-
-        findViewById<View>(R.id.content)?.doOnApplyWindowInsets { view, insets, padding ->
-            // padding contains the original padding values after inflation
-            view.updatePadding(
-                bottom = when (this) {
-                    is HomeActivity -> 0 // Don't add systemWindowInsetBottom to home screen because BottomNavigationView has it by default.
-                    else -> padding.bottom + insets.systemWindowInsetBottom
-                },
-                top = padding.top + insets.systemWindowInsetTop
-            )
-        }
-    }
 
     // ===========================================================
     // Methods
@@ -187,5 +202,28 @@ abstract class BaseActivity : BaseMvpAppCompatActivity(),
         upArrow?.colorFilter =
             PorterDuffColorFilter(ContextCompat.getColor(this, color), PorterDuff.Mode.SRC_ATOP)
         supportActionBar?.setHomeAsUpIndicator(upArrow)
+    }
+
+    override fun showTangemScreen(tangemInfo: TangemInfo) {
+        TangemDialogFragment().apply {
+            arguments =
+                Bundle().apply { putParcelable(Constant.Extra.EXTRA_TANGEM_INFO, tangemInfo) }
+        }.show(supportFragmentManager, AlertDialogFragment.DialogFragmentIdentifier.TANGEM)
+    }
+
+    override fun success(tangemInfo: TangemInfo?) {
+        mPresenter.handleTangemInfo(tangemInfo)
+    }
+
+    override fun cancel() {
+        // Implement logic if needed.
+    }
+
+    override fun showProgressDialog(show: Boolean) {
+        ProgressManager.show(show, supportFragmentManager)
+    }
+
+    override fun showMessage(message: String?) {
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
     }
 }

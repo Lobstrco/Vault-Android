@@ -2,6 +2,7 @@ package com.lobstr.stellar.vault.domain.settings
 
 import com.lobstr.stellar.vault.domain.account.AccountRepository
 import com.lobstr.stellar.vault.domain.key_store.KeyStoreRepository
+import com.lobstr.stellar.vault.presentation.application.LVApplication
 import com.lobstr.stellar.vault.presentation.entities.account.Account
 import com.lobstr.stellar.vault.presentation.entities.account.AccountConfig
 import com.lobstr.stellar.vault.presentation.util.AppUtil
@@ -36,7 +37,12 @@ class SettingsInteractorImpl(
         )
     }
 
+    override fun hasMnemonics(): Boolean {
+        return !prefsUtil.encryptedPhrases.isNullOrEmpty()
+    }
+
     override fun clearUserData() {
+        LVApplication.appComponent.fcmHelper.unregisterFcm()
         prefsUtil.clearUserPrefs()
         keyStoreRepository.clearAll()
     }

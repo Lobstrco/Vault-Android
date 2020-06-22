@@ -5,13 +5,16 @@ import com.lobstr.stellar.vault.presentation.entities.transaction.TransactionRes
 import io.reactivex.Single
 
 interface DashboardInteractor {
+
     fun getPendingTransactionList(nextPageUrl: String?): Single<TransactionResult>
 
-    fun getUserPublicKey(): String
+    fun getUserPublicKey(): String?
 
     fun getSignedAccounts(): Single<List<Account>>
 
     fun getStellarAccount(stellarAddress: String): Single<Account>
 
     fun getSignersCount(): Int
+
+    fun hasTangem(): Boolean
 }

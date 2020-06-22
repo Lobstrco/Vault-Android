@@ -14,7 +14,6 @@ class PrefsUtil(private val sharedPreferences: SharedPreferences) {
         const val PREF_PHRASES_IV = "PREF_PHRASES_IV"
         const val PREF_PIN_IV = "PREF_PIN_IV"
         const val PREF_FCM_TOKEN = "PREF_FCM_TOKEN"
-        const val PREF_APP_VERSION = "PREF_APP_VERSION"
         const val PREF_IS_FCM_REGISTERED_SUCCESSFULLY = "PREF_IS_FCM_REGISTERED_SUCCESSFULLY"
         const val PREF_ACCOUNT_HAS_SIGNERS = "PREF_ACCOUNT_HAS_SIGNERS"
         const val PREF_BIOMETRIC_STATE = "PREF_BIOMETRIC_STATE"
@@ -23,6 +22,7 @@ class PrefsUtil(private val sharedPreferences: SharedPreferences) {
         const val PREF_IS_TR_CONFIRMATION_ENABLED = "PREF_IS_TR_CONFIRMATION_ENABLED"
         const val PREF_ACCOUNT_SIGNERS_COUNT = "PREF_ACCOUNT_SIGNERS_COUNT"
         const val PREF_IS_SPAM_PROTECTION_ENABLED = "PREF_IS_SPAM_PROTECTION_ENABLED"
+        const val PREF_TANGEM_CARD_ID = "PREF_TANGEM_CARD_ID"
     }
 
     var authToken: String?
@@ -32,6 +32,10 @@ class PrefsUtil(private val sharedPreferences: SharedPreferences) {
     var publicKey: String?
         get() = getString(PREF_PUBLIC_KEY)
         set(publicKey) = set(PREF_PUBLIC_KEY, publicKey)
+
+    var tangemCardId: String?
+        get() = getString(PREF_TANGEM_CARD_ID)
+        set(publicKey) = set(PREF_TANGEM_CARD_ID, publicKey)
 
     var encryptedPhrases: String?
         get() = getString(PREF_ENCRYPTED_PHRASES)
@@ -52,10 +56,6 @@ class PrefsUtil(private val sharedPreferences: SharedPreferences) {
     var fcmToken: String?
         get() = getString(PREF_FCM_TOKEN)
         set(fcmToken) = set(PREF_FCM_TOKEN, fcmToken)
-
-    var appVersion: Long
-        get() = getLong(PREF_APP_VERSION)
-        set(appVersion) = set(PREF_APP_VERSION, appVersion)
 
     var isFcmRegisteredSuccessfully: Boolean
         get() = getBoolean(PREF_IS_FCM_REGISTERED_SUCCESSFULLY)

@@ -9,11 +9,12 @@ import io.reactivex.Single
 
 class FcmInteractorImpl(private val fcmRepository: FcmRepository, private val prefsUtil: PrefsUtil) : FcmInteractor {
 
-    override fun fcmDeviceRegistration(type: String, registrationId: String): Single<FcmResult> {
+    override fun fcmDeviceRegistration(type: String, registrationId: String, active: Boolean): Single<FcmResult> {
         return fcmRepository.fcmDeviceRegistration(
             AppUtil.getJwtToken(prefsUtil.authToken),
             type,
-            registrationId
+            registrationId,
+            active
         )
     }
 
@@ -23,15 +24,6 @@ class FcmInteractorImpl(private val fcmRepository: FcmRepository, private val pr
 
     override fun getFcmToken(): String? {
         return prefsUtil.fcmToken
-    }
-
-    override fun saveAppVersion(appVersion: Long) {
-        prefsUtil.appVersion = appVersion
-
-    }
-
-    override fun getAppVersion(): Long {
-        return prefsUtil.appVersion
     }
 
     override fun setFcmRegistered(registered: Boolean) {

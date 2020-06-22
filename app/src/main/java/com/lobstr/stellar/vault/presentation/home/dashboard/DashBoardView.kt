@@ -15,7 +15,7 @@ interface DashboardView : MvpView {
     fun notifySignedAccountsAdapter(accounts: List<Account>)
 
     @AddToEndSingle
-    fun showVaultInfo(identityIconUrl: String, publicKey: String)
+    fun showVaultInfo(hasTangem: Boolean, identityIconUrl: String, publicKey: String?)
 
     @AddToEndSingle
     fun showSignersCount(count: Int)
@@ -25,6 +25,9 @@ interface DashboardView : MvpView {
 
     @Skip
     fun showSignersScreen()
+
+    @Skip
+    fun showSignerInfoScreen()
 
     @Skip
     fun showErrorMessage(message: String)
@@ -40,6 +43,9 @@ interface DashboardView : MvpView {
 
     @AddToEndSingle
     fun showSignersProgress(show: Boolean)
+
+    @AddToEndSingle
+    fun showSignersEmptyState(show: Boolean)
 
     @Skip
     fun showRefreshAnimation(show: Boolean)

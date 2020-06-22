@@ -1,6 +1,7 @@
 package com.lobstr.stellar.vault.domain.pin
 
 import com.lobstr.stellar.vault.domain.key_store.KeyStoreRepository
+import com.lobstr.stellar.vault.presentation.application.LVApplication
 import com.lobstr.stellar.vault.presentation.util.Constant.BiometricState.ENABLED
 import com.lobstr.stellar.vault.presentation.util.Constant.BiometricState.UNKNOWN
 import com.lobstr.stellar.vault.presentation.util.PrefsUtil
@@ -45,8 +46,8 @@ class PinInteractorImpl(
         }
     }
 
-    override fun accountHasSigners(): Boolean {
-        return prefsUtil.accountHasSigners
+    override fun accountHasToken(): Boolean {
+        return !prefsUtil.authToken.isNullOrEmpty()
     }
 
     /**
@@ -61,7 +62,12 @@ class PinInteractorImpl(
         return prefsUtil.biometricState == ENABLED
     }
 
+    override fun getUserPublicKey(): String? {
+        return prefsUtil.publicKey
+    }
+
     override fun clearUserData() {
+        LVApplication.appComponent.fcmHelper.unregisterFcm()
         prefsUtil.clearUserPrefs()
         keyStoreRepository.clearAll()
     }

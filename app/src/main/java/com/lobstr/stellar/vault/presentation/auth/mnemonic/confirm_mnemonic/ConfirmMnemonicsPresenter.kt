@@ -49,7 +49,7 @@ class ConfirmMnemonicsPresenter(private val mnemonicsInitialList: List<MnemonicI
     }
 
     fun infoClicked() {
-        viewState.showHelpScreen()
+        viewState.showHelpScreen(Constant.Support.RECOVERY_PHRASE)
     }
 
     fun btnNextClicked() {

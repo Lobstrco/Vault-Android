@@ -1,7 +1,5 @@
 package com.lobstr.stellar.vault.presentation.home.transactions.import_xdr
 
-import android.app.Activity
-import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -90,20 +88,6 @@ class ImportXdrFragment : BaseFragment(), ImportXdrView, View.OnClickListener {
         )
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (resultCode == Activity.RESULT_CANCELED) {
-            return
-        }
-
-        when (requestCode) {
-            Constant.Code.TRANSACTION_DETAILS_FRAGMENT -> {
-                when (data?.getIntExtra(Constant.Extra.EXTRA_TRANSACTION_STATUS, -1)) {
-                    Constant.Transaction.SIGNED -> parentFragment?.childFragmentManager?.popBackStack()
-                }
-            }
-        }
-    }
-
     // ===========================================================
     // Listeners, methods for/from Interfaces
     // ===========================================================
@@ -134,8 +118,6 @@ class ImportXdrFragment : BaseFragment(), ImportXdrView, View.OnClickListener {
         bundle.putParcelable(Constant.Bundle.BUNDLE_TRANSACTION_ITEM, transactionItem)
         val fragment = requireParentFragment().childFragmentManager.fragmentFactory.instantiate(requireContext().classLoader, TransactionDetailsFragment::class.qualifiedName!!)
         fragment.arguments = bundle
-
-        fragment.setTargetFragment(this, Constant.Code.TRANSACTION_DETAILS_FRAGMENT)
 
         FragmentTransactionManager.displayFragment(
             requireParentFragment().childFragmentManager,

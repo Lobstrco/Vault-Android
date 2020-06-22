@@ -41,9 +41,12 @@ class PreferencesProvider : ContentProvider() {
     ): Cursor? {
         return when (uriMatcher.match(uri)) {
             PUBLIC_KEY_CODE -> {
-                // User was authorized when token!=null and public key was created.
-                if (prefsUtil.authToken.isNullOrEmpty()) {
-                    return null
+                // Mnemonics case.
+                if (!prefsUtil.encryptedPhrases.isNullOrEmpty()) {
+                    // User was authorized when token!=null and public key was created.
+                    if (prefsUtil.authToken.isNullOrEmpty()) {
+                        return null
+                    }
                 }
 
                 val matrixCursor = MatrixCursor(arrayOf(PUBLIC_KEY_PATH))

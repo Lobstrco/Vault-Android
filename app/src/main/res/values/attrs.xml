@@ -8,14 +8,4 @@
         <attr name="itemCounterTextColor" format="color"/>
         <attr name="itemTextColor" format="color"/>
     </declare-styleable>
-
-    <declare-styleable name="ExpandableCardView">
-        <attr name="titleText" format="reference"/>
-        <attr name="contentText" format="reference"/>
-        <attr name="icon" format="reference"/>
-        <attr name="inner_view" format="reference"/>
-        <attr name="expandOnClick" format="boolean"/>
-        <attr name="animationDuration" format="integer"/>
-        <attr name="startExpanded" format="boolean"/>
-    </declare-styleable>
 </resources>

@@ -8,11 +8,17 @@ import androidx.multidex.MultiDexApplication
 import com.google.android.gms.security.ProviderInstaller
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.lobstr.stellar.vault.BuildConfig
+import com.lobstr.stellar.vault.R
 import com.lobstr.stellar.vault.presentation.dagger.component.AppComponent
 import com.lobstr.stellar.vault.presentation.dagger.component.DaggerAppComponent
 import com.lobstr.stellar.vault.presentation.dagger.module.AppModule
-import com.lobstr.stellar.vault.presentation.util.Constant
+import com.lobstr.stellar.vault.presentation.util.Constant.BuildType.DEBUG
+import com.zendesk.logger.Logger
+import io.reactivex.exceptions.UndeliverableException
+import io.reactivex.plugins.RxJavaPlugins
 import org.bouncycastle.jce.provider.BouncyCastleProvider
+import zendesk.core.Zendesk
+import zendesk.support.Support
 import java.security.Provider
 import java.security.Security
 
@@ -53,10 +59,13 @@ class LVApplication : MultiDexApplication() {
         upgradeSecurityProvider()
         enableStrictMode()
         FirebaseAnalytics.getInstance(this)
-            .setAnalyticsCollectionEnabled(BuildConfig.BUILD_TYPE != Constant.BuildType.DEBUG)
+            .setAnalyticsCollectionEnabled(BuildConfig.BUILD_TYPE != DEBUG)
         appComponent = DaggerAppComponent.builder()
             .appModule(AppModule(this))
             .build()
+        configureZendesk()
+
+        setupRxJavaErrorHandler()
     }
 
     // ===========================================================
@@ -103,7 +112,7 @@ class LVApplication : MultiDexApplication() {
     }
 
     private fun enableStrictMode() {
-        if (BuildConfig.BUILD_TYPE == Constant.BuildType.DEBUG) {
+        if (BuildConfig.BUILD_TYPE == DEBUG) {
             StrictMode.setThreadPolicy(
                 StrictMode.ThreadPolicy.Builder()
                     .detectAll()
@@ -116,6 +125,28 @@ class LVApplication : MultiDexApplication() {
                     .penaltyLog()
                     .build()
             )
+        }
+    }
+
+    private fun configureZendesk() {
+        Zendesk.INSTANCE.init(
+            this,
+            resources.getString(R.string.zd_url),
+            resources.getString(R.string.zd_appid),
+            resources.getString(R.string.zd_oauth)
+        )
+        Support.INSTANCE.init(Zendesk.INSTANCE)
+        Logger.setLoggable(BuildConfig.BUILD_TYPE == DEBUG)
+    }
+
+    /**
+     * Used for avoid UndeliverableException.
+     */
+    private fun setupRxJavaErrorHandler() {
+        RxJavaPlugins.setErrorHandler { throwable: Throwable? ->
+            if (throwable is UndeliverableException) {
+                throwable.printStackTrace()
+            }
         }
     }
 

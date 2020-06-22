@@ -1,8 +1,11 @@
 package com.lobstr.stellar.vault.presentation.entities.transaction.operation.offer
 
 import android.os.Parcelable
+import com.lobstr.stellar.vault.R
 import com.lobstr.stellar.vault.presentation.entities.transaction.Asset
 import com.lobstr.stellar.vault.presentation.entities.transaction.operation.Operation
+import com.lobstr.stellar.vault.presentation.entities.transaction.operation.OperationField
+import com.lobstr.stellar.vault.presentation.util.AppUtil
 import kotlinx.android.parcel.Parcelize
 
 @Parcelize
@@ -13,12 +16,14 @@ open class ManageSellOfferOperation(
     private val price: String
 ) : Operation(sourceAccount), Parcelable {
 
-    open fun getFieldsMap(): Map<String, String?> {
-        val map: MutableMap<String, String?> = mutableMapOf()
-        map["selling"] = selling.assetCode
-        map["buying"] = buying.assetCode
-        map["price"] = price
+    override fun getFields(): MutableList<OperationField> {
+        val fields: MutableList<OperationField> = mutableListOf()
+        fields.add(OperationField(AppUtil.getString(R.string.op_field_selling), selling.assetCode))
+        if (selling.assetIssuer != null) fields.add(OperationField(AppUtil.getString(R.string.op_field_asset_issuer), selling.assetIssuer))
+        fields.add(OperationField(AppUtil.getString(R.string.op_field_buying), buying.assetCode))
+        if (buying.assetIssuer != null) fields.add(OperationField(AppUtil.getString(R.string.op_field_asset_issuer), buying.assetIssuer))
+        fields.add(OperationField(AppUtil.getString(R.string.op_field_price), price))
 
-        return map
+        return fields
     }
 }

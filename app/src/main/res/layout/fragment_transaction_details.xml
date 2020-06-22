@@ -12,7 +12,6 @@
             android:layout_height="0dp"
             android:layout_weight="1"
             android:fillViewport="true"
-            android:layout_marginBottom="16dp"
             android:scrollbars="vertical">
 
         <LinearLayout
@@ -52,9 +51,9 @@
                         <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
+                                android:layout_gravity="start|center"
                                 android:fontFamily="sans-serif-medium"
                                 android:text="@string/text_tv_signers"
-                                android:layout_gravity="start|center"
                                 android:textColor="@color/color_primary"
                                 android:textSize="14sp" />
 
@@ -71,7 +70,7 @@
                             android:id="@+id/rvSigners"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:paddingBottom="9dp"/>
+                            android:paddingBottom="9dp" />
                 </LinearLayout>
 
                 <ProgressBar
@@ -86,56 +85,60 @@
 
     </androidx.core.widget.NestedScrollView>
 
-    <TextView
-            android:id="@+id/tvErrorDescription"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:gravity="center"
-            android:paddingStart="16dp"
-            android:paddingTop="8dp"
-            android:paddingEnd="16dp"
-            android:paddingBottom="8dp"
-            android:text="@string/text_tv_sequence_number_invalid_description"
-            android:textAppearance="?android:textAppearanceMedium"
-            android:textColor="@color/color_d9534f"
-            android:textSize="14sp"
-            android:visibility="gone" />
-
     <LinearLayout
+            android:id="@+id/llActionContainer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center"
-            android:paddingTop="8dp"
             android:paddingStart="16dp"
             android:paddingEnd="16dp"
-            android:paddingBottom="16dp">
+            android:paddingBottom="16dp"
+            android:paddingTop="16dp"
+            android:orientation="vertical">
 
-        <Button
-                android:id="@+id/btnDeny"
-                style="@style/Base.Widget.AppCompat.Button.Borderless.Colored"
+        <TextView
+                android:id="@+id/tvErrorDescription"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="8dp"
-                android:layout_weight="1"
-                android:background="@drawable/selector_default_button_with_round_stroked_red"
-                android:text="@string/text_btn_deny"
-                android:textAllCaps="false"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:paddingBottom="16dp"
+                android:text="@string/text_tv_sequence_number_invalid_description"
+                android:textAppearance="?android:textAppearanceMedium"
                 android:textColor="@color/color_d9534f"
-                android:textSize="14sp" />
+                android:textSize="14sp"
+                android:visibility="gone" />
 
-        <Button
-                android:id="@+id/btnConfirm"
-                style="@style/Base.Widget.AppCompat.Button.Borderless.Colored"
+        <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_weight="1"
-                android:background="@drawable/selector_default_button_with_round"
-                android:text="@string/text_btn_confirm"
-                android:textAllCaps="false"
-                android:textColor="@android:color/white"
-                android:textSize="14sp" />
+                android:gravity="center"
+                android:orientation="horizontal">
+
+            <Button
+                    android:id="@+id/btnDeny"
+                    style="@style/Base.Widget.AppCompat.Button.Borderless.Colored"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="8dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/selector_default_button_with_round_stroked_red"
+                    android:text="@string/text_btn_deny"
+                    android:textAllCaps="false"
+                    android:textColor="@color/color_d9534f"
+                    android:textSize="14sp" />
+
+            <Button
+                    android:id="@+id/btnConfirm"
+                    style="@style/Base.Widget.AppCompat.Button.Borderless.Colored"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/selector_default_button_with_round"
+                    android:text="@string/text_btn_confirm"
+                    android:textAllCaps="false"
+                    android:textColor="@android:color/white"
+                    android:textSize="14sp" />
+        </LinearLayout>
     </LinearLayout>
 </LinearLayout>

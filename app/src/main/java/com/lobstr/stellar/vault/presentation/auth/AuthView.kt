@@ -12,9 +12,6 @@ interface AuthView : MvpView {
     @Skip
     fun showAuthFragment()
 
-    @Skip
-    fun showBiometricSetUpFragment()
-
     @AddToEndSingle
     fun setupToolbar(@ColorRes toolbarColor: Int, @DrawableRes upArrow: Int, @ColorRes upArrowColor: Int)
 }

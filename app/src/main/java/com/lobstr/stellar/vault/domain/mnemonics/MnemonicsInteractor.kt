@@ -11,4 +11,6 @@ interface MnemonicsInteractor {
     fun getExistingMnemonics(): Single<ArrayList<MnemonicItem>>
 
     fun getPhrases(): Single<String>
+
+    fun getUserPublicKey(): String?
 }

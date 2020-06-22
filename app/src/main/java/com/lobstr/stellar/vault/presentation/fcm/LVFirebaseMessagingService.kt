@@ -9,7 +9,6 @@ import com.lobstr.stellar.vault.domain.util.EventProviderModule
 import com.lobstr.stellar.vault.domain.util.event.Notification
 import com.lobstr.stellar.vault.presentation.application.LVApplication
 import com.lobstr.stellar.vault.presentation.container.activity.ContainerActivity
-import com.lobstr.stellar.vault.presentation.dagger.module.fcm.FcmServiceModule
 import com.lobstr.stellar.vault.presentation.fcm.LVFirebaseMessagingService.Field.ACCOUNT
 import com.lobstr.stellar.vault.presentation.fcm.LVFirebaseMessagingService.Field.EVENT_TYPE
 import com.lobstr.stellar.vault.presentation.fcm.LVFirebaseMessagingService.Field.MESSAGE_BODY
@@ -49,13 +48,14 @@ class LVFirebaseMessagingService : FirebaseMessagingService() {
         const val TRANSACTION_SUBMITTED = "transaction_submitted"
     }
 
-    init {
-        LVApplication.appComponent.plusFcmServiceComponent(FcmServiceModule()).inject(this)
+    override fun onCreate() {
+        super.onCreate()
+        LVApplication.appComponent.inject(this)
     }
 
     override fun onNewToken(newToken: String) {
         super.onNewToken(newToken)
-        mFcmHelper.requestToRefreshFcmToken()
+        mFcmHelper.requestToRefreshFcmToken(newToken)
     }
 
     override fun onMessageReceived(remoteMessage: RemoteMessage) {

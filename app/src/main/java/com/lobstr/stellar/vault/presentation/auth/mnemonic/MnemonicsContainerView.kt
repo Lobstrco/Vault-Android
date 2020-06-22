@@ -5,7 +5,6 @@ import android.content.ClipData
 import android.content.Context
 import android.content.Intent
 import android.graphics.drawable.Drawable
-import android.os.Build
 import android.util.AttributeSet
 import android.view.DragEvent
 import android.view.View
@@ -14,6 +13,7 @@ import android.widget.ScrollView
 import android.widget.TextView
 import androidx.annotation.IdRes
 import androidx.core.content.ContextCompat
+import androidx.core.view.ViewCompat
 import com.lobstr.stellar.vault.R
 import com.lobstr.stellar.vault.presentation.auth.mnemonic.MnemonicsContainerView.Extra.EXTRA_ITEM_POSITION
 import com.lobstr.stellar.vault.presentation.auth.mnemonic.MnemonicsContainerView.Extra.EXTRA_ITEM_VALUE
@@ -55,10 +55,12 @@ class MnemonicsContainerView(context: Context?, attrs: AttributeSet?) : ScrollVi
     init {
         val typedArray = context!!.obtainStyledAttributes(attrs, R.styleable.MnemonicsContainerView)
 
-        isCounterEnabled = typedArray.getBoolean(R.styleable.MnemonicsContainerView_isCounterEnabled, false)
+        isCounterEnabled =
+            typedArray.getBoolean(R.styleable.MnemonicsContainerView_isCounterEnabled, false)
         isDraggable = typedArray.getBoolean(R.styleable.MnemonicsContainerView_isDraggable, false)
         itemBackground = typedArray.getDrawable(R.styleable.MnemonicsContainerView_itemBackground)
-        itemEmptyBackground = typedArray.getDrawable(R.styleable.MnemonicsContainerView_itemEmptyBackground)
+        itemEmptyBackground =
+            typedArray.getDrawable(R.styleable.MnemonicsContainerView_itemEmptyBackground)
         itemCounterTextColor = typedArray.getColor(
             R.styleable.MnemonicsContainerView_itemCounterTextColor,
             ContextCompat.getColor(context, R.color.color_primary)
@@ -80,7 +82,8 @@ class MnemonicsContainerView(context: Context?, attrs: AttributeSet?) : ScrollVi
             fblMnemonicItemContainer.removeAllViews()
             for (i in mMnemonicList!!.indices) {
                 val mnemonicItem = mMnemonicList!![i]
-                val itemMnemonic = (context as Activity).layoutInflater.inflate(R.layout.item_mnemonic, null)
+                val itemMnemonic =
+                    (context as Activity).layoutInflater.inflate(R.layout.item_mnemonic, null)
 
                 itemMnemonic.background =
                     if (mnemonicItem.hide) itemEmptyBackground?.constantState?.newDrawable()
@@ -119,7 +122,8 @@ class MnemonicsContainerView(context: Context?, attrs: AttributeSet?) : ScrollVi
 
                 if (!mnemonicItem.hide) {
                     itemMnemonic.setOnClickListener {
-                        mMnemonicItemActionListener?.get()?.onMnemonicItemClick(this, i, mnemonicStr)
+                        mMnemonicItemActionListener?.get()
+                            ?.onMnemonicItemClick(this, i, mnemonicStr)
                     }
                 }
 
@@ -134,13 +138,9 @@ class MnemonicsContainerView(context: Context?, attrs: AttributeSet?) : ScrollVi
                         intent.putExtra(EXTRA_ITEM_VALUE, mnemonicStr)
 
                         val data = ClipData.newIntent("", intent)
-                        val shadowBuilder = View.DragShadowBuilder(it)
+                        val shadowBuilder = DragShadowBuilder(it)
 
-                        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
-                            it.startDrag(data, shadowBuilder, null, 0)
-                        } else {
-                            it.startDragAndDrop(data, shadowBuilder, null, 0)
-                        }
+                        ViewCompat.startDragAndDrop(it, data, shadowBuilder, null, 0)
                     }
                 }
             }

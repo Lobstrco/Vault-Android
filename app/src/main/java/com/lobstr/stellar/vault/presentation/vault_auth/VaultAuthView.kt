@@ -6,7 +6,6 @@ import moxy.MvpView
 import moxy.viewstate.strategy.alias.AddToEndSingle
 import moxy.viewstate.strategy.alias.Skip
 
-
 interface VaultAuthView : MvpView {
 
     @AddToEndSingle
@@ -16,18 +15,6 @@ interface VaultAuthView : MvpView {
         @ColorRes upArrowColor: Int
     )
 
-    @AddToEndSingle
-    fun setBtnRetryVisibility(visible: Boolean)
-
-    @AddToEndSingle
-    fun showProgressDialog(show: Boolean)
-
-    @AddToEndSingle
-    fun showSignerInfoFragment()
-
-    @AddToEndSingle
-    fun showHomeScreen()
-
     @Skip
-    fun showMessage(message: String?)
+    fun showAuthTokenFragment()
 }

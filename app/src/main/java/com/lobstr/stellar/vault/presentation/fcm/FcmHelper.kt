@@ -8,13 +8,12 @@ import com.google.android.gms.common.GoogleApiAvailability
 import com.google.firebase.iid.FirebaseInstanceId
 import com.lobstr.stellar.vault.data.error.exeption.DefaultException
 import com.lobstr.stellar.vault.data.error.exeption.UserNotAuthorizedException
+import com.lobstr.stellar.vault.data.error.exeption.UserNotAuthorizedException.Action.DEFAULT
 import com.lobstr.stellar.vault.domain.fcm.FcmInteractor
 import com.lobstr.stellar.vault.presentation.entities.account.Account
 import com.lobstr.stellar.vault.presentation.entities.transaction.TransactionItem
-import com.lobstr.stellar.vault.presentation.util.AppUtil
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
-
 
 class FcmHelper(private val context: Context, private val fcmInteractor: FcmInteractor) {
 
@@ -30,103 +29,75 @@ class FcmHelper(private val context: Context, private val fcmInteractor: FcmInte
         internal const val TRYING_REGISTER_FCM = 3
     }
 
-    fun checkIfFcmRegisteredSuccessfully() {
-        if (!fcmInteractor.isFcmRegistered()) {
-            when (requestFcmToken()) {
-                FcmRegStatus.TRYING_REGISTER_FCM, FcmRegStatus.DEVICE_ALREADY_REGISTERED -> {
-                    val fcmDeviceId = getSavedFcmToken()
-                    if (fcmDeviceId.isNotEmpty()) {
-                        sendFcmToken(fcmDeviceId)
-                    }
-                }
-            }
+    fun checkFcmRegistration() {
+        when (requestFcmTokenStatus()) {
+            FcmRegStatus.TRYING_REGISTER_FCM -> createAndSendFcmToken()
         }
     }
 
-    private fun requestFcmToken(): Int {
+    fun unregisterFcm() {
+        fcmInteractor.getFcmToken()?.let {
+            registerDevice(it, false)
+        }
+    }
+
+    private fun requestFcmTokenStatus(): Int {
         // FCM registration (Check device for Play Services APK before, If check succeeds - proceed).
-        if (checkIsGooglePlayServicesAvailable()) {
-            val fcmDeviceId = getSavedFcmToken()
-            return if (fcmDeviceId.isEmpty()) {
-                createFcmToken()
+        return if (checkIsGooglePlayServicesAvailable()) {
+            val fcmToken = fcmInteractor.getFcmToken()
+            if (fcmToken.isNullOrEmpty() || !fcmInteractor.isFcmRegistered()) {
                 FcmRegStatus.TRYING_REGISTER_FCM
             } else {
-                // If device already registered on FCM  - send its id on server.
-                // It can happen e.g. when two or more users use one device.
-                Log.i(LOG_TAG, "Device already registered with id - $fcmDeviceId")
+                Log.i(LOG_TAG, "Device already registered with id - $fcmToken")
                 FcmRegStatus.DEVICE_ALREADY_REGISTERED
             }
         } else {
             // If no - open app anyway.
             Log.e(LOG_TAG, "No valid Google Play Services APK found. ")
-            return FcmRegStatus.NO_VALID_GOOGLE_PLAY
+            FcmRegStatus.NO_VALID_GOOGLE_PLAY
         }
     }
 
-    internal fun requestToRefreshFcmToken() {
-        if (checkIsGooglePlayServicesAvailable()) {
-            createFcmToken()
-            val fcmToken = getSavedFcmToken()
-            if (fcmToken.isNotEmpty()) {
-                sendFcmToken(fcmToken)
-            }
+    internal fun requestToRefreshFcmToken(newToken: String) {
+        // Update token if needed (when device was registered).
+        val fcmToken = fcmInteractor.getFcmToken()
+        if (!fcmToken.isNullOrEmpty() && fcmToken != newToken) {
+            fcmInteractor.setFcmRegistered(false)
+            fcmInteractor.saveFcmToken(newToken)
+            registerDevice(newToken)
         }
     }
 
-    private fun createFcmToken() {
+    private fun createAndSendFcmToken() {
         FirebaseInstanceId.getInstance().instanceId.addOnSuccessListener {
             val token = it.token
-            saveFcmTokenAndAppVersion(token)
+            fcmInteractor.saveFcmToken(token)
             Log.i(LOG_TAG, "Device registered: REG_ID = $token")
+            registerDevice(token)
         }
     }
 
-    private fun sendFcmToken(token: String?) {
-        if (!token.isNullOrEmpty()) {
-            fcmInteractor.fcmDeviceRegistration(OS_TYPE, token)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({
-                    fcmInteractor.setFcmRegistered(true)
-                }, {
-                    when (it) {
-                        is UserNotAuthorizedException -> {
-                            sendFcmToken(token)
-                        }
-                        is DefaultException -> {
-                            Log.e(LOG_TAG, it.details)
-                        }
-                        else -> {
-                            Log.e(LOG_TAG, it.message ?: "")
+    private fun registerDevice(token: String, active: Boolean = true) {
+        fcmInteractor.fcmDeviceRegistration(OS_TYPE, token, active)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({
+                fcmInteractor.setFcmRegistered(active)
+            }, {
+                when (it) {
+                    is UserNotAuthorizedException -> {
+                        when (it.action) {
+                            DEFAULT -> registerDevice(token)
                         }
                     }
-                })
-        }
-    }
-
-    private fun saveFcmTokenAndAppVersion(token: String) {
-        val appVersion = AppUtil.getAppVersionCode(context)
-        fcmInteractor.saveFcmToken(token)
-        fcmInteractor.saveAppVersion(appVersion)
-    }
-
-    private fun getSavedFcmToken(): String {
-        // Check if app was updated; if so, it must clear the registration ID
-        // since the existing regID is not guaranteed to work with the new app version.
-        val appVersion = fcmInteractor.getAppVersion()
-        val currentVersion = AppUtil.getAppVersionCode(context)
-        if (appVersion != currentVersion) {
-            Log.i(LOG_TAG, "App version changed. ")
-            return ""
-        }
-
-        val fcmToken = fcmInteractor.getFcmToken()
-        if (!fcmToken.isNullOrEmpty()) {
-            Log.i(LOG_TAG, "Previous registration was not found, register device on FCM")
-            return fcmToken
-        }
-
-        return ""
+                    is DefaultException -> {
+                        Log.e(LOG_TAG, it.details)
+                    }
+                    else -> {
+                        Log.e(LOG_TAG, it.message ?: "")
+                    }
+                }
+            })
     }
 
     /**

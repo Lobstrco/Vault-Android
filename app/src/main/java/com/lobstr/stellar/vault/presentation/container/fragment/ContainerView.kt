@@ -9,9 +9,9 @@ interface ContainerView : MvpView {
 
     fun showAuthFr()
 
-    fun showSignerInfoFr()
+    fun showVaultAuthFr()
 
-    fun showBiometricSetUpFr()
+    fun showSignerInfoFr()
 
     fun showDashBoardFr()
 

@@ -9,13 +9,25 @@ import com.lobstr.stellar.vault.presentation.util.biometric.BiometricUtils
 import moxy.MvpPresenter
 import javax.inject.Inject
 
-class BiometricSetUpPresenter : MvpPresenter<BiometricSetUpView>() {
+class BiometricSetUpPresenter(private val pinMode: Byte) : MvpPresenter<BiometricSetUpView>() {
 
     @Inject
     lateinit var interactor: BiometricSetUpInteractor
 
     init {
         LVApplication.appComponent.plusBiometricSetUpComponent(BiometricSetUpModule()).inject(this)
+    }
+
+    override fun onFirstViewAttach() {
+        super.onFirstViewAttach()
+        viewState.setWindowBackground()
+        viewState.windowLightNavigationBar(true)
+        viewState.setupToolbar(
+            false,
+            android.R.color.white,
+            R.drawable.ic_arrow_back,
+            R.color.color_primary
+        )
     }
 
     fun skipClicked() {

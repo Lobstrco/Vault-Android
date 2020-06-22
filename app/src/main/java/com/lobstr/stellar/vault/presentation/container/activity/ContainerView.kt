@@ -18,6 +18,9 @@ interface ContainerView : MvpView {
     )
 
     @Skip
+    fun showSignerInfoFr()
+
+    @Skip
     fun showDashBoardFr()
 
     @Skip

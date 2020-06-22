@@ -7,15 +7,15 @@ import io.reactivex.Single
 
 interface FcmInteractor {
 
-    fun fcmDeviceRegistration(type: String, registrationId: String): Single<FcmResult>
+    fun fcmDeviceRegistration(
+        type: String,
+        registrationId: String,
+        active: Boolean
+    ): Single<FcmResult>
 
     fun saveFcmToken(token: String)
 
     fun getFcmToken(): String?
-
-    fun saveAppVersion(appVersion: Long)
-
-    fun getAppVersion(): Long
 
     fun setFcmRegistered(registered: Boolean)
 

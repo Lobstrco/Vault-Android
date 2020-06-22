@@ -5,6 +5,7 @@ import com.lobstr.stellar.vault.data.error.exeption.NoInternetConnectionExceptio
 import com.lobstr.stellar.vault.data.error.exeption.UserNotAuthorizedException
 import com.lobstr.stellar.vault.domain.dashboard.DashboardInteractor
 import com.lobstr.stellar.vault.domain.util.EventProviderModule
+import com.lobstr.stellar.vault.domain.util.event.Auth
 import com.lobstr.stellar.vault.domain.util.event.Network
 import com.lobstr.stellar.vault.domain.util.event.Notification
 import com.lobstr.stellar.vault.presentation.BasePresenter
@@ -29,7 +30,7 @@ class DashboardPresenter : BasePresenter<DashboardView>() {
     lateinit var interactor: DashboardInteractor
 
     private var stellarAccountsSubscription: Disposable? = null
-    private val cashedStellarAccounts: MutableList<Account> = mutableListOf()
+    private val cachedStellarAccounts: MutableList<Account> = mutableListOf()
 
     private var loadSignedAccountsInProcess = false
     private var loadTransactionsInProcess = false
@@ -44,9 +45,11 @@ class DashboardPresenter : BasePresenter<DashboardView>() {
         viewState.initSignedAccountsRecycledView()
 
         val vaultPublicKey = interactor.getUserPublicKey()
+
         viewState.showVaultInfo(
+            interactor.hasTangem(),
             Constant.Social.USER_ICON_LINK.plus(vaultPublicKey).plus(".png"),
-            AppUtil.ellipsizeStrInMiddle(vaultPublicKey, PK_TRUNCATE_COUNT)!!
+            AppUtil.ellipsizeStrInMiddle(vaultPublicKey, PK_TRUNCATE_COUNT)
         )
 
         registerEventProvider()
@@ -95,6 +98,16 @@ class DashboardPresenter : BasePresenter<DashboardView>() {
                     it.printStackTrace()
                 })
         )
+
+        unsubscribeOnDestroy(
+            eventProviderModule.updateEventSubject
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({
+                    loadSignedAccountsAndTransactions()
+                }, {
+                    it.printStackTrace()
+                })
+        )
     }
 
     private fun loadPendingTransactions() {
@@ -118,7 +131,12 @@ class DashboardPresenter : BasePresenter<DashboardView>() {
                             handleNoInternetConnection()
                         }
                         is UserNotAuthorizedException -> {
-                            loadPendingTransactions()
+                            when (it.action) {
+                                UserNotAuthorizedException.Action.AUTH_REQUIRED -> eventProviderModule.authEventSubject.onNext(
+                                    Auth()
+                                )
+                                else -> loadPendingTransactions()
+                            }
                         }
                         is DefaultException -> {
                             viewState.showErrorMessage(it.details)
@@ -146,22 +164,24 @@ class DashboardPresenter : BasePresenter<DashboardView>() {
                     viewState.showSignersProgress(false)
                 }
                 .subscribe({
-                    viewState.showSignersCount(interactor.getSignersCount())
+                    viewState.showSignersCount(it.size)
+                    viewState.showSignersEmptyState(it.isEmpty())
 
-                    // check cashed federation items
+                    // Check cached federation items.
                     it.forEachIndexed { index, accountItem ->
                         val federation =
-                            cashedStellarAccounts.find { account -> account.address == accountItem.address }
+                            cachedStellarAccounts.find { account -> account.address == accountItem.address }
                                 ?.federation
                         it[index].federation = federation
                     }
 
                     viewState.notifySignedAccountsAdapter(it)
 
-                    // try receive federations for accounts
+                    // Try receive federations for accounts.
                     getStellarAccounts(it)
                 }, {
                     viewState.showSignersCount(interactor.getSignersCount())
+                    viewState.showSignersEmptyState(interactor.getSignersCount() == 0)
 
                     when (it) {
                         is NoInternetConnectionException -> {
@@ -169,7 +189,12 @@ class DashboardPresenter : BasePresenter<DashboardView>() {
                             handleNoInternetConnection()
                         }
                         is UserNotAuthorizedException -> {
-                            loadSignedAccountsList()
+                            when (it.action) {
+                                UserNotAuthorizedException.Action.AUTH_REQUIRED -> eventProviderModule.authEventSubject.onNext(
+                                    Auth()
+                                )
+                                else -> loadSignedAccountsList()
+                            }
                         }
                         is DefaultException -> {
                             viewState.showErrorMessage(it.details)
@@ -183,15 +208,15 @@ class DashboardPresenter : BasePresenter<DashboardView>() {
     }
 
     /**
-     * Used for receive federation by account id
+     * Used for receive federation by account id.
      */
     private fun getStellarAccounts(accounts: List<Account>) {
         stellarAccountsSubscription?.dispose()
         stellarAccountsSubscription = Observable.fromIterable(accounts)
             .subscribeOn(Schedulers.io())
             .filter { account: Account ->
-                cashedStellarAccounts
-                    .find { cashedAccount -> cashedAccount.address == account.address } == null
+                cachedStellarAccounts
+                    .find { cachedAccount -> cachedAccount.address == account.address } == null
             }
             .flatMapSingle {
                 interactor.getStellarAccount(it.address).onErrorReturnItem(it)
@@ -201,22 +226,22 @@ class DashboardPresenter : BasePresenter<DashboardView>() {
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
                 it.forEach { account ->
-                    if (cashedStellarAccounts.find { cashedAccount -> cashedAccount.address == account.address } == null) {
-                        cashedStellarAccounts.add(account)
+                    if (cachedStellarAccounts.find { cachedAccount -> cachedAccount.address == account.address } == null) {
+                        cachedStellarAccounts.add(account)
                     }
                 }
 
-                // check cashed federation items
+                // Check cached federation items.
                 accounts.forEachIndexed { index, accountItem ->
                     val federation =
-                        cashedStellarAccounts.find { account -> account.address == accountItem.address }
+                        cachedStellarAccounts.find { account -> account.address == accountItem.address }
                             ?.federation
                     accounts[index].federation = federation
                 }
 
                 viewState.notifySignedAccountsAdapter(accounts)
             }, {
-                // ignore
+                // Ignore.
             })
 
         unsubscribeOnDestroy(stellarAccountsSubscription!!)
@@ -231,7 +256,7 @@ class DashboardPresenter : BasePresenter<DashboardView>() {
     }
 
     fun copyKeyClicked() {
-        viewState.copyToClipBoard(interactor.getUserPublicKey())
+        interactor.getUserPublicKey()?.let { viewState.copyToClipBoard(it) }
     }
 
     fun userVisibleHintCalled(visible: Boolean) {
@@ -256,5 +281,9 @@ class DashboardPresenter : BasePresenter<DashboardView>() {
 
     fun refreshClicked() {
         loadSignedAccountsAndTransactions()
+    }
+
+    fun addAccountClicked() {
+        viewState.showSignerInfoScreen()
     }
 }

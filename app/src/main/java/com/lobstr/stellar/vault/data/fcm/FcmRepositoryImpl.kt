@@ -22,8 +22,8 @@ class FcmRepositoryImpl(
     private val rxErrorUtils: RxErrorUtils
 ) :
     FcmRepository {
-    override fun fcmDeviceRegistration(token: String, type: String, registrationId: String): Single<FcmResult> {
-        return fcmApi.fcmDeviceRegistration(token, type, registrationId)
+    override fun fcmDeviceRegistration(token: String, type: String, registrationId: String, active: Boolean): Single<FcmResult> {
+        return fcmApi.fcmDeviceRegistration(token, type, registrationId, active)
             .onErrorResumeNext { rxErrorUtils.handleSingleRequestHttpError(it) }
             .map {
                 fcmEntityMapper.transformFcmResponse(it)

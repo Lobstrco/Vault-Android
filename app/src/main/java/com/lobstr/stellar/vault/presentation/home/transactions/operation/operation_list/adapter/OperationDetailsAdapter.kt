@@ -4,8 +4,9 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.lobstr.stellar.vault.R
+import com.lobstr.stellar.vault.presentation.entities.transaction.operation.OperationField
 
-class OperationDetailsAdapter(private val mMap: Map<String, String?>) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class OperationDetailsAdapter(private val fields: MutableList<OperationField>) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     override fun onCreateViewHolder(viewGroup: ViewGroup, i: Int): RecyclerView.ViewHolder {
         val view = LayoutInflater.from(viewGroup.context)
@@ -14,11 +15,10 @@ class OperationDetailsAdapter(private val mMap: Map<String, String?>) : Recycler
     }
 
     override fun onBindViewHolder(viewHolder: RecyclerView.ViewHolder, position: Int) {
-        val key = mMap.keys.toList()[position]
-        (viewHolder as OperationDetailsViewHolder).bind(key, mMap[key])
+        (viewHolder as OperationDetailsViewHolder).bind(fields[position].key, fields[position].value)
     }
 
     override fun getItemCount(): Int {
-        return mMap.size
+        return fields.size
     }
 }

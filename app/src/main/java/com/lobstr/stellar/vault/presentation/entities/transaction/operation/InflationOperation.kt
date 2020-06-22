@@ -8,7 +8,7 @@ data class InflationOperation(
     override val sourceAccount: String?
 ) : Operation(sourceAccount), Parcelable {
 
-    fun getFieldsMap(): Map<String, String?> {
-        return mutableMapOf()
+    override fun getFields(): MutableList<OperationField> {
+        return super.getFields()
     }
 }

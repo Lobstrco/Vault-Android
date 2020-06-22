@@ -8,6 +8,7 @@ import io.reactivex.Single
 
 
 class MnemonicsInteractorImpl(
+    private val prefsUtil: PrefsUtil,
     private val keyStoreRepository: KeyStoreRepository,
     private val stellarRepository: StellarRepository
 ) : MnemonicsInteractor {
@@ -32,5 +33,9 @@ class MnemonicsInteractorImpl(
                 PrefsUtil.PREF_PHRASES_IV
             )
         }
+    }
+
+    override fun getUserPublicKey(): String? {
+        return prefsUtil.publicKey
     }
 }

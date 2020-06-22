@@ -20,4 +20,8 @@ class AuthFrPresenter : MvpPresenter<AuthFrView>() {
     fun helpClicked() {
         viewState.showHelpScreen()
     }
+
+    fun tangemClicked() {
+        viewState.showTangemSetupScreen()
+    }
 }

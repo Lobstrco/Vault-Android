@@ -1,6 +1,8 @@
 package com.lobstr.stellar.vault.presentation.entities.transaction.operation
 
+import com.lobstr.stellar.vault.R
 import com.lobstr.stellar.vault.presentation.entities.transaction.Asset
+import com.lobstr.stellar.vault.presentation.util.AppUtil
 import kotlinx.android.parcel.Parcelize
 
 @Parcelize
@@ -12,15 +14,14 @@ data class PaymentOperation(
     val memo: String
 ) : Operation(sourceAccount) {
 
-    fun getFieldsMap(): Map<String, String?> {
-        val map: MutableMap<String, String?> = mutableMapOf()
-        if (destination.isNotEmpty()) map["destination"] = destination
-        map["asset"] = asset.assetCode
-        map["amount"] = amount
-        if (memo.isNotEmpty()) {
-            map["memo"] = memo
-        }
+    override fun getFields(): MutableList<OperationField> {
+        val fields: MutableList<OperationField> = mutableListOf()
+        if (destination.isNotEmpty()) fields.add(OperationField(AppUtil.getString(R.string.op_field_destination), destination))
+        fields.add(OperationField(AppUtil.getString(R.string.op_field_asset), asset.assetCode))
+        fields.add(OperationField(AppUtil.getString(R.string.op_field_amount), amount))
+        if (asset.assetIssuer != null) fields.add(OperationField(AppUtil.getString(R.string.op_field_asset_issuer), asset.assetIssuer))
+        if (memo.isNotEmpty()) fields.add(OperationField(AppUtil.getString(R.string.op_field_memo), memo))
 
-        return map
+        return fields
     }
 }

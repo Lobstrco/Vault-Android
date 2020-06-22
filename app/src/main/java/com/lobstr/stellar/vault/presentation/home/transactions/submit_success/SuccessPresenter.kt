@@ -1,11 +1,23 @@
 package com.lobstr.stellar.vault.presentation.home.transactions.submit_success
 
+import com.lobstr.stellar.vault.domain.transaction_success.TransactionSuccessInteractor
+import com.lobstr.stellar.vault.presentation.application.LVApplication
+import com.lobstr.stellar.vault.presentation.dagger.module.transaction_success.TransactionSuccessModule
 import moxy.MvpPresenter
+import javax.inject.Inject
 
 class SuccessPresenter(
     private val envelopeXdr: String,
     private val needAdditionalSignatures: Boolean
 ) : MvpPresenter<SuccessView>() {
+
+    @Inject
+    lateinit var interactor: TransactionSuccessInteractor
+
+    init {
+        LVApplication.appComponent.plusTransactionSuccessComponent(TransactionSuccessModule())
+            .inject(this)
+    }
 
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
@@ -14,10 +26,6 @@ class SuccessPresenter(
         viewState.setAdditionalSignaturesInfoEnabled(
             needAdditionalSignatures
         )
-    }
-
-    fun infoClicked() {
-        viewState.showHelpScreen()
     }
 
     fun doneClicked() {

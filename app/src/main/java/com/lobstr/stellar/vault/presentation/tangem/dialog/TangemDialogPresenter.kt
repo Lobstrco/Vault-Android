@@ -1,0 +1,270 @@
+package com.lobstr.stellar.vault.presentation.tangem.dialog
+
+import android.os.Build
+import android.view.Gravity
+import com.lobstr.stellar.vault.R
+import com.lobstr.stellar.vault.domain.tangem.TangemInteractor
+import com.lobstr.stellar.vault.presentation.BasePresenter
+import com.lobstr.stellar.vault.presentation.application.LVApplication
+import com.lobstr.stellar.vault.presentation.dagger.module.tangem.TangemModule
+import com.lobstr.stellar.vault.presentation.dialog.alert.base.AlertDialogFragment
+import com.lobstr.stellar.vault.presentation.entities.tangem.TangemInfo
+import com.lobstr.stellar.vault.presentation.util.AppUtil
+import com.lobstr.stellar.vault.presentation.util.Constant
+import com.tangem.TangemSdkError
+import com.tangem.commands.Card
+import com.tangem.commands.CreateWalletResponse
+import com.tangem.commands.SignResponse
+import com.tangem.tangem_sdk_new.ui.NfcLocation
+import javax.inject.Inject
+
+class TangemDialogPresenter(private var tangemInfo: TangemInfo?) :
+    BasePresenter<TangemDialogView>() {
+
+    private var mAction = Constant.TangemAction.ACTION_DEFAULT
+
+    @Inject
+    lateinit var interactor: TangemInteractor
+
+    init {
+        LVApplication.appComponent.plusTangemDialogComponent(TangemModule()).inject(this)
+    }
+
+    override fun onFirstViewAttach() {
+        super.onFirstViewAttach()
+
+        if (tangemInfo == null) {
+            tangemInfo = TangemInfo()
+        }
+        setNfcLocation()
+    }
+
+    override fun attachView(view: TangemDialogView?) {
+        super.attachView(view)
+        when {
+            tangemInfo?.cardId.isNullOrEmpty() -> {
+                startScanTangemCard()
+            }
+            !tangemInfo?.cardId.isNullOrEmpty() && tangemInfo?.accountId.isNullOrEmpty() -> {
+                startCreateWallet()
+            }
+            !tangemInfo?.cardId.isNullOrEmpty() && !tangemInfo?.accountId.isNullOrEmpty() &&
+                    !tangemInfo?.pendingTransaction.isNullOrEmpty() -> {
+                startSignTransaction()
+            }
+            else -> {
+                viewState.finishScreen()
+            }
+        }
+    }
+
+    private fun startScanTangemCard() {
+        mAction = Constant.TangemAction.ACTION_SCAN
+        viewState.setStateTitle(AppUtil.getString(R.string.text_tv_tangem_dialog_tittle__scan))
+        viewState.setDescriptionMessage(AppUtil.getString(R.string.text_tv_tangem_dialog_description_scan))
+        viewState.startScanTangemCard()
+    }
+
+    private fun startCreateWallet() {
+        mAction = Constant.TangemAction.ACTION_CREATE_WALLET
+        viewState.setStateTitle(AppUtil.getString(R.string.text_tv_tangem_dialog_tittle__scan))
+        viewState.setDescriptionMessage(AppUtil.getString(R.string.text_tv_tangem_dialog_description_scan))
+        viewState.startCreateWallet(tangemInfo?.cardId!!)
+    }
+
+    private fun startSignTransaction() {
+        mAction = Constant.TangemAction.ACTION_SIGN
+        viewState.setStateTitle(AppUtil.getString(R.string.text_tv_tangem_dialog_tittle__scan))
+        viewState.setDescriptionMessage(AppUtil.getString(R.string.text_tv_tangem_dialog_description_scan))
+        if (!tangemInfo?.message.isNullOrEmpty()) {
+            viewState.setStateTitle(tangemInfo?.message)
+        }
+        if (!tangemInfo?.description.isNullOrEmpty()) {
+            viewState.setDescriptionMessage(tangemInfo?.description)
+        }
+        prepareSignTransaction()
+    }
+
+    private fun setNfcLocation() {
+        val codename = Build.DEVICE
+        var locationHeight = 50
+
+        for (nfcLocation in NfcLocation.values()) {
+            if (codename.startsWith(nfcLocation.codename)) {
+                locationHeight = nfcLocation.y
+            }
+        }
+
+        val gravity = when (locationHeight) {
+            in 1..29 -> {
+                Gravity.TOP
+            }
+            in 30..70 -> {
+                Gravity.CENTER_VERTICAL
+            }
+            in 71..99 -> {
+                Gravity.BOTTOM
+            }
+            else -> {
+                Gravity.CENTER_VERTICAL
+            }
+        }
+
+        viewState.setGravity(gravity)
+    }
+
+    fun processDataAfterScanningCard(data: Card) {
+        if (tangemInfo == null) {
+            tangemInfo = TangemInfo()
+        }
+
+        tangemInfo?.cardId = data.cardId
+        tangemInfo?.cardStatus = data.status?.name
+        tangemInfo?.cardStatusCode = data.status?.code
+        if (data.walletPublicKey != null && data.walletPublicKey!!.isNotEmpty()) {
+            tangemInfo?.accountId = interactor.getPublicKeyFromKeyPair(data.walletPublicKey)
+        }
+
+        viewState.showSuccessAnimation()
+    }
+
+    private fun prepareSignTransaction() {
+        if (tangemInfo?.cardId.isNullOrEmpty() || tangemInfo?.accountId.isNullOrEmpty()) {
+            viewState.finishScreen()
+            return
+        }
+
+        val pendingTransaction = interactor.getTransactionFromXDR(tangemInfo?.pendingTransaction!!)
+        val hashPendingTransaction = pendingTransaction.hash()
+        val arrayHashesPendingTransaction: Array<ByteArray> = arrayOf(hashPendingTransaction)
+
+        mAction = Constant.TangemAction.ACTION_SIGN
+        viewState.startSignPendingTransaction(arrayHashesPendingTransaction, tangemInfo?.cardId!!)
+    }
+
+    fun processSignedData(signResponse: SignResponse) {
+        val pendingTransaction = interactor.getTransactionFromXDR(tangemInfo?.pendingTransaction!!)
+        val signedTransactionXDR: String? = interactor.signTransactionWithTangemCardData(
+            pendingTransaction,
+            signResponse,
+            tangemInfo?.accountId!!
+        )
+        tangemInfo?.signedTransaction = signedTransactionXDR
+
+        viewState.showSuccessAnimation()
+    }
+
+    fun processDataAfterCreateWallet(data: CreateWalletResponse) {
+        if (tangemInfo == null) {
+            tangemInfo = TangemInfo()
+        }
+        tangemInfo?.cardId = data.cardId
+        tangemInfo?.cardStatus = data.status.name
+        tangemInfo?.cardStatusCode = data.status.code
+        tangemInfo?.accountId = interactor.getPublicKeyFromKeyPair(data.walletPublicKey)
+
+        viewState.showSuccessAnimation()
+    }
+
+    private fun successfullyCompleteScreen() {
+        viewState.successfullyCompleteOperation(tangemInfo)
+    }
+
+    fun processErrorCompletion(error: TangemSdkError) {
+        val tangemError = interactor.handleTangemError(error)
+        when (tangemError?.errorMod) {
+            Constant.TangemErrorMod.ERROR_MOD_FINISH_SCREEN -> {
+                viewState.showMessage(
+                    tangemError.errorTitle
+                        ?: AppUtil.getString(R.string.text_tv_tangem_default_error_header)
+                )
+            }
+            Constant.TangemErrorMod.ERROR_MOD_ONLY_TEXT -> {
+                viewState.showMessage(
+                    tangemError.errorTitle
+                        ?: AppUtil.getString(R.string.text_tv_tangem_default_error_header)
+                )
+            }
+            Constant.TangemErrorMod.ERROR_MOD_DEFAULT -> {
+                viewState.showMessage(
+                    tangemError.errorTitle
+                        ?: AppUtil.getString(R.string.text_tv_tangem_default_error_header)
+                )
+            }
+            Constant.TangemErrorMod.ERROR_MOD_REPEAT_ACTION -> {
+                viewState.changeActionContainerVisibility(false)
+                viewState.changeErrorContainerVisibility(true)
+                viewState.setErrorContainerData(
+                    tangemError.errorTitle
+                        ?: AppUtil.getString(R.string.text_tv_tangem_default_error_header),
+                    tangemError.errorDescription
+                        ?: AppUtil.getString(R.string.text_tv_tangem_default_error_description)
+                )
+            }
+            else -> {
+                viewState.showMessage(
+                    tangemError?.errorTitle
+                        ?: AppUtil.getString(R.string.text_tv_tangem_default_error_header)
+                )
+            }
+        }
+    }
+
+    fun tryAgainClicked() {
+        viewState.changeActionContainerVisibility(true)
+        viewState.changeErrorContainerVisibility(false)
+        repeatAction()
+        // TODO check.
+//        viewState.showMessage(tangemError.text ?: "Error")
+//        val subscription = Completable.complete()
+//            .delay(1000, TimeUnit.MILLISECONDS)
+//            .observeOn(AndroidSchedulers.mainThread())
+//            .subscribe({
+//                viewState.showMessage("Hold the correct card")
+//                repeatAction()
+//            }, { it.printStackTrace() })
+//
+//        unsubscribeOnDestroy(subscription)
+    }
+
+    private fun repeatAction() {
+        when (mAction) {
+            Constant.TangemAction.ACTION_SCAN -> {
+                startScanTangemCard()
+            }
+            Constant.TangemAction.ACTION_SIGN -> {
+                startSignTransaction()
+            }
+            Constant.TangemAction.ACTION_CREATE_WALLET -> {
+                startCreateWallet()
+            }
+            else -> {
+                viewState.finishScreen()
+            }
+        }
+    }
+
+    fun onAlertDialogPositiveButtonClicked(tag: String?) {
+        when (tag) {
+            AlertDialogFragment.DialogFragmentIdentifier.NFC_INFO_DIALOG -> {
+                viewState.showNfcDeviceSettings()
+            }
+        }
+    }
+
+    fun interruptionOfSignatureOperation() {
+        //viewState.showMessage("Lost Card")
+    }
+
+    fun cancelClicked() {
+        viewState.finishScreen()
+    }
+
+    fun successAnimationFinished() {
+        successfullyCompleteScreen()
+    }
+
+    fun successAnimationStarted() {
+        viewState.vibrate(longArrayOf(1500, 175, 0, 0))
+    }
+}

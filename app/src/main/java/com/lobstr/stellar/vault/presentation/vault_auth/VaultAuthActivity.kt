@@ -1,23 +1,17 @@
 package com.lobstr.stellar.vault.presentation.vault_auth
 
-import android.content.Intent
 import android.os.Bundle
-import android.view.View
-import android.widget.Toast
 import androidx.annotation.ColorRes
 import androidx.annotation.DrawableRes
 import com.lobstr.stellar.vault.R
 import com.lobstr.stellar.vault.presentation.base.activity.BaseActivity
 import com.lobstr.stellar.vault.presentation.container.fragment.ContainerFragment
-import com.lobstr.stellar.vault.presentation.home.HomeActivity
 import com.lobstr.stellar.vault.presentation.util.Constant
 import com.lobstr.stellar.vault.presentation.util.manager.FragmentTransactionManager
-import com.lobstr.stellar.vault.presentation.util.manager.ProgressManager
-import kotlinx.android.synthetic.main.activity_vault_auth.*
 import moxy.presenter.InjectPresenter
 import moxy.presenter.ProvidePresenter
 
-class VaultAuthActivity : BaseActivity(), VaultAuthView, View.OnClickListener {
+class VaultAuthActivity : BaseActivity(), VaultAuthView {
 
     // ===========================================================
     // Constants
@@ -49,28 +43,13 @@ class VaultAuthActivity : BaseActivity(), VaultAuthView, View.OnClickListener {
     // Methods for/from SuperClass
     // ===========================================================
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setListeners()
-    }
-
     override fun getLayoutResource(): Int {
         return R.layout.activity_vault_auth
-    }
-
-    private fun setListeners() {
-        btnRetry.setOnClickListener(this)
     }
 
     // ===========================================================
     // Listeners, methods for/from Interfaces
     // ===========================================================
-
-    override fun onClick(v: View?) {
-        when (v?.id) {
-            btnRetry.id -> mVaultAuthPresenter.tryAuthorizeVault()
-        }
-    }
 
     override fun setupToolbar(@ColorRes toolbarColor: Int, @DrawableRes upArrow: Int, @ColorRes upArrowColor: Int) {
         setActionBarBackground(toolbarColor)
@@ -79,17 +58,9 @@ class VaultAuthActivity : BaseActivity(), VaultAuthView, View.OnClickListener {
         changeActionBarIconVisibility(false)
     }
 
-    override fun setBtnRetryVisibility(visible: Boolean) {
-        btnRetry.visibility = if (visible) View.VISIBLE else View.GONE
-    }
-
-    override fun showProgressDialog(show: Boolean) {
-        ProgressManager.show(show, supportFragmentManager)
-    }
-
-    override fun showSignerInfoFragment() {
+    override fun showAuthTokenFragment() {
         val bundle = Bundle()
-        bundle.putInt(Constant.Bundle.BUNDLE_NAVIGATION_FR, Constant.Navigation.SIGNER_INFO)
+        bundle.putInt(Constant.Bundle.BUNDLE_NAVIGATION_FR, Constant.Navigation.VAULT_AUTH)
         val fragment = supportFragmentManager.fragmentFactory.instantiate(this.classLoader, ContainerFragment::class.qualifiedName!!)
         fragment.arguments = bundle
 
@@ -98,16 +69,6 @@ class VaultAuthActivity : BaseActivity(), VaultAuthView, View.OnClickListener {
             fragment,
             R.id.fl_container
         )
-    }
-
-    override fun showHomeScreen() {
-        val intent = Intent(this, HomeActivity::class.java)
-        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-        startActivity(intent)
-    }
-
-    override fun showMessage(message: String?) {
-        Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
     }
 
     // ===========================================================

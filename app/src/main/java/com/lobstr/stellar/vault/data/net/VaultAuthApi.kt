@@ -10,7 +10,7 @@ interface VaultAuthApi {
 
     @GET("authentication/")
     fun getChallenge(
-        @Query("account") account: String
+        @Query("account") account: String?
     ): Single<ApiGetChallenge>
 
     @FormUrlEncoded

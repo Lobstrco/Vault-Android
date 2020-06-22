@@ -6,6 +6,7 @@ import com.lobstr.stellar.vault.presentation.application.LVApplication
 import com.lobstr.stellar.vault.presentation.dagger.module.mnemonics.MnemonicsModule
 import com.lobstr.stellar.vault.presentation.dialog.alert.base.AlertDialogFragment
 import com.lobstr.stellar.vault.presentation.entities.mnemonic.MnemonicItem
+import com.lobstr.stellar.vault.presentation.util.Constant.Support.RECOVERY_PHRASE
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
@@ -54,7 +55,7 @@ class MnemonicsPresenter(private val generate: Boolean) : BasePresenter<Mnemonic
     }
 
     fun infoClicked() {
-        viewState.showHelpScreen()
+        viewState.showHelpScreen(RECOVERY_PHRASE, interactor.getUserPublicKey())
     }
 
     fun nextClicked() {

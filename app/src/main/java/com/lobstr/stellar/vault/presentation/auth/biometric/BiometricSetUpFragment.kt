@@ -2,14 +2,19 @@ package com.lobstr.stellar.vault.presentation.auth.biometric
 
 
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import com.lobstr.stellar.vault.R
+import com.lobstr.stellar.vault.presentation.base.activity.BaseActivity
 import com.lobstr.stellar.vault.presentation.base.fragment.BaseFragment
 import com.lobstr.stellar.vault.presentation.dialog.alert.base.AlertDialogFragment
+import com.lobstr.stellar.vault.presentation.pin.PinActivity
+import com.lobstr.stellar.vault.presentation.util.Constant
 import com.lobstr.stellar.vault.presentation.util.biometric.BiometricListener
 import com.lobstr.stellar.vault.presentation.util.biometric.BiometricManager
 import com.lobstr.stellar.vault.presentation.vault_auth.VaultAuthActivity
@@ -43,7 +48,9 @@ class BiometricSetUpFragment : BaseFragment(), BiometricSetUpView, BiometricList
     // ===========================================================
 
     @ProvidePresenter
-    fun provideBiometricSetUpPresenter() = BiometricSetUpPresenter()
+    fun provideBiometricSetUpPresenter() = BiometricSetUpPresenter(
+        arguments?.getByte(Constant.Bundle.BUNDLE_PIN_MODE) ?: Constant.PinMode.ENTER
+    )
 
     // ===========================================================
     // Getter & Setter
@@ -80,6 +87,32 @@ class BiometricSetUpFragment : BaseFragment(), BiometricSetUpView, BiometricList
             btnTurOn.id -> mPresenter.turnOnClicked()
             btnSkip.id -> mPresenter.skipClicked()
         }
+    }
+
+    override fun setWindowBackground() {
+        (activity as? PinActivity)?.window?.decorView?.setBackgroundColor(
+            ContextCompat.getColor(
+                requireContext(),
+                android.R.color.white
+            )
+        )
+    }
+
+    /**
+     * Set navigation buttons color.
+     * @param light when true - gray, else - white.
+     */
+    override fun windowLightNavigationBar(light: Boolean) {
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.O) {
+            activity?.window?.decorView?.systemUiVisibility =
+                if (light) View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR else 0
+        }
+    }
+
+    override fun setupToolbar(showHomeAsUp: Boolean,toolbarColor: Int, upArrow: Int, upArrowColor: Int) {
+        (activity as? BaseActivity)?.changeActionBarIconVisibility(showHomeAsUp)
+        (activity as? BaseActivity)?.setActionBarBackground(toolbarColor)
+        (activity as? BaseActivity)?.setHomeAsUpIndicator(upArrow, upArrowColor)
     }
 
     override fun showVaultAuthScreen() {

@@ -6,12 +6,14 @@ import android.text.method.LinkMovementMethod
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import com.lobstr.stellar.vault.R
 import com.lobstr.stellar.vault.presentation.auth.backup.BackUpFragment
 import com.lobstr.stellar.vault.presentation.auth.restore_key.RecoverKeyFragment
+import com.lobstr.stellar.vault.presentation.auth.tangem.TangemSetupFragment
 import com.lobstr.stellar.vault.presentation.base.fragment.BaseFragment
-import com.lobstr.stellar.vault.presentation.faq.FaqFragment
 import com.lobstr.stellar.vault.presentation.util.manager.FragmentTransactionManager
+import com.lobstr.stellar.vault.presentation.util.manager.SupportManager
 import kotlinx.android.synthetic.main.fragment_auth.*
 import moxy.presenter.InjectPresenter
 import moxy.presenter.ProvidePresenter
@@ -66,6 +68,7 @@ class AuthFragment : BaseFragment(), AuthFrView, View.OnClickListener {
     private fun setListeners() {
         btnAuthNew.setOnClickListener(this)
         btnAuthRestore.setOnClickListener(this)
+        btnTangemSignIn.setOnClickListener(this)
         tvHelp.setOnClickListener(this)
     }
 
@@ -77,6 +80,7 @@ class AuthFragment : BaseFragment(), AuthFrView, View.OnClickListener {
         when (v?.id) {
             btnAuthNew.id -> mPresenter.newClicked()
             btnAuthRestore.id -> mPresenter.restoreClicked()
+            btnTangemSignIn.id -> mPresenter.tangemClicked()
             tvHelp.id -> mPresenter.helpClicked()
         }
     }
@@ -101,12 +105,20 @@ class AuthFragment : BaseFragment(), AuthFrView, View.OnClickListener {
         )
     }
 
-    override fun showHelpScreen() {
+    override fun showTangemSetupScreen() {
         FragmentTransactionManager.displayFragment(
             requireParentFragment().childFragmentManager,
-            requireParentFragment().childFragmentManager.fragmentFactory.instantiate(requireContext().classLoader, FaqFragment::class.qualifiedName!!),
+            requireParentFragment().childFragmentManager.fragmentFactory.instantiate(requireContext().classLoader, TangemSetupFragment::class.qualifiedName!!),
             R.id.fl_container
         )
+    }
+
+    override fun showHelpScreen() {
+        SupportManager.showZendeskHelpCenter(requireContext())
+    }
+
+    override fun showMessage(message: String?) {
+        Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
     }
 
     // ===========================================================

@@ -8,5 +8,5 @@ interface BackUpView : MvpView {
 
     fun showCreateMnemonicsScreen()
 
-    fun showHelpScreen()
+    fun showHelpScreen(articleId: Long)
 }

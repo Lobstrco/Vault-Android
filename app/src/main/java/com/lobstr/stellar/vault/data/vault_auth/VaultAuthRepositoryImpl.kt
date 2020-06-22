@@ -10,7 +10,7 @@ class VaultAuthRepositoryImpl(
     private val rxErrorUtils: RxErrorUtils
 ) : VaultAuthRepository {
 
-    override fun getChallenge(account: String): Single<String> {
+    override fun getChallenge(account: String?): Single<String> {
         return vaultAuthApi.getChallenge(account)
             .onErrorResumeNext {
                 rxErrorUtils.handleSingleRequestHttpError(it)

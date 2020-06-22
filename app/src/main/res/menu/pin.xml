@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+            android:id="@+id/action_need_help"
+            android:title="@string/text_pin_menu_need_help"
+            app:actionLayout="@layout/layout_menu_pin"
+            app:showAsAction="always" />
+
+</menu>

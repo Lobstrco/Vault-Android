@@ -5,6 +5,7 @@ import com.lobstr.stellar.vault.R
 import com.lobstr.stellar.vault.data.error.exeption.*
 import com.lobstr.stellar.vault.domain.transaction_details.TransactionDetailsInteractor
 import com.lobstr.stellar.vault.domain.util.EventProviderModule
+import com.lobstr.stellar.vault.domain.util.event.Auth
 import com.lobstr.stellar.vault.domain.util.event.Network
 import com.lobstr.stellar.vault.domain.util.event.Notification
 import com.lobstr.stellar.vault.presentation.BasePresenter
@@ -14,6 +15,7 @@ import com.lobstr.stellar.vault.presentation.dialog.alert.base.AlertDialogFragme
 import com.lobstr.stellar.vault.presentation.dialog.alert.base.AlertDialogFragment.DialogFragmentIdentifier.DENY_TRANSACTION
 import com.lobstr.stellar.vault.presentation.entities.account.Account
 import com.lobstr.stellar.vault.presentation.entities.account.AccountResult
+import com.lobstr.stellar.vault.presentation.entities.tangem.TangemInfo
 import com.lobstr.stellar.vault.presentation.entities.transaction.TransactionItem
 import com.lobstr.stellar.vault.presentation.util.AppUtil
 import com.lobstr.stellar.vault.presentation.util.Constant
@@ -21,13 +23,14 @@ import com.lobstr.stellar.vault.presentation.util.Constant.Transaction.CANCELLED
 import com.lobstr.stellar.vault.presentation.util.Constant.Transaction.IMPORT_XDR
 import com.lobstr.stellar.vault.presentation.util.Constant.Transaction.PENDING
 import com.lobstr.stellar.vault.presentation.util.Constant.Transaction.SIGNED
+import com.lobstr.stellar.vault.presentation.util.Constant.TransactionType.Item.AUTH_CHALLENGE
 import com.lobstr.stellar.vault.presentation.util.Constant.Util.PK_TRUNCATE_COUNT
 import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
-import org.joda.time.DateTime
+import java.time.ZonedDateTime
 import javax.inject.Inject
 
 class TransactionDetailsPresenter(private var transactionItem: TransactionItem) :
@@ -43,7 +46,7 @@ class TransactionDetailsPresenter(private var transactionItem: TransactionItem) 
     private var cancellationInProcess = false
 
     private var stellarAccountsSubscription: Disposable? = null
-    private val cashedStellarAccounts: MutableList<Account> = mutableListOf()
+    private val cachedStellarAccounts: MutableList<Account> = mutableListOf()
 
     init {
         LVApplication.appComponent.plusTransactionDetailsComponent(TransactionDetailsModule())
@@ -98,25 +101,22 @@ class TransactionDetailsPresenter(private var transactionItem: TransactionItem) 
                     viewState.showSignersContainer(it.signers.isNotEmpty())
                     viewState.showSignersCount(calculateSignersCount(it))
 
-                    // check cashed federation items
+                    // Check cached federation items.
                     it.signers.forEachIndexed { index, accountItem ->
                         val federation =
-                            cashedStellarAccounts.find { account -> account.address == accountItem.address }
+                            cachedStellarAccounts.find { account -> account.address == accountItem.address }
                                 ?.federation
                         it.signers[index].federation = federation
                     }
                     viewState.notifySignersAdapter(it.signers)
 
-                    // try receive federations for accounts
+                    // Try receive federations for accounts.
                     getStellarAccounts(it.signers)
                 }, {
                     when (it) {
                         is NoInternetConnectionException -> {
                             viewState.showMessage(it.details)
                             handleNoInternetConnection()
-                        }
-                        is UserNotAuthorizedException -> {
-                            getTransactionSigners()
                         }
                         is DefaultException -> viewState.showMessage(it.details)
                         else -> {
@@ -158,15 +158,15 @@ class TransactionDetailsPresenter(private var transactionItem: TransactionItem) 
     }
 
     /**
-     * Used for receive federation by account id
+     * Used for receive federation by account id.
      */
     private fun getStellarAccounts(accounts: List<Account>) {
         stellarAccountsSubscription?.dispose()
         stellarAccountsSubscription = Observable.fromIterable(accounts)
             .subscribeOn(Schedulers.io())
             .filter { account: Account ->
-                cashedStellarAccounts
-                    .find { cashedAccount -> cashedAccount.address == account.address } == null
+                cachedStellarAccounts
+                    .find { cachedAccount -> cachedAccount.address == account.address } == null
             }
             .flatMapSingle {
                 interactor.getStellarAccount(it.address).onErrorReturnItem(it)
@@ -176,22 +176,22 @@ class TransactionDetailsPresenter(private var transactionItem: TransactionItem) 
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
                 it.forEach { account ->
-                    if (cashedStellarAccounts.find { cashedAccount -> cashedAccount.address == account.address } == null) {
-                        cashedStellarAccounts.add(account)
+                    if (cachedStellarAccounts.find { cachedAccount -> cachedAccount.address == account.address } == null) {
+                        cachedStellarAccounts.add(account)
                     }
                 }
 
-                // check cashed federation items
+                // Check cached federation items.
                 accounts.forEachIndexed { index, accountItem ->
                     val federation =
-                        cashedStellarAccounts.find { account -> account.address == accountItem.address }
+                        cachedStellarAccounts.find { account -> account.address == accountItem.address }
                             ?.federation
                     accounts[index].federation = federation
                 }
 
                 viewState.notifySignersAdapter(accounts)
             }, {
-                // ignore
+                // Ignore.
             })
 
         unsubscribeOnDestroy(stellarAccountsSubscription!!)
@@ -222,20 +222,20 @@ class TransactionDetailsPresenter(private var transactionItem: TransactionItem) 
     }
 
     private fun checkAdditionalInfo() {
-        val map: MutableMap<String, String> = mutableMapOf()
+        val map: MutableMap<String, String?> = mutableMapOf()
 
         val sourceAccount = transactionItem.transaction.sourceAccount
         val addedAt = transactionItem.addedAt
 
         if (!sourceAccount.isNullOrEmpty()) {
-            map[AppUtil.getString(R.string.text_tv_source_account).plus(Constant.Symbol.COLON)] =
-                AppUtil.ellipsizeStrInMiddle(sourceAccount, PK_TRUNCATE_COUNT)!!
+            map[AppUtil.getString(R.string.text_tv_source_account)] =
+                AppUtil.ellipsizeStrInMiddle(sourceAccount, PK_TRUNCATE_COUNT)
         }
 
         if (!addedAt.isNullOrEmpty()) {
-            map[AppUtil.getString(R.string.text_tv_added_at).plus(Constant.Symbol.COLON)] =
+            map[AppUtil.getString(R.string.text_tv_added_at)] =
                 AppUtil.formatDate(
-                    DateTime(addedAt).toDate().time,
+                    ZonedDateTime.parse(addedAt).toInstant().toEpochMilli(),
                     if (DateFormat.is24HourFormat(AppUtil.getAppContext())) "MMM dd yyyy HH:mm" else "MMM dd yyyy h:mm a"
                 )
         }
@@ -243,80 +243,164 @@ class TransactionDetailsPresenter(private var transactionItem: TransactionItem) 
         viewState.setupAdditionalInfo(map)
     }
 
+    fun handleTangemInfo(tangemInfo: TangemInfo?) {
+        if (tangemInfo != null) {
+            // Confirm transaction after Tangem action.
+            confirmTransaction(tangemInfo.signedTransaction)
+        }
+    }
+
     fun btnConfirmClicked() {
         when {
-            interactor.isTrConfirmationEnabled() -> viewState.showConfirmTransactionDialog()
-            else -> confirmTransaction()
+            interactor.hasMnemonics() -> {
+                when {
+                    interactor.isTrConfirmationEnabled() -> viewState.showConfirmTransactionDialog()
+                    else -> confirmTransaction()
+                }
+            }
+            interactor.hasTangem() -> {
+                if (confirmationInProcess) {
+                    return
+                }
+
+                unsubscribeOnDestroy(
+                    interactor.retrieveActualTransaction(transactionItem)
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .doOnSubscribe {
+                            confirmationInProcess = true
+                            viewState.showProgressDialog(true)
+                        }
+                        .doOnEvent { _, _ ->
+                            confirmationInProcess = false
+                            viewState.showProgressDialog(false)
+                        }
+                        .subscribe({
+                            transactionItem = it
+                            viewState.showTangemScreen(
+                                TangemInfo().apply {
+                                    accountId = interactor.getUserPublicKey()
+                                    cardId = interactor.getTangemCardId()
+                                    pendingTransaction = it.xdr
+                                }
+                            )
+                        }, {
+                            when (it) {
+                                is UserNotAuthorizedException -> {
+                                    when (it.action) {
+                                        UserNotAuthorizedException.Action.AUTH_REQUIRED -> eventProviderModule.authEventSubject.onNext(
+                                            Auth()
+                                        )
+                                    }
+                                }
+                                is DefaultException -> {
+                                    viewState.showMessage(it.details)
+                                }
+                                else -> {
+                                    viewState.showMessage(it.message ?: "")
+                                }
+                            }
+                        })
+                )
+            }
         }
     }
 
     fun btnDenyClicked() {
         when {
-            interactor.isTrConfirmationEnabled() -> viewState.showDenyTransactionDialog()
-            else -> denyTransaction()
+            interactor.hasMnemonics() -> {
+                when {
+                    interactor.isTrConfirmationEnabled() -> viewState.showDenyTransactionDialog()
+                    else -> denyTransaction()
+                }
+            }
+            interactor.hasTangem() -> {
+                denyTransaction()
+            }
         }
     }
 
     /**
      * Cases:
      * 1. Is Vault Transaction -> retrieve actual transaction -> sign it on horizon -> notify vault server
-     * 2. Is Transaction from IMPORT_XDR: only sign it on horizon
+     * 2. Is [Constant.TransactionType.Item.AUTH_CHALLENGE] transaction type -> retrieve actual transaction -> sign it and notify vault server
+     * 3. Is Transaction from IMPORT_XDR: only sign it on horizon
+     * 4. Is Transaction after Tangem sign
      */
-    private fun confirmTransaction() {
+    private fun confirmTransaction(signedTransaction: String? = null) {
         if (confirmationInProcess) {
             return
         }
 
-        var needAdditionalSignatures = false
+        // Nullable state - undefined state for handle transaction type AUTH_CHALLENGE behavior.
+        var needAdditionalSignatures: Boolean? = null
 
         var hash: String? = transactionItem.hash
 
         unsubscribeOnDestroy(
-            interactor.retrieveActualTransaction(transactionItem)
+            interactor.retrieveActualTransaction(
+                transactionItem,
+                !signedTransaction.isNullOrEmpty()
+            )
                 .subscribeOn(Schedulers.io())
                 .flatMap {
                     transactionItem = it
-                    interactor.signTransaction(it.xdr!!)
+                    if (signedTransaction.isNullOrEmpty()) {
+                        // Case for transaction received via Mnemonics.
+                        interactor.signTransaction(it.xdr!!)
+                    } else {
+                        // Case for transaction received via Tangem.
+                        interactor.createTransaction(signedTransaction)
+                    }
                 }
                 .flatMap {
-                    interactor.confirmTransactionOnHorizon(it)
-                        .flatMap { submitTransactionResponse ->
-                            val envelopXdr = submitTransactionResponse.envelopeXdr.get()
-                            val extras = submitTransactionResponse.extras
-
-                            val transactionResultCode =
-                                extras?.resultCodes?.transactionResultCode
-
-                            val operationResultCodes =
-                                extras?.resultCodes?.operationsResultCodes
-
-                            val errorToShow =
-                                when (val operationResultCode =
-                                    if (operationResultCodes.isNullOrEmpty()) null else operationResultCodes.first()) {
-                                    // Handle specific operation result code:
-                                    // op_underfunded - used to specify the operation failed due to a lack of funds.
-                                    "op_underfunded" -> operationResultCode
-                                    else -> transactionResultCode
-                                }
-
-                            when {
-                                envelopXdr == null -> throw HorizonException(
-                                    errorToShow!!
-                                )
-                                transactionResultCode != null && transactionResultCode != "tx_bad_auth" -> throw HorizonException(
-                                    errorToShow!!
-                                )
-                                transactionResultCode != null && transactionResultCode == "tx_bad_auth" -> needAdditionalSignatures =
-                                    true
-                            }
-
-                            hash = submitTransactionResponse.hash
-                            Single.fromCallable { envelopXdr }
+                    when (transactionItem.transactionType) {
+                        AUTH_CHALLENGE -> {
+                            needAdditionalSignatures = null
+                            Single.fromCallable { it.toEnvelopeXdrBase64() }
                         }
+                        else -> {
+                            needAdditionalSignatures = false
+                            interactor.confirmTransactionOnHorizon(it)
+                                .flatMap { submitTransactionResponse ->
+                                    val envelopXdr = submitTransactionResponse.envelopeXdr.get()
+                                    val extras = submitTransactionResponse.extras
+
+                                    val transactionResultCode =
+                                        extras?.resultCodes?.transactionResultCode
+
+                                    val operationResultCodes =
+                                        extras?.resultCodes?.operationsResultCodes
+
+                                    val errorToShow =
+                                        when (val operationResultCode =
+                                            if (operationResultCodes.isNullOrEmpty()) null else operationResultCodes.first()) {
+                                            // Handle specific operation result code:
+                                            // op_underfunded - used to specify the operation failed due to a lack of funds.
+                                            "op_underfunded" -> operationResultCode
+                                            else -> transactionResultCode
+                                        }
+
+                                    when {
+                                        envelopXdr == null -> throw HorizonException(
+                                            errorToShow!!
+                                        )
+                                        transactionResultCode != null && transactionResultCode != "tx_bad_auth" -> throw HorizonException(
+                                            errorToShow!!
+                                        )
+                                        transactionResultCode != null && transactionResultCode == "tx_bad_auth" -> needAdditionalSignatures =
+                                            true
+                                    }
+
+                                    hash = submitTransactionResponse.hash
+                                    Single.fromCallable { envelopXdr }
+                                }
+                        }
+                    }
                 }
                 .flatMap {
                     interactor.confirmTransactionOnServer(
-                        needAdditionalSignatures,
+                        needAdditionalSignatures ?: true,
                         transactionItem.status,
                         hash,
                         it
@@ -336,7 +420,7 @@ class TransactionDetailsPresenter(private var transactionItem: TransactionItem) 
                     transactionItem.status = SIGNED
                     viewState.successConfirmTransaction(
                         it,
-                        needAdditionalSignatures,
+                        needAdditionalSignatures ?: false,
                         transactionItem
                     )
                     // Notify about transaction changed.
@@ -349,7 +433,12 @@ class TransactionDetailsPresenter(private var transactionItem: TransactionItem) 
                             viewState.errorConfirmTransaction(it.details)
                         }
                         is UserNotAuthorizedException -> {
-                            confirmTransaction()
+                            when (it.action) {
+                                UserNotAuthorizedException.Action.AUTH_REQUIRED -> eventProviderModule.authEventSubject.onNext(
+                                    Auth()
+                                )
+                                else -> confirmTransaction()
+                            }
                         }
                         is InternalException -> viewState.showMessage(
                             AppUtil.getString(
@@ -407,7 +496,12 @@ class TransactionDetailsPresenter(private var transactionItem: TransactionItem) 
                         }, {
                             when (it) {
                                 is UserNotAuthorizedException -> {
-                                    denyTransaction()
+                                    when (it.action) {
+                                        UserNotAuthorizedException.Action.AUTH_REQUIRED -> eventProviderModule.authEventSubject.onNext(
+                                            Auth()
+                                        )
+                                        else -> denyTransaction()
+                                    }
                                 }
                                 is InternalException -> viewState.showMessage(
                                     AppUtil.getString(
@@ -434,5 +528,13 @@ class TransactionDetailsPresenter(private var transactionItem: TransactionItem) 
 
     fun signedAccountItemLongClicked(account: Account) {
         viewState.copyToClipBoard(account.address)
+    }
+
+    /**
+     * Used for handle action container visibility after click on operation from operations list.
+     * Hide action container after click on operation details.
+     */
+    fun backStackChanged(backStackEntryCount: Int) {
+        viewState.showActionContainer(backStackEntryCount == 1)
     }
 }

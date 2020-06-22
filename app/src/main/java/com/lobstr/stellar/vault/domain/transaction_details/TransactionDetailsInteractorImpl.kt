@@ -24,20 +24,47 @@ class TransactionDetailsInteractorImpl(
     private val prefsUtil: PrefsUtil
 ) : TransactionDetailsInteractor {
 
+    override fun hasMnemonics(): Boolean {
+        return !prefsUtil.encryptedPhrases.isNullOrEmpty()
+    }
+
+    override fun hasTangem(): Boolean {
+        return !prefsUtil.tangemCardId.isNullOrEmpty()
+    }
+
+    override fun getTangemCardId(): String? {
+        return prefsUtil.tangemCardId
+    }
+
+    override fun getUserPublicKey(): String? {
+        return prefsUtil.publicKey
+    }
+
     /**
      * Used for retrieve actual transaction XDR for send it to Horizon.
      * In some cases (when used >1 vault accounts) need retrieve actual XDR.
      *
      * For case when transaction status = IMPORT_XDR - return existing transactionItem.
      * @see Constant.Transaction.IMPORT_XDR
+     * @param skip Skip action for some cases like for signed transaction via Tangem.
      */
-    override fun retrieveActualTransaction(transactionItem: TransactionItem): Single<TransactionItem> {
+    override fun retrieveActualTransaction(
+        transactionItem: TransactionItem,
+        skip: Boolean
+    ): Single<TransactionItem> {
         return when (transactionItem.status) {
             IMPORT_XDR -> Single.fromCallable { transactionItem }
-            else -> transactionRepository.retrieveTransaction(
-                AppUtil.getJwtToken(prefsUtil.authToken),
-                transactionItem.hash
-            )
+            else ->
+                when {
+                    skip -> Single.fromCallable { transactionItem }
+                    else -> {
+                        transactionRepository.retrieveTransaction(
+                            AppUtil.getJwtToken(prefsUtil.authToken),
+                            transactionItem.hash
+                        )
+                    }
+                }
+
         }
     }
 
@@ -115,5 +142,9 @@ class TransactionDetailsInteractorImpl(
     override fun signTransaction(transaction: String): Single<AbstractTransaction> {
         return getPhrases().flatMap { stellarRepository.createKeyPair(it.toCharArray(), 0) }
             .flatMap { stellarRepository.signTransaction(it, transaction) }
+    }
+
+    override fun createTransaction(transaction: String): Single<AbstractTransaction> {
+        return stellarRepository.createTransaction(transaction)
     }
 }

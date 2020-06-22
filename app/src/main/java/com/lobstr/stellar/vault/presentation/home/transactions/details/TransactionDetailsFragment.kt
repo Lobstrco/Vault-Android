@@ -13,10 +13,12 @@ import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.lobstr.stellar.vault.R
 import com.lobstr.stellar.vault.presentation.base.fragment.BaseFragment
+import com.lobstr.stellar.vault.presentation.container.activity.ContainerActivity
 import com.lobstr.stellar.vault.presentation.dialog.alert.base.AlertDialogFragment
 import com.lobstr.stellar.vault.presentation.dialog.alert.base.AlertDialogFragment.DialogFragmentIdentifier.CONFIRM_TRANSACTION
 import com.lobstr.stellar.vault.presentation.dialog.alert.base.AlertDialogFragment.DialogFragmentIdentifier.DENY_TRANSACTION
 import com.lobstr.stellar.vault.presentation.entities.account.Account
+import com.lobstr.stellar.vault.presentation.entities.tangem.TangemInfo
 import com.lobstr.stellar.vault.presentation.entities.transaction.TransactionItem
 import com.lobstr.stellar.vault.presentation.home.settings.signed_accounts.adapter.AccountAdapter
 import com.lobstr.stellar.vault.presentation.home.settings.signed_accounts.adapter.OnAccountItemListener
@@ -24,6 +26,7 @@ import com.lobstr.stellar.vault.presentation.home.transactions.operation.operati
 import com.lobstr.stellar.vault.presentation.home.transactions.operation.operation_list.OperationListFragment
 import com.lobstr.stellar.vault.presentation.home.transactions.submit_error.ErrorFragment
 import com.lobstr.stellar.vault.presentation.home.transactions.submit_success.SuccessFragment
+import com.lobstr.stellar.vault.presentation.tangem.dialog.TangemDialogFragment
 import com.lobstr.stellar.vault.presentation.util.AppUtil
 import com.lobstr.stellar.vault.presentation.util.Constant
 import com.lobstr.stellar.vault.presentation.util.Constant.Bundle.BUNDLE_TRANSACTION_ITEM
@@ -37,7 +40,8 @@ import moxy.presenter.ProvidePresenter
 
 
 class TransactionDetailsFragment : BaseFragment(), TransactionDetailsView, View.OnClickListener,
-    AlertDialogFragment.OnDefaultAlertDialogListener, OnAccountItemListener {
+    AlertDialogFragment.OnDefaultAlertDialogListener, OnAccountItemListener,
+    TangemDialogFragment.OnTangemDialogListener {
 
     // ===========================================================
     // Constants
@@ -94,6 +98,10 @@ class TransactionDetailsFragment : BaseFragment(), TransactionDetailsView, View.
     private fun setListeners() {
         btnConfirm.setOnClickListener(this)
         btnDeny.setOnClickListener(this)
+
+        childFragmentManager.addOnBackStackChangedListener {
+            mPresenter.backStackChanged(childFragmentManager.backStackEntryCount)
+        }
     }
 
     override fun onBackPressed(): Boolean {
@@ -173,7 +181,7 @@ class TransactionDetailsFragment : BaseFragment(), TransactionDetailsView, View.
     }
 
     override fun showOperationDetailsScreen(transactionItem: TransactionItem, position: Int) {
-        // Reset backStack after resetup operations.
+        // Reset backStack after re-setup operations.
         childFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
 
         val bundle = Bundle()
@@ -192,7 +200,7 @@ class TransactionDetailsFragment : BaseFragment(), TransactionDetailsView, View.
         )
     }
 
-    override fun setupAdditionalInfo(map: Map<String, String>) {
+    override fun setupAdditionalInfo(map: Map<String, String?>) {
         for ((key, value) in map) {
             val root =
                 layoutInflater.inflate(R.layout.layout_additional_value, view as ViewGroup, false)
@@ -216,6 +224,10 @@ class TransactionDetailsFragment : BaseFragment(), TransactionDetailsView, View.
         btnDeny.visibility = if (isDenyVisible) View.VISIBLE else View.GONE
     }
 
+    override fun showActionContainer(show: Boolean) {
+        llActionContainer.visibility = if (show) View.VISIBLE else View.GONE
+    }
+
     override fun setTransactionValid(valid: Boolean) {
         btnConfirm.isEnabled = valid
         tvErrorDescription.visibility = if (valid) View.GONE else View.VISIBLE
@@ -237,10 +249,9 @@ class TransactionDetailsFragment : BaseFragment(), TransactionDetailsView, View.
         intent.putExtra(EXTRA_TRANSACTION_ITEM, transactionItem)
         intent.putExtra(EXTRA_TRANSACTION_STATUS, Constant.Transaction.CANCELLED)
         activity?.setResult(Activity.RESULT_OK, intent)
-        targetFragment?.onActivityResult(targetRequestCode, Activity.RESULT_OK, intent)
 
         // Close screen.
-        activity?.onBackPressed()
+        (activity as? ContainerActivity)?.finish() ?: activity?.onBackPressed()
     }
 
     override fun successConfirmTransaction(
@@ -253,7 +264,6 @@ class TransactionDetailsFragment : BaseFragment(), TransactionDetailsView, View.
         intent.putExtra(EXTRA_TRANSACTION_ITEM, transactionItem)
         intent.putExtra(EXTRA_TRANSACTION_STATUS, Constant.Transaction.SIGNED)
         activity?.setResult(Activity.RESULT_OK, intent)
-        targetFragment?.onActivityResult(targetRequestCode, Activity.RESULT_OK, intent)
 
         // Close screen.
         parentFragment?.childFragmentManager?.popBackStack()
@@ -275,14 +285,13 @@ class TransactionDetailsFragment : BaseFragment(), TransactionDetailsView, View.
             requireParentFragment().childFragmentManager,
             fragment,
             R.id.fl_container,
-            true
+            false
         )
     }
 
     override fun errorConfirmTransaction(errorMessage: String) {
         // Notify target about changes.
         activity?.setResult(Activity.RESULT_OK)
-        targetFragment?.onActivityResult(targetRequestCode, Activity.RESULT_OK, null)
 
         // Close screen.
         parentFragment?.childFragmentManager?.popBackStack()
@@ -343,6 +352,21 @@ class TransactionDetailsFragment : BaseFragment(), TransactionDetailsView, View.
 
     override fun copyToClipBoard(text: String) {
         AppUtil.copyToClipboard(context, text)
+    }
+
+    override fun showTangemScreen(tangemInfo: TangemInfo) {
+        TangemDialogFragment().apply {
+            this.arguments =
+                Bundle().apply { putParcelable(Constant.Extra.EXTRA_TANGEM_INFO, tangemInfo) }
+        }.show(childFragmentManager, AlertDialogFragment.DialogFragmentIdentifier.TANGEM)
+    }
+
+    override fun success(tangemInfo: TangemInfo?) {
+        mPresenter.handleTangemInfo(tangemInfo)
+    }
+
+    override fun cancel() {
+        // Implement logic if needed.
     }
 
     // ===========================================================

@@ -15,4 +15,6 @@ interface ConfigInteractor {
     fun setTrConfirmationEnabled(enabled: Boolean)
 
     fun updatedAccountConfig(spamProtectionEnabled: Boolean): Single<AccountConfig>
+
+    fun getUserPublicKey(): String?
 }

@@ -4,7 +4,6 @@ import android.content.ActivityNotFoundException
 import android.content.DialogInterface
 import android.content.Intent
 import android.graphics.Typeface
-import android.net.Uri
 import android.os.Bundle
 import android.text.SpannableString
 import android.text.Spanned
@@ -25,7 +24,6 @@ import com.lobstr.stellar.vault.presentation.container.activity.ContainerActivit
 import com.lobstr.stellar.vault.presentation.dialog.alert.base.AlertDialogFragment
 import com.lobstr.stellar.vault.presentation.dialog.alert.base.AlertDialogFragment.DialogFragmentIdentifier.BIOMETRIC_INFO_DIALOG
 import com.lobstr.stellar.vault.presentation.dialog.alert.base.AlertDialogFragment.DialogFragmentIdentifier.PUBLIC_KEY
-import com.lobstr.stellar.vault.presentation.faq.FaqFragment
 import com.lobstr.stellar.vault.presentation.fcm.NotificationsManager
 import com.lobstr.stellar.vault.presentation.home.settings.license.LicenseFragment
 import com.lobstr.stellar.vault.presentation.home.settings.show_public_key.ShowPublicKeyDialogFragment
@@ -34,6 +32,7 @@ import com.lobstr.stellar.vault.presentation.pin.PinActivity
 import com.lobstr.stellar.vault.presentation.util.AppUtil
 import com.lobstr.stellar.vault.presentation.util.Constant
 import com.lobstr.stellar.vault.presentation.util.manager.FragmentTransactionManager
+import com.lobstr.stellar.vault.presentation.util.manager.SupportManager
 import kotlinx.android.synthetic.main.fragment_settings.*
 import moxy.presenter.InjectPresenter
 import moxy.presenter.ProvidePresenter
@@ -107,6 +106,7 @@ class SettingsFragment : BaseFragment(), SettingsView, View.OnClickListener,
         tvSettingsHelp.setOnClickListener(this)
         swSettingsBiometric.setOnCheckedChangeListener(this)
         swSettingsNotifications.setOnCheckedChangeListener(this)
+        llSettingsSignerCardInfoContainer.setOnClickListener(this)
         llSettingsTrConfirmation.setOnClickListener(this)
         tvSettingsLicense.setOnClickListener(this)
         tvSettingsRateUs.setOnClickListener(this)
@@ -131,6 +131,7 @@ class SettingsFragment : BaseFragment(), SettingsView, View.OnClickListener,
             tvSettingsChangePin.id -> mPresenter.changePinClicked()
             llSettingsSpamProtection.id -> mPresenter.spamProtectionClicked()
             tvSettingsHelp.id -> mPresenter.helpClicked()
+            llSettingsSignerCardInfoContainer.id -> mPresenter.signerCardClicked()
             llSettingsTrConfirmation.id -> mPresenter.trConfirmationClicked()
             tvSettingsLicense.id -> mPresenter.licenseClicked()
             tvSettingsRateUs.id -> mPresenter.rateUsClicked()
@@ -152,10 +153,23 @@ class SettingsFragment : BaseFragment(), SettingsView, View.OnClickListener,
 
     override fun setupSettingsData(
         buildVersion: String,
-        isBiometricSupported: Boolean
+        isBiometricSupported: Boolean,
+        isRecoveryCodeAvailable: Boolean,
+        isSignerCardInfoAvailable: Boolean,
+        isTransactionConfirmationAvailable: Boolean,
+        isChangePinAvailable: Boolean
     ) {
-        llBiometric.visibility = if (isBiometricSupported) View.VISIBLE else View.GONE
+        llBiometricContainer.visibility = if (isBiometricSupported) View.VISIBLE else View.GONE
         tvSettingsVersion.text = buildVersion
+
+        llSettingsMnemonicsContainer.visibility =
+            if (isRecoveryCodeAvailable) View.VISIBLE else View.GONE
+        llSettingsSignerCardInfoContainer.visibility =
+            if (isSignerCardInfoAvailable) View.VISIBLE else View.GONE
+        llSettingsTrConfirmationContainer.visibility =
+            if (isTransactionConfirmationAvailable) View.VISIBLE else View.GONE
+        llSettingsChangePinContainer.visibility =
+            if (isChangePinAvailable) View.VISIBLE else View.GONE
     }
 
     override fun setupSignersCount(signersCount: Int) {
@@ -169,7 +183,12 @@ class SettingsFragment : BaseFragment(), SettingsView, View.OnClickListener,
 
         if (startPosition != Constant.Util.UNDEFINED_VALUE) {
             spannedText.setSpan(
-                ForegroundColorSpan(ContextCompat.getColor(this.requireContext(), R.color.color_primary)),
+                ForegroundColorSpan(
+                    ContextCompat.getColor(
+                        this.requireContext(),
+                        R.color.color_primary
+                    )
+                ),
                 startPosition,
                 endPosition,
                 Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
@@ -230,26 +249,19 @@ class SettingsFragment : BaseFragment(), SettingsView, View.OnClickListener,
     }
 
     override fun showConfirmPinCodeScreen() {
-        val intent = Intent(context, PinActivity::class.java)
-        intent.putExtra(Constant.Extra.EXTRA_CONFIRM_PIN, true)
-        startActivityForResult(intent, Constant.Code.CONFIRM_PIN_FOR_MNEMONIC)
+        startActivityForResult(Intent(context, PinActivity::class.java).apply {
+            putExtra(Constant.Extra.EXTRA_PIN_MODE, Constant.PinMode.CONFIRM)
+        }, Constant.Code.CONFIRM_PIN_FOR_MNEMONIC)
     }
 
     override fun showChangePinScreen() {
-        val intent = Intent(context, PinActivity::class.java)
-        intent.putExtra(Constant.Extra.EXTRA_CHANGE_PIN, true)
-        startActivityForResult(intent, Constant.Code.CHANGE_PIN)
+        startActivityForResult(Intent(context, PinActivity::class.java).apply {
+            putExtra(Constant.Extra.EXTRA_PIN_MODE, Constant.PinMode.CHANGE)
+        }, Constant.Code.CHANGE_PIN)
     }
 
-    override fun showHelpScreen() {
-        FragmentTransactionManager.displayFragment(
-            requireParentFragment().childFragmentManager,
-            requireParentFragment().childFragmentManager.fragmentFactory.instantiate(
-                requireContext().classLoader,
-                FaqFragment::class.qualifiedName!!
-            ),
-            R.id.fl_container
-        )
+    override fun showHelpScreen(userId: String?) {
+        SupportManager.showZendeskHelpCenter(requireContext(), userId = userId)
     }
 
     override fun setBiometricChecked(checked: Boolean) {
@@ -293,18 +305,13 @@ class SettingsFragment : BaseFragment(), SettingsView, View.OnClickListener,
         )
     }
 
-    override fun showStore(storeUrl: String) {
+    override fun showWebPage(storeUrl: String) {
         AppUtil.openWebPage(context, storeUrl)
     }
 
-    override fun sendMail(mail: String, subject: String) {
-        val emailIntent = Intent(Intent.ACTION_SENDTO)
-        val uri = Uri.parse("mailto:" + Uri.encode(mail) + "?subject=" + Uri.encode(subject))
-        emailIntent.data = uri
-        emailIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-
+    override fun sendMail(mail: String, subject: String, body: String?) {
         try {
-            startActivity(emailIntent)
+            AppUtil.sendEmail(requireContext(), mail, subject, body)
         } catch (exc: ActivityNotFoundException) {
             showMessage(getString(R.string.msg_mail_client_not_found))
         }
@@ -338,11 +345,11 @@ class SettingsFragment : BaseFragment(), SettingsView, View.OnClickListener,
         // Add logic if needed.
     }
 
-    override fun showLogOutDialog() {
+    override fun showLogOutDialog(title: String?, message: String?) {
         AlertDialogFragment.Builder(true)
             .setCancelable(true)
-            .setTitle(R.string.title_log_out_dialog)
-            .setMessage(R.string.msg_log_out_dialog)
+            .setTitle(title)
+            .setMessage(message)
             .setNegativeBtnText(R.string.text_btn_cancel)
             .setPositiveBtnText(R.string.text_btn_log_out)
             .create()

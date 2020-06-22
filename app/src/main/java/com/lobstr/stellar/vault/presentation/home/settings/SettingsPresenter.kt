@@ -9,6 +9,7 @@ import com.lobstr.stellar.vault.data.error.exeption.NoInternetConnectionExceptio
 import com.lobstr.stellar.vault.data.error.exeption.UserNotAuthorizedException
 import com.lobstr.stellar.vault.domain.settings.SettingsInteractor
 import com.lobstr.stellar.vault.domain.util.EventProviderModule
+import com.lobstr.stellar.vault.domain.util.event.Auth
 import com.lobstr.stellar.vault.domain.util.event.Network
 import com.lobstr.stellar.vault.domain.util.event.Notification
 import com.lobstr.stellar.vault.presentation.BasePresenter
@@ -17,9 +18,11 @@ import com.lobstr.stellar.vault.presentation.dagger.module.settings.SettingsModu
 import com.lobstr.stellar.vault.presentation.dialog.alert.base.AlertDialogFragment
 import com.lobstr.stellar.vault.presentation.util.AppUtil
 import com.lobstr.stellar.vault.presentation.util.Constant
+import com.lobstr.stellar.vault.presentation.util.Constant.Social.SIGNER_CARD_INFO
 import com.lobstr.stellar.vault.presentation.util.Constant.Social.STORE_URL
 import com.lobstr.stellar.vault.presentation.util.Constant.Social.SUPPORT_MAIL
 import com.lobstr.stellar.vault.presentation.util.biometric.BiometricUtils
+import com.lobstr.stellar.vault.presentation.util.manager.SupportManager
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
@@ -45,8 +48,13 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
         viewState.setupToolbarTitle(R.string.title_toolbar_settings)
         registerEventProvider()
         viewState.setupSettingsData(
-            "${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE})",
-            BiometricUtils.isBiometricSupported(AppUtil.getAppContext())
+            "${BuildConfig.VERSION_NAME} (${if (BuildConfig.FLAVOR == Constant.Flavor.QA) BuildConfig.FLAVOR.toUpperCase()
+                .plus("-").plus(AppUtil.getAppBehavior()) else BuildConfig.VERSION_CODE})",
+            BiometricUtils.isBiometricSupported(AppUtil.getAppContext()) && interactor.hasMnemonics(),
+            interactor.hasMnemonics(),
+            interactor.hasMnemonics(),
+            interactor.hasMnemonics(),
+            interactor.hasMnemonics()
         )
         viewState.setBiometricChecked(
             interactor.isBiometricEnabled()
@@ -91,6 +99,17 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
                     it.printStackTrace()
                 })
         )
+
+        unsubscribeOnDestroy(
+            eventProviderModule.updateEventSubject
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({
+                    getAccountConfig()
+                    viewState.setupSignersCount(interactor.getSignersCount())
+                }, {
+                    it.printStackTrace()
+                })
+        )
     }
 
     override fun attachView(view: SettingsView?) {
@@ -117,7 +136,18 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
     }
 
     fun logOutClicked() {
-        viewState.showLogOutDialog()
+        viewState.showLogOutDialog(
+            if (interactor.hasMnemonics()) {
+                AppUtil.getString(R.string.title_log_out_mnemonics_dialog)
+            } else {
+                null
+            },
+            if (interactor.hasMnemonics()) {
+                AppUtil.getString(R.string.msg_log_out_mnemonics_dialog)
+            } else {
+                AppUtil.getString(R.string.msg_log_out_dialog)
+            }
+        )
     }
 
     fun signersClicked() {
@@ -137,7 +167,7 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
     }
 
     fun helpClicked() {
-        viewState.showHelpScreen()
+        viewState.showHelpScreen(interactor.getUserPublicKey())
     }
 
     fun biometricSwitched(checked: Boolean) {
@@ -169,7 +199,11 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
     }
 
     fun publicKeyClicked() {
-        viewState.showPublicKeyDialog(interactor.getUserPublicKey()!!)
+        interactor.getUserPublicKey()?.let { viewState.showPublicKeyDialog(it) }
+    }
+
+    fun signerCardClicked() {
+        viewState.showWebPage(SIGNER_CARD_INFO)
     }
 
     fun trConfirmationClicked() {
@@ -181,11 +215,15 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
     }
 
     fun rateUsClicked() {
-        viewState.showStore(STORE_URL.plus(BuildConfig.APPLICATION_ID))
+        viewState.showWebPage(STORE_URL.plus(BuildConfig.APPLICATION_ID))
     }
 
     fun contactSupportClicked() {
-        viewState.sendMail(SUPPORT_MAIL, AppUtil.getString(R.string.text_mail_support_subject))
+        viewState.sendMail(
+            SUPPORT_MAIL,
+            SupportManager.createSupportMailSubject(),
+            SupportManager.createSupportMailBody(userId = interactor.getUserPublicKey())
+        )
     }
 
     fun onAlertDialogPositiveButtonClicked(tag: String?) {
@@ -239,7 +277,12 @@ class SettingsPresenter : BasePresenter<SettingsView>() {
                             handleNoInternetConnection()
                         }
                         is UserNotAuthorizedException -> {
-                            getAccountConfig()
+                            when (it.action) {
+                                UserNotAuthorizedException.Action.AUTH_REQUIRED -> eventProviderModule.authEventSubject.onNext(
+                                    Auth()
+                                )
+                                else -> getAccountConfig()
+                            }
                         }
                         is DefaultException -> {
                             viewState.showMessage(it.details)

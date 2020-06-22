@@ -14,6 +14,8 @@ class SignerInfoModule {
     internal fun provideSignerInfoInteractor(
         prefsUtil: PrefsUtil
     ): SignerInfoInteractor {
-        return SignerInfoInteractorImpl(prefsUtil)
+        return SignerInfoInteractorImpl(
+            prefsUtil
+        )
     }
 }

@@ -1,7 +1,6 @@
 <resources>
 
     <!-- Toolbar titles-->
-    <string name="title_toolbar_faq">Help</string>
     <string name="title_toolbar_signed_accounts">Protected Accounts</string>
     <string name="title_toolbar_transaction_details">Transaction Details</string>
     <string name="title_toolbar_dashboard">Home</string>
@@ -30,17 +29,16 @@
     <string name="text_btn_rate_never">Don\'t ask again</string>
     <string name="text_btn_continue">Continue</string>
     <string name="text_btn_change_pin">Change PIN</string>
+    <string name="text_btn_add_account">Add Account</string>
 
     <!-- Start screen -->
     <string name="text_tv_start_screen_title">Multiply your security</string>
     <string name="text_btn_start_screen_create_account">Create Account</string>
     <string name="text_btn_start_screen_restore_account">Recover Account</string>
+    <string name="text_btn_start_screen_signer_card">Use Signer Card</string>
+    <string name="text_tc_start_screen_or">or</string>
     <string name="text_tv_start_screen_help">First time user? See our <a href="https://lobstr.co/vault/">Help section</a></string>
-    <string name="text_tv_start_screen_terms_and_privacy">By registering you agree to our
-        <a href="https://lobstr.co/privacy/">Terms of
-            Service and Privacy Policy
-        </a>
-    </string>
+    <string name="text_tv_start_screen_terms_and_privacy">By registering you agree to our <a href="https://lobstr.co/terms/">Terms of Service</a> and <a href="https://lobstr.co/privacy/">Privacy Policy</a></string>
 
     <!-- Recovery Account -->
     <string name="text_tv_recovery_phrase_title">Recover Account</string>
@@ -79,7 +77,6 @@
     <string name="text_btn_biometric_enable">Enable Biometric Login</string>
 
     <!-- Public Key (Signer Info) screen -->
-    <string name="text_btn_retry_vault_authentication">Retry Authorize</string>
     <string name="text_tv_signer_info_install_lobstr_app_title">Install LOBSTR wallet</string>
     <string name="text_tv_signer_info_install_lobstr_app_description">Vault signer app works best with LOBSTR wallet. Install LOBSTR to enable multisig and use advanced features.</string>
     <string name="text_btn_signer_info_download_lobstr_app">Download LOBSTR</string>
@@ -90,9 +87,12 @@
     <string name="text_tv_signer_info_use_other_service_description">Copy the public key or scan the QR code to add Vault signer and enable multisig on another device.</string>
     <string name="text_btn_show_qr">Show QR</string>
 
-    <!-- Re-check signers screen -->
-    <string name="text_tv_re_check_signer_description">LOBSTR Vault is not a signer for any Stellar account now. Press \"Re-Check\" button after adding Vault signer into your wallet.</string>
-    <string name="text_btn_re_check_signer">Re-Check</string>
+    <!-- Vault auth -->
+    <string name="text_tv_vault_auth_signer_card_title">Your Signer Card is ready</string>
+    <string name="text_tv_vault_auth_signer_mnemonics_description">Your signer account is configured and ready for use. Sign In to use this signer account.</string>
+    <string name="text_tv_vault_auth_signer_card_description">Your Signer Card is configured and ready for use. Scan the card to sign in to your account.</string>
+    <string name="text_btn_vault_auth_signer_card">Sign In with Signer Card</string>
+    <string name="text_btn_vault_auth_mnemonics">Sign In</string>
 
     <!-- Pin screen -->
     <string name="text_title_create_pin">Create PIN</string>
@@ -101,12 +101,15 @@
     <string name="text_title_confirm_new_pin">Confirm New PIN</string>
     <string name="text_title_enter_old_pin">Enter Old PIN</string>
     <string name="text_success_change_pin">PIN changed</string>
+    <string name="text_pin_menu_need_help">Need Help?</string>
 
     <!-- Dashboard screen -->
     <string name="text_dashboard_transactions">Transactions to Sign</string>
     <string name="text_dashboard_show_list">View Transactions List</string>
     <string name="text_title_dashboard_public_key">Vault Public Key</string>
     <string name="text_title_dashboard_signers">Signer For</string>
+    <string name="text_tv_dashboard_signers_empty_state_title">No Protected Accounts</string>
+    <string name="text_tv_dashboard_signers_empty_state_description">Add the Stellar account you want to protect</string>
 
     <!-- Transactions screen -->
     <string name="text_empty_state_transactions_list">No transactions to sign</string>
@@ -125,6 +128,7 @@
     <string name="text_settings_biometric_login">Biometric Login</string>
     <string name="text_settings_spam_protection">Allow Unsigned Transactions</string>
     <string name="text_settings_notifications">Notifications</string>
+    <string name="text_settings_signer_card_info">Signer Card</string>
     <string name="text_settings_version">Version</string>
     <string name="text_settings_help">Help</string>
     <string name="text_settings_license">Licenses</string>
@@ -176,7 +180,7 @@
     <string name="text_tv_status_signed">Signed</string>
     <string name="text_tv_status_pending">Pending</string>
     <string name="text_tv_source_account">Source Account</string>
-    <string name="text_tv_added_at">Added At</string>
+    <string name="text_tv_added_at">Created</string>
 
     <!-- Add XDR screen -->
     <string name="text_tv_import_xdr_subtitle">To submit transaction enter its XDR below</string>
@@ -198,8 +202,9 @@
     </string>
 
     <!-- Log out dialog -->
-    <string name="title_log_out_dialog">Have you secured your recovery phrase?</string>
-    <string name="msg_log_out_dialog">You will not be able to recover your account or sign in without it.</string>
+    <string name="title_log_out_mnemonics_dialog">Have you secured your recovery phrase?</string>
+    <string name="msg_log_out_mnemonics_dialog">You will not be able to recover your account or sign in without it.</string>
+    <string name="msg_log_out_dialog">Do you want to log out from this account?</string>
 
     <!-- Clear Invalid transactions dialog -->
     <string name="title_clear_invalid_tr_dialog">Are you sure?</string>
@@ -278,8 +283,98 @@
     <string name="text_action_log_out">log out</string>
     <string name="text_action_refresh">update</string>
 
+    <!-- NFC dialog -->
+    <string name="title_nfc_dialog">Enable NFC?</string>
+    <string name="msg_nfc_dialog">Scan is useless when NFC is disabled. Reader mode depends on it. Hit OK to go to Settings, where you can enable NFC.</string>
+    <string name="title_nfc_not_available_dialog">NFC not supported</string>
+    <string name="msg_nfc_not_available_dialog">Signer Card can\'t be scanned. This device does not support NFC functionality.</string>
+
+
+    <!-- Tangem setup screen -->
+    <string name="text_tv_tangem_setup_description">Vault Signer Card maximizes the security of digital assets. To proceed, choose the ‘Scan’ option and hold the Signer Card near the back of your device for a few seconds.</string>
+    <string name="text_btn_scan">Scan Signer Card</string>
+    <string name="text_btn_buy_now">Buy Now</string>
+    <string name="text_btn_learn_more">Learn More</string>
+
     <!-- Other -->
     <string name="msg_mail_client_not_found">There are no email clients installed</string>
-    <string name="text_mail_support_subject" translatable="false">LOBSTR Vault feedback</string>
+    <string name="text_mail_support_subject" formatted="false" translatable="false">LOBSTR Vault feedback, %1$s (%2$d)</string>
     <string name="text_app_name_vault" translatable="false">Vault</string>
+    <string name="msg_flavor_dialog" translatable="false">%s build</string>
+    <string name="text_mail_support_body" formatted="false" translatable="false"><![CDATA[
+    Information for the support team.</br>
+    LOBSTR Vault. App version: %1$s (%2$d)</br>
+    Vault public key: %3$s</br>
+    Device brand: %4$s</br>
+    Device: %5$s</br>
+    Model: %6$s</br>
+    OS: Android</br>
+    OS version: %7$s<br></br>
+
+    Describe an issue or provide your feedback below:</br>]]></string>
+    <!-- Zendesk -->
+    <string name="zd_info" formatted="false" translatable="false">
+        LOBSTR VAULT, OS:Android, OS_version:%1$s, App_Version:%2$s_%3$d, Device:%4$s, Model:%5$s, Brand:%6$s
+    </string>
+    <string name="zd_user_id" formatted="false" translatable="false">User_id:%1$s</string>
+    <string name="zendesk_request_subject" translatable="false">Android ticket</string>
+
+    <!-- Tangem dialog -->
+    <string name="text_tv_tangem_dialog_tittle__scan">Ready to Scan</string>
+    <string name="text_tv_tangem_dialog_description_scan">Hold the Signer Card near the back of your device for a few seconds.</string>
+    <string name="text_btn_tangem_dialog_try_again">Try Again</string>
+    <string name="text_btn_tangem_dialog_cancel">Cancel</string>
+
+    <!-- Tangem error -->
+    <string name="text_tv_tangem_default_error_header">Scanning error</string>
+    <string name="text_tv_tangem_default_error_description">An error occurred while scanning the Signer Card. Please try again.</string>
+    <string name="text_tv_tangem_wrong_card_error_header">Wrong Card</string>
+    <string name="text_tv_tangem_wrong_card_error_description">The action could not be completed due to the wrong card being used. Try again using the correct Signer Card.</string>
+    <string name="text_tv_tangem_tag_lost_error_header">Connection Lost</string>
+    <string name="text_tv_tangem_tag_lost_error_description">The card could not be scanned due to a connection failure. Make sure to hold the Signer Card near the back of your device for a few seconds until the scan is complete.</string>
+
+    <!-- Base activity -->
+    <string name="text_tv_tangem_dialog_tittle_session_expired">Session Expired</string>
+    <string name="text_tv_tangem_dialog_description_session_expired">Hold the Signer Card near the back of your device for a few seconds to continue using the app.</string>
+
+    <!-- Tangem create wallet -->
+    <string name="text_tv_tangem_create_wallet_tittle">Create Signer Account</string>
+    <string name="text_btn_tangem_create_wallet">Create Signer Account</string>
+    <string name="text_tv_tangem_create_wallet_description">Your Vault Signer Card is not configured yet.\nIn order to use the Signer Card, you will need to authorize the creation of a signer Stellar account by scanning the Signer Card. This operation can only be performed once for a single card.</string>
+
+    <!-- Operation fields -->
+    <string name="op_field_selling">Selling</string>
+    <string name="op_field_asset_issuer">Asset Issuer</string>
+    <string name="op_field_buying">Buying</string>
+    <string name="op_field_price">Price</string>
+    <string name="op_field_offer_id">Offer ID</string>
+    <string name="op_field_amount">Amount</string>
+    <string name="op_field_destination">Destination</string>
+    <string name="op_field_asset_code">Asset Code</string>
+    <string name="op_field_trustor">Trustor</string>
+    <string name="op_field_authorize">Authorize</string>
+    <string name="op_field_bump_to">Bump To</string>
+    <string name="op_field_asset">Asset</string>
+    <string name="op_field_limit">Limit</string>
+    <string name="op_field_starting_balance">Starting Balance</string>
+    <string name="op_filed_name">Name</string>
+    <string name="op_field_value">Value</string>
+    <string name="op_field_send_asset">Send Asset</string>
+    <string name="op_field_send_max">Send Max</string>
+    <string name="op_field_dest_asset">Dest Asset</string>
+    <string name="op_filed_dest_amount">Dest Amount</string>
+    <string name="op_field_path">Path</string>
+    <string name="op_field_send_amount">Send Amount</string>
+    <string name="op_field_dest_min">Dest Min</string>
+    <string name="op_field_memo">Memo</string>
+    <string name="op_field_inflation_destination">Inflation Destination</string>
+    <string name="op_field_home_domain">Home Domain</string>
+    <string name="op_field_clear_flags">Clear Flags</string>
+    <string name="op_field_set_flags">Set Flags</string>
+    <string name="op_field_master_key_weight">Master Key Weight</string>
+    <string name="op_field_low_threshold">Low Threshold</string>
+    <string name="op_field_medium_threshold">Medium Threshold</string>
+    <string name="op_field_high_threshold">High Threshold</string>
+    <string name="op_field_signer_weight">Signer Weight</string>
+    <string name="op_field_signer_public_key">Signer Public Key</string>
 </resources>

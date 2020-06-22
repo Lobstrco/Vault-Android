@@ -5,7 +5,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.lobstr.stellar.vault.R
-import com.lobstr.stellar.vault.presentation.auth.biometric.BiometricSetUpFragment
 import com.lobstr.stellar.vault.presentation.auth.enter_screen.AuthFragment
 import com.lobstr.stellar.vault.presentation.auth.mnemonic.create_mnemonic.MnemonicsFragment
 import com.lobstr.stellar.vault.presentation.base.fragment.BaseContainerFragment
@@ -23,6 +22,7 @@ import com.lobstr.stellar.vault.presentation.util.Constant
 import com.lobstr.stellar.vault.presentation.util.Constant.Bundle.BUNDLE_NAVIGATION_FR
 import com.lobstr.stellar.vault.presentation.util.Constant.Util.UNDEFINED_VALUE
 import com.lobstr.stellar.vault.presentation.util.manager.FragmentTransactionManager
+import com.lobstr.stellar.vault.presentation.vault_auth.auth.VaultAuthFragment
 import com.lobstr.stellar.vault.presentation.vault_auth.signer_info.SignerInfoFragment
 import moxy.presenter.InjectPresenter
 import moxy.presenter.ProvidePresenter
@@ -98,23 +98,23 @@ class ContainerFragment : BaseContainerFragment(),
         )
     }
 
+    override fun showVaultAuthFr() {
+        FragmentTransactionManager.displayFragment(
+            childFragmentManager,
+            childFragmentManager.fragmentFactory.instantiate(
+                requireContext().classLoader,
+                VaultAuthFragment::class.qualifiedName!!
+            ),
+            R.id.fl_container
+        )
+    }
+
     override fun showSignerInfoFr() {
         FragmentTransactionManager.displayFragment(
             childFragmentManager,
             childFragmentManager.fragmentFactory.instantiate(
                 requireContext().classLoader,
                 SignerInfoFragment::class.qualifiedName!!
-            ),
-            R.id.fl_container
-        )
-    }
-
-    override fun showBiometricSetUpFr() {
-        FragmentTransactionManager.displayFragment(
-            childFragmentManager,
-            childFragmentManager.fragmentFactory.instantiate(
-                requireContext().classLoader,
-                BiometricSetUpFragment::class.qualifiedName!!
             ),
             R.id.fl_container
         )

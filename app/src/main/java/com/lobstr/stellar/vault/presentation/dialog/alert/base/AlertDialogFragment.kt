@@ -51,7 +51,6 @@ open class AlertDialogFragment : BaseMvpAppCompatDialogFragment() {
         const val BIOMETRIC_INFO_DIALOG = "BIOMETRIC_INFO_DIALOG"
         const val DENY_TRANSACTION = "DENY_TRANSACTION"
         const val CONFIRM_TRANSACTION = "CONFIRM_TRANSACTION"
-        const val IMPORT_XDR = "IMPORT_XDR"
         const val PUBLIC_KEY = "PUBLIC_KEY"
         const val DENY_ACCOUNT_CREATION = "DENY_ACCOUNT_CREATION"
         const val LOG_OUT = "LOG_OUT"
@@ -59,6 +58,9 @@ open class AlertDialogFragment : BaseMvpAppCompatDialogFragment() {
         const val RATE_US = "RATE_US"
         const val COMMON_PIN_PATTERN = "COMMON_PIN_PATTERN"
         const val CLEAR_INVALID_TR = "CLEAR_INVALID_TR"
+        const val NFC_INFO_DIALOG = "NFC_INFO_DIALOG"
+        const val TANGEM = "TANGEM"
+        const val INFO = "INFO"
     }
 
     object DialogIdentifier {

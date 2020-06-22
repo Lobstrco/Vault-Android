@@ -3,6 +3,7 @@ package com.lobstr.stellar.vault.domain.stellar
 import com.lobstr.stellar.vault.presentation.entities.account.AccountResult
 import com.lobstr.stellar.vault.presentation.entities.mnemonic.MnemonicItem
 import com.lobstr.stellar.vault.presentation.entities.transaction.TransactionItem
+import com.tangem.commands.SignResponse
 import io.reactivex.Single
 import org.stellar.sdk.AbstractTransaction
 import org.stellar.sdk.KeyPair
@@ -28,4 +29,14 @@ interface StellarRepository {
     fun generate24WordMnemonic(): ArrayList<MnemonicItem>
 
     fun getTransactionSigners(envelopXdr: String, sourceAccount: String): Single<AccountResult>
+
+    fun getPublicKeyFromKeyPair(walletPublicKey: ByteArray?): String?
+
+    fun getTransactionFromXDR(xdr: String): AbstractTransaction
+
+    fun signTransactionWithTangemCardData(
+        transaction: AbstractTransaction,
+        signResponse: SignResponse,
+        accountId: String
+    ): String?
 }

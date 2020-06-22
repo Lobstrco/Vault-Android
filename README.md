@@ -58,7 +58,7 @@ Example of signers property:
 
 - **Make a POST request to https://vault.lobstr.co/api/transactions/**
 
-In order to submit users' signed transactions to LOBSTR Vault for additional signatures, please make a POST request to https://vault.lobstr.co/api/transactions/ with XDR data of transaction sent in the body of request. 
+In order to submit users' signed transactions to LOBSTR Vault for additional signatures, please make a POST request to https://vault.lobstr.co/api/transactions/ with XDR data of transaction sent in the body of the request. 
 
 No authentication required.
 
@@ -68,6 +68,24 @@ Please see the cURL example below:
 curl 'https://vault.lobstr.co/api/transactions/'  -d '{"xdr": "AAAAADHO3Y+T41Lpy8prDeQ5yOs1nQHE5u9IsLeaYnKwA7XkAAAAZAD8XysAAACnAAAAAAAAAAAAAAABAAAAAAAAAAsAAAAAAAAAAQAAAAAAAAAA"}' -H "Content-Type: application/json"
 
 ```
+
+- **Submitting unsigned transactions**
+
+LOBSTR Vault has a built-in protection layer that allows users to select whether they want to receive transaction requests that don't contain any valid signatures.
+
+When you submit a transaction to LOBSTR Vault for additional signatures, you might receive the following response:
+
+Status code: `403 Forbidden`
+
+```
+{
+  "detail": "Signers of this account do not allow unsigned transactions. Attach a valid signature and resubmit the XDR."
+}
+```
+
+This response indicates that all signers of the protected account have opted not to receive transactions that don't contain valid signatures from the protected account itself or other signers. 
+
+You should attach a valid signature to this transaction and resubmit the transaction XDR using the `/transactions` endpoint.
 
 ## Support
 

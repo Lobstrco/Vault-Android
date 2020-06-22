@@ -4,14 +4,12 @@ import android.text.TextUtils
 import androidx.annotation.ColorRes
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
+import com.lobstr.stellar.vault.presentation.entities.tangem.TangemInfo
 import moxy.MvpView
 import moxy.viewstate.strategy.alias.AddToEndSingle
 import moxy.viewstate.strategy.alias.Skip
 
 interface BaseActivityView : MvpView {
-
-    @Skip
-    fun setWindowInset()
 
     @Skip
     fun setActionBarTitle(title: String?)
@@ -42,4 +40,13 @@ interface BaseActivityView : MvpView {
 
     @Skip
     fun setHomeAsUpIndicator(@DrawableRes image: Int, @ColorRes color: Int)
+
+    @Skip
+    fun showTangemScreen(tangemInfo: TangemInfo)
+
+    @AddToEndSingle
+    fun showProgressDialog(show: Boolean)
+
+    @Skip
+    fun showMessage(message: String?)
 }

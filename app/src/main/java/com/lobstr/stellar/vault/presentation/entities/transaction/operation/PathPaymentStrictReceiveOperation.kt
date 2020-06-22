@@ -1,7 +1,9 @@
 package com.lobstr.stellar.vault.presentation.entities.transaction.operation
 
 import android.os.Parcelable
+import com.lobstr.stellar.vault.R
 import com.lobstr.stellar.vault.presentation.entities.transaction.Asset
+import com.lobstr.stellar.vault.presentation.util.AppUtil
 import kotlinx.android.parcel.Parcelize
 
 @Parcelize
@@ -12,23 +14,21 @@ data class PathPaymentStrictReceiveOperation(
     val destination: String,
     val destAsset: Asset,
     val destAmount: String,
-    val path: List<Asset>
+    val path: List<Asset>?
 ) : Operation(sourceAccount), Parcelable {
 
-    fun getFieldsMap(): Map<String, String?> {
-        val map: MutableMap<String, String?> = mutableMapOf()
-        map["sendAsset"] = sendAsset.assetCode
-        map["sendMax"] = sendMax
-        if (destination.isNotEmpty()) map["destination"] = destination
-        map["destAsset"] = destAsset.assetCode
-        map["destAmount"] = destAmount
+    override fun getFields(): MutableList<OperationField> {
+        val fields: MutableList<OperationField> = mutableListOf()
+        fields.add(OperationField(AppUtil.getString(R.string.op_field_send_asset), sendAsset.assetCode))
+        if (sendAsset.assetIssuer != null) fields.add(OperationField(AppUtil.getString(R.string.op_field_asset_issuer), sendAsset.assetIssuer))
+        fields.add(OperationField(AppUtil.getString(R.string.op_field_send_max), sendMax))
+        if (destination.isNotEmpty()) fields.add(OperationField(AppUtil.getString(R.string.op_field_destination), destination))
+        fields.add(OperationField(AppUtil.getString(R.string.op_field_dest_asset), destAsset.assetCode))
+        if (destAsset.assetIssuer != null) fields.add(OperationField(AppUtil.getString(R.string.op_field_asset_issuer), destAsset.assetIssuer))
+        fields.add(OperationField(AppUtil.getString(R.string.op_filed_dest_amount), destAmount))
 
-        var pathStr = ""
-        path.forEach {
-            pathStr += it.assetCode + " "
-        }
-        map["path"] = pathStr
+        if (!path.isNullOrEmpty()) fields.add(OperationField(AppUtil.getString(R.string.op_field_path), path.joinToString(separator = " ") { it.assetCode }))
 
-        return map
+        return fields
     }
 }

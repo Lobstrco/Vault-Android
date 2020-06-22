@@ -1,10 +1,22 @@
 package com.lobstr.stellar.vault.presentation.home.transactions.submit_error
 
 import com.lobstr.stellar.vault.R
+import com.lobstr.stellar.vault.domain.transaction_error.TransactionErrorInteractor
+import com.lobstr.stellar.vault.presentation.application.LVApplication
+import com.lobstr.stellar.vault.presentation.dagger.module.transaction_error.TransactionErrorModule
 import com.lobstr.stellar.vault.presentation.util.AppUtil
 import moxy.MvpPresenter
+import javax.inject.Inject
 
 class ErrorPresenter(private val error: String) : MvpPresenter<ErrorView>() {
+
+    @Inject
+    lateinit var interactor: TransactionErrorInteractor
+
+    init {
+        LVApplication.appComponent.plusTransactionErrorComponent(TransactionErrorModule())
+            .inject(this)
+    }
 
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
@@ -36,7 +48,7 @@ class ErrorPresenter(private val error: String) : MvpPresenter<ErrorView>() {
     }
 
     fun infoClicked() {
-        viewState.showHelpScreen()
+        viewState.showHelpScreen(interactor.getUserPublicKey())
     }
 
     fun doneClicked() {

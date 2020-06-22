@@ -3,6 +3,7 @@ package com.lobstr.stellar.vault.data.error
 import com.lobstr.stellar.vault.data.error.exeption.DefaultException
 import com.lobstr.stellar.vault.data.error.exeption.ExpiredSignatureException
 import com.lobstr.stellar.vault.data.error.exeption.UserNotAuthorizedException
+import com.lobstr.stellar.vault.data.error.exeption.UserNotAuthorizedException.Action.AUTH_REQUIRED
 import com.lobstr.stellar.vault.data.net.VaultAuthApi
 import com.lobstr.stellar.vault.domain.error.RxErrorUtils
 import com.lobstr.stellar.vault.domain.key_store.KeyStoreRepository
@@ -40,7 +41,11 @@ class RxErrorUtilsImpl(
     }
 
     private fun <T> refreshObservableAuthentication(): Observable<T> {
-        return vaultAuthApi.getChallenge(prefsUtil.publicKey!!)
+        // Throw UserNotAuthorizedException with AUTH_REQUIRED action for non mnemonics case.
+        if(prefsUtil.encryptedPhrases.isNullOrEmpty()){
+            return Observable.error(UserNotAuthorizedException("User Not Authorized", AUTH_REQUIRED))
+        }
+        return vaultAuthApi.getChallenge(prefsUtil.publicKey)
             .flatMap { apiGetChallenge ->
                 getPhrases().flatMap { stellarRepository.createKeyPair(it.toCharArray(), 0) }
                     .flatMap { stellarRepository.signTransaction(it, apiGetChallenge.transaction!!) }
@@ -79,7 +84,11 @@ class RxErrorUtilsImpl(
     }
 
     private fun <T> refreshSingleAuthentication(): Single<T> {
-        return vaultAuthApi.getChallenge(prefsUtil.publicKey!!)
+        // Throw UserNotAuthorizedException with AUTH_REQUIRED action for non mnemonics case.
+        if(prefsUtil.encryptedPhrases.isNullOrEmpty()){
+            return Single.error(UserNotAuthorizedException("User Not Authorized", AUTH_REQUIRED))
+        }
+        return vaultAuthApi.getChallenge(prefsUtil.publicKey)
             .flatMap { apiGetChallenge ->
                 getPhrases().flatMap { stellarRepository.createKeyPair(it.toCharArray(), 0) }
                     .flatMap { stellarRepository.signTransaction(it, apiGetChallenge.transaction!!) }
@@ -121,7 +130,11 @@ class RxErrorUtilsImpl(
     }
 
     private fun refreshCompletableAuthentication(): Completable {
-        return vaultAuthApi.getChallenge(prefsUtil.publicKey!!)
+        // Throw UserNotAuthorizedException with AUTH_REQUIRED action for non mnemonics case.
+        if(prefsUtil.encryptedPhrases.isNullOrEmpty()){
+            return Completable.error(UserNotAuthorizedException("User Not Authorized", AUTH_REQUIRED))
+        }
+        return vaultAuthApi.getChallenge(prefsUtil.publicKey)
             .flatMap { apiGetChallenge ->
                 getPhrases().flatMap { stellarRepository.createKeyPair(it.toCharArray(), 0) }
                     .flatMap { stellarRepository.signTransaction(it, apiGetChallenge.transaction!!) }
@@ -131,7 +144,7 @@ class RxErrorUtilsImpl(
                 prefsUtil.authToken = it.token
                 throw UserNotAuthorizedException("User Not Authorized")
             }
-            .toCompletable()
+            .ignoreElement()
             .onErrorResumeNext {
                 handleCompletableRequestHttpError(
                     it,

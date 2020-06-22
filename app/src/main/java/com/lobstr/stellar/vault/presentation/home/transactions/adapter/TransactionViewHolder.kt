@@ -16,7 +16,7 @@ import com.lobstr.stellar.vault.presentation.util.AppUtil
 import com.lobstr.stellar.vault.presentation.util.Constant
 import com.lobstr.stellar.vault.presentation.util.Constant.Util.PK_TRUNCATE_COUNT
 import kotlinx.android.synthetic.main.adapter_item_transaction.view.*
-import org.joda.time.DateTime
+import java.time.ZonedDateTime
 
 class TransactionViewHolder(itemView: View, private val listener: OnTransactionItemClicked) :
     RecyclerView.ViewHolder(itemView) {
@@ -51,7 +51,7 @@ class TransactionViewHolder(itemView: View, private val listener: OnTransactionI
             .into(itemView.ivIdentity)
 
         itemView.tvTransactionItemDate.text = AppUtil.formatDate(
-            DateTime(item.addedAt).toDate().time,
+            ZonedDateTime.parse(item.addedAt).toInstant().toEpochMilli(),
             if(DateFormat.is24HourFormat(context)) "MMM dd yyyy HH:mm" else "MMM dd yyyy h:mm a"
         )
 

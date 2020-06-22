@@ -1,0 +1,83 @@
+package com.lobstr.stellar.vault.presentation.auth.tangem
+
+import android.app.Activity
+import android.content.Intent
+import com.lobstr.stellar.vault.R
+import com.lobstr.stellar.vault.domain.tangem.setup.TangemSetupInteractor
+import com.lobstr.stellar.vault.presentation.application.LVApplication
+import com.lobstr.stellar.vault.presentation.dagger.module.tangem.setup.TangemSetupModule
+import com.lobstr.stellar.vault.presentation.entities.tangem.TangemInfo
+import com.lobstr.stellar.vault.presentation.util.AppUtil
+import com.lobstr.stellar.vault.presentation.util.Constant
+import com.lobstr.stellar.vault.presentation.util.Constant.Social.SIGNER_CARD_BUY
+import com.lobstr.stellar.vault.presentation.util.Constant.Social.SIGNER_CARD_INFO
+import com.lobstr.stellar.vault.presentation.util.Constant.Support.SIGNING_WITH_VAULT_SIGNER_CARD
+import moxy.MvpPresenter
+import javax.inject.Inject
+
+
+class TangemSetupPresenter : MvpPresenter<TangemView>() {
+
+    @Inject
+    lateinit var interactor: TangemSetupInteractor
+
+    init {
+        LVApplication.appComponent.plusTangemSetupComponent(TangemSetupModule()).inject(this)
+    }
+
+    override fun attachView(view: TangemView?) {
+        super.attachView(view)
+        viewState.setupToolbar(R.color.color_e7ddf8)
+    }
+
+    override fun detachView(view: TangemView?) {
+        viewState.setupToolbar(android.R.color.white)
+        super.detachView(view)
+    }
+
+    fun scanClicked() {
+        // Check NFC status and when NFC available - show Tangem.
+        if (AppUtil.isNfcAvailable()) {
+            viewState.showTangemScreen()
+        } else {
+            viewState.showNfcNotAvailable()
+        }
+    }
+
+    fun learnMoreClicked() {
+        viewState.showWebPage(SIGNER_CARD_INFO)
+    }
+
+    fun buyNowClicked() {
+        viewState.showWebPage(SIGNER_CARD_BUY)
+    }
+
+    fun infoClicked() {
+        viewState.showHelpScreen(SIGNING_WITH_VAULT_SIGNER_CARD)
+    }
+
+    fun handleOnActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (resultCode == Activity.RESULT_OK) {
+            when (requestCode) {
+                Constant.Code.TANGEM_CREATE_WALLET -> {
+                    // Handle create wallet result.
+                    handleTangemInfo(data?.getParcelableExtra(Constant.Extra.EXTRA_TANGEM_INFO))
+                }
+            }
+        }
+    }
+
+    fun handleTangemInfo(tangemInfo: TangemInfo?) {
+        if (tangemInfo != null) {
+            if (tangemInfo.cardStatusCode == Constant.TangemCardStatus.EMPTY) {
+                viewState.showTangemCreateWalletScreen(TangemInfo().apply {
+                    cardId = tangemInfo.cardId
+                })
+            } else {
+                interactor.savePublicKey(tangemInfo.accountId!!)
+                interactor.saveTangemCardId(tangemInfo.cardId!!)
+                viewState.showVaultAuthScreen()
+            }
+        }
+    }
+}

@@ -2,7 +2,6 @@ package com.lobstr.stellar.vault.presentation.home.transactions.import_xdr
 
 import com.lobstr.stellar.vault.R
 import com.lobstr.stellar.vault.domain.import_xdr.ImportXdrInteractor
-import com.lobstr.stellar.vault.domain.util.EventProviderModule
 import com.lobstr.stellar.vault.presentation.BasePresenter
 import com.lobstr.stellar.vault.presentation.application.LVApplication
 import com.lobstr.stellar.vault.presentation.dagger.module.import_xdr.ImportXdrModule
@@ -15,10 +14,6 @@ class ImportXdrPresenter : BasePresenter<ImportXdrView>() {
 
     @Inject
     lateinit var interactor: ImportXdrInteractor
-
-    @Inject
-    lateinit var eventProviderModule: EventProviderModule
-
 
     private var transactionCreationInProcess = false
 

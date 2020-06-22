@@ -63,6 +63,7 @@ class TransactionEntityMapper(private val network: Network) {
             apiTransactionItem.getStatusDisplay,
             apiTransactionItem.status,
             apiTransactionItem.sequenceOutdatedAt,
+            apiTransactionItem.transactionType,
             getTransaction(
                 AbstractTransaction.fromEnvelopeXdr(apiTransactionItem.xdr, network)
             )
@@ -79,6 +80,7 @@ class TransactionEntityMapper(private val network: Network) {
             "",
             IMPORT_XDR,
             null,
+            null,
             getTransaction(transaction)
         )
     }
@@ -86,7 +88,7 @@ class TransactionEntityMapper(private val network: Network) {
     private fun getTransaction(transaction: AbstractTransaction): Transaction {
         val operations: MutableList<Operation> = mutableListOf()
 
-        val targetTx = when(transaction){
+        val targetTx = when (transaction) {
             is FeeBumpTransaction -> transaction.innerTransaction
             is org.stellar.sdk.Transaction -> transaction
             else -> throw Exception("Unknown transaction type.")
@@ -94,12 +96,27 @@ class TransactionEntityMapper(private val network: Network) {
 
         targetTx.operations.forEach {
             when (it) {
-                is org.stellar.sdk.PaymentOperation -> operations.add(mapPaymentOperation(targetTx.memo, it))
-                is org.stellar.sdk.CreateAccountOperation -> operations.add(mapCreateAccountOperation(it))
-                is org.stellar.sdk.PathPaymentStrictSendOperation -> operations.add(mapPathPaymentStrictSendOperation(it))
-                is org.stellar.sdk.PathPaymentStrictReceiveOperation -> operations.add(mapPathPaymentStrictReceiveOperation(it))
-                is org.stellar.sdk.ManageSellOfferOperation -> operations.add(mapManageSellOfferOperation(it))
-                is org.stellar.sdk.ManageBuyOfferOperation -> operations.add(mapManageBuyOfferOperation(it))
+                is org.stellar.sdk.PaymentOperation -> operations.add(
+                    mapPaymentOperation(
+                        targetTx.memo,
+                        it
+                    )
+                )
+                is org.stellar.sdk.CreateAccountOperation -> operations.add(
+                    mapCreateAccountOperation(it)
+                )
+                is org.stellar.sdk.PathPaymentStrictSendOperation -> operations.add(
+                    mapPathPaymentStrictSendOperation(it)
+                )
+                is org.stellar.sdk.PathPaymentStrictReceiveOperation -> operations.add(
+                    mapPathPaymentStrictReceiveOperation(it)
+                )
+                is org.stellar.sdk.ManageSellOfferOperation -> operations.add(
+                    mapManageSellOfferOperation(it)
+                )
+                is org.stellar.sdk.ManageBuyOfferOperation -> operations.add(
+                    mapManageBuyOfferOperation(it)
+                )
                 is org.stellar.sdk.CreatePassiveSellOfferOperation -> operations.add(
                     mapCreatePassiveSellOfferOperation(
                         it
@@ -108,10 +125,18 @@ class TransactionEntityMapper(private val network: Network) {
                 is org.stellar.sdk.SetOptionsOperation -> operations.add(mapSetOptionsOperation(it))
                 is org.stellar.sdk.ChangeTrustOperation -> operations.add(mapChangeTrustOperation(it))
                 is org.stellar.sdk.AllowTrustOperation -> operations.add(mapAllowTrustOperation(it))
-                is org.stellar.sdk.AccountMergeOperation -> operations.add(mapAccountMergeOperation(it))
+                is org.stellar.sdk.AccountMergeOperation -> operations.add(
+                    mapAccountMergeOperation(
+                        it
+                    )
+                )
                 is org.stellar.sdk.InflationOperation -> operations.add(mapInflationOperation(it))
                 is org.stellar.sdk.ManageDataOperation -> operations.add(mapManageDataOperation(it))
-                is org.stellar.sdk.BumpSequenceOperation -> operations.add(mapBumpSequenceOperation(it))
+                is org.stellar.sdk.BumpSequenceOperation -> operations.add(
+                    mapBumpSequenceOperation(
+                        it
+                    )
+                )
             }
         }
 
@@ -122,7 +147,10 @@ class TransactionEntityMapper(private val network: Network) {
         )
     }
 
-    private fun mapPaymentOperation(memo: Memo, operation: org.stellar.sdk.PaymentOperation): PaymentOperation {
+    private fun mapPaymentOperation(
+        memo: Memo,
+        operation: org.stellar.sdk.PaymentOperation
+    ): PaymentOperation {
         return PaymentOperation(
             (operation as org.stellar.sdk.Operation).sourceAccount,
             operation.destination,
@@ -141,13 +169,6 @@ class TransactionEntityMapper(private val network: Network) {
     }
 
     private fun mapPathPaymentStrictSendOperation(operation: org.stellar.sdk.PathPaymentStrictSendOperation): PathPaymentStrictSendOperation {
-        val path: MutableList<Asset> = mutableListOf()
-        if (operation.path.isNotEmpty()) {
-            operation.path.forEach {
-                path.add(mapAsset(it))
-            }
-        }
-
         return PathPaymentStrictSendOperation(
             (operation as org.stellar.sdk.Operation).sourceAccount,
             mapAsset(operation.sendAsset),
@@ -155,18 +176,19 @@ class TransactionEntityMapper(private val network: Network) {
             operation.destination,
             mapAsset(operation.destAsset),
             operation.destMin,
-            path
+            if (operation.path.isNotEmpty()) {
+                val path: MutableList<Asset> = mutableListOf()
+                operation.path.forEach {
+                    path.add(mapAsset(it))
+                }
+                path
+            } else {
+                null
+            }
         )
     }
 
     private fun mapPathPaymentStrictReceiveOperation(operation: org.stellar.sdk.PathPaymentStrictReceiveOperation): PathPaymentStrictReceiveOperation {
-        val path: MutableList<Asset> = mutableListOf()
-        if (operation.path.isNotEmpty()) {
-            operation.path.forEach {
-                path.add(mapAsset(it))
-            }
-        }
-
         return PathPaymentStrictReceiveOperation(
             (operation as org.stellar.sdk.Operation).sourceAccount,
             mapAsset(operation.sendAsset),
@@ -174,7 +196,15 @@ class TransactionEntityMapper(private val network: Network) {
             operation.destination,
             mapAsset(operation.destAsset),
             operation.destAmount,
-            path
+            if (operation.path.isNotEmpty()) {
+                val path: MutableList<Asset> = mutableListOf()
+                operation.path.forEach {
+                    path.add(mapAsset(it))
+                }
+                path
+            } else {
+                null
+            }
         )
     }
 
@@ -230,7 +260,12 @@ class TransactionEntityMapper(private val network: Network) {
             operation.mediumThreshold,
             operation.highThreshold,
             operation.homeDomain,
-            operation.signerWeight
+            operation.signerWeight,
+            try {
+                KeyPair.fromXdrSignerKey(operation.signer).accountId
+            } catch (e: Exception) {
+                null
+            }
         )
     }
 

@@ -12,21 +12,18 @@ import android.widget.Toast
 import com.lobstr.stellar.vault.R
 import com.lobstr.stellar.vault.presentation.base.fragment.BaseFragment
 import com.lobstr.stellar.vault.presentation.dialog.alert.base.AlertDialogFragment
-import com.lobstr.stellar.vault.presentation.faq.FaqFragment
 import com.lobstr.stellar.vault.presentation.home.settings.show_public_key.ShowPublicKeyDialogFragment
 import com.lobstr.stellar.vault.presentation.util.AppUtil
 import com.lobstr.stellar.vault.presentation.util.Constant
 import com.lobstr.stellar.vault.presentation.util.Constant.LobstrWallet.DEEP_LINK_MULTISIG_SETUP
 import com.lobstr.stellar.vault.presentation.util.Constant.LobstrWallet.PACKAGE_NAME
 import com.lobstr.stellar.vault.presentation.util.Constant.Social.STORE_URL
-import com.lobstr.stellar.vault.presentation.util.manager.FragmentTransactionManager
-import com.lobstr.stellar.vault.presentation.vault_auth.recheck_signer.RecheckSignerFragment
+import com.lobstr.stellar.vault.presentation.util.manager.SupportManager
 import kotlinx.android.synthetic.main.fragment_signer_info.*
 import moxy.presenter.InjectPresenter
 import moxy.presenter.ProvidePresenter
 
-class SignerInfoFragment : BaseFragment(),
-    SignerInfoView, View.OnClickListener {
+class SignerInfoFragment : BaseFragment(), SignerInfoView, View.OnClickListener {
 
     // ===========================================================
     // Constants
@@ -82,11 +79,10 @@ class SignerInfoFragment : BaseFragment(),
         btnOpenLobstrApp.setOnClickListener(this)
         btnCopyUserPk.setOnClickListener(this)
         btnShowQr.setOnClickListener(this)
-        btnNext.setOnClickListener(this)
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.signer_info, menu)
+        inflater.inflate(R.menu.auth_token, menu)
         super.onCreateOptionsMenu(menu, inflater)
     }
 
@@ -108,7 +104,6 @@ class SignerInfoFragment : BaseFragment(),
             btnOpenLobstrApp.id -> mPresenter.openLobstrAppClicked()
             btnCopyUserPk.id -> mPresenter.copyUserPublicKeyClicked()
             btnShowQr.id -> mPresenter.showQrClicked()
-            btnNext.id -> mPresenter.btnNextClicked()
         }
     }
 
@@ -136,26 +131,8 @@ class SignerInfoFragment : BaseFragment(),
         AppUtil.copyToClipboard(context, text)
     }
 
-    override fun showRecheckSignerScreen() {
-        FragmentTransactionManager.displayFragment(
-            requireParentFragment().childFragmentManager,
-            requireParentFragment().childFragmentManager.fragmentFactory.instantiate(
-                requireContext().classLoader,
-                RecheckSignerFragment::class.qualifiedName!!
-            ),
-            R.id.fl_container
-        )
-    }
-
-    override fun showHelpScreen() {
-        FragmentTransactionManager.displayFragment(
-            requireParentFragment().childFragmentManager,
-            requireParentFragment().childFragmentManager.fragmentFactory.instantiate(
-                requireContext().classLoader,
-                FaqFragment::class.qualifiedName!!
-            ),
-            R.id.fl_container
-        )
+    override fun showHelpScreen(userId: String?) {
+        SupportManager.showZendeskHelpCenter(requireContext(), userId = userId)
     }
 
     override fun showPublicKeyDialog(publicKey: String) {
@@ -192,6 +169,14 @@ class SignerInfoFragment : BaseFragment(),
         } catch (exc: Exception) {
             Toast.makeText(context, R.string.msg_no_app_found, Toast.LENGTH_SHORT).show()
         }
+    }
+
+    override fun showMessage(message: String?) {
+        Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+    }
+
+    override fun finishScreen() {
+        activity?.finish()
     }
 
     // ===========================================================

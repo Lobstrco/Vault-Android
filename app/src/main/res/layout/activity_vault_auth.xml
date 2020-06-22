@@ -22,20 +22,5 @@
             android:layout_height="match_parent"
             app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        <Button
-                android:text="@string/text_btn_retry_vault_authentication"
-                android:layout_height="wrap_content"
-                android:id="@+id/btnRetry"
-                android:layout_width="match_parent"
-                style="@style/Base.Widget.AppCompat.Button.Borderless.Colored"
-                android:background="@drawable/selector_default_button_with_round"
-                android:textColor="@android:color/white"
-                android:textAppearance="?android:textAppearanceMedium"
-                android:textSize="14sp"
-                android:textAllCaps="false"
-                android:layout_gravity="center"
-                android:layout_marginLeft="42dp"
-                android:layout_marginRight="42dp"
-                android:visibility="gone"/>
     </FrameLayout>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
