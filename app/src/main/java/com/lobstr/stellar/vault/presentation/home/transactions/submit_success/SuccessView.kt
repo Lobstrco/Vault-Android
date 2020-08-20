@@ -18,6 +18,9 @@ interface SuccessView : MvpView {
     @AddToEndSingle
     fun setAdditionalSignaturesInfoEnabled(enabled: Boolean)
 
+    @AddToEndSingle
+    fun showXdrContainer(show: Boolean)
+
     @Skip
     fun copyToClipBoard(text: String)
 }

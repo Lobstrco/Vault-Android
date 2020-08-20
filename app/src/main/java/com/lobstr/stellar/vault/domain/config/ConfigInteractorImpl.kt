@@ -4,7 +4,7 @@ import com.lobstr.stellar.vault.domain.account.AccountRepository
 import com.lobstr.stellar.vault.presentation.entities.account.AccountConfig
 import com.lobstr.stellar.vault.presentation.util.AppUtil
 import com.lobstr.stellar.vault.presentation.util.PrefsUtil
-import io.reactivex.Single
+import io.reactivex.rxjava3.core.Single
 
 
 class ConfigInteractorImpl(

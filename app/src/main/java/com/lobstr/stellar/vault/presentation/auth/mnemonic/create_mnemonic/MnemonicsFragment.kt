@@ -15,13 +15,16 @@ import com.lobstr.stellar.vault.presentation.util.AppUtil
 import com.lobstr.stellar.vault.presentation.util.Constant
 import com.lobstr.stellar.vault.presentation.util.manager.FragmentTransactionManager
 import com.lobstr.stellar.vault.presentation.util.manager.SupportManager
+import dagger.Lazy
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_mnemonics.*
-import moxy.presenter.InjectPresenter
-import moxy.presenter.ProvidePresenter
+import moxy.ktx.moxyPresenter
+import javax.inject.Inject
 
 /**
  * Used for show or generate mnemonics
  */
+@AndroidEntryPoint
 class MnemonicsFragment : BaseFragment(),
     MnemonicsView, View.OnClickListener, AlertDialogFragment.OnDefaultAlertDialogListener {
 
@@ -37,8 +40,8 @@ class MnemonicsFragment : BaseFragment(),
     // Fields
     // ===========================================================
 
-    @InjectPresenter
-    lateinit var mPresenter: MnemonicsPresenter
+    @Inject
+    lateinit var daggerPresenter: Lazy<MnemonicsPresenter>
 
     private var mView: View? = null
 
@@ -46,11 +49,9 @@ class MnemonicsFragment : BaseFragment(),
     // Constructors
     // ===========================================================
 
-    @ProvidePresenter
-    fun provideMnemonicsPresenter() =
-        MnemonicsPresenter(
-            arguments?.getBoolean(Constant.Bundle.BUNDLE_GENERATE_MNEMONICS) ?: false
-        )
+    private val mPresenter by moxyPresenter { daggerPresenter.get().apply {
+        generate = arguments?.getBoolean(Constant.Bundle.BUNDLE_GENERATE_MNEMONICS) ?: false
+    } }
 
     // ===========================================================
     // Getter & Setter

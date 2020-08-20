@@ -2,7 +2,7 @@ package com.lobstr.stellar.vault.domain.settings
 
 import com.lobstr.stellar.vault.presentation.entities.account.Account
 import com.lobstr.stellar.vault.presentation.entities.account.AccountConfig
-import io.reactivex.Single
+import io.reactivex.rxjava3.core.Single
 
 interface SettingsInteractor {
 

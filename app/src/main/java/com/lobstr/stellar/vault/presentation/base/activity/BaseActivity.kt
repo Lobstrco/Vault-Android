@@ -17,16 +17,25 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.lobstr.stellar.vault.R
 import com.lobstr.stellar.vault.presentation.BaseMvpAppCompatActivity
+import com.lobstr.stellar.vault.presentation.application.LVApplication
 import com.lobstr.stellar.vault.presentation.base.fragment.BaseFragment
+import com.lobstr.stellar.vault.presentation.container.activity.ContainerActivity
 import com.lobstr.stellar.vault.presentation.container.fragment.ContainerFragment
 import com.lobstr.stellar.vault.presentation.dialog.alert.base.AlertDialogFragment
 import com.lobstr.stellar.vault.presentation.entities.tangem.TangemInfo
+import com.lobstr.stellar.vault.presentation.home.HomeActivity
+import com.lobstr.stellar.vault.presentation.pin.PinActivity
 import com.lobstr.stellar.vault.presentation.tangem.dialog.TangemDialogFragment
 import com.lobstr.stellar.vault.presentation.util.Constant
+import com.lobstr.stellar.vault.presentation.util.Constant.Extra.EXTRA_NOTIFICATION
 import com.lobstr.stellar.vault.presentation.util.manager.ProgressManager
-import moxy.presenter.InjectPresenter
-import moxy.presenter.ProvidePresenter
+import com.lobstr.stellar.vault.presentation.vault_auth.VaultAuthActivity
+import dagger.Lazy
+import dagger.hilt.android.AndroidEntryPoint
+import moxy.ktx.moxyPresenter
+import javax.inject.Inject
 
+@AndroidEntryPoint
 abstract class BaseActivity : BaseMvpAppCompatActivity(),
     BaseActivityView, TangemDialogFragment.OnTangemDialogListener {
 
@@ -42,8 +51,8 @@ abstract class BaseActivity : BaseMvpAppCompatActivity(),
     // Fields
     // ===========================================================
 
-    @InjectPresenter
-    lateinit var mPresenter: BaseActivityPresenter
+    @Inject
+    lateinit var daggerPresenter: Lazy<BaseActivityPresenter>
 
     // ===========================================================
     // Constructors
@@ -60,8 +69,7 @@ abstract class BaseActivity : BaseMvpAppCompatActivity(),
     // Constructors
     // ===========================================================
 
-    @ProvidePresenter
-    fun provideBaseActivityPresenter() = BaseActivityPresenter()
+    val mPresenter: BaseActivityPresenter by moxyPresenter { daggerPresenter.get() }
 
     // ===========================================================
     // Getter & Setter
@@ -84,15 +92,30 @@ abstract class BaseActivity : BaseMvpAppCompatActivity(),
             Intent(this, javaClass).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP),
             0
         )
+
+        onNewIntent(intent)
     }
 
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
-
+        if(intent?.getBooleanExtra(EXTRA_NOTIFICATION, false) == true){
+            // Reset pin appearance after notification click if needed.
+            LVApplication.checkPinAppearance = true
+        }
     }
 
     override fun onResume() {
         super.onResume()
+        // Check Pin Appearance.
+        when (this) {
+            is HomeActivity, is VaultAuthActivity, is ContainerActivity -> {
+                if (LVApplication.checkPinAppearance) {
+                    LVApplication.checkPinAppearance = false
+                    mPresenter.checkPinAppearance()
+                }
+            }
+        }
+
         nfcAdapter?.enableForegroundDispatch(this, nfcPendingIntent, null, null)
     }
 
@@ -113,7 +136,8 @@ abstract class BaseActivity : BaseMvpAppCompatActivity(),
     }
 
     fun checkBackPress(container: Fragment?) {
-        val fragmentManager = (container as? ContainerFragment)?.childFragmentManager ?: supportFragmentManager
+        val fragmentManager =
+            (container as? ContainerFragment)?.childFragmentManager ?: supportFragmentManager
         val backStackCount = fragmentManager.backStackEntryCount
 
         if (backStackCount > 1) {
@@ -225,5 +249,13 @@ abstract class BaseActivity : BaseMvpAppCompatActivity(),
 
     override fun showMessage(message: String?) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+    }
+
+    override fun proceedPinActivityAppearance() {
+        startActivity(Intent(this, PinActivity::class.java).apply {
+            addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+            addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
+            putExtra(Constant.Extra.EXTRA_PIN_MODE, Constant.PinMode.ENTER)
+        })
     }
 }

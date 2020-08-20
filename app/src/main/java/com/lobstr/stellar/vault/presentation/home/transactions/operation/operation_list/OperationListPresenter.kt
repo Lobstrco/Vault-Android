@@ -22,7 +22,7 @@ class OperationListPresenter(private val transactionItem: TransactionItem) : Mvp
         // Prepare operations list for show it.
         operationList.clear()
         for (operation in transactionItem.transaction.operations) {
-            val resId: Int = AppUtil.getTransactionOperationName(operation)
+            val resId: Int = AppUtil.getTransactionOperationName(operation, transactionItem.transactionType)
             if (resId != -1) {
                 operationList.add(resId)
             }

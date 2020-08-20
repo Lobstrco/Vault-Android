@@ -2,8 +2,8 @@ package com.lobstr.stellar.vault.presentation
 
 import com.lobstr.stellar.vault.presentation.util.manager.network.NetworkWorker
 import com.lobstr.stellar.vault.presentation.util.manager.network.WorkerManager
-import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.disposables.Disposable
+import io.reactivex.rxjava3.disposables.CompositeDisposable
+import io.reactivex.rxjava3.disposables.Disposable
 import moxy.MvpPresenter
 import moxy.MvpView
 import java.util.*

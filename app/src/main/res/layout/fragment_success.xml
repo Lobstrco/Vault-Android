@@ -87,13 +87,13 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
-                            android:drawableStart="@drawable/ic_content_copy_purple"
                             android:drawablePadding="8dp"
                             android:fontFamily="sans-serif"
                             android:text="@string/text_btn_copy_xdr"
                             android:textAllCaps="false"
                             android:textColor="@color/color_primary"
-                            android:textSize="12sp" />
+                            android:textSize="12sp"
+                            app:drawableStartCompat="@drawable/ic_content_copy_purple"/>
                 </LinearLayout>
 
                 <androidx.core.widget.NestedScrollView

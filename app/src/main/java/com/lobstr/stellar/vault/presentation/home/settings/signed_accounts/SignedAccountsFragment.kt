@@ -18,9 +18,13 @@ import com.lobstr.stellar.vault.presentation.home.settings.signed_accounts.adapt
 import com.lobstr.stellar.vault.presentation.home.settings.signed_accounts.edit_account.EditAccountDialogFragment
 import com.lobstr.stellar.vault.presentation.util.AppUtil
 import com.lobstr.stellar.vault.presentation.util.Constant
+import dagger.Lazy
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_signed_accounts.*
-import moxy.presenter.InjectPresenter
+import moxy.ktx.moxyPresenter
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class SignedAccountsFragment : BaseFragment(), SignedAccountsView,
     SwipeRefreshLayout.OnRefreshListener,
     OnAccountItemListener {
@@ -37,14 +41,16 @@ class SignedAccountsFragment : BaseFragment(), SignedAccountsView,
     // Fields
     // ===========================================================
 
-    @InjectPresenter
-    lateinit var mPresenter: SignedAccountsPresenter
+    @Inject
+    lateinit var daggerPresenter: Lazy<SignedAccountsPresenter>
 
     private var mView: View? = null
 
     // ===========================================================
     // Constructors
     // ===========================================================
+
+    private val mPresenter by moxyPresenter { daggerPresenter.get() }
 
     // ===========================================================
     // Getter & Setter

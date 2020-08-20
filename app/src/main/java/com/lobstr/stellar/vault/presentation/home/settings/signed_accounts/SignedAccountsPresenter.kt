@@ -10,23 +10,17 @@ import com.lobstr.stellar.vault.domain.util.event.Auth
 import com.lobstr.stellar.vault.domain.util.event.Network
 import com.lobstr.stellar.vault.domain.util.event.Notification
 import com.lobstr.stellar.vault.presentation.BasePresenter
-import com.lobstr.stellar.vault.presentation.application.LVApplication
-import com.lobstr.stellar.vault.presentation.dagger.module.signed_account.SignedAccountModule
 import com.lobstr.stellar.vault.presentation.entities.account.Account
 import com.lobstr.stellar.vault.presentation.util.Constant
-import io.reactivex.Observable
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.Disposable
-import io.reactivex.schedulers.Schedulers
-import javax.inject.Inject
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.disposables.Disposable
+import io.reactivex.rxjava3.schedulers.Schedulers
 
-class SignedAccountsPresenter : BasePresenter<SignedAccountsView>() {
-
-    @Inject
-    lateinit var eventProviderModule: EventProviderModule
-
-    @Inject
-    lateinit var interactor: SignedAccountInteractor
+class SignedAccountsPresenter(
+    private val interactor: SignedAccountInteractor,
+    private val eventProviderModule: EventProviderModule
+) : BasePresenter<SignedAccountsView>() {
 
     private val accounts: MutableList<Account> = mutableListOf()
 
@@ -35,10 +29,6 @@ class SignedAccountsPresenter : BasePresenter<SignedAccountsView>() {
 
     private var stellarAccountsSubscription: Disposable? = null
     private val cachedStellarAccounts: MutableList<Account> = mutableListOf()
-
-    init {
-        LVApplication.appComponent.plusSignedAccountComponent(SignedAccountModule()).inject(this)
-    }
 
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()

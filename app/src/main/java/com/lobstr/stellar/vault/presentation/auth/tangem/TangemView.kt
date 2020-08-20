@@ -9,7 +9,7 @@ import moxy.viewstate.strategy.alias.Skip
 interface TangemView : MvpView {
 
     fun setupToolbar(
-        @ColorRes toolbarColor: Int
+        @ColorRes color: Int
     )
 
     fun showTangemScreen()

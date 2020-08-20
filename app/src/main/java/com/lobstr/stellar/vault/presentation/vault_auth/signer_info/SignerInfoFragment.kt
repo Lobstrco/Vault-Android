@@ -19,10 +19,13 @@ import com.lobstr.stellar.vault.presentation.util.Constant.LobstrWallet.DEEP_LIN
 import com.lobstr.stellar.vault.presentation.util.Constant.LobstrWallet.PACKAGE_NAME
 import com.lobstr.stellar.vault.presentation.util.Constant.Social.STORE_URL
 import com.lobstr.stellar.vault.presentation.util.manager.SupportManager
+import dagger.Lazy
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_signer_info.*
-import moxy.presenter.InjectPresenter
-import moxy.presenter.ProvidePresenter
+import moxy.ktx.moxyPresenter
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class SignerInfoFragment : BaseFragment(), SignerInfoView, View.OnClickListener {
 
     // ===========================================================
@@ -37,8 +40,8 @@ class SignerInfoFragment : BaseFragment(), SignerInfoView, View.OnClickListener 
     // Fields
     // ===========================================================
 
-    @InjectPresenter
-    lateinit var mPresenter: SignerInfoPresenter
+    @Inject
+    lateinit var daggerPresenter: Lazy<SignerInfoPresenter>
 
     private var mView: View? = null
 
@@ -46,8 +49,7 @@ class SignerInfoFragment : BaseFragment(), SignerInfoView, View.OnClickListener 
     // Constructors
     // ===========================================================
 
-    @ProvidePresenter
-    fun provideSignerInfoPresenter() = SignerInfoPresenter()
+    private val mPresenter by moxyPresenter { daggerPresenter.get() }
 
     // ===========================================================
     // Getter & Setter

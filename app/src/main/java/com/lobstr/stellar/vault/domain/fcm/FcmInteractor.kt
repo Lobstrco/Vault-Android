@@ -3,7 +3,7 @@ package com.lobstr.stellar.vault.domain.fcm
 import com.lobstr.stellar.vault.presentation.entities.account.Account
 import com.lobstr.stellar.vault.presentation.entities.fcm.FcmResult
 import com.lobstr.stellar.vault.presentation.entities.transaction.TransactionItem
-import io.reactivex.Single
+import io.reactivex.rxjava3.core.Single
 
 interface FcmInteractor {
 

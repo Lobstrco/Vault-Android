@@ -10,8 +10,7 @@ import com.lobstr.stellar.vault.presentation.util.Constant
 import com.lobstr.stellar.vault.presentation.util.manager.FragmentTransactionManager
 import com.lobstr.stellar.vault.presentation.util.manager.SupportManager
 import kotlinx.android.synthetic.main.fragment_back_up.*
-import moxy.presenter.InjectPresenter
-import moxy.presenter.ProvidePresenter
+import moxy.ktx.moxyPresenter
 
 class BackUpFragment : BaseFragment(), BackUpView, View.OnClickListener {
 
@@ -27,17 +26,13 @@ class BackUpFragment : BaseFragment(), BackUpView, View.OnClickListener {
     // Fields
     // ===========================================================
 
-    @InjectPresenter
-    lateinit var mPresenter: BackUpPresenter
-
     private var mView: View? = null
 
     // ===========================================================
     // Constructors
     // ===========================================================
 
-    @ProvidePresenter
-    fun provideBackUpPresenter() = BackUpPresenter()
+    private val mPresenter by moxyPresenter { BackUpPresenter() }
 
     // ===========================================================
     // Getter & Setter

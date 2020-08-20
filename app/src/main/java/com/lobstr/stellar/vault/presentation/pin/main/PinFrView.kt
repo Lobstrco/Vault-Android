@@ -44,6 +44,9 @@ interface PinFrView : MvpView {
     fun showErrorMessage(@StringRes message: Int)
 
     @AddToEndSingle
+    fun setResult(resultCode: Int)
+
+    @AddToEndSingle
     fun finishScreenWithResult(resultCode: Int)
 
     @AddToEndSingle

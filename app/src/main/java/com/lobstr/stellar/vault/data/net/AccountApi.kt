@@ -3,8 +3,8 @@ package com.lobstr.stellar.vault.data.net
 import com.lobstr.stellar.vault.data.net.entities.account.ApiAccountConfig
 import com.lobstr.stellar.vault.data.net.entities.account.ApiSignedAccountsResponse
 import com.lobstr.stellar.vault.data.net.entities.account.ApiStellarAccount
-import io.reactivex.Completable
-import io.reactivex.Single
+import io.reactivex.rxjava3.core.Completable
+import io.reactivex.rxjava3.core.Single
 import retrofit2.http.*
 
 

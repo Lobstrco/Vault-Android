@@ -27,6 +27,9 @@ interface BiometricSetUpView : MvpView {
     @Skip
     fun showVaultAuthScreen()
 
+    @AddToEndSingle
+    fun finishScreen()
+
     @Skip
     fun showBiometricInfoDialog(@StringRes titleRes: Int, @StringRes messageRes: Int)
 

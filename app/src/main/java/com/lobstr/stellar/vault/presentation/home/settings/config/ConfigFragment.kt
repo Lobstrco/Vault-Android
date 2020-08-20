@@ -13,10 +13,13 @@ import com.lobstr.stellar.vault.presentation.home.settings.config.adapter.OnConf
 import com.lobstr.stellar.vault.presentation.util.Constant
 import com.lobstr.stellar.vault.presentation.util.manager.ProgressManager
 import com.lobstr.stellar.vault.presentation.util.manager.SupportManager
+import dagger.Lazy
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_config.*
-import moxy.presenter.InjectPresenter
-import moxy.presenter.ProvidePresenter
+import moxy.ktx.moxyPresenter
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class ConfigFragment : BaseFragment(), ConfigView, OnConfigItemListener {
 
     // ===========================================================
@@ -31,8 +34,8 @@ class ConfigFragment : BaseFragment(), ConfigView, OnConfigItemListener {
     // Fields
     // ===========================================================
 
-    @InjectPresenter
-    lateinit var mPresenter: ConfigPresenter
+    @Inject
+    lateinit var daggerPresenter: Lazy<ConfigPresenter>
 
     private var mView: View? = null
 
@@ -40,10 +43,11 @@ class ConfigFragment : BaseFragment(), ConfigView, OnConfigItemListener {
     // Constructors
     // ===========================================================
 
-    @ProvidePresenter
-    fun provideConfigPresenter() = ConfigPresenter(
-        arguments?.getInt(Constant.Bundle.BUNDLE_CONFIG)!!
-    )
+    private val mPresenter by moxyPresenter {
+        daggerPresenter.get().apply {
+            config = arguments?.getInt(Constant.Bundle.BUNDLE_CONFIG)!!
+        }
+    }
 
     // ===========================================================
     // Getter & Setter

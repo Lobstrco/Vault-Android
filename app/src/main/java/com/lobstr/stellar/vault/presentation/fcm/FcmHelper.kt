@@ -3,8 +3,6 @@ package com.lobstr.stellar.vault.presentation.fcm
 
 import android.content.Context
 import android.util.Log
-import com.google.android.gms.common.ConnectionResult
-import com.google.android.gms.common.GoogleApiAvailability
 import com.google.firebase.iid.FirebaseInstanceId
 import com.lobstr.stellar.vault.data.error.exeption.DefaultException
 import com.lobstr.stellar.vault.data.error.exeption.UserNotAuthorizedException
@@ -12,8 +10,9 @@ import com.lobstr.stellar.vault.data.error.exeption.UserNotAuthorizedException.A
 import com.lobstr.stellar.vault.domain.fcm.FcmInteractor
 import com.lobstr.stellar.vault.presentation.entities.account.Account
 import com.lobstr.stellar.vault.presentation.entities.transaction.TransactionItem
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
+import com.lobstr.stellar.vault.presentation.util.AppUtil
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.schedulers.Schedulers
 
 class FcmHelper(private val context: Context, private val fcmInteractor: FcmInteractor) {
 
@@ -43,7 +42,7 @@ class FcmHelper(private val context: Context, private val fcmInteractor: FcmInte
 
     private fun requestFcmTokenStatus(): Int {
         // FCM registration (Check device for Play Services APK before, If check succeeds - proceed).
-        return if (checkIsGooglePlayServicesAvailable()) {
+        return if (AppUtil.isGooglePlayServicesAvailable(context)) {
             val fcmToken = fcmInteractor.getFcmToken()
             if (fcmToken.isNullOrEmpty() || !fcmInteractor.isFcmRegistered()) {
                 FcmRegStatus.TRYING_REGISTER_FCM
@@ -98,28 +97,6 @@ class FcmHelper(private val context: Context, private val fcmInteractor: FcmInte
                     }
                 }
             })
-    }
-
-    /**
-     * Check the device to make sure it has the Google Play Services APK. If
-     * it doesn't, display a dialog that allows users to download the APK from
-     * the Google Play Store or enable it in the device's system settings.
-     */
-    private fun checkIsGooglePlayServicesAvailable(): Boolean {
-        val apiAvailability = GoogleApiAvailability.getInstance()
-        val resultCode = apiAvailability.isGooglePlayServicesAvailable(context)
-
-        if (resultCode != ConnectionResult.SUCCESS) {
-            if (apiAvailability.isUserResolvableError(resultCode)) {
-                Log.e(LOG_TAG, "No valid Google Play Services APK found. ")
-            } else {
-                Log.e(LOG_TAG, "This device is not supported. ")
-            }
-
-            return false
-        }
-
-        return true
     }
 
     fun isUserAuthorized(): Boolean {

@@ -11,7 +11,7 @@ import com.lobstr.stellar.vault.presentation.util.AppUtil
 import com.lobstr.stellar.vault.presentation.util.Constant
 import com.lobstr.stellar.vault.presentation.util.Constant.Transaction.IMPORT_XDR
 import com.lobstr.stellar.vault.presentation.util.PrefsUtil
-import io.reactivex.Single
+import io.reactivex.rxjava3.core.Single
 import org.stellar.sdk.AbstractTransaction
 import org.stellar.sdk.responses.SubmitTransactionResponse
 

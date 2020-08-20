@@ -4,17 +4,26 @@ import com.lobstr.stellar.vault.domain.confirm_mnemonics.ConfirmMnemonicsInterac
 import com.lobstr.stellar.vault.domain.confirm_mnemonics.ConfirmMnemonicsInteractorImpl
 import com.lobstr.stellar.vault.domain.key_store.KeyStoreRepository
 import com.lobstr.stellar.vault.domain.stellar.StellarRepository
-import com.lobstr.stellar.vault.presentation.dagger.scope.AuthScope
+import com.lobstr.stellar.vault.presentation.auth.mnemonic.confirm_mnemonic.ConfirmMnemonicsPresenter
 import com.lobstr.stellar.vault.presentation.util.PrefsUtil
 import dagger.Module
 import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.android.components.FragmentComponent
 
 @Module
-class ConfirmMnemonicsModule {
+@InstallIn(FragmentComponent::class)
+object ConfirmMnemonicsModule {
 
     @Provides
-    @AuthScope
-    internal fun provideCreateMnemonicsInteractor(
+    fun provideConfirmMnemonicsPresenter(
+        confirmMnemonicsInteractor: ConfirmMnemonicsInteractor
+    ): ConfirmMnemonicsPresenter {
+        return ConfirmMnemonicsPresenter(confirmMnemonicsInteractor)
+    }
+
+    @Provides
+    fun provideConfirmMnemonicsInteractor(
         stellarRepository: StellarRepository,
         keyStoreRepository: KeyStoreRepository,
         prefsUtil: PrefsUtil

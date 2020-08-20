@@ -34,11 +34,13 @@ import com.lobstr.stellar.vault.presentation.util.Constant.Extra.EXTRA_TRANSACTI
 import com.lobstr.stellar.vault.presentation.util.Constant.Extra.EXTRA_TRANSACTION_STATUS
 import com.lobstr.stellar.vault.presentation.util.manager.FragmentTransactionManager
 import com.lobstr.stellar.vault.presentation.util.manager.ProgressManager
+import dagger.Lazy
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_transaction_details.*
-import moxy.presenter.InjectPresenter
-import moxy.presenter.ProvidePresenter
+import moxy.ktx.moxyPresenter
+import javax.inject.Inject
 
-
+@AndroidEntryPoint
 class TransactionDetailsFragment : BaseFragment(), TransactionDetailsView, View.OnClickListener,
     AlertDialogFragment.OnDefaultAlertDialogListener, OnAccountItemListener,
     TangemDialogFragment.OnTangemDialogListener {
@@ -55,8 +57,8 @@ class TransactionDetailsFragment : BaseFragment(), TransactionDetailsView, View.
     // Fields
     // ===========================================================
 
-    @InjectPresenter
-    lateinit var mPresenter: TransactionDetailsPresenter
+    @Inject
+    lateinit var daggerPresenter: Lazy<TransactionDetailsPresenter>
 
     private var mView: View? = null
 
@@ -64,10 +66,9 @@ class TransactionDetailsFragment : BaseFragment(), TransactionDetailsView, View.
     // Constructors
     // ===========================================================
 
-    @ProvidePresenter
-    fun provideTransactionDetailsPresenter() = TransactionDetailsPresenter(
-        arguments?.getParcelable(BUNDLE_TRANSACTION_ITEM)!!
-    )
+    private val mPresenter by moxyPresenter { daggerPresenter.get().apply {
+        transactionItem = arguments?.getParcelable(BUNDLE_TRANSACTION_ITEM)!!
+    } }
 
     // ===========================================================
     // Getter & Setter
@@ -256,7 +257,7 @@ class TransactionDetailsFragment : BaseFragment(), TransactionDetailsView, View.
 
     override fun successConfirmTransaction(
         envelopeXdr: String,
-        needAdditionalSignatures: Boolean,
+        transactionSuccessStatus: Byte,
         transactionItem: TransactionItem
     ) {
         // Notify target about changes.
@@ -271,9 +272,9 @@ class TransactionDetailsFragment : BaseFragment(), TransactionDetailsView, View.
         // Show success screen.
         val bundle = Bundle()
         bundle.putString(Constant.Bundle.BUNDLE_ENVELOPE_XDR, envelopeXdr)
-        bundle.putBoolean(
-            Constant.Bundle.BUNDLE_NEED_ADDITIONAL_SIGNATURES,
-            needAdditionalSignatures
+        bundle.putByte(
+            Constant.Bundle.BUNDLE_TRANSACTION_CONFIRMATION_SUCCESS_STATUS,
+            transactionSuccessStatus
         )
         val fragment = requireParentFragment().childFragmentManager.fragmentFactory.instantiate(
             requireContext().classLoader,

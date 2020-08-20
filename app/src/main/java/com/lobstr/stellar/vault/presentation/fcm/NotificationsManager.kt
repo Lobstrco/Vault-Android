@@ -18,6 +18,7 @@ import com.lobstr.stellar.vault.presentation.fcm.NotificationsManager.ChannelId.
 import com.lobstr.stellar.vault.presentation.fcm.NotificationsManager.ChannelId.NEW_SIGNATURES
 import com.lobstr.stellar.vault.presentation.fcm.NotificationsManager.ChannelId.OTHER
 import com.lobstr.stellar.vault.presentation.fcm.NotificationsManager.ChannelId.SIGNER_STATUS
+import com.lobstr.stellar.vault.presentation.util.Constant.Extra.EXTRA_NOTIFICATION
 
 
 class NotificationsManager(private val context: Context) {
@@ -78,6 +79,7 @@ class NotificationsManager(private val context: Context) {
         val notificationManager = NotificationManagerCompat.from(context)
 
         val intent = Intent(context, targetClass)
+        intent.putExtra(EXTRA_NOTIFICATION, true)
         intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_CLEAR_TOP)
         intent.action = System.currentTimeMillis().toString()
         val contentIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
@@ -151,6 +153,7 @@ class NotificationsManager(private val context: Context) {
         // and refresh this data when we will open activity.
         // In KitKat and Lollipop PendingIntent.FLAG_UPDATE_CURRENT not working correct
         // (after first time) and this trick helps to solve the problem.
+        intent.putExtra(EXTRA_NOTIFICATION, true)
         getPendingIntent(intent)?.cancel()
         notificationBuilder.setContentIntent(getPendingIntent(intent))
 

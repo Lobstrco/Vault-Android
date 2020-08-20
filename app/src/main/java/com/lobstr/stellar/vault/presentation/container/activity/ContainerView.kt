@@ -39,7 +39,7 @@ interface ContainerView : MvpView {
     fun showMnemonicsFr()
 
     @Skip
-    fun showSuccessFr(envelopeXdr: String, needAdditionalSignatures: Boolean)
+    fun showSuccessFr(envelopeXdr: String, transactionSuccessStatus: Byte)
 
     @Skip
     fun showErrorFr(errorMessage: String)

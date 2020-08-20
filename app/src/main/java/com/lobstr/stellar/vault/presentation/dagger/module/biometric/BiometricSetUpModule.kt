@@ -2,17 +2,27 @@ package com.lobstr.stellar.vault.presentation.dagger.module.biometric
 
 import com.lobstr.stellar.vault.domain.biometric.BiometricSetUpInteractor
 import com.lobstr.stellar.vault.domain.biometric.BiometricSetUpInteractorImpl
-import com.lobstr.stellar.vault.presentation.dagger.scope.AuthScope
+import com.lobstr.stellar.vault.presentation.auth.biometric.BiometricSetUpPresenter
 import com.lobstr.stellar.vault.presentation.util.PrefsUtil
 import dagger.Module
 import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.android.components.FragmentComponent
 
 
 @Module
-class BiometricSetUpModule {
+@InstallIn(FragmentComponent::class)
+object BiometricSetUpModule {
+
     @Provides
-    @AuthScope
-    internal fun provideBiometricSetUpInteractor(
+    fun provideBiometricSetUpPresenter(
+        biometricSetUpInteractor: BiometricSetUpInteractor
+    ): BiometricSetUpPresenter {
+        return BiometricSetUpPresenter(biometricSetUpInteractor)
+    }
+
+    @Provides
+    fun provideBiometricSetUpInteractor(
         prefsUtil: PrefsUtil
     ): BiometricSetUpInteractor {
         return BiometricSetUpInteractorImpl(prefsUtil)

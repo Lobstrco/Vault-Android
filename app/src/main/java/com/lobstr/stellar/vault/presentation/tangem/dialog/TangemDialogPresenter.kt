@@ -5,8 +5,6 @@ import android.view.Gravity
 import com.lobstr.stellar.vault.R
 import com.lobstr.stellar.vault.domain.tangem.TangemInteractor
 import com.lobstr.stellar.vault.presentation.BasePresenter
-import com.lobstr.stellar.vault.presentation.application.LVApplication
-import com.lobstr.stellar.vault.presentation.dagger.module.tangem.TangemModule
 import com.lobstr.stellar.vault.presentation.dialog.alert.base.AlertDialogFragment
 import com.lobstr.stellar.vault.presentation.entities.tangem.TangemInfo
 import com.lobstr.stellar.vault.presentation.util.AppUtil
@@ -16,19 +14,12 @@ import com.tangem.commands.Card
 import com.tangem.commands.CreateWalletResponse
 import com.tangem.commands.SignResponse
 import com.tangem.tangem_sdk_new.ui.NfcLocation
-import javax.inject.Inject
 
-class TangemDialogPresenter(private var tangemInfo: TangemInfo?) :
-    BasePresenter<TangemDialogView>() {
+class TangemDialogPresenter(private val interactor: TangemInteractor) : BasePresenter<TangemDialogView>() {
+
+    var tangemInfo: TangemInfo? = null
 
     private var mAction = Constant.TangemAction.ACTION_DEFAULT
-
-    @Inject
-    lateinit var interactor: TangemInteractor
-
-    init {
-        LVApplication.appComponent.plusTangemDialogComponent(TangemModule()).inject(this)
-    }
 
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()

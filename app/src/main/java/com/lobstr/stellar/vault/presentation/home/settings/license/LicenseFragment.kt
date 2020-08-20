@@ -8,8 +8,7 @@ import android.view.ViewGroup
 import com.lobstr.stellar.vault.R
 import com.lobstr.stellar.vault.presentation.base.fragment.BaseFragment
 import kotlinx.android.synthetic.main.fragment_license.*
-import moxy.presenter.InjectPresenter
-import moxy.presenter.ProvidePresenter
+import moxy.ktx.moxyPresenter
 
 class LicenseFragment : BaseFragment(), LicenseView {
 
@@ -25,17 +24,13 @@ class LicenseFragment : BaseFragment(), LicenseView {
     // Fields
     // ===========================================================
 
-    @InjectPresenter
-    lateinit var mPresenter: LicensePresenter
-
     private var mView: View? = null
 
     // ===========================================================
     // Constructors
     // ===========================================================
 
-    @ProvidePresenter
-    fun provideLicensePresenter() = LicensePresenter()
+    private val mPresenter by moxyPresenter { LicensePresenter() }
 
     // ===========================================================
     // Getter & Setter

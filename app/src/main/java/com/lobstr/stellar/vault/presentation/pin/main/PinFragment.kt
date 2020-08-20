@@ -12,6 +12,7 @@ import androidx.annotation.StringRes
 import androidx.core.content.ContextCompat
 import com.andrognito.pinlockview.PinLockListener
 import com.lobstr.stellar.vault.R
+import com.lobstr.stellar.vault.presentation.application.LVApplication
 import com.lobstr.stellar.vault.presentation.auth.AuthActivity
 import com.lobstr.stellar.vault.presentation.auth.biometric.BiometricSetUpFragment
 import com.lobstr.stellar.vault.presentation.base.activity.BaseActivity
@@ -27,10 +28,13 @@ import com.lobstr.stellar.vault.presentation.util.biometric.BiometricManager
 import com.lobstr.stellar.vault.presentation.util.manager.FragmentTransactionManager
 import com.lobstr.stellar.vault.presentation.util.manager.ProgressManager
 import com.lobstr.stellar.vault.presentation.vault_auth.VaultAuthActivity
+import dagger.Lazy
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_pin.*
-import moxy.presenter.InjectPresenter
-import moxy.presenter.ProvidePresenter
+import moxy.ktx.moxyPresenter
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class PinFragment : BaseFragment(), PinFrView, PinLockListener, BiometricListener,
     View.OnClickListener, AlertDialogFragment.OnDefaultAlertDialogListener {
 
@@ -48,8 +52,8 @@ class PinFragment : BaseFragment(), PinFrView, PinLockListener, BiometricListene
     // Fields
     // ===========================================================
 
-    @InjectPresenter
-    lateinit var mPresenter: PinFrPresenter
+    @Inject
+    lateinit var daggerPresenter: Lazy<PinFrPresenter>
 
     private var mBiometricManager: BiometricManager? = null
 
@@ -59,11 +63,9 @@ class PinFragment : BaseFragment(), PinFrView, PinLockListener, BiometricListene
     // Constructors
     // ===========================================================
 
-    @ProvidePresenter
-    fun providePinFrPresenter() =
-        PinFrPresenter(
-            arguments?.getByte(Constant.Bundle.BUNDLE_PIN_MODE) ?: Constant.PinMode.ENTER
-        )
+    private val mPresenter by moxyPresenter { daggerPresenter.get().apply {
+        pinMode = arguments?.getByte(Constant.Bundle.BUNDLE_PIN_MODE) ?: Constant.PinMode.ENTER
+    } }
 
     // ===========================================================
     // Getter & Setter
@@ -231,7 +233,13 @@ class PinFragment : BaseFragment(), PinFrView, PinLockListener, BiometricListene
         Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
     }
 
+    override fun setResult(resultCode: Int) {
+        activity?.setResult(resultCode)
+    }
+
     override fun finishScreenWithResult(resultCode: Int) {
+        // NOTE Skip pin appearance check for prevent pin screen duplication after finish.
+        LVApplication.checkPinAppearance = false
         activity?.setResult(resultCode)
         activity?.finish()
     }
@@ -314,7 +322,7 @@ class PinFragment : BaseFragment(), PinFrView, PinLockListener, BiometricListene
 
     override fun sendMail(mail: String, subject: String, body: String?) {
         try {
-            AppUtil.sendEmail(requireContext(), mail, subject, body)
+            AppUtil.sendEmail(requireContext(), arrayOf(mail), subject, body)
         } catch (exc: ActivityNotFoundException) {
             Toast.makeText(requireContext(),getString(R.string.msg_mail_client_not_found), Toast.LENGTH_SHORT).show()
         }

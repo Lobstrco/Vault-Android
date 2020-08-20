@@ -3,7 +3,7 @@ package com.lobstr.stellar.vault.data.vault_auth
 import com.lobstr.stellar.vault.data.net.VaultAuthApi
 import com.lobstr.stellar.vault.domain.error.RxErrorUtils
 import com.lobstr.stellar.vault.domain.vault_auth.VaultAuthRepository
-import io.reactivex.Single
+import io.reactivex.rxjava3.core.Single
 
 class VaultAuthRepositoryImpl(
     private val vaultAuthApi: VaultAuthApi,

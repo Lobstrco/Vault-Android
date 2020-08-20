@@ -4,34 +4,24 @@ import com.lobstr.stellar.vault.domain.signer_info.SignerInfoInteractor
 import com.lobstr.stellar.vault.domain.util.EventProviderModule
 import com.lobstr.stellar.vault.domain.util.event.Notification
 import com.lobstr.stellar.vault.presentation.BasePresenter
-import com.lobstr.stellar.vault.presentation.application.LVApplication
-import com.lobstr.stellar.vault.presentation.dagger.module.signer_info.SignerInfoModule
 import com.lobstr.stellar.vault.presentation.util.AppUtil
 import com.lobstr.stellar.vault.presentation.util.Constant.Util.PK_TRUNCATE_COUNT
-import io.reactivex.Observable
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.Disposable
-import io.reactivex.schedulers.Schedulers
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.disposables.Disposable
+import io.reactivex.rxjava3.schedulers.Schedulers
 import java.util.concurrent.TimeUnit
-import javax.inject.Inject
 
-class SignerInfoPresenter : BasePresenter<SignerInfoView>() {
+class SignerInfoPresenter(
+    private val interactor: SignerInfoInteractor,
+    private val eventProviderModule: EventProviderModule
+) : BasePresenter<SignerInfoView>() {
 
     companion object {
         private const val REQUEST_PERIOD = 3L
     }
 
-    @Inject
-    lateinit var eventProviderModule: EventProviderModule
-
-    @Inject
-    lateinit var interactor: SignerInfoInteractor
-
     private var checkLobstrAppIntervalSubscription: Disposable? = null
-
-    init {
-        LVApplication.appComponent.plusSignerInfoComponent(SignerInfoModule()).inject(this)
-    }
 
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()

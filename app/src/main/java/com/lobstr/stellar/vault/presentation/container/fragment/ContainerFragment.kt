@@ -20,12 +20,12 @@ import com.lobstr.stellar.vault.presentation.home.transactions.submit_error.Erro
 import com.lobstr.stellar.vault.presentation.home.transactions.submit_success.SuccessFragment
 import com.lobstr.stellar.vault.presentation.util.Constant
 import com.lobstr.stellar.vault.presentation.util.Constant.Bundle.BUNDLE_NAVIGATION_FR
+import com.lobstr.stellar.vault.presentation.util.Constant.TransactionConfirmationSuccessStatus.SUCCESS
 import com.lobstr.stellar.vault.presentation.util.Constant.Util.UNDEFINED_VALUE
 import com.lobstr.stellar.vault.presentation.util.manager.FragmentTransactionManager
 import com.lobstr.stellar.vault.presentation.vault_auth.auth.VaultAuthFragment
 import com.lobstr.stellar.vault.presentation.vault_auth.signer_info.SignerInfoFragment
-import moxy.presenter.InjectPresenter
-import moxy.presenter.ProvidePresenter
+import moxy.ktx.moxyPresenter
 
 /**
  * Used for containing all main fragments in the app
@@ -46,9 +46,6 @@ class ContainerFragment : BaseContainerFragment(),
     // Fields
     // ===========================================================
 
-    @InjectPresenter
-    lateinit var mPresenter: ContainerPresenter
-
     // ===========================================================
     // Constructors
     // ===========================================================
@@ -57,16 +54,14 @@ class ContainerFragment : BaseContainerFragment(),
      * BUNDLE_NAVIGATION_FR - flag for setup main (initial) fragment in container.
      * @see Constant.Navigation
      */
-    @ProvidePresenter
-    fun provideContainerPresenter() =
-        ContainerPresenter(
-            arguments?.getInt(BUNDLE_NAVIGATION_FR)!!,
-            arguments?.getParcelable(Constant.Bundle.BUNDLE_TRANSACTION_ITEM),
-            arguments?.getString(Constant.Bundle.BUNDLE_ENVELOPE_XDR),
-            arguments?.getBoolean(Constant.Bundle.BUNDLE_NEED_ADDITIONAL_SIGNATURES, false),
-            arguments?.getString(Constant.Bundle.BUNDLE_ERROR_MESSAGE),
-            arguments?.getInt(Constant.Bundle.BUNDLE_CONFIG, UNDEFINED_VALUE) ?: UNDEFINED_VALUE
-        )
+    private val mPresenter by moxyPresenter { ContainerPresenter(
+        arguments?.getInt(BUNDLE_NAVIGATION_FR)!!,
+        arguments?.getParcelable(Constant.Bundle.BUNDLE_TRANSACTION_ITEM),
+        arguments?.getString(Constant.Bundle.BUNDLE_ENVELOPE_XDR),
+        arguments?.getByte(Constant.Bundle.BUNDLE_TRANSACTION_CONFIRMATION_SUCCESS_STATUS, SUCCESS),
+        arguments?.getString(Constant.Bundle.BUNDLE_ERROR_MESSAGE),
+        arguments?.getInt(Constant.Bundle.BUNDLE_CONFIG, UNDEFINED_VALUE) ?: UNDEFINED_VALUE
+    ) }
 
     // ===========================================================
     // Getter & Setter
@@ -200,12 +195,12 @@ class ContainerFragment : BaseContainerFragment(),
         )
     }
 
-    override fun showSuccessFr(envelopeXdr: String, needAdditionalSignatures: Boolean) {
+    override fun showSuccessFr(envelopeXdr: String, transactionSuccessStatus: Byte) {
         val bundle = Bundle()
         bundle.putString(Constant.Bundle.BUNDLE_ENVELOPE_XDR, envelopeXdr)
-        bundle.putBoolean(
-            Constant.Bundle.BUNDLE_NEED_ADDITIONAL_SIGNATURES,
-            needAdditionalSignatures
+        bundle.putByte(
+            Constant.Bundle.BUNDLE_TRANSACTION_CONFIRMATION_SUCCESS_STATUS,
+            transactionSuccessStatus
         )
         val fragment = childFragmentManager.fragmentFactory.instantiate(
             requireContext().classLoader,

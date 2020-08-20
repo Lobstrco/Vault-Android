@@ -19,7 +19,7 @@ class OperationDetailsPresenter(private val mTransactionItem: TransactionItem, p
 
         val operation: Operation = mTransactionItem.transaction.operations[mPosition]
 
-        viewState.setupToolbarTitle(AppUtil.getTransactionOperationName(operation))
+        viewState.setupToolbarTitle(AppUtil.getTransactionOperationName(operation, mTransactionItem.transactionType))
 
         viewState.initRecycledView(operation.getFields())
     }

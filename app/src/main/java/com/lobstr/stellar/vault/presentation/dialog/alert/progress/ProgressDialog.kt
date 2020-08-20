@@ -1,8 +1,7 @@
 package com.lobstr.stellar.vault.presentation.dialog.alert.progress
 
 import com.lobstr.stellar.vault.presentation.dialog.alert.base.AlertDialogFragment
-import moxy.presenter.InjectPresenter
-import moxy.presenter.ProvidePresenter
+import moxy.ktx.moxyPresenter
 
 
 class ProgressDialog : AlertDialogFragment(), ProgressDialogView {
@@ -19,15 +18,11 @@ class ProgressDialog : AlertDialogFragment(), ProgressDialogView {
     // Fields
     // ===========================================================
 
-    @InjectPresenter
-    lateinit var mPresenter: ProgressDialogPresenter
-
     // ===========================================================
     // Constructors
     // ===========================================================
 
-    @ProvidePresenter
-    fun provideProgressDialogPresenter() = ProgressDialogPresenter()
+    private val mPresenter by moxyPresenter { ProgressDialogPresenter() }
 
     // ===========================================================
     // Getter & Setter

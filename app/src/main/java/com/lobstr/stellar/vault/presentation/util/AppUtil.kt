@@ -23,6 +23,8 @@ import androidx.annotation.StringRes
 import androidx.browser.customtabs.CustomTabsIntent
 import androidx.core.content.ContextCompat
 import androidx.core.content.pm.PackageInfoCompat
+import com.google.android.gms.common.ConnectionResult
+import com.google.android.gms.common.GoogleApiAvailability
 import com.google.gson.Gson
 import com.google.gson.JsonIOException
 import com.google.gson.JsonSyntaxException
@@ -36,12 +38,39 @@ import com.lobstr.stellar.vault.presentation.entities.transaction.operation.offe
 import com.lobstr.stellar.vault.presentation.entities.transaction.operation.offer.ManageBuyOfferOperation
 import com.lobstr.stellar.vault.presentation.entities.transaction.operation.offer.SellOfferOperation
 import com.lobstr.stellar.vault.presentation.util.Constant.Symbol.NULL
+import com.lobstr.stellar.vault.presentation.util.Constant.TransactionType.Item.AUTH_CHALLENGE
+import com.lobstr.stellar.vault.presentation.util.Constant.TransactionType.Item.TRANSACTION
 import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.*
 
 
 object AppUtil {
+
+    fun isGooglePlayServicesAvailable(context: Context, showExplanation: Boolean = false): Boolean {
+        val apiAvailability = GoogleApiAvailability.getInstance()
+        val resultCode = apiAvailability.isGooglePlayServicesAvailable(context)
+
+        if (resultCode != ConnectionResult.SUCCESS) {
+            if (apiAvailability.isUserResolvableError(resultCode)) {
+                Log.e("GooglePlayServices", "No valid Google Play Services APK found. ")
+                if (context is Activity && showExplanation) {
+                    apiAvailability.getErrorDialog(context, resultCode, 9000).show()
+                }
+            } else {
+                Log.e("GooglePlayServices", "This device is not supported. ")
+                if (showExplanation) {
+                    Toast.makeText(
+                        context,
+                        R.string.msg_google_play_services_not_supported,
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            }
+            return false
+        }
+        return true
+    }
 
     fun openWebPage(context: Context?, url: String) {
         if (url.isEmpty()) {
@@ -131,7 +160,12 @@ object AppUtil {
         return null
     }
 
-    fun getTransactionOperationName(operation: Operation): Int {
+    /**
+     * Used for receive operation type.
+     * @param operation Operation.
+     * @param txType Target Transaction Type for determining Sep 10 Challenge.
+     */
+    fun getTransactionOperationName(operation: Operation, txType: String?): Int {
         return when (operation) {
             is PaymentOperation -> R.string.text_operation_name_payment
             is CreateAccountOperation -> R.string.text_operation_name_create_account
@@ -146,20 +180,26 @@ object AppUtil {
             is AllowTrustOperation -> R.string.text_operation_name_allow_trust
             is AccountMergeOperation -> R.string.text_operation_name_account_merge
             is InflationOperation -> R.string.text_operation_name_inflation
-            is ManageDataOperation -> R.string.text_operation_name_manage_data
+            is ManageDataOperation -> {
+                when (txType) {
+                    TRANSACTION -> R.string.text_operation_name_manage_data
+                    AUTH_CHALLENGE -> R.string.text_operation_name_challenge
+                    else -> R.string.text_operation_name_manage_data
+                }
+            }
             is BumpSequenceOperation -> R.string.text_operation_name_bump_sequence
             else -> -1
         }
     }
 
-    fun convertPixelsToDp(px: Float, context: Context): Float {
+    fun convertPixelsToDp(context: Context, px: Int): Float {
         val resources = context.resources
         val metrics = resources.displayMetrics
         return px / (metrics.densityDpi.toFloat() / DisplayMetrics.DENSITY_DEFAULT)
     }
 
-    fun convertDpToPixels(context: Context, dp: Float): Float {
-        return dp * context.resources.displayMetrics.density
+    fun convertDpToPixels(context: Context, dp: Float): Int {
+        return (dp * context.resources.displayMetrics.density).toInt()
     }
 
     fun getTextHeight(t: TextView): Int {
@@ -199,7 +239,7 @@ object AppUtil {
     fun getString(@StringRes resId: Int): String =
         getAppContext().getString(resId)
 
-    fun getAppContext(): Context = LVApplication.appComponent.context
+    fun getAppContext(): Context = LVApplication.appContext
 
     fun isPublicKey(value: String?): Boolean {
         if (value.isNullOrEmpty() || value.length != 56) {
@@ -252,18 +292,17 @@ object AppUtil {
 
     fun sendEmail(
         context: Context,
-        mail: String,
-        subject: String,
+        mails: Array<String>?,
+        subject: String?,
         body: String? = null
     ) {
-        val emailIntent = Intent(Intent.ACTION_SENDTO)
-        val uri = Uri.parse(
-            "mailto:" + Uri.encode(mail) + "?subject=" + Uri.encode(subject) +
-                    "&body=" + Uri.encode(body ?: "")
-        )
-        emailIntent.data = uri
-        emailIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-        context.startActivity(emailIntent)
+        context.startActivity(Intent(Intent.ACTION_SENDTO).apply {
+            data = Uri.parse("mailto:")
+            putExtra(Intent.EXTRA_EMAIL, mails ?: "")
+            putExtra(Intent.EXTRA_TEXT, body ?: "")
+            putExtra(Intent.EXTRA_SUBJECT, subject ?: "")
+            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        })
     }
 
     fun getAppBehavior() =

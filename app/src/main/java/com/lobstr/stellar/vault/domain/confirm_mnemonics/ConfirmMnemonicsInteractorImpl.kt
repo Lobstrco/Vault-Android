@@ -3,7 +3,7 @@ package com.lobstr.stellar.vault.domain.confirm_mnemonics
 import com.lobstr.stellar.vault.domain.key_store.KeyStoreRepository
 import com.lobstr.stellar.vault.domain.stellar.StellarRepository
 import com.lobstr.stellar.vault.presentation.util.PrefsUtil
-import io.reactivex.Single
+import io.reactivex.rxjava3.core.Single
 import org.stellar.sdk.KeyPair
 
 

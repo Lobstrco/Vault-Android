@@ -1,9 +1,9 @@
 package com.lobstr.stellar.vault.domain.error
 
 import com.lobstr.stellar.vault.presentation.util.Constant
-import io.reactivex.Completable
-import io.reactivex.Observable
-import io.reactivex.Single
+import io.reactivex.rxjava3.core.Completable
+import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.core.Single
 
 interface RxErrorUtils {
 

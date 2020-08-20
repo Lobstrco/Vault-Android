@@ -11,9 +11,12 @@ import com.lobstr.stellar.vault.presentation.pin.PinActivity
 import com.lobstr.stellar.vault.presentation.util.Constant
 import com.lobstr.stellar.vault.presentation.util.Constant.PinMode.ENTER
 import com.lobstr.stellar.vault.presentation.vault_auth.VaultAuthActivity
-import moxy.presenter.InjectPresenter
-import moxy.presenter.ProvidePresenter
+import dagger.Lazy
+import dagger.hilt.android.AndroidEntryPoint
+import moxy.ktx.moxyPresenter
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class SplashActivity : BaseMvpAppCompatActivity(), SplashView,
     AlertDialogFragment.OnDefaultAlertDialogListener {
 
@@ -29,15 +32,14 @@ class SplashActivity : BaseMvpAppCompatActivity(), SplashView,
     // Fields
     // ===========================================================
 
-    @InjectPresenter
-    lateinit var mPresenter: SplashPresenter
+    @Inject
+    lateinit var daggerPresenter: Lazy<SplashPresenter>
 
     // ===========================================================
     // Constructors
     // ===========================================================
 
-    @ProvidePresenter
-    fun provideSplashPresenter() = SplashPresenter()
+    private val mPresenter by moxyPresenter { daggerPresenter.get() }
 
     // ===========================================================
     // Getter & Setter

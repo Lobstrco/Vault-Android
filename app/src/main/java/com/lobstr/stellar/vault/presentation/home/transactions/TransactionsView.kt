@@ -22,7 +22,7 @@ interface TransactionsView : MvpView {
     fun showErrorMessage(message: String)
 
     @AddToEndSingle
-    fun showTransactionList(items: List<TransactionItem>, needShowProgress: Boolean?)
+    fun showTransactionList(items: List<TransactionItem>, needShowProgress: Boolean)
 
     @Skip
     fun scrollListToPosition(position: Int)

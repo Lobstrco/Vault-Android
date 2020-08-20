@@ -18,10 +18,13 @@ import com.lobstr.stellar.vault.presentation.util.Constant
 import com.lobstr.stellar.vault.presentation.util.biometric.BiometricListener
 import com.lobstr.stellar.vault.presentation.util.biometric.BiometricManager
 import com.lobstr.stellar.vault.presentation.vault_auth.VaultAuthActivity
+import dagger.Lazy
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_biometric_set_up.*
-import moxy.presenter.InjectPresenter
-import moxy.presenter.ProvidePresenter
+import moxy.ktx.moxyPresenter
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class BiometricSetUpFragment : BaseFragment(), BiometricSetUpView, BiometricListener, View.OnClickListener {
 
     // ===========================================================
@@ -36,8 +39,8 @@ class BiometricSetUpFragment : BaseFragment(), BiometricSetUpView, BiometricList
     // Fields
     // ===========================================================
 
-    @InjectPresenter
-    lateinit var mPresenter: BiometricSetUpPresenter
+    @Inject
+    lateinit var daggerPresenter: Lazy<BiometricSetUpPresenter>
 
     private var mView: View? = null
 
@@ -47,10 +50,9 @@ class BiometricSetUpFragment : BaseFragment(), BiometricSetUpView, BiometricList
     // Constructors
     // ===========================================================
 
-    @ProvidePresenter
-    fun provideBiometricSetUpPresenter() = BiometricSetUpPresenter(
-        arguments?.getByte(Constant.Bundle.BUNDLE_PIN_MODE) ?: Constant.PinMode.ENTER
-    )
+    private val mPresenter by moxyPresenter { daggerPresenter.get().apply {
+        pinMode = arguments?.getByte(Constant.Bundle.BUNDLE_PIN_MODE) ?: Constant.PinMode.ENTER
+    } }
 
     // ===========================================================
     // Getter & Setter
@@ -119,6 +121,10 @@ class BiometricSetUpFragment : BaseFragment(), BiometricSetUpView, BiometricList
         val intent = Intent(activity, VaultAuthActivity::class.java)
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         startActivity(intent)
+    }
+
+    override fun finishScreen() {
+        activity?.finish()
     }
 
     // Biometric.

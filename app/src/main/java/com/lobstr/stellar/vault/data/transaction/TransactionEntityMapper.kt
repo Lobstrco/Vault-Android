@@ -23,6 +23,8 @@ import com.lobstr.stellar.vault.presentation.entities.transaction.operation.offe
 import com.lobstr.stellar.vault.presentation.entities.transaction.operation.offer.ManageBuyOfferOperation
 import com.lobstr.stellar.vault.presentation.entities.transaction.operation.offer.ManageSellOfferOperation
 import com.lobstr.stellar.vault.presentation.util.Constant.Transaction.IMPORT_XDR
+import com.lobstr.stellar.vault.presentation.util.Constant.TransactionType.Item.AUTH_CHALLENGE
+import com.lobstr.stellar.vault.presentation.util.Constant.TransactionType.Item.TRANSACTION
 import org.stellar.sdk.*
 import java.math.BigDecimal
 
@@ -71,6 +73,7 @@ class TransactionEntityMapper(private val network: Network) {
     }
 
     fun transformTransactionItem(transaction: AbstractTransaction): TransactionItem {
+        val innerTransaction = getTransaction(transaction)
         return TransactionItem(
             "",
             "",
@@ -80,10 +83,32 @@ class TransactionEntityMapper(private val network: Network) {
             "",
             IMPORT_XDR,
             null,
-            null,
-            getTransaction(transaction)
+            getTransactionType(transaction.toEnvelopeXdrBase64(), innerTransaction.sourceAccount!!),
+            innerTransaction
         )
     }
+
+    /**
+     * Check sep 10 challenge for determining transaction type.
+     * @return transaction type: [TRANSACTION] or [AUTH_CHALLENGE].
+     */
+    private fun getTransactionType(xdr: String, sourceAccount: String) =
+        if (getChallengeTransaction(xdr, sourceAccount) == null) {
+            TRANSACTION
+        } else {
+            AUTH_CHALLENGE
+        }
+
+    private fun getChallengeTransaction(challengeXdr: String, serverAccountId: String) =
+        try {
+            Sep10Challenge.readChallengeTransaction(
+                challengeXdr,
+                serverAccountId,
+                network
+            )
+        } catch (exc: InvalidSep10ChallengeException) {
+            null
+        }
 
     private fun getTransaction(transaction: AbstractTransaction): Transaction {
         val operations: MutableList<Operation> = mutableListOf()

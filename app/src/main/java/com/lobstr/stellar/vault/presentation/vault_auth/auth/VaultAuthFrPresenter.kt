@@ -8,28 +8,18 @@ import com.lobstr.stellar.vault.domain.util.event.Network
 import com.lobstr.stellar.vault.domain.util.event.Notification
 import com.lobstr.stellar.vault.domain.vault_auth_screen.VaultAuthInteractor
 import com.lobstr.stellar.vault.presentation.BasePresenter
-import com.lobstr.stellar.vault.presentation.application.LVApplication
-import com.lobstr.stellar.vault.presentation.dagger.module.vault_auth.VaultAuthModule
 import com.lobstr.stellar.vault.presentation.dialog.alert.base.AlertDialogFragment
 import com.lobstr.stellar.vault.presentation.entities.tangem.TangemInfo
 import com.lobstr.stellar.vault.presentation.util.AppUtil
 import com.lobstr.stellar.vault.presentation.util.Constant
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
-import javax.inject.Inject
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.schedulers.Schedulers
 
 
-class VaultAuthFrPresenter : BasePresenter<VaultAuthFrView>() {
-
-    @Inject
-    lateinit var interactor: VaultAuthInteractor
-
-    @Inject
-    lateinit var eventProviderModule: EventProviderModule
-
-    init {
-        LVApplication.appComponent.plusVaultAuthComponent(VaultAuthModule()).inject(this)
-    }
+class VaultAuthFrPresenter(
+    private val interactor: VaultAuthInteractor,
+    private val eventProviderModule: EventProviderModule
+) : BasePresenter<VaultAuthFrView>() {
 
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()

@@ -53,7 +53,7 @@ interface TransactionDetailsView : MvpView {
     @AddToEndSingle
     fun successConfirmTransaction(
         envelopeXdr: String,
-        needAdditionalSignatures: Boolean,
+        transactionSuccessStatus: Byte,
         transactionItem: TransactionItem
     )
 

@@ -3,17 +3,31 @@ package com.lobstr.stellar.vault.presentation.dagger.module.signed_account
 import com.lobstr.stellar.vault.domain.account.AccountRepository
 import com.lobstr.stellar.vault.domain.signed_account.SignedAccountInteractor
 import com.lobstr.stellar.vault.domain.signed_account.SignedAccountInteractorImpl
-import com.lobstr.stellar.vault.presentation.dagger.scope.SignedAccountScope
+import com.lobstr.stellar.vault.domain.util.EventProviderModule
+import com.lobstr.stellar.vault.presentation.home.settings.signed_accounts.SignedAccountsPresenter
 import com.lobstr.stellar.vault.presentation.util.PrefsUtil
 import dagger.Module
 import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.android.components.FragmentComponent
 
 @Module
-class SignedAccountModule {
+@InstallIn(FragmentComponent::class)
+object SignedAccountModule {
 
     @Provides
-    @SignedAccountScope
-    internal fun provideSignedAccountInteractor(
+    fun provideSignedAccountsPresenter(
+        signedAccountInteractor: SignedAccountInteractor,
+        eventProviderModule: EventProviderModule
+    ): SignedAccountsPresenter {
+        return SignedAccountsPresenter(
+            signedAccountInteractor,
+            eventProviderModule
+        )
+    }
+
+    @Provides
+    fun provideSignedAccountInteractor(
         accountRepository: AccountRepository,
         prefsUtil: PrefsUtil
     ): SignedAccountInteractor {

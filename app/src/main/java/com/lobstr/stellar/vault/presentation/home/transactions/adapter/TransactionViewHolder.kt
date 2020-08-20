@@ -62,7 +62,7 @@ class TransactionViewHolder(itemView: View, private val listener: OnTransactionI
                 PK_TRUNCATE_COUNT
             ) else item.transaction.federation
 
-        itemView.tvTransactionItemOperation.text = getOperationName(item.transaction, context)
+        itemView.tvTransactionItemOperation.text = getOperationName(context, item.transaction, item.transactionType)
         itemView.setOnClickListener {
             val position = this@TransactionViewHolder.adapterPosition
             if (position == RecyclerView.NO_POSITION) {
@@ -71,12 +71,13 @@ class TransactionViewHolder(itemView: View, private val listener: OnTransactionI
 
             listener.onTransactionItemClick(item)
         }
+        item.transactionType
     }
 
-    private fun getOperationName(transaction: Transaction, context: Context): String {
+    private fun getOperationName(context: Context, transaction: Transaction, type: String?): String {
         return if (transaction.operations.isNotEmpty()) {
             if (transaction.operations.size == 1) {
-                context.getString(AppUtil.getTransactionOperationName(transaction.operations[0]))
+                context.getString(AppUtil.getTransactionOperationName(transaction.operations[0], type))
             } else {
                 String.format(
                     context.getString(R.string.text_operation_name_several_operation),

@@ -1,6 +1,5 @@
 package com.lobstr.stellar.vault.presentation.auth.mnemonic
 
-import android.app.Activity
 import android.content.ClipData
 import android.content.Context
 import android.content.Intent
@@ -8,27 +7,27 @@ import android.graphics.drawable.Drawable
 import android.util.AttributeSet
 import android.view.DragEvent
 import android.view.View
-import android.widget.LinearLayout
+import android.view.ViewGroup
+import android.widget.GridLayout
 import android.widget.ScrollView
 import android.widget.TextView
 import androidx.annotation.IdRes
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
+import androidx.core.view.marginEnd
+import androidx.core.view.marginStart
 import com.lobstr.stellar.vault.R
 import com.lobstr.stellar.vault.presentation.auth.mnemonic.MnemonicsContainerView.Extra.EXTRA_ITEM_POSITION
 import com.lobstr.stellar.vault.presentation.auth.mnemonic.MnemonicsContainerView.Extra.EXTRA_ITEM_VALUE
 import com.lobstr.stellar.vault.presentation.auth.mnemonic.MnemonicsContainerView.Extra.EXTRA_PARENT_ID
 import com.lobstr.stellar.vault.presentation.entities.mnemonic.MnemonicItem
+import com.lobstr.stellar.vault.presentation.util.AppUtil
 import kotlinx.android.synthetic.main.mnemonic_item_container.view.*
 import java.lang.ref.WeakReference
 
 
 class MnemonicsContainerView(context: Context?, attrs: AttributeSet?) : ScrollView(context, attrs),
     View.OnDragListener {
-
-    companion object {
-        const val ITEM_MARGIN = 16
-    }
 
     object Extra {
         const val EXTRA_PARENT_ID = "EXTRA_PARENT_ID"
@@ -47,6 +46,15 @@ class MnemonicsContainerView(context: Context?, attrs: AttributeSet?) : ScrollVi
     private var itemCounterTextColor: Int
 
     private var itemTextColor: Int
+
+    private var itemMarginStart: Float
+    private var itemMarginEnd: Float
+    private var itemMarginTop: Float
+    private var itemMarginBottom: Float
+
+    private val mnemonicsColumnCount: Int
+
+    private val mnemonicsOuterMargin: Float
 
     var mMnemonicList: List<MnemonicItem>? = null
 
@@ -69,6 +77,12 @@ class MnemonicsContainerView(context: Context?, attrs: AttributeSet?) : ScrollVi
             R.styleable.MnemonicsContainerView_itemTextColor,
             ContextCompat.getColor(context, R.color.color_primary)
         )
+        mnemonicsColumnCount = typedArray.getInt(R.styleable.MnemonicsContainerView_mnemonicsColumnCount, 4)
+        itemMarginStart = typedArray.getDimension(R.styleable.MnemonicsContainerView_itemMarginStart, 4f)
+        itemMarginEnd = typedArray.getDimension(R.styleable.MnemonicsContainerView_itemMarginEnd, 4f)
+        itemMarginTop = typedArray.getDimension(R.styleable.MnemonicsContainerView_itemMarginTop, 6f)
+        itemMarginBottom = typedArray.getDimension(R.styleable.MnemonicsContainerView_itemMarginBottom, 6f)
+        mnemonicsOuterMargin = typedArray.getDimension(R.styleable.MnemonicsContainerView_mnemonicsOuterMargin, 16f)
 
         typedArray.recycle()
 
@@ -79,11 +93,13 @@ class MnemonicsContainerView(context: Context?, attrs: AttributeSet?) : ScrollVi
 
     fun setupMnemonics() {
         if (mMnemonicList != null) {
-            fblMnemonicItemContainer.removeAllViews()
+            glMnemonicItemContainer.removeAllViews()
+            glMnemonicItemContainer.columnCount = mnemonicsColumnCount
             for (i in mMnemonicList!!.indices) {
                 val mnemonicItem = mMnemonicList!![i]
-                val itemMnemonic =
-                    (context as Activity).layoutInflater.inflate(R.layout.item_mnemonic, null)
+                val itemMnemonic = inflate(context, R.layout.item_mnemonic, null)
+
+                val itemWidth: Float = calculateItemWidth(glMnemonicItemContainer, mnemonicsColumnCount)
 
                 itemMnemonic.background =
                     if (mnemonicItem.hide) itemEmptyBackground?.constantState?.newDrawable()
@@ -106,19 +122,17 @@ class MnemonicsContainerView(context: Context?, attrs: AttributeSet?) : ScrollVi
 
                 word.visibility = if (mnemonicItem.hide) View.INVISIBLE else View.VISIBLE
 
-                val layoutParams = LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.WRAP_CONTENT,
-                    LinearLayout.LayoutParams.WRAP_CONTENT
-                )
+                val layoutParams = GridLayout.LayoutParams()
+                layoutParams.width = AppUtil.convertDpToPixels(context, itemWidth)
 
                 layoutParams.setMargins(
-                    ITEM_MARGIN,
-                    ITEM_MARGIN,
-                    ITEM_MARGIN,
-                    ITEM_MARGIN
+                    AppUtil.convertDpToPixels(context, itemMarginStart),
+                    AppUtil.convertDpToPixels(context, itemMarginTop),
+                    AppUtil.convertDpToPixels(context, itemMarginEnd),
+                    AppUtil.convertDpToPixels(context, itemMarginBottom)
                 )
 
-                fblMnemonicItemContainer.addView(itemMnemonic, i, layoutParams)
+                glMnemonicItemContainer.addView(itemMnemonic, i, layoutParams)
 
                 if (!mnemonicItem.hide) {
                     itemMnemonic.setOnClickListener {
@@ -133,7 +147,7 @@ class MnemonicsContainerView(context: Context?, attrs: AttributeSet?) : ScrollVi
                         intent.putExtra(EXTRA_PARENT_ID, this.id)
                         intent.putExtra(
                             EXTRA_ITEM_POSITION,
-                            fblMnemonicItemContainer.indexOfChild(itemMnemonic)
+                            glMnemonicItemContainer.indexOfChild(itemMnemonic)
                         )
                         intent.putExtra(EXTRA_ITEM_VALUE, mnemonicStr)
 
@@ -145,6 +159,15 @@ class MnemonicsContainerView(context: Context?, attrs: AttributeSet?) : ScrollVi
                 }
             }
         }
+    }
+
+    private fun calculateItemWidth(container: ViewGroup, itemsCount:Int): Float {
+        val displayMetrics = context.resources.displayMetrics
+        val dpWidth = displayMetrics.widthPixels / displayMetrics.density
+        val containerSize = dpWidth - (AppUtil.convertPixelsToDp(context, container.marginStart) + AppUtil.convertPixelsToDp(context, container.marginEnd))
+        val itemWidthWithMargins = (containerSize - mnemonicsOuterMargin * 2) / itemsCount
+
+        return itemWidthWithMargins - (itemMarginStart + itemMarginEnd)
     }
 
     override fun onDrag(v: View?, event: DragEvent?): Boolean {

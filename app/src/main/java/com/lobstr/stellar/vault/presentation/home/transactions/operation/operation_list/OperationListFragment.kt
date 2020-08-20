@@ -15,8 +15,7 @@ import com.lobstr.stellar.vault.presentation.home.transactions.operation.operati
 import com.lobstr.stellar.vault.presentation.util.Constant
 import com.lobstr.stellar.vault.presentation.util.manager.FragmentTransactionManager
 import kotlinx.android.synthetic.main.fragment_operation_list.*
-import moxy.presenter.InjectPresenter
-import moxy.presenter.ProvidePresenter
+import moxy.ktx.moxyPresenter
 
 class OperationListFragment : BaseFragment(),
     OperationListView, OnOperationClicked {
@@ -33,20 +32,15 @@ class OperationListFragment : BaseFragment(),
     // Fields
     // ===========================================================
 
-    @InjectPresenter
-    lateinit var mPresenter: OperationListPresenter
-
     private var mView: View? = null
 
     // ===========================================================
     // Constructors
     // ===========================================================
 
-    @ProvidePresenter
-    fun provideOperationListPresenter() =
-        OperationListPresenter(
-            arguments?.getParcelable(Constant.Bundle.BUNDLE_TRANSACTION_ITEM)!!
-        )
+    private val mPresenter by moxyPresenter { OperationListPresenter(
+        arguments?.getParcelable(Constant.Bundle.BUNDLE_TRANSACTION_ITEM)!!
+    ) }
 
     // ===========================================================
     // Getter & Setter

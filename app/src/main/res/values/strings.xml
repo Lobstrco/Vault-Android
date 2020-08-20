@@ -119,6 +119,7 @@
     <!-- Settings -->
     <string name="title_settings_wallet">Account</string>
     <string name="title_settings_security">Security</string>
+    <string name="title_settings_help">Help</string>
     <string name="title_settings_other">Other</string>
     <string name="text_settings_public_key">Vault Public Key</string>
     <string name="text_settings_signer">Signer for %d account</string>
@@ -128,9 +129,9 @@
     <string name="text_settings_biometric_login">Biometric Login</string>
     <string name="text_settings_spam_protection">Allow Unsigned Transactions</string>
     <string name="text_settings_notifications">Notifications</string>
-    <string name="text_settings_signer_card_info">Signer Card</string>
+    <string name="text_settings_signer_card_info">Learn about the Signer Card</string>
     <string name="text_settings_version">Version</string>
-    <string name="text_settings_help">Help</string>
+    <string name="text_settings_help">Help Center</string>
     <string name="text_settings_license">Licenses</string>
     <string name="text_settings_rate_us">Rate Us</string>
     <string name="text_settings_contact_support">Contact Support</string>
@@ -167,6 +168,7 @@
     <string name="text_operation_name_inflation">Inflation</string>
     <string name="text_operation_name_manage_data">Manage Data</string>
     <string name="text_operation_name_bump_sequence">Bump Sequence</string>
+    <string name="text_operation_name_challenge">Challenge</string>
     <string name="text_operation_name_several_operation">%s Operations</string>
     <string name="text_operation_name_unknown">Unknown</string>
 
@@ -238,6 +240,7 @@
     <string name="text_error_use_old_pin">You can not use old PIN</string>
     <string name="msg_transaction_denied">Transaction denied</string>
     <string name="msg_no_app_found">No application found</string>
+    <string name="msg_google_play_services_not_supported">The device is not supported for required Google Play Services</string>
 
     <!-- Api errors -->
     <string name="api_error_not_found">Not Found</string>
@@ -301,17 +304,18 @@
     <string name="text_mail_support_subject" formatted="false" translatable="false">LOBSTR Vault feedback, %1$s (%2$d)</string>
     <string name="text_app_name_vault" translatable="false">Vault</string>
     <string name="msg_flavor_dialog" translatable="false">%s build</string>
-    <string name="text_mail_support_body" formatted="false" translatable="false"><![CDATA[
-    Information for the support team.</br>
-    LOBSTR Vault. App version: %1$s (%2$d)</br>
-    Vault public key: %3$s</br>
-    Device brand: %4$s</br>
-    Device: %5$s</br>
-    Model: %6$s</br>
-    OS: Android</br>
-    OS version: %7$s<br></br>
+    <string name="text_mail_support_body" formatted="false" translatable="false">
+"Information for the support team.
+LOBSTR Vault. App version: %1$s (%2$d)
+Vault public key: %3$s
+Device brand: %4$s
+Device: %5$s
+Model: %6$s
+OS: Android
+OS version: %7$s
 
-    Describe an issue or provide your feedback below:</br>]]></string>
+Describe an issue or provide your feedback below:
+"</string>
     <!-- Zendesk -->
     <string name="zd_info" formatted="false" translatable="false">
         LOBSTR VAULT, OS:Android, OS_version:%1$s, App_Version:%2$s_%3$d, Device:%4$s, Model:%5$s, Brand:%6$s

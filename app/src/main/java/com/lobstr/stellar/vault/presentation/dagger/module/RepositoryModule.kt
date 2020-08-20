@@ -4,6 +4,7 @@ import android.content.Context
 import com.lobstr.stellar.vault.data.account.AccountEntityMapper
 import com.lobstr.stellar.vault.data.account.AccountRepositoryImpl
 import com.lobstr.stellar.vault.data.error.ExceptionMapper
+import com.lobstr.stellar.vault.data.error.RxErrorRepositoryImpl
 import com.lobstr.stellar.vault.data.error.RxErrorUtilsImpl
 import com.lobstr.stellar.vault.data.fcm.FcmEntityMapper
 import com.lobstr.stellar.vault.data.fcm.FcmRepositoryImpl
@@ -19,6 +20,7 @@ import com.lobstr.stellar.vault.data.transaction.TransactionEntityMapper
 import com.lobstr.stellar.vault.data.transaction.TransactionRepositoryImpl
 import com.lobstr.stellar.vault.data.vault_auth.VaultAuthRepositoryImpl
 import com.lobstr.stellar.vault.domain.account.AccountRepository
+import com.lobstr.stellar.vault.domain.error.RxErrorRepository
 import com.lobstr.stellar.vault.domain.error.RxErrorUtils
 import com.lobstr.stellar.vault.domain.fcm.FcmRepository
 import com.lobstr.stellar.vault.domain.key_store.KeyStoreRepository
@@ -29,17 +31,31 @@ import com.lobstr.stellar.vault.domain.vault_auth.VaultAuthRepository
 import com.lobstr.stellar.vault.presentation.util.PrefsUtil
 import dagger.Module
 import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.android.components.ApplicationComponent
+import dagger.hilt.android.qualifiers.ApplicationContext
 import org.stellar.sdk.Network
 import org.stellar.sdk.Server
 import javax.inject.Singleton
 
 @Module
-class RepositoryModule {
+@InstallIn(ApplicationComponent::class)
+object RepositoryModule {
 
     @Singleton
     @Provides
-    fun provideStellarRepository(network: Network, server: Server): StellarRepository {
-        return StellarRepositoryImpl(network, server, MnemonicsMapper(), TransactionEntityMapper(network))
+    fun provideStellarRepository(
+        network: Network,
+        server: Server,
+        rxErrorUtils: RxErrorUtils
+    ): StellarRepository {
+        return StellarRepositoryImpl(
+            network,
+            server,
+            MnemonicsMapper(),
+            TransactionEntityMapper(network),
+            rxErrorUtils
+        )
     }
 
     @Singleton
@@ -50,25 +66,43 @@ class RepositoryModule {
 
     @Singleton
     @Provides
-    fun provideKeyStoreRepository(context: Context, prefsUtil: PrefsUtil): KeyStoreRepository {
+    fun provideKeyStoreRepository(@ApplicationContext context: Context, prefsUtil: PrefsUtil): KeyStoreRepository {
         return KeyStoreRepositoryImpl(context, prefsUtil, MnemonicsMapper())
     }
 
     @Singleton
     @Provides
-    fun provideRxErrorRepository(
+    fun provideRxErrorUtils(
         exceptionMapper: ExceptionMapper,
         apiVaultAuthApi: VaultAuthApi,
-        stellarRepository: StellarRepository,
+        rxErrorRepository: RxErrorRepository,
         keyStoreRepository: KeyStoreRepository,
         prefsUtil: PrefsUtil
     ): RxErrorUtils {
-        return RxErrorUtilsImpl(exceptionMapper, apiVaultAuthApi, stellarRepository, keyStoreRepository, prefsUtil)
+        return RxErrorUtilsImpl(
+            exceptionMapper,
+            apiVaultAuthApi,
+            rxErrorRepository,
+            keyStoreRepository,
+            prefsUtil
+        )
     }
 
     @Singleton
     @Provides
-    fun provideFcmRepository(fcmApi: FcmApi, network: Network, rxErrorUtils: RxErrorUtils): FcmRepository {
+    fun provideRxErrorRepository(
+        network: Network
+    ): RxErrorRepository {
+        return RxErrorRepositoryImpl(network)
+    }
+
+    @Singleton
+    @Provides
+    fun provideFcmRepository(
+        fcmApi: FcmApi,
+        network: Network,
+        rxErrorUtils: RxErrorUtils
+    ): FcmRepository {
         return FcmRepositoryImpl(
             fcmApi,
             FcmEntityMapper(),
@@ -94,12 +128,19 @@ class RepositoryModule {
         network: Network,
         rxErrorUtils: RxErrorUtils
     ): TransactionRepository {
-        return TransactionRepositoryImpl(transactionApi, TransactionEntityMapper(network), rxErrorUtils)
+        return TransactionRepositoryImpl(
+            transactionApi,
+            TransactionEntityMapper(network),
+            rxErrorUtils
+        )
     }
 
     @Singleton
     @Provides
-    fun provideAccountRepository(accountApi: AccountApi, rxErrorUtils: RxErrorUtils): AccountRepository {
+    fun provideAccountRepository(
+        accountApi: AccountApi,
+        rxErrorUtils: RxErrorUtils
+    ): AccountRepository {
         return AccountRepositoryImpl(accountApi, AccountEntityMapper(), rxErrorUtils)
     }
 }

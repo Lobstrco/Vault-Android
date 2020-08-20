@@ -18,12 +18,14 @@ import com.lobstr.stellar.vault.presentation.util.AppUtil
 import com.lobstr.stellar.vault.presentation.util.Constant
 import com.lobstr.stellar.vault.presentation.util.manager.ProgressManager
 import com.lobstr.stellar.vault.presentation.vault_auth.VaultAuthActivity
+import dagger.Lazy
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_pin.*
 import kotlinx.android.synthetic.main.fragment_vault_auth.*
-import moxy.presenter.InjectPresenter
-import moxy.presenter.ProvidePresenter
+import moxy.ktx.moxyPresenter
+import javax.inject.Inject
 
-
+@AndroidEntryPoint
 class VaultAuthFragment : BaseFragment(),
     VaultAuthFrView, View.OnClickListener, AlertDialogFragment.OnDefaultAlertDialogListener,
     TangemDialogFragment.OnTangemDialogListener {
@@ -40,8 +42,8 @@ class VaultAuthFragment : BaseFragment(),
     // Fields
     // ===========================================================
 
-    @InjectPresenter
-    lateinit var mPresenter: VaultAuthFrPresenter
+    @Inject
+    lateinit var daggerPresenter: Lazy<VaultAuthFrPresenter>
 
     private var mView: View? = null
 
@@ -49,8 +51,7 @@ class VaultAuthFragment : BaseFragment(),
     // Constructors
     // ===========================================================
 
-    @ProvidePresenter
-    fun provideVaultAuthFrPresenter() = VaultAuthFrPresenter()
+    private val mPresenter by moxyPresenter { daggerPresenter.get() }
 
     // ===========================================================
     // Getter & Setter
@@ -88,7 +89,7 @@ class VaultAuthFragment : BaseFragment(),
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            // TODO add some items in menu if needed.
+            // NOTE add some items in menu if needed.
         }
 
         return super.onOptionsItemSelected(item)

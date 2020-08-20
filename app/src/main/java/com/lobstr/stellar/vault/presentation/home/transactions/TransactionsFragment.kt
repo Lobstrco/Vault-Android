@@ -21,10 +21,13 @@ import com.lobstr.stellar.vault.presentation.util.Constant
 import com.lobstr.stellar.vault.presentation.util.Constant.Code.IMPORT_XDR_FRAGMENT
 import com.lobstr.stellar.vault.presentation.util.Constant.Code.TRANSACTION_DETAILS_FRAGMENT
 import com.lobstr.stellar.vault.presentation.util.manager.ProgressManager
+import dagger.Lazy
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_transactions.*
-import moxy.presenter.InjectPresenter
-import moxy.presenter.ProvidePresenter
+import moxy.ktx.moxyPresenter
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class TransactionsFragment : BaseFragment(), TransactionsView, SwipeRefreshLayout.OnRefreshListener,
     OnTransactionItemClicked, View.OnClickListener,
     AlertDialogFragment.OnDefaultAlertDialogListener {
@@ -41,8 +44,8 @@ class TransactionsFragment : BaseFragment(), TransactionsView, SwipeRefreshLayou
     // Fields
     // ===========================================================
 
-    @InjectPresenter
-    lateinit var mPresenter: TransactionsPresenter
+    @Inject
+    lateinit var daggerPresenter: Lazy<TransactionsPresenter>
 
     private var mView: View? = null
 
@@ -50,8 +53,7 @@ class TransactionsFragment : BaseFragment(), TransactionsView, SwipeRefreshLayou
     // Constructors
     // ===========================================================
 
-    @ProvidePresenter
-    fun provideTransactionsPresenter() = TransactionsPresenter()
+    private val mPresenter by moxyPresenter { daggerPresenter.get() }
 
     // ===========================================================
     // Getter & Setter
@@ -164,7 +166,7 @@ class TransactionsFragment : BaseFragment(), TransactionsView, SwipeRefreshLayou
 
     override fun showTransactionList(
         items: List<TransactionItem>,
-        needShowProgress: Boolean?
+        needShowProgress: Boolean
     ) {
         (rvTransactions.adapter as? TransactionAdapter)?.setTransactionList(items, needShowProgress)
         mPresenter.attemptRestoreRvPosition()
@@ -244,12 +246,10 @@ class TransactionsFragment : BaseFragment(), TransactionsView, SwipeRefreshLayou
 
             val layoutManager: LinearLayoutManager =
                 recyclerView.layoutManager as LinearLayoutManager
-            val visibleItemCount = layoutManager.childCount
             val totalItemCount = layoutManager.itemCount
             val firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition()
             val lastVisibleItemPosition = layoutManager.findLastVisibleItemPosition()
             mPresenter.onListScrolled(
-                visibleItemCount,
                 totalItemCount,
                 firstVisibleItemPosition,
                 lastVisibleItemPosition

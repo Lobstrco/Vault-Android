@@ -1,21 +1,23 @@
 package com.lobstr.stellar.vault.domain.pin
 
 import com.lobstr.stellar.vault.domain.key_store.KeyStoreRepository
-import com.lobstr.stellar.vault.presentation.application.LVApplication
+import com.lobstr.stellar.vault.presentation.fcm.FcmHelper
 import com.lobstr.stellar.vault.presentation.util.Constant.BiometricState.ENABLED
 import com.lobstr.stellar.vault.presentation.util.Constant.BiometricState.UNKNOWN
 import com.lobstr.stellar.vault.presentation.util.PrefsUtil
-import io.reactivex.Completable
-import io.reactivex.Single
+import io.reactivex.rxjava3.core.Completable
+import io.reactivex.rxjava3.core.Single
 
 class PinInteractorImpl(
     private val keyStoreRepository: KeyStoreRepository,
-    private val prefsUtil: PrefsUtil
+    private val prefsUtil: PrefsUtil,
+    private val fcmHelper: FcmHelper
 ) : PinInteractor {
 
     override fun checkPinValidation(pin: String): Single<Boolean> {
         return Single.fromCallable {
-            val savedPin = keyStoreRepository.decryptData(PrefsUtil.PREF_ENCRYPTED_PIN, PrefsUtil.PREF_PIN_IV)
+            val savedPin =
+                keyStoreRepository.decryptData(PrefsUtil.PREF_ENCRYPTED_PIN, PrefsUtil.PREF_PIN_IV)
             return@fromCallable !(savedPin.isNullOrEmpty() || savedPin != pin)
         }
     }
@@ -67,7 +69,7 @@ class PinInteractorImpl(
     }
 
     override fun clearUserData() {
-        LVApplication.appComponent.fcmHelper.unregisterFcm()
+        fcmHelper.unregisterFcm()
         prefsUtil.clearUserPrefs()
         keyStoreRepository.clearAll()
     }

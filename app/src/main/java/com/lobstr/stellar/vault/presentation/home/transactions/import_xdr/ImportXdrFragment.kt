@@ -15,11 +15,13 @@ import com.lobstr.stellar.vault.presentation.util.AppUtil
 import com.lobstr.stellar.vault.presentation.util.Constant
 import com.lobstr.stellar.vault.presentation.util.manager.FragmentTransactionManager
 import com.lobstr.stellar.vault.presentation.util.manager.ProgressManager
+import dagger.Lazy
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_import_xdr.*
-import moxy.presenter.InjectPresenter
-import moxy.presenter.ProvidePresenter
+import moxy.ktx.moxyPresenter
+import javax.inject.Inject
 
-
+@AndroidEntryPoint
 class ImportXdrFragment : BaseFragment(), ImportXdrView, View.OnClickListener {
 
     // ===========================================================
@@ -34,8 +36,8 @@ class ImportXdrFragment : BaseFragment(), ImportXdrView, View.OnClickListener {
     // Fields
     // ===========================================================
 
-    @InjectPresenter
-    lateinit var mPresenter: ImportXdrPresenter
+    @Inject
+    lateinit var daggerPresenter: Lazy<ImportXdrPresenter>
 
     private var mView: View? = null
 
@@ -43,8 +45,7 @@ class ImportXdrFragment : BaseFragment(), ImportXdrView, View.OnClickListener {
     // Constructors
     // ===========================================================
 
-    @ProvidePresenter
-    fun provideImportXdrPresenter() = ImportXdrPresenter()
+    private val mPresenter by moxyPresenter { daggerPresenter.get() }
 
     // ===========================================================
     // Getter & Setter

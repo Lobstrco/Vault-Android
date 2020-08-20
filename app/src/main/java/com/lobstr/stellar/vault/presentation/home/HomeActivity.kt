@@ -15,10 +15,13 @@ import com.lobstr.stellar.vault.presentation.home.HomeViewPagerAdapter.Position.
 import com.lobstr.stellar.vault.presentation.home.HomeViewPagerAdapter.Position.SETTINGS
 import com.lobstr.stellar.vault.presentation.home.HomeViewPagerAdapter.Position.TRANSACTIONS
 import com.lobstr.stellar.vault.presentation.util.Constant
+import dagger.Lazy
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_home.*
-import moxy.presenter.InjectPresenter
-import moxy.presenter.ProvidePresenter
+import moxy.ktx.moxyPresenter
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class HomeActivity : BaseActivity(), HomeActivityView,
     BottomNavigationView.OnNavigationItemSelectedListener {
 
@@ -34,15 +37,14 @@ class HomeActivity : BaseActivity(), HomeActivityView,
     // Fields
     // ===========================================================
 
-    @InjectPresenter
-    lateinit var mHomePresenter: HomeActivityPresenter
+    @Inject
+    lateinit var homeDaggerPresenter: Lazy<HomeActivityPresenter>
 
     // ===========================================================
     // Constructors
     // ===========================================================
 
-    @ProvidePresenter
-    fun provideHomeActivityPresenter() = HomeActivityPresenter()
+    private val mHomePresenter by moxyPresenter { homeDaggerPresenter.get() }
 
     // ===========================================================
     // Getter & Setter

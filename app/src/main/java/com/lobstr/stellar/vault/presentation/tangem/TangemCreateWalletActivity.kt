@@ -17,8 +17,7 @@ import com.lobstr.stellar.vault.presentation.tangem.dialog.TangemDialogFragment
 import com.lobstr.stellar.vault.presentation.util.Constant
 import com.lobstr.stellar.vault.presentation.util.manager.SupportManager
 import kotlinx.android.synthetic.main.activity_tangem_create_wallet.*
-import moxy.presenter.InjectPresenter
-import moxy.presenter.ProvidePresenter
+import moxy.ktx.moxyPresenter
 
 class TangemCreateWalletActivity : BaseActivity(), TangemCreateWalletView,
     View.OnClickListener,
@@ -36,16 +35,12 @@ class TangemCreateWalletActivity : BaseActivity(), TangemCreateWalletView,
     // Fields
     // ===========================================================
 
-    @InjectPresenter
-    lateinit var mCreateWalletPresenter: TangemCreateWalletPresenter
-
     // ===========================================================
     // Constructors
     // ===========================================================
 
-    @ProvidePresenter
-    fun provideTangemCreateWalletPresenter() =
-        TangemCreateWalletPresenter(intent?.getParcelableExtra(Constant.Extra.EXTRA_TANGEM_INFO))
+    private val mCreateWalletPresenter by moxyPresenter { TangemCreateWalletPresenter(intent?.getParcelableExtra(Constant.Extra.EXTRA_TANGEM_INFO)) }
+
     // ===========================================================
     // Getter & Setter
     // ===========================================================

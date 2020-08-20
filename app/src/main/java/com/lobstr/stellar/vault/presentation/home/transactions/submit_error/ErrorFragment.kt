@@ -8,10 +8,13 @@ import com.lobstr.stellar.vault.presentation.base.fragment.BaseFragment
 import com.lobstr.stellar.vault.presentation.util.AppUtil
 import com.lobstr.stellar.vault.presentation.util.Constant
 import com.lobstr.stellar.vault.presentation.util.manager.SupportManager
+import dagger.Lazy
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_error.*
-import moxy.presenter.InjectPresenter
-import moxy.presenter.ProvidePresenter
+import moxy.ktx.moxyPresenter
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class ErrorFragment : BaseFragment(), ErrorView, View.OnClickListener {
 
     // ===========================================================
@@ -26,8 +29,8 @@ class ErrorFragment : BaseFragment(), ErrorView, View.OnClickListener {
     // Fields
     // ===========================================================
 
-    @InjectPresenter
-    lateinit var mPresenter: ErrorPresenter
+    @Inject
+    lateinit var daggerPresenter: Lazy<ErrorPresenter>
 
     private var mView: View? = null
 
@@ -35,10 +38,9 @@ class ErrorFragment : BaseFragment(), ErrorView, View.OnClickListener {
     // Constructors
     // ===========================================================
 
-    @ProvidePresenter
-    fun provideErrorPresenter() = ErrorPresenter(
-        requireArguments().getString(Constant.Bundle.BUNDLE_ERROR_MESSAGE)!!
-    )
+    private val mPresenter by moxyPresenter { daggerPresenter.get().apply {
+            error = requireArguments().getString(Constant.Bundle.BUNDLE_ERROR_MESSAGE)!!
+        }}
 
     // ===========================================================
     // Getter & Setter

@@ -118,6 +118,7 @@
 -keep public class * extends android.app.Fragment
 -keep public class com.android.vending.licensing.ILicensingService
 
+# Mnemonics
 -keep class org.bouncycastle.** { *; }
 -dontwarn org.bouncycastle.**
 -keep class org.spongycastle.**
@@ -220,5 +221,10 @@
 
 # Tangem
 -keep class com.tangem.** { *; }
+
+# PinLockView
+-keep class com.andrognito.** { *; }
+-dontwarn com.andrognito.**
+
 
 

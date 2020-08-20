@@ -11,10 +11,11 @@ object Constant {
         const val EXTRA_TRANSACTION_ITEM = "EXTRA_TRANSACTION_ITEM"
         const val EXTRA_TRANSACTION_STATUS = "EXTRA_TRANSACTION_STATUS"
         const val EXTRA_ENVELOPE_XDR = "EXTRA_ENVELOPE_XDR"
-        const val EXTRA_NEED_ADDITIONAL_SIGNATURES = "EXTRA_NEED_ADDITIONAL_SIGNATURES"
+        const val EXTRA_TRANSACTION_CONFIRMATION_SUCCESS_STATUS = "EXTRA_TRANSACTION_CONFIRMATION_SUCCESS_STATUS"
         const val EXTRA_ERROR_MESSAGE = "EXTRA_ERROR_MESSAGE"
         const val EXTRA_CONFIG = "EXTRA_CONFIG"
         const val EXTRA_TANGEM_INFO = "EXTRA_TANGEM_INFO"
+        const val EXTRA_NOTIFICATION = "EXTRA_NOTIFICATION"
     }
 
     object Bundle {
@@ -25,7 +26,8 @@ object Constant {
         const val BUNDLE_TRANSACTION_ITEM = "BUNDLE_TRANSACTION_ITEM"
         const val BUNDLE_OPERATION_POSITION = "BUNDLE_OPERATION_POSITION"
         const val BUNDLE_ENVELOPE_XDR = "BUNDLE_ENVELOPE_XDR"
-        const val BUNDLE_NEED_ADDITIONAL_SIGNATURES = "BUNDLE_NEED_ADDITIONAL_SIGNATURES"
+        const val BUNDLE_TRANSACTION_CONFIRMATION_SUCCESS_STATUS =
+            "BUNDLE_TRANSACTION_CONFIRMATION_SUCCESS_STATUS"
         const val BUNDLE_ERROR_MESSAGE = "BUNDLE_ERROR_MESSAGE"
         const val BUNDLE_CONFIG = "BUNDLE_CONFIG"
         const val BUNDLE_PIN_MODE = "BUNDLE_PIN_MODE"
@@ -55,6 +57,12 @@ object Constant {
 
         // When transaction created from entered XDR.
         const val IMPORT_XDR = 4
+    }
+
+    object TransactionConfirmationSuccessStatus {
+        const val SUCCESS: Byte = 0 // Common success status.
+        const val SUCCESS_NEED_ADDITIONAL_SIGNATURES: Byte = 1
+        const val SUCCESS_CHALLENGE: Byte = 2
     }
 
     object ConfigType {

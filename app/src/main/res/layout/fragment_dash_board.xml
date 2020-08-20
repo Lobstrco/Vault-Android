@@ -254,13 +254,13 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginBottom="8dp"
                                 android:layout_gravity="center"
-                                android:drawableTop="@drawable/img_empty_signers"
                                 android:drawablePadding="24dp"
                                 android:gravity="center"
                                 android:text="@string/text_tv_dashboard_signers_empty_state_title"
                                 android:textColor="@android:color/black"
                                 android:textSize="16sp"
-                                android:textStyle="bold" />
+                                android:textStyle="bold"
+                                app:drawableTopCompat="@drawable/img_empty_signers" />
 
                         <TextView
                                 android:layout_width="wrap_content"

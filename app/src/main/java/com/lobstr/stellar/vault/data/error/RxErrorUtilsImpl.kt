@@ -5,19 +5,19 @@ import com.lobstr.stellar.vault.data.error.exeption.ExpiredSignatureException
 import com.lobstr.stellar.vault.data.error.exeption.UserNotAuthorizedException
 import com.lobstr.stellar.vault.data.error.exeption.UserNotAuthorizedException.Action.AUTH_REQUIRED
 import com.lobstr.stellar.vault.data.net.VaultAuthApi
+import com.lobstr.stellar.vault.domain.error.RxErrorRepository
 import com.lobstr.stellar.vault.domain.error.RxErrorUtils
 import com.lobstr.stellar.vault.domain.key_store.KeyStoreRepository
-import com.lobstr.stellar.vault.domain.stellar.StellarRepository
 import com.lobstr.stellar.vault.presentation.util.Constant
 import com.lobstr.stellar.vault.presentation.util.PrefsUtil
-import io.reactivex.Completable
-import io.reactivex.Observable
-import io.reactivex.Single
+import io.reactivex.rxjava3.core.Completable
+import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.core.Single
 
 class RxErrorUtilsImpl(
     private val exceptionMapper: ExceptionMapper,
     private val vaultAuthApi: VaultAuthApi,
-    private val stellarRepository: StellarRepository,
+    private val rxErrorRepository: RxErrorRepository,
     private val keyStoreRepository: KeyStoreRepository,
     private val prefsUtil: PrefsUtil
 ) : RxErrorUtils {
@@ -47,8 +47,8 @@ class RxErrorUtilsImpl(
         }
         return vaultAuthApi.getChallenge(prefsUtil.publicKey)
             .flatMap { apiGetChallenge ->
-                getPhrases().flatMap { stellarRepository.createKeyPair(it.toCharArray(), 0) }
-                    .flatMap { stellarRepository.signTransaction(it, apiGetChallenge.transaction!!) }
+                getPhrases().flatMap { rxErrorRepository.createKeyPair(it.toCharArray(), 0) }
+                    .flatMap { rxErrorRepository.signTransaction(it, apiGetChallenge.transaction!!) }
             }
             .flatMap { vaultAuthApi.submitChallenge(it.toEnvelopeXdrBase64()) }
             .doOnSuccess {
@@ -90,8 +90,8 @@ class RxErrorUtilsImpl(
         }
         return vaultAuthApi.getChallenge(prefsUtil.publicKey)
             .flatMap { apiGetChallenge ->
-                getPhrases().flatMap { stellarRepository.createKeyPair(it.toCharArray(), 0) }
-                    .flatMap { stellarRepository.signTransaction(it, apiGetChallenge.transaction!!) }
+                getPhrases().flatMap { rxErrorRepository.createKeyPair(it.toCharArray(), 0) }
+                    .flatMap { rxErrorRepository.signTransaction(it, apiGetChallenge.transaction!!) }
             }
             .flatMap { vaultAuthApi.submitChallenge(it.toEnvelopeXdrBase64()) }
             .doOnSuccess {
@@ -136,8 +136,8 @@ class RxErrorUtilsImpl(
         }
         return vaultAuthApi.getChallenge(prefsUtil.publicKey)
             .flatMap { apiGetChallenge ->
-                getPhrases().flatMap { stellarRepository.createKeyPair(it.toCharArray(), 0) }
-                    .flatMap { stellarRepository.signTransaction(it, apiGetChallenge.transaction!!) }
+                getPhrases().flatMap { rxErrorRepository.createKeyPair(it.toCharArray(), 0) }
+                    .flatMap { rxErrorRepository.signTransaction(it, apiGetChallenge.transaction!!) }
             }
             .flatMap { vaultAuthApi.submitChallenge(it.toEnvelopeXdrBase64()) }
             .doOnSuccess {

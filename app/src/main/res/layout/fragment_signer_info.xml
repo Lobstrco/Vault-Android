@@ -201,13 +201,13 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="start"
-                            android:drawableStart="@drawable/ic_content_copy_purple"
                             android:drawablePadding="8dp"
                             android:fontFamily="sans-serif"
                             android:text="@string/text_btn_copy_key"
                             android:textAllCaps="false"
                             android:textColor="@color/color_primary"
-                            android:textSize="14sp" />
+                            android:textSize="14sp"
+                            app:drawableStartCompat="@drawable/ic_content_copy_purple"/>
 
                     <Button
                             android:id="@+id/btnShowQr"
@@ -215,13 +215,13 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="end"
-                            android:drawableStart="@drawable/ic_qr_code_purple"
                             android:drawablePadding="6dp"
                             android:fontFamily="sans-serif"
                             android:text="@string/text_btn_show_qr"
                             android:textAllCaps="false"
                             android:textColor="@color/color_primary"
-                            android:textSize="14sp" />
+                            android:textSize="14sp"
+                            app:drawableStartCompat="@drawable/ic_qr_code_purple"/>
                 </FrameLayout>
 
             </LinearLayout>

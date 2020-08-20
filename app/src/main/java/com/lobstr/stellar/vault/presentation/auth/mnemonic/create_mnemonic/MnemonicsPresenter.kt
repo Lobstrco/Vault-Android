@@ -2,23 +2,15 @@ package com.lobstr.stellar.vault.presentation.auth.mnemonic.create_mnemonic
 
 import com.lobstr.stellar.vault.domain.mnemonics.MnemonicsInteractor
 import com.lobstr.stellar.vault.presentation.BasePresenter
-import com.lobstr.stellar.vault.presentation.application.LVApplication
-import com.lobstr.stellar.vault.presentation.dagger.module.mnemonics.MnemonicsModule
 import com.lobstr.stellar.vault.presentation.dialog.alert.base.AlertDialogFragment
 import com.lobstr.stellar.vault.presentation.entities.mnemonic.MnemonicItem
 import com.lobstr.stellar.vault.presentation.util.Constant.Support.RECOVERY_PHRASE
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
-import javax.inject.Inject
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.schedulers.Schedulers
 
-class MnemonicsPresenter(private val generate: Boolean) : BasePresenter<MnemonicsView>() {
+class MnemonicsPresenter(var interactor: MnemonicsInteractor) : BasePresenter<MnemonicsView>() {
 
-    @Inject
-    lateinit var interactor: MnemonicsInteractor
-
-    init {
-        LVApplication.appComponent.plusMnemonicsComponent(MnemonicsModule()).inject(this)
-    }
+    var generate: Boolean = false
 
     private var mnemonicItemList: ArrayList<MnemonicItem>? = null
 

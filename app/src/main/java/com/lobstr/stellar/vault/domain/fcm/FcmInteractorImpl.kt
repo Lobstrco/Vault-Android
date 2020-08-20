@@ -5,7 +5,7 @@ import com.lobstr.stellar.vault.presentation.entities.fcm.FcmResult
 import com.lobstr.stellar.vault.presentation.entities.transaction.TransactionItem
 import com.lobstr.stellar.vault.presentation.util.AppUtil
 import com.lobstr.stellar.vault.presentation.util.PrefsUtil
-import io.reactivex.Single
+import io.reactivex.rxjava3.core.Single
 
 class FcmInteractorImpl(private val fcmRepository: FcmRepository, private val prefsUtil: PrefsUtil) : FcmInteractor {
 

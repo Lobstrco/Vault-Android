@@ -3,7 +3,7 @@ package com.lobstr.stellar.vault.domain.transaction_details
 import com.lobstr.stellar.vault.presentation.entities.account.Account
 import com.lobstr.stellar.vault.presentation.entities.account.AccountResult
 import com.lobstr.stellar.vault.presentation.entities.transaction.TransactionItem
-import io.reactivex.Single
+import io.reactivex.rxjava3.core.Single
 import org.stellar.sdk.AbstractTransaction
 import org.stellar.sdk.responses.SubmitTransactionResponse
 

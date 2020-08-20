@@ -3,23 +3,13 @@ package com.lobstr.stellar.vault.presentation.home.transactions.import_xdr
 import com.lobstr.stellar.vault.R
 import com.lobstr.stellar.vault.domain.import_xdr.ImportXdrInteractor
 import com.lobstr.stellar.vault.presentation.BasePresenter
-import com.lobstr.stellar.vault.presentation.application.LVApplication
-import com.lobstr.stellar.vault.presentation.dagger.module.import_xdr.ImportXdrModule
 import com.lobstr.stellar.vault.presentation.util.AppUtil
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
-import javax.inject.Inject
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.schedulers.Schedulers
 
-class ImportXdrPresenter : BasePresenter<ImportXdrView>() {
-
-    @Inject
-    lateinit var interactor: ImportXdrInteractor
+class ImportXdrPresenter(private val interactor: ImportXdrInteractor) : BasePresenter<ImportXdrView>() {
 
     private var transactionCreationInProcess = false
-
-    init {
-        LVApplication.appComponent.plusImportXdrComponent(ImportXdrModule()).inject(this)
-    }
 
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()

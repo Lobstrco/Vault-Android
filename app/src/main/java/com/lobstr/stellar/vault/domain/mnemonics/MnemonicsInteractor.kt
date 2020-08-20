@@ -1,7 +1,7 @@
 package com.lobstr.stellar.vault.domain.mnemonics
 
 import com.lobstr.stellar.vault.presentation.entities.mnemonic.MnemonicItem
-import io.reactivex.Single
+import io.reactivex.rxjava3.core.Single
 
 
 interface MnemonicsInteractor {

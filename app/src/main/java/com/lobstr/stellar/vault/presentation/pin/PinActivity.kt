@@ -1,5 +1,6 @@
 package com.lobstr.stellar.vault.presentation.pin
 
+import android.content.Intent
 import android.os.Bundle
 import com.lobstr.stellar.vault.R
 import com.lobstr.stellar.vault.presentation.base.activity.BaseActivity
@@ -7,8 +8,7 @@ import com.lobstr.stellar.vault.presentation.pin.main.PinFragment
 import com.lobstr.stellar.vault.presentation.util.Constant
 import com.lobstr.stellar.vault.presentation.util.Constant.PinMode.ENTER
 import com.lobstr.stellar.vault.presentation.util.manager.FragmentTransactionManager
-import moxy.presenter.InjectPresenter
-import moxy.presenter.ProvidePresenter
+import moxy.ktx.moxyPresenter
 
 class PinActivity : BaseActivity(), PinView {
 
@@ -24,18 +24,14 @@ class PinActivity : BaseActivity(), PinView {
     // Fields
     // ===========================================================
 
-    @InjectPresenter
-    lateinit var mPinPresenter: PinPresenter
-
 
     // ===========================================================
     // Constructors
     // ===========================================================
 
-    @ProvidePresenter
-    fun providePinPresenter() = PinPresenter(
+    private val mPinPresenter by moxyPresenter { PinPresenter(
         intent?.getByteExtra(Constant.Extra.EXTRA_PIN_MODE, ENTER) ?: ENTER
-    )
+    ) }
 
     // ===========================================================
     // Getter & Setter
@@ -68,6 +64,21 @@ class PinActivity : BaseActivity(), PinView {
             R.id.fl_container,
             false
         )
+    }
+
+    override fun onBackPressed() {
+        mPinPresenter.onBackPressed()
+    }
+
+    override fun finishApp() {
+        val intent = Intent(Intent.ACTION_MAIN)
+        intent.addCategory(Intent.CATEGORY_HOME)
+        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+        startActivity(intent)
+    }
+
+    override fun finishScreen() {
+        finish()
     }
 
     // ===========================================================

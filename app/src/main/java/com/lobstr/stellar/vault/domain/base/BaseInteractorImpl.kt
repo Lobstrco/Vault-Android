@@ -2,7 +2,7 @@ package com.lobstr.stellar.vault.domain.base
 
 import com.lobstr.stellar.vault.domain.vault_auth.VaultAuthRepository
 import com.lobstr.stellar.vault.presentation.util.PrefsUtil
-import io.reactivex.Single
+import io.reactivex.rxjava3.core.Single
 
 
 class BaseInteractorImpl(
@@ -29,5 +29,9 @@ class BaseInteractorImpl(
     override fun authorizeVault(transaction: String): Single<String> {
         return vaultAuthRepository.submitChallenge(transaction)
             .doOnSuccess { prefsUtil.authToken = it }
+    }
+
+    override fun hasEncryptedPin(): Boolean {
+        return !prefsUtil.encryptedPin.isNullOrEmpty()
     }
 }

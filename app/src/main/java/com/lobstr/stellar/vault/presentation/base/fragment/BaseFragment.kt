@@ -4,17 +4,11 @@ import android.content.Intent
 import android.os.Bundle
 import com.lobstr.stellar.vault.presentation.BaseMvpAppCompatFragment
 import com.lobstr.stellar.vault.presentation.base.activity.BaseActivity
-import moxy.presenter.InjectPresenter
-import moxy.presenter.ProvidePresenter
-
+import moxy.ktx.moxyPresenter
 
 abstract class BaseFragment : BaseMvpAppCompatFragment(), BaseFragmentView {
 
-    @InjectPresenter
-    lateinit var mBasePresenter: BaseFragmentPresenter
-
-    @ProvidePresenter
-    fun provideBaseFragmentPresenter() = BaseFragmentPresenter()
+    private val mBasePresenter by moxyPresenter { BaseFragmentPresenter() }
 
     override fun setMenuVisibility(menuVisible: Boolean) {
         super.setMenuVisibility(menuVisible)

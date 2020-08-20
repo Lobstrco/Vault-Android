@@ -8,31 +8,22 @@ import com.lobstr.stellar.vault.domain.config.ConfigInteractor
 import com.lobstr.stellar.vault.domain.util.EventProviderModule
 import com.lobstr.stellar.vault.domain.util.event.Auth
 import com.lobstr.stellar.vault.presentation.BasePresenter
-import com.lobstr.stellar.vault.presentation.application.LVApplication
-import com.lobstr.stellar.vault.presentation.dagger.module.config.ConfigModule
 import com.lobstr.stellar.vault.presentation.entities.config.Config
 import com.lobstr.stellar.vault.presentation.util.AppUtil
 import com.lobstr.stellar.vault.presentation.util.Constant
 import com.lobstr.stellar.vault.presentation.util.Constant.Code.Config.SPAM_PROTECTION
 import com.lobstr.stellar.vault.presentation.util.Constant.Code.Config.TRANSACTION_CONFIRMATIONS
 import com.lobstr.stellar.vault.presentation.util.Constant.Util.UNDEFINED_VALUE
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
-import javax.inject.Inject
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.schedulers.Schedulers
 
-class ConfigPresenter(private val config: Int) : BasePresenter<ConfigView>() {
+class ConfigPresenter(
+    private var interactor: ConfigInteractor,
+    private val eventProviderModule: EventProviderModule) : BasePresenter<ConfigView>() {
 
-    @Inject
-    lateinit var interactor: ConfigInteractor
-
-    @Inject
-    lateinit var eventProviderModule: EventProviderModule
+    var config: Int = UNDEFINED_VALUE
 
     private var updateAccountConfigInProcess = false
-
-    init {
-        LVApplication.appComponent.plusConfigComponent(ConfigModule()).inject(this)
-    }
 
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()

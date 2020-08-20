@@ -23,10 +23,13 @@ import com.lobstr.stellar.vault.presentation.util.tangem.CustomCardManagerDelega
 import com.lobstr.stellar.vault.presentation.util.tangem.customInit
 import com.tangem.TangemSdk
 import com.tangem.common.CompletionResult
+import dagger.Lazy
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_tangem_dialog.*
-import moxy.presenter.InjectPresenter
-import moxy.presenter.ProvidePresenter
+import moxy.ktx.moxyPresenter
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class TangemDialogFragment : BaseBottomSheetDialog(), TangemDialogView,
     View.OnClickListener, AlertDialogFragment.OnDefaultAlertDialogListener,
     CustomCardManagerDelegate.CustomCardManagerDelegateListener {
@@ -45,8 +48,8 @@ class TangemDialogFragment : BaseBottomSheetDialog(), TangemDialogView,
 
     private lateinit var tangemSdk: TangemSdk
 
-    @InjectPresenter
-    lateinit var mPresenter: TangemDialogPresenter
+    @Inject
+    lateinit var daggerPresenter: Lazy<TangemDialogPresenter>
 
     private var mView: View? = null
 
@@ -54,10 +57,9 @@ class TangemDialogFragment : BaseBottomSheetDialog(), TangemDialogView,
     // Constructors
     // ===========================================================
 
-    @ProvidePresenter
-    fun provideTangemDialogPresenter() = TangemDialogPresenter(
-        arguments?.getParcelable(Constant.Extra.EXTRA_TANGEM_INFO)
-    )
+    private val mPresenter by moxyPresenter { daggerPresenter.get().apply {
+        tangemInfo = arguments?.getParcelable(Constant.Extra.EXTRA_TANGEM_INFO)
+    } }
 
     // ===========================================================
     // Getter & Setter

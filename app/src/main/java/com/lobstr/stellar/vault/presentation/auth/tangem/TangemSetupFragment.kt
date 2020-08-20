@@ -5,7 +5,7 @@ import android.os.Bundle
 import android.view.*
 import android.widget.Toast
 import com.lobstr.stellar.vault.R
-import com.lobstr.stellar.vault.presentation.base.activity.BaseActivity
+import com.lobstr.stellar.vault.presentation.auth.AuthActivity
 import com.lobstr.stellar.vault.presentation.base.fragment.BaseFragment
 import com.lobstr.stellar.vault.presentation.dialog.alert.base.AlertDialogFragment
 import com.lobstr.stellar.vault.presentation.entities.tangem.TangemInfo
@@ -15,10 +15,13 @@ import com.lobstr.stellar.vault.presentation.util.AppUtil
 import com.lobstr.stellar.vault.presentation.util.Constant
 import com.lobstr.stellar.vault.presentation.util.manager.SupportManager
 import com.lobstr.stellar.vault.presentation.vault_auth.VaultAuthActivity
+import dagger.Lazy
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_tangem_setup.*
-import moxy.presenter.InjectPresenter
-import moxy.presenter.ProvidePresenter
+import moxy.ktx.moxyPresenter
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class TangemSetupFragment : BaseFragment(), TangemView, View.OnClickListener,
     TangemDialogFragment.OnTangemDialogListener {
 
@@ -34,8 +37,8 @@ class TangemSetupFragment : BaseFragment(), TangemView, View.OnClickListener,
     // Fields
     // ===========================================================
 
-    @InjectPresenter
-    lateinit var mPresenter: TangemSetupPresenter
+    @Inject
+    lateinit var daggerPresenter: Lazy<TangemSetupPresenter>
 
     private var mView: View? = null
 
@@ -43,8 +46,7 @@ class TangemSetupFragment : BaseFragment(), TangemView, View.OnClickListener,
     // Constructors
     // ===========================================================
 
-    @ProvidePresenter
-    fun provideTangemSetupPresenter() = TangemSetupPresenter()
+    private val mPresenter by moxyPresenter { daggerPresenter.get() }
 
     // ===========================================================
     // Getter & Setter
@@ -107,8 +109,8 @@ class TangemSetupFragment : BaseFragment(), TangemView, View.OnClickListener,
         }
     }
 
-    override fun setupToolbar(toolbarColor: Int) {
-        (activity as? BaseActivity)?.setActionBarBackground(toolbarColor)
+    override fun setupToolbar(color: Int) {
+        (activity as? AuthActivity)?.updateToolbar(toolbarColor = color)
     }
 
     override fun showTangemScreen() {

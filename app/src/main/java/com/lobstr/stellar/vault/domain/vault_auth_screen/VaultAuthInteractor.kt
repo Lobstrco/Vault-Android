@@ -1,7 +1,7 @@
 package com.lobstr.stellar.vault.domain.vault_auth_screen
 
 import com.lobstr.stellar.vault.presentation.entities.account.Account
-import io.reactivex.Single
+import io.reactivex.rxjava3.core.Single
 
 
 interface VaultAuthInteractor {

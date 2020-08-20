@@ -3,20 +3,15 @@ package com.lobstr.stellar.vault.presentation.auth.biometric
 import com.lobstr.stellar.vault.R
 import com.lobstr.stellar.vault.domain.biometric.BiometricSetUpInteractor
 import com.lobstr.stellar.vault.presentation.application.LVApplication
-import com.lobstr.stellar.vault.presentation.dagger.module.biometric.BiometricSetUpModule
 import com.lobstr.stellar.vault.presentation.util.AppUtil
+import com.lobstr.stellar.vault.presentation.util.Constant
+import com.lobstr.stellar.vault.presentation.util.Constant.PinMode.CREATE
 import com.lobstr.stellar.vault.presentation.util.biometric.BiometricUtils
 import moxy.MvpPresenter
-import javax.inject.Inject
 
-class BiometricSetUpPresenter(private val pinMode: Byte) : MvpPresenter<BiometricSetUpView>() {
+class BiometricSetUpPresenter(private val interactor: BiometricSetUpInteractor) : MvpPresenter<BiometricSetUpView>() {
 
-    @Inject
-    lateinit var interactor: BiometricSetUpInteractor
-
-    init {
-        LVApplication.appComponent.plusBiometricSetUpComponent(BiometricSetUpModule()).inject(this)
-    }
+    var pinMode: Byte = Constant.PinMode.ENTER
 
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
@@ -32,7 +27,7 @@ class BiometricSetUpPresenter(private val pinMode: Byte) : MvpPresenter<Biometri
 
     fun skipClicked() {
         interactor.setBiometricEnabled(false)
-        viewState.showVaultAuthScreen()
+        checkBehavior()
     }
 
     fun turnOnClicked() {
@@ -53,6 +48,15 @@ class BiometricSetUpPresenter(private val pinMode: Byte) : MvpPresenter<Biometri
 
     fun biometricAuthenticationSuccessful() {
         interactor.setBiometricEnabled(true)
-        viewState.showVaultAuthScreen()
+        checkBehavior()
+    }
+
+    private fun checkBehavior(){
+        // NOTE Skip pin appearance check for prevent pin screen duplication after finish.
+        LVApplication.checkPinAppearance = false
+        when(pinMode){
+            CREATE -> viewState.showVaultAuthScreen()
+            else -> viewState.finishScreen()
+        }
     }
 }

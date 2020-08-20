@@ -7,19 +7,19 @@ import com.google.firebase.messaging.RemoteMessage
 import com.lobstr.stellar.vault.R
 import com.lobstr.stellar.vault.domain.util.EventProviderModule
 import com.lobstr.stellar.vault.domain.util.event.Notification
-import com.lobstr.stellar.vault.presentation.application.LVApplication
 import com.lobstr.stellar.vault.presentation.container.activity.ContainerActivity
 import com.lobstr.stellar.vault.presentation.fcm.LVFirebaseMessagingService.Field.ACCOUNT
 import com.lobstr.stellar.vault.presentation.fcm.LVFirebaseMessagingService.Field.EVENT_TYPE
 import com.lobstr.stellar.vault.presentation.fcm.LVFirebaseMessagingService.Field.MESSAGE_BODY
 import com.lobstr.stellar.vault.presentation.fcm.LVFirebaseMessagingService.Field.MESSAGE_TITLE
 import com.lobstr.stellar.vault.presentation.fcm.LVFirebaseMessagingService.Field.TRANSACTION
-import com.lobstr.stellar.vault.presentation.splash.SplashActivity
+import com.lobstr.stellar.vault.presentation.home.HomeActivity
 import com.lobstr.stellar.vault.presentation.util.Constant
+import dagger.hilt.android.AndroidEntryPoint
 import java.util.*
 import javax.inject.Inject
 
-
+@AndroidEntryPoint
 class LVFirebaseMessagingService : FirebaseMessagingService() {
 
     @Inject
@@ -50,7 +50,7 @@ class LVFirebaseMessagingService : FirebaseMessagingService() {
 
     override fun onCreate() {
         super.onCreate()
-        LVApplication.appComponent.inject(this)
+//        LVApplication.appComponent.inject(this)
     }
 
     override fun onNewToken(newToken: String) {
@@ -127,7 +127,6 @@ class LVFirebaseMessagingService : FirebaseMessagingService() {
             Notification(Notification.Type.SIGNED_NEW_ACCOUNT, account)
         )
 
-        // NOTE Show by default Splash screen, otherwise - HomeActivity . Fix caused by security reasons (click notification on Pin Screen).
         sendDefaultMessage(
             NotificationsManager.NotificationId.SIGNERS_COUNT_CHANGED,
             NotificationsManager.ChannelId.SIGNER_STATUS,
@@ -135,8 +134,7 @@ class LVFirebaseMessagingService : FirebaseMessagingService() {
             messageBody,
             NotificationsManager.GroupId.SIGNER_STATUS,
             NotificationsManager.GroupName.SIGNER_STATUS,
-            notificationsManager/*,
-            HomeActivity::class.java*/
+            notificationsManager
         )
     }
 
@@ -151,7 +149,6 @@ class LVFirebaseMessagingService : FirebaseMessagingService() {
             Notification(Notification.Type.REMOVED_SIGNER, account)
         )
 
-        // NOTE Show by default Splash screen, otherwise - HomeActivity . Fix caused by security reasons (click notification on Pin Screen).
         sendDefaultMessage(
             NotificationsManager.NotificationId.SIGNERS_COUNT_CHANGED,
             NotificationsManager.ChannelId.SIGNER_STATUS,
@@ -159,8 +156,7 @@ class LVFirebaseMessagingService : FirebaseMessagingService() {
             messageBody,
             NotificationsManager.GroupId.SIGNER_STATUS,
             NotificationsManager.GroupName.SIGNER_STATUS,
-            notificationsManager/*,
-            HomeActivity::class.java*/
+            notificationsManager
         )
     }
 
@@ -179,12 +175,6 @@ class LVFirebaseMessagingService : FirebaseMessagingService() {
             return
         }
 
-        // Show transaction details screen after click on notification.
-        val intent = Intent(this, ContainerActivity::class.java)
-        intent.putExtra(Constant.Extra.EXTRA_NAVIGATION_FR, Constant.Navigation.TRANSACTION_DETAILS)
-        intent.putExtra(Constant.Extra.EXTRA_TRANSACTION_ITEM, transaction)
-
-        // NOTE Show by default Splash screen, otherwise - send intent. Fix caused by security reasons (click notification on Pin Screen).
         notificationsManager.sendNotification(
             NotificationsManager.ChannelId.INCOMING_TRANSACTIONS,
             NotificationsManager.NotificationId.LV_MAIN,
@@ -192,7 +182,14 @@ class LVFirebaseMessagingService : FirebaseMessagingService() {
             messageBody,
             NotificationsManager.GroupId.LV_MAIN,
             NotificationsManager.GroupName.LV_MAIN,
-            /*intent*/SplashActivity::class.java
+            // Show transaction details screen after click on notification.
+            Intent(this, ContainerActivity::class.java).apply {
+                putExtra(
+                    Constant.Extra.EXTRA_NAVIGATION_FR,
+                    Constant.Navigation.TRANSACTION_DETAILS
+                )
+                putExtra(Constant.Extra.EXTRA_TRANSACTION_ITEM, transaction)
+            }
         )
     }
 
@@ -248,7 +245,7 @@ class LVFirebaseMessagingService : FirebaseMessagingService() {
         groupId: Int,
         groupName: String,
         notificationsManager: NotificationsManager,
-        targetClass: Class<*> = SplashActivity::class.java
+        targetClass: Class<*> = HomeActivity::class.java
     ) {
         if (!mFcmHelper.isNotificationsEnabled()) {
             return

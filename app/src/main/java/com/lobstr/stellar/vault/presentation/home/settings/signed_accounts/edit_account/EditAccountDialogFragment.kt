@@ -9,8 +9,7 @@ import com.lobstr.stellar.vault.presentation.BaseBottomSheetDialog
 import com.lobstr.stellar.vault.presentation.util.AppUtil
 import com.lobstr.stellar.vault.presentation.util.Constant
 import kotlinx.android.synthetic.main.fragment_edit_account.*
-import moxy.presenter.InjectPresenter
-import moxy.presenter.ProvidePresenter
+import moxy.ktx.moxyPresenter
 
 
 class EditAccountDialogFragment : BaseBottomSheetDialog(), EditAccountView, View.OnClickListener {
@@ -27,19 +26,15 @@ class EditAccountDialogFragment : BaseBottomSheetDialog(), EditAccountView, View
     // Fields
     // ===========================================================
 
-    @InjectPresenter
-    lateinit var mPresenter: EditAccountPresenter
-
     private var mView: View? = null
 
     // ===========================================================
     // Constructors
     // ===========================================================
 
-    @ProvidePresenter
-    fun provideEditAccountPresenter() = EditAccountPresenter(
+    private val mPresenter by moxyPresenter { EditAccountPresenter(
         arguments?.getString(Constant.Bundle.BUNDLE_PUBLIC_KEY)!!
-    )
+    )}
 
     // ===========================================================
     // Getter & Setter

@@ -4,8 +4,6 @@ import android.app.Activity
 import android.content.Intent
 import com.lobstr.stellar.vault.R
 import com.lobstr.stellar.vault.domain.tangem.setup.TangemSetupInteractor
-import com.lobstr.stellar.vault.presentation.application.LVApplication
-import com.lobstr.stellar.vault.presentation.dagger.module.tangem.setup.TangemSetupModule
 import com.lobstr.stellar.vault.presentation.entities.tangem.TangemInfo
 import com.lobstr.stellar.vault.presentation.util.AppUtil
 import com.lobstr.stellar.vault.presentation.util.Constant
@@ -13,17 +11,9 @@ import com.lobstr.stellar.vault.presentation.util.Constant.Social.SIGNER_CARD_BU
 import com.lobstr.stellar.vault.presentation.util.Constant.Social.SIGNER_CARD_INFO
 import com.lobstr.stellar.vault.presentation.util.Constant.Support.SIGNING_WITH_VAULT_SIGNER_CARD
 import moxy.MvpPresenter
-import javax.inject.Inject
 
 
-class TangemSetupPresenter : MvpPresenter<TangemView>() {
-
-    @Inject
-    lateinit var interactor: TangemSetupInteractor
-
-    init {
-        LVApplication.appComponent.plusTangemSetupComponent(TangemSetupModule()).inject(this)
-    }
+class TangemSetupPresenter(private val interactor: TangemSetupInteractor) : MvpPresenter<TangemView>() {
 
     override fun attachView(view: TangemView?) {
         super.attachView(view)

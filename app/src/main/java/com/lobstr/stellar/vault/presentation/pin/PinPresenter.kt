@@ -1,22 +1,19 @@
 package com.lobstr.stellar.vault.presentation.pin
 
-import com.lobstr.stellar.vault.domain.pin.PinInteractor
-import com.lobstr.stellar.vault.presentation.BasePresenter
-import com.lobstr.stellar.vault.presentation.application.LVApplication
-import com.lobstr.stellar.vault.presentation.dagger.module.pin.PinModule
-import javax.inject.Inject
+import com.lobstr.stellar.vault.presentation.util.Constant
+import moxy.MvpPresenter
 
-class PinPresenter(private var pinMode: Byte) : BasePresenter<PinView>() {
-
-    @Inject
-    lateinit var interactor: PinInteractor
-
-    init {
-        LVApplication.appComponent.plusPinComponent(PinModule()).inject(this)
-    }
+class PinPresenter(private var pinMode: Byte) : MvpPresenter<PinView>() {
 
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
         viewState.showPinFr(pinMode)
+    }
+
+    fun onBackPressed() {
+        when (pinMode) {
+            Constant.PinMode.ENTER -> viewState.finishApp()
+            else -> viewState.finishScreen()
+        }
     }
 }

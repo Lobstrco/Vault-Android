@@ -9,9 +9,33 @@ import moxy.viewstate.strategy.alias.Skip
 
 interface AuthView : MvpView {
 
-    @Skip
-    fun showAuthFragment()
+    @AddToEndSingle
+    fun setActionBarIconVisibility(visible: Boolean)
 
     @AddToEndSingle
-    fun setupToolbar(@ColorRes toolbarColor: Int, @DrawableRes upArrow: Int, @ColorRes upArrowColor: Int)
+    fun setupToolbarColor(
+        @ColorRes color: Int
+    )
+
+    @AddToEndSingle
+    fun setupToolbarUpArrow(
+        @DrawableRes arrow: Int,
+        @ColorRes color: Int
+    )
+
+    @AddToEndSingle
+    fun setupToolbarTitleColor(
+        @ColorRes color: Int
+    )
+
+    @Skip
+    fun updateToolbar(
+        @ColorRes toolbarColor: Int? = null,
+        @DrawableRes upArrow: Int? = null,
+        @ColorRes upArrowColor: Int? = null,
+        @ColorRes titleColor: Int? = null
+    )
+
+    @Skip
+    fun showAuthFragment()
 }

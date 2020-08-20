@@ -1,29 +1,32 @@
 package com.lobstr.stellar.vault.presentation.application
 
+import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.StrictMode
 import android.util.Log
+import androidx.lifecycle.ProcessLifecycleOwner
+import androidx.hilt.work.HiltWorkerFactory
 import androidx.multidex.MultiDexApplication
+import androidx.work.Configuration
 import com.google.android.gms.security.ProviderInstaller
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.lobstr.stellar.vault.BuildConfig
 import com.lobstr.stellar.vault.R
-import com.lobstr.stellar.vault.presentation.dagger.component.AppComponent
-import com.lobstr.stellar.vault.presentation.dagger.component.DaggerAppComponent
-import com.lobstr.stellar.vault.presentation.dagger.module.AppModule
 import com.lobstr.stellar.vault.presentation.util.Constant.BuildType.DEBUG
 import com.zendesk.logger.Logger
-import io.reactivex.exceptions.UndeliverableException
-import io.reactivex.plugins.RxJavaPlugins
+import dagger.hilt.android.HiltAndroidApp
+import io.reactivex.rxjava3.exceptions.UndeliverableException
+import io.reactivex.rxjava3.plugins.RxJavaPlugins
 import org.bouncycastle.jce.provider.BouncyCastleProvider
 import zendesk.core.Zendesk
 import zendesk.support.Support
 import java.security.Provider
 import java.security.Security
+import javax.inject.Inject
 
-
-class LVApplication : MultiDexApplication() {
+@HiltAndroidApp
+class LVApplication : MultiDexApplication(), Configuration.Provider {
 
     // ===========================================================
     // Constants
@@ -35,7 +38,13 @@ class LVApplication : MultiDexApplication() {
 
     companion object {
         val LOG_TAG = LVApplication::class.simpleName
-        lateinit var appComponent: AppComponent
+        lateinit var appContext: Context
+        // App Pin appearance flag handled in AppLifecycleListener.
+        var checkPinAppearance = true
+    }
+
+    private val lifecycleListener: AppLifecycleListener by lazy {
+        AppLifecycleListener()
     }
 
     // ===========================================================
@@ -56,17 +65,25 @@ class LVApplication : MultiDexApplication() {
 
     override fun onCreate() {
         super.onCreate()
+        appContext = applicationContext
+
         upgradeSecurityProvider()
         enableStrictMode()
         FirebaseAnalytics.getInstance(this)
             .setAnalyticsCollectionEnabled(BuildConfig.BUILD_TYPE != DEBUG)
-        appComponent = DaggerAppComponent.builder()
-            .appModule(AppModule(this))
-            .build()
-        configureZendesk()
 
+        setupLifecycleListener()
+        configureZendesk()
         setupRxJavaErrorHandler()
     }
+
+    // NOTE Used for Inject data in Worker.
+    @Inject
+    lateinit var workerFactory: HiltWorkerFactory
+    override fun getWorkManagerConfiguration(): Configuration =
+        Configuration.Builder()
+            .setWorkerFactory(workerFactory)
+            .build()
 
     // ===========================================================
     // Methods
@@ -126,6 +143,10 @@ class LVApplication : MultiDexApplication() {
                     .build()
             )
         }
+    }
+
+    private fun setupLifecycleListener() {
+        ProcessLifecycleOwner.get().lifecycle.addObserver(lifecycleListener)
     }
 
     private fun configureZendesk() {

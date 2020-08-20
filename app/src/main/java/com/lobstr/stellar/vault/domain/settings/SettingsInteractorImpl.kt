@@ -2,19 +2,20 @@ package com.lobstr.stellar.vault.domain.settings
 
 import com.lobstr.stellar.vault.domain.account.AccountRepository
 import com.lobstr.stellar.vault.domain.key_store.KeyStoreRepository
-import com.lobstr.stellar.vault.presentation.application.LVApplication
 import com.lobstr.stellar.vault.presentation.entities.account.Account
 import com.lobstr.stellar.vault.presentation.entities.account.AccountConfig
+import com.lobstr.stellar.vault.presentation.fcm.FcmHelper
 import com.lobstr.stellar.vault.presentation.util.AppUtil
 import com.lobstr.stellar.vault.presentation.util.Constant.BiometricState.DISABLED
 import com.lobstr.stellar.vault.presentation.util.Constant.BiometricState.ENABLED
 import com.lobstr.stellar.vault.presentation.util.PrefsUtil
-import io.reactivex.Single
+import io.reactivex.rxjava3.core.Single
 
 class SettingsInteractorImpl(
     private val prefsUtil: PrefsUtil,
     private val accountRepository: AccountRepository,
-    private val keyStoreRepository: KeyStoreRepository
+    private val keyStoreRepository: KeyStoreRepository,
+    private val fcmHelper: FcmHelper
 ) :
     SettingsInteractor {
 
@@ -42,7 +43,7 @@ class SettingsInteractorImpl(
     }
 
     override fun clearUserData() {
-        LVApplication.appComponent.fcmHelper.unregisterFcm()
+        fcmHelper.unregisterFcm()
         prefsUtil.clearUserPrefs()
         keyStoreRepository.clearAll()
     }

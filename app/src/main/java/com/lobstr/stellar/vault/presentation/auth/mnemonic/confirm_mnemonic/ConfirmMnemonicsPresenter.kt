@@ -4,37 +4,30 @@ import com.lobstr.stellar.vault.BuildConfig
 import com.lobstr.stellar.vault.R
 import com.lobstr.stellar.vault.domain.confirm_mnemonics.ConfirmMnemonicsInteractor
 import com.lobstr.stellar.vault.presentation.BasePresenter
-import com.lobstr.stellar.vault.presentation.application.LVApplication
-import com.lobstr.stellar.vault.presentation.dagger.module.confirm_mnemonics.ConfirmMnemonicsModule
 import com.lobstr.stellar.vault.presentation.entities.mnemonic.MnemonicItem
 import com.lobstr.stellar.vault.presentation.util.Constant
 import com.lobstr.stellar.vault.presentation.util.Constant.Util.COUNT_MNEMONIC_WORDS_12
 import com.soneso.stellarmnemonics.mnemonic.MnemonicException
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
-import javax.inject.Inject
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.schedulers.Schedulers
 
-class ConfirmMnemonicsPresenter(private val mnemonicsInitialList: List<MnemonicItem>) :
+class ConfirmMnemonicsPresenter(private val interactor: ConfirmMnemonicsInteractor) :
     BasePresenter<ConfirmMnemonicsView>() {
 
-    @Inject
-    lateinit var interactor: ConfirmMnemonicsInteractor
-
-    init {
-        LVApplication.appComponent.plusConfirmMnemonicsComponent(ConfirmMnemonicsModule()).inject(this)
-    }
+    lateinit var mnemonicsInitialList: List<MnemonicItem>
 
     // List of mnemonics in confirmation (top) section
     private val mnemonicsToConfirmList = mutableListOf<MnemonicItem>()
 
     // List of mnemonics in selection (bottom) section
-    private val mnemonicsToSelectList =
-        mnemonicsInitialList.map { MnemonicItem(it.value) }.toMutableList()
+    private lateinit var mnemonicsToSelectList: MutableList<MnemonicItem>
 
     private lateinit var mnemonicsInitialStr: String
 
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
+
+        mnemonicsToSelectList = mnemonicsInitialList.map { MnemonicItem(it.value) }.toMutableList()
 
         prepareShuffledList()
         viewState.setupMnemonicsToSelect(mnemonicsToSelectList)

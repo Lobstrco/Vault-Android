@@ -15,8 +15,7 @@ import com.lobstr.stellar.vault.presentation.base.fragment.BaseFragment
 import com.lobstr.stellar.vault.presentation.util.manager.FragmentTransactionManager
 import com.lobstr.stellar.vault.presentation.util.manager.SupportManager
 import kotlinx.android.synthetic.main.fragment_auth.*
-import moxy.presenter.InjectPresenter
-import moxy.presenter.ProvidePresenter
+import moxy.ktx.moxyPresenter
 
 class AuthFragment : BaseFragment(), AuthFrView, View.OnClickListener {
 
@@ -32,17 +31,13 @@ class AuthFragment : BaseFragment(), AuthFrView, View.OnClickListener {
     // Fields
     // ===========================================================
 
-    @InjectPresenter
-    lateinit var mPresenter: AuthFrPresenter
-
     private var mView: View? = null
 
     // ===========================================================
     // Constructors
     // ===========================================================
 
-    @ProvidePresenter
-    fun provideAuthFrPresenter() = AuthFrPresenter()
+    private val mPresenter by moxyPresenter { AuthFrPresenter() }
 
     // ===========================================================
     // Getter & Setter

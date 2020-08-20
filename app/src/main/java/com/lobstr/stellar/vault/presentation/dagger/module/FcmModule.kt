@@ -8,15 +8,19 @@ import com.lobstr.stellar.vault.presentation.fcm.FcmHelper
 import com.lobstr.stellar.vault.presentation.util.PrefsUtil
 import dagger.Module
 import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.android.components.ApplicationComponent
+import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Singleton
 
 @Module
-class FcmModule {
+@InstallIn(ApplicationComponent::class)
+object FcmModule {
 
     @Provides
     @Singleton
     fun provideFcmHelper(
-        fcmInteractor: FcmInteractor, context: Context
+        fcmInteractor: FcmInteractor, @ApplicationContext context: Context
     ): FcmHelper {
         return FcmHelper(context, fcmInteractor)
     }

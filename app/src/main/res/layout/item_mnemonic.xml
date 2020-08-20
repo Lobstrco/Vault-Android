@@ -1,26 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/itemMnemonicContainer"
-        android:padding="8dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="center"
         android:gravity="center_vertical"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:padding="8dp">
 
     <TextView
             android:id="@+id/tvMnemonicNumber"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="10sp"
-            android:visibility="gone"
             android:layout_marginEnd="8dp"
-            android:textColor="@android:color/darker_gray"/>
+            android:maxLines="1"
+            android:textColor="@android:color/darker_gray"
+            android:visibility="gone"
+            android:textSize="10sp"
+            app:autoSizeMinTextSize="4sp"
+            app:autoSizeStepGranularity="0.5sp"
+            app:autoSizeTextType="uniform" />
 
     <TextView
             android:id="@+id/tvMnemonicWord"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="12sp"/>
+            android:maxLines="1"
+            android:gravity="center"
+            android:textSize="12sp"
+            app:autoSizeMinTextSize="4sp"
+            app:autoSizeStepGranularity="0.5sp"
+            app:autoSizeTextType="uniform" />
 
 </LinearLayout>

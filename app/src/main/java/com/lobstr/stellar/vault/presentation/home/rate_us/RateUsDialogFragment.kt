@@ -3,10 +3,12 @@ package com.lobstr.stellar.vault.presentation.home.rate_us
 import android.content.DialogInterface
 import com.lobstr.stellar.vault.presentation.dialog.alert.base.AlertDialogFragment
 import com.lobstr.stellar.vault.presentation.util.AppUtil
-import moxy.presenter.InjectPresenter
-import moxy.presenter.ProvidePresenter
+import dagger.Lazy
+import dagger.hilt.android.AndroidEntryPoint
+import moxy.ktx.moxyPresenter
+import javax.inject.Inject
 
-
+@AndroidEntryPoint
 class RateUsDialogFragment : AlertDialogFragment(), RateUsView {
 
     // ===========================================================
@@ -21,15 +23,14 @@ class RateUsDialogFragment : AlertDialogFragment(), RateUsView {
     // Fields
     // ===========================================================
 
-    @InjectPresenter
-    lateinit var mPresenter: RateUsPresenter
+    @Inject
+    lateinit var daggerPresenter: Lazy<RateUsPresenter>
 
     // ===========================================================
     // Constructors
     // ===========================================================
 
-    @ProvidePresenter
-    fun provideIRateUsPresenter() = RateUsPresenter()
+    private val mPresenter by moxyPresenter { daggerPresenter.get() }
 
     // ===========================================================
     // Getter & Setter

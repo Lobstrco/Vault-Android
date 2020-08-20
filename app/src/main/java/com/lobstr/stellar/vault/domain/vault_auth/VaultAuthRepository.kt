@@ -1,6 +1,6 @@
 package com.lobstr.stellar.vault.domain.vault_auth
 
-import io.reactivex.Single
+import io.reactivex.rxjava3.core.Single
 
 
 interface VaultAuthRepository {

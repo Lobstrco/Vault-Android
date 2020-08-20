@@ -1,6 +1,6 @@
 package com.lobstr.stellar.vault.domain.base
 
-import io.reactivex.Single
+import io.reactivex.rxjava3.core.Single
 
 
 interface BaseInteractor {
@@ -14,4 +14,6 @@ interface BaseInteractor {
     fun getChallenge(): Single<String>
 
     fun authorizeVault(transaction: String): Single<String>
+
+    fun hasEncryptedPin(): Boolean
 }

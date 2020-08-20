@@ -1,6 +1,5 @@
 package com.lobstr.stellar.vault.presentation.dagger.module
 
-import android.app.Application
 import android.content.Context
 import android.content.SharedPreferences
 import androidx.preference.PreferenceManager
@@ -9,33 +8,31 @@ import com.lobstr.stellar.vault.domain.util.EventProviderModule
 import com.lobstr.stellar.vault.presentation.util.PrefsUtil
 import dagger.Module
 import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.android.components.ApplicationComponent
+import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Singleton
 
 @Module
-class AppModule(val application: Application) {
+@InstallIn(ApplicationComponent::class)
+object AppModule{
 
     @Provides
     @Singleton
-    internal fun provideApplicationContext(): Context {
-        return application
-    }
-
-    @Provides
-    @Singleton
-    internal fun providePreferences(context: Context): PrefsUtil {
+    fun providePreferences(@ApplicationContext context: Context): PrefsUtil {
         val prefs: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
         return PrefsUtil(prefs)
     }
 
     @Provides
     @Singleton
-    internal fun provideExceptionMapper(context: Context): ExceptionMapper {
+    fun provideExceptionMapper(@ApplicationContext context: Context): ExceptionMapper {
         return ExceptionMapper(context)
     }
 
     @Provides
     @Singleton
-    internal fun provideEventProviderModule(): EventProviderModule {
+    fun provideEventProviderModule(): EventProviderModule {
         return EventProviderModule()
     }
 }

@@ -6,8 +6,8 @@ import com.lobstr.stellar.vault.presentation.entities.transaction.TransactionRes
 import com.lobstr.stellar.vault.presentation.util.AppUtil
 import com.lobstr.stellar.vault.presentation.util.Constant
 import com.lobstr.stellar.vault.presentation.util.PrefsUtil
-import io.reactivex.Completable
-import io.reactivex.Single
+import io.reactivex.rxjava3.core.Completable
+import io.reactivex.rxjava3.core.Single
 
 class TransactionInteractorImpl(
     private val accountRepository: AccountRepository,

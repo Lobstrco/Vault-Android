@@ -19,7 +19,7 @@ class ContainerPresenter(
     private val targetFr: Int,
     private val transactionItem: TransactionItem?,
     private val envelopeXdr: String?,
-    private val needAdditionalSignatures: Boolean?,
+    private val transactionConfirmationSuccessStatus: Byte?,
     private val errorMessage: String?,
     private val config: Int
 ) : MvpPresenter<ContainerView>() {
@@ -51,7 +51,7 @@ class ContainerPresenter(
 
             MNEMONICS -> viewState.showMnemonicsFr()
 
-            SUCCESS -> viewState.showSuccessFr(envelopeXdr!!, needAdditionalSignatures!!)
+            SUCCESS -> viewState.showSuccessFr(envelopeXdr!!, transactionConfirmationSuccessStatus!!)
 
             ERROR -> viewState.showErrorFr(errorMessage!!)
 

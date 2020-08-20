@@ -2,7 +2,7 @@ package com.lobstr.stellar.vault.data.net
 
 import com.lobstr.stellar.vault.data.net.entities.vault_auth.ApiGetChallenge
 import com.lobstr.stellar.vault.data.net.entities.vault_auth.ApiSubmitChallenge
-import io.reactivex.Single
+import io.reactivex.rxjava3.core.Single
 import retrofit2.http.*
 
 

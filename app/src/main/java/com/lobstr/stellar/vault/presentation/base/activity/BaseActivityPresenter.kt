@@ -7,27 +7,17 @@ import com.lobstr.stellar.vault.domain.base.BaseInteractor
 import com.lobstr.stellar.vault.domain.util.EventProviderModule
 import com.lobstr.stellar.vault.domain.util.event.Update
 import com.lobstr.stellar.vault.presentation.BasePresenter
-import com.lobstr.stellar.vault.presentation.application.LVApplication
-import com.lobstr.stellar.vault.presentation.dagger.module.base.BaseModule
 import com.lobstr.stellar.vault.presentation.entities.tangem.TangemInfo
 import com.lobstr.stellar.vault.presentation.util.AppUtil
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
-import javax.inject.Inject
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.schedulers.Schedulers
 
-class BaseActivityPresenter : BasePresenter<BaseActivityView>() {
-
-    @Inject
-    lateinit var interactor: BaseInteractor
-
-    @Inject
-    lateinit var mEventProviderModule: EventProviderModule
+class BaseActivityPresenter(
+    private val interactor: BaseInteractor,
+    private val mEventProviderModule: EventProviderModule
+) : BasePresenter<BaseActivityView>() {
 
     private var authInProcess = false
-
-    init {
-        LVApplication.appComponent.plusBaseComponent(BaseModule()).inject(this)
-    }
 
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
@@ -130,6 +120,14 @@ class BaseActivityPresenter : BasePresenter<BaseActivityView>() {
                         }
                     })
             )
+        }
+    }
+
+    fun checkPinAppearance() {
+        if (attachedViews.size == 0) return
+
+        if (interactor.hasEncryptedPin()) {
+            viewState.proceedPinActivityAppearance()
         }
     }
 }

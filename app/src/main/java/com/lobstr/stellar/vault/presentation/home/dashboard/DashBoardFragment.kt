@@ -27,10 +27,13 @@ import com.lobstr.stellar.vault.presentation.home.settings.signed_accounts.adapt
 import com.lobstr.stellar.vault.presentation.home.settings.signed_accounts.edit_account.EditAccountDialogFragment
 import com.lobstr.stellar.vault.presentation.util.AppUtil
 import com.lobstr.stellar.vault.presentation.util.Constant
+import dagger.Lazy
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_dash_board.*
-import moxy.presenter.InjectPresenter
-import moxy.presenter.ProvidePresenter
+import moxy.ktx.moxyPresenter
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class DashboardFragment : BaseFragment(), DashboardView, View.OnClickListener,
     OnAccountItemListener {
 
@@ -46,8 +49,8 @@ class DashboardFragment : BaseFragment(), DashboardView, View.OnClickListener,
     // Fields
     // ===========================================================
 
-    @InjectPresenter
-    lateinit var mPresenter: DashboardPresenter
+    @Inject
+    lateinit var daggerPresenter: Lazy<DashboardPresenter>
 
     private var mView: View? = null
 
@@ -57,8 +60,7 @@ class DashboardFragment : BaseFragment(), DashboardView, View.OnClickListener,
     // Constructors
     // ===========================================================
 
-    @ProvidePresenter
-    fun provideDashBoardPresenter() = DashboardPresenter()
+    private val mPresenter by moxyPresenter { daggerPresenter.get() }
 
     // ===========================================================
     // Getter & Setter

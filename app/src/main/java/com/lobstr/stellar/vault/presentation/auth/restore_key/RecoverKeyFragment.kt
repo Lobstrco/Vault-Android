@@ -20,10 +20,13 @@ import com.lobstr.stellar.vault.presentation.util.AppUtil
 import com.lobstr.stellar.vault.presentation.util.Constant
 import com.lobstr.stellar.vault.presentation.util.manager.ProgressManager
 import com.lobstr.stellar.vault.presentation.util.manager.SupportManager
+import dagger.Lazy
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_recovery_key.*
-import moxy.presenter.InjectPresenter
-import moxy.presenter.ProvidePresenter
+import moxy.ktx.moxyPresenter
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class RecoverKeyFragment : BaseFragment(), RecoverKeyFrView, View.OnClickListener {
 
     // ===========================================================
@@ -38,8 +41,8 @@ class RecoverKeyFragment : BaseFragment(), RecoverKeyFrView, View.OnClickListene
     // Fields
     // ===========================================================
 
-    @InjectPresenter
-    lateinit var mPresenter: RecoverKeyFrPresenter
+    @Inject
+    lateinit var daggerPresenter: Lazy<RecoverKeyFrPresenter>
 
     private var mView: View? = null
 
@@ -47,8 +50,7 @@ class RecoverKeyFragment : BaseFragment(), RecoverKeyFrView, View.OnClickListene
     // Constructors
     // ===========================================================
 
-    @ProvidePresenter
-    fun provideRecoverKeyFrPresenter() = RecoverKeyFrPresenter()
+    private val mPresenter by moxyPresenter { daggerPresenter.get() }
 
     // ===========================================================
     // Getter & Setter

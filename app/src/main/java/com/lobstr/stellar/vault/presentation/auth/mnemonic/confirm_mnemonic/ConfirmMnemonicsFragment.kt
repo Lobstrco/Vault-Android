@@ -14,10 +14,13 @@ import com.lobstr.stellar.vault.presentation.pin.PinActivity
 import com.lobstr.stellar.vault.presentation.util.Constant
 import com.lobstr.stellar.vault.presentation.util.manager.ProgressManager
 import com.lobstr.stellar.vault.presentation.util.manager.SupportManager
+import dagger.Lazy
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_confirm_mnemonics.*
-import moxy.presenter.InjectPresenter
-import moxy.presenter.ProvidePresenter
+import moxy.ktx.moxyPresenter
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class ConfirmMnemonicsFragment : BaseFragment(), ConfirmMnemonicsView, View.OnClickListener,
     MnemonicsContainerView.MnemonicItemActionListener {
 
@@ -33,8 +36,8 @@ class ConfirmMnemonicsFragment : BaseFragment(), ConfirmMnemonicsView, View.OnCl
     // Fields
     // ===========================================================
 
-    @InjectPresenter
-    lateinit var mPresenter: ConfirmMnemonicsPresenter
+    @Inject
+    lateinit var daggerPresenter: Lazy<ConfirmMnemonicsPresenter>
 
     private var mView: View? = null
 
@@ -42,10 +45,9 @@ class ConfirmMnemonicsFragment : BaseFragment(), ConfirmMnemonicsView, View.OnCl
     // Constructors
     // ===========================================================
 
-    @ProvidePresenter
-    fun provideConfirmMnemonicsPresenter() = ConfirmMnemonicsPresenter(
-        arguments?.getParcelableArrayList(Constant.Bundle.BUNDLE_MNEMONICS_ARRAY)!!
-    )
+    private val mPresenter by moxyPresenter { daggerPresenter.get().apply {
+        mnemonicsInitialList = arguments?.getParcelableArrayList(Constant.Bundle.BUNDLE_MNEMONICS_ARRAY)!!
+    } }
 
     // ===========================================================
     // Getter & Setter

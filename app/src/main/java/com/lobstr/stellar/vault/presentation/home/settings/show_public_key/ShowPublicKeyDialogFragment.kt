@@ -11,8 +11,7 @@ import com.lobstr.stellar.vault.presentation.util.AppUtil
 import com.lobstr.stellar.vault.presentation.util.Constant
 import com.lobstr.stellar.vault.presentation.util.Constant.Util.PK_TRUNCATE_COUNT
 import kotlinx.android.synthetic.main.fragment_show_public_key.*
-import moxy.presenter.InjectPresenter
-import moxy.presenter.ProvidePresenter
+import moxy.ktx.moxyPresenter
 import net.glxn.qrgen.android.QRCode
 
 
@@ -31,19 +30,15 @@ class ShowPublicKeyDialogFragment : BaseBottomSheetDialog(), ShowPublicKeyView,
     // Fields
     // ===========================================================
 
-    @InjectPresenter
-    lateinit var mPresenter: ShowPublicKeyPresenter
-
     private var mView: View? = null
 
     // ===========================================================
     // Constructors
     // ===========================================================
 
-    @ProvidePresenter
-    fun provideShowPublicKeyPresenter() = ShowPublicKeyPresenter(
+    private val mPresenter by moxyPresenter { ShowPublicKeyPresenter(
         arguments?.getString(Constant.Bundle.BUNDLE_PUBLIC_KEY)!!
-    )
+    ) }
 
     // ===========================================================
     // Getter & Setter

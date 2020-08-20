@@ -5,7 +5,6 @@ import com.lobstr.stellar.vault.R
 import com.lobstr.stellar.vault.domain.pin.PinInteractor
 import com.lobstr.stellar.vault.presentation.BasePresenter
 import com.lobstr.stellar.vault.presentation.application.LVApplication
-import com.lobstr.stellar.vault.presentation.dagger.module.pin.PinModule
 import com.lobstr.stellar.vault.presentation.dialog.alert.base.AlertDialogFragment
 import com.lobstr.stellar.vault.presentation.pin.main.PinFragment.Companion.STYLE_CREATE_PIN
 import com.lobstr.stellar.vault.presentation.pin.main.PinFragment.Companion.STYLE_ENTER_PIN
@@ -17,14 +16,13 @@ import com.lobstr.stellar.vault.presentation.util.Constant.PinMode.CREATE
 import com.lobstr.stellar.vault.presentation.util.Constant.PinMode.ENTER
 import com.lobstr.stellar.vault.presentation.util.biometric.BiometricUtils
 import com.lobstr.stellar.vault.presentation.util.manager.SupportManager
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
-import javax.inject.Inject
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.schedulers.Schedulers
 
 
-class PinFrPresenter(private var pinMode: Byte) : BasePresenter<PinFrView>() {
-    @Inject
-    lateinit var interactor: PinInteractor
+class PinFrPresenter(private val interactor: PinInteractor) : BasePresenter<PinFrView>() {
+
+    var pinMode: Byte = ENTER
 
     // Temp value for handle pin creation after change.
     private var isCreationAfterChangePinMode: Boolean = false
@@ -39,10 +37,6 @@ class PinFrPresenter(private var pinMode: Byte) : BasePresenter<PinFrView>() {
             "654321", "222111", "111222", "121111", "111112", "011111", "111110",
             "010000", "000111", "111000", "000001", "100000"
         )
-
-    init {
-        LVApplication.appComponent.plusPinComponent(PinModule()).inject(this)
-    }
 
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
@@ -160,11 +154,9 @@ class PinFrPresenter(private var pinMode: Byte) : BasePresenter<PinFrView>() {
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe {
                     needBlockPinView = true
-                    viewState.showProgressDialog(true)
                 }
                 .doOnEvent { _: Boolean, _: Throwable? ->
                     needBlockPinView = false
-                    viewState.showProgressDialog(false)
                 }
                 .doOnSuccess { success ->
                     if (needCheckOldPint) {
@@ -193,7 +185,15 @@ class PinFrPresenter(private var pinMode: Byte) : BasePresenter<PinFrView>() {
                                 )
                                 CREATE -> viewState.finishScreenWithResult(Activity.RESULT_OK)
                                 CHANGE -> showCreateAfterChangePinState()
-                                ENTER -> checkAuthState()
+                                ENTER -> {
+                                    when {
+                                        !interactor.isTouchIdSetUp() && BiometricUtils.isBiometricSupported(AppUtil.getAppContext()) -> {
+                                            viewState.setResult(Activity.RESULT_OK)
+                                            viewState.showBiometricSetUpScreen(pinMode)
+                                        }
+                                        else -> viewState.finishScreenWithResult(Activity.RESULT_OK)
+                                    }
+                                }
                             }
                         } else {
                             viewState.showErrorMessage(R.string.text_error_incorrect_pin)
@@ -213,18 +213,20 @@ class PinFrPresenter(private var pinMode: Byte) : BasePresenter<PinFrView>() {
     }
 
     fun biometricAuthenticationSuccessful() {
-        when (pinMode) {
-            CONFIRM -> viewState.finishScreenWithResult(Activity.RESULT_OK)
-            else -> checkAuthState()
-        }
+        viewState.finishScreenWithResult(Activity.RESULT_OK)
     }
 
     private fun checkAuthState() {
+        // NOTE Skip pin appearance check for prevent pin screen duplication after finish.
+        LVApplication.checkPinAppearance = false
         when {
             interactor.accountHasToken() -> viewState.showHomeScreen()
             else -> {
                 when {
-                    !interactor.isTouchIdSetUp() && BiometricUtils.isBiometricSupported(AppUtil.getAppContext()) -> viewState.showBiometricSetUpScreen(pinMode)
+                    !interactor.isTouchIdSetUp() && BiometricUtils.isBiometricSupported(AppUtil.getAppContext()) -> {
+                        viewState.setResult(Activity.RESULT_OK)
+                        viewState.showBiometricSetUpScreen(pinMode)
+                    }
                     else -> viewState.showVaultAuthScreen()
                 }
             }

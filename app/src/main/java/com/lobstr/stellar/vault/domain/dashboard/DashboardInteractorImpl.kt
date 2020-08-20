@@ -7,7 +7,7 @@ import com.lobstr.stellar.vault.presentation.entities.transaction.TransactionRes
 import com.lobstr.stellar.vault.presentation.util.AppUtil
 import com.lobstr.stellar.vault.presentation.util.Constant
 import com.lobstr.stellar.vault.presentation.util.PrefsUtil
-import io.reactivex.Single
+import io.reactivex.rxjava3.core.Single
 
 class DashboardInteractorImpl(
     private val transactionRepository: TransactionRepository,

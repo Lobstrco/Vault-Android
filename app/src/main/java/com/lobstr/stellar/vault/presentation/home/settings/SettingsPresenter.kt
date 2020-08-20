@@ -13,8 +13,6 @@ import com.lobstr.stellar.vault.domain.util.event.Auth
 import com.lobstr.stellar.vault.domain.util.event.Network
 import com.lobstr.stellar.vault.domain.util.event.Notification
 import com.lobstr.stellar.vault.presentation.BasePresenter
-import com.lobstr.stellar.vault.presentation.application.LVApplication
-import com.lobstr.stellar.vault.presentation.dagger.module.settings.SettingsModule
 import com.lobstr.stellar.vault.presentation.dialog.alert.base.AlertDialogFragment
 import com.lobstr.stellar.vault.presentation.util.AppUtil
 import com.lobstr.stellar.vault.presentation.util.Constant
@@ -23,25 +21,15 @@ import com.lobstr.stellar.vault.presentation.util.Constant.Social.STORE_URL
 import com.lobstr.stellar.vault.presentation.util.Constant.Social.SUPPORT_MAIL
 import com.lobstr.stellar.vault.presentation.util.biometric.BiometricUtils
 import com.lobstr.stellar.vault.presentation.util.manager.SupportManager
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
-import javax.inject.Inject
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.schedulers.Schedulers
 
-class SettingsPresenter : BasePresenter<SettingsView>() {
-
-    @Inject
-    lateinit var eventProviderModule: EventProviderModule
-
-    @Inject
-    lateinit var interactor: SettingsInteractor
+class SettingsPresenter(private val interactor: SettingsInteractor,
+                        private val eventProviderModule: EventProviderModule) : BasePresenter<SettingsView>() {
 
     private var loadSignedAccountsInProcess = false
 
     private var loadAccountConfigInProcess = false
-
-    init {
-        LVApplication.appComponent.plusSettingsComponent(SettingsModule()).inject(this)
-    }
 
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()

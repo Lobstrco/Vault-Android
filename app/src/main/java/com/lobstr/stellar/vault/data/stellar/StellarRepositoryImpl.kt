@@ -2,8 +2,8 @@ package com.lobstr.stellar.vault.data.stellar
 
 import com.lobstr.stellar.vault.data.mnemonic.MnemonicsMapper
 import com.lobstr.stellar.vault.data.transaction.TransactionEntityMapper
+import com.lobstr.stellar.vault.domain.error.RxErrorUtils
 import com.lobstr.stellar.vault.domain.stellar.StellarRepository
-import com.lobstr.stellar.vault.presentation.application.LVApplication
 import com.lobstr.stellar.vault.presentation.entities.account.Account
 import com.lobstr.stellar.vault.presentation.entities.account.AccountResult
 import com.lobstr.stellar.vault.presentation.entities.account.Thresholds
@@ -11,8 +11,8 @@ import com.lobstr.stellar.vault.presentation.entities.mnemonic.MnemonicItem
 import com.lobstr.stellar.vault.presentation.entities.transaction.TransactionItem
 import com.soneso.stellarmnemonics.Wallet
 import com.tangem.commands.SignResponse
-import io.reactivex.Single
-import io.reactivex.Single.fromCallable
+import io.reactivex.rxjava3.core.Single
+import io.reactivex.rxjava3.core.Single.fromCallable
 import org.stellar.sdk.*
 import org.stellar.sdk.responses.AccountResponse
 import org.stellar.sdk.responses.SubmitTransactionResponse
@@ -24,7 +24,8 @@ class StellarRepositoryImpl(
     private val network: Network,
     private val server: Server,
     private val mnemonicsMapper: MnemonicsMapper,
-    private val transactionEntityMapper: TransactionEntityMapper
+    private val transactionEntityMapper: TransactionEntityMapper,
+    private val rxErrorUtils: RxErrorUtils
 ) : StellarRepository {
 
     override fun generate12WordMnemonic(): ArrayList<MnemonicItem> {
@@ -58,7 +59,7 @@ class StellarRepositoryImpl(
                 else -> throw Exception("Unknown transaction type.")
             }
         }).onErrorResumeNext {
-            LVApplication.appComponent.rxErrorUtils.handleSingleRequestHttpError(it)
+            rxErrorUtils.handleSingleRequestHttpError(it)
         }
     }
 
@@ -79,7 +80,6 @@ class StellarRepositoryImpl(
     override fun createTransactionItem(envelopXdr: String): Single<TransactionItem> {
         return fromCallable(Callable {
             val transaction = AbstractTransaction.fromEnvelopeXdr(envelopXdr, network)
-
             // Create Transaction Item for handle it in transaction Details
             return@Callable transactionEntityMapper.transformTransactionItem(transaction)
         })
@@ -142,7 +142,7 @@ class StellarRepositoryImpl(
                 return@map accountResult
             }
             .onErrorResumeNext {
-                LVApplication.appComponent.rxErrorUtils.handleSingleRequestHttpError(it)
+                rxErrorUtils.handleSingleRequestHttpError(it)
             }
     }
 
@@ -153,6 +153,15 @@ class StellarRepositoryImpl(
 
     override fun getTransactionFromXDR(xdr: String): AbstractTransaction {
         return AbstractTransaction.fromEnvelopeXdr(xdr, Network.PUBLIC)
+    }
+
+    override fun readChallengeTransaction(
+        challengeXdr: String,
+        serverAccountId: String
+    ): Sep10Challenge.ChallengeTransaction? = try {
+        Sep10Challenge.readChallengeTransaction(challengeXdr, serverAccountId, Network.PUBLIC)
+    } catch (exc: InvalidSep10ChallengeException) {
+        null
     }
 
     override fun signTransactionWithTangemCardData(

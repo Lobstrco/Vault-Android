@@ -7,5 +7,11 @@
         <attr name="itemEmptyBackground" format="reference"/>
         <attr name="itemCounterTextColor" format="color"/>
         <attr name="itemTextColor" format="color"/>
+        <attr name="itemMarginStart" format="dimension"/>
+        <attr name="itemMarginEnd" format="dimension"/>
+        <attr name="itemMarginTop" format="dimension"/>
+        <attr name="itemMarginBottom" format="dimension"/>
+        <attr name="mnemonicsColumnCount" format="integer"/>
+        <attr name="mnemonicsOuterMargin" format="dimension"/>
     </declare-styleable>
 </resources>

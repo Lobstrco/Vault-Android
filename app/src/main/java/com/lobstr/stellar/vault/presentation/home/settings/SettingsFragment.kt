@@ -33,11 +33,14 @@ import com.lobstr.stellar.vault.presentation.util.AppUtil
 import com.lobstr.stellar.vault.presentation.util.Constant
 import com.lobstr.stellar.vault.presentation.util.manager.FragmentTransactionManager
 import com.lobstr.stellar.vault.presentation.util.manager.SupportManager
+import dagger.Lazy
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_settings.*
-import moxy.presenter.InjectPresenter
-import moxy.presenter.ProvidePresenter
+import moxy.ktx.moxyPresenter
 import java.util.*
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class SettingsFragment : BaseFragment(), SettingsView, View.OnClickListener,
     CompoundButton.OnCheckedChangeListener, AlertDialogFragment.OnDefaultAlertDialogListener {
 
@@ -53,8 +56,8 @@ class SettingsFragment : BaseFragment(), SettingsView, View.OnClickListener,
     // Fields
     // ===========================================================
 
-    @InjectPresenter
-    lateinit var mPresenter: SettingsPresenter
+    @Inject
+    lateinit var daggerPresenter: Lazy<SettingsPresenter>
 
     private var mView: View? = null
 
@@ -62,8 +65,7 @@ class SettingsFragment : BaseFragment(), SettingsView, View.OnClickListener,
     // Constructors
     // ===========================================================
 
-    @ProvidePresenter
-    fun provideSettingsPresenter() = SettingsPresenter()
+    private val mPresenter by moxyPresenter { daggerPresenter.get() }
 
     // ===========================================================
     // Getter & Setter
@@ -311,7 +313,7 @@ class SettingsFragment : BaseFragment(), SettingsView, View.OnClickListener,
 
     override fun sendMail(mail: String, subject: String, body: String?) {
         try {
-            AppUtil.sendEmail(requireContext(), mail, subject, body)
+            AppUtil.sendEmail(requireContext(), arrayOf(mail), subject, body)
         } catch (exc: ActivityNotFoundException) {
             showMessage(getString(R.string.msg_mail_client_not_found))
         }

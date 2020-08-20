@@ -19,13 +19,11 @@ class TransactionAdapter(private val listener: OnTransactionItemClicked) :
 
     fun setTransactionList(
         transactionItems: List<TransactionItem>,
-        needShowProgress: Boolean?
+        needShowProgress: Boolean
     ) {
         this.transactionItems.clear()
         this.transactionItems.addAll(transactionItems)
-        if (needShowProgress != null) {
-            this.needShowProgress = needShowProgress
-        }
+        this.needShowProgress = needShowProgress
         notifyDataSetChanged()
     }
 

@@ -12,30 +12,24 @@ import com.lobstr.stellar.vault.domain.util.event.Auth
 import com.lobstr.stellar.vault.domain.util.event.Network
 import com.lobstr.stellar.vault.domain.util.event.Notification
 import com.lobstr.stellar.vault.presentation.BasePresenter
-import com.lobstr.stellar.vault.presentation.application.LVApplication
-import com.lobstr.stellar.vault.presentation.dagger.module.transaction.TransactionModule
 import com.lobstr.stellar.vault.presentation.dialog.alert.base.AlertDialogFragment
 import com.lobstr.stellar.vault.presentation.entities.account.Account
 import com.lobstr.stellar.vault.presentation.entities.transaction.TransactionItem
 import com.lobstr.stellar.vault.presentation.util.Constant
 import com.lobstr.stellar.vault.presentation.util.Constant.Util.UNDEFINED_VALUE
-import io.reactivex.Observable
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.Disposable
-import io.reactivex.schedulers.Schedulers
-import javax.inject.Inject
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.disposables.Disposable
+import io.reactivex.rxjava3.schedulers.Schedulers
 
-class TransactionsPresenter : BasePresenter<TransactionsView>() {
+class TransactionsPresenter(
+    private val interactor: TransactionInteractor,
+    private val eventProviderModule: EventProviderModule
+) : BasePresenter<TransactionsView>() {
 
     companion object {
         const val LIMIT_PAGE_SIZE = 10
     }
-
-    @Inject
-    lateinit var eventProviderModule: EventProviderModule
-
-    @Inject
-    lateinit var interactor: TransactionInteractor
 
     // For restore RecycleView position after saveInstanceState (-1 - undefined state).
     private var savedRvPosition: Int = UNDEFINED_VALUE
@@ -48,10 +42,6 @@ class TransactionsPresenter : BasePresenter<TransactionsView>() {
 
     private var stellarAccountsSubscription: Disposable? = null
     private val cachedStellarAccounts: MutableList<Account> = mutableListOf()
-
-    init {
-        LVApplication.appComponent.plusTransactionComponent(TransactionModule()).inject(this)
-    }
 
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
@@ -221,7 +211,7 @@ class TransactionsPresenter : BasePresenter<TransactionsView>() {
                             ?.federation
                     transactions[index].transaction.federation = federation
                 }
-                viewState.showTransactionList(transactions, null)
+                viewState.showTransactionList(transactions, !nextPageUrl.isNullOrEmpty())
             }, {
                 // Ignore.
             })
@@ -309,7 +299,6 @@ class TransactionsPresenter : BasePresenter<TransactionsView>() {
     }
 
     fun onListScrolled(
-        visibleItemCount: Int,
         totalItemCount: Int,
         firstVisibleItemPosition: Int,
         lastVisibleItemPosition: Int

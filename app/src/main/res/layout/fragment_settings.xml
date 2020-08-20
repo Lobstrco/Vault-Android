@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -67,9 +68,83 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="?android:attr/selectableItemBackground"
-                    android:drawableEnd="@drawable/ic_arrow_right"
                     android:padding="16dp"
                     android:text="@string/text_settings_signer"
+                    android:textColor="@android:color/black"
+                    android:textSize="16sp"
+                    app:drawableEndCompat="@drawable/ic_arrow_right" />
+
+            <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="0dp"
+                    android:background="@color/color_33979797" />
+
+            <LinearLayout
+                    android:id="@+id/llSettingsTrConfirmationContainer"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                <LinearLayout
+                        android:id="@+id/llSettingsTrConfirmation"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="?android:attr/selectableItemBackground"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:padding="16dp">
+
+                    <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="8dp"
+                            android:layout_weight="1"
+                            android:ellipsize="end"
+                            android:maxLines="1"
+                            android:singleLine="true"
+                            android:text="@string/text_settings_transaction_confirmation"
+                            android:textColor="@android:color/black"
+                            android:textSize="16sp" />
+
+                    <TextView
+                            android:id="@+id/tvTrConfirmationConfig"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="4dp"
+                            android:layout_weight="0"
+                            android:gravity="center"
+                            android:paddingBottom="2dp"
+                            android:singleLine="true"
+                            android:textColor="@color/color_99000000"
+                            android:textSize="16sp" />
+
+                    <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/ic_arrow_right"
+                            tools:ignore="ContentDescription" />
+                </LinearLayout>
+
+                <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginEnd="0dp"
+                        android:background="@color/color_33979797" />
+            </LinearLayout>
+
+            <androidx.appcompat.widget.SwitchCompat
+                    android:id="@+id/swSettingsNotifications"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="16dp"
+                    android:paddingTop="18dp"
+                    android:paddingEnd="16dp"
+                    android:paddingBottom="18dp"
+                    android:saveEnabled="false"
+                    android:text="@string/text_settings_notifications"
                     android:textColor="@android:color/black"
                     android:textSize="16sp" />
 
@@ -103,11 +178,11 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="?android:attr/selectableItemBackground"
-                        android:drawableEnd="@drawable/ic_arrow_right"
                         android:padding="16dp"
                         android:text="@string/text_settings_mnemonic_code"
                         android:textColor="@android:color/black"
-                        android:textSize="16sp" />
+                        android:textSize="16sp"
+                        app:drawableEndCompat="@drawable/ic_arrow_right" />
 
                 <View
                         android:layout_width="match_parent"
@@ -128,11 +203,11 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="?android:attr/selectableItemBackground"
-                        android:drawableEnd="@drawable/ic_arrow_right"
                         android:padding="16dp"
                         android:text="@string/text_settings_change_pin"
                         android:textColor="@android:color/black"
-                        android:textSize="16sp" />
+                        android:textSize="16sp"
+                        app:drawableEndCompat="@drawable/ic_arrow_right" />
 
                 <View
                         android:layout_width="match_parent"
@@ -211,6 +286,53 @@
             </LinearLayout>
         </LinearLayout>
 
+        <!-- Help -->
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:background="@android:color/white"
+                android:orientation="vertical">
+
+            <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="sans-serif-medium"
+                    android:padding="16dp"
+                    android:text="@string/title_settings_help"
+                    android:textColor="@color/color_primary"
+                    android:textSize="14sp" />
+
+            <TextView
+                    android:id="@+id/tvSettingsHelp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="?android:attr/selectableItemBackground"
+                    android:padding="16dp"
+                    android:text="@string/text_settings_help"
+                    android:textColor="@android:color/black"
+                    android:textSize="16sp"
+                    app:drawableEndCompat="@drawable/ic_arrow_right" />
+
+            <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="0dp"
+                    android:background="@color/color_33979797" />
+
+            <TextView
+                    android:id="@+id/tvSettingsContactSupport"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="?android:attr/selectableItemBackground"
+                    android:padding="16dp"
+                    android:text="@string/text_settings_contact_support"
+                    android:textColor="@android:color/black"
+                    android:textSize="16sp"
+                    app:drawableEndCompat="@drawable/ic_arrow_right" />
+        </LinearLayout>
+
         <!-- Other -->
         <LinearLayout
                 android:layout_width="match_parent"
@@ -228,62 +350,6 @@
                     android:textColor="@color/color_primary"
                     android:textSize="14sp" />
 
-            <TextView
-                    android:id="@+id/tvSettingsHelp"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="?android:attr/selectableItemBackground"
-                    android:drawableEnd="@drawable/ic_arrow_right"
-                    android:padding="16dp"
-                    android:text="@string/text_settings_help"
-                    android:textColor="@android:color/black"
-                    android:textSize="16sp" />
-
-            <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginEnd="0dp"
-                    android:background="@color/color_33979797" />
-
-            <TextView
-                    android:id="@+id/tvSettingsContactSupport"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="?android:attr/selectableItemBackground"
-                    android:drawableEnd="@drawable/ic_arrow_right"
-                    android:padding="16dp"
-                    android:text="@string/text_settings_contact_support"
-                    android:textColor="@android:color/black"
-                    android:textSize="16sp" />
-
-            <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginEnd="0dp"
-                    android:background="@color/color_33979797" />
-
-            <androidx.appcompat.widget.SwitchCompat
-                    android:id="@+id/swSettingsNotifications"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:paddingStart="16dp"
-                    android:paddingTop="18dp"
-                    android:paddingEnd="16dp"
-                    android:paddingBottom="18dp"
-                    android:saveEnabled="false"
-                    android:text="@string/text_settings_notifications"
-                    android:textColor="@android:color/black"
-                    android:textSize="16sp" />
-
-            <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginEnd="0dp"
-                    android:background="@color/color_33979797" />
-
             <LinearLayout
                     android:id="@+id/llSettingsSignerCardInfoContainer"
                     android:layout_width="match_parent"
@@ -294,65 +360,11 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="?android:attr/selectableItemBackground"
-                        android:drawableEnd="@drawable/ic_arrow_right"
                         android:padding="16dp"
                         android:text="@string/text_settings_signer_card_info"
                         android:textColor="@android:color/black"
-                        android:textSize="16sp" />
-
-                <View
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:layout_marginStart="16dp"
-                        android:layout_marginEnd="0dp"
-                        android:background="@color/color_33979797" />
-            </LinearLayout>
-
-            <LinearLayout
-                    android:id="@+id/llSettingsTrConfirmationContainer"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
-
-                <LinearLayout
-                        android:id="@+id/llSettingsTrConfirmation"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:background="?android:attr/selectableItemBackground"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal"
-                        android:padding="16dp">
-
-                    <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginEnd="8dp"
-                            android:layout_weight="1"
-                            android:ellipsize="end"
-                            android:maxLines="1"
-                            android:singleLine="true"
-                            android:text="@string/text_settings_transaction_confirmation"
-                            android:textColor="@android:color/black"
-                            android:textSize="16sp" />
-
-                    <TextView
-                            android:id="@+id/tvTrConfirmationConfig"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginEnd="4dp"
-                            android:layout_weight="0"
-                            android:gravity="center"
-                            android:paddingBottom="2dp"
-                            android:singleLine="true"
-                            android:textColor="@color/color_99000000"
-                            android:textSize="16sp" />
-
-                    <ImageView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:src="@drawable/ic_arrow_right"
-                            tools:ignore="ContentDescription" />
-                </LinearLayout>
+                        android:textSize="16sp"
+                        app:drawableEndCompat="@drawable/ic_arrow_right" />
 
                 <View
                         android:layout_width="match_parent"
@@ -367,11 +379,11 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="?android:attr/selectableItemBackground"
-                    android:drawableEnd="@drawable/ic_arrow_right"
                     android:padding="16dp"
                     android:text="@string/text_settings_rate_us"
                     android:textColor="@android:color/black"
-                    android:textSize="16sp" />
+                    android:textSize="16sp"
+                    app:drawableEndCompat="@drawable/ic_arrow_right" />
 
             <View
                     android:layout_width="match_parent"
@@ -385,11 +397,11 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="?android:attr/selectableItemBackground"
-                    android:drawableEnd="@drawable/ic_arrow_right"
                     android:padding="16dp"
                     android:text="@string/text_settings_license"
                     android:textColor="@android:color/black"
-                    android:textSize="16sp" />
+                    android:textSize="16sp"
+                    app:drawableEndCompat="@drawable/ic_arrow_right" />
 
             <View
                     android:layout_width="match_parent"
@@ -450,12 +462,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom"
-                android:drawableTop="@drawable/ic_gray_logo"
                 android:drawablePadding="8dp"
                 android:gravity="center"
                 android:padding="16dp"
                 android:text="@string/text_all_rights_reserved"
                 android:textColor="@color/color_999b9b9b"
-                android:textSize="10sp" />
+                android:textSize="10sp"
+                app:drawableTopCompat="@drawable/ic_gray_logo" />
     </LinearLayout>
 </ScrollView>

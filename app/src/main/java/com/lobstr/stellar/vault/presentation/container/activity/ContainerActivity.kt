@@ -14,13 +14,14 @@ import com.lobstr.stellar.vault.presentation.util.Constant.Navigation.IMPORT_XDR
 import com.lobstr.stellar.vault.presentation.util.Constant.Navigation.SETTINGS
 import com.lobstr.stellar.vault.presentation.util.Constant.Navigation.SIGNER_INFO
 import com.lobstr.stellar.vault.presentation.util.Constant.Navigation.TRANSACTION_DETAILS
+import com.lobstr.stellar.vault.presentation.util.Constant.TransactionConfirmationSuccessStatus.SUCCESS
 import com.lobstr.stellar.vault.presentation.util.Constant.Util.UNDEFINED_VALUE
 import com.lobstr.stellar.vault.presentation.util.manager.FragmentTransactionManager
-import moxy.presenter.InjectPresenter
-import moxy.presenter.ProvidePresenter
+import moxy.ktx.moxyPresenter
 
 /**
  * Used for show separate activity with fragments container.
+ * Associated with [com.lobstr.stellar.vault.presentation.home.HomeActivity].
  * @see ContainerFragment
  */
 class ContainerActivity : BaseActivity(), ContainerView {
@@ -37,9 +38,6 @@ class ContainerActivity : BaseActivity(), ContainerView {
     // Fields
     // ===========================================================
 
-    @InjectPresenter
-    lateinit var mContainerPresenter: ContainerPresenter
-
     // ===========================================================
     // Constructors
     // ===========================================================
@@ -53,15 +51,14 @@ class ContainerActivity : BaseActivity(), ContainerView {
      * Example:
      * @see Constant.Bundle.BUNDLE_TRANSACTION_ITEM
      */
-    @ProvidePresenter
-    fun provideContainerPresenter() = ContainerPresenter(
+    private val mContainerPresenter by moxyPresenter { ContainerPresenter(
         intent?.getIntExtra(EXTRA_NAVIGATION_FR, DASHBOARD)!!,
         intent?.getParcelableExtra(Constant.Extra.EXTRA_TRANSACTION_ITEM),
         intent?.getStringExtra(Constant.Extra.EXTRA_ENVELOPE_XDR),
-        intent?.getBooleanExtra(Constant.Extra.EXTRA_NEED_ADDITIONAL_SIGNATURES, false),
+        intent?.getByteExtra(Constant.Extra.EXTRA_TRANSACTION_CONFIRMATION_SUCCESS_STATUS, SUCCESS),
         intent?.getStringExtra(Constant.Extra.EXTRA_ERROR_MESSAGE),
         intent?.getIntExtra(Constant.Extra.EXTRA_CONFIG, UNDEFINED_VALUE) ?: UNDEFINED_VALUE
-    )
+    ) }
 
     // ===========================================================
     // Getter & Setter
@@ -200,13 +197,13 @@ class ContainerActivity : BaseActivity(), ContainerView {
         )
     }
 
-    override fun showSuccessFr(envelopeXdr: String, needAdditionalSignatures: Boolean) {
+    override fun showSuccessFr(envelopeXdr: String, transactionSuccessStatus: Byte) {
         val bundle = Bundle()
         bundle.putInt(Constant.Bundle.BUNDLE_NAVIGATION_FR, Constant.Navigation.SUCCESS)
         bundle.putString(Constant.Bundle.BUNDLE_ENVELOPE_XDR, envelopeXdr)
-        bundle.putBoolean(
-            Constant.Bundle.BUNDLE_NEED_ADDITIONAL_SIGNATURES,
-            needAdditionalSignatures
+        bundle.putByte(
+            Constant.Bundle.BUNDLE_TRANSACTION_CONFIRMATION_SUCCESS_STATUS,
+            transactionSuccessStatus
         )
         val fragment = supportFragmentManager.fragmentFactory.instantiate(
             this.classLoader,

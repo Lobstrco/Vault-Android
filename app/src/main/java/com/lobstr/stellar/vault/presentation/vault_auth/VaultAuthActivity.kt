@@ -8,8 +8,7 @@ import com.lobstr.stellar.vault.presentation.base.activity.BaseActivity
 import com.lobstr.stellar.vault.presentation.container.fragment.ContainerFragment
 import com.lobstr.stellar.vault.presentation.util.Constant
 import com.lobstr.stellar.vault.presentation.util.manager.FragmentTransactionManager
-import moxy.presenter.InjectPresenter
-import moxy.presenter.ProvidePresenter
+import moxy.ktx.moxyPresenter
 
 class VaultAuthActivity : BaseActivity(), VaultAuthView {
 
@@ -25,15 +24,11 @@ class VaultAuthActivity : BaseActivity(), VaultAuthView {
     // Fields
     // ===========================================================
 
-    @InjectPresenter
-    lateinit var mVaultAuthPresenter: VaultAuthPresenter
-
     // ===========================================================
     // Constructors
     // ===========================================================
 
-    @ProvidePresenter
-    fun provideVaultAuthPresenter() = VaultAuthPresenter()
+    private val mVaultAuthPresenter by moxyPresenter { VaultAuthPresenter() }
 
     // ===========================================================
     // Getter & Setter

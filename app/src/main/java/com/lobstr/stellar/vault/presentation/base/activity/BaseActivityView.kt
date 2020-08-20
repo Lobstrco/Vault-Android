@@ -49,4 +49,7 @@ interface BaseActivityView : MvpView {
 
     @Skip
     fun showMessage(message: String?)
+
+    @Skip
+    fun proceedPinActivityAppearance()
 }

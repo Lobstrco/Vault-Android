@@ -4,28 +4,18 @@ import android.text.TextUtils
 import com.lobstr.stellar.vault.R
 import com.lobstr.stellar.vault.domain.recovery_key.RecoverKeyInteractor
 import com.lobstr.stellar.vault.presentation.BasePresenter
-import com.lobstr.stellar.vault.presentation.application.LVApplication
 import com.lobstr.stellar.vault.presentation.auth.restore_key.entities.RecoveryPhraseInfo
-import com.lobstr.stellar.vault.presentation.dagger.module.recovery_key.RecoveryKeyModule
 import com.lobstr.stellar.vault.presentation.util.Constant.Support.RECOVER_ACCOUNT
 import com.lobstr.stellar.vault.presentation.util.Constant.Util.COUNT_MNEMONIC_WORDS_12
 import com.lobstr.stellar.vault.presentation.util.Constant.Util.COUNT_MNEMONIC_WORDS_24
 import com.soneso.stellarmnemonics.mnemonic.MnemonicException
 import com.soneso.stellarmnemonics.mnemonic.WordList
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
-import javax.inject.Inject
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.schedulers.Schedulers
 
-class RecoverKeyFrPresenter : BasePresenter<RecoverKeyFrView>() {
-
-    @Inject
-    lateinit var interactor: RecoverKeyInteractor
+class RecoverKeyFrPresenter(private val interactor: RecoverKeyInteractor) : BasePresenter<RecoverKeyFrView>() {
 
     private lateinit var phrases: String
-
-    init {
-        LVApplication.appComponent.plusRecoveryKeyComponent(RecoveryKeyModule()).inject(this)
-    }
 
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
