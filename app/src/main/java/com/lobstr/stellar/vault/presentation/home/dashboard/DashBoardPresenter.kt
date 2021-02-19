@@ -17,13 +17,14 @@ import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.disposables.Disposable
 import io.reactivex.rxjava3.schedulers.Schedulers
+import javax.inject.Inject
 
-class DashboardPresenter(
+class DashboardPresenter @Inject constructor(
     private val interactor: DashboardInteractor,
     private val eventProviderModule: EventProviderModule
 ) : BasePresenter<DashboardView>() {
 
-    private var stellarAccountsSubscription: Disposable? = null
+    private var stellarAccountsDisposable: Disposable? = null
     private val cachedStellarAccounts: MutableList<Account> = mutableListOf()
 
     private var loadSignedAccountsInProcess = false
@@ -201,8 +202,8 @@ class DashboardPresenter(
      * Used for receive federation by account id.
      */
     private fun getStellarAccounts(accounts: List<Account>) {
-        stellarAccountsSubscription?.dispose()
-        stellarAccountsSubscription = Observable.fromIterable(accounts)
+        stellarAccountsDisposable?.dispose()
+        stellarAccountsDisposable = Observable.fromIterable(accounts)
             .subscribeOn(Schedulers.io())
             .filter { account: Account ->
                 cachedStellarAccounts
@@ -234,7 +235,7 @@ class DashboardPresenter(
                 // Ignore.
             })
 
-        unsubscribeOnDestroy(stellarAccountsSubscription!!)
+        unsubscribeOnDestroy(stellarAccountsDisposable!!)
     }
 
     fun transactionCountClicked() {

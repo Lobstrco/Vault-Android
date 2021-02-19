@@ -23,19 +23,25 @@ interface StellarRepository {
 
     fun signTransaction(signer: KeyPair, envelopXdr: String): Single<AbstractTransaction>
 
+    /**
+     * Used for Create Transaction Item from XDR.
+     */
     fun createTransactionItem(envelopXdr: String): Single<TransactionItem>
 
     fun generate12WordMnemonic(): ArrayList<MnemonicItem>
 
     fun generate24WordMnemonic(): ArrayList<MnemonicItem>
 
+    /**
+     * Used for get transaction signers info (exclude VAULT marker key).
+     */
     fun getTransactionSigners(envelopXdr: String, sourceAccount: String): Single<AccountResult>
 
     fun getPublicKeyFromKeyPair(walletPublicKey: ByteArray?): String?
 
     fun getTransactionFromXDR(xdr: String): AbstractTransaction
 
-    fun readChallengeTransaction(challengeXdr: String, serverAccountId: String): Sep10Challenge.ChallengeTransaction?
+    fun readChallengeTransaction(challengeXdr: String, serverAccountId: String, domainName: String, webAuthDomain: String?): Sep10Challenge.ChallengeTransaction?
 
     fun signTransactionWithTangemCardData(
         transaction: AbstractTransaction,

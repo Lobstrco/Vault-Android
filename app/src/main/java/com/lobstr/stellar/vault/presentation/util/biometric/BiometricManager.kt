@@ -3,9 +3,9 @@ package com.lobstr.stellar.vault.presentation.util.biometric
 import android.content.Context
 import android.util.Log
 import androidx.biometric.BiometricPrompt
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
-import com.google.android.gms.tasks.TaskExecutors.MAIN_THREAD
 import java.util.concurrent.Executor
 
 class BiometricManager(biometricBuilder: BiometricBuilder) {
@@ -20,7 +20,6 @@ class BiometricManager(biometricBuilder: BiometricBuilder) {
     private var description: String?
     private var negativeButtonText: String?
     private var requireConfirmation: Boolean
-    private var deviceCredentialAllowed: Boolean
 
     private var biometricPrompt: BiometricPrompt?
 
@@ -31,7 +30,6 @@ class BiometricManager(biometricBuilder: BiometricBuilder) {
         this.description = biometricBuilder.description
         this.negativeButtonText = biometricBuilder.negativeButtonText
         this.requireConfirmation = biometricBuilder.requireConfirmation
-        this.deviceCredentialAllowed = biometricBuilder.deviceCredentialAllowed
 
         val fragment = biometricBuilder.biometricListener as? Fragment
         val activity = biometricBuilder.biometricListener as? FragmentActivity
@@ -52,6 +50,7 @@ class BiometricManager(biometricBuilder: BiometricBuilder) {
     }
 
     fun cancelAuthentication() {
+        // Called in onStop in BiometricFragment.
         biometricPrompt?.cancelAuthentication()
     }
 
@@ -84,22 +83,14 @@ class BiometricManager(biometricBuilder: BiometricBuilder) {
 
     private fun displayBiometricPrompt() {
         try {
-            val promptInfo = BiometricPrompt.PromptInfo.Builder()
-                .setTitle(title!!)
-                .setSubtitle(subtitle)
-                .setDescription(description)
-                .setConfirmationRequired(requireConfirmation)
-
-            // Cannot call setNegativeButtonText() and
-            // setDeviceCredentialAllowed() at the same time.
-            if (deviceCredentialAllowed) {
-                promptInfo.setDeviceCredentialAllowed(deviceCredentialAllowed)
-            } else {
-                promptInfo.setNegativeButtonText(negativeButtonText!!)
-            }
-
             biometricPrompt?.authenticate(
-                promptInfo.build()
+                BiometricPrompt.PromptInfo.Builder()
+                    .setTitle(title!!)
+                    .setSubtitle(subtitle)
+                    .setDescription(description)
+                    .setConfirmationRequired(requireConfirmation)
+                    .setNegativeButtonText(negativeButtonText!!)
+                    .build()
             )
         } catch (exc: Exception) {
             // Handle internal errors.
@@ -113,8 +104,7 @@ class BiometricManager(biometricBuilder: BiometricBuilder) {
         var description: String? = null
         var negativeButtonText: String? = null
         var requireConfirmation: Boolean = true
-        var deviceCredentialAllowed: Boolean = false
-        var executor: Executor = MAIN_THREAD
+        var executor: Executor = ContextCompat.getMainExecutor(context)
 
         /**
          * Required field.
@@ -139,11 +129,6 @@ class BiometricManager(biometricBuilder: BiometricBuilder) {
             return this
         }
 
-        fun setDeviceCredentialAllowed(deviceCredentialAllowed: Boolean): BiometricBuilder {
-            this.deviceCredentialAllowed = deviceCredentialAllowed
-            return this
-        }
-
         /**
          * Required field.
          */
@@ -154,7 +139,7 @@ class BiometricManager(biometricBuilder: BiometricBuilder) {
 
         /**
          * Set executor for handle biometric callback if needed.
-         * By default - MAIN_THREAD.
+         * By default - MAIN.
          */
         fun setExecutor(executor: Executor): BiometricBuilder {
             this.executor = executor

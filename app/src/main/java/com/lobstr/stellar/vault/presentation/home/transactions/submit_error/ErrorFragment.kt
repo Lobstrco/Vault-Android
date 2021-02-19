@@ -4,15 +4,15 @@ package com.lobstr.stellar.vault.presentation.home.transactions.submit_error
 import android.os.Bundle
 import android.view.*
 import com.lobstr.stellar.vault.R
+import com.lobstr.stellar.vault.databinding.FragmentErrorBinding
 import com.lobstr.stellar.vault.presentation.base.fragment.BaseFragment
 import com.lobstr.stellar.vault.presentation.util.AppUtil
 import com.lobstr.stellar.vault.presentation.util.Constant
 import com.lobstr.stellar.vault.presentation.util.manager.SupportManager
-import dagger.Lazy
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.android.synthetic.main.fragment_error.*
 import moxy.ktx.moxyPresenter
 import javax.inject.Inject
+import javax.inject.Provider
 
 @AndroidEntryPoint
 class ErrorFragment : BaseFragment(), ErrorView, View.OnClickListener {
@@ -29,16 +29,17 @@ class ErrorFragment : BaseFragment(), ErrorView, View.OnClickListener {
     // Fields
     // ===========================================================
 
-    @Inject
-    lateinit var daggerPresenter: Lazy<ErrorPresenter>
+    private var _binding: FragmentErrorBinding? = null
+    private val binding get() = _binding!!
 
-    private var mView: View? = null
+    @Inject
+    lateinit var presenterProvider: Provider<ErrorPresenter>
 
     // ===========================================================
     // Constructors
     // ===========================================================
 
-    private val mPresenter by moxyPresenter { daggerPresenter.get().apply {
+    private val mPresenter by moxyPresenter { presenterProvider.get().apply {
             error = requireArguments().getString(Constant.Bundle.BUNDLE_ERROR_MESSAGE)!!
         }}
 
@@ -54,8 +55,8 @@ class ErrorFragment : BaseFragment(), ErrorView, View.OnClickListener {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        mView = if (mView == null) inflater.inflate(R.layout.fragment_error, container, false) else mView
-        return mView
+        _binding = FragmentErrorBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -64,7 +65,7 @@ class ErrorFragment : BaseFragment(), ErrorView, View.OnClickListener {
     }
 
     private fun setListeners() {
-        btnDone.setOnClickListener(this)
+        binding.btnDone.setOnClickListener(this)
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -80,13 +81,18 @@ class ErrorFragment : BaseFragment(), ErrorView, View.OnClickListener {
         return super.onOptionsItemSelected(item)
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+
     // ===========================================================
     // Listeners, methods for/from Interfaces
     // ===========================================================
 
     override fun onClick(v: View?) {
         when (v?.id) {
-            btnDone.id -> mPresenter.doneClicked()
+            binding.btnDone.id -> mPresenter.doneClicked()
         }
     }
 
@@ -95,7 +101,7 @@ class ErrorFragment : BaseFragment(), ErrorView, View.OnClickListener {
     }
 
     override fun setupErrorInfo(error: String) {
-        tvErrorDescription.text = error
+        binding.tvErrorDescription.text = error
     }
 
     override fun finishScreen() {

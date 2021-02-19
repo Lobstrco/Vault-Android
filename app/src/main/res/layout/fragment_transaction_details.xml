@@ -20,7 +20,7 @@
                 android:orientation="vertical">
 
             <FrameLayout
-                    android:id="@+id/fl_container"
+                    android:id="@+id/flContainer"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
 

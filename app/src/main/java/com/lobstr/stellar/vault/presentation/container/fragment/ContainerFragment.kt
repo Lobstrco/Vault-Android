@@ -89,7 +89,7 @@ class ContainerFragment : BaseContainerFragment(),
                 requireContext().classLoader,
                 AuthFragment::class.qualifiedName!!
             ),
-            R.id.fl_container
+            R.id.flContainer
         )
     }
 
@@ -100,7 +100,7 @@ class ContainerFragment : BaseContainerFragment(),
                 requireContext().classLoader,
                 VaultAuthFragment::class.qualifiedName!!
             ),
-            R.id.fl_container
+            R.id.flContainer
         )
     }
 
@@ -111,49 +111,49 @@ class ContainerFragment : BaseContainerFragment(),
                 requireContext().classLoader,
                 SignerInfoFragment::class.qualifiedName!!
             ),
-            R.id.fl_container
+            R.id.flContainer
         )
     }
 
     // Base unique home tabs fragment.
     override fun showDashBoardFr() {
         // Unique fragment must be first in container.
-        if (childFragmentManager.findFragmentById(R.id.fl_container) != null) return
+        if (childFragmentManager.findFragmentById(R.id.flContainer) != null) return
         FragmentTransactionManager.displayFragment(
             childFragmentManager,
             childFragmentManager.fragmentFactory.instantiate(
                 requireContext().classLoader,
                 DashboardFragment::class.qualifiedName!!
             ),
-            R.id.fl_container
+            R.id.flContainer
         )
     }
 
     // Base unique home tabs fragment.
     override fun showSettingsFr() {
         // Unique fragment must be first in container.
-        if (childFragmentManager.findFragmentById(R.id.fl_container) != null) return
+        if (childFragmentManager.findFragmentById(R.id.flContainer) != null) return
         FragmentTransactionManager.displayFragment(
             childFragmentManager,
             childFragmentManager.fragmentFactory.instantiate(
                 requireContext().classLoader,
                 SettingsFragment::class.qualifiedName!!
             ),
-            R.id.fl_container
+            R.id.flContainer
         )
     }
 
     // Base unique home tabs fragment.
     override fun showTransactionsFr() {
         // Unique fragment must be first in container.
-        if (childFragmentManager.findFragmentById(R.id.fl_container) != null) return
+        if (childFragmentManager.findFragmentById(R.id.flContainer) != null) return
         FragmentTransactionManager.displayFragment(
             childFragmentManager,
             childFragmentManager.fragmentFactory.instantiate(
                 requireContext().classLoader,
                 TransactionsFragment::class.qualifiedName!!
             ),
-            R.id.fl_container
+            R.id.flContainer
         )
     }
 
@@ -169,7 +169,7 @@ class ContainerFragment : BaseContainerFragment(),
         FragmentTransactionManager.displayFragment(
             childFragmentManager,
             fragment,
-            R.id.fl_container
+            R.id.flContainer
         )
     }
 
@@ -180,7 +180,7 @@ class ContainerFragment : BaseContainerFragment(),
                 requireContext().classLoader,
                 ImportXdrFragment::class.qualifiedName!!
             ),
-            R.id.fl_container
+            R.id.flContainer
         )
     }
 
@@ -191,7 +191,7 @@ class ContainerFragment : BaseContainerFragment(),
                 requireContext().classLoader,
                 MnemonicsFragment::class.qualifiedName!!
             ),
-            R.id.fl_container
+            R.id.flContainer
         )
     }
 
@@ -211,7 +211,7 @@ class ContainerFragment : BaseContainerFragment(),
         FragmentTransactionManager.displayFragment(
             childFragmentManager,
             fragment,
-            R.id.fl_container
+            R.id.flContainer
         )
     }
 
@@ -227,7 +227,7 @@ class ContainerFragment : BaseContainerFragment(),
         FragmentTransactionManager.displayFragment(
             childFragmentManager,
             fragment,
-            R.id.fl_container
+            R.id.flContainer
         )
     }
 
@@ -238,7 +238,7 @@ class ContainerFragment : BaseContainerFragment(),
                 requireContext().classLoader,
                 SignedAccountsFragment::class.qualifiedName!!
             ),
-            R.id.fl_container
+            R.id.flContainer
         )
     }
 
@@ -254,7 +254,7 @@ class ContainerFragment : BaseContainerFragment(),
         FragmentTransactionManager.displayFragment(
             childFragmentManager,
             fragment,
-            R.id.fl_container
+            R.id.flContainer
         )
     }
 

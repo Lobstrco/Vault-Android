@@ -13,10 +13,14 @@ import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.FragmentManager
 import com.lobstr.stellar.vault.R
 import com.lobstr.stellar.vault.presentation.BaseMvpAppCompatDialogFragment
+import com.lobstr.stellar.vault.presentation.dialog.alert.base.AlertDialogFragment.DialogIdentifier.APP_UPDATE
 import com.lobstr.stellar.vault.presentation.dialog.alert.base.AlertDialogFragment.DialogIdentifier.PROGRESS
 import com.lobstr.stellar.vault.presentation.dialog.alert.base.AlertDialogFragment.DialogIdentifier.RATE_US
+import com.lobstr.stellar.vault.presentation.dialog.alert.base.AlertDialogFragment.DialogIdentifier.SUGGEST_RATE_US
 import com.lobstr.stellar.vault.presentation.dialog.alert.progress.ProgressDialog
-import com.lobstr.stellar.vault.presentation.home.rate_us.RateUsDialogFragment
+import com.lobstr.stellar.vault.presentation.home.app_update.AppUpdateDialogFragment
+import com.lobstr.stellar.vault.presentation.home.rate_us.common.RateUsDialogFragment
+import com.lobstr.stellar.vault.presentation.home.rate_us.suggest.SuggestRateUsDialogFragment
 import com.lobstr.stellar.vault.presentation.util.AppUtil
 
 
@@ -43,6 +47,9 @@ open class AlertDialogFragment : BaseMvpAppCompatDialogFragment() {
     private var mNegativeBtnText: CharSequence? = null
     private var mPositiveBtnText: CharSequence? = null
     private var mNeutralBtnText: CharSequence? = null
+    private var negativeBtnEnabled: Boolean = true
+    private var positiveBtnEnabled: Boolean = true
+    private var neutralBtnEnabled: Boolean = true
 
     protected var mContentView: View? = null
 
@@ -56,16 +63,20 @@ open class AlertDialogFragment : BaseMvpAppCompatDialogFragment() {
         const val LOG_OUT = "LOG_OUT"
         const val EDIT_ACCOUNT = "EDIT_ACCOUNT"
         const val RATE_US = "RATE_US"
+        const val SUGGEST_RATE_US = "SUGGEST_RATE_US"
         const val COMMON_PIN_PATTERN = "COMMON_PIN_PATTERN"
-        const val CLEAR_INVALID_TR = "CLEAR_INVALID_TR"
+        const val CLEAR_TRANSACTIONS = "CLEAR_TRANSACTIONS"
         const val NFC_INFO_DIALOG = "NFC_INFO_DIALOG"
         const val TANGEM = "TANGEM"
         const val INFO = "INFO"
+        const val APP_UPDATE = "APP_UPDATE"
     }
 
     object DialogIdentifier {
         const val PROGRESS = 1
-        const val RATE_US = 2
+        const val SUGGEST_RATE_US = 2
+        const val RATE_US = 3
+        const val APP_UPDATE = 4
     }
 
     companion object {
@@ -84,6 +95,9 @@ open class AlertDialogFragment : BaseMvpAppCompatDialogFragment() {
         const val ARGUMENT_DIALOG_NEGATIVE_BTN_TEXT = "ARGUMENT_DIALOG_NEGATIVE_BTN_TEXT"
         const val ARGUMENT_DIALOG_POSITIVE_BTN_TEXT = "ARGUMENT_DIALOG_POSITIVE_BTN_TEXT"
         const val ARGUMENT_DIALOG_NEUTRAL_BTN_TEXT = "ARGUMENT_DIALOG_NEUTRAL_BTN_TEXT"
+        const val ARGUMENT_DIALOG_NEGATIVE_BTN_ENABLED = "ARGUMENT_DIALOG_NEGATIVE_BTN_ENABLED"
+        const val ARGUMENT_DIALOG_POSITIVE_BTN_ENABLED = "ARGUMENT_DIALOG_POSITIVE_BTN_ENABLED"
+        const val ARGUMENT_DIALOG_NEUTRAL_BTN_ENABLED = "ARGUMENT_DIALOG_NEUTRAL_BTN_ENABLED"
         const val ARGUMENT_DIALOG_SPECIFIC_DATA = "ARGUMENT_DIALOG_SPECIFIC_DATA"
 
         // ===========================================================
@@ -101,9 +115,21 @@ open class AlertDialogFragment : BaseMvpAppCompatDialogFragment() {
                     Log.i(LOG_TAG, " fabric: ProgressDialog")
                 }
 
+                SUGGEST_RATE_US -> {
+                    alertDialogFragment =
+                        SuggestRateUsDialogFragment()
+                    Log.i(LOG_TAG, " fabric: SuggestRateUsDialogFragment")
+                }
+
                 RATE_US -> {
-                    alertDialogFragment = RateUsDialogFragment()
+                    alertDialogFragment =
+                        RateUsDialogFragment()
                     Log.i(LOG_TAG, " fabric: RateUsDialogFragment")
+                }
+
+                APP_UPDATE -> {
+                    alertDialogFragment = AppUpdateDialogFragment()
+                    Log.i(LOG_TAG, " fabric: AppUpdateDialogFragment")
                 }
 
                 else -> {
@@ -134,7 +160,7 @@ open class AlertDialogFragment : BaseMvpAppCompatDialogFragment() {
 
         isCancelable = cancelableOf
 
-        return AlertDialog.Builder(requireActivity(), R.style.AlertDialog)
+        return AlertDialog.Builder(requireActivity(), theme)
             .setTitle(mTitle)
             .setMessage(mMessage)
             .setView(mContentView)
@@ -156,6 +182,10 @@ open class AlertDialogFragment : BaseMvpAppCompatDialogFragment() {
             .create()
     }
 
+    override fun getTheme(): Int {
+        return R.style.AlertDialog
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -170,13 +200,37 @@ open class AlertDialogFragment : BaseMvpAppCompatDialogFragment() {
         )
     }
 
+    /**
+     * Used for usual dialog showing. Here checking only visibility status of the previous dialog.
+     */
     override fun show(manager: FragmentManager, tag: String?) {
         // If dialog is showed - skip it.
-        if ((manager.findFragmentByTag(tag) as? AlertDialogFragment)?.dialog?.isShowing == true) {
+        if ((manager.findFragmentByTag(tag) as? AlertDialogFragment)?.dialog != null) {
             return
         }
 
         super.show(manager, tag)
+    }
+
+    /**
+     * Used for dialog showing with the strong check of previous dialog reference.
+     * Use it when several identical dialogs called concurrently.
+     */
+    fun showInstant(manager: FragmentManager, tag: String?) {
+        // If dialog don't equals null - skip it.
+        if ((manager.findFragmentByTag(tag) as? AlertDialogFragment)?.dialog != null) {
+            return
+        }
+
+        super.show(manager, tag)
+    }
+
+    override fun onStart() {
+        super.onStart()
+        // Enable or disable buttons.
+        (dialog as? AlertDialog)?.getButton(Dialog.BUTTON_NEGATIVE)?.isEnabled = negativeBtnEnabled
+        (dialog as? AlertDialog)?.getButton(Dialog.BUTTON_POSITIVE)?.isEnabled = positiveBtnEnabled
+        (dialog as? AlertDialog)?.getButton(Dialog.BUTTON_NEUTRAL)?.isEnabled = neutralBtnEnabled
     }
 
     override fun onDismiss(dialog: DialogInterface) {
@@ -200,12 +254,16 @@ open class AlertDialogFragment : BaseMvpAppCompatDialogFragment() {
 
         isCalledInFragment = requireArguments().getBoolean(ARGUMENT_DIALOG_IS_CALLED_IN_FRAGMENT)
         cancelableOf = requireArguments().getBoolean(ARGUMENT_DIALOG_IS_CANCELABLE)
+
         mView = requireArguments().getInt(ARGUMENT_DIALOG_VIEW)
         mTitle = requireArguments().getCharSequence(ARGUMENT_DIALOG_TITLE)
         mMessage = requireArguments().getCharSequence(ARGUMENT_DIALOG_MESSAGE)
         mNegativeBtnText = requireArguments().getCharSequence(ARGUMENT_DIALOG_NEGATIVE_BTN_TEXT)
         mPositiveBtnText = requireArguments().getCharSequence(ARGUMENT_DIALOG_POSITIVE_BTN_TEXT)
         mNeutralBtnText = requireArguments().getCharSequence(ARGUMENT_DIALOG_NEUTRAL_BTN_TEXT)
+        negativeBtnEnabled = requireArguments().getBoolean(ARGUMENT_DIALOG_NEGATIVE_BTN_ENABLED, true)
+        positiveBtnEnabled = requireArguments().getBoolean(ARGUMENT_DIALOG_POSITIVE_BTN_ENABLED, true)
+        neutralBtnEnabled = requireArguments().getBoolean(ARGUMENT_DIALOG_NEUTRAL_BTN_ENABLED, true)
 
         mOnBaseAlertDialogListener = if (isCalledInFragment)
             if (parentFragment is OnBaseAlertDialogListener) parentFragment as OnBaseAlertDialogListener? else null
@@ -251,6 +309,23 @@ open class AlertDialogFragment : BaseMvpAppCompatDialogFragment() {
         }
     }
 
+    // Use these methods for enable and disable Alert Dialog buttons.
+
+    protected fun setNegativeBtnEnabled(enabled: Boolean){
+        negativeBtnEnabled = enabled
+        (dialog as? AlertDialog)?.getButton(Dialog.BUTTON_NEGATIVE)?.isEnabled = enabled
+    }
+
+    protected fun setPositiveBtnEnabled(enabled: Boolean){
+        positiveBtnEnabled = enabled
+        (dialog as? AlertDialog)?.getButton(Dialog.BUTTON_POSITIVE)?.isEnabled = enabled
+    }
+
+    protected fun setNeutralBtnEnabled(enabled: Boolean){
+        neutralBtnEnabled = enabled
+        (dialog as? AlertDialog)?.getButton(Dialog.BUTTON_NEUTRAL)?.isEnabled = enabled
+    }
+
     // ===========================================================
     // Inner and Anonymous Classes
     // ===========================================================
@@ -276,6 +351,9 @@ open class AlertDialogFragment : BaseMvpAppCompatDialogFragment() {
         private var negativeBtnText: CharSequence? = null
         private var positiveBtnText: CharSequence? = null
         private var neutralBtnText: CharSequence? = null
+        private var negativeBtnEnabled: Boolean = true
+        private var positiveBtnEnabled: Boolean = true
+        private var neutralBtnEnabled: Boolean = true
 
         private var dialogBundle: Bundle? = null
 
@@ -345,6 +423,21 @@ open class AlertDialogFragment : BaseMvpAppCompatDialogFragment() {
             return this
         }
 
+        fun setNegativeBtnEnabled(negativeBtnEnabled: Boolean): Builder {
+            this.negativeBtnEnabled = negativeBtnEnabled
+            return this
+        }
+
+        fun setPositiveBtnEnabled(positiveBtnEnabled: Boolean): Builder {
+            this.positiveBtnEnabled = positiveBtnEnabled
+            return this
+        }
+
+        fun setNeutralBtnEnabled(neutralBtnEnabled: Boolean): Builder {
+            this.neutralBtnEnabled = neutralBtnEnabled
+            return this
+        }
+
         /**
          * Use it for specific AlertDialogFragments.
          *
@@ -353,7 +446,7 @@ open class AlertDialogFragment : BaseMvpAppCompatDialogFragment() {
          * @see ARGUMENT_DIALOG_SPECIFIC_DATA
          * @return Builder.
          */
-        fun setSpecificDialog(dialogId: Int, bundle: Bundle?): Builder {
+        fun setSpecificDialog(dialogId: Int, bundle: Bundle? = null): Builder {
             this.dialogId = dialogId
             this.dialogBundle = bundle
             return this
@@ -373,6 +466,9 @@ open class AlertDialogFragment : BaseMvpAppCompatDialogFragment() {
             bundle.putCharSequence(ARGUMENT_DIALOG_NEGATIVE_BTN_TEXT, negativeBtnText)
             bundle.putCharSequence(ARGUMENT_DIALOG_POSITIVE_BTN_TEXT, positiveBtnText)
             bundle.putCharSequence(ARGUMENT_DIALOG_NEUTRAL_BTN_TEXT, neutralBtnText)
+            bundle.putBoolean(ARGUMENT_DIALOG_NEGATIVE_BTN_ENABLED, negativeBtnEnabled)
+            bundle.putBoolean(ARGUMENT_DIALOG_POSITIVE_BTN_ENABLED, positiveBtnEnabled)
+            bundle.putBoolean(ARGUMENT_DIALOG_NEUTRAL_BTN_ENABLED, neutralBtnEnabled)
 
             bundle.putBundle(ARGUMENT_DIALOG_SPECIFIC_DATA, dialogBundle)
 

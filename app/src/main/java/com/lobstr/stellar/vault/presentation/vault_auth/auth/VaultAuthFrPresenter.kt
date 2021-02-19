@@ -14,9 +14,10 @@ import com.lobstr.stellar.vault.presentation.util.AppUtil
 import com.lobstr.stellar.vault.presentation.util.Constant
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.schedulers.Schedulers
+import javax.inject.Inject
 
 
-class VaultAuthFrPresenter(
+class VaultAuthFrPresenter @Inject constructor(
     private val interactor: VaultAuthInteractor,
     private val eventProviderModule: EventProviderModule
 ) : BasePresenter<VaultAuthFrView>() {

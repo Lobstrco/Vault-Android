@@ -6,10 +6,12 @@ import com.lobstr.stellar.vault.presentation.BasePresenter
 import com.lobstr.stellar.vault.presentation.dialog.alert.base.AlertDialogFragment
 import com.lobstr.stellar.vault.presentation.util.AppUtil
 import com.lobstr.stellar.vault.presentation.util.Constant
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Completable
 import java.util.concurrent.TimeUnit
+import javax.inject.Inject
 
-class SplashPresenter(private val interactor: SplashInteractor) : BasePresenter<SplashView>() {
+class SplashPresenter @Inject constructor(private val interactor: SplashInteractor) : BasePresenter<SplashView>() {
 
     companion object {
         const val SPLASH_TIMEOUT = 2000
@@ -21,6 +23,7 @@ class SplashPresenter(private val interactor: SplashInteractor) : BasePresenter<
         unsubscribeOnDestroy(
             Completable.complete()
                 .delay(SPLASH_TIMEOUT.toLong(), TimeUnit.MILLISECONDS)
+                .observeOn(AndroidSchedulers.mainThread())
                 .doOnComplete {
                     if (BuildConfig.FLAVOR == Constant.Flavor.QA) {
                         viewState.showFlavorDialog(

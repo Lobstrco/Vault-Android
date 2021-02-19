@@ -6,8 +6,9 @@ import com.lobstr.stellar.vault.presentation.BasePresenter
 import com.lobstr.stellar.vault.presentation.util.AppUtil
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.schedulers.Schedulers
+import javax.inject.Inject
 
-class ImportXdrPresenter(private val interactor: ImportXdrInteractor) : BasePresenter<ImportXdrView>() {
+class ImportXdrPresenter @Inject constructor(private val interactor: ImportXdrInteractor) : BasePresenter<ImportXdrView>() {
 
     private var transactionCreationInProcess = false
 

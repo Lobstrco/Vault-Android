@@ -1,7 +1,9 @@
 package com.lobstr.stellar.vault.presentation.util.manager
 
 import android.content.Context
+import android.content.Intent
 import android.os.Build
+import androidx.core.content.ContextCompat
 import com.lobstr.stellar.vault.BuildConfig
 import com.lobstr.stellar.vault.R
 import com.lobstr.stellar.vault.presentation.util.AppUtil
@@ -46,22 +48,25 @@ object SupportManager {
         ) else null
     ) {
         setZendeskIdentity(name = userId ?: "not provided")
-        ViewArticleActivity.builder(articleId)
+        val builder = ViewArticleActivity.builder(articleId)
             .withContactUsButtonVisible(contactUsVisible)
-            .apply {
-                if (contactUsVisible) {
-                    show(
-                        context, RequestActivity.builder()
-                            .apply {
-                                requestSubject?.let { withRequestSubject(it) }
-                                tags?.let { withTags(it) }
-                            }
-                            .config()
-                    )
-                } else {
-                    show(context)
-                }
-            }
+        ContextCompat.startActivity(context, if (contactUsVisible) {
+            builder.intent(
+                context, RequestActivity.builder()
+                    .apply {
+                        requestSubject?.let { withRequestSubject(it) }
+                        tags?.let { withTags(it) }
+                    }
+                    .config()
+            )
+        } else {
+            builder.intent(context)
+        }.apply {
+            addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+            addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
+        },
+            null
+        )
     }
 
     fun showZendeskRequest(
@@ -74,12 +79,17 @@ object SupportManager {
         )
     ) {
         setZendeskIdentity(name = userId ?: "not provided")
-        RequestActivity.builder()
+        ContextCompat.startActivity(context, RequestActivity.builder()
             .apply {
                 requestSubject?.let { withRequestSubject(it) }
                 tags?.let { withTags(it) }
             }
-            .show(context)
+            .intent(context).apply {
+                addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
+            },
+            null
+        )
     }
 
     fun showZendeskHelpCenter(
@@ -99,7 +109,7 @@ object SupportManager {
         ) else null
     ) {
         setZendeskIdentity(name = userId ?: "not provided")
-        HelpCenterActivity
+        ContextCompat.startActivity(context, HelpCenterActivity
             .builder()
             .withShowConversationsMenuButton(showConversationsMenuButton)
             .withContactUsButtonVisible(contactUsVisibleInHelpCenter)
@@ -112,7 +122,7 @@ object SupportManager {
                     withArticlesForSectionIds(sectionIds)
                 }
             }
-            .show(
+            .intent(
                 context,
                 ViewArticleActivity.builder()
                     .withContactUsButtonVisible(contactUsVisibleInArticle)
@@ -126,8 +136,13 @@ object SupportManager {
                         .config()
                 } else {
                     null
-                }
-            )
+                })
+            .apply {
+                addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
+            },
+            null
+        )
     }
 
     private fun createZendeskDeviceInfoTag(context: Context = AppUtil.getAppContext()) =

@@ -2,6 +2,8 @@ package com.lobstr.stellar.vault.presentation.fcm
 
 import android.content.Intent
 import android.text.TextUtils
+import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationManagerCompat
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import com.lobstr.stellar.vault.R
@@ -16,8 +18,8 @@ import com.lobstr.stellar.vault.presentation.fcm.LVFirebaseMessagingService.Fiel
 import com.lobstr.stellar.vault.presentation.home.HomeActivity
 import com.lobstr.stellar.vault.presentation.util.Constant
 import dagger.hilt.android.AndroidEntryPoint
-import java.util.*
 import javax.inject.Inject
+import kotlin.random.Random
 
 @AndroidEntryPoint
 class LVFirebaseMessagingService : FirebaseMessagingService() {
@@ -46,11 +48,6 @@ class LVFirebaseMessagingService : FirebaseMessagingService() {
         const val ADDED_NEW_TRANSACTION = "added_new_transaction"
         const val ADDED_NEW_SIGNATURE = "added_new_signature"
         const val TRANSACTION_SUBMITTED = "transaction_submitted"
-    }
-
-    override fun onCreate() {
-        super.onCreate()
-//        LVApplication.appComponent.inject(this)
     }
 
     override fun onNewToken(newToken: String) {
@@ -102,7 +99,7 @@ class LVFirebaseMessagingService : FirebaseMessagingService() {
                 )
 
                 else -> sendDefaultMessage(
-                    (Date().time / 1000L % Int.MAX_VALUE).toInt(),
+                    Random.nextInt(),
                     NotificationsManager.ChannelId.OTHER,
                     messageTitle,
                     messageBody,
@@ -189,7 +186,11 @@ class LVFirebaseMessagingService : FirebaseMessagingService() {
                     Constant.Navigation.TRANSACTION_DETAILS
                 )
                 putExtra(Constant.Extra.EXTRA_TRANSACTION_ITEM, transaction)
-            }
+            },
+            Intent(this, HomeActivity::class.java).apply {
+                addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_CLEAR_TOP)
+            },
+            priority = NotificationCompat.PRIORITY_HIGH
         )
     }
 
@@ -237,6 +238,10 @@ class LVFirebaseMessagingService : FirebaseMessagingService() {
         )
     }
 
+    /**
+     * @param importance Importance level for the notification channel (Android 8.0 and higher). Use [NotificationManagerCompat] constants.
+     * @param priority Notification priority (Android 7.1 and lower).
+     */
     private fun sendDefaultMessage(
         notificationId: Int,
         channelId: String,
@@ -245,7 +250,10 @@ class LVFirebaseMessagingService : FirebaseMessagingService() {
         groupId: Int,
         groupName: String,
         notificationsManager: NotificationsManager,
-        targetClass: Class<*> = HomeActivity::class.java
+        notificationIntentClass: Class<*> = HomeActivity::class.java,
+        groupIntentClass: Class<*> = HomeActivity::class.java,
+        importance: Int = NotificationManagerCompat.IMPORTANCE_HIGH,
+        priority: Int = NotificationCompat.PRIORITY_DEFAULT
     ) {
         if (!mFcmHelper.isNotificationsEnabled()) {
             return
@@ -262,7 +270,10 @@ class LVFirebaseMessagingService : FirebaseMessagingService() {
             messageBody,
             groupId,
             groupName,
-            targetClass
+            notificationIntentClass,
+            groupIntentClass,
+            importance,
+            priority
         )
     }
 }

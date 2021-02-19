@@ -3,15 +3,14 @@ package com.lobstr.stellar.vault.presentation.entities.transaction.operation
 import com.lobstr.stellar.vault.R
 import com.lobstr.stellar.vault.presentation.entities.transaction.Asset
 import com.lobstr.stellar.vault.presentation.util.AppUtil
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class PaymentOperation(
     override val sourceAccount: String?,
     val destination: String,
     val asset: Asset,
-    val amount: String,
-    val memo: String
+    val amount: String
 ) : Operation(sourceAccount) {
 
     override fun getFields(): MutableList<OperationField> {
@@ -20,7 +19,6 @@ data class PaymentOperation(
         fields.add(OperationField(AppUtil.getString(R.string.op_field_asset), asset.assetCode))
         fields.add(OperationField(AppUtil.getString(R.string.op_field_amount), amount))
         if (asset.assetIssuer != null) fields.add(OperationField(AppUtil.getString(R.string.op_field_asset_issuer), asset.assetIssuer))
-        if (memo.isNotEmpty()) fields.add(OperationField(AppUtil.getString(R.string.op_field_memo), memo))
 
         return fields
     }

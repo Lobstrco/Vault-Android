@@ -11,10 +11,10 @@ import com.lobstr.stellar.vault.presentation.pin.PinActivity
 import com.lobstr.stellar.vault.presentation.util.Constant
 import com.lobstr.stellar.vault.presentation.util.Constant.PinMode.ENTER
 import com.lobstr.stellar.vault.presentation.vault_auth.VaultAuthActivity
-import dagger.Lazy
 import dagger.hilt.android.AndroidEntryPoint
 import moxy.ktx.moxyPresenter
 import javax.inject.Inject
+import javax.inject.Provider
 
 @AndroidEntryPoint
 class SplashActivity : BaseMvpAppCompatActivity(), SplashView,
@@ -33,13 +33,13 @@ class SplashActivity : BaseMvpAppCompatActivity(), SplashView,
     // ===========================================================
 
     @Inject
-    lateinit var daggerPresenter: Lazy<SplashPresenter>
+    lateinit var presenterProvider: Provider<SplashPresenter>
 
     // ===========================================================
     // Constructors
     // ===========================================================
 
-    private val mPresenter by moxyPresenter { daggerPresenter.get() }
+    private val mPresenter by moxyPresenter { presenterProvider.get() }
 
     // ===========================================================
     // Getter & Setter

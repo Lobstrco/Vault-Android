@@ -22,5 +22,7 @@ interface TransactionRepository {
 
     fun markTransactionAsCancelled(token: String, hash: String): Single<TransactionItem>
 
+    fun cancelTransactions(token: String): Completable
+
     fun cancelOutdatedTransactions(token: String): Completable
 }

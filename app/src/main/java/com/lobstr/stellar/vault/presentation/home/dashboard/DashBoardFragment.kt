@@ -17,25 +17,23 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.lobstr.stellar.vault.R
+import com.lobstr.stellar.vault.databinding.FragmentDashBoardBinding
 import com.lobstr.stellar.vault.presentation.base.fragment.BaseFragment
 import com.lobstr.stellar.vault.presentation.container.activity.ContainerActivity
 import com.lobstr.stellar.vault.presentation.dialog.alert.base.AlertDialogFragment
 import com.lobstr.stellar.vault.presentation.entities.account.Account
 import com.lobstr.stellar.vault.presentation.home.HomeActivity
 import com.lobstr.stellar.vault.presentation.home.settings.signed_accounts.adapter.AccountAdapter
-import com.lobstr.stellar.vault.presentation.home.settings.signed_accounts.adapter.OnAccountItemListener
 import com.lobstr.stellar.vault.presentation.home.settings.signed_accounts.edit_account.EditAccountDialogFragment
 import com.lobstr.stellar.vault.presentation.util.AppUtil
 import com.lobstr.stellar.vault.presentation.util.Constant
-import dagger.Lazy
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.android.synthetic.main.fragment_dash_board.*
 import moxy.ktx.moxyPresenter
 import javax.inject.Inject
+import javax.inject.Provider
 
 @AndroidEntryPoint
-class DashboardFragment : BaseFragment(), DashboardView, View.OnClickListener,
-    OnAccountItemListener {
+class DashboardFragment : BaseFragment(), DashboardView, View.OnClickListener {
 
     // ===========================================================
     // Constants
@@ -49,10 +47,11 @@ class DashboardFragment : BaseFragment(), DashboardView, View.OnClickListener,
     // Fields
     // ===========================================================
 
-    @Inject
-    lateinit var daggerPresenter: Lazy<DashboardPresenter>
+    private var _binding: FragmentDashBoardBinding? = null
+    private val binding get() = _binding!!
 
-    private var mView: View? = null
+    @Inject
+    lateinit var presenterProvider: Provider<DashboardPresenter>
 
     private var mRefreshAnimation: ObjectAnimator? = null
 
@@ -60,7 +59,7 @@ class DashboardFragment : BaseFragment(), DashboardView, View.OnClickListener,
     // Constructors
     // ===========================================================
 
-    private val mPresenter by moxyPresenter { daggerPresenter.get() }
+    private val mPresenter by moxyPresenter { presenterProvider.get() }
 
     // ===========================================================
     // Getter & Setter
@@ -80,13 +79,8 @@ class DashboardFragment : BaseFragment(), DashboardView, View.OnClickListener,
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        mView =
-            if (mView == null) inflater.inflate(
-                R.layout.fragment_dash_board,
-                container,
-                false
-            ) else mView
-        return mView
+        _binding = FragmentDashBoardBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -96,12 +90,12 @@ class DashboardFragment : BaseFragment(), DashboardView, View.OnClickListener,
     }
 
     private fun setListeners() {
-        tvDashboardShowList.setOnClickListener(this)
-        tvDashboardCopyPublicKey.setOnClickListener(this)
-        tvDashboardTransactionCount.setOnClickListener(this)
-        tvDashboardSignersCount.setOnClickListener(this)
-        tvEmptyStateAction.setOnClickListener(this)
-        tvAddAccount.setOnClickListener(this)
+        binding.tvDashboardShowList.setOnClickListener(this)
+        binding.tvDashboardCopyPublicKey.setOnClickListener(this)
+        binding.tvDashboardTransactionCount.setOnClickListener(this)
+        binding.tvDashboardSignersCount.setOnClickListener(this)
+        binding.tvEmptyStateAction.setOnClickListener(this)
+        binding.tvAddAccount.setOnClickListener(this)
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -130,53 +124,52 @@ class DashboardFragment : BaseFragment(), DashboardView, View.OnClickListener,
         return super.onOptionsItemSelected(item)
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+
     // ===========================================================
     // Listeners, methods for/from Interfaces
     // ===========================================================
 
     override fun onClick(v: View?) {
         when (v?.id) {
-            tvDashboardTransactionCount.id -> mPresenter.transactionCountClicked()
-            tvDashboardShowList.id -> mPresenter.showTransactionListClicked()
-            tvDashboardCopyPublicKey.id -> mPresenter.copyKeyClicked()
-            tvDashboardSignersCount.id -> mPresenter.signersCountClicked()
-            tvAddAccount.id -> mPresenter.addAccountClicked()
-            tvEmptyStateAction.id -> mPresenter.addAccountClicked()
+            binding.tvDashboardTransactionCount.id -> mPresenter.transactionCountClicked()
+            binding.tvDashboardShowList.id -> mPresenter.showTransactionListClicked()
+            binding.tvDashboardCopyPublicKey.id -> mPresenter.copyKeyClicked()
+            binding.tvDashboardSignersCount.id -> mPresenter.signersCountClicked()
+            binding.tvAddAccount.id -> mPresenter.addAccountClicked()
+            binding.tvEmptyStateAction.id -> mPresenter.addAccountClicked()
         }
     }
 
     override fun initSignedAccountsRecycledView() {
-        rvSignedAccounts.layoutManager = LinearLayoutManager(activity)
-        rvSignedAccounts.itemAnimator = null
-        rvSignedAccounts.isNestedScrollingEnabled = false
-        rvSignedAccounts.adapter = AccountAdapter(AccountAdapter.ACCOUNT, this)
+        binding.rvSignedAccounts.layoutManager = LinearLayoutManager(activity)
+        binding. rvSignedAccounts.itemAnimator = null
+        binding.rvSignedAccounts.isNestedScrollingEnabled = false
+        binding.rvSignedAccounts.adapter = AccountAdapter(AccountAdapter.ACCOUNT,
+            { mPresenter.signedAccountItemClicked(it) },
+            { mPresenter.signedAccountItemLongClicked(it) })
     }
 
     override fun notifySignedAccountsAdapter(accounts: List<Account>) {
-        (rvSignedAccounts.adapter as? AccountAdapter)?.setAccountList(accounts)
-    }
-
-    override fun onAccountItemClick(account: Account) {
-        mPresenter.signedAccountItemClicked(account)
-    }
-
-    override fun onAccountItemLongClick(account: Account) {
-        mPresenter.signedAccountItemLongClicked(account)
+        (binding.rvSignedAccounts.adapter as? AccountAdapter)?.setAccountList(accounts)
     }
 
     override fun showVaultInfo(hasTangem: Boolean, identityIconUrl: String, publicKey: String?) {
-        ivSignerCard.visibility = if(hasTangem) View.VISIBLE else View.GONE
-        flIdentityContainer.visibility = if(hasTangem) View.GONE else View.VISIBLE
+        binding.ivSignerCard.visibility = if (hasTangem) View.VISIBLE else View.GONE
+        binding.flIdentityContainer.visibility = if (hasTangem) View.GONE else View.VISIBLE
 
-        if(!hasTangem) {
+        if (!hasTangem) {
             // Set user identity icon.
             Glide.with(requireContext())
                 .load(identityIconUrl)
                 .placeholder(R.drawable.ic_person)
-                .into(ivIdentity)
+                .into(binding.ivIdentity)
         }
 
-        tvDashboardPublicKey.text = publicKey
+        binding.tvDashboardPublicKey.text = publicKey
     }
 
     override fun showSignersCount(count: Int) {
@@ -215,26 +208,30 @@ class DashboardFragment : BaseFragment(), DashboardView, View.OnClickListener,
             )
         }
 
-        tvDashboardSignersCount.text = spannedText
+        binding.tvDashboardSignersCount.text = spannedText
     }
 
     override fun showDashboardInfo(count: Int?) {
         // Nullable value mean undefined value.
         if (count != null) {
-            tvDashboardTransactionCount.text = count.toString()
+            binding.tvDashboardTransactionCount.text = count.toString()
         }
-        pbDashboardTransactions.visibility = View.GONE
-        llDashboardTransactionToSignContainer.visibility = View.VISIBLE
+        binding.pbDashboardTransactions.visibility = View.GONE
+        binding.llDashboardTransactionToSignContainer.visibility = View.VISIBLE
     }
 
     override fun showSignersScreen() {
         val intent = Intent(context, ContainerActivity::class.java)
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+        intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
         intent.putExtra(Constant.Extra.EXTRA_NAVIGATION_FR, Constant.Navigation.SIGNED_ACCOUNTS)
         startActivity(intent)
     }
 
     override fun showSignerInfoScreen() {
         val intent = Intent(context, ContainerActivity::class.java)
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+        intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
         intent.putExtra(Constant.Extra.EXTRA_NAVIGATION_FR, Constant.Navigation.SIGNER_INFO)
         startActivity(intent)
     }
@@ -265,15 +262,15 @@ class DashboardFragment : BaseFragment(), DashboardView, View.OnClickListener,
     }
 
     override fun showSignersProgress(show: Boolean) {
-        pbDashboardSigners.visibility = if (show) View.VISIBLE else View.GONE
-        tvAddAccount.visibility = if (show) View.GONE else View.VISIBLE
-        tvDashboardSignersCount.visibility = if (show) View.GONE else View.VISIBLE
+        binding.pbDashboardSigners.visibility = if (show) View.VISIBLE else View.GONE
+        binding.tvAddAccount.visibility = if (show) View.GONE else View.VISIBLE
+        binding.tvDashboardSignersCount.visibility = if (show) View.GONE else View.VISIBLE
     }
 
     override fun showSignersEmptyState(show: Boolean) {
-        cvDashboardSignersInfo.visibility = if (show) View.GONE else View.VISIBLE
-        cvDashboardSignersEmptyState.visibility = if (show) View.VISIBLE else View.GONE
-        svTransactions.visibility = if (show) View.GONE else View.VISIBLE
+        binding.cvDashboardSignersInfo.visibility = if (show) View.GONE else View.VISIBLE
+        binding.cvDashboardSignersEmptyState.visibility = if (show) View.VISIBLE else View.GONE
+        binding.svTransactions.visibility = if (show) View.GONE else View.VISIBLE
     }
 
     override fun showRefreshAnimation(show: Boolean) {

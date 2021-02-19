@@ -2,10 +2,10 @@ package com.lobstr.stellar.vault.data.transaction
 
 import com.lobstr.stellar.vault.data.net.entities.transaction.ApiTransactionItem
 import com.lobstr.stellar.vault.data.net.entities.transaction.ApiTransactionResult
+import com.lobstr.stellar.vault.presentation.entities.transaction.*
 import com.lobstr.stellar.vault.presentation.entities.transaction.Asset
+import com.lobstr.stellar.vault.presentation.entities.transaction.Claimant
 import com.lobstr.stellar.vault.presentation.entities.transaction.Transaction
-import com.lobstr.stellar.vault.presentation.entities.transaction.TransactionItem
-import com.lobstr.stellar.vault.presentation.entities.transaction.TransactionResult
 import com.lobstr.stellar.vault.presentation.entities.transaction.operation.AccountMergeOperation
 import com.lobstr.stellar.vault.presentation.entities.transaction.operation.AllowTrustOperation
 import com.lobstr.stellar.vault.presentation.entities.transaction.operation.BumpSequenceOperation
@@ -18,10 +18,20 @@ import com.lobstr.stellar.vault.presentation.entities.transaction.operation.Path
 import com.lobstr.stellar.vault.presentation.entities.transaction.operation.PathPaymentStrictSendOperation
 import com.lobstr.stellar.vault.presentation.entities.transaction.operation.PaymentOperation
 import com.lobstr.stellar.vault.presentation.entities.transaction.operation.SetOptionsOperation
+import com.lobstr.stellar.vault.presentation.entities.transaction.operation.claimable_balance.ClaimClaimableBalanceOperation
+import com.lobstr.stellar.vault.presentation.entities.transaction.operation.claimable_balance.CreateClaimableBalanceOperation
 import com.lobstr.stellar.vault.presentation.entities.transaction.operation.offer.*
 import com.lobstr.stellar.vault.presentation.entities.transaction.operation.offer.CreatePassiveSellOfferOperation
 import com.lobstr.stellar.vault.presentation.entities.transaction.operation.offer.ManageBuyOfferOperation
 import com.lobstr.stellar.vault.presentation.entities.transaction.operation.offer.ManageSellOfferOperation
+import com.lobstr.stellar.vault.presentation.entities.transaction.operation.sponsoring.BeginSponsoringFutureReservesOperation
+import com.lobstr.stellar.vault.presentation.entities.transaction.operation.sponsoring.EndSponsoringFutureReservesOperation
+import com.lobstr.stellar.vault.presentation.entities.transaction.operation.sponsoring.RevokeAccountSponsorshipOperation
+import com.lobstr.stellar.vault.presentation.entities.transaction.operation.sponsoring.RevokeClaimableBalanceSponsorshipOperation
+import com.lobstr.stellar.vault.presentation.entities.transaction.operation.sponsoring.RevokeDataSponsorshipOperation
+import com.lobstr.stellar.vault.presentation.entities.transaction.operation.sponsoring.RevokeOfferSponsorshipOperation
+import com.lobstr.stellar.vault.presentation.entities.transaction.operation.sponsoring.RevokeSignerSponsorshipOperation
+import com.lobstr.stellar.vault.presentation.entities.transaction.operation.sponsoring.RevokeTrustlineSponsorshipOperation
 import com.lobstr.stellar.vault.presentation.util.Constant.Transaction.IMPORT_XDR
 import com.lobstr.stellar.vault.presentation.util.Constant.TransactionType.Item.AUTH_CHALLENGE
 import com.lobstr.stellar.vault.presentation.util.Constant.TransactionType.Item.TRANSACTION
@@ -29,6 +39,10 @@ import org.stellar.sdk.*
 import java.math.BigDecimal
 
 class TransactionEntityMapper(private val network: Network) {
+
+    companion object {
+        const val MANAGER_DATA_NAME_FLAG = "auth" // Equivalent of Sep10Challenge.MANAGER_DATA_NAME_FLAG.
+    }
 
     fun transformTransactions(apiTransactionResult: ApiTransactionResult?): TransactionResult {
         if (apiTransactionResult == null) {
@@ -83,28 +97,52 @@ class TransactionEntityMapper(private val network: Network) {
             "",
             IMPORT_XDR,
             null,
-            getTransactionType(transaction.toEnvelopeXdrBase64(), innerTransaction.sourceAccount!!),
+            getTransactionType(
+                transaction.toEnvelopeXdrBase64(), innerTransaction.sourceAccount,
+                // Verify that the first operation in the transaction is a Manage Data operation for determine AUTH_CHALLENGE transaction type. Else - TRANSACTION type.
+                if (innerTransaction.operations.isNotEmpty() && innerTransaction.operations[0] is ManageDataOperation) extractDomain((innerTransaction.operations[0] as ManageDataOperation).name) else null,
+                if (innerTransaction.operations.isNotEmpty() && innerTransaction.operations[0] is ManageDataOperation) (innerTransaction.operations[0] as ManageDataOperation).value?.let { String(it) } else null,
+            ),
             innerTransaction
         )
     }
 
     /**
+     * Remove [MANAGER_DATA_NAME_FLAG] from name to receive target domain.
+     * @return domain without [MANAGER_DATA_NAME_FLAG], if it is contained. Else - input.
+     */
+    private fun extractDomain(name: String?) = when {
+        name.isNullOrEmpty() -> name
+        name.contains(" $MANAGER_DATA_NAME_FLAG") -> name.substring(0, name.lastIndexOf(" $MANAGER_DATA_NAME_FLAG"))
+        else -> name
+    }
+
+    /**
      * Check sep 10 challenge for determining transaction type.
+     * @param domainName Retrieved from 'name' field value of [ManageDataOperation] without [MANAGER_DATA_NAME_FLAG]. SEP-0010 v3.0.0 requirements.
+     * @param webAuthDomain The home domain that is expected to be included as the value of the [ManageDataOperation] with the 'web_auth_domain' key, if present.
      * @return transaction type: [TRANSACTION] or [AUTH_CHALLENGE].
      */
-    private fun getTransactionType(xdr: String, sourceAccount: String) =
-        if (getChallengeTransaction(xdr, sourceAccount) == null) {
+    private fun getTransactionType(xdr: String, sourceAccount: String, domainName: String?, webAuthDomain: String?) =
+        if (domainName == null || getChallengeTransaction(xdr, sourceAccount, domainName, webAuthDomain) == null) {
             TRANSACTION
         } else {
             AUTH_CHALLENGE
         }
 
-    private fun getChallengeTransaction(challengeXdr: String, serverAccountId: String) =
+    private fun getChallengeTransaction(
+        challengeXdr: String,
+        serverAccountId: String,
+        domainName: String,
+        webAuthDomain: String?
+    ) =
         try {
             Sep10Challenge.readChallengeTransaction(
                 challengeXdr,
                 serverAccountId,
-                network
+                network,
+                domainName,
+                webAuthDomain
             )
         } catch (exc: InvalidSep10ChallengeException) {
             null
@@ -122,10 +160,7 @@ class TransactionEntityMapper(private val network: Network) {
         targetTx.operations.forEach {
             when (it) {
                 is org.stellar.sdk.PaymentOperation -> operations.add(
-                    mapPaymentOperation(
-                        targetTx.memo,
-                        it
-                    )
+                    mapPaymentOperation(it)
                 )
                 is org.stellar.sdk.CreateAccountOperation -> operations.add(
                     mapCreateAccountOperation(it)
@@ -162,27 +197,43 @@ class TransactionEntityMapper(private val network: Network) {
                         it
                     )
                 )
+                is org.stellar.sdk.BeginSponsoringFutureReservesOperation -> operations.add(mapBeginSponsoringFutureReservesOperation(it))
+
+                is org.stellar.sdk.EndSponsoringFutureReservesOperation -> operations.add(mapEndSponsoringFutureReservesOperation(it))
+                is org.stellar.sdk.RevokeAccountSponsorshipOperation -> operations.add(mapRevokeAccountSponsorshipOperation(it))
+                is org.stellar.sdk.RevokeClaimableBalanceSponsorshipOperation -> operations.add(mapRevokeClaimableBalanceSponsorshipOperation(it))
+                is org.stellar.sdk.RevokeDataSponsorshipOperation -> operations.add(mapRevokeDataSponsorshipOperation(it))
+                is org.stellar.sdk.RevokeOfferSponsorshipOperation -> operations.add(mapRevokeOfferSponsorshipOperation(it))
+                is org.stellar.sdk.RevokeSignerSponsorshipOperation -> operations.add(mapRevokeSignerSponsorshipOperation(it))
+                is org.stellar.sdk.RevokeTrustlineSponsorshipOperation -> operations.add(mapRevokeTrustlineSponsorshipOperation(it))
+                is org.stellar.sdk.CreateClaimableBalanceOperation -> operations.add(mapCreateClaimableBalanceOperation(it))
+                is org.stellar.sdk.ClaimClaimableBalanceOperation -> operations.add(mapClaimClaimableBalanceOperation(it))
             }
         }
 
         return Transaction(
             targetTx.sourceAccount,
+            mapMemo(targetTx.memo),
             operations,
             targetTx.sequenceNumber
         )
     }
 
     private fun mapPaymentOperation(
-        memo: Memo,
         operation: org.stellar.sdk.PaymentOperation
     ): PaymentOperation {
         return PaymentOperation(
             (operation as org.stellar.sdk.Operation).sourceAccount,
             operation.destination,
             mapAsset(operation.asset),
-            operation.amount,
-            memo.toString()
+            operation.amount
         )
+    }
+
+    private fun mapMemo(memo: Memo): String = when(memo) {
+        is MemoHash -> memo.hexValue
+        is MemoReturnHash -> memo.hexValue
+        else -> memo.toString()
     }
 
     private fun mapCreateAccountOperation(operation: org.stellar.sdk.CreateAccountOperation): CreateAccountOperation {
@@ -339,11 +390,98 @@ class TransactionEntityMapper(private val network: Network) {
         )
     }
 
+    private fun mapBeginSponsoringFutureReservesOperation(operation: org.stellar.sdk.BeginSponsoringFutureReservesOperation): BeginSponsoringFutureReservesOperation {
+        return BeginSponsoringFutureReservesOperation(
+            (operation as org.stellar.sdk.Operation).sourceAccount,
+            operation.sponsoredId
+        )
+    }
+
+    private fun mapEndSponsoringFutureReservesOperation(operation: org.stellar.sdk.EndSponsoringFutureReservesOperation): EndSponsoringFutureReservesOperation {
+        return EndSponsoringFutureReservesOperation(
+            (operation as org.stellar.sdk.Operation).sourceAccount
+        )
+    }
+
+    private fun mapRevokeAccountSponsorshipOperation(operation: org.stellar.sdk.RevokeAccountSponsorshipOperation): RevokeAccountSponsorshipOperation {
+        return RevokeAccountSponsorshipOperation(
+            (operation as org.stellar.sdk.Operation).sourceAccount,
+            operation.accountId
+        )
+    }
+
+    private fun mapRevokeClaimableBalanceSponsorshipOperation(operation: org.stellar.sdk.RevokeClaimableBalanceSponsorshipOperation): RevokeClaimableBalanceSponsorshipOperation {
+        return RevokeClaimableBalanceSponsorshipOperation(
+            (operation as org.stellar.sdk.Operation).sourceAccount,
+            operation.balanceId
+        )
+    }
+
+    private fun mapRevokeDataSponsorshipOperation(operation: org.stellar.sdk.RevokeDataSponsorshipOperation): RevokeDataSponsorshipOperation {
+        return RevokeDataSponsorshipOperation(
+            (operation as org.stellar.sdk.Operation).sourceAccount,
+            operation.accountId,
+            operation.dataName
+        )
+    }
+
+    private fun mapRevokeOfferSponsorshipOperation(operation: org.stellar.sdk.RevokeOfferSponsorshipOperation): RevokeOfferSponsorshipOperation {
+        return RevokeOfferSponsorshipOperation(
+            (operation as org.stellar.sdk.Operation).sourceAccount,
+            operation.seller,
+            operation.offerId
+        )
+    }
+
+    private fun mapRevokeSignerSponsorshipOperation(operation: org.stellar.sdk.RevokeSignerSponsorshipOperation): RevokeSignerSponsorshipOperation {
+        return RevokeSignerSponsorshipOperation(
+            (operation as org.stellar.sdk.Operation).sourceAccount,
+            operation.accountId,
+            try {
+                KeyPair.fromXdrSignerKey(operation.signer).accountId
+            } catch (e: Exception) {
+                null
+            }
+        )
+    }
+
+    private fun mapRevokeTrustlineSponsorshipOperation(operation: org.stellar.sdk.RevokeTrustlineSponsorshipOperation): RevokeTrustlineSponsorshipOperation {
+        return RevokeTrustlineSponsorshipOperation(
+            (operation as org.stellar.sdk.Operation).sourceAccount,
+            operation.accountId,
+            mapAsset(operation.asset)
+        )
+    }
+
+    private fun mapCreateClaimableBalanceOperation(operation: org.stellar.sdk.CreateClaimableBalanceOperation): CreateClaimableBalanceOperation {
+        return CreateClaimableBalanceOperation(
+            (operation as org.stellar.sdk.Operation).sourceAccount,
+            operation.amount,
+            mapAsset(operation.asset),
+            mutableListOf<Claimant>().apply {
+                operation.claimants.forEach {
+                    add(mapClaimant(it))
+                }
+            }
+        )
+    }
+
+    private fun mapClaimClaimableBalanceOperation(operation: org.stellar.sdk.ClaimClaimableBalanceOperation): ClaimClaimableBalanceOperation {
+        return ClaimClaimableBalanceOperation(
+            (operation as org.stellar.sdk.Operation).sourceAccount,
+            operation.balanceId
+        )
+    }
+
     private fun mapAsset(asset: org.stellar.sdk.Asset?): Asset {
         return when (asset) {
             is AssetTypeCreditAlphaNum4 -> Asset(asset.code, asset.type, asset.issuer)
             is AssetTypeCreditAlphaNum12 -> Asset(asset.code, asset.type, asset.issuer)
             else -> Asset("XLM", "native", null)
         }
+    }
+
+    private fun mapClaimant(claimant: org.stellar.sdk.Claimant): Claimant {
+        return Claimant(claimant.destination)
     }
 }

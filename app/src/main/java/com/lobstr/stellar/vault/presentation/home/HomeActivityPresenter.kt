@@ -1,15 +1,19 @@
 package com.lobstr.stellar.vault.presentation.home
 
+import com.lobstr.stellar.vault.R
 import com.lobstr.stellar.vault.domain.home.HomeInteractor
+import com.lobstr.stellar.vault.presentation.application.LVApplication
 import com.lobstr.stellar.vault.presentation.util.Constant
 import moxy.MvpPresenter
+import javax.inject.Inject
 
-class HomeActivityPresenter(private var interactor: HomeInteractor) : MvpPresenter<HomeActivityView>() {
+class HomeActivityPresenter @Inject constructor(private var interactor: HomeInteractor) :
+    MvpPresenter<HomeActivityView>() {
 
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
 
-        viewState.setupToolbar()
+        viewState.setupToolbar(R.drawable.ic_arrow_back, android.R.color.white)
 
         interactor.checkFcmRegistration()
 
@@ -18,16 +22,26 @@ class HomeActivityPresenter(private var interactor: HomeInteractor) : MvpPresent
         viewState.setupViewPager()
     }
 
+    override fun attachView(view: HomeActivityView?) {
+        super.attachView(view)
+        // Check Rate Us behavior state.
+        checkRateUsDialog()
+    }
+
     /**
      * HomeActivity is responsible for check RateUs Dialog.
      */
     fun checkRateUsDialog() {
-        if (interactor.getRateUsState() == Constant.RateUsState.RATED
-            || interactor.getRateUsState() == Constant.RateUsState.SKIPPED
-        ) {
-            return
-        }
+        if (LVApplication.checkRateUsDialogState == Constant.RateUsSessionState.CHECK) {
+            LVApplication.checkRateUsDialogState = Constant.RateUsSessionState.CHECKED
 
-        viewState.showRateUsDialog()
+            if (interactor.getRateUsState() == Constant.RateUsState.RATED
+                || interactor.getRateUsState() == Constant.RateUsState.SKIPPED
+            ) {
+                return
+            }
+
+            viewState.suggestRateUsDialog()
+        }
     }
 }

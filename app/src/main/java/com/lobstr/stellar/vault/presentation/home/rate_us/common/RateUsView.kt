@@ -1,4 +1,4 @@
-package com.lobstr.stellar.vault.presentation.home.rate_us
+package com.lobstr.stellar.vault.presentation.home.rate_us.common
 
 import moxy.MvpView
 import moxy.viewstate.strategy.alias.Skip

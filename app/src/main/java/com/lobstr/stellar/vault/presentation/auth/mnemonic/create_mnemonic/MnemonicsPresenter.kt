@@ -7,8 +7,9 @@ import com.lobstr.stellar.vault.presentation.entities.mnemonic.MnemonicItem
 import com.lobstr.stellar.vault.presentation.util.Constant.Support.RECOVERY_PHRASE
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.schedulers.Schedulers
+import javax.inject.Inject
 
-class MnemonicsPresenter(var interactor: MnemonicsInteractor) : BasePresenter<MnemonicsView>() {
+class MnemonicsPresenter @Inject constructor(val interactor: MnemonicsInteractor) : BasePresenter<MnemonicsView>() {
 
     var generate: Boolean = false
 

@@ -63,6 +63,11 @@ class TransactionRepositoryImpl(
             }
     }
 
+    override fun cancelTransactions(token: String): Completable {
+        return transactionApi.cancelTransactions(token)
+            .onErrorResumeNext { rxErrorUtils.handleCompletableRequestHttpError(it) }
+    }
+
     override fun cancelOutdatedTransactions(token: String): Completable {
         return transactionApi.cancelOutdatedTransactions(token)
             .onErrorResumeNext { rxErrorUtils.handleCompletableRequestHttpError(it) }

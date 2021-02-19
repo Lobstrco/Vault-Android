@@ -14,8 +14,10 @@ import com.tangem.commands.Card
 import com.tangem.commands.CreateWalletResponse
 import com.tangem.commands.SignResponse
 import com.tangem.tangem_sdk_new.ui.NfcLocation
+import javax.inject.Inject
 
-class TangemDialogPresenter(private val interactor: TangemInteractor) : BasePresenter<TangemDialogView>() {
+class TangemDialogPresenter @Inject constructor(private val interactor: TangemInteractor) :
+    BasePresenter<TangemDialogView>() {
 
     var tangemInfo: TangemInfo? = null
 
@@ -112,7 +114,8 @@ class TangemDialogPresenter(private val interactor: TangemInteractor) : BasePres
         tangemInfo?.cardId = data.cardId
         tangemInfo?.cardStatus = data.status?.name
         tangemInfo?.cardStatusCode = data.status?.code
-        if (data.walletPublicKey != null && data.walletPublicKey!!.isNotEmpty()) {
+
+        if(tangemInfo?.cardStatusCode == Constant.TangemCardStatus.LOADED){
             tangemInfo?.accountId = interactor.getPublicKeyFromKeyPair(data.walletPublicKey)
         }
 
@@ -152,8 +155,10 @@ class TangemDialogPresenter(private val interactor: TangemInteractor) : BasePres
         tangemInfo?.cardId = data.cardId
         tangemInfo?.cardStatus = data.status.name
         tangemInfo?.cardStatusCode = data.status.code
-        tangemInfo?.accountId = interactor.getPublicKeyFromKeyPair(data.walletPublicKey)
 
+        if(tangemInfo?.cardStatusCode == Constant.TangemCardStatus.LOADED){
+            tangemInfo?.accountId = interactor.getPublicKeyFromKeyPair(data.walletPublicKey)
+        }
         viewState.showSuccessAnimation()
     }
 
@@ -183,14 +188,7 @@ class TangemDialogPresenter(private val interactor: TangemInteractor) : BasePres
                 )
             }
             Constant.TangemErrorMod.ERROR_MOD_REPEAT_ACTION -> {
-                viewState.changeActionContainerVisibility(false)
-                viewState.changeErrorContainerVisibility(true)
-                viewState.setErrorContainerData(
-                    tangemError.errorTitle
-                        ?: AppUtil.getString(R.string.text_tv_tangem_default_error_header),
-                    tangemError.errorDescription
-                        ?: AppUtil.getString(R.string.text_tv_tangem_default_error_description)
-                )
+                showErrorWithRepeatAction(tangemError.errorTitle, tangemError.errorDescription)
             }
             else -> {
                 viewState.showMessage(
@@ -199,6 +197,17 @@ class TangemDialogPresenter(private val interactor: TangemInteractor) : BasePres
                 )
             }
         }
+    }
+
+    private fun showErrorWithRepeatAction(errorTitle: String?, errorDescription: String?) {
+        viewState.changeActionContainerVisibility(false)
+        viewState.changeErrorContainerVisibility(true)
+        viewState.setErrorContainerData(
+            errorTitle
+                ?: AppUtil.getString(R.string.text_tv_tangem_default_error_header),
+            errorDescription
+                ?: AppUtil.getString(R.string.text_tv_tangem_default_error_description)
+        )
     }
 
     fun tryAgainClicked() {

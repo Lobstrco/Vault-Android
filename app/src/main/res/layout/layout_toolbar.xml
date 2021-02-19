@@ -15,7 +15,7 @@
     to change color otherwise toolbar will not accept any color-->
 
     <TextView
-            android:id="@+id/tv_toolbar_title"
+            android:id="@+id/tvToolbarTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"

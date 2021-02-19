@@ -14,7 +14,7 @@ object ProgressManager {
             AlertDialogFragment.Builder(handleInFragment)
                 .setCancelable(cancelable)
                 .setView(R.layout.layout_preloader)
-                .setSpecificDialog(PROGRESS, null)
+                .setSpecificDialog(PROGRESS)
                 .create()
                 .show(manager, PROGRESS_DIALOG)
         } else {

@@ -4,8 +4,9 @@ import com.lobstr.stellar.vault.R
 import com.lobstr.stellar.vault.domain.transaction_error.TransactionErrorInteractor
 import com.lobstr.stellar.vault.presentation.util.AppUtil
 import moxy.MvpPresenter
+import javax.inject.Inject
 
-class ErrorPresenter(private val interactor: TransactionErrorInteractor) : MvpPresenter<ErrorView>() {
+class ErrorPresenter @Inject constructor(private val interactor: TransactionErrorInteractor) : MvpPresenter<ErrorView>() {
 
     lateinit var error: String
 

@@ -1,8 +1,9 @@
 package com.lobstr.stellar.vault.presentation.pin
 
-import android.content.Intent
 import android.os.Bundle
+import android.view.View
 import com.lobstr.stellar.vault.R
+import com.lobstr.stellar.vault.databinding.ActivityPinBinding
 import com.lobstr.stellar.vault.presentation.base.activity.BaseActivity
 import com.lobstr.stellar.vault.presentation.pin.main.PinFragment
 import com.lobstr.stellar.vault.presentation.util.Constant
@@ -41,9 +42,7 @@ class PinActivity : BaseActivity(), PinView {
     // Methods for/from SuperClass
     // ===========================================================
 
-    override fun getLayoutResource(): Int {
-        return R.layout.activity_pin
-    }
+    override fun getContentView(): View = ActivityPinBinding.inflate(layoutInflater).root
 
     // ===========================================================
     // Listeners, methods for/from Interfaces
@@ -61,24 +60,9 @@ class PinActivity : BaseActivity(), PinView {
         FragmentTransactionManager.displayFragment(
             supportFragmentManager,
             fragment,
-            R.id.fl_container,
+            R.id.flContainer,
             false
         )
-    }
-
-    override fun onBackPressed() {
-        mPinPresenter.onBackPressed()
-    }
-
-    override fun finishApp() {
-        val intent = Intent(Intent.ACTION_MAIN)
-        intent.addCategory(Intent.CATEGORY_HOME)
-        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-        startActivity(intent)
-    }
-
-    override fun finishScreen() {
-        finish()
     }
 
     // ===========================================================

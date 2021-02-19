@@ -6,20 +6,20 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.lobstr.stellar.vault.R
+import com.lobstr.stellar.vault.databinding.AdapterItemAccountWithStatusBinding
 import com.lobstr.stellar.vault.presentation.entities.account.Account
 import com.lobstr.stellar.vault.presentation.util.AppUtil
 import com.lobstr.stellar.vault.presentation.util.Constant
 import com.lobstr.stellar.vault.presentation.util.Constant.Util.PK_TRUNCATE_COUNT
-import kotlinx.android.synthetic.main.adapter_item_account_with_status.view.*
 
 class AccountWithStatusViewHolder(
-    itemView: View,
-    private val listener: OnAccountItemListener
+    private val binding: AdapterItemAccountWithStatusBinding,
+    private val itemLongClickListener: (account: Account) -> Unit
 ) :
-    RecyclerView.ViewHolder(itemView) {
+    RecyclerView.ViewHolder(binding.root) {
 
     fun bind(account: Account, itemsCount: Int) {
-        itemView.divider.visibility = calculateDividerVisibility(itemsCount)
+        binding.divider.visibility = calculateDividerVisibility(itemsCount)
 
         // Set user icon.
         Glide.with(itemView.context)
@@ -29,17 +29,17 @@ class AccountWithStatusViewHolder(
                     .plus(".png")
             )
             .placeholder(R.drawable.ic_person)
-            .into(itemView.ivIdentity)
+            .into(binding.ivIdentity)
 
         // Show section for address with federation and vault account marker.
-        itemView.tvAccount.visibility =
+        binding.tvAccount.visibility =
             if (!account.federation.isNullOrEmpty() || account.isVaultAccount == true) {
                 View.VISIBLE
             } else {
                 View.GONE
             }
 
-        itemView.tvAccount.text = when {
+        binding.tvAccount.text = when {
             !account.federation.isNullOrEmpty() -> AppUtil.ellipsizeStrInMiddle(
                 account.address,
                 PK_TRUNCATE_COUNT
@@ -48,28 +48,28 @@ class AccountWithStatusViewHolder(
             else -> null
         }
 
-        itemView.tvAccountFederation.ellipsize =
+        binding.tvAccountFederation.ellipsize =
             if (account.federation.isNullOrEmpty()) {
                 TextUtils.TruncateAt.MIDDLE
             } else {
                 TextUtils.TruncateAt.END
             }
 
-        itemView.tvAccountFederation.text =
+        binding.tvAccountFederation.text =
             if (account.federation.isNullOrEmpty()) {
                 AppUtil.ellipsizeStrInMiddle(account.address, PK_TRUNCATE_COUNT)
             } else {
                 account.federation
             }
 
-        itemView.tvStatus.text =
+        binding.tvStatus.text =
             if (account.signed == true) {
                 itemView.context.getString(R.string.text_tv_status_signed)
             } else {
                 itemView.context.getString(R.string.text_tv_status_pending)
             }
 
-        itemView.tvStatus.setTextColor(
+        binding.tvStatus.setTextColor(
             if (account.signed == true) {
                 ContextCompat.getColor(itemView.context, R.color.color_5cb87f)
             } else {
@@ -83,7 +83,7 @@ class AccountWithStatusViewHolder(
                 return@setOnLongClickListener false
             }
 
-            listener.onAccountItemLongClick(account)
+            itemLongClickListener(account)
 
             true
         }

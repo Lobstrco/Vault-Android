@@ -11,9 +11,10 @@ import com.lobstr.stellar.vault.presentation.util.Constant.Social.SIGNER_CARD_BU
 import com.lobstr.stellar.vault.presentation.util.Constant.Social.SIGNER_CARD_INFO
 import com.lobstr.stellar.vault.presentation.util.Constant.Support.SIGNING_WITH_VAULT_SIGNER_CARD
 import moxy.MvpPresenter
+import javax.inject.Inject
 
 
-class TangemSetupPresenter(private val interactor: TangemSetupInteractor) : MvpPresenter<TangemView>() {
+class TangemSetupPresenter @Inject constructor(private val interactor: TangemSetupInteractor) : MvpPresenter<TangemView>() {
 
     override fun attachView(view: TangemView?) {
         super.attachView(view)

@@ -35,4 +35,6 @@ interface SettingsInteractor {
     fun setTrConfirmationEnabled(enabled: Boolean)
 
     fun getSignedAccounts(): Single<List<Account>>
+
+    fun setRateUsState(state: Int)
 }

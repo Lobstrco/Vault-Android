@@ -3,10 +3,11 @@ package com.lobstr.stellar.vault.presentation.home.transactions.adapter
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.lobstr.stellar.vault.R
+import com.lobstr.stellar.vault.databinding.AdapterItemTransactionBinding
+import com.lobstr.stellar.vault.databinding.LayoutListPreloaderBinding
 import com.lobstr.stellar.vault.presentation.entities.transaction.TransactionItem
 
-class TransactionAdapter(private val listener: OnTransactionItemClicked) :
+class TransactionAdapter(private val itemClickListener: (transactionItem: TransactionItem) -> Unit) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     companion object {
@@ -31,15 +32,13 @@ class TransactionAdapter(private val listener: OnTransactionItemClicked) :
         return when (viewType) {
             CONTENT_VIEW_TYPE -> {
                 TransactionViewHolder(
-                    LayoutInflater.from(viewGroup.context)
-                        .inflate(R.layout.adapter_item_transaction, viewGroup, false),
-                    listener
+                    AdapterItemTransactionBinding.inflate(LayoutInflater.from(viewGroup.context), viewGroup, false),
+                    itemClickListener
                 )
             }
             else -> {
                 ProgressViewHolder(
-                    LayoutInflater.from(viewGroup.context)
-                        .inflate(R.layout.layout_list_preloader, viewGroup, false)
+                    LayoutListPreloaderBinding.inflate(LayoutInflater.from(viewGroup.context), viewGroup, false)
                 )
             }
         }

@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.*
 import androidx.fragment.app.FragmentManager
 import com.lobstr.stellar.vault.R
+import com.lobstr.stellar.vault.databinding.FragmentMnemonicsBinding
 import com.lobstr.stellar.vault.presentation.auth.AuthActivity
 import com.lobstr.stellar.vault.presentation.auth.mnemonic.confirm_mnemonic.ConfirmMnemonicsFragment
 import com.lobstr.stellar.vault.presentation.base.fragment.BaseFragment
@@ -15,11 +16,10 @@ import com.lobstr.stellar.vault.presentation.util.AppUtil
 import com.lobstr.stellar.vault.presentation.util.Constant
 import com.lobstr.stellar.vault.presentation.util.manager.FragmentTransactionManager
 import com.lobstr.stellar.vault.presentation.util.manager.SupportManager
-import dagger.Lazy
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.android.synthetic.main.fragment_mnemonics.*
 import moxy.ktx.moxyPresenter
 import javax.inject.Inject
+import javax.inject.Provider
 
 /**
  * Used for show or generate mnemonics
@@ -40,16 +40,17 @@ class MnemonicsFragment : BaseFragment(),
     // Fields
     // ===========================================================
 
-    @Inject
-    lateinit var daggerPresenter: Lazy<MnemonicsPresenter>
+    private var _binding: FragmentMnemonicsBinding? = null
+    private val binding get() = _binding!!
 
-    private var mView: View? = null
+    @Inject
+    lateinit var presenterProvider: Provider<MnemonicsPresenter>
 
     // ===========================================================
     // Constructors
     // ===========================================================
 
-    private val mPresenter by moxyPresenter { daggerPresenter.get().apply {
+    private val mPresenter by moxyPresenter { presenterProvider.get().apply {
         generate = arguments?.getBoolean(Constant.Bundle.BUNDLE_GENERATE_MNEMONICS) ?: false
     } }
 
@@ -65,8 +66,8 @@ class MnemonicsFragment : BaseFragment(),
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        mView = if (mView == null) inflater.inflate(R.layout.fragment_mnemonics, container, false) else mView
-        return mView
+        _binding = FragmentMnemonicsBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -75,8 +76,8 @@ class MnemonicsFragment : BaseFragment(),
     }
 
     private fun setListeners() {
-        btnNext.setOnClickListener(this)
-        btnClipToBoard.setOnClickListener(this)
+        binding.btnNext.setOnClickListener(this)
+        binding.btnClipToBoard.setOnClickListener(this)
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -104,14 +105,19 @@ class MnemonicsFragment : BaseFragment(),
         return super.onBackPressed()
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+
     // ===========================================================
     // Listeners, methods for/from Interfaces
     // ===========================================================
 
     override fun onClick(v: View?) {
         when (v?.id) {
-            btnNext.id -> mPresenter.nextClicked()
-            btnClipToBoard.id -> mPresenter.clipToBordClicked()
+            binding.btnNext.id -> mPresenter.nextClicked()
+            binding.btnClipToBoard.id -> mPresenter.clipToBordClicked()
         }
     }
 
@@ -120,13 +126,13 @@ class MnemonicsFragment : BaseFragment(),
     }
 
     override fun setActionLayerVisibility(isVisible: Boolean) {
-        llActionLayer.visibility = if (isVisible) View.VISIBLE else View.GONE
+        binding.llActionLayer.visibility = if (isVisible) View.VISIBLE else View.GONE
     }
 
     override fun setupMnemonics(mnemonicItems: List<MnemonicItem>) {
-        tvMnemonicsInstruction.text = String.format(getString(R.string.text_tv_mnemonics_instruction), mnemonicItems.size)
-        mnemonicContainerView.mMnemonicList = mnemonicItems
-        mnemonicContainerView.setupMnemonics()
+        binding.tvMnemonicsInstruction.text = String.format(getString(R.string.text_tv_mnemonics_instruction), mnemonicItems.size)
+        binding.mnemonicContainerView.mMnemonicList = mnemonicItems
+        binding.mnemonicContainerView.setupMnemonics()
     }
 
     override fun showConfirmationScreen(mnemonics: ArrayList<MnemonicItem>) {
@@ -139,7 +145,7 @@ class MnemonicsFragment : BaseFragment(),
         FragmentTransactionManager.displayFragment(
             requireParentFragment().childFragmentManager,
             fragment,
-            R.id.fl_container
+            R.id.flContainer
         )
     }
 

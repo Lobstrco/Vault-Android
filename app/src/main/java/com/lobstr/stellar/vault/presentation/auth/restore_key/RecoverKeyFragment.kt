@@ -2,7 +2,6 @@ package com.lobstr.stellar.vault.presentation.auth.restore_key
 
 import android.content.Intent
 import android.os.Bundle
-import android.text.Editable
 import android.text.InputType
 import android.text.Spannable
 import android.text.TextWatcher
@@ -12,7 +11,9 @@ import android.view.inputmethod.EditorInfo
 import android.widget.Toast
 import androidx.annotation.StringRes
 import androidx.core.content.ContextCompat
+import androidx.core.widget.doAfterTextChanged
 import com.lobstr.stellar.vault.R
+import com.lobstr.stellar.vault.databinding.FragmentRecoveryKeyBinding
 import com.lobstr.stellar.vault.presentation.auth.restore_key.entities.RecoveryPhraseInfo
 import com.lobstr.stellar.vault.presentation.base.fragment.BaseFragment
 import com.lobstr.stellar.vault.presentation.pin.PinActivity
@@ -20,11 +21,10 @@ import com.lobstr.stellar.vault.presentation.util.AppUtil
 import com.lobstr.stellar.vault.presentation.util.Constant
 import com.lobstr.stellar.vault.presentation.util.manager.ProgressManager
 import com.lobstr.stellar.vault.presentation.util.manager.SupportManager
-import dagger.Lazy
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.android.synthetic.main.fragment_recovery_key.*
 import moxy.ktx.moxyPresenter
 import javax.inject.Inject
+import javax.inject.Provider
 
 @AndroidEntryPoint
 class RecoverKeyFragment : BaseFragment(), RecoverKeyFrView, View.OnClickListener {
@@ -41,16 +41,19 @@ class RecoverKeyFragment : BaseFragment(), RecoverKeyFrView, View.OnClickListene
     // Fields
     // ===========================================================
 
-    @Inject
-    lateinit var daggerPresenter: Lazy<RecoverKeyFrPresenter>
+    private var _binding: FragmentRecoveryKeyBinding? = null
+    private val binding get() = _binding!!
 
-    private var mView: View? = null
+    @Inject
+    lateinit var presenterProvider: Provider<RecoverKeyFrPresenter>
+
+    private var mTextWatcher: TextWatcher? = null
 
     // ===========================================================
     // Constructors
     // ===========================================================
 
-    private val mPresenter by moxyPresenter { daggerPresenter.get() }
+    private val mPresenter by moxyPresenter { presenterProvider.get() }
 
     // ===========================================================
     // Getter & Setter
@@ -64,15 +67,20 @@ class RecoverKeyFragment : BaseFragment(), RecoverKeyFrView, View.OnClickListene
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        mView = if (mView == null) inflater.inflate(R.layout.fragment_recovery_key, container, false) else mView
-        return mView
+        _binding = FragmentRecoveryKeyBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        etRecoveryPhrase.imeOptions = EditorInfo.IME_ACTION_DONE
-        etRecoveryPhrase.setRawInputType(InputType.TYPE_CLASS_TEXT)
+        binding.etRecoveryPhrase.imeOptions = EditorInfo.IME_ACTION_DONE
+        binding.etRecoveryPhrase.setRawInputType(InputType.TYPE_CLASS_TEXT)
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
     override fun onResume() {
@@ -82,8 +90,10 @@ class RecoverKeyFragment : BaseFragment(), RecoverKeyFrView, View.OnClickListene
     }
 
     private fun setListeners() {
-        etRecoveryPhrase.addTextChangedListener(mTextWatcher)
-        btnRecoverKey.setOnClickListener(this)
+        mTextWatcher = binding.etRecoveryPhrase.doAfterTextChanged {
+            mPresenter.phrasesChanged(it.toString())
+        }
+        binding.btnRecoverKey.setOnClickListener(this)
     }
 
     override fun onPause() {
@@ -105,25 +115,9 @@ class RecoverKeyFragment : BaseFragment(), RecoverKeyFrView, View.OnClickListene
         return super.onOptionsItemSelected(item)
     }
 
-    private var mTextWatcher: TextWatcher = object : TextWatcher {
-
-        override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
-
-        }
-
-        override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-
-        }
-
-        override fun afterTextChanged(s: Editable) {
-            mPresenter.phrasesChanged(etRecoveryPhrase?.text.toString())
-        }
-    }
-
     override fun onStop() {
         super.onStop()
-
-        etRecoveryPhrase.removeTextChangedListener(mTextWatcher)
+        binding.etRecoveryPhrase.removeTextChangedListener(mTextWatcher)
     }
 
     // ===========================================================
@@ -132,7 +126,7 @@ class RecoverKeyFragment : BaseFragment(), RecoverKeyFrView, View.OnClickListene
 
     override fun onClick(v: View?) {
         when (v?.id) {
-            btnRecoverKey.id -> mPresenter.btnRecoverClicked()
+            binding.btnRecoverKey.id -> mPresenter.btnRecoverClicked()
         }
     }
 
@@ -144,7 +138,7 @@ class RecoverKeyFragment : BaseFragment(), RecoverKeyFrView, View.OnClickListene
                 ForegroundColorSpan(ContextCompat.getColor(requireContext(), android.R.color.black))
             }
 
-            etRecoveryPhrase.text.setSpan(
+            binding.etRecoveryPhrase.text.setSpan(
                 color,
                 phrasesInfo.startPosition,
                 phrasesInfo.startPosition + phrasesInfo.length,
@@ -155,14 +149,14 @@ class RecoverKeyFragment : BaseFragment(), RecoverKeyFrView, View.OnClickListene
 
     override fun changeTextBackground(isError: Boolean) {
         if (isError) {
-            etRecoveryPhrase.setBackgroundResource(R.drawable.bg_mnemonics_error)
+            binding.etRecoveryPhrase.setBackgroundResource(R.drawable.bg_mnemonics_error)
         } else {
-            etRecoveryPhrase.setBackgroundResource(R.drawable.bg_mnemonics)
+            binding.etRecoveryPhrase.setBackgroundResource(R.drawable.bg_mnemonics)
         }
     }
 
     override fun enableNextButton(enable: Boolean) {
-        btnRecoverKey.isEnabled = enable
+        binding.btnRecoverKey.isEnabled = enable
     }
 
     override fun showPinScreen() {

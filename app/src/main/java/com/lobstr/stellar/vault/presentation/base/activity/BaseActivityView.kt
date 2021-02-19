@@ -1,5 +1,6 @@
 package com.lobstr.stellar.vault.presentation.base.activity
 
+import android.graphics.drawable.Drawable
 import android.text.TextUtils
 import androidx.annotation.ColorRes
 import androidx.annotation.DrawableRes
@@ -30,7 +31,13 @@ interface BaseActivityView : MvpView {
     fun setActionBarTitleColor(@ColorRes color: Int)
 
     @Skip
-    fun setActionBarIcon(iconRes: Int)
+    fun setActionBarIcon(@DrawableRes icon: Int)
+
+    @Skip
+    fun setActionBarIcon(icon: Drawable?)
+
+    @Skip
+    fun setActionBarIcon(@DrawableRes icon: Int, @ColorRes color: Int)
 
     @AddToEndSingle
     fun changeActionBarIconVisibility(visible: Boolean)
@@ -38,11 +45,8 @@ interface BaseActivityView : MvpView {
     @Skip
     fun setActionBarBackground(@DrawableRes background: Int)
 
-    @Skip
-    fun setHomeAsUpIndicator(@DrawableRes image: Int, @ColorRes color: Int)
-
-    @Skip
-    fun showTangemScreen(tangemInfo: TangemInfo)
+    @AddToEndSingle
+    fun showTangemScreen(show: Boolean, tangemInfo: TangemInfo? = null)
 
     @AddToEndSingle
     fun showProgressDialog(show: Boolean)
@@ -52,4 +56,19 @@ interface BaseActivityView : MvpView {
 
     @Skip
     fun proceedPinActivityAppearance()
+
+    @Skip
+    fun checkAppVersionBehavior()
+
+    @Skip
+    fun showAppUpdateDialog(
+        show: Boolean,
+        title: String? = null,
+        message: String? = null,
+        positiveBtnText: String? = null,
+        negativeBtnText: String? = null
+    )
+
+    @Skip
+    fun showStore(storeUrl: String)
 }

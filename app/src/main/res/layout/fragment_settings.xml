@@ -1,7 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        tools:context=".presentation.home.settings.SettingsFragment">
+
+<ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fillViewport="true"
@@ -50,7 +56,8 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="0"
                         android:maxWidth="150dp"
-                        android:singleLine="true"
+                        android:maxLines="1"
+                        android:ellipsize="end"
                         android:text="@string/text_settings_show"
                         android:textColor="@color/color_primary"
                         android:textSize="14sp" />
@@ -61,7 +68,8 @@
                     android:layout_height="1dp"
                     android:layout_marginStart="16dp"
                     android:layout_marginEnd="0dp"
-                    android:background="@color/color_33979797" />
+                    android:background="@color/color_979797"
+                    android:alpha="0.2" />
 
             <TextView
                     android:id="@+id/tvSettingsSigners"
@@ -79,7 +87,8 @@
                     android:layout_height="1dp"
                     android:layout_marginStart="16dp"
                     android:layout_marginEnd="0dp"
-                    android:background="@color/color_33979797" />
+                    android:background="@color/color_979797"
+                    android:alpha="0.2" />
 
             <LinearLayout
                     android:id="@+id/llSettingsTrConfirmationContainer"
@@ -103,7 +112,6 @@
                             android:layout_weight="1"
                             android:ellipsize="end"
                             android:maxLines="1"
-                            android:singleLine="true"
                             android:text="@string/text_settings_transaction_confirmation"
                             android:textColor="@android:color/black"
                             android:textSize="16sp" />
@@ -116,8 +124,10 @@
                             android:layout_weight="0"
                             android:gravity="center"
                             android:paddingBottom="2dp"
-                            android:singleLine="true"
-                            android:textColor="@color/color_99000000"
+                            android:maxLines="1"
+                            android:ellipsize="end"
+                            android:textColor="@android:color/black"
+                            android:alpha="0.6"
                             android:textSize="16sp" />
 
                     <ImageView
@@ -132,7 +142,8 @@
                         android:layout_height="1dp"
                         android:layout_marginStart="16dp"
                         android:layout_marginEnd="0dp"
-                        android:background="@color/color_33979797" />
+                        android:background="@color/color_979797"
+                        android:alpha="0.2" />
             </LinearLayout>
 
             <androidx.appcompat.widget.SwitchCompat
@@ -189,7 +200,8 @@
                         android:layout_height="1dp"
                         android:layout_marginStart="16dp"
                         android:layout_marginEnd="0dp"
-                        android:background="@color/color_33979797" />
+                        android:background="@color/color_979797"
+                        android:alpha="0.2" />
             </LinearLayout>
 
             <LinearLayout
@@ -214,7 +226,8 @@
                         android:layout_height="1dp"
                         android:layout_marginStart="16dp"
                         android:layout_marginEnd="0dp"
-                        android:background="@color/color_33979797" />
+                        android:background="@color/color_979797"
+                        android:alpha="0.2" />
             </LinearLayout>
 
             <LinearLayout
@@ -241,7 +254,8 @@
                         android:layout_height="1dp"
                         android:layout_marginStart="16dp"
                         android:layout_marginEnd="0dp"
-                        android:background="@color/color_33979797" />
+                        android:background="@color/color_979797"
+                        android:alpha="0.2" />
             </LinearLayout>
 
             <LinearLayout
@@ -260,7 +274,6 @@
                         android:layout_weight="1"
                         android:ellipsize="end"
                         android:maxLines="1"
-                        android:singleLine="true"
                         android:text="@string/text_settings_spam_protection"
                         android:textColor="@android:color/black"
                         android:textSize="16sp" />
@@ -273,8 +286,10 @@
                         android:layout_weight="0"
                         android:gravity="center"
                         android:paddingBottom="2dp"
-                        android:singleLine="true"
-                        android:textColor="@color/color_99000000"
+                        android:maxLines="1"
+                        android:ellipsize="end"
+                        android:textColor="@android:color/black"
+                        android:alpha="0.6"
                         android:textSize="16sp" />
 
                 <ImageView
@@ -319,7 +334,8 @@
                     android:layout_height="1dp"
                     android:layout_marginStart="16dp"
                     android:layout_marginEnd="0dp"
-                    android:background="@color/color_33979797" />
+                    android:background="@color/color_979797"
+                    android:alpha="0.2" />
 
             <TextView
                     android:id="@+id/tvSettingsContactSupport"
@@ -371,7 +387,8 @@
                         android:layout_height="1dp"
                         android:layout_marginStart="16dp"
                         android:layout_marginEnd="0dp"
-                        android:background="@color/color_33979797" />
+                        android:background="@color/color_979797"
+                        android:alpha="0.2" />
             </LinearLayout>
 
             <TextView
@@ -390,7 +407,8 @@
                     android:layout_height="1dp"
                     android:layout_marginStart="16dp"
                     android:layout_marginEnd="0dp"
-                    android:background="@color/color_33979797" />
+                    android:background="@color/color_979797"
+                    android:alpha="0.2" />
 
             <TextView
                     android:id="@+id/tvSettingsLicense"
@@ -408,7 +426,8 @@
                     android:layout_height="1dp"
                     android:layout_marginStart="16dp"
                     android:layout_marginEnd="0dp"
-                    android:background="@color/color_33979797" />
+                    android:background="@color/color_979797"
+                    android:alpha="0.2" />
 
             <LinearLayout
                     android:layout_width="match_parent"
@@ -442,7 +461,8 @@
                     android:layout_height="1dp"
                     android:layout_marginStart="16dp"
                     android:layout_marginEnd="0dp"
-                    android:background="@color/color_33979797" />
+                    android:background="@color/color_979797"
+                    android:alpha="0.2" />
 
             <TextView
                     android:id="@+id/tvLogOut"
@@ -466,8 +486,10 @@
                 android:gravity="center"
                 android:padding="16dp"
                 android:text="@string/text_all_rights_reserved"
-                android:textColor="@color/color_999b9b9b"
+                android:textColor="@color/color_9b9b9b"
+                android:alpha="0.6"
                 android:textSize="10sp"
                 app:drawableTopCompat="@drawable/ic_gray_logo" />
     </LinearLayout>
 </ScrollView>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

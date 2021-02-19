@@ -1,9 +1,11 @@
 package com.lobstr.stellar.vault.presentation.container.activity
 
 import android.os.Bundle
+import android.view.View
 import androidx.annotation.ColorRes
 import androidx.annotation.DrawableRes
 import com.lobstr.stellar.vault.R
+import com.lobstr.stellar.vault.databinding.ActivityContainerBinding
 import com.lobstr.stellar.vault.presentation.base.activity.BaseActivity
 import com.lobstr.stellar.vault.presentation.container.fragment.ContainerFragment
 import com.lobstr.stellar.vault.presentation.entities.transaction.TransactionItem
@@ -68,7 +70,7 @@ class ContainerActivity : BaseActivity(), ContainerView {
     // Methods for/from SuperClass
     // ===========================================================
 
-    override fun getLayoutResource() = R.layout.activity_container
+    override fun getContentView(): View = ActivityContainerBinding.inflate(layoutInflater).root
 
     // ===========================================================
     // Listeners, methods for/from Interfaces
@@ -79,7 +81,7 @@ class ContainerActivity : BaseActivity(), ContainerView {
         @ColorRes upArrowColor: Int, @ColorRes titleColor: Int
     ) {
         setActionBarBackground(toolbarColor)
-        setHomeAsUpIndicator(upArrow, upArrowColor)
+        setActionBarIcon(upArrow, upArrowColor)
         setActionBarTitleColor(titleColor)
         changeActionBarIconVisibility(true)
     }
@@ -97,7 +99,7 @@ class ContainerActivity : BaseActivity(), ContainerView {
         FragmentTransactionManager.displayFragment(
             supportFragmentManager,
             fragment,
-            R.id.fl_container
+            R.id.flContainer
         )
     }
 
@@ -113,7 +115,7 @@ class ContainerActivity : BaseActivity(), ContainerView {
         FragmentTransactionManager.displayFragment(
             supportFragmentManager,
             fragment,
-            R.id.fl_container
+            R.id.flContainer
         )
     }
 
@@ -129,7 +131,7 @@ class ContainerActivity : BaseActivity(), ContainerView {
         FragmentTransactionManager.displayFragment(
             supportFragmentManager,
             fragment,
-            R.id.fl_container
+            R.id.flContainer
         )
     }
 
@@ -145,7 +147,7 @@ class ContainerActivity : BaseActivity(), ContainerView {
         FragmentTransactionManager.displayFragment(
             supportFragmentManager,
             fragment,
-            R.id.fl_container
+            R.id.flContainer
         )
     }
 
@@ -161,7 +163,7 @@ class ContainerActivity : BaseActivity(), ContainerView {
         FragmentTransactionManager.displayFragment(
             supportFragmentManager,
             fragment,
-            R.id.fl_container
+            R.id.flContainer
         )
     }
 
@@ -177,7 +179,7 @@ class ContainerActivity : BaseActivity(), ContainerView {
         FragmentTransactionManager.displayFragment(
             supportFragmentManager,
             fragment,
-            R.id.fl_container
+            R.id.flContainer
         )
     }
 
@@ -193,7 +195,7 @@ class ContainerActivity : BaseActivity(), ContainerView {
         FragmentTransactionManager.displayFragment(
             supportFragmentManager,
             fragment,
-            R.id.fl_container
+            R.id.flContainer
         )
     }
 
@@ -214,7 +216,7 @@ class ContainerActivity : BaseActivity(), ContainerView {
         FragmentTransactionManager.displayFragment(
             supportFragmentManager,
             fragment,
-            R.id.fl_container
+            R.id.flContainer
         )
     }
 
@@ -231,7 +233,7 @@ class ContainerActivity : BaseActivity(), ContainerView {
         FragmentTransactionManager.displayFragment(
             supportFragmentManager,
             fragment,
-            R.id.fl_container
+            R.id.flContainer
         )
     }
 
@@ -247,7 +249,7 @@ class ContainerActivity : BaseActivity(), ContainerView {
         FragmentTransactionManager.displayFragment(
             supportFragmentManager,
             fragment,
-            R.id.fl_container
+            R.id.flContainer
         )
     }
 
@@ -264,7 +266,7 @@ class ContainerActivity : BaseActivity(), ContainerView {
         FragmentTransactionManager.displayFragment(
             supportFragmentManager,
             fragment,
-            R.id.fl_container
+            R.id.flContainer
         )
     }
 

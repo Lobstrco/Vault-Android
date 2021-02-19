@@ -1,15 +1,18 @@
 package com.lobstr.stellar.vault.presentation.dagger.module
 
+import android.content.Context
 import com.lobstr.stellar.vault.BuildConfig
 import com.lobstr.stellar.vault.data.net.AccountApi
 import com.lobstr.stellar.vault.data.net.FcmApi
 import com.lobstr.stellar.vault.data.net.TransactionApi
 import com.lobstr.stellar.vault.data.net.VaultAuthApi
 import com.lobstr.stellar.vault.presentation.util.Constant
+import com.lobstr.stellar.vault.presentation.util.CustomInterceptor
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
-import dagger.hilt.android.components.ApplicationComponent
+import dagger.hilt.android.qualifiers.ApplicationContext
+import dagger.hilt.components.SingletonComponent
 import io.reactivex.rxjava3.schedulers.Schedulers
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -22,7 +25,7 @@ import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
 
 @Module
-@InstallIn(ApplicationComponent::class)
+@InstallIn(SingletonComponent::class)
 object ApiModule {
 
     private const val BASE_STAGING_URL = "https://vault-staging.lobstr.co/api/"
@@ -33,9 +36,10 @@ object ApiModule {
 
     @Provides
     @Singleton
-    fun provideOkHttpClient(): OkHttpClient {
+    fun provideOkHttpClient(@ApplicationContext context: Context): OkHttpClient {
         val builder = OkHttpClient.Builder()
         builder.connectTimeout(1, TimeUnit.MINUTES).readTimeout(1, TimeUnit.MINUTES)
+            .addInterceptor(CustomInterceptor())
 
         if (BuildConfig.BUILD_TYPE == Constant.BuildType.DEBUG) {
             val logging = HttpLoggingInterceptor()

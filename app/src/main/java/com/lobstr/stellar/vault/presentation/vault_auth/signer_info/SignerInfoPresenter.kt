@@ -11,8 +11,9 @@ import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.disposables.Disposable
 import io.reactivex.rxjava3.schedulers.Schedulers
 import java.util.concurrent.TimeUnit
+import javax.inject.Inject
 
-class SignerInfoPresenter(
+class SignerInfoPresenter @Inject constructor(
     private val interactor: SignerInfoInteractor,
     private val eventProviderModule: EventProviderModule
 ) : BasePresenter<SignerInfoView>() {
@@ -21,7 +22,7 @@ class SignerInfoPresenter(
         private const val REQUEST_PERIOD = 3L
     }
 
-    private var checkLobstrAppIntervalSubscription: Disposable? = null
+    private var checkLobstrAppIntervalDisposable: Disposable? = null
 
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
@@ -62,8 +63,8 @@ class SignerInfoPresenter(
 
     fun startCheckExistenceLobstrAppWithInterval(start: Boolean) {
         if (start) {
-            if (checkLobstrAppIntervalSubscription?.isDisposed != false) {
-                checkLobstrAppIntervalSubscription =
+            if (checkLobstrAppIntervalDisposable?.isDisposed != false) {
+                checkLobstrAppIntervalDisposable =
                     Observable.interval(0, REQUEST_PERIOD, TimeUnit.SECONDS)
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
@@ -72,7 +73,7 @@ class SignerInfoPresenter(
                             { it.printStackTrace() })
             }
         } else {
-            checkLobstrAppIntervalSubscription?.dispose()
+            checkLobstrAppIntervalDisposable?.dispose()
         }
     }
 

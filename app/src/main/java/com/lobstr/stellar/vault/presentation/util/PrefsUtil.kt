@@ -2,6 +2,7 @@ package com.lobstr.stellar.vault.presentation.util
 
 import android.content.SharedPreferences
 import android.util.Base64
+import com.lobstr.stellar.vault.presentation.util.Constant.Counter.APP_UPDATE
 
 
 class PrefsUtil(private val sharedPreferences: SharedPreferences) {
@@ -23,6 +24,8 @@ class PrefsUtil(private val sharedPreferences: SharedPreferences) {
         const val PREF_ACCOUNT_SIGNERS_COUNT = "PREF_ACCOUNT_SIGNERS_COUNT"
         const val PREF_IS_SPAM_PROTECTION_ENABLED = "PREF_IS_SPAM_PROTECTION_ENABLED"
         const val PREF_TANGEM_CARD_ID = "PREF_TANGEM_CARD_ID"
+        const val PREF_APP_UPDATE_COUNTER_TIMER = "PREF_APP_UPDATE_COUNTER_TIMER"
+        const val PREF_APP_UPDATE_RECOMMENDED_STATE = "PREF_APP_UPDATE_RECOMMENDED_STATE"
     }
 
     var authToken: String?
@@ -95,6 +98,17 @@ class PrefsUtil(private val sharedPreferences: SharedPreferences) {
         get() = getInt(PREF_ACCOUNT_SIGNERS_COUNT)
         set(count) = set(PREF_ACCOUNT_SIGNERS_COUNT, count)
 
+    var appUpdateCounterTimer: Int
+        get() = getInt(PREF_APP_UPDATE_COUNTER_TIMER)
+        set(count) = set(PREF_APP_UPDATE_COUNTER_TIMER, count)
+
+    /**
+     * Used for showing App Update Alert for 'between recommended and current state'.
+     */
+    var appUpdateRecommendedState: Boolean
+        get() = getBoolean(PREF_APP_UPDATE_RECOMMENDED_STATE)
+        set(enabled) = set(PREF_APP_UPDATE_RECOMMENDED_STATE, enabled)
+
     operator fun set(key: String, value: String?) {
         sharedPreferences.edit().putString(key, value).apply()
     }
@@ -127,13 +141,21 @@ class PrefsUtil(private val sharedPreferences: SharedPreferences) {
         when (key) {
             PREF_IS_NOTIFICATIONS_ENABLED -> devValue = true
             PREF_IS_TR_CONFIRMATION_ENABLED -> devValue = true
+            PREF_APP_UPDATE_RECOMMENDED_STATE -> devValue = true
         }
 
         return sharedPreferences.getBoolean(key, devValue)
     }
 
     fun getInt(key: String): Int {
-        return sharedPreferences.getInt(key, 0)
+        var devValue = 0
+
+        // Set default value for specific cases.
+        when (key) {
+            PREF_APP_UPDATE_COUNTER_TIMER -> devValue = APP_UPDATE
+        }
+
+        return sharedPreferences.getInt(key, devValue)
     }
 
     fun getLong(key: String): Long {
@@ -148,7 +170,9 @@ class PrefsUtil(private val sharedPreferences: SharedPreferences) {
         for (key in sharedPreferences.all.keys) {
             when (key) {
                 // Put here excluded keys.
-                PREF_RATE_US_STATE -> {
+                PREF_RATE_US_STATE,
+                PREF_APP_UPDATE_COUNTER_TIMER,
+                PREF_APP_UPDATE_RECOMMENDED_STATE-> {
                     /* do nothing*/
                 }
                 else -> editor.remove(key)

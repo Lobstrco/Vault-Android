@@ -16,10 +16,12 @@ import com.lobstr.stellar.vault.presentation.util.Constant.Code.Config.TRANSACTI
 import com.lobstr.stellar.vault.presentation.util.Constant.Util.UNDEFINED_VALUE
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.schedulers.Schedulers
+import javax.inject.Inject
 
-class ConfigPresenter(
-    private var interactor: ConfigInteractor,
-    private val eventProviderModule: EventProviderModule) : BasePresenter<ConfigView>() {
+class ConfigPresenter @Inject constructor(
+    private val interactor: ConfigInteractor,
+    private val eventProviderModule: EventProviderModule
+) : BasePresenter<ConfigView>() {
 
     var config: Int = UNDEFINED_VALUE
 

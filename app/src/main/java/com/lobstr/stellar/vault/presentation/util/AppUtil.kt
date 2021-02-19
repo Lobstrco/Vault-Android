@@ -1,10 +1,7 @@
 package com.lobstr.stellar.vault.presentation.util
 
 import android.app.Activity
-import android.content.ClipData
-import android.content.ClipboardManager
-import android.content.Context
-import android.content.Intent
+import android.content.*
 import android.content.pm.PackageManager
 import android.graphics.Point
 import android.net.Uri
@@ -15,11 +12,13 @@ import android.os.Vibrator
 import android.util.DisplayMetrics
 import android.util.Log
 import android.view.View
+import android.view.WindowInsets
 import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
 import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.StringRes
+import androidx.browser.customtabs.CustomTabColorSchemeParams
 import androidx.browser.customtabs.CustomTabsIntent
 import androidx.core.content.ContextCompat
 import androidx.core.content.pm.PackageInfoCompat
@@ -33,10 +32,13 @@ import com.lobstr.stellar.vault.BuildConfig
 import com.lobstr.stellar.vault.R
 import com.lobstr.stellar.vault.presentation.application.LVApplication
 import com.lobstr.stellar.vault.presentation.entities.transaction.operation.*
+import com.lobstr.stellar.vault.presentation.entities.transaction.operation.claimable_balance.ClaimClaimableBalanceOperation
+import com.lobstr.stellar.vault.presentation.entities.transaction.operation.claimable_balance.CreateClaimableBalanceOperation
 import com.lobstr.stellar.vault.presentation.entities.transaction.operation.offer.CancelSellOfferOperation
 import com.lobstr.stellar.vault.presentation.entities.transaction.operation.offer.CreatePassiveSellOfferOperation
 import com.lobstr.stellar.vault.presentation.entities.transaction.operation.offer.ManageBuyOfferOperation
 import com.lobstr.stellar.vault.presentation.entities.transaction.operation.offer.SellOfferOperation
+import com.lobstr.stellar.vault.presentation.entities.transaction.operation.sponsoring.*
 import com.lobstr.stellar.vault.presentation.util.Constant.Symbol.NULL
 import com.lobstr.stellar.vault.presentation.util.Constant.TransactionType.Item.AUTH_CHALLENGE
 import com.lobstr.stellar.vault.presentation.util.Constant.TransactionType.Item.TRANSACTION
@@ -77,40 +79,46 @@ object AppUtil {
             return
         }
 
-        val builder = CustomTabsIntent.Builder()
-        val customTabsIntent = builder.build()
-        builder.setToolbarColor(ContextCompat.getColor(context!!, R.color.color_primary))
-        customTabsIntent.launchUrl(context, Uri.parse(url))
+        try {
+            CustomTabsIntent.Builder()
+                .setDefaultColorSchemeParams(
+                CustomTabColorSchemeParams.Builder()
+                    .setToolbarColor(ContextCompat.getColor(context!!, R.color.color_primary))
+                    .build()
+            )
+            .build()
+                .apply {
+                    intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
+                    launchUrl(context, Uri.parse(url))
+                }
+        } catch (exc: ActivityNotFoundException) {
+            Toast.makeText(context, R.string.msg_no_app_found, Toast.LENGTH_SHORT).show()
+        }
     }
 
-    fun formatDate(date: Long, datePattern: String): String {
+    fun formatDate(date: Long, datePattern: String, locale: Locale = Locale.ENGLISH): String {
         val calendar = Calendar.getInstance()
         calendar.timeInMillis = date
         try {
-            val format = SimpleDateFormat(datePattern, Locale.ENGLISH)
+            val format = SimpleDateFormat(datePattern, locale)
             return format.format(date)
         } catch (e: Exception) {
             e.printStackTrace()
         }
-
         return NULL
     }
 
     fun copyToClipboard(context: Context?, extractedString: String) {
-        val clipboard = context?.getSystemService(Context.CLIPBOARD_SERVICE) as? ClipboardManager
-        val clip = ClipData.newPlainText("Copied Text", extractedString)
-        clipboard?.setPrimaryClip(clip)
-        Toast.makeText(context, R.string.msg_successfully_copied, Toast.LENGTH_SHORT).show()
-    }
-
-    fun pasteFromClipboard(context: Context?): String? {
-        val clipboard = context?.getSystemService(Context.CLIPBOARD_SERVICE) as? ClipboardManager
-
-        val item = clipboard?.primaryClip?.getItemAt(0)
-
-        return if (item == null || item.text == null) {
-            null
-        } else item.text.toString()
+        try {
+            val clipboard =
+                context?.getSystemService(Context.CLIPBOARD_SERVICE) as? ClipboardManager
+            val clip = ClipData.newPlainText("Copied Text", extractedString)
+            clipboard?.setPrimaryClip(clip)
+            Toast.makeText(context, R.string.msg_successfully_copied, Toast.LENGTH_SHORT).show()
+        } catch (exc: SecurityException) {
+            // Handle security exception in some cases (Android Q): https://developer.android.com/about/versions/10/privacy/changes#clipboard-data
+            Toast.makeText(context, R.string.msg_unknown_error, Toast.LENGTH_SHORT).show()
+        }
     }
 
     fun getAppVersionCode(context: Context?): Long {
@@ -163,9 +171,9 @@ object AppUtil {
     /**
      * Used for receive operation type.
      * @param operation Operation.
-     * @param txType Target Transaction Type for determining Sep 10 Challenge.
+     * @param transactionType Target Transaction Type for determining Sep 10 Challenge.
      */
-    fun getTransactionOperationName(operation: Operation, txType: String?): Int {
+    fun getTransactionOperationName(operation: Operation, transactionType: String?): Int {
         return when (operation) {
             is PaymentOperation -> R.string.text_operation_name_payment
             is CreateAccountOperation -> R.string.text_operation_name_create_account
@@ -181,13 +189,23 @@ object AppUtil {
             is AccountMergeOperation -> R.string.text_operation_name_account_merge
             is InflationOperation -> R.string.text_operation_name_inflation
             is ManageDataOperation -> {
-                when (txType) {
+                when (transactionType) {
                     TRANSACTION -> R.string.text_operation_name_manage_data
                     AUTH_CHALLENGE -> R.string.text_operation_name_challenge
                     else -> R.string.text_operation_name_manage_data
                 }
             }
             is BumpSequenceOperation -> R.string.text_operation_name_bump_sequence
+            is BeginSponsoringFutureReservesOperation -> R.string.text_operation_name_begin_sponsoring_future_reserves
+            is EndSponsoringFutureReservesOperation -> R.string.text_operation_name_end_sponsoring_future_reserves
+            is RevokeAccountSponsorshipOperation -> R.string.text_operation_name_revoke_account_sponsorship
+            is RevokeClaimableBalanceSponsorshipOperation -> R.string.text_operation_name_revoke_claimable_balance_sponsorship
+            is RevokeDataSponsorshipOperation -> R.string.text_operation_name_revoke_data_sponsorship
+            is RevokeOfferSponsorshipOperation -> R.string.text_operation_name_revoke_offer_sponsorship
+            is RevokeSignerSponsorshipOperation -> R.string.text_operation_name_revoke_signer_sponsorship
+            is RevokeTrustlineSponsorshipOperation -> R.string.text_operation_name_revoke_trustline_sponsorship
+            is CreateClaimableBalanceOperation -> R.string.text_operation_name_create_claimable_balance
+            is ClaimClaimableBalanceOperation -> R.string.text_operation_name_claim_claimable_balance
             else -> -1
         }
     }
@@ -211,11 +229,27 @@ object AppUtil {
     }
 
     fun screenWidth(context: Context): Int {
-        val wm = context.getSystemService(Context.WINDOW_SERVICE) as WindowManager
-        val display = wm.defaultDisplay
-        val size = Point()
-        display.getSize(size)
-        return size.x
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            // https://developer.android.com/reference/android/view/WindowMetrics?hl=com#getBounds()
+            // NOTE Android R behavior: check in future compat version of WindowMetrics in AndroidX.
+            //  Use WindowInsetsCompat instead after update androidx.core:core-ktx to version > 1.3.2
+            //  In 1.3.2 - getInsetsIgnoringVisibility don't added (added in 1.5.0-alpha04).
+            val metrics = (context.getSystemService(Context.WINDOW_SERVICE) as WindowManager).currentWindowMetrics
+            // Gets all excluding insets.
+            val windowInsets = metrics.windowInsets
+            val insets = windowInsets.getInsetsIgnoringVisibility(WindowInsets.Type.navigationBars()
+                    or WindowInsets.Type.displayCutout())
+            val insetsWidth = insets.right + insets.left
+            // Legacy size that Display#getSize reports.
+            val bounds = metrics.bounds
+            bounds.width() - insetsWidth
+        } else {
+            val wm = context.getSystemService(Context.WINDOW_SERVICE) as WindowManager
+            val display = wm.defaultDisplay
+            val size = Point()
+            display.getSize(size)
+            size.x
+        }
     }
 
     fun vibrate(context: Context, pattern: LongArray) {

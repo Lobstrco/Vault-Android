@@ -10,26 +10,24 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.lobstr.stellar.vault.R
+import com.lobstr.stellar.vault.databinding.FragmentTransactionsBinding
 import com.lobstr.stellar.vault.presentation.base.fragment.BaseFragment
 import com.lobstr.stellar.vault.presentation.container.activity.ContainerActivity
 import com.lobstr.stellar.vault.presentation.dialog.alert.base.AlertDialogFragment
 import com.lobstr.stellar.vault.presentation.entities.transaction.TransactionItem
-import com.lobstr.stellar.vault.presentation.home.HomeActivity
-import com.lobstr.stellar.vault.presentation.home.transactions.adapter.OnTransactionItemClicked
 import com.lobstr.stellar.vault.presentation.home.transactions.adapter.TransactionAdapter
 import com.lobstr.stellar.vault.presentation.util.Constant
 import com.lobstr.stellar.vault.presentation.util.Constant.Code.IMPORT_XDR_FRAGMENT
 import com.lobstr.stellar.vault.presentation.util.Constant.Code.TRANSACTION_DETAILS_FRAGMENT
 import com.lobstr.stellar.vault.presentation.util.manager.ProgressManager
-import dagger.Lazy
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.android.synthetic.main.fragment_transactions.*
 import moxy.ktx.moxyPresenter
 import javax.inject.Inject
+import javax.inject.Provider
 
 @AndroidEntryPoint
 class TransactionsFragment : BaseFragment(), TransactionsView, SwipeRefreshLayout.OnRefreshListener,
-    OnTransactionItemClicked, View.OnClickListener,
+    View.OnClickListener,
     AlertDialogFragment.OnDefaultAlertDialogListener {
 
     // ===========================================================
@@ -44,16 +42,17 @@ class TransactionsFragment : BaseFragment(), TransactionsView, SwipeRefreshLayou
     // Fields
     // ===========================================================
 
-    @Inject
-    lateinit var daggerPresenter: Lazy<TransactionsPresenter>
+    private var _binding: FragmentTransactionsBinding? = null
+    private val binding get() = _binding!!
 
-    private var mView: View? = null
+    @Inject
+    lateinit var presenterProvider: Provider<TransactionsPresenter>
 
     // ===========================================================
     // Constructors
     // ===========================================================
 
-    private val mPresenter by moxyPresenter { daggerPresenter.get() }
+    private val mPresenter by moxyPresenter { presenterProvider.get() }
 
     // ===========================================================
     // Getter & Setter
@@ -67,12 +66,8 @@ class TransactionsFragment : BaseFragment(), TransactionsView, SwipeRefreshLayou
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        mView = if (mView == null) inflater.inflate(
-            R.layout.fragment_transactions,
-            container,
-            false
-        ) else mView
-        return mView
+        _binding = FragmentTransactionsBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -105,8 +100,8 @@ class TransactionsFragment : BaseFragment(), TransactionsView, SwipeRefreshLayou
     }
 
     private fun setListeners() {
-        srlTransactions.setOnRefreshListener(this)
-        fabAddTransaction.setOnClickListener(this)
+        binding.srlTransactions.setOnRefreshListener(this)
+        binding.fabAddTransaction.setOnClickListener(this)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -119,9 +114,14 @@ class TransactionsFragment : BaseFragment(), TransactionsView, SwipeRefreshLayou
 
         // Save RecycleView position for restore it after.
         mPresenter.onSaveInstanceState(
-            (rvTransactions?.layoutManager as? LinearLayoutManager)?.findFirstVisibleItemPosition()
+            (binding.rvTransactions.layoutManager as? LinearLayoutManager)?.findFirstVisibleItemPosition()
                 ?: 0
         )
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
     // ===========================================================
@@ -130,12 +130,8 @@ class TransactionsFragment : BaseFragment(), TransactionsView, SwipeRefreshLayou
 
     override fun onClick(v: View?) {
         when (v?.id) {
-            fabAddTransaction.id -> mPresenter.addTransactionClicked()
+            binding.fabAddTransaction.id -> mPresenter.addTransactionClicked()
         }
-    }
-
-    override fun onTransactionItemClick(transactionItem: TransactionItem) {
-        mPresenter.transactionItemClicked(transactionItem)
     }
 
     override fun onRefresh() {
@@ -147,14 +143,18 @@ class TransactionsFragment : BaseFragment(), TransactionsView, SwipeRefreshLayou
     }
 
     override fun initRecycledView() {
-        rvTransactions.layoutManager = LinearLayoutManager(context)
-        rvTransactions.itemAnimator = null
-        rvTransactions.adapter = TransactionAdapter(this)
-        rvTransactions.addOnScrollListener(RecyclerTransactionsScrollingListener())
+        binding.rvTransactions.layoutManager = LinearLayoutManager(context)
+        binding.rvTransactions.itemAnimator = null
+        binding.rvTransactions.adapter = TransactionAdapter {
+            mPresenter.transactionItemClicked(it)
+        }
+        binding.rvTransactions.addOnScrollListener(RecyclerTransactionsScrollingListener())
     }
 
     override fun showTransactionDetails(transactionItem: TransactionItem) {
         val intent = Intent(context, ContainerActivity::class.java)
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+        intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
         intent.putExtra(Constant.Extra.EXTRA_NAVIGATION_FR, Constant.Navigation.TRANSACTION_DETAILS)
         intent.putExtra(Constant.Extra.EXTRA_TRANSACTION_ITEM, transactionItem)
         startActivityForResult(intent, TRANSACTION_DETAILS_FRAGMENT)
@@ -168,12 +168,12 @@ class TransactionsFragment : BaseFragment(), TransactionsView, SwipeRefreshLayou
         items: List<TransactionItem>,
         needShowProgress: Boolean
     ) {
-        (rvTransactions.adapter as? TransactionAdapter)?.setTransactionList(items, needShowProgress)
+        (binding.rvTransactions.adapter as? TransactionAdapter)?.setTransactionList(items, needShowProgress)
         mPresenter.attemptRestoreRvPosition()
     }
 
     override fun scrollListToPosition(position: Int) {
-        rvTransactions.scrollToPosition(position)
+        binding.rvTransactions.scrollToPosition(position)
     }
 
     override fun showOptionsMenu(show: Boolean) {
@@ -181,7 +181,7 @@ class TransactionsFragment : BaseFragment(), TransactionsView, SwipeRefreshLayou
     }
 
     override fun showPullToRefresh(show: Boolean) {
-        srlTransactions.isRefreshing = show
+        binding.srlTransactions.isRefreshing = show
     }
 
     override fun showProgressDialog(show: Boolean) {
@@ -189,30 +189,29 @@ class TransactionsFragment : BaseFragment(), TransactionsView, SwipeRefreshLayou
     }
 
     override fun showEmptyState(show: Boolean) {
-        tvTransactionEmptyState.visibility = if (show) View.VISIBLE else View.GONE
+        binding.tvTransactionEmptyState.visibility = if (show) View.VISIBLE else View.GONE
     }
 
     override fun showImportXdrScreen() {
         val intent = Intent(context, ContainerActivity::class.java)
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+        intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
         intent.putExtra(Constant.Extra.EXTRA_NAVIGATION_FR, Constant.Navigation.IMPORT_XDR)
         startActivityForResult(intent, IMPORT_XDR_FRAGMENT)
     }
 
-    override fun checkRateUsDialog() {
-        (activity as? HomeActivity)?.checkRateUsDialog()
-    }
-
-    override fun showClearInvalidTrDialog() {
+    override fun showClearTransactionsDialog() {
         AlertDialogFragment.Builder(true)
             .setCancelable(true)
-            .setTitle(R.string.title_clear_invalid_tr_dialog)
-            .setMessage(R.string.msg_clear_invalid_tr_dialog)
-            .setNegativeBtnText(R.string.text_btn_cancel)
-            .setPositiveBtnText(R.string.text_btn_ok)
+            .setTitle(R.string.title_clear_transactions_dialog)
+            .setMessage(R.string.msg_clear_transactions_dialog)
+            .setPositiveBtnText(R.string.text_btn_remove_invalid)
+            .setNeutralBtnText(R.string.text_btn_cancel)
+            .setNegativeBtnText(R.string.text_btn_remove_all)
             .create()
             .show(
                 childFragmentManager,
-                AlertDialogFragment.DialogFragmentIdentifier.CLEAR_INVALID_TR
+                AlertDialogFragment.DialogFragmentIdentifier.CLEAR_TRANSACTIONS
             )
     }
 
@@ -221,7 +220,7 @@ class TransactionsFragment : BaseFragment(), TransactionsView, SwipeRefreshLayou
     }
 
     override fun onNegativeBtnClick(tag: String?, dialogInterface: DialogInterface) {
-        // Add logic if needed.
+        mPresenter.onAlertDialogNegativeButtonClicked(tag)
     }
 
     override fun onNeutralBtnClick(tag: String?, dialogInterface: DialogInterface) {

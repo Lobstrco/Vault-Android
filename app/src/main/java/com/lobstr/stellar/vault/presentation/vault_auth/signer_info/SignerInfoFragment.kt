@@ -10,6 +10,7 @@ import android.os.Bundle
 import android.view.*
 import android.widget.Toast
 import com.lobstr.stellar.vault.R
+import com.lobstr.stellar.vault.databinding.FragmentSignerInfoBinding
 import com.lobstr.stellar.vault.presentation.base.fragment.BaseFragment
 import com.lobstr.stellar.vault.presentation.dialog.alert.base.AlertDialogFragment
 import com.lobstr.stellar.vault.presentation.home.settings.show_public_key.ShowPublicKeyDialogFragment
@@ -19,11 +20,10 @@ import com.lobstr.stellar.vault.presentation.util.Constant.LobstrWallet.DEEP_LIN
 import com.lobstr.stellar.vault.presentation.util.Constant.LobstrWallet.PACKAGE_NAME
 import com.lobstr.stellar.vault.presentation.util.Constant.Social.STORE_URL
 import com.lobstr.stellar.vault.presentation.util.manager.SupportManager
-import dagger.Lazy
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.android.synthetic.main.fragment_signer_info.*
 import moxy.ktx.moxyPresenter
 import javax.inject.Inject
+import javax.inject.Provider
 
 @AndroidEntryPoint
 class SignerInfoFragment : BaseFragment(), SignerInfoView, View.OnClickListener {
@@ -40,16 +40,17 @@ class SignerInfoFragment : BaseFragment(), SignerInfoView, View.OnClickListener 
     // Fields
     // ===========================================================
 
-    @Inject
-    lateinit var daggerPresenter: Lazy<SignerInfoPresenter>
+    private var _binding: FragmentSignerInfoBinding? = null
+    private val binding get() = _binding!!
 
-    private var mView: View? = null
+    @Inject
+    lateinit var presenterProvider: Provider<SignerInfoPresenter>
 
     // ===========================================================
     // Constructors
     // ===========================================================
 
-    private val mPresenter by moxyPresenter { daggerPresenter.get() }
+    private val mPresenter by moxyPresenter { presenterProvider.get() }
 
     // ===========================================================
     // Getter & Setter
@@ -63,12 +64,8 @@ class SignerInfoFragment : BaseFragment(), SignerInfoView, View.OnClickListener 
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        mView = if (mView == null) inflater.inflate(
-            R.layout.fragment_signer_info,
-            container,
-            false
-        ) else mView
-        return mView
+        _binding = FragmentSignerInfoBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -77,10 +74,10 @@ class SignerInfoFragment : BaseFragment(), SignerInfoView, View.OnClickListener 
     }
 
     private fun setListeners() {
-        btnDownloadLobstrApp.setOnClickListener(this)
-        btnOpenLobstrApp.setOnClickListener(this)
-        btnCopyUserPk.setOnClickListener(this)
-        btnShowQr.setOnClickListener(this)
+        binding.btnDownloadLobstrApp.setOnClickListener(this)
+        binding.btnOpenLobstrApp.setOnClickListener(this)
+        binding.btnCopyUserPk.setOnClickListener(this)
+        binding.btnShowQr.setOnClickListener(this)
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -96,16 +93,21 @@ class SignerInfoFragment : BaseFragment(), SignerInfoView, View.OnClickListener 
         return super.onOptionsItemSelected(item)
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+
     // ===========================================================
     // Listeners, methods for/from Interfaces
     // ===========================================================
 
     override fun onClick(v: View?) {
         when (v?.id) {
-            btnDownloadLobstrApp.id -> mPresenter.downloadLobstrAppClicked()
-            btnOpenLobstrApp.id -> mPresenter.openLobstrAppClicked()
-            btnCopyUserPk.id -> mPresenter.copyUserPublicKeyClicked()
-            btnShowQr.id -> mPresenter.showQrClicked()
+            binding.btnDownloadLobstrApp.id -> mPresenter.downloadLobstrAppClicked()
+            binding.btnOpenLobstrApp.id -> mPresenter.openLobstrAppClicked()
+            binding.btnCopyUserPk.id -> mPresenter.copyUserPublicKeyClicked()
+            binding.btnShowQr.id -> mPresenter.showQrClicked()
         }
     }
 
@@ -118,15 +120,15 @@ class SignerInfoFragment : BaseFragment(), SignerInfoView, View.OnClickListener 
             e.printStackTrace()
         }
 
-        cvLobstrWalletInfo.visibility = if (applicationInfo != null) View.VISIBLE else View.GONE
-        cvLobstrWalletInstall.visibility = if (applicationInfo != null) View.GONE else View.VISIBLE
+        binding.cvLobstrWalletInfo.visibility = if (applicationInfo != null) View.VISIBLE else View.GONE
+        binding.cvLobstrWalletInstall.visibility = if (applicationInfo != null) View.GONE else View.VISIBLE
 
         // Start check of Lobstr Wallet app install.
         mPresenter.startCheckExistenceLobstrAppWithInterval(applicationInfo == null)
     }
 
     override fun setupUserPublicKey(userPublicKey: String?) {
-        tvUserPublicKey.text = userPublicKey
+        binding.tvUserPublicKey.text = userPublicKey
     }
 
     override fun copyToClipBoard(text: String) {

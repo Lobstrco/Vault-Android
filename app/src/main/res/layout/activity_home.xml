@@ -34,9 +34,10 @@
                 android:id="@+id/bnvHomeTabs"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@android:color/white"
-                app:itemBackground="@drawable/selector_bottom_navigation"
+                app:backgroundTint="@android:color/white"
+                app:itemRippleColor="@color/color_primary"
                 app:itemTextColor="@color/selector_bottom_navigation_text"
+                app:labelVisibilityMode="labeled"
                 app:menu="@menu/bottom_navigation_main" />
     </LinearLayout>
 

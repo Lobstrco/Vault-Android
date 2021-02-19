@@ -6,6 +6,7 @@ import com.lobstr.stellar.vault.presentation.entities.account.Account
 import com.lobstr.stellar.vault.presentation.entities.account.AccountConfig
 import com.lobstr.stellar.vault.presentation.fcm.FcmHelper
 import com.lobstr.stellar.vault.presentation.util.AppUtil
+import com.lobstr.stellar.vault.presentation.util.Constant
 import com.lobstr.stellar.vault.presentation.util.Constant.BiometricState.DISABLED
 import com.lobstr.stellar.vault.presentation.util.Constant.BiometricState.ENABLED
 import com.lobstr.stellar.vault.presentation.util.PrefsUtil
@@ -83,5 +84,12 @@ class SettingsInteractorImpl(
     override fun getSignedAccounts(): Single<List<Account>> {
         return accountRepository.getSignedAccounts(AppUtil.getJwtToken(prefsUtil.authToken))
             .doOnSuccess { prefsUtil.accountSignersCount = it.size }
+    }
+
+    /**
+     * @see Constant.RateUsState
+     */
+    override fun setRateUsState(state: Int) {
+        prefsUtil.rateUsState = state
     }
 }

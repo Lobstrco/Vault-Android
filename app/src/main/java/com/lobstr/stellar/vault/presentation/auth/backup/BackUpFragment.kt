@@ -4,12 +4,12 @@ package com.lobstr.stellar.vault.presentation.auth.backup
 import android.os.Bundle
 import android.view.*
 import com.lobstr.stellar.vault.R
+import com.lobstr.stellar.vault.databinding.FragmentBackUpBinding
 import com.lobstr.stellar.vault.presentation.auth.mnemonic.create_mnemonic.MnemonicsFragment
 import com.lobstr.stellar.vault.presentation.base.fragment.BaseFragment
 import com.lobstr.stellar.vault.presentation.util.Constant
 import com.lobstr.stellar.vault.presentation.util.manager.FragmentTransactionManager
 import com.lobstr.stellar.vault.presentation.util.manager.SupportManager
-import kotlinx.android.synthetic.main.fragment_back_up.*
 import moxy.ktx.moxyPresenter
 
 class BackUpFragment : BaseFragment(), BackUpView, View.OnClickListener {
@@ -26,7 +26,8 @@ class BackUpFragment : BaseFragment(), BackUpView, View.OnClickListener {
     // Fields
     // ===========================================================
 
-    private var mView: View? = null
+    private var _binding: FragmentBackUpBinding? = null
+    private val binding get() = _binding!!
 
     // ===========================================================
     // Constructors
@@ -46,12 +47,8 @@ class BackUpFragment : BaseFragment(), BackUpView, View.OnClickListener {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        mView = if (mView == null) inflater.inflate(
-            R.layout.fragment_back_up,
-            container,
-            false
-        ) else mView
-        return mView
+        _binding = FragmentBackUpBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -60,7 +57,7 @@ class BackUpFragment : BaseFragment(), BackUpView, View.OnClickListener {
     }
 
     private fun setListeners() {
-        btnNext.setOnClickListener(this)
+        binding.btnNext.setOnClickListener(this)
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -76,13 +73,18 @@ class BackUpFragment : BaseFragment(), BackUpView, View.OnClickListener {
         return super.onOptionsItemSelected(item)
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+
     // ===========================================================
     // Listeners, methods for/from Interfaces
     // ===========================================================
 
     override fun onClick(v: View?) {
         when (v?.id) {
-            btnNext.id -> mPresenter.nextClicked()
+            binding.btnNext.id -> mPresenter.nextClicked()
         }
     }
 
@@ -98,7 +100,7 @@ class BackUpFragment : BaseFragment(), BackUpView, View.OnClickListener {
         FragmentTransactionManager.displayFragment(
             requireParentFragment().childFragmentManager,
             fragment,
-            R.id.fl_container
+            R.id.flContainer
         )
     }
 

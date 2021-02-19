@@ -10,8 +10,9 @@ import com.lobstr.stellar.vault.presentation.util.Constant.Util.COUNT_MNEMONIC_W
 import com.soneso.stellarmnemonics.mnemonic.MnemonicException
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.schedulers.Schedulers
+import javax.inject.Inject
 
-class ConfirmMnemonicsPresenter(private val interactor: ConfirmMnemonicsInteractor) :
+class ConfirmMnemonicsPresenter @Inject constructor(private val interactor: ConfirmMnemonicsInteractor) :
     BasePresenter<ConfirmMnemonicsView>() {
 
     lateinit var mnemonicsInitialList: List<MnemonicItem>

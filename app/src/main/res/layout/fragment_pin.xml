@@ -88,7 +88,7 @@
                     android:gravity="center"
                     android:text="@string/text_settings_log_out"
                     android:textAppearance="?android:textAppearanceMedium"
-                    android:textColor="@android:color/white"
+                    android:textColor="@color/selector_text_white"
                     android:textStyle="bold" />
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>

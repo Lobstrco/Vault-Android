@@ -14,6 +14,7 @@ import android.widget.Toast
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.lobstr.stellar.vault.R
+import com.lobstr.stellar.vault.databinding.FragmentTangemDialogBinding
 import com.lobstr.stellar.vault.presentation.BaseBottomSheetDialog
 import com.lobstr.stellar.vault.presentation.dialog.alert.base.AlertDialogFragment
 import com.lobstr.stellar.vault.presentation.entities.tangem.TangemInfo
@@ -23,11 +24,10 @@ import com.lobstr.stellar.vault.presentation.util.tangem.CustomCardManagerDelega
 import com.lobstr.stellar.vault.presentation.util.tangem.customInit
 import com.tangem.TangemSdk
 import com.tangem.common.CompletionResult
-import dagger.Lazy
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.android.synthetic.main.fragment_tangem_dialog.*
 import moxy.ktx.moxyPresenter
 import javax.inject.Inject
+import javax.inject.Provider
 
 @AndroidEntryPoint
 class TangemDialogFragment : BaseBottomSheetDialog(), TangemDialogView,
@@ -46,18 +46,19 @@ class TangemDialogFragment : BaseBottomSheetDialog(), TangemDialogView,
     // Fields
     // ===========================================================
 
+    private var _binding: FragmentTangemDialogBinding? = null
+    private val binding get() = _binding!!
+
     private lateinit var tangemSdk: TangemSdk
 
     @Inject
-    lateinit var daggerPresenter: Lazy<TangemDialogPresenter>
-
-    private var mView: View? = null
+    lateinit var presenterProvider: Provider<TangemDialogPresenter>
 
     // ===========================================================
     // Constructors
     // ===========================================================
 
-    private val mPresenter by moxyPresenter { daggerPresenter.get().apply {
+    private val mPresenter by moxyPresenter { presenterProvider.get().apply {
         tangemInfo = arguments?.getParcelable(Constant.Extra.EXTRA_TANGEM_INFO)
     } }
 
@@ -73,12 +74,13 @@ class TangemDialogFragment : BaseBottomSheetDialog(), TangemDialogView,
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        mView = if (mView == null) inflater.inflate(
-            R.layout.fragment_tangem_dialog,
-            container,
-            false
-        ) else mView
-        return mView
+        _binding = FragmentTangemDialogBinding.inflate(inflater, container, false)
+        return binding.root
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
@@ -166,40 +168,40 @@ class TangemDialogFragment : BaseBottomSheetDialog(), TangemDialogView,
 
         params.gravity = gravity
         params.bottomMargin = AppUtil.convertDpToPixels(requireActivity(), 13f).toInt()
-        ivCardHorizontalFr.layoutParams = params
+        binding.ivCardHorizontalFr.layoutParams = params
     }
 
     override fun changeActionContainerVisibility(show: Boolean) {
         if (show) {
-            llActionContainer.visibility = View.VISIBLE
+            binding.llActionContainer.visibility = View.VISIBLE
         } else {
-            llActionContainer.visibility = View.INVISIBLE
+            binding.llActionContainer.visibility = View.INVISIBLE
         }
     }
 
     override fun changeErrorContainerVisibility(show: Boolean) {
         if (show) {
-            llErrorContainer.visibility = View.VISIBLE
+            binding.llErrorContainer.visibility = View.VISIBLE
         } else {
-            llErrorContainer.visibility = View.INVISIBLE
+            binding.llErrorContainer.visibility = View.INVISIBLE
         }
     }
 
     override fun setErrorContainerData(errorTitle: String, errorDescription: String) {
-        tvErrorTitleFr.text = errorTitle
-        tvErrorMessageFr.text = errorDescription
+        binding.tvErrorTitleFr.text = errorTitle
+        binding.tvErrorMessageFr.text = errorDescription
     }
 
     override fun showSuccessAnimation() {
-        idNFCChipLocationContainer.visibility = View.INVISIBLE
-        idSuccessContainer.visibility = View.VISIBLE
-        ivScanStatus.playAnimation()
+        binding.idNFCChipLocationContainer.visibility = View.INVISIBLE
+        binding.idSuccessContainer.visibility = View.VISIBLE
+        binding.ivScanStatus.playAnimation()
     }
 
     private fun setListeners() {
-        btnTryAgainFr.setOnClickListener(this)
-        tvCancel.setOnClickListener(this)
-        ivScanStatus.addAnimatorListener(object : Animator.AnimatorListener {
+        binding.btnTryAgainFr.setOnClickListener(this)
+        binding.tvCancel.setOnClickListener(this)
+        binding.ivScanStatus.addAnimatorListener(object : Animator.AnimatorListener {
             override fun onAnimationRepeat(animation: Animator?) {
 
             }
@@ -232,11 +234,11 @@ class TangemDialogFragment : BaseBottomSheetDialog(), TangemDialogView,
     }
 
     override fun setStateTitle(state: String?) {
-        tvStateTitleFr.text = state
+        binding.tvStateTitleFr.text = state
     }
 
     override fun setDescriptionMessage(message: String?) {
-        tvMessageTitleFr.text = message
+        binding.tvMessageTitleFr.text = message
     }
 
     // ===========================================================

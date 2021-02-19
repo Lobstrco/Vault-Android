@@ -221,6 +221,7 @@
 
 # Tangem
 -keep class com.tangem.** { *; }
+-dontwarn com.tangem.**
 
 # PinLockView
 -keep class com.andrognito.** { *; }

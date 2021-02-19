@@ -3,28 +3,25 @@ package com.lobstr.stellar.vault.presentation.home.transactions.details.adapter
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.lobstr.stellar.vault.R
+import com.lobstr.stellar.vault.databinding.AdapterItemOperationBinding
 
-class TransactionOperationAdapter(private val listener: OnOperationClicked) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
-
-    private var operationItems: MutableList<Int> = mutableListOf()
-
-    fun setOperationList(operations: MutableList<Int>) {
-        operationItems = operations
-        notifyDataSetChanged()
-    }
+class TransactionOperationAdapter(
+    private val operations: List<Int>,
+    private val itemClickListener: (position: Int) -> Unit
+) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     override fun onCreateViewHolder(viewGroup: ViewGroup, i: Int): RecyclerView.ViewHolder {
-        val view = LayoutInflater.from(viewGroup.context)
-            .inflate(R.layout.adapter_item_operation, viewGroup, false)
-        return TransactionOperationViewHolder(view, listener)
+        return TransactionOperationViewHolder(
+            AdapterItemOperationBinding.inflate(LayoutInflater.from(viewGroup.context), viewGroup, false),
+            itemClickListener
+        )
     }
 
     override fun onBindViewHolder(viewHolder: RecyclerView.ViewHolder, position: Int) {
-        (viewHolder as TransactionOperationViewHolder).bind(operationItems[position], itemCount)
+        (viewHolder as TransactionOperationViewHolder).bind(operations[position], itemCount)
     }
 
     override fun getItemCount(): Int {
-        return operationItems.size
+        return operations.size
     }
 }

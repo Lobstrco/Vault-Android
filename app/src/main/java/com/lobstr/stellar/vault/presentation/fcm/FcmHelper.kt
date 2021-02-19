@@ -3,7 +3,7 @@ package com.lobstr.stellar.vault.presentation.fcm
 
 import android.content.Context
 import android.util.Log
-import com.google.firebase.iid.FirebaseInstanceId
+import com.google.firebase.messaging.FirebaseMessaging
 import com.lobstr.stellar.vault.data.error.exeption.DefaultException
 import com.lobstr.stellar.vault.data.error.exeption.UserNotAuthorizedException
 import com.lobstr.stellar.vault.data.error.exeption.UserNotAuthorizedException.Action.DEFAULT
@@ -68,8 +68,8 @@ class FcmHelper(private val context: Context, private val fcmInteractor: FcmInte
     }
 
     private fun createAndSendFcmToken() {
-        FirebaseInstanceId.getInstance().instanceId.addOnSuccessListener {
-            val token = it.token
+        FirebaseMessaging.getInstance().token.addOnSuccessListener {
+            val token = it
             fcmInteractor.saveFcmToken(token)
             Log.i(LOG_TAG, "Device registered: REG_ID = $token")
             registerDevice(token)

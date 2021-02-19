@@ -18,6 +18,7 @@ import android.widget.Toast
 import androidx.annotation.StringRes
 import androidx.core.content.ContextCompat
 import com.lobstr.stellar.vault.R
+import com.lobstr.stellar.vault.databinding.FragmentSettingsBinding
 import com.lobstr.stellar.vault.presentation.auth.AuthActivity
 import com.lobstr.stellar.vault.presentation.base.fragment.BaseFragment
 import com.lobstr.stellar.vault.presentation.container.activity.ContainerActivity
@@ -33,12 +34,11 @@ import com.lobstr.stellar.vault.presentation.util.AppUtil
 import com.lobstr.stellar.vault.presentation.util.Constant
 import com.lobstr.stellar.vault.presentation.util.manager.FragmentTransactionManager
 import com.lobstr.stellar.vault.presentation.util.manager.SupportManager
-import dagger.Lazy
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.android.synthetic.main.fragment_settings.*
 import moxy.ktx.moxyPresenter
 import java.util.*
 import javax.inject.Inject
+import javax.inject.Provider
 
 @AndroidEntryPoint
 class SettingsFragment : BaseFragment(), SettingsView, View.OnClickListener,
@@ -56,16 +56,17 @@ class SettingsFragment : BaseFragment(), SettingsView, View.OnClickListener,
     // Fields
     // ===========================================================
 
-    @Inject
-    lateinit var daggerPresenter: Lazy<SettingsPresenter>
+    private var _binding: FragmentSettingsBinding? = null
+    private val binding get() = _binding!!
 
-    private var mView: View? = null
+    @Inject
+    lateinit var presenterProvider: Provider<SettingsPresenter>
 
     // ===========================================================
     // Constructors
     // ===========================================================
 
-    private val mPresenter by moxyPresenter { daggerPresenter.get() }
+    private val mPresenter by moxyPresenter { presenterProvider.get() }
 
     // ===========================================================
     // Getter & Setter
@@ -85,12 +86,8 @@ class SettingsFragment : BaseFragment(), SettingsView, View.OnClickListener,
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        mView = if (mView == null) inflater.inflate(
-            R.layout.fragment_settings,
-            container,
-            false
-        ) else mView
-        return mView
+        _binding = FragmentSettingsBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -100,25 +97,30 @@ class SettingsFragment : BaseFragment(), SettingsView, View.OnClickListener,
     }
 
     private fun setListeners() {
-        llPublicKey.setOnClickListener(this)
-        tvSettingsSigners.setOnClickListener(this)
-        tvSettingsMnemonics.setOnClickListener(this)
-        tvSettingsChangePin.setOnClickListener(this)
-        llSettingsSpamProtection.setOnClickListener(this)
-        tvSettingsHelp.setOnClickListener(this)
-        swSettingsBiometric.setOnCheckedChangeListener(this)
-        swSettingsNotifications.setOnCheckedChangeListener(this)
-        llSettingsSignerCardInfoContainer.setOnClickListener(this)
-        llSettingsTrConfirmation.setOnClickListener(this)
-        tvSettingsLicense.setOnClickListener(this)
-        tvSettingsRateUs.setOnClickListener(this)
-        tvSettingsContactSupport.setOnClickListener(this)
-        tvLogOut.setOnClickListener(this)
+        binding.llPublicKey.setOnClickListener(this)
+        binding.tvSettingsSigners.setOnClickListener(this)
+        binding.tvSettingsMnemonics.setOnClickListener(this)
+        binding.tvSettingsChangePin.setOnClickListener(this)
+        binding.llSettingsSpamProtection.setOnClickListener(this)
+        binding.tvSettingsHelp.setOnClickListener(this)
+        binding.swSettingsBiometric.setOnCheckedChangeListener(this)
+        binding.swSettingsNotifications.setOnCheckedChangeListener(this)
+        binding.llSettingsSignerCardInfoContainer.setOnClickListener(this)
+        binding.llSettingsTrConfirmation.setOnClickListener(this)
+        binding.tvSettingsLicense.setOnClickListener(this)
+        binding.tvSettingsRateUs.setOnClickListener(this)
+        binding.tvSettingsContactSupport.setOnClickListener(this)
+        binding.tvLogOut.setOnClickListener(this)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         mPresenter.handleOnActivityResult(requestCode, resultCode, data)
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
     // ===========================================================
@@ -127,18 +129,18 @@ class SettingsFragment : BaseFragment(), SettingsView, View.OnClickListener,
 
     override fun onClick(v: View?) {
         when (v?.id) {
-            llPublicKey.id -> mPresenter.publicKeyClicked()
-            tvSettingsSigners.id -> mPresenter.signersClicked()
-            tvSettingsMnemonics.id -> mPresenter.mnemonicsClicked()
-            tvSettingsChangePin.id -> mPresenter.changePinClicked()
-            llSettingsSpamProtection.id -> mPresenter.spamProtectionClicked()
-            tvSettingsHelp.id -> mPresenter.helpClicked()
-            llSettingsSignerCardInfoContainer.id -> mPresenter.signerCardClicked()
-            llSettingsTrConfirmation.id -> mPresenter.trConfirmationClicked()
-            tvSettingsLicense.id -> mPresenter.licenseClicked()
-            tvSettingsRateUs.id -> mPresenter.rateUsClicked()
-            tvSettingsContactSupport.id -> mPresenter.contactSupportClicked()
-            tvLogOut.id -> mPresenter.logOutClicked()
+            binding.llPublicKey.id -> mPresenter.publicKeyClicked()
+            binding.tvSettingsSigners.id -> mPresenter.signersClicked()
+            binding.tvSettingsMnemonics.id -> mPresenter.mnemonicsClicked()
+            binding.tvSettingsChangePin.id -> mPresenter.changePinClicked()
+            binding.llSettingsSpamProtection.id -> mPresenter.spamProtectionClicked()
+            binding.tvSettingsHelp.id -> mPresenter.helpClicked()
+            binding.llSettingsSignerCardInfoContainer.id -> mPresenter.signerCardClicked()
+            binding.llSettingsTrConfirmation.id -> mPresenter.trConfirmationClicked()
+            binding.tvSettingsLicense.id -> mPresenter.licenseClicked()
+            binding.tvSettingsRateUs.id -> mPresenter.rateUsClicked()
+            binding.tvSettingsContactSupport.id -> mPresenter.contactSupportClicked()
+            binding.tvLogOut.id -> mPresenter.logOutClicked()
         }
     }
 
@@ -161,16 +163,16 @@ class SettingsFragment : BaseFragment(), SettingsView, View.OnClickListener,
         isTransactionConfirmationAvailable: Boolean,
         isChangePinAvailable: Boolean
     ) {
-        llBiometricContainer.visibility = if (isBiometricSupported) View.VISIBLE else View.GONE
-        tvSettingsVersion.text = buildVersion
+        binding.llBiometricContainer.visibility = if (isBiometricSupported) View.VISIBLE else View.GONE
+        binding.tvSettingsVersion.text = buildVersion
 
-        llSettingsMnemonicsContainer.visibility =
+        binding.llSettingsMnemonicsContainer.visibility =
             if (isRecoveryCodeAvailable) View.VISIBLE else View.GONE
-        llSettingsSignerCardInfoContainer.visibility =
+        binding.llSettingsSignerCardInfoContainer.visibility =
             if (isSignerCardInfoAvailable) View.VISIBLE else View.GONE
-        llSettingsTrConfirmationContainer.visibility =
+        binding.llSettingsTrConfirmationContainer.visibility =
             if (isTransactionConfirmationAvailable) View.VISIBLE else View.GONE
-        llSettingsChangePinContainer.visibility =
+        binding.llSettingsChangePinContainer.visibility =
             if (isChangePinAvailable) View.VISIBLE else View.GONE
     }
 
@@ -209,7 +211,7 @@ class SettingsFragment : BaseFragment(), SettingsView, View.OnClickListener,
             )
         }
 
-        tvSettingsSigners.text = spannedText
+        binding.tvSettingsSigners.text = spannedText
     }
 
     override fun showSuccessMessage(@StringRes message: Int) {
@@ -240,24 +242,30 @@ class SettingsFragment : BaseFragment(), SettingsView, View.OnClickListener,
                 requireContext().classLoader,
                 SignedAccountsFragment::class.qualifiedName!!
             ),
-            R.id.fl_container
+            R.id.flContainer
         )
     }
 
     override fun showMnemonicsScreen() {
         val intent = Intent(context, ContainerActivity::class.java)
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+        intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
         intent.putExtra(Constant.Extra.EXTRA_NAVIGATION_FR, Constant.Navigation.MNEMONICS)
         startActivity(intent)
     }
 
     override fun showConfirmPinCodeScreen() {
         startActivityForResult(Intent(context, PinActivity::class.java).apply {
+            addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+            addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
             putExtra(Constant.Extra.EXTRA_PIN_MODE, Constant.PinMode.CONFIRM)
         }, Constant.Code.CONFIRM_PIN_FOR_MNEMONIC)
     }
 
     override fun showChangePinScreen() {
         startActivityForResult(Intent(context, PinActivity::class.java).apply {
+            addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+            addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
             putExtra(Constant.Extra.EXTRA_PIN_MODE, Constant.PinMode.CHANGE)
         }, Constant.Code.CHANGE_PIN)
     }
@@ -267,23 +275,23 @@ class SettingsFragment : BaseFragment(), SettingsView, View.OnClickListener,
     }
 
     override fun setBiometricChecked(checked: Boolean) {
-        swSettingsBiometric.setOnCheckedChangeListener(null)
-        swSettingsBiometric.isChecked = checked
-        swSettingsBiometric.setOnCheckedChangeListener(this)
+        binding.swSettingsBiometric.setOnCheckedChangeListener(null)
+        binding.swSettingsBiometric.isChecked = checked
+        binding.swSettingsBiometric.setOnCheckedChangeListener(this)
     }
 
     override fun setSpamProtection(config: String?) {
-        tvSpamProtectionConfig.text = config
+        binding.tvSpamProtectionConfig.text = config
     }
 
     override fun setNotificationsChecked(checked: Boolean) {
-        swSettingsNotifications.setOnCheckedChangeListener(null)
-        swSettingsNotifications.isChecked = checked
-        swSettingsNotifications.setOnCheckedChangeListener(this)
+        binding.swSettingsNotifications.setOnCheckedChangeListener(null)
+        binding.swSettingsNotifications.isChecked = checked
+        binding.swSettingsNotifications.setOnCheckedChangeListener(this)
     }
 
     override fun setTrConfirmation(config: String?) {
-        tvTrConfirmationConfig.text = config
+        binding.tvTrConfirmationConfig.text = config
     }
 
     override fun showBiometricInfoDialog(titleRes: Int, messageRes: Int) {
@@ -303,7 +311,7 @@ class SettingsFragment : BaseFragment(), SettingsView, View.OnClickListener,
                 requireContext().classLoader,
                 LicenseFragment::class.qualifiedName!!
             ),
-            R.id.fl_container
+            R.id.flContainer
         )
     }
 
@@ -321,13 +329,15 @@ class SettingsFragment : BaseFragment(), SettingsView, View.OnClickListener,
 
     override fun showConfigScreen(config: Int) {
         val intent = Intent(context, ContainerActivity::class.java)
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+        intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
         intent.putExtra(Constant.Extra.EXTRA_NAVIGATION_FR, Constant.Navigation.CONFIG)
         intent.putExtra(Constant.Extra.EXTRA_CONFIG, config)
         startActivityForResult(intent, config)
     }
 
     override fun setupPolicyYear(id: Int) {
-        tvCurrentPolicyDate.text =
+        binding.tvCurrentPolicyDate.text =
             String.format(getString(id), Calendar.getInstance().get(Calendar.YEAR))
     }
 

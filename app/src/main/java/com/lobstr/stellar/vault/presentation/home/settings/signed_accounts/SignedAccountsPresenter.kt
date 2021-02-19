@@ -16,8 +16,9 @@ import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.disposables.Disposable
 import io.reactivex.rxjava3.schedulers.Schedulers
+import javax.inject.Inject
 
-class SignedAccountsPresenter(
+class SignedAccountsPresenter @Inject constructor(
     private val interactor: SignedAccountInteractor,
     private val eventProviderModule: EventProviderModule
 ) : BasePresenter<SignedAccountsView>() {
@@ -27,7 +28,7 @@ class SignedAccountsPresenter(
     // For restore RecycleView position after saveInstanceState (-1 - undefined state).
     private var savedRvPosition: Int = Constant.Util.UNDEFINED_VALUE
 
-    private var stellarAccountsSubscription: Disposable? = null
+    private var stellarAccountsDisposable: Disposable? = null
     private val cachedStellarAccounts: MutableList<Account> = mutableListOf()
 
     override fun onFirstViewAttach() {
@@ -136,8 +137,8 @@ class SignedAccountsPresenter(
      * Used for receive federation by account id.
      */
     private fun getStellarAccounts(accounts: List<Account>) {
-        stellarAccountsSubscription?.dispose()
-        stellarAccountsSubscription = Observable.fromIterable(accounts)
+        stellarAccountsDisposable?.dispose()
+        stellarAccountsDisposable = Observable.fromIterable(accounts)
             .subscribeOn(Schedulers.io())
             .filter { account: Account ->
                 cachedStellarAccounts
@@ -169,7 +170,7 @@ class SignedAccountsPresenter(
                 // Ignore.
             })
 
-        unsubscribeOnDestroy(stellarAccountsSubscription!!)
+        unsubscribeOnDestroy(stellarAccountsDisposable!!)
     }
 
     fun onRefreshCalled() {

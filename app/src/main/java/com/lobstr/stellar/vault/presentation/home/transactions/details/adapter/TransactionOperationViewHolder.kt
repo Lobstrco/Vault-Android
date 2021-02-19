@@ -4,23 +4,23 @@ import android.content.Context
 import android.view.View
 import androidx.annotation.StringRes
 import androidx.recyclerview.widget.RecyclerView
-import kotlinx.android.synthetic.main.adapter_item_operation.view.*
+import com.lobstr.stellar.vault.databinding.AdapterItemOperationBinding
 
 
-class TransactionOperationViewHolder(itemView: View, private val listener: OnOperationClicked) :
-    RecyclerView.ViewHolder(itemView) {
+class TransactionOperationViewHolder(private val binding: AdapterItemOperationBinding, private val itemClickListener: (position: Int) -> Unit) :
+    RecyclerView.ViewHolder(binding.root) {
 
     fun bind(@StringRes title: Int, itemsCount: Int) {
         val context: Context = itemView.context
-        itemView.divider.visibility = calculateDividerVisibility(itemsCount)
-        itemView.tvOperationTitle.text = capitalize(context.getString(title))
+        binding.divider.visibility = calculateDividerVisibility(itemsCount)
+        binding.tvOperationTitle.text = capitalize(context.getString(title))
         itemView.setOnClickListener {
             val position = this@TransactionOperationViewHolder.adapterPosition
             if (position == RecyclerView.NO_POSITION) {
                 return@setOnClickListener
             }
 
-            listener.onOperationItemClick(position)
+            itemClickListener(position)
         }
     }
 

@@ -8,26 +8,23 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-import com.lobstr.stellar.vault.R
+import com.lobstr.stellar.vault.databinding.FragmentSignedAccountsBinding
 import com.lobstr.stellar.vault.presentation.base.fragment.BaseFragment
 import com.lobstr.stellar.vault.presentation.dialog.alert.base.AlertDialogFragment
 import com.lobstr.stellar.vault.presentation.entities.account.Account
 import com.lobstr.stellar.vault.presentation.home.settings.signed_accounts.adapter.AccountAdapter
 import com.lobstr.stellar.vault.presentation.home.settings.signed_accounts.adapter.AccountAdapter.Companion.ACCOUNT_EXTENDED
-import com.lobstr.stellar.vault.presentation.home.settings.signed_accounts.adapter.OnAccountItemListener
 import com.lobstr.stellar.vault.presentation.home.settings.signed_accounts.edit_account.EditAccountDialogFragment
 import com.lobstr.stellar.vault.presentation.util.AppUtil
 import com.lobstr.stellar.vault.presentation.util.Constant
-import dagger.Lazy
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.android.synthetic.main.fragment_signed_accounts.*
 import moxy.ktx.moxyPresenter
 import javax.inject.Inject
+import javax.inject.Provider
 
 @AndroidEntryPoint
 class SignedAccountsFragment : BaseFragment(), SignedAccountsView,
-    SwipeRefreshLayout.OnRefreshListener,
-    OnAccountItemListener {
+    SwipeRefreshLayout.OnRefreshListener {
 
     // ===========================================================
     // Constants
@@ -41,16 +38,17 @@ class SignedAccountsFragment : BaseFragment(), SignedAccountsView,
     // Fields
     // ===========================================================
 
-    @Inject
-    lateinit var daggerPresenter: Lazy<SignedAccountsPresenter>
+    private var _binding: FragmentSignedAccountsBinding? = null
+    private val binding get() = _binding!!
 
-    private var mView: View? = null
+    @Inject
+    lateinit var presenterProvider: Provider<SignedAccountsPresenter>
 
     // ===========================================================
     // Constructors
     // ===========================================================
 
-    private val mPresenter by moxyPresenter { daggerPresenter.get() }
+    private val mPresenter by moxyPresenter { presenterProvider.get() }
 
     // ===========================================================
     // Getter & Setter
@@ -64,12 +62,8 @@ class SignedAccountsFragment : BaseFragment(), SignedAccountsView,
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        mView = if (mView == null) inflater.inflate(
-            R.layout.fragment_signed_accounts,
-            container,
-            false
-        ) else mView
-        return mView
+        _binding = FragmentSignedAccountsBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -79,7 +73,7 @@ class SignedAccountsFragment : BaseFragment(), SignedAccountsView,
     }
 
     private fun setListeners() {
-        srlSignedAccounts.setOnRefreshListener(this)
+        binding.srlSignedAccounts.setOnRefreshListener(this)
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -87,9 +81,14 @@ class SignedAccountsFragment : BaseFragment(), SignedAccountsView,
 
         // save RecycleView position for restore it after
         mPresenter.onSaveInstanceState(
-            (rvSignedAccounts?.layoutManager as? LinearLayoutManager)?.findFirstVisibleItemPosition()
+            (_binding?.rvSignedAccounts?.layoutManager as? LinearLayoutManager)?.findFirstVisibleItemPosition()
                 ?: 0
         )
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
     // ===========================================================
@@ -100,30 +99,24 @@ class SignedAccountsFragment : BaseFragment(), SignedAccountsView,
         mPresenter.onRefreshCalled()
     }
 
-    override fun onAccountItemClick(account: Account) {
-        mPresenter.signedAccountItemClicked(account)
-    }
-
-    override fun onAccountItemLongClick(account: Account) {
-        mPresenter.signedAccountItemLongClicked(account)
-    }
-
     override fun setupToolbarTitle(titleRes: Int) {
         saveActionBarTitle(titleRes)
     }
 
     override fun initRecycledView() {
-        rvSignedAccounts.layoutManager = LinearLayoutManager(activity)
-        rvSignedAccounts.itemAnimator = null
-        rvSignedAccounts.adapter = AccountAdapter(ACCOUNT_EXTENDED, this)
+        binding.rvSignedAccounts.layoutManager = LinearLayoutManager(activity)
+        binding.rvSignedAccounts.itemAnimator = null
+        binding.rvSignedAccounts.adapter = AccountAdapter(ACCOUNT_EXTENDED,
+            { mPresenter.signedAccountItemClicked(it) },
+            { mPresenter.signedAccountItemLongClicked(it) })
     }
 
     override fun showProgress(show: Boolean) {
-        srlSignedAccounts.isRefreshing = show
+        binding.srlSignedAccounts.isRefreshing = show
     }
 
     override fun showEmptyState(show: Boolean) {
-        tvSignedAccountsEmptyState.visibility = if (show) View.VISIBLE else View.GONE
+        binding.tvSignedAccountsEmptyState.visibility = if (show) View.VISIBLE else View.GONE
     }
 
     override fun showErrorMessage(message: String) {
@@ -131,13 +124,13 @@ class SignedAccountsFragment : BaseFragment(), SignedAccountsView,
     }
 
     override fun notifyAdapter(accounts: List<Account>) {
-        (rvSignedAccounts.adapter as? AccountAdapter)?.setAccountList(accounts)
+        (binding.rvSignedAccounts.adapter as? AccountAdapter)?.setAccountList(accounts)
 
         mPresenter.attemptRestoreRvPosition()
     }
 
     override fun scrollListToPosition(position: Int) {
-        rvSignedAccounts.scrollToPosition(position)
+        binding.rvSignedAccounts.scrollToPosition(position)
     }
 
     override fun showEditAccountDialog(address: String) {

@@ -2,18 +2,21 @@ package com.lobstr.stellar.vault.presentation.base.activity
 
 import android.app.PendingIntent
 import android.content.Intent
-import android.graphics.PorterDuff
-import android.graphics.PorterDuffColorFilter
+import android.graphics.drawable.Drawable
 import android.nfc.NfcAdapter
 import android.os.Bundle
 import android.text.TextUtils
+import android.view.View
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.addCallback
 import androidx.annotation.ColorRes
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
+import androidx.core.graphics.drawable.DrawableCompat
+import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import com.lobstr.stellar.vault.R
 import com.lobstr.stellar.vault.presentation.BaseMvpAppCompatActivity
@@ -24,20 +27,21 @@ import com.lobstr.stellar.vault.presentation.container.fragment.ContainerFragmen
 import com.lobstr.stellar.vault.presentation.dialog.alert.base.AlertDialogFragment
 import com.lobstr.stellar.vault.presentation.entities.tangem.TangemInfo
 import com.lobstr.stellar.vault.presentation.home.HomeActivity
+import com.lobstr.stellar.vault.presentation.home.app_update.AppUpdateDialogFragment
 import com.lobstr.stellar.vault.presentation.pin.PinActivity
 import com.lobstr.stellar.vault.presentation.tangem.dialog.TangemDialogFragment
+import com.lobstr.stellar.vault.presentation.util.AppUtil
 import com.lobstr.stellar.vault.presentation.util.Constant
-import com.lobstr.stellar.vault.presentation.util.Constant.Extra.EXTRA_NOTIFICATION
 import com.lobstr.stellar.vault.presentation.util.manager.ProgressManager
 import com.lobstr.stellar.vault.presentation.vault_auth.VaultAuthActivity
-import dagger.Lazy
 import dagger.hilt.android.AndroidEntryPoint
 import moxy.ktx.moxyPresenter
 import javax.inject.Inject
+import javax.inject.Provider
 
 @AndroidEntryPoint
 abstract class BaseActivity : BaseMvpAppCompatActivity(),
-    BaseActivityView, TangemDialogFragment.OnTangemDialogListener {
+    BaseActivityView, TangemDialogFragment.OnTangemDialogListener, AppUpdateDialogFragment.OnAppUpdateDialogListener {
 
     // ===========================================================
     // Constants
@@ -52,7 +56,7 @@ abstract class BaseActivity : BaseMvpAppCompatActivity(),
     // ===========================================================
 
     @Inject
-    lateinit var daggerPresenter: Lazy<BaseActivityPresenter>
+    lateinit var presenterProvider: Provider<BaseActivityPresenter>
 
     // ===========================================================
     // Constructors
@@ -69,7 +73,7 @@ abstract class BaseActivity : BaseMvpAppCompatActivity(),
     // Constructors
     // ===========================================================
 
-    val mPresenter: BaseActivityPresenter by moxyPresenter { daggerPresenter.get() }
+    val mPresenter: BaseActivityPresenter by moxyPresenter { presenterProvider.get() }
 
     // ===========================================================
     // Getter & Setter
@@ -81,7 +85,7 @@ abstract class BaseActivity : BaseMvpAppCompatActivity(),
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(getLayoutResource())
+        setContentView(getContentView())
         findViews()
         setupToolbar()
 
@@ -93,14 +97,15 @@ abstract class BaseActivity : BaseMvpAppCompatActivity(),
             0
         )
 
-        onNewIntent(intent)
-    }
+        onBackPressedDispatcher.addCallback(this) {
+            val container = supportFragmentManager.findFragmentById(R.id.flContainer)
 
-    override fun onNewIntent(intent: Intent?) {
-        super.onNewIntent(intent)
-        if(intent?.getBooleanExtra(EXTRA_NOTIFICATION, false) == true){
-            // Reset pin appearance after notification click if needed.
-            LVApplication.checkPinAppearance = true
+            // Handle back press in fragment if needed.
+            val childFragment =
+                container?.childFragmentManager?.findFragmentById(R.id.flContainer) ?: container
+            if ((childFragment as? BaseFragment)?.onBackPressed() == true) return@addCallback
+
+            checkBackPress(container)
         }
     }
 
@@ -110,7 +115,6 @@ abstract class BaseActivity : BaseMvpAppCompatActivity(),
         when (this) {
             is HomeActivity, is VaultAuthActivity, is ContainerActivity -> {
                 if (LVApplication.checkPinAppearance) {
-                    LVApplication.checkPinAppearance = false
                     mPresenter.checkPinAppearance()
                 }
             }
@@ -122,17 +126,6 @@ abstract class BaseActivity : BaseMvpAppCompatActivity(),
     override fun onPause() {
         super.onPause()
         nfcAdapter?.disableForegroundDispatch(this)
-    }
-
-    override fun onBackPressed() {
-        val container = supportFragmentManager.findFragmentById(R.id.fl_container)
-
-        // Handle back press in fragment if needed.
-        val childFragment =
-            container?.childFragmentManager?.findFragmentById(R.id.fl_container) ?: container
-        if ((childFragment as? BaseFragment)?.onBackPressed() == true) return
-
-        checkBackPress(container)
     }
 
     fun checkBackPress(container: Fragment?) {
@@ -172,10 +165,10 @@ abstract class BaseActivity : BaseMvpAppCompatActivity(),
     // common
     private fun findViews() {
         mToolbar = findViewById(R.id.tb)
-        mTvToolbarTitle = mToolbar?.findViewById(R.id.tv_toolbar_title)
+        mTvToolbarTitle = mToolbar?.findViewById(R.id.tvToolbarTitle)
     }
 
-    protected abstract fun getLayoutResource(): Int
+    protected abstract fun getContentView(): View
 
     ///////////////////////////////////////////////////////////////
     // title
@@ -209,8 +202,21 @@ abstract class BaseActivity : BaseMvpAppCompatActivity(),
 
     ///////////////////////////////////////////////////////////////
     // icon
-    override fun setActionBarIcon(iconRes: Int) {
-        mToolbar?.setNavigationIcon(iconRes)
+    override fun setActionBarIcon(@DrawableRes icon: Int) {
+        supportActionBar?.setHomeAsUpIndicator(icon)
+    }
+
+    override fun setActionBarIcon(icon: Drawable?) {
+        supportActionBar?.setHomeAsUpIndicator(icon)
+    }
+
+    override fun setActionBarIcon(@DrawableRes icon: Int, @ColorRes color: Int) {
+        val upArrow = ContextCompat.getDrawable(this, icon)
+        upArrow?.let {
+            val upArrowWrapped = DrawableCompat.wrap(upArrow).mutate()
+            DrawableCompat.setTint(upArrowWrapped, ContextCompat.getColor(this, color))
+            setActionBarIcon(upArrowWrapped)
+        }
     }
 
     override fun changeActionBarIconVisibility(visible: Boolean) {
@@ -221,18 +227,15 @@ abstract class BaseActivity : BaseMvpAppCompatActivity(),
         mToolbar?.setBackgroundResource(background)
     }
 
-    override fun setHomeAsUpIndicator(@DrawableRes image: Int, @ColorRes color: Int) {
-        val upArrow = ContextCompat.getDrawable(this, image)
-        upArrow?.colorFilter =
-            PorterDuffColorFilter(ContextCompat.getColor(this, color), PorterDuff.Mode.SRC_ATOP)
-        supportActionBar?.setHomeAsUpIndicator(upArrow)
-    }
-
-    override fun showTangemScreen(tangemInfo: TangemInfo) {
-        TangemDialogFragment().apply {
-            arguments =
-                Bundle().apply { putParcelable(Constant.Extra.EXTRA_TANGEM_INFO, tangemInfo) }
-        }.show(supportFragmentManager, AlertDialogFragment.DialogFragmentIdentifier.TANGEM)
+    override fun showTangemScreen(show: Boolean, tangemInfo: TangemInfo?) {
+        if (show) {
+            TangemDialogFragment().apply {
+                arguments =
+                    Bundle().apply { putParcelable(Constant.Extra.EXTRA_TANGEM_INFO, tangemInfo) }
+            }.show(supportFragmentManager, AlertDialogFragment.DialogFragmentIdentifier.TANGEM)
+        } else {
+            (supportFragmentManager.findFragmentByTag(AlertDialogFragment.DialogFragmentIdentifier.TANGEM) as? DialogFragment)?.dismiss()
+        }
     }
 
     override fun success(tangemInfo: TangemInfo?) {
@@ -253,9 +256,52 @@ abstract class BaseActivity : BaseMvpAppCompatActivity(),
 
     override fun proceedPinActivityAppearance() {
         startActivity(Intent(this, PinActivity::class.java).apply {
-            addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-            addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
+            addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT)
             putExtra(Constant.Extra.EXTRA_PIN_MODE, Constant.PinMode.ENTER)
         })
+    }
+
+    override fun checkAppVersionBehavior() {
+        // Exclude some activities from 'App Version Check' logic.
+        when (this) {
+            is PinActivity -> {
+                /* do nothing*/
+            }
+            else -> {
+                mPresenter.startCheckAppVersion()
+            }
+        }
+    }
+
+    override fun showAppUpdateDialog(show: Boolean,
+                                     title: String?,
+                                     message: String?,
+                                     positiveBtnText: String?,
+                                     negativeBtnText: String?) {
+        if (show) {
+            AlertDialogFragment.Builder(false)
+                .setSpecificDialog(AlertDialogFragment.DialogIdentifier.APP_UPDATE)
+                .setCancelable(false)
+                .setTitle(title)
+                .setMessage(message)
+                .setPositiveBtnText(positiveBtnText)
+                .setNegativeBtnText(negativeBtnText)
+                .create()
+                .showInstant(supportFragmentManager, AlertDialogFragment.DialogFragmentIdentifier.APP_UPDATE)
+        } else {
+            (supportFragmentManager.findFragmentByTag(AlertDialogFragment.DialogFragmentIdentifier.APP_UPDATE) as? DialogFragment)?.dismiss()
+        }
+    }
+
+    override fun onUpdateClicked() {
+        mPresenter.updateAppClicked()
+    }
+
+    override fun onSkipClicked() {
+        mPresenter.skipAppUpdateClicked()
+    }
+
+    override fun showStore(storeUrl: String) {
+        AppUtil.openWebPage(this, storeUrl)
     }
 }

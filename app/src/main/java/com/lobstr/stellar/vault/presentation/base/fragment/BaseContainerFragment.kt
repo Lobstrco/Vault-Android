@@ -35,7 +35,7 @@ abstract class BaseContainerFragment : BaseMvpAppCompatFragment() {
         setHasOptionsMenu(menuVisible)
 
         if (isAdded) {
-            val fragment = childFragmentManager.findFragmentById(R.id.fl_container)
+            val fragment = childFragmentManager.findFragmentById(R.id.flContainer)
             fragment?.setMenuVisibility(menuVisible)
         }
 

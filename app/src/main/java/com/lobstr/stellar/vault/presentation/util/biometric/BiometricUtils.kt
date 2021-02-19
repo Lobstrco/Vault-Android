@@ -6,6 +6,7 @@ import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Build
 import androidx.biometric.BiometricManager
+import androidx.biometric.BiometricManager.Authenticators.BIOMETRIC_WEAK
 import androidx.core.app.ActivityCompat
 
 
@@ -28,7 +29,7 @@ object BiometricUtils {
      * */
     private fun isHardwareSupported(context: Context): Boolean {
         return try {
-            BiometricManager.from(context).canAuthenticate() != BiometricManager.BIOMETRIC_ERROR_NO_HARDWARE
+            BiometricManager.from(context).canAuthenticate(BIOMETRIC_WEAK) != BiometricManager.BIOMETRIC_ERROR_NO_HARDWARE
         } catch (exc: SecurityException) {
             exc.printStackTrace()
             false
@@ -43,7 +44,7 @@ object BiometricUtils {
      * */
     fun isBiometricAvailable(context: Context): Boolean {
         return try {
-            BiometricManager.from(context).canAuthenticate() != BiometricManager.BIOMETRIC_ERROR_NONE_ENROLLED
+            BiometricManager.from(context).canAuthenticate(BIOMETRIC_WEAK) == BiometricManager.BIOMETRIC_SUCCESS
         } catch (exc: SecurityException) {
             exc.printStackTrace()
             false

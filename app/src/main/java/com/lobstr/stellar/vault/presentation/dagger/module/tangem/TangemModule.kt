@@ -4,7 +4,6 @@ import com.lobstr.stellar.vault.domain.stellar.StellarRepository
 import com.lobstr.stellar.vault.domain.tangem.TangemInteractor
 import com.lobstr.stellar.vault.domain.tangem.TangemInteractorImpl
 import com.lobstr.stellar.vault.domain.tangem.TangemRepository
-import com.lobstr.stellar.vault.presentation.tangem.dialog.TangemDialogPresenter
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -13,14 +12,6 @@ import dagger.hilt.android.components.FragmentComponent
 @Module
 @InstallIn(FragmentComponent::class)
 object TangemModule {
-
-    @Provides
-    fun provideTangemDialogPresenter(
-        tangemInteractor: TangemInteractor
-    ): TangemDialogPresenter {
-        return TangemDialogPresenter(tangemInteractor)
-    }
-
     @Provides
     fun provideTangemInteractor(
         stellarRepository: StellarRepository, tangemRepository: TangemRepository

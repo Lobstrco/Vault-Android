@@ -12,8 +12,9 @@ import com.soneso.stellarmnemonics.mnemonic.MnemonicException
 import com.soneso.stellarmnemonics.mnemonic.WordList
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.schedulers.Schedulers
+import javax.inject.Inject
 
-class RecoverKeyFrPresenter(private val interactor: RecoverKeyInteractor) : BasePresenter<RecoverKeyFrView>() {
+class RecoverKeyFrPresenter @Inject constructor(private val interactor: RecoverKeyInteractor) : BasePresenter<RecoverKeyFrView>() {
 
     private lateinit var phrases: String
 

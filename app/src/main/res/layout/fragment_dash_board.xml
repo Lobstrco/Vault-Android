@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
         tools:context=".presentation.home.dashboard.DashboardFragment">
+<LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
     <androidx.core.widget.NestedScrollView
             android:id="@+id/svTransactions"
@@ -63,7 +67,8 @@
                         android:paddingRight="16dp"
                         android:paddingBottom="6dp"
                         android:text="@string/text_dashboard_show_list"
-                        android:textColor="@color/color_99ffffff"
+                        android:textColor="@android:color/white"
+                        android:alpha="0.6"
                         android:textSize="13sp" />
             </LinearLayout>
 
@@ -140,7 +145,7 @@
                                 android:gravity="center_horizontal"
                                 android:singleLine="true"
                                 android:textAllCaps="true"
-                                android:textColor="@color/color_4D000000"
+                                android:textColor="@color/color_4d000000"
                                 android:textSize="13sp" />
 
                         <TextView
@@ -266,6 +271,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:alpha="0.6"
+                                android:gravity="center"
                                 android:text="@string/text_tv_dashboard_signers_empty_state_description"
                                 android:textColor="@color/color_071c33"
                                 android:textSize="14sp" />
@@ -318,3 +324,4 @@
         </FrameLayout>
     </androidx.core.widget.NestedScrollView>
 </LinearLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -1,7 +1,7 @@
 package com.lobstr.stellar.vault.presentation.entities.tangem
 
 import android.os.Parcelable
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 
 @Parcelize
 class TangemError(

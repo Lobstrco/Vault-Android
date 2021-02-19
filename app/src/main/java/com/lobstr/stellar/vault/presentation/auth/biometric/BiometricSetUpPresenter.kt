@@ -8,15 +8,17 @@ import com.lobstr.stellar.vault.presentation.util.Constant
 import com.lobstr.stellar.vault.presentation.util.Constant.PinMode.CREATE
 import com.lobstr.stellar.vault.presentation.util.biometric.BiometricUtils
 import moxy.MvpPresenter
+import javax.inject.Inject
 
-class BiometricSetUpPresenter(private val interactor: BiometricSetUpInteractor) : MvpPresenter<BiometricSetUpView>() {
+class BiometricSetUpPresenter @Inject constructor(private val interactor: BiometricSetUpInteractor) :
+    MvpPresenter<BiometricSetUpView>() {
 
     var pinMode: Byte = Constant.PinMode.ENTER
 
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
         viewState.setWindowBackground()
-        viewState.windowLightNavigationBar(true)
+        viewState.setupNavigationBar(android.R.color.transparent, true)
         viewState.setupToolbar(
             false,
             android.R.color.white,
@@ -32,7 +34,7 @@ class BiometricSetUpPresenter(private val interactor: BiometricSetUpInteractor) 
 
     fun turnOnClicked() {
         if (BiometricUtils.isBiometricAvailable(AppUtil.getAppContext())) {
-            viewState.showBiometricDialog(true)
+            viewState.showBiometricDialog()
         } else {
             viewState.showBiometricInfoDialog(
                 R.string.title_biometric_not_set_up_dialog,
@@ -41,21 +43,23 @@ class BiometricSetUpPresenter(private val interactor: BiometricSetUpInteractor) 
         }
     }
 
-    override fun detachView(view: BiometricSetUpView?) {
-        viewState.showBiometricDialog(false)
-        super.detachView(view)
-    }
-
     fun biometricAuthenticationSuccessful() {
         interactor.setBiometricEnabled(true)
         checkBehavior()
     }
 
-    private fun checkBehavior(){
+    private fun checkBehavior() {
         // NOTE Skip pin appearance check for prevent pin screen duplication after finish.
         LVApplication.checkPinAppearance = false
-        when(pinMode){
+        when (pinMode) {
             CREATE -> viewState.showVaultAuthScreen()
+            else -> viewState.finishScreen()
+        }
+    }
+
+    fun onBackPressed() {
+        when (pinMode) {
+            Constant.PinMode.ENTER -> viewState.finishApp()
             else -> viewState.finishScreen()
         }
     }

@@ -64,7 +64,7 @@ interface TransactionDetailsView : MvpView {
     fun showOperationDetailsScreen(transactionItem: TransactionItem, position: Int)
 
     @AddToEndSingle
-    fun setupAdditionalInfo(map: Map<String, String?>)
+    fun setupTransactionInfo(map: Map<String, String?>)
 
     @Skip
     fun showConfirmTransactionDialog()

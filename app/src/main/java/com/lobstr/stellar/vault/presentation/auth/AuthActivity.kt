@@ -1,9 +1,11 @@
 package com.lobstr.stellar.vault.presentation.auth
 
 import android.os.Bundle
+import android.view.View
 import androidx.annotation.ColorRes
 import androidx.annotation.DrawableRes
 import com.lobstr.stellar.vault.R
+import com.lobstr.stellar.vault.databinding.ActivityAuthBinding
 import com.lobstr.stellar.vault.presentation.base.activity.BaseActivity
 import com.lobstr.stellar.vault.presentation.container.fragment.ContainerFragment
 import com.lobstr.stellar.vault.presentation.util.Constant
@@ -38,9 +40,7 @@ class AuthActivity : BaseActivity(), AuthView {
     // Methods for/from SuperClass
     // ===========================================================
 
-    override fun getLayoutResource(): Int {
-        return R.layout.activity_auth
-    }
+    override fun getContentView(): View = ActivityAuthBinding.inflate(layoutInflater).root
 
     // ===========================================================
     // Listeners, methods for/from Interfaces
@@ -55,7 +55,7 @@ class AuthActivity : BaseActivity(), AuthView {
     }
 
     override fun setupToolbarUpArrow(@DrawableRes arrow: Int, @ColorRes color: Int) {
-        setHomeAsUpIndicator(arrow, color)
+        setActionBarIcon(arrow, color)
     }
 
     override fun setupToolbarTitleColor(@ColorRes color: Int) {
@@ -86,7 +86,7 @@ class AuthActivity : BaseActivity(), AuthView {
         FragmentTransactionManager.displayFragment(
             supportFragmentManager,
             fragment,
-            R.id.fl_container
+            R.id.flContainer
         )
     }
 

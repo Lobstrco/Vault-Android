@@ -7,18 +7,16 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.lobstr.stellar.vault.R
+import com.lobstr.stellar.vault.databinding.FragmentOperationListBinding
 import com.lobstr.stellar.vault.presentation.base.fragment.BaseFragment
 import com.lobstr.stellar.vault.presentation.entities.transaction.TransactionItem
-import com.lobstr.stellar.vault.presentation.home.transactions.details.adapter.OnOperationClicked
 import com.lobstr.stellar.vault.presentation.home.transactions.details.adapter.TransactionOperationAdapter
 import com.lobstr.stellar.vault.presentation.home.transactions.operation.operation_details.OperationDetailsFragment
 import com.lobstr.stellar.vault.presentation.util.Constant
 import com.lobstr.stellar.vault.presentation.util.manager.FragmentTransactionManager
-import kotlinx.android.synthetic.main.fragment_operation_list.*
 import moxy.ktx.moxyPresenter
 
-class OperationListFragment : BaseFragment(),
-    OperationListView, OnOperationClicked {
+class OperationListFragment : BaseFragment(), OperationListView {
 
     // ===========================================================
     // Constants
@@ -32,7 +30,8 @@ class OperationListFragment : BaseFragment(),
     // Fields
     // ===========================================================
 
-    private var mView: View? = null
+    private var _binding: FragmentOperationListBinding? = null
+    private val binding get() = _binding!!
 
     // ===========================================================
     // Constructors
@@ -54,8 +53,13 @@ class OperationListFragment : BaseFragment(),
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        mView = if (mView == null) inflater.inflate(R.layout.fragment_operation_list, container, false) else mView
-        return mView
+        _binding = FragmentOperationListBinding.inflate(inflater, container, false)
+        return binding.root
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
     // ===========================================================
@@ -66,19 +70,13 @@ class OperationListFragment : BaseFragment(),
         saveActionBarTitle(titleRes)
     }
 
-    override fun initRecycledView() {
-        rvTransactionOperations.layoutManager = LinearLayoutManager(context)
-        rvTransactionOperations.itemAnimator = null
-        rvTransactionOperations.isNestedScrollingEnabled = false
-        rvTransactionOperations.adapter = TransactionOperationAdapter(this)
-    }
-
-    override fun setOperationsToList(operationList: MutableList<Int>) {
-        (rvTransactionOperations.adapter as TransactionOperationAdapter).setOperationList(operationList)
-    }
-
-    override fun onOperationItemClick(position: Int) {
-        mPresenter.operationItemClicked(position)
+    override fun initRecycledView(operations: List<Int>) {
+        binding.rvTransactionOperations.layoutManager = LinearLayoutManager(context)
+        binding.rvTransactionOperations.itemAnimator = null
+        binding.rvTransactionOperations.isNestedScrollingEnabled = false
+        binding.rvTransactionOperations.adapter = TransactionOperationAdapter(operations) { position ->
+            mPresenter.operationItemClicked(position)
+        }
     }
 
     override fun showOperationDetailsScreen(transactionItem: TransactionItem, position: Int) {
@@ -92,7 +90,7 @@ class OperationListFragment : BaseFragment(),
         FragmentTransactionManager.displayFragment(
             requireParentFragment().childFragmentManager,
             fragment,
-            R.id.fl_container
+            R.id.flContainer
         )
     }
 

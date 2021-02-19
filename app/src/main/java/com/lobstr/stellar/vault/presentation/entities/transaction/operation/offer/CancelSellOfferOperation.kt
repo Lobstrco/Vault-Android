@@ -5,7 +5,7 @@ import com.lobstr.stellar.vault.R
 import com.lobstr.stellar.vault.presentation.entities.transaction.Asset
 import com.lobstr.stellar.vault.presentation.entities.transaction.operation.OperationField
 import com.lobstr.stellar.vault.presentation.util.AppUtil
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class CancelSellOfferOperation(

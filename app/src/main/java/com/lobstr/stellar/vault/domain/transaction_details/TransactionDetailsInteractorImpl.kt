@@ -1,5 +1,6 @@
 package com.lobstr.stellar.vault.domain.transaction_details
 
+import com.lobstr.stellar.vault.data.error.exeption.ForbiddenException
 import com.lobstr.stellar.vault.domain.account.AccountRepository
 import com.lobstr.stellar.vault.domain.key_store.KeyStoreRepository
 import com.lobstr.stellar.vault.domain.stellar.StellarRepository
@@ -44,7 +45,7 @@ class TransactionDetailsInteractorImpl(
      * Used for retrieve actual transaction XDR for send it to Horizon.
      * In some cases (when used >1 vault accounts) need retrieve actual XDR.
      *
-     * For case when transaction status = IMPORT_XDR - return existing transactionItem.
+     * For case when transaction status = IMPORT_XDR - check token and return existing transactionItem after success.
      * @see Constant.Transaction.IMPORT_XDR
      * @param skip Skip action for some cases like for signed transaction via Tangem.
      */
@@ -53,7 +54,11 @@ class TransactionDetailsInteractorImpl(
         skip: Boolean
     ): Single<TransactionItem> {
         return when (transactionItem.status) {
-            IMPORT_XDR -> Single.fromCallable { transactionItem }
+            IMPORT_XDR -> transactionRepository.getTransactionList(
+                AppUtil.getJwtToken(prefsUtil.authToken), // Check token.
+                null,
+                null
+            ).flatMap { Single.fromCallable { transactionItem } }
             else ->
                 when {
                     skip -> Single.fromCallable { transactionItem }
@@ -100,7 +105,15 @@ class TransactionDetailsInteractorImpl(
                     Single.fromCallable { transaction }
                 }
                 else -> {
-                    Single.error(it)
+                    when (it) {
+                        // Ignore ForbiddenException for cases when signers were deleted.
+                        is ForbiddenException -> {
+                            Single.fromCallable { transaction }
+                        }
+                        else -> {
+                            Single.error(it)
+                        }
+                    }
                 }
             }
         }
@@ -124,6 +137,10 @@ class TransactionDetailsInteractorImpl(
 
     override fun isTrConfirmationEnabled(): Boolean {
         return prefsUtil.isTrConfirmationEnabled
+    }
+
+    override fun getSignedAccounts(): Single<List<Account>> {
+        return accountRepository.getSignedAccounts(AppUtil.getJwtToken(prefsUtil.authToken))
     }
 
     override fun getTransactionSigners(xdr: String, sourceAccount: String): Single<AccountResult> {

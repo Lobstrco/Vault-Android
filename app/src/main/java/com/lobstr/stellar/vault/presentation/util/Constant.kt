@@ -15,7 +15,6 @@ object Constant {
         const val EXTRA_ERROR_MESSAGE = "EXTRA_ERROR_MESSAGE"
         const val EXTRA_CONFIG = "EXTRA_CONFIG"
         const val EXTRA_TANGEM_INFO = "EXTRA_TANGEM_INFO"
-        const val EXTRA_NOTIFICATION = "EXTRA_NOTIFICATION"
     }
 
     object Bundle {
@@ -221,5 +220,16 @@ object Constant {
         const val RECOVER_ACCOUNT = 360013243520L
         const val SIGNING_WITH_VAULT_SIGNER_CARD = 360013838099L
         const val TRANSACTION_CONFIRMATIONS = 360013304739L
+    }
+
+    object RateUsSessionState {
+        const val UNDEFINED: Byte = 0
+        const val CHECK: Byte = 1
+        const val CHECKED: Byte = 2
+    }
+
+    object Counter {
+        const val APP_UPDATE = 6
+        const val START = 0
     }
 }

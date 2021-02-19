@@ -6,21 +6,20 @@ import android.view.*
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.lobstr.stellar.vault.R
+import com.lobstr.stellar.vault.databinding.FragmentConfigBinding
 import com.lobstr.stellar.vault.presentation.base.fragment.BaseFragment
 import com.lobstr.stellar.vault.presentation.entities.config.Config
 import com.lobstr.stellar.vault.presentation.home.settings.config.adapter.ConfigAdapter
-import com.lobstr.stellar.vault.presentation.home.settings.config.adapter.OnConfigItemListener
 import com.lobstr.stellar.vault.presentation.util.Constant
 import com.lobstr.stellar.vault.presentation.util.manager.ProgressManager
 import com.lobstr.stellar.vault.presentation.util.manager.SupportManager
-import dagger.Lazy
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.android.synthetic.main.fragment_config.*
 import moxy.ktx.moxyPresenter
 import javax.inject.Inject
+import javax.inject.Provider
 
 @AndroidEntryPoint
-class ConfigFragment : BaseFragment(), ConfigView, OnConfigItemListener {
+class ConfigFragment : BaseFragment(), ConfigView {
 
     // ===========================================================
     // Constants
@@ -34,17 +33,18 @@ class ConfigFragment : BaseFragment(), ConfigView, OnConfigItemListener {
     // Fields
     // ===========================================================
 
-    @Inject
-    lateinit var daggerPresenter: Lazy<ConfigPresenter>
+    private var _binding: FragmentConfigBinding? = null
+    private val binding get() = _binding!!
 
-    private var mView: View? = null
+    @Inject
+    lateinit var presenterProvider: Provider<ConfigPresenter>
 
     // ===========================================================
     // Constructors
     // ===========================================================
 
     private val mPresenter by moxyPresenter {
-        daggerPresenter.get().apply {
+        presenterProvider.get().apply {
             config = arguments?.getInt(Constant.Bundle.BUNDLE_CONFIG)!!
         }
     }
@@ -61,12 +61,8 @@ class ConfigFragment : BaseFragment(), ConfigView, OnConfigItemListener {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        mView = if (mView == null) inflater.inflate(
-            R.layout.fragment_config,
-            container,
-            false
-        ) else mView
-        return mView
+        _binding = FragmentConfigBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -82,6 +78,11 @@ class ConfigFragment : BaseFragment(), ConfigView, OnConfigItemListener {
         return super.onOptionsItemSelected(item)
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+
     // ===========================================================
     // Listeners, methods for/from Interfaces
     // ===========================================================
@@ -91,25 +92,23 @@ class ConfigFragment : BaseFragment(), ConfigView, OnConfigItemListener {
     }
 
     override fun setupConfigTitle(title: String?) {
-        tvConfigTitle.text = title
+        binding.tvConfigTitle.text = title
     }
 
     override fun initListComponents(configs: List<Config>, selectedType: Byte) {
-        rvConfig.layoutManager = LinearLayoutManager(context)
-        rvConfig.adapter = ConfigAdapter(configs, selectedType, this)
+        binding.rvConfig.layoutManager = LinearLayoutManager(context)
+        binding.rvConfig.adapter = ConfigAdapter(configs, selectedType) { config, type ->
+            mPresenter.configItemClicked(config, type)
+        }
     }
 
     override fun setSelectedType(selectedType: Byte) {
         activity?.setResult(Activity.RESULT_OK)
-        (rvConfig.adapter as? ConfigAdapter)?.setSelectedType(selectedType)
-    }
-
-    override fun onConfigItemClick(config: Config, selectedType: Byte) {
-        mPresenter.configItemClicked(config, selectedType)
+        (binding.rvConfig.adapter as? ConfigAdapter)?.setSelectedType(selectedType)
     }
 
     override fun setupConfigDescription(description: String?) {
-        tvConfigDescription.text = description
+        binding.tvConfigDescription.text = description
     }
 
     override fun finishScreen() {

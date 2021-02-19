@@ -1,25 +1,23 @@
 package com.lobstr.stellar.vault.presentation.home
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
+import android.view.View
+import androidx.activity.addCallback
 import androidx.annotation.IdRes
 import androidx.fragment.app.FragmentManager.POP_BACK_STACK_INCLUSIVE
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import com.google.android.material.bottomnavigation.LabelVisibilityMode
 import com.lobstr.stellar.vault.R
-import com.lobstr.stellar.vault.presentation.auth.AuthActivity
+import com.lobstr.stellar.vault.databinding.ActivityHomeBinding
 import com.lobstr.stellar.vault.presentation.base.activity.BaseActivity
 import com.lobstr.stellar.vault.presentation.dialog.alert.base.AlertDialogFragment
 import com.lobstr.stellar.vault.presentation.home.HomeViewPagerAdapter.Position.DASHBOARD
 import com.lobstr.stellar.vault.presentation.home.HomeViewPagerAdapter.Position.SETTINGS
 import com.lobstr.stellar.vault.presentation.home.HomeViewPagerAdapter.Position.TRANSACTIONS
-import com.lobstr.stellar.vault.presentation.util.Constant
-import dagger.Lazy
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.android.synthetic.main.activity_home.*
 import moxy.ktx.moxyPresenter
 import javax.inject.Inject
+import javax.inject.Provider
 
 @AndroidEntryPoint
 class HomeActivity : BaseActivity(), HomeActivityView,
@@ -37,14 +35,16 @@ class HomeActivity : BaseActivity(), HomeActivityView,
     // Fields
     // ===========================================================
 
+    private lateinit var binding: ActivityHomeBinding
+
     @Inject
-    lateinit var homeDaggerPresenter: Lazy<HomeActivityPresenter>
+    lateinit var homePresenterProvider: Provider<HomeActivityPresenter>
 
     // ===========================================================
     // Constructors
     // ===========================================================
 
-    private val mHomePresenter by moxyPresenter { homeDaggerPresenter.get() }
+    private val mHomePresenter by moxyPresenter { homePresenterProvider.get() }
 
     // ===========================================================
     // Getter & Setter
@@ -57,26 +57,38 @@ class HomeActivity : BaseActivity(), HomeActivityView,
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setListeners()
+
+        onBackPressedDispatcher.addCallback(this) {
+            try {
+                checkBackPress(supportFragmentManager.fragments[binding.vpHome.currentItem])
+            } catch (exc: IndexOutOfBoundsException) {
+                super.onBackPressed()
+            }
+        }
+    }
+
+    override fun getContentView(): View {
+        binding = ActivityHomeBinding.inflate(layoutInflater)
+        return binding.root
     }
 
     private fun setListeners() {
-        bnvHomeTabs.setOnNavigationItemSelectedListener(this)
+        binding.bnvHomeTabs.setOnNavigationItemSelectedListener(this)
     }
-
-    override fun getLayoutResource() = R.layout.activity_home
 
     // ===========================================================
     // Listeners, methods for/from Interfaces
     // ===========================================================
 
-    override fun setupToolbar() {
+    override fun setupToolbar(upArrow: Int, upArrowColor: Int) {
+        setActionBarIcon(upArrow, upArrowColor)
         changeActionBarIconVisibility(false)
     }
 
     override fun setupViewPager() {
-        vpHome.offscreenPageLimit = 4
-        vpHome.isUserInputEnabled = false
-        vpHome.adapter = HomeViewPagerAdapter(supportFragmentManager, lifecycle)
+        binding.vpHome.offscreenPageLimit = 4
+        binding.vpHome.isUserInputEnabled = false
+        binding.vpHome.adapter = HomeViewPagerAdapter(supportFragmentManager, lifecycle)
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
@@ -85,43 +97,27 @@ class HomeActivity : BaseActivity(), HomeActivityView,
         }
 
         when (item.itemId) {
-            R.id.action_dashboard -> vpHome.setCurrentItem(DASHBOARD, false)
+            R.id.action_dashboard -> binding.vpHome.setCurrentItem(DASHBOARD, false)
 
-            R.id.action_transactions -> vpHome.setCurrentItem(TRANSACTIONS, false)
+            R.id.action_transactions -> binding.vpHome.setCurrentItem(TRANSACTIONS, false)
 
-            R.id.action_settings -> vpHome.setCurrentItem(SETTINGS, false)
+            R.id.action_settings -> binding.vpHome.setCurrentItem(SETTINGS, false)
         }
 
         return true
     }
 
     override fun initBottomNavigationView() {
-        bnvHomeTabs.itemIconTintList = null
-        bnvHomeTabs.labelVisibilityMode = LabelVisibilityMode.LABEL_VISIBILITY_LABELED
-    }
-
-    override fun showAuthScreen() {
-        val intent = Intent(this, AuthActivity::class.java)
-        intent.putExtra(Constant.Extra.EXTRA_NAVIGATION_FR, Constant.Navigation.AUTH)
-        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-        startActivity(intent)
+        binding.bnvHomeTabs.itemIconTintList = null
     }
 
     override fun setSelectedBottomNavigationItem(@IdRes itemId: Int) {
-        bnvHomeTabs.selectedItemId = itemId
-    }
-
-    override fun onBackPressed() {
-        try {
-            checkBackPress(supportFragmentManager.fragments[vpHome.currentItem])
-        } catch (exc: IndexOutOfBoundsException) {
-            super.onBackPressed()
-        }
+        binding.bnvHomeTabs.selectedItemId = itemId
     }
 
     override fun resetBackStack() {
         try {
-            val currentContainer = supportFragmentManager.fragments[vpHome.currentItem]
+            val currentContainer = supportFragmentManager.fragments[binding.vpHome.currentItem]
 
             if (currentContainer == null) {
                 return
@@ -147,17 +143,15 @@ class HomeActivity : BaseActivity(), HomeActivityView,
         mHomePresenter.checkRateUsDialog()
     }
 
-    override fun showRateUsDialog() {
+    override fun suggestRateUsDialog() {
         AlertDialogFragment.Builder(false)
+            .setSpecificDialog(AlertDialogFragment.DialogIdentifier.SUGGEST_RATE_US)
             .setCancelable(true)
-            .setSpecificDialog(AlertDialogFragment.DialogIdentifier.RATE_US, null)
-            .setTitle(R.string.title_rate_us_dialog)
-            .setMessage(R.string.msg_rate_us_dialog)
-            .setNegativeBtnText(R.string.text_btn_rate_never)
-            .setNeutralBtnText(R.string.text_btn_rate_later)
-            .setPositiveBtnText(R.string.text_btn_rate_us)
+            .setMessage(R.string.msg_suggest_rate_us)
+            .setNegativeBtnText(R.string.text_btn_cancel_suggestion_rate_us)
+            .setPositiveBtnText(R.string.text_btn_suggest_rate_us)
             .create()
-            .show(supportFragmentManager, AlertDialogFragment.DialogFragmentIdentifier.RATE_US)
+            .show(supportFragmentManager, AlertDialogFragment.DialogFragmentIdentifier.SUGGEST_RATE_US)
     }
 
     // ===========================================================

@@ -4,11 +4,10 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.lobstr.stellar.vault.R
+import com.lobstr.stellar.vault.databinding.FragmentEditAccountBinding
 import com.lobstr.stellar.vault.presentation.BaseBottomSheetDialog
 import com.lobstr.stellar.vault.presentation.util.AppUtil
 import com.lobstr.stellar.vault.presentation.util.Constant
-import kotlinx.android.synthetic.main.fragment_edit_account.*
 import moxy.ktx.moxyPresenter
 
 
@@ -26,7 +25,8 @@ class EditAccountDialogFragment : BaseBottomSheetDialog(), EditAccountView, View
     // Fields
     // ===========================================================
 
-    private var mView: View? = null
+    private var _binding: FragmentEditAccountBinding? = null
+    private val binding get() = _binding!!
 
     // ===========================================================
     // Constructors
@@ -48,8 +48,8 @@ class EditAccountDialogFragment : BaseBottomSheetDialog(), EditAccountView, View
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        mView = if (mView == null) inflater.inflate(R.layout.fragment_edit_account, container, false) else mView
-        return mView
+        _binding = FragmentEditAccountBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -58,8 +58,13 @@ class EditAccountDialogFragment : BaseBottomSheetDialog(), EditAccountView, View
     }
 
     private fun setListeners() {
-        btnCopyPublicKey.setOnClickListener(this)
-        btnOpenExplorer.setOnClickListener(this)
+        binding.btnCopyPublicKey.setOnClickListener(this)
+        binding.btnOpenExplorer.setOnClickListener(this)
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
     // ===========================================================
@@ -68,8 +73,8 @@ class EditAccountDialogFragment : BaseBottomSheetDialog(), EditAccountView, View
 
     override fun onClick(v: View?) {
         when (v?.id) {
-            btnCopyPublicKey.id -> mPresenter.copyPublicKeyClicked()
-            btnOpenExplorer.id -> mPresenter.openExplorerClicked()
+            binding.btnCopyPublicKey.id -> mPresenter.copyPublicKeyClicked()
+            binding.btnOpenExplorer.id -> mPresenter.openExplorerClicked()
         }
     }
 

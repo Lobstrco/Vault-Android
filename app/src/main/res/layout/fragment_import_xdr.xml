@@ -30,7 +30,7 @@
             android:inputType="textNoSuggestions|textMultiLine"
             android:padding="17dp"
             android:scrollbars="vertical"
-            android:textColorHint="@color/color_4D000000"
+            android:textColorHint="@color/color_4d000000"
             android:textSize="14sp" />
 
     <TextView

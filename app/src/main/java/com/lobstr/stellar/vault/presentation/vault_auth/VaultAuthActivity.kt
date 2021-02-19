@@ -1,9 +1,11 @@
 package com.lobstr.stellar.vault.presentation.vault_auth
 
 import android.os.Bundle
+import android.view.View
 import androidx.annotation.ColorRes
 import androidx.annotation.DrawableRes
 import com.lobstr.stellar.vault.R
+import com.lobstr.stellar.vault.databinding.ActivityVaultAuthBinding
 import com.lobstr.stellar.vault.presentation.base.activity.BaseActivity
 import com.lobstr.stellar.vault.presentation.container.fragment.ContainerFragment
 import com.lobstr.stellar.vault.presentation.util.Constant
@@ -38,9 +40,7 @@ class VaultAuthActivity : BaseActivity(), VaultAuthView {
     // Methods for/from SuperClass
     // ===========================================================
 
-    override fun getLayoutResource(): Int {
-        return R.layout.activity_vault_auth
-    }
+    override fun getContentView(): View = ActivityVaultAuthBinding.inflate(layoutInflater).root
 
     // ===========================================================
     // Listeners, methods for/from Interfaces
@@ -48,7 +48,7 @@ class VaultAuthActivity : BaseActivity(), VaultAuthView {
 
     override fun setupToolbar(@ColorRes toolbarColor: Int, @DrawableRes upArrow: Int, @ColorRes upArrowColor: Int) {
         setActionBarBackground(toolbarColor)
-        setHomeAsUpIndicator(upArrow, upArrowColor)
+        setActionBarIcon(upArrow, upArrowColor)
         setActionBarTitleColor(upArrowColor)
         changeActionBarIconVisibility(false)
     }
@@ -62,7 +62,7 @@ class VaultAuthActivity : BaseActivity(), VaultAuthView {
         FragmentTransactionManager.displayFragment(
             supportFragmentManager,
             fragment,
-            R.id.fl_container
+            R.id.flContainer
         )
     }
 

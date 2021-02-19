@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -44,5 +45,7 @@
             android:layout_marginTop="16dp"
             android:layout_marginBottom="16dp"
             android:layout_marginStart="16dp"
-            android:layout_marginEnd="8dp"/>
-</FrameLayout>
+            android:layout_marginEnd="8dp"
+            android:contentDescription="@string/title_toolbar_import_xdr" />
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

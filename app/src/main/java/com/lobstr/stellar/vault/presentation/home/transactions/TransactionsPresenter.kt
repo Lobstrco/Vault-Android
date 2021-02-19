@@ -21,8 +21,9 @@ import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.disposables.Disposable
 import io.reactivex.rxjava3.schedulers.Schedulers
+import javax.inject.Inject
 
-class TransactionsPresenter(
+class TransactionsPresenter @Inject constructor(
     private val interactor: TransactionInteractor,
     private val eventProviderModule: EventProviderModule
 ) : BasePresenter<TransactionsView>() {
@@ -40,7 +41,7 @@ class TransactionsPresenter(
     private var isLoading = false
     private val transactions: MutableList<TransactionItem> = mutableListOf()
 
-    private var stellarAccountsSubscription: Disposable? = null
+    private var stellarAccountsDisposable: Disposable? = null
     private val cachedStellarAccounts: MutableList<Account> = mutableListOf()
 
     override fun onFirstViewAttach() {
@@ -148,9 +149,9 @@ class TransactionsPresenter(
                     viewState.scrollListToPosition(0)
                 }
                 newLoadTransactions = false
-                viewState.showOptionsMenu(transactions.find { !it.sequenceOutdatedAt.isNullOrEmpty() } != null)
+                viewState.showOptionsMenu(transactions.isNotEmpty())
             }, {
-                viewState.showOptionsMenu(transactions.find { !it.sequenceOutdatedAt.isNullOrEmpty() } != null)
+                viewState.showOptionsMenu(transactions.isNotEmpty())
                 viewState.showEmptyState(transactions.isEmpty())
                 when (it) {
                     is NoInternetConnectionException -> {
@@ -159,7 +160,9 @@ class TransactionsPresenter(
                     }
                     is UserNotAuthorizedException -> {
                         when (it.action) {
-                            UserNotAuthorizedException.Action.AUTH_REQUIRED -> eventProviderModule.authEventSubject.onNext(Auth())
+                            UserNotAuthorizedException.Action.AUTH_REQUIRED -> eventProviderModule.authEventSubject.onNext(
+                                Auth()
+                            )
                             else -> loadTransactions()
                         }
                     }
@@ -185,11 +188,11 @@ class TransactionsPresenter(
         transactions.forEach {
             if (cachedStellarAccounts.find { account -> account.address == it.transaction.sourceAccount } == null
                 && accountList.find { account -> account.address == it.transaction.sourceAccount } == null) {
-                accountList.add(Account(it.transaction.sourceAccount!!, it.transaction.federation))
+                accountList.add(Account(it.transaction.sourceAccount, it.transaction.federation))
             }
         }
-        stellarAccountsSubscription?.dispose()
-        stellarAccountsSubscription = Observable.fromIterable(accountList)
+        stellarAccountsDisposable?.dispose()
+        stellarAccountsDisposable = Observable.fromIterable(accountList)
             .subscribeOn(Schedulers.io())
             .flatMapSingle {
                 interactor.getStellarAccount(it.address).onErrorReturnItem(it)
@@ -216,7 +219,7 @@ class TransactionsPresenter(
                 // Ignore.
             })
 
-        unsubscribeOnDestroy(stellarAccountsSubscription!!)
+        unsubscribeOnDestroy(stellarAccountsDisposable!!)
     }
 
     internal fun handleOnActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -226,10 +229,6 @@ class TransactionsPresenter(
 
         when (requestCode) {
             Constant.Code.TRANSACTION_DETAILS_FRAGMENT, Constant.Code.IMPORT_XDR_FRAGMENT -> {
-                when (data?.getIntExtra(Constant.Extra.EXTRA_TRANSACTION_STATUS, -1)) {
-                    Constant.Transaction.SIGNED -> viewState.checkRateUsDialog()
-                }
-
                 refreshCalled()
             }
         }
@@ -251,15 +250,60 @@ class TransactionsPresenter(
     }
 
     fun clearClicked() {
-        viewState.showClearInvalidTrDialog()
+        viewState.showClearTransactionsDialog()
     }
 
     fun onAlertDialogPositiveButtonClicked(tag: String?) {
         when (tag) {
-            AlertDialogFragment.DialogFragmentIdentifier.CLEAR_INVALID_TR -> {
+            AlertDialogFragment.DialogFragmentIdentifier.CLEAR_TRANSACTIONS -> {
                 clearInvalidTransactions()
             }
         }
+    }
+
+    fun onAlertDialogNegativeButtonClicked(tag: String?) {
+        when (tag) {
+            AlertDialogFragment.DialogFragmentIdentifier.CLEAR_TRANSACTIONS -> {
+                clearTransactions()
+            }
+        }
+    }
+
+    private fun clearTransactions() {
+        unsubscribeOnDestroy(
+            interactor.cancelTransactions()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnSubscribe {
+                    viewState.showProgressDialog(true)
+                }
+                .doOnEvent {
+                    viewState.showProgressDialog(false)
+                }
+                .subscribe({
+                    refreshCalled()
+                }, {
+                    when (it) {
+                        is NoInternetConnectionException -> {
+                            viewState.showErrorMessage(it.details)
+                        }
+                        is UserNotAuthorizedException -> {
+                            when (it.action) {
+                                UserNotAuthorizedException.Action.AUTH_REQUIRED -> eventProviderModule.authEventSubject.onNext(
+                                    Auth()
+                                )
+                                else -> clearTransactions()
+                            }
+                        }
+                        is DefaultException -> {
+                            viewState.showErrorMessage(it.details)
+                        }
+                        else -> {
+                            viewState.showErrorMessage(it.message ?: "")
+                        }
+                    }
+                })
+        )
     }
 
     private fun clearInvalidTransactions() {
@@ -274,7 +318,6 @@ class TransactionsPresenter(
                     viewState.showProgressDialog(false)
                 }
                 .subscribe({
-                    viewState.showOptionsMenu(false)
                     refreshCalled()
                 }, {
                     when (it) {
@@ -283,7 +326,9 @@ class TransactionsPresenter(
                         }
                         is UserNotAuthorizedException -> {
                             when (it.action) {
-                                UserNotAuthorizedException.Action.AUTH_REQUIRED -> eventProviderModule.authEventSubject.onNext(Auth())
+                                UserNotAuthorizedException.Action.AUTH_REQUIRED -> eventProviderModule.authEventSubject.onNext(
+                                    Auth()
+                                )
                                 else -> clearInvalidTransactions()
                             }
                         }

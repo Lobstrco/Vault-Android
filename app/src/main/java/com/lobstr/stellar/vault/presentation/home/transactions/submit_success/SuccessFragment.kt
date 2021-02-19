@@ -5,16 +5,15 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.lobstr.stellar.vault.R
+import com.lobstr.stellar.vault.databinding.FragmentSuccessBinding
 import com.lobstr.stellar.vault.presentation.base.fragment.BaseFragment
 import com.lobstr.stellar.vault.presentation.util.AppUtil
 import com.lobstr.stellar.vault.presentation.util.Constant
 import com.lobstr.stellar.vault.presentation.util.Constant.TransactionConfirmationSuccessStatus.SUCCESS
-import dagger.Lazy
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.android.synthetic.main.fragment_success.*
 import moxy.ktx.moxyPresenter
 import javax.inject.Inject
+import javax.inject.Provider
 
 @AndroidEntryPoint
 class SuccessFragment : BaseFragment(), SuccessView, View.OnClickListener {
@@ -31,16 +30,17 @@ class SuccessFragment : BaseFragment(), SuccessView, View.OnClickListener {
     // Fields
     // ===========================================================
 
-    @Inject
-    lateinit var daggerPresenter: Lazy<SuccessPresenter>
+    private var _binding: FragmentSuccessBinding? = null
+    private val binding get() = _binding!!
 
-    private var mView: View? = null
+    @Inject
+    lateinit var presenterProvider: Provider<SuccessPresenter>
 
     // ===========================================================
     // Constructors
     // ===========================================================
 
-    private val mPresenter by moxyPresenter { daggerPresenter.get().apply {
+    private val mPresenter by moxyPresenter { presenterProvider.get().apply {
         envelopeXdr = requireArguments().getString(Constant.Bundle.BUNDLE_ENVELOPE_XDR)!!
         status = requireArguments().getByte(Constant.Bundle.BUNDLE_TRANSACTION_CONFIRMATION_SUCCESS_STATUS, SUCCESS)
     } }
@@ -57,8 +57,8 @@ class SuccessFragment : BaseFragment(), SuccessView, View.OnClickListener {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        mView = if (mView == null) inflater.inflate(R.layout.fragment_success, container, false) else mView
-        return mView
+        _binding = FragmentSuccessBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -67,8 +67,13 @@ class SuccessFragment : BaseFragment(), SuccessView, View.OnClickListener {
     }
 
     private fun setListeners() {
-        btnCopyXdr.setOnClickListener(this)
-        btnDone.setOnClickListener(this)
+        binding.btnCopyXdr.setOnClickListener(this)
+        binding.btnDone.setOnClickListener(this)
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
     // ===========================================================
@@ -77,8 +82,8 @@ class SuccessFragment : BaseFragment(), SuccessView, View.OnClickListener {
 
     override fun onClick(v: View?) {
         when (v?.id) {
-            btnCopyXdr.id -> mPresenter.copyXdrClicked()
-            btnDone.id -> mPresenter.doneClicked()
+            binding.btnCopyXdr.id -> mPresenter.copyXdrClicked()
+            binding.btnDone.id -> mPresenter.doneClicked()
         }
     }
 
@@ -87,7 +92,7 @@ class SuccessFragment : BaseFragment(), SuccessView, View.OnClickListener {
     }
 
     override fun setupXdr(xdr: String) {
-        tvXdr.text = xdr
+        binding.tvXdr.text = xdr
     }
 
     override fun finishScreen() {
@@ -95,12 +100,12 @@ class SuccessFragment : BaseFragment(), SuccessView, View.OnClickListener {
     }
 
     override fun setAdditionalSignaturesInfoEnabled(enabled: Boolean) {
-        tvAdditionalSignaturesDescription.visibility = if (enabled) View.VISIBLE else View.GONE
-        llXdrContainer.visibility = if (enabled) View.VISIBLE else View.GONE
+        binding.tvAdditionalSignaturesDescription.visibility = if (enabled) View.VISIBLE else View.GONE
+        binding.llXdrContainer.visibility = if (enabled) View.VISIBLE else View.GONE
     }
 
     override fun showXdrContainer(show: Boolean) {
-        llXdrContainer.visibility = if (show) View.VISIBLE else View.GONE
+        binding.llXdrContainer.visibility = if (show) View.VISIBLE else View.GONE
     }
 
     override fun copyToClipBoard(text: String) {

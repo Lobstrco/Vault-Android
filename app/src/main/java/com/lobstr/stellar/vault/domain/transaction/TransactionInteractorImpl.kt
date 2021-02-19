@@ -35,6 +35,10 @@ class TransactionInteractorImpl(
         )
     }
 
+    override fun cancelTransactions(): Completable {
+        return transactionRepository.cancelTransactions(AppUtil.getJwtToken(prefUtil.authToken))
+    }
+
     override fun cancelOutdatedTransactions(): Completable {
         return transactionRepository.cancelOutdatedTransactions(AppUtil.getJwtToken(prefUtil.authToken))
     }

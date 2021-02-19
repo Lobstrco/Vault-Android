@@ -13,10 +13,7 @@ interface OperationListView : MvpView {
     fun setupToolbarTitle(@StringRes titleRes: Int)
 
     @AddToEndSingle
-    fun initRecycledView()
-
-    @AddToEndSingle
-    fun setOperationsToList(operationList: MutableList<Int>)
+    fun initRecycledView(operations: List<Int>)
 
     @Skip
     fun showOperationDetailsScreen(transactionItem: TransactionItem, position: Int)

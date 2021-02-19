@@ -6,14 +6,17 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.lobstr.stellar.vault.R
+import com.lobstr.stellar.vault.databinding.FragmentOperationDetailsBinding
 import com.lobstr.stellar.vault.presentation.base.fragment.BaseFragment
 import com.lobstr.stellar.vault.presentation.entities.transaction.operation.OperationField
 import com.lobstr.stellar.vault.presentation.home.transactions.operation.operation_list.adapter.OperationDetailsAdapter
 import com.lobstr.stellar.vault.presentation.util.Constant
-import kotlinx.android.synthetic.main.fragment_operation_details.*
+import dagger.hilt.android.AndroidEntryPoint
 import moxy.ktx.moxyPresenter
+import javax.inject.Inject
+import javax.inject.Provider
 
+@AndroidEntryPoint
 class OperationDetailsFragment : BaseFragment(),
     OperationDetailsView {
 
@@ -29,16 +32,20 @@ class OperationDetailsFragment : BaseFragment(),
     // Fields
     // ===========================================================
 
-    private var mView: View? = null
+    @Inject
+    lateinit var presenterProvider: Provider<OperationDetailsPresenter>
+
+    private var _binding: FragmentOperationDetailsBinding? = null
+    private val binding get() = _binding!!
 
     // ===========================================================
     // Constructors
     // ===========================================================
 
-    private val mPresenter by moxyPresenter { OperationDetailsPresenter(
-        arguments?.getParcelable(Constant.Bundle.BUNDLE_TRANSACTION_ITEM)!!,
-        arguments?.getInt(Constant.Bundle.BUNDLE_OPERATION_POSITION)!!
-    ) }
+    private val mPresenter by moxyPresenter { presenterProvider.get().apply {
+        transactionItem = arguments?.getParcelable(Constant.Bundle.BUNDLE_TRANSACTION_ITEM)!!
+        position = arguments?.getInt(Constant.Bundle.BUNDLE_OPERATION_POSITION)!!
+    } }
 
     // ===========================================================
     // Getter & Setter
@@ -52,8 +59,13 @@ class OperationDetailsFragment : BaseFragment(),
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        mView = if (mView == null) inflater.inflate(R.layout.fragment_operation_details, container, false) else mView
-        return mView
+        _binding = FragmentOperationDetailsBinding.inflate(inflater, container, false)
+        return binding.root
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
     // ===========================================================
@@ -65,10 +77,14 @@ class OperationDetailsFragment : BaseFragment(),
     }
 
     override fun initRecycledView(fields: MutableList<OperationField>) {
-        rvOperationDetails.layoutManager = LinearLayoutManager(activity)
-        rvOperationDetails.itemAnimator = null
-        rvOperationDetails.isNestedScrollingEnabled = false
-        rvOperationDetails.adapter = OperationDetailsAdapter(fields)
+        binding.rvOperationDetails.layoutManager = LinearLayoutManager(activity)
+        binding.rvOperationDetails.itemAnimator = null
+        binding.rvOperationDetails.isNestedScrollingEnabled = false
+        binding.rvOperationDetails.adapter = OperationDetailsAdapter(fields)
+    }
+
+    override fun notifyAdapter() {
+        (binding.rvOperationDetails.adapter as? OperationDetailsAdapter)?.notifyDataSetChanged()
     }
 
     // ===========================================================

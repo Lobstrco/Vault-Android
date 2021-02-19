@@ -7,11 +7,14 @@ import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.*
+import android.view.View
 import android.widget.Toast
+import androidx.annotation.ColorRes
 import androidx.annotation.StringRes
 import androidx.core.content.ContextCompat
 import com.andrognito.pinlockview.PinLockListener
 import com.lobstr.stellar.vault.R
+import com.lobstr.stellar.vault.databinding.FragmentPinBinding
 import com.lobstr.stellar.vault.presentation.application.LVApplication
 import com.lobstr.stellar.vault.presentation.auth.AuthActivity
 import com.lobstr.stellar.vault.presentation.auth.biometric.BiometricSetUpFragment
@@ -28,11 +31,10 @@ import com.lobstr.stellar.vault.presentation.util.biometric.BiometricManager
 import com.lobstr.stellar.vault.presentation.util.manager.FragmentTransactionManager
 import com.lobstr.stellar.vault.presentation.util.manager.ProgressManager
 import com.lobstr.stellar.vault.presentation.vault_auth.VaultAuthActivity
-import dagger.Lazy
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.android.synthetic.main.fragment_pin.*
 import moxy.ktx.moxyPresenter
 import javax.inject.Inject
+import javax.inject.Provider
 
 @AndroidEntryPoint
 class PinFragment : BaseFragment(), PinFrView, PinLockListener, BiometricListener,
@@ -52,20 +54,23 @@ class PinFragment : BaseFragment(), PinFrView, PinLockListener, BiometricListene
     // Fields
     // ===========================================================
 
+    private var _binding: FragmentPinBinding? = null
+    private val binding get() = _binding!!
+
     @Inject
-    lateinit var daggerPresenter: Lazy<PinFrPresenter>
+    lateinit var presenterProvider: Provider<PinFrPresenter>
 
     private var mBiometricManager: BiometricManager? = null
-
-    private var mView: View? = null
 
     // ===========================================================
     // Constructors
     // ===========================================================
 
-    private val mPresenter by moxyPresenter { daggerPresenter.get().apply {
-        pinMode = arguments?.getByte(Constant.Bundle.BUNDLE_PIN_MODE) ?: Constant.PinMode.ENTER
-    } }
+    private val mPresenter by moxyPresenter {
+        presenterProvider.get().apply {
+            pinMode = arguments?.getByte(Constant.Bundle.BUNDLE_PIN_MODE) ?: Constant.PinMode.ENTER
+        }
+    }
 
     // ===========================================================
     // Getter & Setter
@@ -79,12 +84,8 @@ class PinFragment : BaseFragment(), PinFrView, PinLockListener, BiometricListene
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        mView = if (mView == null) inflater.inflate(
-            R.layout.fragment_pin,
-            container,
-            false
-        ) else mView
-        return mView
+        _binding = FragmentPinBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -110,14 +111,35 @@ class PinFragment : BaseFragment(), PinFrView, PinLockListener, BiometricListene
         return super.onOptionsItemSelected(item)
     }
 
+    override fun onBackPressed(): Boolean {
+        mPresenter.onBackPressed()
+        return true
+    }
+
     /**
      * Set navigation buttons color.
      * @param light when true - gray, else - white.
      */
-    override fun windowLightNavigationBar(light: Boolean) {
+    override fun setupNavigationBar(@ColorRes color: Int, light: Boolean) {
         if (Build.VERSION.SDK_INT > Build.VERSION_CODES.O) {
-            activity?.window?.decorView?.systemUiVisibility =
-                if (light) View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR else 0
+            activity?.window?.navigationBarColor = ContextCompat.getColor(requireContext(), color)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                // NOTE Android R behavior: check in future compat version of WindowInsetsController in AndroidX.
+                //  Added WindowInsetsControllerCompat to androidx.core:core-ktx:1.5.0-alpha05.
+                //  Use example:
+                //  WindowCompat.getInsetsController(window, decorView).isAppearanceLightNavigationBars = light
+                //  WindowInsetsControllerCompat(window, decorView).isAppearanceLightNavigationBars = light
+
+                // 0 statement clears APPEARANCE_LIGHT_NAVIGATION_BARS.
+                // https://developer.android.com/refezrence/android/view/WindowInsetsController#setSystemBarsAppearance(int,%20int)
+                activity?.window?.decorView?.windowInsetsController?.setSystemBarsAppearance(
+                    if (light) WindowInsetsController.APPEARANCE_LIGHT_NAVIGATION_BARS else 0,
+                    WindowInsetsController.APPEARANCE_LIGHT_NAVIGATION_BARS
+                )
+            } else {
+                activity?.window?.decorView?.systemUiVisibility =
+                    if (light) View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR else 0
+            }
         }
     }
 
@@ -127,14 +149,19 @@ class PinFragment : BaseFragment(), PinFrView, PinLockListener, BiometricListene
     }
 
     private fun setListeners() {
-        pinLockView.setPinLockListener(this)
-        tvPinLogOut.setOnClickListener(this)
+        binding.pinLockView.setPinLockListener(this)
+        binding.tvPinLogOut.setOnClickListener(this)
     }
 
     override fun onClick(v: View?) {
         when (v?.id) {
-            tvPinLogOut.id -> mPresenter.logoutClicked()
+            binding.tvPinLogOut.id -> mPresenter.logoutClicked()
         }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
     // ===========================================================
@@ -142,62 +169,63 @@ class PinFragment : BaseFragment(), PinFrView, PinLockListener, BiometricListene
     // ===========================================================
 
     override fun setupToolbar(
-        showHomeAsUp: Boolean,
         hasMenu: Boolean,
         toolbarColor: Int,
         upArrow: Int,
         upArrowColor: Int
     ) {
-        (activity as? BaseActivity)?.changeActionBarIconVisibility(showHomeAsUp)
         setHasOptionsMenu(hasMenu)
         (activity as? BaseActivity)?.setActionBarBackground(toolbarColor)
-        (activity as? BaseActivity)?.setHomeAsUpIndicator(upArrow, upArrowColor)
+        (activity as? BaseActivity)?.setActionBarIcon(upArrow, upArrowColor)
+    }
+
+    override fun showHomeAsUp(show: Boolean) {
+        (activity as? BaseActivity)?.changeActionBarIconVisibility(show)
     }
 
     override fun setScreenStyle(style: Int) {
-        pinLockView.pinLength = 6
+        binding.pinLockView.pinLength = 6
 
         if (style == STYLE_ENTER_PIN) {
-            indicatorDotsWhite.pinLength = 6
-            pinLockView.attachIndicatorDots(indicatorDotsWhite)
+            // Dark style.
+            binding.indicatorDotsWhite.pinLength = 6
+            binding.pinLockView.attachIndicatorDots(binding.indicatorDotsWhite)
             (activity as? PinActivity)?.window?.decorView?.setBackgroundColor(
                 ContextCompat.getColor(
                     requireContext(),
                     R.color.color_primary
                 )
             )
-            pinLockView.textColor = ContextCompat.getColor(requireContext(), android.R.color.white)
+            binding.pinLockView.textColor =
+                ContextCompat.getColor(requireContext(), android.R.color.white)
 
-            tvPinTitle.visibility = View.GONE
-            ivPinLogo.visibility = View.VISIBLE
-            indicatorDotsWhite.visibility = View.VISIBLE
-            indicatorDots.visibility = View.GONE
-            tvPinLogOut.visibility = View.VISIBLE
+            binding.tvPinTitle.visibility = View.GONE
+            binding.ivPinLogo.visibility = View.VISIBLE
+            binding.indicatorDotsWhite.visibility = View.VISIBLE
+            binding.indicatorDots.visibility = View.GONE
+            binding.tvPinLogOut.visibility = View.VISIBLE
         } else {
-            indicatorDots.pinLength = 6
-            pinLockView.attachIndicatorDots(indicatorDots)
-            (activity as? PinActivity)?.window?.decorView?.setBackgroundColor(
-                ContextCompat.getColor(
-                    requireContext(),
-                    android.R.color.white
-                )
-            )
-            pinLockView.textColor = ContextCompat.getColor(requireContext(), android.R.color.black)
+            // White style.
+            binding.indicatorDots.pinLength = 6
+            binding.pinLockView.attachIndicatorDots(binding.indicatorDots)
+            // NOTE By default AppTheme has android:windowBackground = white.
+            binding.pinLockView.textColor =
+                ContextCompat.getColor(requireContext(), android.R.color.black)
 
-            tvPinTitle.visibility = View.VISIBLE
-            ivPinLogo.visibility = View.GONE
-            indicatorDotsWhite.visibility = View.GONE
-            indicatorDots.visibility = View.VISIBLE
-            tvPinLogOut.visibility = View.GONE
+            binding.tvPinTitle.visibility = View.VISIBLE
+            binding.ivPinLogo.visibility = View.GONE
+            binding.indicatorDotsWhite.visibility = View.GONE
+            binding.indicatorDots.visibility = View.VISIBLE
+            binding.tvPinLogOut.visibility = View.GONE
         }
     }
 
     override fun showTitle(@StringRes title: Int) {
-        tvPinTitle.text = getString(title)
+        binding.tvPinTitle.text = getString(title)
     }
 
     override fun resetPin() {
-        pinLockView.resetPinLockView()
+        binding.pinLockView.resetPinLockView()
     }
 
     override fun showHomeScreen() {
@@ -224,7 +252,7 @@ class PinFragment : BaseFragment(), PinFrView, PinLockListener, BiometricListene
         FragmentTransactionManager.displayFragment(
             requireActivity().supportFragmentManager,
             fragment,
-            R.id.fl_container,
+            R.id.flContainer,
             false
         )
     }
@@ -237,11 +265,18 @@ class PinFragment : BaseFragment(), PinFrView, PinLockListener, BiometricListene
         activity?.setResult(resultCode)
     }
 
-    override fun finishScreenWithResult(resultCode: Int) {
+    override fun finishScreen(resultCode: Int) {
         // NOTE Skip pin appearance check for prevent pin screen duplication after finish.
         LVApplication.checkPinAppearance = false
         activity?.setResult(resultCode)
         activity?.finish()
+    }
+
+    override fun finishApp() {
+        val intent = Intent(Intent.ACTION_MAIN)
+        intent.addCategory(Intent.CATEGORY_HOME)
+        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+        startActivity(intent)
     }
 
     override fun showProgressDialog(show: Boolean) {
@@ -258,7 +293,7 @@ class PinFragment : BaseFragment(), PinFrView, PinLockListener, BiometricListene
 
     // Pin Lock listeners callbacks.
 
-    override fun onComplete(pin: String?) {
+    override fun onComplete(pin: String) {
         AppUtil.vibrate(requireContext(), longArrayOf(0, 8, 0, 0))
         Log.i(PinActivity.LOG_TAG, "Pin complete: $pin")
         mPresenter.onPinComplete(pin)
@@ -269,7 +304,7 @@ class PinFragment : BaseFragment(), PinFrView, PinLockListener, BiometricListene
         Log.i(PinActivity.LOG_TAG, "Pin empty")
     }
 
-    override fun onPinChange(pinLength: Int, intermediatePin: String?) {
+    override fun onPinChange(pinLength: Int, intermediatePin: String) {
         AppUtil.vibrate(requireContext(), longArrayOf(0, 8, 0, 0))
         Log.i(
             PinActivity.LOG_TAG,
@@ -324,23 +359,25 @@ class PinFragment : BaseFragment(), PinFrView, PinLockListener, BiometricListene
         try {
             AppUtil.sendEmail(requireContext(), arrayOf(mail), subject, body)
         } catch (exc: ActivityNotFoundException) {
-            Toast.makeText(requireContext(),getString(R.string.msg_mail_client_not_found), Toast.LENGTH_SHORT).show()
+            Toast.makeText(
+                requireContext(),
+                getString(R.string.msg_mail_client_not_found),
+                Toast.LENGTH_SHORT
+            ).show()
         }
     }
 
     // Biometric.
 
-    override fun showBiometricDialog(show: Boolean) {
-        mBiometricManager?.cancelAuthentication()
-
-        if (show) {
+    override fun showBiometricDialog() {
+        if (mBiometricManager == null) {
             mBiometricManager = BiometricManager.BiometricBuilder(requireContext(), this)
                 .setTitle(getString(R.string.biometric_title))
                 .setSubtitle(getString(R.string.biometric_subtitle))
                 .setNegativeButtonText(getString(R.string.text_btn_cancel).toUpperCase())
                 .build()
-            mBiometricManager?.authenticate(this)
         }
+        mBiometricManager?.authenticate(this)
     }
 
     override fun onBiometricAuthenticationPermissionNotGranted() {

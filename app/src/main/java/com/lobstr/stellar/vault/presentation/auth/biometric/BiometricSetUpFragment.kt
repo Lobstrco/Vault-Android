@@ -7,9 +7,12 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowInsetsController.APPEARANCE_LIGHT_NAVIGATION_BARS
 import android.widget.Toast
+import androidx.annotation.ColorRes
 import androidx.core.content.ContextCompat
 import com.lobstr.stellar.vault.R
+import com.lobstr.stellar.vault.databinding.FragmentBiometricSetUpBinding
 import com.lobstr.stellar.vault.presentation.base.activity.BaseActivity
 import com.lobstr.stellar.vault.presentation.base.fragment.BaseFragment
 import com.lobstr.stellar.vault.presentation.dialog.alert.base.AlertDialogFragment
@@ -18,14 +21,14 @@ import com.lobstr.stellar.vault.presentation.util.Constant
 import com.lobstr.stellar.vault.presentation.util.biometric.BiometricListener
 import com.lobstr.stellar.vault.presentation.util.biometric.BiometricManager
 import com.lobstr.stellar.vault.presentation.vault_auth.VaultAuthActivity
-import dagger.Lazy
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.android.synthetic.main.fragment_biometric_set_up.*
 import moxy.ktx.moxyPresenter
 import javax.inject.Inject
+import javax.inject.Provider
 
 @AndroidEntryPoint
-class BiometricSetUpFragment : BaseFragment(), BiometricSetUpView, BiometricListener, View.OnClickListener {
+class BiometricSetUpFragment : BaseFragment(), BiometricSetUpView, BiometricListener,
+    View.OnClickListener {
 
     // ===========================================================
     // Constants
@@ -39,10 +42,11 @@ class BiometricSetUpFragment : BaseFragment(), BiometricSetUpView, BiometricList
     // Fields
     // ===========================================================
 
-    @Inject
-    lateinit var daggerPresenter: Lazy<BiometricSetUpPresenter>
+    private var _binding: FragmentBiometricSetUpBinding? = null
+    private val binding get() = _binding!!
 
-    private var mView: View? = null
+    @Inject
+    lateinit var presenterProvider: Provider<BiometricSetUpPresenter>
 
     private var mBiometricManager: BiometricManager? = null
 
@@ -50,9 +54,11 @@ class BiometricSetUpFragment : BaseFragment(), BiometricSetUpView, BiometricList
     // Constructors
     // ===========================================================
 
-    private val mPresenter by moxyPresenter { daggerPresenter.get().apply {
-        pinMode = arguments?.getByte(Constant.Bundle.BUNDLE_PIN_MODE) ?: Constant.PinMode.ENTER
-    } }
+    private val mPresenter by moxyPresenter {
+        presenterProvider.get().apply {
+            pinMode = arguments?.getByte(Constant.Bundle.BUNDLE_PIN_MODE) ?: Constant.PinMode.ENTER
+        }
+    }
 
     // ===========================================================
     // Getter & Setter
@@ -66,8 +72,12 @@ class BiometricSetUpFragment : BaseFragment(), BiometricSetUpView, BiometricList
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        mView = if (mView == null) inflater.inflate(R.layout.fragment_biometric_set_up, container, false) else mView
-        return mView
+        _binding = FragmentBiometricSetUpBinding.inflate(
+            inflater,
+            container,
+            false
+        )
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -76,8 +86,18 @@ class BiometricSetUpFragment : BaseFragment(), BiometricSetUpView, BiometricList
     }
 
     private fun setListeners() {
-        btnTurOn.setOnClickListener(this)
-        btnSkip.setOnClickListener(this)
+        binding.btnTurOn.setOnClickListener(this)
+        binding.btnSkip.setOnClickListener(this)
+    }
+
+    override fun onBackPressed(): Boolean {
+        mPresenter.onBackPressed()
+        return true
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
     // ===========================================================
@@ -86,8 +106,8 @@ class BiometricSetUpFragment : BaseFragment(), BiometricSetUpView, BiometricList
 
     override fun onClick(v: View?) {
         when (v?.id) {
-            btnTurOn.id -> mPresenter.turnOnClicked()
-            btnSkip.id -> mPresenter.skipClicked()
+            binding.btnTurOn.id -> mPresenter.turnOnClicked()
+            binding.btnSkip.id -> mPresenter.skipClicked()
         }
     }
 
@@ -104,17 +124,38 @@ class BiometricSetUpFragment : BaseFragment(), BiometricSetUpView, BiometricList
      * Set navigation buttons color.
      * @param light when true - gray, else - white.
      */
-    override fun windowLightNavigationBar(light: Boolean) {
+    override fun setupNavigationBar(@ColorRes color: Int, light: Boolean) {
         if (Build.VERSION.SDK_INT > Build.VERSION_CODES.O) {
-            activity?.window?.decorView?.systemUiVisibility =
-                if (light) View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR else 0
+            activity?.window?.navigationBarColor = ContextCompat.getColor(requireContext(), color)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                // NOTE Android R behavior: check in future compat version of WindowInsetsController in AndroidX.
+                //  Added WindowInsetsControllerCompat to androidx.core:core-ktx:1.5.0-alpha05.
+                //  Use example:
+                //  WindowCompat.getInsetsController(window, decorView).isAppearanceLightNavigationBars = light
+                //  WindowInsetsControllerCompat(window, decorView).isAppearanceLightNavigationBars = light
+
+                // 0 statement clears APPEARANCE_LIGHT_NAVIGATION_BARS.
+                // https://developer.android.com/reference/android/view/WindowInsetsController#setSystemBarsAppearance(int,%20int)
+                activity?.window?.decorView?.windowInsetsController?.setSystemBarsAppearance(
+                    if (light) APPEARANCE_LIGHT_NAVIGATION_BARS else 0,
+                    APPEARANCE_LIGHT_NAVIGATION_BARS
+                )
+            } else {
+                activity?.window?.decorView?.systemUiVisibility =
+                    if (light) View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR else 0
+            }
         }
     }
 
-    override fun setupToolbar(showHomeAsUp: Boolean,toolbarColor: Int, upArrow: Int, upArrowColor: Int) {
+    override fun setupToolbar(
+        showHomeAsUp: Boolean,
+        toolbarColor: Int,
+        upArrow: Int,
+        upArrowColor: Int
+    ) {
         (activity as? BaseActivity)?.changeActionBarIconVisibility(showHomeAsUp)
         (activity as? BaseActivity)?.setActionBarBackground(toolbarColor)
-        (activity as? BaseActivity)?.setHomeAsUpIndicator(upArrow, upArrowColor)
+        (activity as? BaseActivity)?.setActionBarIcon(upArrow, upArrowColor)
     }
 
     override fun showVaultAuthScreen() {
@@ -127,6 +168,13 @@ class BiometricSetUpFragment : BaseFragment(), BiometricSetUpView, BiometricList
         activity?.finish()
     }
 
+    override fun finishApp() {
+        val intent = Intent(Intent.ACTION_MAIN)
+        intent.addCategory(Intent.CATEGORY_HOME)
+        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+        startActivity(intent)
+    }
+
     // Biometric.
 
     override fun showBiometricInfoDialog(titleRes: Int, messageRes: Int) {
@@ -136,20 +184,22 @@ class BiometricSetUpFragment : BaseFragment(), BiometricSetUpView, BiometricList
             .setMessage(messageRes)
             .setPositiveBtnText(R.string.text_btn_ok)
             .create()
-            .show(childFragmentManager, AlertDialogFragment.DialogFragmentIdentifier.BIOMETRIC_INFO_DIALOG)
+            .show(
+                childFragmentManager,
+                AlertDialogFragment.DialogFragmentIdentifier.BIOMETRIC_INFO_DIALOG
+            )
     }
 
-    override fun showBiometricDialog(show: Boolean) {
-        mBiometricManager?.cancelAuthentication()
-
-        if (show) {
+    override fun showBiometricDialog() {
+        mBiometricManager?.cancelAuthentication() // Cancel biometric authentication for avoiding dialog duplications.
+        if (mBiometricManager == null) {
             mBiometricManager = BiometricManager.BiometricBuilder(requireContext(), this)
                 .setTitle(getString(R.string.biometric_title))
                 .setSubtitle(getString(R.string.biometric_subtitle))
                 .setNegativeButtonText(getString(R.string.text_btn_cancel).toUpperCase())
                 .build()
-            mBiometricManager?.authenticate(this)
         }
+        mBiometricManager?.authenticate(this)
     }
 
     override fun onBiometricAuthenticationPermissionNotGranted() {

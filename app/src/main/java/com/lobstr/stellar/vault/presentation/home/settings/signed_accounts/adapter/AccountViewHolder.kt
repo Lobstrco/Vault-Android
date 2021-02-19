@@ -5,20 +5,20 @@ import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.lobstr.stellar.vault.R
+import com.lobstr.stellar.vault.databinding.AdapterItemAccountBinding
 import com.lobstr.stellar.vault.presentation.entities.account.Account
 import com.lobstr.stellar.vault.presentation.util.AppUtil
 import com.lobstr.stellar.vault.presentation.util.Constant
 import com.lobstr.stellar.vault.presentation.util.Constant.Util.PK_TRUNCATE_COUNT
-import kotlinx.android.synthetic.main.adapter_item_account.view.*
-import kotlinx.android.synthetic.main.adapter_item_account_extended.view.divider
-import kotlinx.android.synthetic.main.adapter_item_account_extended.view.ivIdentity
-import kotlinx.android.synthetic.main.adapter_item_account_extended.view.tvAccount
 
-class AccountViewHolder(itemView: View, private val listener: OnAccountItemListener) :
-    RecyclerView.ViewHolder(itemView) {
+class AccountViewHolder(
+    private val binding: AdapterItemAccountBinding,
+    private val itemClickListener: (account: Account) -> Unit,
+    private val itemLongClickListener: (account: Account) -> Unit
+) : RecyclerView.ViewHolder(binding.root) {
 
     fun bind(account: Account, itemsCount: Int) {
-        itemView.divider.visibility = calculateDividerVisibility(itemsCount)
+        binding.divider.visibility = calculateDividerVisibility(itemsCount)
 
         // Set user icon.
         Glide.with(itemView.context)
@@ -28,16 +28,16 @@ class AccountViewHolder(itemView: View, private val listener: OnAccountItemListe
                     .plus(".png")
             )
             .placeholder(R.drawable.ic_person)
-            .into(itemView.ivIdentity)
+            .into(binding.ivIdentity)
 
-        itemView.tvAccount.visibility =
+        binding.tvAccount.visibility =
             if (account.federation.isNullOrEmpty()) {
                 View.GONE
             } else {
                 View.VISIBLE
             }
 
-        itemView.tvAccount.text = when {
+        binding.tvAccount.text = when {
             !account.federation.isNullOrEmpty() -> AppUtil.ellipsizeStrInMiddle(
                 account.address,
                 PK_TRUNCATE_COUNT
@@ -45,14 +45,14 @@ class AccountViewHolder(itemView: View, private val listener: OnAccountItemListe
             else -> null
         }
 
-        itemView.tvAccountFederation.ellipsize =
+        binding.tvAccountFederation.ellipsize =
             if (account.federation.isNullOrEmpty()) {
                 TextUtils.TruncateAt.MIDDLE
             } else {
                 TextUtils.TruncateAt.END
             }
 
-        itemView.tvAccountFederation.text =
+        binding.tvAccountFederation.text =
             if (account.federation.isNullOrEmpty()) {
                 AppUtil.ellipsizeStrInMiddle(account.address, PK_TRUNCATE_COUNT)
             } else {
@@ -65,7 +65,7 @@ class AccountViewHolder(itemView: View, private val listener: OnAccountItemListe
                 return@setOnClickListener
             }
 
-            listener.onAccountItemClick(account)
+            itemClickListener(account)
         }
 
         itemView.setOnLongClickListener {
@@ -74,7 +74,7 @@ class AccountViewHolder(itemView: View, private val listener: OnAccountItemListe
                 return@setOnLongClickListener false
             }
 
-            listener.onAccountItemLongClick(account)
+            itemLongClickListener(account)
 
             true
         }

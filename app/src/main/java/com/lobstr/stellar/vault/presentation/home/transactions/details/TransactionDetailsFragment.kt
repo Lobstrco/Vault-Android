@@ -12,6 +12,8 @@ import android.widget.Toast
 import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.lobstr.stellar.vault.R
+import com.lobstr.stellar.vault.databinding.FragmentTransactionDetailsBinding
+import com.lobstr.stellar.vault.presentation.application.LVApplication
 import com.lobstr.stellar.vault.presentation.base.fragment.BaseFragment
 import com.lobstr.stellar.vault.presentation.container.activity.ContainerActivity
 import com.lobstr.stellar.vault.presentation.dialog.alert.base.AlertDialogFragment
@@ -21,7 +23,6 @@ import com.lobstr.stellar.vault.presentation.entities.account.Account
 import com.lobstr.stellar.vault.presentation.entities.tangem.TangemInfo
 import com.lobstr.stellar.vault.presentation.entities.transaction.TransactionItem
 import com.lobstr.stellar.vault.presentation.home.settings.signed_accounts.adapter.AccountAdapter
-import com.lobstr.stellar.vault.presentation.home.settings.signed_accounts.adapter.OnAccountItemListener
 import com.lobstr.stellar.vault.presentation.home.transactions.operation.operation_details.OperationDetailsFragment
 import com.lobstr.stellar.vault.presentation.home.transactions.operation.operation_list.OperationListFragment
 import com.lobstr.stellar.vault.presentation.home.transactions.submit_error.ErrorFragment
@@ -34,16 +35,14 @@ import com.lobstr.stellar.vault.presentation.util.Constant.Extra.EXTRA_TRANSACTI
 import com.lobstr.stellar.vault.presentation.util.Constant.Extra.EXTRA_TRANSACTION_STATUS
 import com.lobstr.stellar.vault.presentation.util.manager.FragmentTransactionManager
 import com.lobstr.stellar.vault.presentation.util.manager.ProgressManager
-import dagger.Lazy
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.android.synthetic.main.fragment_transaction_details.*
 import moxy.ktx.moxyPresenter
 import javax.inject.Inject
+import javax.inject.Provider
 
 @AndroidEntryPoint
 class TransactionDetailsFragment : BaseFragment(), TransactionDetailsView, View.OnClickListener,
-    AlertDialogFragment.OnDefaultAlertDialogListener, OnAccountItemListener,
-    TangemDialogFragment.OnTangemDialogListener {
+    AlertDialogFragment.OnDefaultAlertDialogListener, TangemDialogFragment.OnTangemDialogListener {
 
     // ===========================================================
     // Constants
@@ -57,18 +56,21 @@ class TransactionDetailsFragment : BaseFragment(), TransactionDetailsView, View.
     // Fields
     // ===========================================================
 
-    @Inject
-    lateinit var daggerPresenter: Lazy<TransactionDetailsPresenter>
+    private var _binding: FragmentTransactionDetailsBinding? = null
+    private val binding get() = _binding!!
 
-    private var mView: View? = null
+    @Inject
+    lateinit var presenterProvider: Provider<TransactionDetailsPresenter>
 
     // ===========================================================
     // Constructors
     // ===========================================================
 
-    private val mPresenter by moxyPresenter { daggerPresenter.get().apply {
-        transactionItem = arguments?.getParcelable(BUNDLE_TRANSACTION_ITEM)!!
-    } }
+    private val mPresenter by moxyPresenter {
+        presenterProvider.get().apply {
+            transactionItem = arguments?.getParcelable(BUNDLE_TRANSACTION_ITEM)!!
+        }
+    }
 
     // ===========================================================
     // Getter & Setter
@@ -82,12 +84,8 @@ class TransactionDetailsFragment : BaseFragment(), TransactionDetailsView, View.
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        mView = if (mView == null) inflater.inflate(
-            R.layout.fragment_transaction_details,
-            container,
-            false
-        ) else mView
-        return mView
+        _binding = FragmentTransactionDetailsBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -97,8 +95,8 @@ class TransactionDetailsFragment : BaseFragment(), TransactionDetailsView, View.
     }
 
     private fun setListeners() {
-        btnConfirm.setOnClickListener(this)
-        btnDeny.setOnClickListener(this)
+        binding.btnConfirm.setOnClickListener(this)
+        binding.btnDeny.setOnClickListener(this)
 
         childFragmentManager.addOnBackStackChangedListener {
             mPresenter.backStackChanged(childFragmentManager.backStackEntryCount)
@@ -116,14 +114,19 @@ class TransactionDetailsFragment : BaseFragment(), TransactionDetailsView, View.
         return super.onBackPressed()
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+
     // ===========================================================
     // Listeners, methods for/from Interfaces
     // ===========================================================
 
     override fun onClick(v: View?) {
         when (v?.id) {
-            btnConfirm.id -> mPresenter.btnConfirmClicked()
-            btnDeny.id -> mPresenter.btnDenyClicked()
+            binding.btnConfirm.id -> mPresenter.btnConfirmClicked()
+            binding.btnDeny.id -> mPresenter.btnDenyClicked()
         }
     }
 
@@ -132,34 +135,29 @@ class TransactionDetailsFragment : BaseFragment(), TransactionDetailsView, View.
     }
 
     override fun initSignersRecycledView() {
-        rvSigners.layoutManager = LinearLayoutManager(activity)
-        rvSigners.itemAnimator = null
-        rvSigners.isNestedScrollingEnabled = false
-        rvSigners.adapter = AccountAdapter(AccountAdapter.ACCOUNT_WITH_STATUS, this)
+        binding.rvSigners.layoutManager = LinearLayoutManager(activity)
+        binding.rvSigners.itemAnimator = null
+        binding.rvSigners.isNestedScrollingEnabled = false
+        binding.rvSigners.adapter = AccountAdapter(
+            AccountAdapter.ACCOUNT_WITH_STATUS,
+            { /*Implement logic if needed.*/ },
+            { mPresenter.signedAccountItemLongClicked(it) })
     }
 
     override fun notifySignersAdapter(accounts: List<Account>) {
-        (rvSigners.adapter as AccountAdapter).setAccountList(accounts)
+        (binding.rvSigners.adapter as AccountAdapter).setAccountList(accounts)
     }
 
     override fun showSignersProgress(show: Boolean) {
-        pbSigners.visibility = if (show) View.VISIBLE else View.GONE
+        binding.pbSigners.visibility = if (show) View.VISIBLE else View.GONE
     }
 
     override fun showSignersContainer(show: Boolean) {
-        llSignersContainer.visibility = if (show) View.VISIBLE else View.GONE
+        binding.llSignersContainer.visibility = if (show) View.VISIBLE else View.GONE
     }
 
     override fun showSignersCount(count: String?) {
-        tvSignersCount.text = count
-    }
-
-    override fun onAccountItemClick(account: Account) {
-        // Implement logic if needed.
-    }
-
-    override fun onAccountItemLongClick(account: Account) {
-        mPresenter.signedAccountItemLongClicked(account)
+        binding.tvSignersCount.text = count
     }
 
     override fun showOperationList(transactionItem: TransactionItem) {
@@ -177,7 +175,7 @@ class TransactionDetailsFragment : BaseFragment(), TransactionDetailsView, View.
         FragmentTransactionManager.displayFragment(
             childFragmentManager,
             fragment,
-            R.id.fl_container
+            R.id.flContainer
         )
     }
 
@@ -197,11 +195,11 @@ class TransactionDetailsFragment : BaseFragment(), TransactionDetailsView, View.
         FragmentTransactionManager.displayFragment(
             childFragmentManager,
             fragment,
-            R.id.fl_container
+            R.id.flContainer
         )
     }
 
-    override fun setupAdditionalInfo(map: Map<String, String?>) {
+    override fun setupTransactionInfo(map: Map<String, String?>) {
         for ((key, value) in map) {
             val root =
                 layoutInflater.inflate(R.layout.layout_additional_value, view as ViewGroup, false)
@@ -211,27 +209,27 @@ class TransactionDetailsFragment : BaseFragment(), TransactionDetailsView, View.
             fieldValue.text = value
 
             // Show divider only fo first value.
-            if (llAdditionalInfo.childCount == 0) {
+            if (binding.llAdditionalInfo.childCount == 0) {
                 val divider = root.findViewById<View>(R.id.divider)
                 divider.visibility = View.VISIBLE
             }
 
-            llAdditionalInfo.addView(root)
+            binding.llAdditionalInfo.addView(root)
         }
     }
 
     override fun setActionBtnVisibility(isConfirmVisible: Boolean, isDenyVisible: Boolean) {
-        btnConfirm.visibility = if (isConfirmVisible) View.VISIBLE else View.GONE
-        btnDeny.visibility = if (isDenyVisible) View.VISIBLE else View.GONE
+        binding.btnConfirm.visibility = if (isConfirmVisible) View.VISIBLE else View.GONE
+        binding.btnDeny.visibility = if (isDenyVisible) View.VISIBLE else View.GONE
     }
 
     override fun showActionContainer(show: Boolean) {
-        llActionContainer.visibility = if (show) View.VISIBLE else View.GONE
+        binding.llActionContainer.visibility = if (show) View.VISIBLE else View.GONE
     }
 
     override fun setTransactionValid(valid: Boolean) {
-        btnConfirm.isEnabled = valid
-        tvErrorDescription.visibility = if (valid) View.GONE else View.VISIBLE
+        binding.btnConfirm.isEnabled = valid
+        binding.tvErrorDescription.visibility = if (valid) View.GONE else View.VISIBLE
     }
 
     override fun showMessage(message: String?) {
@@ -266,6 +264,9 @@ class TransactionDetailsFragment : BaseFragment(), TransactionDetailsView, View.
         intent.putExtra(EXTRA_TRANSACTION_STATUS, Constant.Transaction.SIGNED)
         activity?.setResult(Activity.RESULT_OK, intent)
 
+        // Mark Check Rate Us state.
+        LVApplication.checkRateUsDialogState = Constant.RateUsSessionState.CHECK
+
         // Close screen.
         parentFragment?.childFragmentManager?.popBackStack()
 
@@ -285,7 +286,7 @@ class TransactionDetailsFragment : BaseFragment(), TransactionDetailsView, View.
         FragmentTransactionManager.displayFragment(
             requireParentFragment().childFragmentManager,
             fragment,
-            R.id.fl_container,
+            R.id.flContainer,
             false
         )
     }
@@ -309,7 +310,7 @@ class TransactionDetailsFragment : BaseFragment(), TransactionDetailsView, View.
         FragmentTransactionManager.displayFragment(
             requireParentFragment().childFragmentManager,
             fragment,
-            R.id.fl_container
+            R.id.flContainer
         )
     }
 

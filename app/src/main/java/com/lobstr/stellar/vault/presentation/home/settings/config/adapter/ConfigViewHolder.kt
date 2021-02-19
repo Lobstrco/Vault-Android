@@ -2,18 +2,18 @@ package com.lobstr.stellar.vault.presentation.home.settings.config.adapter
 
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
+import com.lobstr.stellar.vault.databinding.AdapterItemConfigBinding
 import com.lobstr.stellar.vault.presentation.entities.config.Config
-import kotlinx.android.synthetic.main.adapter_item_config.view.*
 
 
-class ConfigViewHolder(itemView: View, private val listener: OnConfigItemListener) :
-    RecyclerView.ViewHolder(itemView) {
+class ConfigViewHolder(private val binding: AdapterItemConfigBinding, private val itemClickListener: (config: Config, selectedType: Byte) -> Unit) :
+    RecyclerView.ViewHolder(binding.root) {
 
     fun bind(config: Config, selectedType: Byte, itemsCount: Int) {
-        itemView.tvConfig.text = config.text
-        itemView.ivConfigStatus.visibility =
+        binding.tvConfig.text = config.text
+        binding.ivConfigStatus.visibility =
             if (config.type == selectedType) View.VISIBLE else View.INVISIBLE
-        itemView.divider.visibility = calculateDividerVisibility(itemsCount)
+        binding.divider.visibility = calculateDividerVisibility(itemsCount)
 
         itemView.setOnClickListener {
             val position = this@ConfigViewHolder.adapterPosition
@@ -21,7 +21,7 @@ class ConfigViewHolder(itemView: View, private val listener: OnConfigItemListene
                 return@setOnClickListener
             }
 
-            listener.onConfigItemClick(config, selectedType)
+            itemClickListener(config, selectedType)
         }
     }
 

@@ -78,7 +78,8 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:text="@string/text_tv_signed_xdr"
-                            android:textColor="@color/color_994A4A4A"
+                            android:textColor="@color/color_4a4a4a"
+                            android:alpha="0.6"
                             android:textSize="12sp" />
 
                     <Button
@@ -109,7 +110,6 @@
                         android:layout_height="match_parent"
                         android:gravity="center|start"
                         android:padding="16dp"
-                        android:textColorHint="@color/color_4D000000"
                         android:textSize="12sp" />
                 </androidx.core.widget.NestedScrollView>
             </LinearLayout>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
-        android:layout_height="56dp"
+        android:layout_height="wrap_content"
         android:background="@android:color/white"
         android:gravity="center_vertical"
         android:orientation="vertical">
@@ -12,7 +12,8 @@
             android:layout_height="0.5dp"
             android:layout_marginStart="16dp"
             android:layout_marginEnd="0dp"
-            android:background="@color/color_33979797"
+            android:background="@color/color_979797"
+            android:alpha="0.2"
             android:visibility="invisible" />
 
     <LinearLayout
@@ -21,8 +22,7 @@
             android:background="@android:color/white"
             android:gravity="center_vertical"
             android:orientation="horizontal"
-            android:paddingStart="16dp"
-            android:paddingEnd="16dp">
+            android:padding="16dp">
 
         <TextView
                 android:id="@+id/tvFieldName"

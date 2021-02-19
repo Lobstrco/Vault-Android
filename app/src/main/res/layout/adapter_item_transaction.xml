@@ -36,7 +36,7 @@
                     android:paddingStart="10dp"
                     android:paddingEnd="0dp"
                     android:ellipsize="end"
-                    android:singleLine="true"
+                    android:maxLines="1"
                     android:fontFamily="sans-serif-medium"
                     android:textColor="@android:color/black"
                     android:id="@+id/tvTransactionItemOperation"
@@ -48,7 +48,8 @@
                     android:paddingStart="10dp"
                     android:paddingEnd="0dp"
                     android:layout_marginTop="4dp"
-                    android:textColor="@color/color_99000000"
+                    android:textColor="@android:color/black"
+                    android:alpha="0.6"
                     android:id="@+id/tvTransactionInvalid"
                     android:visibility="gone"
                     android:text="@string/text_tv_sequence_number_invalid"
@@ -104,9 +105,10 @@
                     android:layout_height="wrap_content"
                     android:gravity="end"
                     android:id="@+id/tvTransactionItemDate"
-                    android:textColor="@color/color_4D000000"
+                    android:textColor="@color/color_4d000000"
                     android:textSize="14sp"
-                    android:singleLine="true"/>
+                    android:maxLines="1"
+                    android:ellipsize="end"/>
 
         </LinearLayout>
 

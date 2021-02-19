@@ -10,13 +10,13 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
 import com.lobstr.stellar.vault.R
+import com.lobstr.stellar.vault.databinding.ActivityTangemCreateWalletBinding
 import com.lobstr.stellar.vault.presentation.base.activity.BaseActivity
 import com.lobstr.stellar.vault.presentation.dialog.alert.base.AlertDialogFragment
 import com.lobstr.stellar.vault.presentation.entities.tangem.TangemInfo
 import com.lobstr.stellar.vault.presentation.tangem.dialog.TangemDialogFragment
 import com.lobstr.stellar.vault.presentation.util.Constant
 import com.lobstr.stellar.vault.presentation.util.manager.SupportManager
-import kotlinx.android.synthetic.main.activity_tangem_create_wallet.*
 import moxy.ktx.moxyPresenter
 
 class TangemCreateWalletActivity : BaseActivity(), TangemCreateWalletView,
@@ -34,6 +34,8 @@ class TangemCreateWalletActivity : BaseActivity(), TangemCreateWalletView,
     // ===========================================================
     // Fields
     // ===========================================================
+
+    private lateinit var binding: ActivityTangemCreateWalletBinding
 
     // ===========================================================
     // Constructors
@@ -54,12 +56,13 @@ class TangemCreateWalletActivity : BaseActivity(), TangemCreateWalletView,
         setListeners()
     }
 
-    private fun setListeners() {
-        btnCreateWallet.setOnClickListener(this)
+    override fun getContentView(): View {
+        binding = ActivityTangemCreateWalletBinding.inflate(layoutInflater)
+        return binding.root
     }
 
-    override fun getLayoutResource(): Int {
-        return R.layout.activity_tangem_create_wallet
+    private fun setListeners() {
+        binding.btnCreateWallet.setOnClickListener(this)
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -147,7 +150,7 @@ class TangemCreateWalletActivity : BaseActivity(), TangemCreateWalletView,
 
     override fun setupToolbar(toolbarColor: Int, upArrow: Int, upArrowColor: Int, titleColor: Int) {
         setActionBarBackground(toolbarColor)
-        setHomeAsUpIndicator(upArrow, upArrowColor)
+        setActionBarIcon(upArrow, upArrowColor)
         setActionBarTitleColor(titleColor)
     }
 

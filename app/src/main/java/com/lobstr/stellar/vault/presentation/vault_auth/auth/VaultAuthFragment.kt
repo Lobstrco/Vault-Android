@@ -7,6 +7,7 @@ import android.view.*
 import android.widget.Toast
 import com.bumptech.glide.Glide
 import com.lobstr.stellar.vault.R
+import com.lobstr.stellar.vault.databinding.FragmentVaultAuthBinding
 import com.lobstr.stellar.vault.presentation.auth.AuthActivity
 import com.lobstr.stellar.vault.presentation.base.fragment.BaseFragment
 import com.lobstr.stellar.vault.presentation.dialog.alert.base.AlertDialogFragment
@@ -18,12 +19,10 @@ import com.lobstr.stellar.vault.presentation.util.AppUtil
 import com.lobstr.stellar.vault.presentation.util.Constant
 import com.lobstr.stellar.vault.presentation.util.manager.ProgressManager
 import com.lobstr.stellar.vault.presentation.vault_auth.VaultAuthActivity
-import dagger.Lazy
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.android.synthetic.main.activity_pin.*
-import kotlinx.android.synthetic.main.fragment_vault_auth.*
 import moxy.ktx.moxyPresenter
 import javax.inject.Inject
+import javax.inject.Provider
 
 @AndroidEntryPoint
 class VaultAuthFragment : BaseFragment(),
@@ -42,16 +41,17 @@ class VaultAuthFragment : BaseFragment(),
     // Fields
     // ===========================================================
 
-    @Inject
-    lateinit var daggerPresenter: Lazy<VaultAuthFrPresenter>
+    private var _binding: FragmentVaultAuthBinding? = null
+    private val binding get() = _binding!!
 
-    private var mView: View? = null
+    @Inject
+    lateinit var presenterProvider: Provider<VaultAuthFrPresenter>
 
     // ===========================================================
     // Constructors
     // ===========================================================
 
-    private val mPresenter by moxyPresenter { daggerPresenter.get() }
+    private val mPresenter by moxyPresenter { presenterProvider.get() }
 
     // ===========================================================
     // Getter & Setter
@@ -65,12 +65,8 @@ class VaultAuthFragment : BaseFragment(),
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        mView = if (mView == null) inflater.inflate(
-            R.layout.fragment_vault_auth,
-            container,
-            false
-        ) else mView
-        return mView
+        _binding = FragmentVaultAuthBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -79,7 +75,7 @@ class VaultAuthFragment : BaseFragment(),
     }
 
     private fun setListeners() {
-        btnAuth.setOnClickListener(this)
+        binding.btnAuth.setOnClickListener(this)
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -100,13 +96,18 @@ class VaultAuthFragment : BaseFragment(),
         return true
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+
     // ===========================================================
     // Listeners, methods for/from Interfaces
     // ===========================================================
 
     override fun onClick(v: View?) {
         when (v?.id) {
-            btnAuth.id -> mPresenter.authClicked()
+            binding.btnAuth.id -> mPresenter.authClicked()
         }
     }
 
@@ -119,21 +120,21 @@ class VaultAuthFragment : BaseFragment(),
         descriptionMain: String,
         button: String
     ) {
-        ivBgIdentity.visibility = if (showIdentityLogo) View.VISIBLE else View.GONE
-        ivTangem.visibility = if (showTangemLogo) View.VISIBLE else View.GONE
-        tvDescription.visibility = if (description.isNullOrEmpty()) View.GONE else View.VISIBLE
+        binding.ivBgIdentity.visibility = if (showIdentityLogo) View.VISIBLE else View.GONE
+        binding.ivTangem.visibility = if (showTangemLogo) View.VISIBLE else View.GONE
+        binding.tvDescription.visibility = if (description.isNullOrEmpty()) View.GONE else View.VISIBLE
         if (showIdentityLogo) {
             // Set user identity icon.
             Glide.with(requireContext())
                 .load(identityIconUrl)
                 .placeholder(R.drawable.ic_person)
-                .into(ivIdentity)
+                .into(binding.ivIdentity)
         }
 
-        tvTitle.text = title
-        tvDescription.text = description
-        tvDescriptionMain.text = descriptionMain
-        btnAuth.text = button
+        binding.tvTitle.text = title
+        binding.tvDescription.text = description
+        binding.tvDescriptionMain.text = descriptionMain
+        binding.btnAuth.text = button
     }
 
     override fun copyToClipBoard(text: String) {
@@ -148,7 +149,8 @@ class VaultAuthFragment : BaseFragment(),
     }
 
     override fun showIdentityContent(show: Boolean) {
-        (activity as? VaultAuthActivity)?.content?.visibility = if(show) View.VISIBLE else View.INVISIBLE
+        (activity as? VaultAuthActivity)?.window?.decorView
+            ?.findViewById<View>(android.R.id.content)?.visibility = if(show) View.VISIBLE else View.INVISIBLE
     }
 
     override fun showProgressDialog(show: Boolean) {

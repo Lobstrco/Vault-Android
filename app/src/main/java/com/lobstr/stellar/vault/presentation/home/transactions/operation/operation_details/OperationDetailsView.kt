@@ -11,4 +11,6 @@ interface OperationDetailsView : MvpView {
     fun setupToolbarTitle(@StringRes titleRes: Int)
 
     fun initRecycledView(fields: MutableList<OperationField>)
+
+    fun notifyAdapter()
 }

@@ -4,8 +4,9 @@ import com.lobstr.stellar.vault.domain.transaction_success.TransactionSuccessInt
 import com.lobstr.stellar.vault.presentation.util.Constant.TransactionConfirmationSuccessStatus.SUCCESS
 import com.lobstr.stellar.vault.presentation.util.Constant.TransactionConfirmationSuccessStatus.SUCCESS_NEED_ADDITIONAL_SIGNATURES
 import moxy.MvpPresenter
+import javax.inject.Inject
 
-class SuccessPresenter(
+class SuccessPresenter @Inject constructor(
     private val interactor: TransactionSuccessInteractor
 ) : MvpPresenter<SuccessView>() {
 

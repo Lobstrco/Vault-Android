@@ -5,29 +5,23 @@ import com.lobstr.stellar.vault.presentation.entities.transaction.TransactionIte
 import com.lobstr.stellar.vault.presentation.util.AppUtil
 import moxy.MvpPresenter
 
-class OperationListPresenter(private val transactionItem: TransactionItem) : MvpPresenter<OperationListView>() {
-
-    private var operationList: MutableList<Int> = mutableListOf()
+class OperationListPresenter(private val transactionItem: TransactionItem) :
+    MvpPresenter<OperationListView>() {
 
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
 
         viewState.setupToolbarTitle(R.string.title_toolbar_transaction_details)
-        viewState.initRecycledView()
-        prepareOperationsList()
-    }
-
-    private fun prepareOperationsList() {
-
-        // Prepare operations list for show it.
-        operationList.clear()
-        for (operation in transactionItem.transaction.operations) {
-            val resId: Int = AppUtil.getTransactionOperationName(operation, transactionItem.transactionType)
-            if (resId != -1) {
-                operationList.add(resId)
+        viewState.initRecycledView(mutableListOf<Int>().apply {
+            // Prepare operations list for show it.
+            for (operation in transactionItem.transaction.operations) {
+                val resId: Int =
+                    AppUtil.getTransactionOperationName(operation, transactionItem.transactionType)
+                if (resId != -1) {
+                    add(resId)
+                }
             }
-        }
-        viewState.setOperationsToList(operationList)
+        })
     }
 
     fun operationItemClicked(position: Int) {

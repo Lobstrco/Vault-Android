@@ -18,14 +18,21 @@ import com.lobstr.stellar.vault.presentation.util.biometric.BiometricUtils
 import com.lobstr.stellar.vault.presentation.util.manager.SupportManager
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.schedulers.Schedulers
+import javax.inject.Inject
 
 
-class PinFrPresenter(private val interactor: PinInteractor) : BasePresenter<PinFrView>() {
+class PinFrPresenter @Inject constructor(private val interactor: PinInteractor) : BasePresenter<PinFrView>() {
 
     var pinMode: Byte = ENTER
 
+    // Used for determine back button visibility on pin flow start.
+    private var isHomeAsUpVisibleOnStart: Boolean = false
+
     // Temp value for handle pin creation after change.
     private var isCreationAfterChangePinMode: Boolean = false
+
+    // State for indicate Pin confirmation state on UI.
+    private var isCreatePinState: Boolean = false
 
     private var newPin: String? = null
     private var tempCommonPin: String? = null
@@ -40,14 +47,19 @@ class PinFrPresenter(private val interactor: PinInteractor) : BasePresenter<PinF
 
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
-        viewState.windowLightNavigationBar(pinMode != ENTER)
+        viewState.setupNavigationBar(
+            if (pinMode != ENTER) android.R.color.transparent else R.color.color_primary,
+            pinMode != ENTER
+        )
         viewState.setupToolbar(
-            pinMode == CONFIRM || pinMode == CHANGE,
             pinMode == ENTER,
             if (pinMode == ENTER) R.color.color_primary else android.R.color.white,
             R.drawable.ic_arrow_back,
             if (pinMode == ENTER) android.R.color.white else R.color.color_primary
         )
+
+        isHomeAsUpVisibleOnStart = pinMode == CONFIRM || pinMode == CHANGE
+        viewState.showHomeAsUp(isHomeAsUpVisibleOnStart)
 
         when (pinMode) {
             CREATE -> {
@@ -75,20 +87,15 @@ class PinFrPresenter(private val interactor: PinInteractor) : BasePresenter<PinF
         if (pinMode == ENTER && interactor.isTouchIdEnabled() &&
             BiometricUtils.isBiometricAvailable(AppUtil.getAppContext())
         ) {
-            viewState.showBiometricDialog(true)
+            viewState.showBiometricDialog()
         }
-    }
-
-    override fun detachView(view: PinFrView) {
-        viewState.showBiometricDialog(false)
-        super.detachView(view)
     }
 
     /**
      * @param pin Your completely entered pin
      */
-    fun onPinComplete(pin: String?) {
-        if (pin != null) {
+    fun onPinComplete(pin: String) {
+        if (pin.isNotEmpty()) {
             when (pinMode) {
                 CREATE -> createPin(pin)
                 CHANGE -> confirmPin(pin, false)
@@ -125,7 +132,7 @@ class PinFrPresenter(private val interactor: PinInteractor) : BasePresenter<PinF
                         }
                         .doOnComplete {
                             if (isCreationAfterChangePinMode) {
-                                viewState.finishScreenWithResult(Activity.RESULT_OK)
+                                viewState.finishScreen(Activity.RESULT_OK)
                             } else {
                                 checkAuthState()
                             }
@@ -168,8 +175,13 @@ class PinFrPresenter(private val interactor: PinInteractor) : BasePresenter<PinF
                                 tempCommonPin = pin
                                 viewState.showCommonPinPatternDialog()
                             } else {
+                                // Save Pin flow state for handle 'Back Press' action.
+                                isCreatePinState = true
+                                // Show back button for return to the first step of pin creation flow.
+                                viewState.showHomeAsUp(true)
+
                                 newPin = pin
-                                if (pinMode == CHANGE) {
+                                if (isCreationAfterChangePinMode) {
                                     viewState.showTitle(R.string.text_title_confirm_new_pin)
                                 } else {
                                     viewState.showTitle(R.string.text_title_confirm_pin)
@@ -180,18 +192,20 @@ class PinFrPresenter(private val interactor: PinInteractor) : BasePresenter<PinF
                     } else {
                         if (success) {
                             when (pinMode) {
-                                CONFIRM -> viewState.finishScreenWithResult(
+                                CONFIRM -> viewState.finishScreen(
                                     Activity.RESULT_OK
                                 )
-                                CREATE -> viewState.finishScreenWithResult(Activity.RESULT_OK)
+                                CREATE -> viewState.finishScreen(Activity.RESULT_OK)
                                 CHANGE -> showCreateAfterChangePinState()
                                 ENTER -> {
                                     when {
-                                        !interactor.isTouchIdSetUp() && BiometricUtils.isBiometricSupported(AppUtil.getAppContext()) -> {
+                                        !interactor.isTouchIdSetUp() && BiometricUtils.isBiometricSupported(
+                                            AppUtil.getAppContext()
+                                        ) -> {
                                             viewState.setResult(Activity.RESULT_OK)
                                             viewState.showBiometricSetUpScreen(pinMode)
                                         }
-                                        else -> viewState.finishScreenWithResult(Activity.RESULT_OK)
+                                        else -> viewState.finishScreen(Activity.RESULT_OK)
                                     }
                                 }
                             }
@@ -213,7 +227,7 @@ class PinFrPresenter(private val interactor: PinInteractor) : BasePresenter<PinF
     }
 
     fun biometricAuthenticationSuccessful() {
-        viewState.finishScreenWithResult(Activity.RESULT_OK)
+        viewState.finishScreen(Activity.RESULT_OK)
     }
 
     private fun checkAuthState() {
@@ -226,6 +240,7 @@ class PinFrPresenter(private val interactor: PinInteractor) : BasePresenter<PinF
                     !interactor.isTouchIdSetUp() && BiometricUtils.isBiometricSupported(AppUtil.getAppContext()) -> {
                         viewState.setResult(Activity.RESULT_OK)
                         viewState.showBiometricSetUpScreen(pinMode)
+                        viewState.showHomeAsUp(false)
                     }
                     else -> viewState.showVaultAuthScreen()
                 }
@@ -257,12 +272,17 @@ class PinFrPresenter(private val interactor: PinInteractor) : BasePresenter<PinF
             AlertDialogFragment.DialogFragmentIdentifier.COMMON_PIN_PATTERN -> {
                 newPin = tempCommonPin
                 tempCommonPin = null
-                if (pinMode == CHANGE) {
+                if (isCreationAfterChangePinMode) {
                     viewState.showTitle(R.string.text_title_confirm_new_pin)
                 } else {
                     viewState.showTitle(R.string.text_title_confirm_pin)
                 }
                 viewState.resetPin()
+
+                // Save Pin flow state for handle 'Back Press' action.
+                isCreatePinState = true
+                // Show back button for return to the first step of Pin creation flow.
+                viewState.showHomeAsUp(true)
             }
         }
     }
@@ -289,5 +309,24 @@ class PinFrPresenter(private val interactor: PinInteractor) : BasePresenter<PinF
             SupportManager.createSupportMailSubject(),
             SupportManager.createSupportMailBody(userId = interactor.getUserPublicKey())
         )
+    }
+
+    fun onBackPressed() {
+        if (isCreatePinState) {
+            // Handle 'Back Press' action for return to the first step of Pin creation flow.
+            // Reset Pin data.
+            newPin = null
+            tempCommonPin = null
+            viewState.resetPin()
+            viewState.showTitle(if(isCreationAfterChangePinMode) R.string.text_title_create_new_pin else R.string.text_title_create_pin)
+            viewState.showHomeAsUp(isHomeAsUpVisibleOnStart)
+            isCreatePinState = false
+        } else {
+            // Otherwise - handle regular behavior.
+            when (pinMode) {
+                ENTER -> viewState.finishApp()
+                else -> viewState.finishScreen()
+            }
+        }
     }
 }

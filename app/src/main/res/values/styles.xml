@@ -12,6 +12,8 @@
         <item name="windowNoTitle">true</item>
         <item name="android:windowBackground">@android:color/white</item>
         <item name="bottomSheetDialogTheme">@style/BottomSheetDialogTheme</item>
+        <item name="bottomNavigationStyle">@style/BottomNavigationStyle</item>
+        <item name="snackbarStyle">@style/Widget.MaterialComponents.Snackbar</item>
     </style>
 
     <style name="AppTheme" parent="LightAppTheme" />
@@ -49,8 +51,9 @@
     </style>
 
     <style name="BaseBottomSheetDialog" parent="@style/Theme.Design.Light.BottomSheetDialog">
-        <item name="android:windowIsFloating">true</item>
-        <item name="bottomSheetStyle">@style/BottomSheet</item>
+        <item name="android:windowIsFloating">false</item>
+        <item name="android:backgroundDimEnabled">true</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
     </style>
 
     <!-- Set the rounded drawable as background to your bottom sheet -->
@@ -58,9 +61,25 @@
         <item name="android:background">@drawable/bg_bottom_sheet</item>
     </style>
 
-    <style name="BottomSheetDialogTheme" parent="BaseBottomSheetDialog" />
+    <style name="BottomSheetDialogTheme" parent="BaseBottomSheetDialog">
+        <item name="bottomSheetStyle">@style/BottomSheet</item>
+        <item name="android:windowSoftInputMode">adjustResize|stateAlwaysHidden</item>
+    </style>
 
     <style name="ProgressBarWhite" parent="Widget.AppCompat.ProgressBar">
         <item name="colorControlActivated">@android:color/white</item>
+    </style>
+
+    <style name="BottomNavigationStyle" parent="@style/Widget.MaterialComponents.BottomNavigationView.Colored">
+        <item name="itemTextAppearanceInactive">@style/BottomNavigationStyle.Inactive</item>
+        <item name="itemTextAppearanceActive">@style/BottomNavigationStyle.Active</item>
+    </style>
+
+    <style name="BottomNavigationStyle.Inactive" parent="@style/TextAppearance.MaterialComponents.Caption">
+        <item name="android:textSize">12sp</item>
+    </style>
+
+    <style name="BottomNavigationStyle.Active" parent="@style/TextAppearance.MaterialComponents.Caption">
+        <item name="android:textSize">14sp</item>
     </style>
 </resources>

@@ -3,10 +3,16 @@ package com.lobstr.stellar.vault.presentation.home.settings.signed_accounts.adap
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.lobstr.stellar.vault.R
+import com.lobstr.stellar.vault.databinding.AdapterItemAccountBinding
+import com.lobstr.stellar.vault.databinding.AdapterItemAccountExtendedBinding
+import com.lobstr.stellar.vault.databinding.AdapterItemAccountWithStatusBinding
 import com.lobstr.stellar.vault.presentation.entities.account.Account
 
-class AccountAdapter(private val dataType: Int, private val listener: OnAccountItemListener) :
+class AccountAdapter(
+    private val dataType: Int,
+    private val itemClickListener: (account: Account) -> Unit,
+    private val itemLongClickListener: (account: Account) -> Unit
+) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     companion object {
@@ -26,23 +32,20 @@ class AccountAdapter(private val dataType: Int, private val listener: OnAccountI
     override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when (viewType) {
             ACCOUNT_EXTENDED -> AccountExtendedViewHolder(
-                LayoutInflater.from(viewGroup.context)
-                    .inflate(R.layout.adapter_item_account_extended, viewGroup, false),
-                listener
+                AdapterItemAccountExtendedBinding.inflate(LayoutInflater.from(viewGroup.context), viewGroup, false),
+                itemClickListener, itemLongClickListener
             )
             ACCOUNT -> AccountViewHolder(
-                LayoutInflater.from(viewGroup.context)
-                    .inflate(R.layout.adapter_item_account, viewGroup, false), listener
+                AdapterItemAccountBinding.inflate(LayoutInflater.from(viewGroup.context), viewGroup, false),
+                itemClickListener, itemLongClickListener
             )
             ACCOUNT_WITH_STATUS -> AccountWithStatusViewHolder(
-                LayoutInflater.from(viewGroup.context)
-                    .inflate(R.layout.adapter_item_account_with_status, viewGroup, false),
-                listener
+                AdapterItemAccountWithStatusBinding.inflate(LayoutInflater.from(viewGroup.context), viewGroup, false),
+                itemLongClickListener
             )
             else -> AccountExtendedViewHolder(
-                LayoutInflater.from(viewGroup.context)
-                    .inflate(R.layout.adapter_item_account_extended, viewGroup, false),
-                listener
+                AdapterItemAccountExtendedBinding.inflate(LayoutInflater.from(viewGroup.context), viewGroup, false),
+                itemClickListener, itemLongClickListener
             )
         }
     }

@@ -5,6 +5,7 @@ import com.lobstr.stellar.vault.domain.account.AccountRepository
 import com.lobstr.stellar.vault.domain.error.RxErrorUtils
 import com.lobstr.stellar.vault.presentation.entities.account.Account
 import com.lobstr.stellar.vault.presentation.entities.account.AccountConfig
+import com.lobstr.stellar.vault.presentation.entities.account.AppVersion
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Single
 
@@ -44,6 +45,12 @@ class AccountRepositoryImpl(
     ): Single<AccountConfig> {
         return accountApi.updateAccountConfig(token, spamProtectionEnabled)
             .map { accountEntityMapper.transformAccountConfig(it) }
+            .onErrorResumeNext { rxErrorUtils.handleSingleRequestHttpError(it) }
+    }
+
+    override fun getAppVersion(): Single<AppVersion> {
+        return accountApi.getAppVersion()
+            .map { accountEntityMapper.transformAppVersion(it) }
             .onErrorResumeNext { rxErrorUtils.handleSingleRequestHttpError(it) }
     }
 }

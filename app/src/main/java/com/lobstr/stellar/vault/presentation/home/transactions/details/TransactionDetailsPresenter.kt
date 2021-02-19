@@ -32,8 +32,9 @@ import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.disposables.Disposable
 import io.reactivex.rxjava3.schedulers.Schedulers
 import java.time.ZonedDateTime
+import javax.inject.Inject
 
-class TransactionDetailsPresenter(
+class TransactionDetailsPresenter @Inject constructor(
     private val interactor: TransactionDetailsInteractor,
     private val eventProviderModule: EventProviderModule
 ) : BasePresenter<TransactionDetailsView>() {
@@ -43,7 +44,7 @@ class TransactionDetailsPresenter(
     private var confirmationInProcess = false
     private var cancellationInProcess = false
 
-    private var stellarAccountsSubscription: Disposable? = null
+    private var stellarAccountsDisposable: Disposable? = null
     private val cachedStellarAccounts: MutableList<Account> = mutableListOf()
 
     override fun onFirstViewAttach() {
@@ -73,14 +74,39 @@ class TransactionDetailsPresenter(
                     it.printStackTrace()
                 })
         )
+
+        unsubscribeOnDestroy(
+            eventProviderModule.updateEventSubject
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({
+                    getTransactionSigners()
+                }, {
+                    it.printStackTrace()
+                })
+        )
     }
 
     private fun getTransactionSigners() {
         unsubscribeOnDestroy(
-            interactor.getTransactionSigners(
-                transactionItem.xdr!!,
-                transactionItem.transaction.sourceAccount!!
-            )
+            interactor.getSignedAccounts()
+                .flatMap {
+                    // Check Target Source Account (by default transaction.sourceAccount).
+                    var targetSourceAccount = transactionItem.transaction.sourceAccount
+
+                    // First - try to find transaction.sourceAccount in the signed accounts list. If don't exist - try to find an operations source account in it.
+                    if (it.find { account -> account.address == targetSourceAccount } == null) {
+                        for (operation in transactionItem.transaction.operations) {
+                            if (it.find { account -> account.address == operation.sourceAccount } != null) {
+                                targetSourceAccount = operation.sourceAccount!!
+                            }
+                        }
+                    }
+
+                    interactor.getTransactionSigners(
+                        transactionItem.xdr!!,
+                        targetSourceAccount
+                    )
+                }
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe {
@@ -111,6 +137,14 @@ class TransactionDetailsPresenter(
                             viewState.showMessage(it.details)
                             handleNoInternetConnection()
                         }
+                        is UserNotAuthorizedException -> {
+                            when (it.action) {
+                                UserNotAuthorizedException.Action.AUTH_REQUIRED -> eventProviderModule.authEventSubject.onNext(
+                                    Auth()
+                                )
+                                else -> getTransactionSigners()
+                            }
+                        }
                     }
                 })
         )
@@ -132,10 +166,14 @@ class TransactionDetailsPresenter(
                     accountResult.signers.first().weight != 0 && accountResult.signers.filter { it.weight == accountResult.signers.first().weight }.size == accountResult.signers.size
 
                 return if (isThresholdsSameAndNotZero and isWeightsSameAndNotZero) {
-                    "${accountResult.signers.filter { it.signed == true }.size} ${AppUtil.getString(
-                        R.string.text_tv_of
-                    )} ${kotlin.math.ceil((highThreshold.toFloat() / accountResult.signers.first().weight!!.toFloat()))
-                        .toInt()}"
+                    "${accountResult.signers.filter { it.signed == true }.size} ${
+                        AppUtil.getString(
+                            R.string.text_tv_of
+                        )
+                    } ${
+                        kotlin.math.ceil((highThreshold.toFloat() / accountResult.signers.first().weight!!.toFloat()))
+                            .toInt()
+                    }"
                 } else {
                     null
                 }
@@ -150,8 +188,8 @@ class TransactionDetailsPresenter(
      * Used for receive federation by account id.
      */
     private fun getStellarAccounts(accounts: List<Account>) {
-        stellarAccountsSubscription?.dispose()
-        stellarAccountsSubscription = Observable.fromIterable(accounts)
+        stellarAccountsDisposable?.dispose()
+        stellarAccountsDisposable = Observable.fromIterable(accounts)
             .subscribeOn(Schedulers.io())
             .filter { account: Account ->
                 cachedStellarAccounts
@@ -183,7 +221,7 @@ class TransactionDetailsPresenter(
                 // Ignore.
             })
 
-        unsubscribeOnDestroy(stellarAccountsSubscription!!)
+        unsubscribeOnDestroy(stellarAccountsDisposable!!)
     }
 
     private fun prepareUiAndOperationsList() {
@@ -207,17 +245,17 @@ class TransactionDetailsPresenter(
         }
 
         // Check and setup additional info like Source Account and date.
-        checkAdditionalInfo()
+        checkTransactionInfo()
     }
 
-    private fun checkAdditionalInfo() {
+    private fun checkTransactionInfo() {
         val map: MutableMap<String, String?> = mutableMapOf()
 
         val sourceAccount = transactionItem.transaction.sourceAccount
         val addedAt = transactionItem.addedAt
 
         if (!sourceAccount.isNullOrEmpty()) {
-            map[AppUtil.getString(R.string.text_tv_source_account)] =
+            map[AppUtil.getString(R.string.text_tv_transaction_source_account)] =
                 AppUtil.ellipsizeStrInMiddle(sourceAccount, PK_TRUNCATE_COUNT)
         }
 
@@ -229,7 +267,7 @@ class TransactionDetailsPresenter(
                 )
         }
 
-        viewState.setupAdditionalInfo(map)
+        viewState.setupTransactionInfo(map)
     }
 
     fun handleTangemInfo(tangemInfo: TangemInfo?) {
@@ -255,6 +293,12 @@ class TransactionDetailsPresenter(
                 unsubscribeOnDestroy(
                     interactor.retrieveActualTransaction(transactionItem)
                         .subscribeOn(Schedulers.io())
+                        .doOnSuccess {
+                            transactionItem = it
+                            when (transactionItem.status) {
+                                CANCELLED, SIGNED -> throw DefaultException(AppUtil.getString(R.string.msg_transaction_already_signed_or_denied))
+                            }
+                        }
                         .observeOn(AndroidSchedulers.mainThread())
                         .doOnSubscribe {
                             confirmationInProcess = true
@@ -265,7 +309,6 @@ class TransactionDetailsPresenter(
                             viewState.showProgressDialog(false)
                         }
                         .subscribe({
-                            transactionItem = it
                             viewState.showTangemScreen(
                                 TangemInfo().apply {
                                     accountId = interactor.getUserPublicKey()
@@ -334,6 +377,11 @@ class TransactionDetailsPresenter(
                 .subscribeOn(Schedulers.io())
                 .flatMap {
                     transactionItem = it
+
+                    when (transactionItem.status) {
+                        CANCELLED, SIGNED -> throw DefaultException(AppUtil.getString(R.string.msg_transaction_already_signed_or_denied))
+                    }
+
                     if (signedTransaction.isNullOrEmpty()) {
                         // Case for transaction received via Mnemonics.
                         interactor.signTransaction(it.xdr!!)
@@ -456,8 +504,9 @@ class TransactionDetailsPresenter(
     }
 
     private fun denyTransaction() {
-        // Check transaction status = IMPORT_XDR - transaction details showed for entered xdr.
+        // Check transaction status.
         when (transactionItem.status) {
+            // IMPORT_XDR - 'success deny transaction' action without api call.
             IMPORT_XDR -> {
                 viewState.successDenyTransaction(transactionItem)
 
@@ -507,6 +556,9 @@ class TransactionDetailsPresenter(
                                         R.string.api_error_internal_submit_transaction
                                     )
                                 )
+                                is HttpNotFoundException -> {
+                                    viewState.showMessage(AppUtil.getString(R.string.msg_transaction_already_signed_or_denied))
+                                }
                                 is DefaultException -> viewState.showMessage(it.details)
                                 else -> {
                                     viewState.showMessage(it.message ?: "")

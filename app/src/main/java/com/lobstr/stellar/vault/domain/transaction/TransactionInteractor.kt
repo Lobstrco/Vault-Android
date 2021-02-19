@@ -13,6 +13,8 @@ interface TransactionInteractor {
 
     fun getInactiveTransactionList(nextPageUrl: String?): Single<TransactionResult>
 
+    fun cancelTransactions(): Completable
+
     fun cancelOutdatedTransactions(): Completable
 
     fun getStellarAccount(stellarAddress: String): Single<Account>

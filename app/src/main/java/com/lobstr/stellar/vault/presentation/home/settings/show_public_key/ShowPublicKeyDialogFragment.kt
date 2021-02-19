@@ -6,11 +6,11 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import com.lobstr.stellar.vault.R
+import com.lobstr.stellar.vault.databinding.FragmentShowPublicKeyBinding
 import com.lobstr.stellar.vault.presentation.BaseBottomSheetDialog
 import com.lobstr.stellar.vault.presentation.util.AppUtil
 import com.lobstr.stellar.vault.presentation.util.Constant
 import com.lobstr.stellar.vault.presentation.util.Constant.Util.PK_TRUNCATE_COUNT
-import kotlinx.android.synthetic.main.fragment_show_public_key.*
 import moxy.ktx.moxyPresenter
 import net.glxn.qrgen.android.QRCode
 
@@ -30,7 +30,8 @@ class ShowPublicKeyDialogFragment : BaseBottomSheetDialog(), ShowPublicKeyView,
     // Fields
     // ===========================================================
 
-    private var mView: View? = null
+    private var _binding: FragmentShowPublicKeyBinding? = null
+    private val binding get() = _binding!!
 
     // ===========================================================
     // Constructors
@@ -52,12 +53,8 @@ class ShowPublicKeyDialogFragment : BaseBottomSheetDialog(), ShowPublicKeyView,
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        mView = if (mView == null) inflater.inflate(
-            R.layout.fragment_show_public_key,
-            container,
-            false
-        ) else mView
-        return mView
+        _binding = FragmentShowPublicKeyBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -66,7 +63,12 @@ class ShowPublicKeyDialogFragment : BaseBottomSheetDialog(), ShowPublicKeyView,
     }
 
     private fun setListeners() {
-        btnCopyKey.setOnClickListener(this)
+        binding.btnCopyKey.setOnClickListener(this)
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
     // ===========================================================
@@ -75,7 +77,7 @@ class ShowPublicKeyDialogFragment : BaseBottomSheetDialog(), ShowPublicKeyView,
 
     override fun onClick(v: View?) {
         when (v?.id) {
-            btnCopyKey.id -> {
+            binding.btnCopyKey.id -> {
                 AppUtil.closeKeyboard(activity)
                 mPresenter.copyPublicKeyClicked()
             }
@@ -88,9 +90,9 @@ class ShowPublicKeyDialogFragment : BaseBottomSheetDialog(), ShowPublicKeyView,
             ContextCompat.getColor(requireContext(), android.R.color.transparent)
         ).bitmap()
 
-        ivUserPublicKeyQrCode.setImageBitmap(qrCodeImage)
+        binding.ivUserPublicKeyQrCode.setImageBitmap(qrCodeImage)
 
-        tvPublicKey.text = AppUtil.ellipsizeStrInMiddle(publicKey, PK_TRUNCATE_COUNT)
+        binding.tvPublicKey.text = AppUtil.ellipsizeStrInMiddle(publicKey, PK_TRUNCATE_COUNT)
     }
 
     override fun copyToClipBoard(text: String) {

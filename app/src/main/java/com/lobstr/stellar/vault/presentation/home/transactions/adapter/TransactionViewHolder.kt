@@ -10,34 +10,34 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.lobstr.stellar.vault.R
+import com.lobstr.stellar.vault.databinding.AdapterItemTransactionBinding
 import com.lobstr.stellar.vault.presentation.entities.transaction.Transaction
 import com.lobstr.stellar.vault.presentation.entities.transaction.TransactionItem
 import com.lobstr.stellar.vault.presentation.util.AppUtil
 import com.lobstr.stellar.vault.presentation.util.Constant
 import com.lobstr.stellar.vault.presentation.util.Constant.Util.PK_TRUNCATE_COUNT
-import kotlinx.android.synthetic.main.adapter_item_transaction.view.*
 import java.time.ZonedDateTime
 
-class TransactionViewHolder(itemView: View, private val listener: OnTransactionItemClicked) :
-    RecyclerView.ViewHolder(itemView) {
+class TransactionViewHolder(private val binding: AdapterItemTransactionBinding, private val itemClickListener: (transactionItem: TransactionItem) -> Unit) :
+    RecyclerView.ViewHolder(binding.root) {
 
     fun bind(item: TransactionItem) {
         val context: Context = itemView.context
 
         val isSequenceValid = item.sequenceOutdatedAt.isNullOrEmpty()
 
-        itemView.statusView.background.colorFilter = PorterDuffColorFilter(
-            ContextCompat.getColor(context, if (isSequenceValid) R.color.color_primary else R.color.color_4D000000),
+        binding.statusView.background.colorFilter = PorterDuffColorFilter(
+            ContextCompat.getColor(context, if (isSequenceValid) R.color.color_primary else R.color.color_4d000000),
             PorterDuff.Mode.SRC_IN
         )
 
-        itemView.tvTransactionInvalid.visibility =
+        binding.tvTransactionInvalid.visibility =
             if (isSequenceValid) View.GONE else View.VISIBLE
 
-        itemView.tvSourceAccount.visibility =
+        binding.tvSourceAccount.visibility =
             if (item.transaction.sourceAccount.isNullOrEmpty()) View.GONE else View.VISIBLE
 
-        itemView.flIdentityContainer.visibility =
+        binding.flIdentityContainer.visibility =
             if (item.transaction.sourceAccount.isNullOrEmpty()) View.GONE else View.VISIBLE
 
         // set user icon
@@ -48,28 +48,28 @@ class TransactionViewHolder(itemView: View, private val listener: OnTransactionI
                     .plus(".png")
             )
             .placeholder(R.drawable.ic_person)
-            .into(itemView.ivIdentity)
+            .into(binding.ivIdentity)
 
-        itemView.tvTransactionItemDate.text = AppUtil.formatDate(
+        binding.tvTransactionItemDate.text = AppUtil.formatDate(
             ZonedDateTime.parse(item.addedAt).toInstant().toEpochMilli(),
             if(DateFormat.is24HourFormat(context)) "MMM dd yyyy HH:mm" else "MMM dd yyyy h:mm a"
         )
 
-        itemView.tvSourceAccount.ellipsize = if (item.transaction.federation.isNullOrEmpty()) TextUtils.TruncateAt.MIDDLE else TextUtils.TruncateAt.END
-        itemView.tvSourceAccount.text =
+        binding.tvSourceAccount.ellipsize = if (item.transaction.federation.isNullOrEmpty()) TextUtils.TruncateAt.MIDDLE else TextUtils.TruncateAt.END
+        binding.tvSourceAccount.text =
             if (item.transaction.federation.isNullOrEmpty()) AppUtil.ellipsizeStrInMiddle(
                 item.transaction.sourceAccount,
                 PK_TRUNCATE_COUNT
             ) else item.transaction.federation
 
-        itemView.tvTransactionItemOperation.text = getOperationName(context, item.transaction, item.transactionType)
+        binding.tvTransactionItemOperation.text = getOperationName(context, item.transaction, item.transactionType)
         itemView.setOnClickListener {
             val position = this@TransactionViewHolder.adapterPosition
             if (position == RecyclerView.NO_POSITION) {
                 return@setOnClickListener
             }
 
-            listener.onTransactionItemClick(item)
+            itemClickListener(item)
         }
         item.transactionType
     }

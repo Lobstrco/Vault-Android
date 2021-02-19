@@ -8,13 +8,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import com.lobstr.stellar.vault.R
+import com.lobstr.stellar.vault.databinding.FragmentAuthBinding
 import com.lobstr.stellar.vault.presentation.auth.backup.BackUpFragment
 import com.lobstr.stellar.vault.presentation.auth.restore_key.RecoverKeyFragment
 import com.lobstr.stellar.vault.presentation.auth.tangem.TangemSetupFragment
 import com.lobstr.stellar.vault.presentation.base.fragment.BaseFragment
 import com.lobstr.stellar.vault.presentation.util.manager.FragmentTransactionManager
 import com.lobstr.stellar.vault.presentation.util.manager.SupportManager
-import kotlinx.android.synthetic.main.fragment_auth.*
 import moxy.ktx.moxyPresenter
 
 class AuthFragment : BaseFragment(), AuthFrView, View.OnClickListener {
@@ -31,7 +31,8 @@ class AuthFragment : BaseFragment(), AuthFrView, View.OnClickListener {
     // Fields
     // ===========================================================
 
-    private var mView: View? = null
+    private var _binding: FragmentAuthBinding? = null
+    private val binding get() = _binding!!
 
     // ===========================================================
     // Constructors
@@ -51,8 +52,8 @@ class AuthFragment : BaseFragment(), AuthFrView, View.OnClickListener {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        mView = if (mView == null) inflater.inflate(R.layout.fragment_auth, container, false) else mView
-        return mView
+        _binding = FragmentAuthBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -61,10 +62,15 @@ class AuthFragment : BaseFragment(), AuthFrView, View.OnClickListener {
     }
 
     private fun setListeners() {
-        btnAuthNew.setOnClickListener(this)
-        btnAuthRestore.setOnClickListener(this)
-        btnTangemSignIn.setOnClickListener(this)
-        tvHelp.setOnClickListener(this)
+        binding.btnAuthNew.setOnClickListener(this)
+        binding.btnAuthRestore.setOnClickListener(this)
+        binding.btnTangemSignIn.setOnClickListener(this)
+        binding.tvHelp.setOnClickListener(this)
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
     // ===========================================================
@@ -73,22 +79,22 @@ class AuthFragment : BaseFragment(), AuthFrView, View.OnClickListener {
 
     override fun onClick(v: View?) {
         when (v?.id) {
-            btnAuthNew.id -> mPresenter.newClicked()
-            btnAuthRestore.id -> mPresenter.restoreClicked()
-            btnTangemSignIn.id -> mPresenter.tangemClicked()
-            tvHelp.id -> mPresenter.helpClicked()
+            binding.btnAuthNew.id -> mPresenter.newClicked()
+            binding.btnAuthRestore.id -> mPresenter.restoreClicked()
+            binding.btnTangemSignIn.id -> mPresenter.tangemClicked()
+            binding.tvHelp.id -> mPresenter.helpClicked()
         }
     }
 
     override fun setMovementMethods() {
-        tvTermsAndPrivacyPolicy.movementMethod = LinkMovementMethod.getInstance()
+        binding.tvTermsAndPrivacyPolicy.movementMethod = LinkMovementMethod.getInstance()
     }
 
     override fun showBackUpScreen() {
         FragmentTransactionManager.displayFragment(
             requireParentFragment().childFragmentManager,
             requireParentFragment().childFragmentManager.fragmentFactory.instantiate(requireContext().classLoader, BackUpFragment::class.qualifiedName!!),
-            R.id.fl_container
+            R.id.flContainer
         )
     }
 
@@ -96,7 +102,7 @@ class AuthFragment : BaseFragment(), AuthFrView, View.OnClickListener {
         FragmentTransactionManager.displayFragment(
             requireParentFragment().childFragmentManager,
             requireParentFragment().childFragmentManager.fragmentFactory.instantiate(requireContext().classLoader, RecoverKeyFragment::class.qualifiedName!!),
-            R.id.fl_container
+            R.id.flContainer
         )
     }
 
@@ -104,7 +110,7 @@ class AuthFragment : BaseFragment(), AuthFrView, View.OnClickListener {
         FragmentTransactionManager.displayFragment(
             requireParentFragment().childFragmentManager,
             requireParentFragment().childFragmentManager.fragmentFactory.instantiate(requireContext().classLoader, TangemSetupFragment::class.qualifiedName!!),
-            R.id.fl_container
+            R.id.flContainer
         )
     }
 

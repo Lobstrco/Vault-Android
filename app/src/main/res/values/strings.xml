@@ -24,12 +24,16 @@
     <string name="text_btn_done">Done</string>
     <string name="text_btn_copy_key">Copy Key</string>
     <string name="text_btn_import_xdr_next">Next</string>
-    <string name="text_btn_rate_us">Rate now</string>
+    <string name="text_btn_suggest_rate_us">Love it</string>
+    <string name="text_btn_cancel_suggestion_rate_us">Not for me</string>
+    <string name="text_btn_rate_us">Rate Us 5 stars</string>
     <string name="text_btn_rate_later">Remind later</string>
     <string name="text_btn_rate_never">Don\'t ask again</string>
     <string name="text_btn_continue">Continue</string>
     <string name="text_btn_change_pin">Change PIN</string>
     <string name="text_btn_add_account">Add Account</string>
+    <string name="text_btn_remove_all">Remove All</string>
+    <string name="text_btn_remove_invalid">Remove Invalid</string>
 
     <!-- Start screen -->
     <string name="text_tv_start_screen_title">Multiply your security</string>
@@ -58,7 +62,7 @@
     <string name="text_tv_mnemonics_description">Recovery phrase can help you to recover access to your account in case
         your phone is lost or stolen.
     </string>
-    <string name="text_tv_mnemonics_instruction">Write down these %d words and keep them secure. Don’t email them or
+    <string name="text_tv_mnemonics_instruction">Write down these %d words and keep them secure. Don\'t email them or
         screenshot them.
     </string>
     <string name="text_tv_mnemonics_confirmation">You will need to confirm recovery phrase on the next screen</string>
@@ -144,7 +148,7 @@
     <string name="text_config_no">No</string>
     <string name="text_config_yes">Yes</string>
     <string name="text_config_confirm_transactions_title">Confirm Transactions</string>
-    <string name="text_config_confirm_transactions_description">Show additional confirmation alert before signing  transaction requests to avoid mistakes.</string>
+    <string name="text_config_confirm_transactions_description">Show additional confirmation alert before signing transaction requests to avoid mistakes.</string>
     <string name="text_config_spam_protection_description">Select whether you want to receive transaction requests that don\'t contain any valid signatures from the protected account or other signers. Choose ‘No’ to protect your account from spam transactions.</string>
 
     <!-- Signed Accounts screen -->
@@ -170,6 +174,16 @@
     <string name="text_operation_name_bump_sequence">Bump Sequence</string>
     <string name="text_operation_name_challenge">Challenge</string>
     <string name="text_operation_name_several_operation">%s Operations</string>
+    <string name="text_operation_name_begin_sponsoring_future_reserves">Begin Sponsoring Future Reserves</string>
+    <string name="text_operation_name_end_sponsoring_future_reserves">End Sponsoring Future Reserves</string>
+    <string name="text_operation_name_revoke_account_sponsorship">Revoke Account Sponsorship</string>
+    <string name="text_operation_name_revoke_claimable_balance_sponsorship">Revoke Claimable Balance Sponsorship</string>
+    <string name="text_operation_name_revoke_data_sponsorship">Revoke Data Sponsorship</string>
+    <string name="text_operation_name_revoke_offer_sponsorship">Revoke Offer Sponsorship</string>
+    <string name="text_operation_name_revoke_signer_sponsorship">Revoke Signer Sponsorship</string>
+    <string name="text_operation_name_revoke_trustline_sponsorship">Revoke Trustline Sponsorship</string>
+    <string name="text_operation_name_create_claimable_balance">Create Claimable Balance</string>
+    <string name="text_operation_name_claim_claimable_balance">Claim Claimable Balance</string>
     <string name="text_operation_name_unknown">Unknown</string>
 
     <!-- Transaction details -->
@@ -181,7 +195,7 @@
     <string name="text_tv_of">of</string>
     <string name="text_tv_status_signed">Signed</string>
     <string name="text_tv_status_pending">Pending</string>
-    <string name="text_tv_source_account">Source Account</string>
+    <string name="text_tv_transaction_source_account">Transaction Source</string>
     <string name="text_tv_added_at">Created</string>
 
     <!-- Add XDR screen -->
@@ -209,16 +223,19 @@
     <string name="msg_log_out_dialog">Do you want to log out from this account?</string>
 
     <!-- Clear Invalid transactions dialog -->
-    <string name="title_clear_invalid_tr_dialog">Are you sure?</string>
-    <string name="msg_clear_invalid_tr_dialog">Do you want to remove all invalid transactions?</string>
+    <string name="title_clear_transactions_dialog">Remove transactions</string>
+    <string name="msg_clear_transactions_dialog">What type of transactions do you want to remove?</string>
 
     <!-- Common PIN pattern dialog -->
     <string name="title_common_pin_pattern_dialog">Warning</string>
     <string name="msg_common_pin_pattern_dialog">You are trying to set a very common PIN which can be easily guessed by someone. We recommend to set a new PIN.</string>
 
+    <!-- Rate us suggestion dialog -->
+    <string name="msg_suggest_rate_us">Love Using LOBSTR Vault?</string>
+
     <!-- Rate us dialog -->
-    <string name="title_rate_us_dialog">Love Using LOBSTR Vault?</string>
-    <string name="msg_rate_us_dialog">Please rate us in the Google Play.</string>
+    <string name="title_rate_us_dialog">Rate Us</string>
+    <string name="msg_rate_us_dialog">Thank you for your support! Please rate us on Google Play.</string>
 
     <!-- Public key dialog -->
     <string name="text_tv_show_public_key_title">Vault Public Key</string>
@@ -241,6 +258,8 @@
     <string name="msg_transaction_denied">Transaction denied</string>
     <string name="msg_no_app_found">No application found</string>
     <string name="msg_google_play_services_not_supported">The device is not supported for required Google Play Services</string>
+    <string name="msg_unknown_error">Unknown error received</string>
+    <string name="msg_transaction_already_signed_or_denied">The transaction has already been confirmed or denied</string>
 
     <!-- Api errors -->
     <string name="api_error_not_found">Not Found</string>
@@ -301,10 +320,10 @@
 
     <!-- Other -->
     <string name="msg_mail_client_not_found">There are no email clients installed</string>
-    <string name="text_mail_support_subject" formatted="false" translatable="false">LOBSTR Vault feedback, %1$s (%2$d)</string>
+    <string name="text_mail_support_subject" translatable="false">LOBSTR Vault feedback, %1$s (%2$d)</string>
     <string name="text_app_name_vault" translatable="false">Vault</string>
     <string name="msg_flavor_dialog" translatable="false">%s build</string>
-    <string name="text_mail_support_body" formatted="false" translatable="false">
+    <string name="text_mail_support_body" translatable="false">
 "Information for the support team.
 LOBSTR Vault. App version: %1$s (%2$d)
 Vault public key: %3$s
@@ -317,10 +336,10 @@ OS version: %7$s
 Describe an issue or provide your feedback below:
 "</string>
     <!-- Zendesk -->
-    <string name="zd_info" formatted="false" translatable="false">
+    <string name="zd_info" translatable="false">
         LOBSTR VAULT, OS:Android, OS_version:%1$s, App_Version:%2$s_%3$d, Device:%4$s, Model:%5$s, Brand:%6$s
     </string>
-    <string name="zd_user_id" formatted="false" translatable="false">User_id:%1$s</string>
+    <string name="zd_user_id" translatable="false">User_id:%1$s</string>
     <string name="zendesk_request_subject" translatable="false">Android ticket</string>
 
     <!-- Tangem dialog -->
@@ -338,13 +357,13 @@ Describe an issue or provide your feedback below:
     <string name="text_tv_tangem_tag_lost_error_description">The card could not be scanned due to a connection failure. Make sure to hold the Signer Card near the back of your device for a few seconds until the scan is complete.</string>
 
     <!-- Base activity -->
-    <string name="text_tv_tangem_dialog_tittle_session_expired">Session Expired</string>
-    <string name="text_tv_tangem_dialog_description_session_expired">Hold the Signer Card near the back of your device for a few seconds to continue using the app.</string>
+    <string name="text_tv_tangem_dialog_tittle_session_expired">Signer Card verification</string>
+    <string name="text_tv_tangem_dialog_description_session_expired">Verify your possession of the Signer Card and the signer account. Hold the Signer Card near the back of your device for a few seconds to continue using the app.</string>
 
     <!-- Tangem create wallet -->
     <string name="text_tv_tangem_create_wallet_tittle">Create Signer Account</string>
     <string name="text_btn_tangem_create_wallet">Create Signer Account</string>
-    <string name="text_tv_tangem_create_wallet_description">Your Vault Signer Card is not configured yet.\nIn order to use the Signer Card, you will need to authorize the creation of a signer Stellar account by scanning the Signer Card. This operation can only be performed once for a single card.</string>
+    <string name="text_tv_tangem_create_wallet_description">Your Vault Signer Card is not configured yet. \nIn order to use the Signer Card, you will need to authorize the creation of a signer Stellar account by scanning the Signer Card. This operation can only be performed once for a single card.</string>
 
     <!-- Operation fields -->
     <string name="op_field_selling">Selling</string>
@@ -354,6 +373,7 @@ Describe an issue or provide your feedback below:
     <string name="op_field_offer_id">Offer ID</string>
     <string name="op_field_amount">Amount</string>
     <string name="op_field_destination">Destination</string>
+    <string name="op_field_destination_federation">Destination Federation</string>
     <string name="op_field_asset_code">Asset Code</string>
     <string name="op_field_trustor">Trustor</string>
     <string name="op_field_authorize">Authorize</string>
@@ -381,4 +401,21 @@ Describe an issue or provide your feedback below:
     <string name="op_field_high_threshold">High Threshold</string>
     <string name="op_field_signer_weight">Signer Weight</string>
     <string name="op_field_signer_public_key">Signer Public Key</string>
+    <string name="op_field_source_account">Operation Source</string>
+    <string name="op_field_sponsored_id">Sponsored ID</string>
+    <string name="op_field_account_id">Account ID</string>
+    <string name="op_field_balance_id">Balance ID</string>
+    <string name="op_field_data_name">Data Name</string>
+    <string name="op_field_seller">Seller</string>
+    <string name="op_field_claimants">Claimants</string>
+    <string name="op_field_claimant">Claimant</string>
+
+
+    <!-- App Update Dialog -->
+    <string name="text_app_update_title_weak">Update is available</string>
+    <string name="text_app_update_title_required">Update the app</string>
+    <string name="text_app_update_message_weak">Update LOBSTR Vault app to get the latest exciting features.</string>
+    <string name="text_app_update_message_required">Your app is outdated and is no longer supported. Update the app to continue using LOBSTR Vault.</string>
+    <string name="btn_text_app_update">Update</string>
+    <string name="btn_text_app_update_skip">Skip</string>
 </resources>

@@ -147,19 +147,26 @@ class StellarRepositoryImpl(
     }
 
     override fun getPublicKeyFromKeyPair(walletPublicKey: ByteArray?): String? {
-        val keyPair = KeyPair.fromPublicKey(walletPublicKey)
-        return keyPair.accountId
+        return try {
+            val keyPair = KeyPair.fromPublicKey(walletPublicKey)
+            return keyPair.accountId
+        } catch (exc: RuntimeException) {
+            // Handle invalid public key exception.
+            null
+        }
     }
 
     override fun getTransactionFromXDR(xdr: String): AbstractTransaction {
-        return AbstractTransaction.fromEnvelopeXdr(xdr, Network.PUBLIC)
+        return AbstractTransaction.fromEnvelopeXdr(xdr, network)
     }
 
     override fun readChallengeTransaction(
         challengeXdr: String,
-        serverAccountId: String
+        serverAccountId: String,
+        domainName: String,
+        webAuthDomain: String?
     ): Sep10Challenge.ChallengeTransaction? = try {
-        Sep10Challenge.readChallengeTransaction(challengeXdr, serverAccountId, Network.PUBLIC)
+        Sep10Challenge.readChallengeTransaction(challengeXdr, serverAccountId, network, domainName, webAuthDomain)
     } catch (exc: InvalidSep10ChallengeException) {
         null
     }

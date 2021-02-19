@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.*
 import android.widget.Toast
 import com.lobstr.stellar.vault.R
+import com.lobstr.stellar.vault.databinding.FragmentTangemSetupBinding
 import com.lobstr.stellar.vault.presentation.auth.AuthActivity
 import com.lobstr.stellar.vault.presentation.base.fragment.BaseFragment
 import com.lobstr.stellar.vault.presentation.dialog.alert.base.AlertDialogFragment
@@ -15,11 +16,10 @@ import com.lobstr.stellar.vault.presentation.util.AppUtil
 import com.lobstr.stellar.vault.presentation.util.Constant
 import com.lobstr.stellar.vault.presentation.util.manager.SupportManager
 import com.lobstr.stellar.vault.presentation.vault_auth.VaultAuthActivity
-import dagger.Lazy
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.android.synthetic.main.fragment_tangem_setup.*
 import moxy.ktx.moxyPresenter
 import javax.inject.Inject
+import javax.inject.Provider
 
 @AndroidEntryPoint
 class TangemSetupFragment : BaseFragment(), TangemView, View.OnClickListener,
@@ -37,16 +37,17 @@ class TangemSetupFragment : BaseFragment(), TangemView, View.OnClickListener,
     // Fields
     // ===========================================================
 
-    @Inject
-    lateinit var daggerPresenter: Lazy<TangemSetupPresenter>
+    private var _binding: FragmentTangemSetupBinding? = null
+    private val binding get() = _binding!!
 
-    private var mView: View? = null
+    @Inject
+    lateinit var presenterProvider: Provider<TangemSetupPresenter>
 
     // ===========================================================
     // Constructors
     // ===========================================================
 
-    private val mPresenter by moxyPresenter { daggerPresenter.get() }
+    private val mPresenter by moxyPresenter { presenterProvider.get() }
 
     // ===========================================================
     // Getter & Setter
@@ -60,12 +61,8 @@ class TangemSetupFragment : BaseFragment(), TangemView, View.OnClickListener,
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        mView = if (mView == null) inflater.inflate(
-            R.layout.fragment_tangem_setup,
-            container,
-            false
-        ) else mView
-        return mView
+        _binding = FragmentTangemSetupBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -74,9 +71,9 @@ class TangemSetupFragment : BaseFragment(), TangemView, View.OnClickListener,
     }
 
     private fun setListeners() {
-        btnScan.setOnClickListener(this)
-        btnLearnMore.setOnClickListener(this)
-        btnBuyNow.setOnClickListener(this)
+        binding.btnScan.setOnClickListener(this)
+        binding.btnLearnMore.setOnClickListener(this)
+        binding.btnBuyNow.setOnClickListener(this)
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -97,15 +94,20 @@ class TangemSetupFragment : BaseFragment(), TangemView, View.OnClickListener,
         mPresenter.handleOnActivityResult(requestCode, resultCode, data)
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+
     // ===========================================================
     // Listeners, methods for/from Interfaces
     // ===========================================================
 
     override fun onClick(v: View?) {
         when (v?.id) {
-            btnScan.id -> mPresenter.scanClicked()
-            btnLearnMore.id -> mPresenter.learnMoreClicked()
-            btnBuyNow.id -> mPresenter.buyNowClicked()
+            binding.btnScan.id -> mPresenter.scanClicked()
+            binding.btnLearnMore.id -> mPresenter.learnMoreClicked()
+            binding.btnBuyNow.id -> mPresenter.buyNowClicked()
         }
     }
 

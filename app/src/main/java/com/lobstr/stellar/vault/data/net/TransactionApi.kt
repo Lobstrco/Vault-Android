@@ -65,6 +65,11 @@ interface TransactionApi {
         @Header("Authorization") token: String
     ): Single<ApiTransactionItem>
 
+    @POST("transactions/hide-all/")
+    fun cancelTransactions(
+        @Header("Authorization") token: String
+    ): Completable
+
     @POST("transactions/hide-outdated/")
     fun cancelOutdatedTransactions(
         @Header("Authorization") token: String

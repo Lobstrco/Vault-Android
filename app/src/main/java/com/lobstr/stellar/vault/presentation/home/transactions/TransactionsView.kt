@@ -43,8 +43,5 @@ interface TransactionsView : MvpView {
     fun showImportXdrScreen()
 
     @Skip
-    fun checkRateUsDialog()
-
-    @Skip
-    fun showClearInvalidTrDialog()
+    fun showClearTransactionsDialog()
 }

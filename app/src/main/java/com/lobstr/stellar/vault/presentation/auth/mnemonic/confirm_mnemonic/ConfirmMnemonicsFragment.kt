@@ -7,6 +7,7 @@ import android.view.*
 import android.widget.Toast
 import androidx.annotation.StringRes
 import com.lobstr.stellar.vault.R
+import com.lobstr.stellar.vault.databinding.FragmentConfirmMnemonicsBinding
 import com.lobstr.stellar.vault.presentation.auth.mnemonic.MnemonicsContainerView
 import com.lobstr.stellar.vault.presentation.base.fragment.BaseFragment
 import com.lobstr.stellar.vault.presentation.entities.mnemonic.MnemonicItem
@@ -14,11 +15,10 @@ import com.lobstr.stellar.vault.presentation.pin.PinActivity
 import com.lobstr.stellar.vault.presentation.util.Constant
 import com.lobstr.stellar.vault.presentation.util.manager.ProgressManager
 import com.lobstr.stellar.vault.presentation.util.manager.SupportManager
-import dagger.Lazy
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.android.synthetic.main.fragment_confirm_mnemonics.*
 import moxy.ktx.moxyPresenter
 import javax.inject.Inject
+import javax.inject.Provider
 
 @AndroidEntryPoint
 class ConfirmMnemonicsFragment : BaseFragment(), ConfirmMnemonicsView, View.OnClickListener,
@@ -36,16 +36,17 @@ class ConfirmMnemonicsFragment : BaseFragment(), ConfirmMnemonicsView, View.OnCl
     // Fields
     // ===========================================================
 
-    @Inject
-    lateinit var daggerPresenter: Lazy<ConfirmMnemonicsPresenter>
+    private var _binding: FragmentConfirmMnemonicsBinding? = null
+    private val binding get() = _binding!!
 
-    private var mView: View? = null
+    @Inject
+    lateinit var presenterProvider: Provider<ConfirmMnemonicsPresenter>
 
     // ===========================================================
     // Constructors
     // ===========================================================
 
-    private val mPresenter by moxyPresenter { daggerPresenter.get().apply {
+    private val mPresenter by moxyPresenter { presenterProvider.get().apply {
         mnemonicsInitialList = arguments?.getParcelableArrayList(Constant.Bundle.BUNDLE_MNEMONICS_ARRAY)!!
     } }
 
@@ -61,8 +62,8 @@ class ConfirmMnemonicsFragment : BaseFragment(), ConfirmMnemonicsView, View.OnCl
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        mView = if (mView == null) inflater.inflate(R.layout.fragment_confirm_mnemonics, container, false) else mView
-        return mView
+        _binding = FragmentConfirmMnemonicsBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -71,10 +72,10 @@ class ConfirmMnemonicsFragment : BaseFragment(), ConfirmMnemonicsView, View.OnCl
     }
 
     private fun setListeners() {
-        btnClear.setOnClickListener(this)
-        btnNext.setOnClickListener(this)
-        mnemonicContainerToSelectView.setMnemonicItemActionListener(this)
-        mnemonicContainerToConfirmView.setMnemonicItemActionListener(this)
+        binding.btnClear.setOnClickListener(this)
+        binding.btnNext.setOnClickListener(this)
+        binding.mnemonicContainerToSelectView.setMnemonicItemActionListener(this)
+        binding.mnemonicContainerToConfirmView.setMnemonicItemActionListener(this)
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -88,6 +89,11 @@ class ConfirmMnemonicsFragment : BaseFragment(), ConfirmMnemonicsView, View.OnCl
         }
 
         return super.onOptionsItemSelected(item)
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
     // ===========================================================
@@ -110,20 +116,20 @@ class ConfirmMnemonicsFragment : BaseFragment(), ConfirmMnemonicsView, View.OnCl
 
     override fun onClick(v: View?) {
         when (v?.id) {
-            btnClear.id -> mPresenter.btnClearClicked()
-            btnNext.id -> mPresenter.btnNextClicked()
+            binding.btnClear.id -> mPresenter.btnClearClicked()
+            binding.btnNext.id -> mPresenter.btnNextClicked()
         }
     }
 
     override fun setupMnemonicsToSelect(mnemonics: List<MnemonicItem>) {
-        mnemonicContainerToSelectView.mMnemonicList = mnemonics
-        mnemonicContainerToSelectView.setupMnemonics()
+        binding.mnemonicContainerToSelectView.mMnemonicList = mnemonics
+        binding.mnemonicContainerToSelectView.setupMnemonics()
     }
 
     override fun setupMnemonicsToConfirm(mnemonics: List<MnemonicItem>) {
-        mnemonicContainerToConfirmView.mMnemonicList = mnemonics
-        mnemonicContainerToConfirmView.setupMnemonics()
-        btnClear.visibility = if (mnemonics.isEmpty()) View.INVISIBLE else View.VISIBLE
+        binding.mnemonicContainerToConfirmView.mMnemonicList = mnemonics
+        binding.mnemonicContainerToConfirmView.setupMnemonics()
+        binding.btnClear.visibility = if (mnemonics.isEmpty()) View.INVISIBLE else View.VISIBLE
     }
 
     override fun showMessage(message: String) {
@@ -150,7 +156,7 @@ class ConfirmMnemonicsFragment : BaseFragment(), ConfirmMnemonicsView, View.OnCl
     }
 
     override fun setActionButtonEnabled(enabled: Boolean) {
-        btnNext.isEnabled = enabled
+        binding.btnNext.isEnabled = enabled
     }
 
     // ===========================================================

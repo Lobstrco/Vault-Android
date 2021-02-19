@@ -23,8 +23,9 @@ import com.lobstr.stellar.vault.presentation.util.biometric.BiometricUtils
 import com.lobstr.stellar.vault.presentation.util.manager.SupportManager
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.schedulers.Schedulers
+import javax.inject.Inject
 
-class SettingsPresenter(private val interactor: SettingsInteractor,
+class SettingsPresenter @Inject constructor(private val interactor: SettingsInteractor,
                         private val eventProviderModule: EventProviderModule) : BasePresenter<SettingsView>() {
 
     private var loadSignedAccountsInProcess = false
@@ -203,6 +204,7 @@ class SettingsPresenter(private val interactor: SettingsInteractor,
     }
 
     fun rateUsClicked() {
+        interactor.setRateUsState(Constant.RateUsState.RATED)
         viewState.showWebPage(STORE_URL.plus(BuildConfig.APPLICATION_ID))
     }
 

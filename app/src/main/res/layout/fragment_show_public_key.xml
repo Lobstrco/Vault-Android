@@ -32,7 +32,7 @@
             android:layout_marginStart="36dp"
             android:layout_marginEnd="36dp"
             android:layout_gravity="center"
-            android:textColor="@color/color_4D000000"
+            android:textColor="@color/color_4d000000"
             android:textSize="14sp"
             android:textAllCaps="true"
             android:textAppearance="?android:textAppearanceMedium"/>

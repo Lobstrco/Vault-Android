@@ -5,14 +5,16 @@ import android.content.Intent
 import android.os.Build
 import android.os.StrictMode
 import android.util.Log
-import androidx.lifecycle.ProcessLifecycleOwner
 import androidx.hilt.work.HiltWorkerFactory
+import androidx.lifecycle.ProcessLifecycleOwner
 import androidx.multidex.MultiDexApplication
 import androidx.work.Configuration
 import com.google.android.gms.security.ProviderInstaller
-import com.google.firebase.analytics.FirebaseAnalytics
+import com.google.firebase.analytics.ktx.analytics
+import com.google.firebase.ktx.Firebase
 import com.lobstr.stellar.vault.BuildConfig
 import com.lobstr.stellar.vault.R
+import com.lobstr.stellar.vault.presentation.util.Constant
 import com.lobstr.stellar.vault.presentation.util.Constant.BuildType.DEBUG
 import com.zendesk.logger.Logger
 import dagger.hilt.android.HiltAndroidApp
@@ -39,8 +41,17 @@ class LVApplication : MultiDexApplication(), Configuration.Provider {
     companion object {
         val LOG_TAG = LVApplication::class.simpleName
         lateinit var appContext: Context
+
         // App Pin appearance flag handled in AppLifecycleListener.
         var checkPinAppearance = true
+
+        // Rate Us dialog flag.
+        var checkRateUsDialogState: Byte = Constant.RateUsSessionState.UNDEFINED
+            set(value) {
+                if (field != Constant.RateUsSessionState.CHECKED) {
+                    field = value
+                }
+            }
     }
 
     private val lifecycleListener: AppLifecycleListener by lazy {
@@ -69,9 +80,7 @@ class LVApplication : MultiDexApplication(), Configuration.Provider {
 
         upgradeSecurityProvider()
         enableStrictMode()
-        FirebaseAnalytics.getInstance(this)
-            .setAnalyticsCollectionEnabled(BuildConfig.BUILD_TYPE != DEBUG)
-
+        Firebase.analytics.setAnalyticsCollectionEnabled(BuildConfig.BUILD_TYPE != DEBUG)
         setupLifecycleListener()
         configureZendesk()
         setupRxJavaErrorHandler()

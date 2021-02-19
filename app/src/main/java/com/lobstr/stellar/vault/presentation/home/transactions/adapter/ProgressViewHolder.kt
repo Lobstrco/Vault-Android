@@ -1,6 +1,6 @@
 package com.lobstr.stellar.vault.presentation.home.transactions.adapter
 
-import android.view.View
 import androidx.recyclerview.widget.RecyclerView
+import com.lobstr.stellar.vault.databinding.LayoutListPreloaderBinding
 
-class ProgressViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
+class ProgressViewHolder(binding: LayoutListPreloaderBinding) : RecyclerView.ViewHolder(binding.root)

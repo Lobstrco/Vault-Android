@@ -5,9 +5,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.lobstr.stellar.vault.R
+import com.lobstr.stellar.vault.databinding.FragmentLicenseBinding
 import com.lobstr.stellar.vault.presentation.base.fragment.BaseFragment
-import kotlinx.android.synthetic.main.fragment_license.*
 import moxy.ktx.moxyPresenter
 
 class LicenseFragment : BaseFragment(), LicenseView {
@@ -24,7 +23,8 @@ class LicenseFragment : BaseFragment(), LicenseView {
     // Fields
     // ===========================================================
 
-    private var mView: View? = null
+    private var _binding: FragmentLicenseBinding? = null
+    private val binding get() = _binding!!
 
     // ===========================================================
     // Constructors
@@ -44,8 +44,13 @@ class LicenseFragment : BaseFragment(), LicenseView {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        mView = if (mView == null) inflater.inflate(R.layout.fragment_license, container, false) else mView
-        return mView
+        _binding = FragmentLicenseBinding.inflate(inflater, container, false)
+        return binding.root
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
     // ===========================================================
@@ -57,7 +62,7 @@ class LicenseFragment : BaseFragment(), LicenseView {
     }
 
     override fun setupPagePath(path: String) {
-        wvLicense.loadUrl(path)
+        binding.wvLicense.loadUrl(path)
     }
 
     // ===========================================================

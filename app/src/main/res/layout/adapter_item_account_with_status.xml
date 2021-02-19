@@ -68,7 +68,8 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="0"
                 android:gravity="end"
-                android:singleLine="true"
+                android:maxLines="1"
+                android:ellipsize="end"
                 android:textSize="14sp" />
     </LinearLayout>
 
@@ -78,5 +79,6 @@
             android:layout_height="1dp"
             android:layout_gravity="bottom"
             android:layout_marginStart="16dp"
-            android:background="@color/color_33979797" />
+            android:background="@color/color_979797"
+            android:alpha="0.2" />
 </FrameLayout>

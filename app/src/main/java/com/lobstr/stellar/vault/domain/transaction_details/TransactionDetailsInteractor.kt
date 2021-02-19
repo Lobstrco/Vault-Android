@@ -37,6 +37,8 @@ interface TransactionDetailsInteractor {
 
     fun isTrConfirmationEnabled(): Boolean
 
+    fun getSignedAccounts(): Single<List<Account>>
+
     fun getTransactionSigners(
         xdr: String,
         sourceAccount: String

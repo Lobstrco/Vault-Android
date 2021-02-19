@@ -1,5 +1,6 @@
 package com.lobstr.stellar.vault.presentation.pin.main
 
+import android.app.Activity
 import androidx.annotation.ColorRes
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
@@ -11,16 +12,18 @@ import moxy.viewstate.strategy.alias.Skip
 interface PinFrView : MvpView {
 
     @AddToEndSingle
-    fun windowLightNavigationBar(light: Boolean)
+    fun setupNavigationBar(@ColorRes color: Int, light: Boolean)
 
     @AddToEndSingle
     fun setupToolbar(
-        showHomeAsUp: Boolean,
         hasMenu: Boolean,
         @ColorRes toolbarColor: Int,
         @DrawableRes upArrow: Int,
         @ColorRes upArrowColor: Int
     )
+
+    @AddToEndSingle
+    fun showHomeAsUp(show: Boolean)
 
     @AddToEndSingle
     fun showTitle(@StringRes title: Int)
@@ -47,13 +50,16 @@ interface PinFrView : MvpView {
     fun setResult(resultCode: Int)
 
     @AddToEndSingle
-    fun finishScreenWithResult(resultCode: Int)
+    fun finishScreen(resultCode: Int = Activity.RESULT_CANCELED)
+
+    @Skip
+    fun finishApp()
 
     @AddToEndSingle
     fun showProgressDialog(show: Boolean)
 
     @Skip
-    fun showBiometricDialog(show: Boolean)
+    fun showBiometricDialog()
 
     @AddToEndSingle
     fun showAuthScreen()

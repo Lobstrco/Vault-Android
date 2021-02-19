@@ -1,5 +1,7 @@
 package com.lobstr.stellar.vault.presentation.home
 
+import androidx.annotation.ColorRes
+import androidx.annotation.DrawableRes
 import androidx.annotation.IdRes
 import moxy.MvpView
 import moxy.viewstate.strategy.alias.AddToEndSingle
@@ -9,13 +11,11 @@ import moxy.viewstate.strategy.alias.Skip
 interface HomeActivityView : MvpView {
 
     @AddToEndSingle
-    fun setupToolbar()
+    fun setupToolbar(@DrawableRes upArrow: Int,
+                     @ColorRes upArrowColor: Int,)
 
     @AddToEndSingle
     fun initBottomNavigationView()
-
-    @AddToEndSingle
-    fun showAuthScreen()
 
     @AddToEndSingle
     fun setupViewPager()
@@ -30,5 +30,5 @@ interface HomeActivityView : MvpView {
     fun checkRateUsDialog()
 
     @Skip
-    fun showRateUsDialog()
+    fun suggestRateUsDialog()
 }

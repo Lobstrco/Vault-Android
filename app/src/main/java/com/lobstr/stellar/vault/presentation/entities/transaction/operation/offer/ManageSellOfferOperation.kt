@@ -6,7 +6,7 @@ import com.lobstr.stellar.vault.presentation.entities.transaction.Asset
 import com.lobstr.stellar.vault.presentation.entities.transaction.operation.Operation
 import com.lobstr.stellar.vault.presentation.entities.transaction.operation.OperationField
 import com.lobstr.stellar.vault.presentation.util.AppUtil
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 
 @Parcelize
 open class ManageSellOfferOperation(

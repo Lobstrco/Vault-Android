@@ -6,6 +6,7 @@ import android.content.Intent
 import android.graphics.drawable.Drawable
 import android.util.AttributeSet
 import android.view.DragEvent
+import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.GridLayout
@@ -17,12 +18,12 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.marginEnd
 import androidx.core.view.marginStart
 import com.lobstr.stellar.vault.R
+import com.lobstr.stellar.vault.databinding.MnemonicItemContainerBinding
 import com.lobstr.stellar.vault.presentation.auth.mnemonic.MnemonicsContainerView.Extra.EXTRA_ITEM_POSITION
 import com.lobstr.stellar.vault.presentation.auth.mnemonic.MnemonicsContainerView.Extra.EXTRA_ITEM_VALUE
 import com.lobstr.stellar.vault.presentation.auth.mnemonic.MnemonicsContainerView.Extra.EXTRA_PARENT_ID
 import com.lobstr.stellar.vault.presentation.entities.mnemonic.MnemonicItem
 import com.lobstr.stellar.vault.presentation.util.AppUtil
-import kotlinx.android.synthetic.main.mnemonic_item_container.view.*
 import java.lang.ref.WeakReference
 
 
@@ -34,6 +35,8 @@ class MnemonicsContainerView(context: Context?, attrs: AttributeSet?) : ScrollVi
         const val EXTRA_ITEM_POSITION = "EXTRA_ITEM_POSITION"
         const val EXTRA_ITEM_VALUE = "EXTRA_ITEM_VALUE"
     }
+
+    private var binding: MnemonicItemContainerBinding
 
     private var isCounterEnabled: Boolean
 
@@ -86,20 +89,20 @@ class MnemonicsContainerView(context: Context?, attrs: AttributeSet?) : ScrollVi
 
         typedArray.recycle()
 
-        inflate(getContext(), R.layout.mnemonic_item_container, this)
+        binding = MnemonicItemContainerBinding.inflate(LayoutInflater.from(context), this, true)
 
         setOnDragListener(this)
     }
 
     fun setupMnemonics() {
         if (mMnemonicList != null) {
-            glMnemonicItemContainer.removeAllViews()
-            glMnemonicItemContainer.columnCount = mnemonicsColumnCount
+            binding.glMnemonicItemContainer.removeAllViews()
+            binding.glMnemonicItemContainer.columnCount = mnemonicsColumnCount
             for (i in mMnemonicList!!.indices) {
                 val mnemonicItem = mMnemonicList!![i]
                 val itemMnemonic = inflate(context, R.layout.item_mnemonic, null)
 
-                val itemWidth: Float = calculateItemWidth(glMnemonicItemContainer, mnemonicsColumnCount)
+                val itemWidth: Float = calculateItemWidth(binding.glMnemonicItemContainer, mnemonicsColumnCount)
 
                 itemMnemonic.background =
                     if (mnemonicItem.hide) itemEmptyBackground?.constantState?.newDrawable()
@@ -132,7 +135,7 @@ class MnemonicsContainerView(context: Context?, attrs: AttributeSet?) : ScrollVi
                     AppUtil.convertDpToPixels(context, itemMarginBottom)
                 )
 
-                glMnemonicItemContainer.addView(itemMnemonic, i, layoutParams)
+                binding.glMnemonicItemContainer.addView(itemMnemonic, i, layoutParams)
 
                 if (!mnemonicItem.hide) {
                     itemMnemonic.setOnClickListener {
@@ -147,7 +150,7 @@ class MnemonicsContainerView(context: Context?, attrs: AttributeSet?) : ScrollVi
                         intent.putExtra(EXTRA_PARENT_ID, this.id)
                         intent.putExtra(
                             EXTRA_ITEM_POSITION,
-                            glMnemonicItemContainer.indexOfChild(itemMnemonic)
+                            binding.glMnemonicItemContainer.indexOfChild(itemMnemonic)
                         )
                         intent.putExtra(EXTRA_ITEM_VALUE, mnemonicStr)
 

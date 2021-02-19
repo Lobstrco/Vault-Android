@@ -14,7 +14,7 @@ interface BiometricSetUpView : MvpView {
     fun setWindowBackground()
 
     @AddToEndSingle
-    fun windowLightNavigationBar(light: Boolean)
+    fun setupNavigationBar(@ColorRes color: Int, light: Boolean)
 
     @AddToEndSingle
     fun setupToolbar(
@@ -31,8 +31,11 @@ interface BiometricSetUpView : MvpView {
     fun finishScreen()
 
     @Skip
+    fun finishApp()
+
+    @Skip
     fun showBiometricInfoDialog(@StringRes titleRes: Int, @StringRes messageRes: Int)
 
     @Skip
-    fun showBiometricDialog(show: Boolean)
+    fun showBiometricDialog()
 }
