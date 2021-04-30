@@ -40,9 +40,8 @@ import com.lobstr.stellar.vault.presentation.entities.transaction.operation.offe
 import com.lobstr.stellar.vault.presentation.entities.transaction.operation.offer.SellOfferOperation
 import com.lobstr.stellar.vault.presentation.entities.transaction.operation.sponsoring.*
 import com.lobstr.stellar.vault.presentation.util.Constant.Symbol.NULL
-import com.lobstr.stellar.vault.presentation.util.Constant.TransactionType.Item.AUTH_CHALLENGE
-import com.lobstr.stellar.vault.presentation.util.Constant.TransactionType.Item.TRANSACTION
 import java.io.IOException
+import java.net.URLEncoder
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -57,7 +56,7 @@ object AppUtil {
             if (apiAvailability.isUserResolvableError(resultCode)) {
                 Log.e("GooglePlayServices", "No valid Google Play Services APK found. ")
                 if (context is Activity && showExplanation) {
-                    apiAvailability.getErrorDialog(context, resultCode, 9000).show()
+                    apiAvailability.getErrorDialog(context, resultCode, 9000)?.show()
                 }
             } else {
                 Log.e("GooglePlayServices", "This device is not supported. ")
@@ -173,7 +172,7 @@ object AppUtil {
      * @param operation Operation.
      * @param transactionType Target Transaction Type for determining Sep 10 Challenge.
      */
-    fun getTransactionOperationName(operation: Operation, transactionType: String?): Int {
+    fun getTransactionOperationName(operation: Operation): Int {
         return when (operation) {
             is PaymentOperation -> R.string.text_operation_name_payment
             is CreateAccountOperation -> R.string.text_operation_name_create_account
@@ -188,13 +187,7 @@ object AppUtil {
             is AllowTrustOperation -> R.string.text_operation_name_allow_trust
             is AccountMergeOperation -> R.string.text_operation_name_account_merge
             is InflationOperation -> R.string.text_operation_name_inflation
-            is ManageDataOperation -> {
-                when (transactionType) {
-                    TRANSACTION -> R.string.text_operation_name_manage_data
-                    AUTH_CHALLENGE -> R.string.text_operation_name_challenge
-                    else -> R.string.text_operation_name_manage_data
-                }
-            }
+            is ManageDataOperation -> R.string.text_operation_name_manage_data
             is BumpSequenceOperation -> R.string.text_operation_name_bump_sequence
             is BeginSponsoringFutureReservesOperation -> R.string.text_operation_name_begin_sponsoring_future_reserves
             is EndSponsoringFutureReservesOperation -> R.string.text_operation_name_end_sponsoring_future_reserves
@@ -341,4 +334,12 @@ object AppUtil {
 
     fun getAppBehavior() =
         if (BuildConfig.BUILD_TYPE == Constant.BuildType.RELEASE) Constant.Behavior.PRODUCTION else Constant.Behavior.STAGING
+
+    fun composeLaboratoryUrl(
+        input: String,
+        type: String = Constant.Laboratory.Type.TRANSACTION_ENVELOPE,
+        network: String = Constant.Laboratory.NETWORK.PUBLIC
+    ) = String.format(
+        Constant.Laboratory.URL, URLEncoder.encode(input, "utf-8"), type, network
+    )
 }

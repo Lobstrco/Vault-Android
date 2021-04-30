@@ -88,7 +88,7 @@ class ConfigPresenter @Inject constructor(
             SPAM_PROTECTION -> updateAccountConfig(!AppUtil.getConfigValue(config.type))
             TRANSACTION_CONFIRMATIONS -> {
                 interactor.setTrConfirmationEnabled(AppUtil.getConfigValue(config.type))
-                viewState.setSelectedType(AppUtil.getConfigType(interactor.isTrConfirmationEnabled()))
+                viewState.setSelectedType(AppUtil.getConfigType(interactor.isTrConfirmationEnabled()), this.config)
             }
         }
     }
@@ -112,7 +112,7 @@ class ConfigPresenter @Inject constructor(
                 }
                 .subscribe({
                     interactor.setSpamProtectionEnabled(it.spamProtectionEnabled)
-                    viewState.setSelectedType(AppUtil.getConfigType(!it.spamProtectionEnabled))
+                    viewState.setSelectedType(AppUtil.getConfigType(!it.spamProtectionEnabled), config)
                 }, {
                     when (it) {
                         is NoInternetConnectionException -> {

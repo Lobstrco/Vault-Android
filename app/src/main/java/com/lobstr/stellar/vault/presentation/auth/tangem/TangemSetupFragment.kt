@@ -1,9 +1,12 @@
 package com.lobstr.stellar.vault.presentation.auth.tangem
 
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.view.*
 import android.widget.Toast
+import androidx.activity.result.ActivityResult
+import androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult
 import com.lobstr.stellar.vault.R
 import com.lobstr.stellar.vault.databinding.FragmentTangemSetupBinding
 import com.lobstr.stellar.vault.presentation.auth.AuthActivity
@@ -49,6 +52,15 @@ class TangemSetupFragment : BaseFragment(), TangemView, View.OnClickListener,
 
     private val mPresenter by moxyPresenter { presenterProvider.get() }
 
+    private val mRegisterForTangemCreateWalletResult =
+        registerForActivityResult(StartActivityForResult()) { result: ActivityResult ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                // Handle create wallet result.
+                mvpDelegate.onAttach()
+                mPresenter.handleTangemInfo(result.data?.getParcelableExtra(Constant.Extra.EXTRA_TANGEM_INFO))
+            }
+        }
+
     // ===========================================================
     // Getter & Setter
     // ===========================================================
@@ -89,11 +101,6 @@ class TangemSetupFragment : BaseFragment(), TangemView, View.OnClickListener,
         return super.onOptionsItemSelected(item)
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        mPresenter.handleOnActivityResult(requestCode, resultCode, data)
-    }
-
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
@@ -123,11 +130,15 @@ class TangemSetupFragment : BaseFragment(), TangemView, View.OnClickListener,
     }
 
     override fun showTangemCreateWalletScreen(tangemInfo: TangemInfo) {
-        startActivityForResult(Intent(context, TangemCreateWalletActivity::class.java).apply {
-            addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-            addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
-            putExtra(Constant.Extra.EXTRA_TANGEM_INFO, tangemInfo)
-        }, Constant.Code.TANGEM_CREATE_WALLET)
+        mRegisterForTangemCreateWalletResult.launch(
+            Intent(
+                context,
+                TangemCreateWalletActivity::class.java
+            ).apply {
+                addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
+                putExtra(Constant.Extra.EXTRA_TANGEM_INFO, tangemInfo)
+            })
     }
 
     override fun showVaultAuthScreen() {
@@ -176,5 +187,4 @@ class TangemSetupFragment : BaseFragment(), TangemView, View.OnClickListener,
     // ===========================================================
     // Inner and Anonymous Classes
     // ===========================================================
-
 }

@@ -16,7 +16,7 @@ class ConfigViewHolder(private val binding: AdapterItemConfigBinding, private va
         binding.divider.visibility = calculateDividerVisibility(itemsCount)
 
         itemView.setOnClickListener {
-            val position = this@ConfigViewHolder.adapterPosition
+            val position = this@ConfigViewHolder.bindingAdapterPosition
             if (position == RecyclerView.NO_POSITION) {
                 return@setOnClickListener
             }
@@ -31,7 +31,7 @@ class ConfigViewHolder(private val binding: AdapterItemConfigBinding, private va
      * @return Visibility.
      */
     private fun calculateDividerVisibility(itemsCount: Int): Int {
-        return if (itemsCount == 1 || adapterPosition == itemsCount - 1) {
+        return if (itemsCount == 1 || bindingAdapterPosition == itemsCount - 1) {
             View.INVISIBLE
         } else {
             View.VISIBLE

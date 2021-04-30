@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.*
 import android.widget.Toast
+import androidx.core.view.isVisible
 import com.bumptech.glide.Glide
 import com.lobstr.stellar.vault.R
 import com.lobstr.stellar.vault.databinding.FragmentVaultAuthBinding
@@ -120,9 +121,9 @@ class VaultAuthFragment : BaseFragment(),
         descriptionMain: String,
         button: String
     ) {
-        binding.ivBgIdentity.visibility = if (showIdentityLogo) View.VISIBLE else View.GONE
-        binding.ivTangem.visibility = if (showTangemLogo) View.VISIBLE else View.GONE
-        binding.tvDescription.visibility = if (description.isNullOrEmpty()) View.GONE else View.VISIBLE
+        binding.ivBgIdentity.isVisible = showIdentityLogo
+        binding.ivTangem.isVisible = showTangemLogo
+        binding.tvDescription.isVisible = !description.isNullOrEmpty()
         if (showIdentityLogo) {
             // Set user identity icon.
             Glide.with(requireContext())

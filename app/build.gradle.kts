@@ -18,8 +18,8 @@ android {
         applicationId = "com.lobstr.stellar.vault"
         minSdkVersion(22)
         targetSdkVersion(30)
-        versionCode = 24
-        versionName = "2.2.1"
+        versionCode = 25
+        versionName = "2.3.0"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         multiDexEnabled = true
 
@@ -142,21 +142,24 @@ android {
     }
 }
 
-val desugar_jdk_libs by extra("1.1.1")
+val desugar_jdk_libs by extra("1.1.5")
 val dagger by extra("2.28.1")
-val rx_java by extra("3.0.4")
+val rx_java by extra("3.0.12")
 val rx_android by extra("3.0.0")
-val rx_kotlin by extra("3.0.0")
+val rx_kotlin by extra("3.0.1")
 val retrofit by extra("2.9.0")
 val okhttp by extra("4.9.0")
 val moxy by extra("2.2.0")
 val glide by extra("4.12.0")
 val material by extra("1.3.0")
 val browser by extra("1.3.0")
-val firebase_bom by extra("26.5.0")
+val firebase_bom by extra("27.1.0")
 val javax_annotation by extra("10.0-b28")
+val play_service_base by extra("17.6.0")
 val androidx_core by extra("1.3.2")
 val androidx_appcompat by extra("1.2.0")
+val fragment by extra("1.3.3")
+val recyclerview by extra("1.2.0")
 val androidx_multidex by extra("2.0.1")
 val androidx_preference by extra("1.1.1")
 val androidx_constraintlayout by extra("2.0.4")
@@ -164,17 +167,17 @@ val androidx_legacy_support_v4 by extra("1.0.0")
 val junit by extra("4.13.2")
 val runner by extra("1.1.2")
 val espresso_core by extra("3.3.0")
-val stellar_sdk by extra("0.23.0")
+val stellar_sdk by extra("0.24.0")
 val work_manager by extra("2.5.0")
 val biometric by extra("1.1.0")
-val lottieVersion by extra("3.6.1")
+val lottieVersion by extra("3.7.0")
 val qr_gen by extra("2.6.0")
 val viewpager2 by extra("1.0.0")
 val tangem by extra("0.9.0")
 val zendesk by extra("5.0.2")
-val hilt by extra("2.32-alpha")
-val androidx_hilt by extra("1.0.0-alpha03")
-val lifecycle by extra("2.3.0")
+val hilt by extra("2.35")
+val androidx_hilt by extra("1.0.0-beta01")
+val lifecycle by extra("2.3.1")
 
 dependencies {
     implementation(fileTree(mapOf("dir" to "libs", "include" to listOf("*.jar"))))
@@ -189,8 +192,11 @@ dependencies {
     implementation("com.github.stellar:java-stellar-sdk:$stellar_sdk")
 
     // Android.
+    implementation("com.google.android.gms:play-services-base:$play_service_base")
     implementation("androidx.core:core-ktx:$androidx_core")
     implementation("androidx.appcompat:appcompat:$androidx_appcompat")
+    implementation("androidx.fragment:fragment-ktx:$fragment")
+    implementation("androidx.recyclerview:recyclerview:$recyclerview")
     implementation("androidx.multidex:multidex:$androidx_multidex")
     implementation("androidx.constraintlayout:constraintlayout:$androidx_constraintlayout")
     implementation("androidx.legacy:legacy-support-v4:$androidx_legacy_support_v4")

@@ -1,6 +1,7 @@
 package com.lobstr.stellar.vault.presentation.home.settings.config
 
 import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
 import android.view.*
 import android.widget.Toast
@@ -102,8 +103,8 @@ class ConfigFragment : BaseFragment(), ConfigView {
         }
     }
 
-    override fun setSelectedType(selectedType: Byte) {
-        activity?.setResult(Activity.RESULT_OK)
+    override fun setSelectedType(selectedType: Byte, config: Int) {
+        activity?.setResult(Activity.RESULT_OK, Intent().apply { putExtra(Constant.Extra.EXTRA_CONFIG, config) })
         (binding.rvConfig.adapter as? ConfigAdapter)?.setSelectedType(selectedType)
     }
 

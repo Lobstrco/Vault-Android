@@ -22,5 +22,11 @@ interface SuccessView : MvpView {
     fun showXdrContainer(show: Boolean)
 
     @Skip
+    fun showHelpScreen(userId: String?)
+
+    @Skip
+    fun showWebPage(url: String)
+
+    @Skip
     fun copyToClipBoard(text: String)
 }

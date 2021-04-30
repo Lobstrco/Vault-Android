@@ -2,14 +2,15 @@ package com.lobstr.stellar.vault.presentation.home.transactions.submit_success
 
 
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
+import androidx.core.view.isVisible
+import com.lobstr.stellar.vault.R
 import com.lobstr.stellar.vault.databinding.FragmentSuccessBinding
 import com.lobstr.stellar.vault.presentation.base.fragment.BaseFragment
 import com.lobstr.stellar.vault.presentation.util.AppUtil
 import com.lobstr.stellar.vault.presentation.util.Constant
 import com.lobstr.stellar.vault.presentation.util.Constant.TransactionConfirmationSuccessStatus.SUCCESS
+import com.lobstr.stellar.vault.presentation.util.manager.SupportManager
 import dagger.hilt.android.AndroidEntryPoint
 import moxy.ktx.moxyPresenter
 import javax.inject.Inject
@@ -67,8 +68,23 @@ class SuccessFragment : BaseFragment(), SuccessView, View.OnClickListener {
     }
 
     private fun setListeners() {
-        binding.btnCopyXdr.setOnClickListener(this)
+        binding.copyXdr.btnCopyXdr.setOnClickListener(this)
         binding.btnDone.setOnClickListener(this)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.success, menu)
+        super.onCreateOptionsMenu(menu, inflater)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.action_info -> mPresenter.infoClicked()
+            R.id.action_view_transaction_details -> mPresenter.viewTransactionDetailsClicked()
+            R.id.action_copy_signed_xdr -> mPresenter.copySignedXdrClicked()
+        }
+
+        return super.onOptionsItemSelected(item)
     }
 
     override fun onDestroyView() {
@@ -82,7 +98,7 @@ class SuccessFragment : BaseFragment(), SuccessView, View.OnClickListener {
 
     override fun onClick(v: View?) {
         when (v?.id) {
-            binding.btnCopyXdr.id -> mPresenter.copyXdrClicked()
+            binding.copyXdr.btnCopyXdr.id -> mPresenter.copyXdrClicked()
             binding.btnDone.id -> mPresenter.doneClicked()
         }
     }
@@ -92,7 +108,7 @@ class SuccessFragment : BaseFragment(), SuccessView, View.OnClickListener {
     }
 
     override fun setupXdr(xdr: String) {
-        binding.tvXdr.text = xdr
+        binding.copyXdr.tvXdr.text = xdr
     }
 
     override fun finishScreen() {
@@ -100,12 +116,20 @@ class SuccessFragment : BaseFragment(), SuccessView, View.OnClickListener {
     }
 
     override fun setAdditionalSignaturesInfoEnabled(enabled: Boolean) {
-        binding.tvAdditionalSignaturesDescription.visibility = if (enabled) View.VISIBLE else View.GONE
-        binding.llXdrContainer.visibility = if (enabled) View.VISIBLE else View.GONE
+        binding.tvAdditionalSignaturesDescription.isVisible = enabled
+        binding.copyXdr.root.isVisible = enabled
     }
 
     override fun showXdrContainer(show: Boolean) {
-        binding.llXdrContainer.visibility = if (show) View.VISIBLE else View.GONE
+        binding.copyXdr.root.isVisible = show
+    }
+
+    override fun showHelpScreen(userId: String?) {
+        SupportManager.showZendeskHelpCenter(requireContext(), userId = userId)
+    }
+
+    override fun showWebPage(url: String) {
+        AppUtil.openWebPage(context, url)
     }
 
     override fun copyToClipBoard(text: String) {

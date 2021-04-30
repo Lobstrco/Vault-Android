@@ -1,7 +1,5 @@
 package com.lobstr.stellar.vault.presentation.auth.tangem
 
-import android.app.Activity
-import android.content.Intent
 import com.lobstr.stellar.vault.R
 import com.lobstr.stellar.vault.domain.tangem.setup.TangemSetupInteractor
 import com.lobstr.stellar.vault.presentation.entities.tangem.TangemInfo
@@ -45,17 +43,6 @@ class TangemSetupPresenter @Inject constructor(private val interactor: TangemSet
 
     fun infoClicked() {
         viewState.showHelpScreen(SIGNING_WITH_VAULT_SIGNER_CARD)
-    }
-
-    fun handleOnActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (resultCode == Activity.RESULT_OK) {
-            when (requestCode) {
-                Constant.Code.TANGEM_CREATE_WALLET -> {
-                    // Handle create wallet result.
-                    handleTangemInfo(data?.getParcelableExtra(Constant.Extra.EXTRA_TANGEM_INFO))
-                }
-            }
-        }
     }
 
     fun handleTangemInfo(tangemInfo: TangemInfo?) {

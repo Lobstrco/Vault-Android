@@ -1,7 +1,5 @@
 package com.lobstr.stellar.vault.presentation.home.transactions
 
-import android.app.Activity
-import android.content.Intent
 import com.lobstr.stellar.vault.R
 import com.lobstr.stellar.vault.data.error.exeption.DefaultException
 import com.lobstr.stellar.vault.data.error.exeption.NoInternetConnectionException
@@ -15,7 +13,6 @@ import com.lobstr.stellar.vault.presentation.BasePresenter
 import com.lobstr.stellar.vault.presentation.dialog.alert.base.AlertDialogFragment
 import com.lobstr.stellar.vault.presentation.entities.account.Account
 import com.lobstr.stellar.vault.presentation.entities.transaction.TransactionItem
-import com.lobstr.stellar.vault.presentation.util.Constant
 import com.lobstr.stellar.vault.presentation.util.Constant.Util.UNDEFINED_VALUE
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
@@ -31,9 +28,6 @@ class TransactionsPresenter @Inject constructor(
     companion object {
         const val LIMIT_PAGE_SIZE = 10
     }
-
-    // For restore RecycleView position after saveInstanceState (-1 - undefined state).
-    private var savedRvPosition: Int = UNDEFINED_VALUE
 
     private var transactionsLoadingDisposable: Disposable? = null
     private var nextPageUrl: String? = null
@@ -118,10 +112,6 @@ class TransactionsPresenter @Inject constructor(
                 viewState.showPullToRefresh(false)
             }
             .subscribe({ result ->
-                // Reset saved scroll position for avoid scroll to wrong position after
-                // pagination action.
-                savedRvPosition = UNDEFINED_VALUE
-
                 if (newLoadTransactions) {
                     transactions.clear()
                 }
@@ -137,7 +127,7 @@ class TransactionsPresenter @Inject constructor(
                     val federation =
                         cachedStellarAccounts.find { account -> account.address == transactionItem.transaction.sourceAccount }
                             ?.federation
-                    transactions[index].transaction.federation = federation
+                    transactions[index].federation = federation
                 }
 
                 viewState.showTransactionList(transactions, !nextPageUrl.isNullOrEmpty())
@@ -188,7 +178,7 @@ class TransactionsPresenter @Inject constructor(
         transactions.forEach {
             if (cachedStellarAccounts.find { account -> account.address == it.transaction.sourceAccount } == null
                 && accountList.find { account -> account.address == it.transaction.sourceAccount } == null) {
-                accountList.add(Account(it.transaction.sourceAccount, it.transaction.federation))
+                accountList.add(Account(it.transaction.sourceAccount, it.federation))
             }
         }
         stellarAccountsDisposable?.dispose()
@@ -212,7 +202,7 @@ class TransactionsPresenter @Inject constructor(
                     val federation =
                         cachedStellarAccounts.find { account -> account.address == transactionItem.transaction.sourceAccount }
                             ?.federation
-                    transactions[index].transaction.federation = federation
+                    transactions[index].federation = federation
                 }
                 viewState.showTransactionList(transactions, !nextPageUrl.isNullOrEmpty())
             }, {
@@ -222,16 +212,8 @@ class TransactionsPresenter @Inject constructor(
         unsubscribeOnDestroy(stellarAccountsDisposable!!)
     }
 
-    internal fun handleOnActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (resultCode == Activity.RESULT_CANCELED) {
-            return
-        }
-
-        when (requestCode) {
-            Constant.Code.TRANSACTION_DETAILS_FRAGMENT, Constant.Code.IMPORT_XDR_FRAGMENT -> {
-                refreshCalled()
-            }
-        }
+    fun handleTransactionResult() {
+        refreshCalled()
     }
 
     fun refreshCalled() {
@@ -353,20 +335,5 @@ class TransactionsPresenter @Inject constructor(
                 loadTransactions()
             }
         }
-    }
-
-    fun onSaveInstanceState(position: Int) {
-        // Save list position and restore it after if needed.
-        savedRvPosition = position
-    }
-
-    fun attemptRestoreRvPosition() {
-        if (savedRvPosition == UNDEFINED_VALUE) {
-            return
-        }
-
-        viewState.scrollListToPosition(savedRvPosition)
-
-        savedRvPosition = UNDEFINED_VALUE
     }
 }

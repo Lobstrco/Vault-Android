@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
@@ -7,14 +8,15 @@
             app:showAsAction="ifRoom">
         <menu>
             <item
-                    android:id="@+id/action_info"
-                    android:title="@string/text_action_open_help_center" />
-            <item
-                    android:id="@+id/action_view_transaction_details"
-                    android:title="@string/text_menu_view_transaction_details" />
+                    android:id="@+id/action_copy_xdr"
+                    android:title="@string/text_menu_copy_xdr" />
             <item
                     android:id="@+id/action_copy_signed_xdr"
                     android:title="@string/text_menu_copy_signed_xdr" />
+
+            <item
+                    android:id="@+id/action_view_transaction_details"
+                    android:title="@string/text_menu_view_transaction_details" />
         </menu>
     </item>
 </menu>

@@ -58,7 +58,7 @@ interface TransactionDetailsView : MvpView {
     )
 
     @AddToEndSingle
-    fun errorConfirmTransaction(errorMessage: String)
+    fun errorConfirmTransaction(errorMessage: String, envelopeXdr: String)
 
     @AddToEndSingle
     fun showOperationDetailsScreen(transactionItem: TransactionItem, position: Int)
@@ -74,6 +74,9 @@ interface TransactionDetailsView : MvpView {
 
     @Skip
     fun copyToClipBoard(text: String)
+
+    @Skip
+    fun showWebPage(url: String)
 
     @Skip
     fun showTangemScreen(tangemInfo: TangemInfo)

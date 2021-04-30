@@ -9,6 +9,5 @@ data class Transaction(
     val sourceAccount: String,
     val memo: String?,
     val operations: List<Operation>,
-    var mSequenceNumber: Long = 0,
-    var federation: String? = null
+    var mSequenceNumber: Long = 0
 ) : Parcelable

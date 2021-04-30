@@ -9,10 +9,12 @@ import javax.inject.Inject
 class ErrorPresenter @Inject constructor(private val interactor: TransactionErrorInteractor) : MvpPresenter<ErrorView>() {
 
     lateinit var error: String
+    lateinit var envelopeXdr: String
 
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
         viewState.vibrate(longArrayOf(2000, 50, 50, 50))
+        viewState.setupXdr(envelopeXdr)
         viewState.setupErrorInfo(
             handleErrorMessage(error)
         )
@@ -41,6 +43,14 @@ class ErrorPresenter @Inject constructor(private val interactor: TransactionErro
 
     fun infoClicked() {
         viewState.showHelpScreen(interactor.getUserPublicKey())
+    }
+
+    fun copySignedXdrClicked() {
+        viewState.copyToClipBoard(envelopeXdr)
+    }
+
+    fun viewTransactionDetailsClicked() {
+        viewState.showWebPage(AppUtil.composeLaboratoryUrl(envelopeXdr))
     }
 
     fun doneClicked() {

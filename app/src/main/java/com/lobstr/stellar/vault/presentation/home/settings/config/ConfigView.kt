@@ -18,7 +18,7 @@ interface ConfigView : MvpView {
     fun initListComponents(configs: List<Config>, selectedType: Byte)
 
     @AddToEndSingle
-    fun setSelectedType(selectedType: Byte)
+    fun setSelectedType(selectedType: Byte, config: Int)
 
     @AddToEndSingle
     fun setupConfigDescription(description: String?)

@@ -12,16 +12,6 @@ open class BaseBottomSheetDialog : BaseMvpAppCompatDialogFragment() {
         return BottomSheetDialog(requireContext(), theme)
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        // Handle IllegalStateException: DialogFragment can not be attached to a container view
-        // in this case just dismiss dialog.
-        try {
-            super.onActivityCreated(savedInstanceState)
-        } catch (exc: IllegalStateException) {
-            dismiss()
-        }
-    }
-
     override fun show(manager: FragmentManager, tag: String?) {
         // If dialog don't equals null - skip it.
         if (manager.findFragmentByTag(tag) != null) {

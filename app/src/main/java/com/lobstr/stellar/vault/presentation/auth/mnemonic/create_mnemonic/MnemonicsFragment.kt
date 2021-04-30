@@ -4,6 +4,7 @@ package com.lobstr.stellar.vault.presentation.auth.mnemonic.create_mnemonic
 import android.content.DialogInterface
 import android.os.Bundle
 import android.view.*
+import androidx.core.view.isVisible
 import androidx.fragment.app.FragmentManager
 import com.lobstr.stellar.vault.R
 import com.lobstr.stellar.vault.databinding.FragmentMnemonicsBinding
@@ -126,7 +127,7 @@ class MnemonicsFragment : BaseFragment(),
     }
 
     override fun setActionLayerVisibility(isVisible: Boolean) {
-        binding.llActionLayer.visibility = if (isVisible) View.VISIBLE else View.GONE
+        binding.llActionLayer.isVisible = isVisible
     }
 
     override fun setupMnemonics(mnemonicItems: List<MnemonicItem>) {

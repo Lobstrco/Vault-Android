@@ -11,6 +11,9 @@ interface ErrorView : MvpView {
     fun vibrate(pattern: LongArray)
 
     @AddToEndSingle
+    fun setupXdr(xdr: String)
+
+    @AddToEndSingle
     fun setupErrorInfo(error: String)
 
     @Skip
@@ -18,4 +21,10 @@ interface ErrorView : MvpView {
 
     @Skip
     fun showHelpScreen(userId: String?)
+
+    @Skip
+    fun showWebPage(url: String)
+
+    @Skip
+    fun copyToClipBoard(text: String)
 }

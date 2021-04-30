@@ -172,19 +172,11 @@ class TangemDialogFragment : BaseBottomSheetDialog(), TangemDialogView,
     }
 
     override fun changeActionContainerVisibility(show: Boolean) {
-        if (show) {
-            binding.llActionContainer.visibility = View.VISIBLE
-        } else {
-            binding.llActionContainer.visibility = View.INVISIBLE
-        }
+        binding.llActionContainer.visibility = if (show) View.VISIBLE else View.INVISIBLE
     }
 
     override fun changeErrorContainerVisibility(show: Boolean) {
-        if (show) {
-            binding.llErrorContainer.visibility = View.VISIBLE
-        } else {
-            binding.llErrorContainer.visibility = View.INVISIBLE
-        }
+        binding.llErrorContainer.visibility = if(show) View.VISIBLE else View.INVISIBLE
     }
 
     override fun setErrorContainerData(errorTitle: String, errorDescription: String) {
@@ -200,7 +192,7 @@ class TangemDialogFragment : BaseBottomSheetDialog(), TangemDialogView,
 
     private fun setListeners() {
         binding.btnTryAgainFr.setOnClickListener(this)
-        binding.tvCancel.setOnClickListener(this)
+        binding.btnCancel.setOnClickListener(this)
         binding.ivScanStatus.addAnimatorListener(object : Animator.AnimatorListener {
             override fun onAnimationRepeat(animation: Animator?) {
 
@@ -222,7 +214,7 @@ class TangemDialogFragment : BaseBottomSheetDialog(), TangemDialogView,
 
     override fun onClick(v: View?) {
         when (v?.id) {
-            R.id.tvCancel -> mPresenter.cancelClicked()
+            R.id.btnCancel -> mPresenter.cancelClicked()
             R.id.btnTryAgainFr -> mPresenter.tryAgainClicked()
         }
     }

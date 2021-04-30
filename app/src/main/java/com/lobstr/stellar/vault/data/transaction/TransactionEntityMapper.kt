@@ -41,7 +41,8 @@ import java.math.BigDecimal
 class TransactionEntityMapper(private val network: Network) {
 
     companion object {
-        const val MANAGER_DATA_NAME_FLAG = "auth" // Equivalent of Sep10Challenge.MANAGER_DATA_NAME_FLAG.
+        const val HOME_DOMAIN_MANAGER_DATA_NAME_FLAG = "auth" // Equivalent of Sep10Challenge.HOME_DOMAIN_MANAGER_DATA_NAME_FLAG.
+        const val WEB_AUTH_DOMAIN_MANAGER_DATA_NAME = "web_auth_domain" // Equivalent of Sep10Challenge.WEB_AUTH_DOMAIN_MANAGER_DATA_NAME.
     }
 
     fun transformTransactions(apiTransactionResult: ApiTransactionResult?): TransactionResult {
@@ -100,26 +101,29 @@ class TransactionEntityMapper(private val network: Network) {
             getTransactionType(
                 transaction.toEnvelopeXdrBase64(), innerTransaction.sourceAccount,
                 // Verify that the first operation in the transaction is a Manage Data operation for determine AUTH_CHALLENGE transaction type. Else - TRANSACTION type.
-                if (innerTransaction.operations.isNotEmpty() && innerTransaction.operations[0] is ManageDataOperation) extractDomain((innerTransaction.operations[0] as ManageDataOperation).name) else null,
-                if (innerTransaction.operations.isNotEmpty() && innerTransaction.operations[0] is ManageDataOperation) (innerTransaction.operations[0] as ManageDataOperation).value?.let { String(it) } else null,
+                if (innerTransaction.operations.isNotEmpty() && innerTransaction.operations[0] is ManageDataOperation)
+                    extractDomain((innerTransaction.operations[0] as ManageDataOperation).name) else null,
+                if (innerTransaction.operations.isNotEmpty() && innerTransaction.operations[0] is ManageDataOperation)
+                    (innerTransaction.operations.find { it is ManageDataOperation && it.name == WEB_AUTH_DOMAIN_MANAGER_DATA_NAME } as? ManageDataOperation)?.value
+                        ?.let { webAuthDomain -> String(webAuthDomain) } else null,
             ),
             innerTransaction
         )
     }
 
     /**
-     * Remove [MANAGER_DATA_NAME_FLAG] from name to receive target domain.
-     * @return domain without [MANAGER_DATA_NAME_FLAG], if it is contained. Else - input.
+     * Remove [HOME_DOMAIN_MANAGER_DATA_NAME_FLAG] from name to receive target domain.
+     * @return domain without [HOME_DOMAIN_MANAGER_DATA_NAME_FLAG], if it is contained. Else - input.
      */
     private fun extractDomain(name: String?) = when {
         name.isNullOrEmpty() -> name
-        name.contains(" $MANAGER_DATA_NAME_FLAG") -> name.substring(0, name.lastIndexOf(" $MANAGER_DATA_NAME_FLAG"))
+        name.contains(" $HOME_DOMAIN_MANAGER_DATA_NAME_FLAG") -> name.substring(0, name.lastIndexOf(" $HOME_DOMAIN_MANAGER_DATA_NAME_FLAG"))
         else -> name
     }
 
     /**
      * Check sep 10 challenge for determining transaction type.
-     * @param domainName Retrieved from 'name' field value of [ManageDataOperation] without [MANAGER_DATA_NAME_FLAG]. SEP-0010 v3.0.0 requirements.
+     * @param domainName Retrieved from 'name' field value of [ManageDataOperation] without [HOME_DOMAIN_MANAGER_DATA_NAME_FLAG].
      * @param webAuthDomain The home domain that is expected to be included as the value of the [ManageDataOperation] with the 'web_auth_domain' key, if present.
      * @return transaction type: [TRANSACTION] or [AUTH_CHALLENGE].
      */
@@ -475,8 +479,8 @@ class TransactionEntityMapper(private val network: Network) {
 
     private fun mapAsset(asset: org.stellar.sdk.Asset?): Asset {
         return when (asset) {
-            is AssetTypeCreditAlphaNum4 -> Asset(asset.code, asset.type, asset.issuer)
-            is AssetTypeCreditAlphaNum12 -> Asset(asset.code, asset.type, asset.issuer)
+            is AssetTypeCreditAlphaNum -> Asset(asset.code, asset.type, asset.issuer)
+            is AssetTypeNative -> Asset("XLM", "native", null)
             else -> Asset("XLM", "native", null)
         }
     }

@@ -12,6 +12,7 @@ import android.widget.Toast
 import androidx.annotation.ColorRes
 import androidx.annotation.StringRes
 import androidx.core.content.ContextCompat
+import androidx.core.view.isVisible
 import com.andrognito.pinlockview.PinLockListener
 import com.lobstr.stellar.vault.R
 import com.lobstr.stellar.vault.databinding.FragmentPinBinding
@@ -199,11 +200,11 @@ class PinFragment : BaseFragment(), PinFrView, PinLockListener, BiometricListene
             binding.pinLockView.textColor =
                 ContextCompat.getColor(requireContext(), android.R.color.white)
 
-            binding.tvPinTitle.visibility = View.GONE
-            binding.ivPinLogo.visibility = View.VISIBLE
-            binding.indicatorDotsWhite.visibility = View.VISIBLE
-            binding.indicatorDots.visibility = View.GONE
-            binding.tvPinLogOut.visibility = View.VISIBLE
+            binding.tvPinTitle.isVisible = false
+            binding.ivPinLogo.isVisible = true
+            binding.indicatorDotsWhite.isVisible = true
+            binding.indicatorDots.isVisible = false
+            binding.tvPinLogOut.isVisible = true
         } else {
             // White style.
             binding.indicatorDots.pinLength = 6
@@ -212,11 +213,11 @@ class PinFragment : BaseFragment(), PinFrView, PinLockListener, BiometricListene
             binding.pinLockView.textColor =
                 ContextCompat.getColor(requireContext(), android.R.color.black)
 
-            binding.tvPinTitle.visibility = View.VISIBLE
-            binding.ivPinLogo.visibility = View.GONE
-            binding.indicatorDotsWhite.visibility = View.GONE
-            binding.indicatorDots.visibility = View.VISIBLE
-            binding.tvPinLogOut.visibility = View.GONE
+            binding.tvPinTitle.isVisible = true
+            binding.ivPinLogo.isVisible = false
+            binding.indicatorDotsWhite.isVisible = false
+            binding.indicatorDots.isVisible = true
+            binding.tvPinLogOut.isVisible = false
         }
     }
 

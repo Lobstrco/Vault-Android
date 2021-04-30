@@ -103,20 +103,17 @@ object Constant {
     }
 
     object Code {
-        const val TRANSACTION_DETAILS_FRAGMENT = 102
-        const val CHANGE_PIN = 103
-        const val CONFIRM_PIN_FOR_MNEMONIC = 104
-        const val IMPORT_XDR_FRAGMENT = 105
-
         /**
          * Config screen identity.
          */
         object Config {
-            const val SPAM_PROTECTION = 106
-            const val TRANSACTION_CONFIRMATIONS = 107
+            const val SPAM_PROTECTION = 102
+            const val TRANSACTION_CONFIRMATIONS = 103
         }
+    }
 
-        const val TANGEM_CREATE_WALLET = 108
+    object RequestKey{
+        const val TRANSACTION_DETAILS_FRAGMENT = "TRANSACTION_DETAILS_FRAGMENT"
     }
 
     object TransactionType {
@@ -171,6 +168,17 @@ object Constant {
         private const val URL = "https://stellar.expert/explorer/public"
         const val ACCOUNT = URL.plus("/account/")
         const val TRANSACTION = URL.plus("/tx/")
+    }
+
+    object Laboratory {
+        const val URL = "https://laboratory.stellar.org/#xdr-viewer?input=%s&type=%s&network=%s"
+        object Type {
+            const val TRANSACTION_ENVELOPE = "TransactionEnvelope"
+        }
+        object NETWORK {
+            const val PUBLIC = "public"
+            const val TEST = "test"
+        }
     }
 
     object LobstrWallet {

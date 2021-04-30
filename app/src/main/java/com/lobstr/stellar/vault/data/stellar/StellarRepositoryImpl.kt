@@ -115,10 +115,9 @@ class StellarRepositoryImpl(
 
                 val signatures = transaction.signatures ?: return@map accountResult
 
-                // Exclude marker key (VAULT).
+                // Exclude marker key (VAULT) and accounts with weight = 0.
                 val listOfTargetSigners = accountResponse.signers
-                    .filter { !it.key.contains("VAULT") }
-
+                    .filter { !it.key.contains("VAULT") && it.weight != 0 }
 
                 // Check verification for each key.
                 for (signer in listOfTargetSigners) {

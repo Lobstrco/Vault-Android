@@ -39,7 +39,7 @@ data class CreateClaimableBalanceOperation(
                             it.destination,
                             PK_TRUNCATE_COUNT
                         ).toString().plus("\n") else it.destination.plus("\n")
-                    }
+                    }.trim()
                 ))
             }
         }

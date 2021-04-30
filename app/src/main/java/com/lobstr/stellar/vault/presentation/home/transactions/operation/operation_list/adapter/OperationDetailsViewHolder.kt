@@ -14,14 +14,11 @@ class OperationDetailsViewHolder(private val binding: AdapterItemOperationDetail
     fun bind(name: String, value: String?) {
         binding.tvOperationFieldName.text = name
         binding.tvOperationFieldValue.ellipsize = when (name) {
-            AppUtil.getString(R.string.op_field_memo) -> TextUtils.TruncateAt.END
             AppUtil.getString(R.string.op_field_destination_federation) -> TextUtils.TruncateAt.END
             else -> TextUtils.TruncateAt.MIDDLE
         }
-        binding.tvOperationFieldValue.isSingleLine = when(name){
-            AppUtil.getString(R.string.op_field_claimants) -> false
-            else -> true
-        }
+        binding.tvOperationFieldValue.isSingleLine = value?.contains("\n") != true
+
         binding.tvOperationFieldValue.text =
             if (AppUtil.isPublicKey(value)) {
                 AppUtil.ellipsizeStrInMiddle(value, Constant.Util.PK_TRUNCATE_COUNT)

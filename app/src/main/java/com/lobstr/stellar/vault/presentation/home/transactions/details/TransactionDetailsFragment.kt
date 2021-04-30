@@ -4,12 +4,13 @@ import android.app.Activity
 import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.text.TextUtils
+import android.view.*
 import android.widget.TextView
 import android.widget.Toast
+import androidx.core.view.isVisible
 import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.setFragmentResult
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.lobstr.stellar.vault.R
 import com.lobstr.stellar.vault.databinding.FragmentTransactionDetailsBinding
@@ -103,6 +104,21 @@ class TransactionDetailsFragment : BaseFragment(), TransactionDetailsView, View.
         }
     }
 
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.transaction_details, menu)
+        super.onCreateOptionsMenu(menu, inflater)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.action_copy_xdr -> mPresenter.copyXdrClicked()
+            R.id.action_copy_signed_xdr -> mPresenter.copySignedXdrClicked()
+            R.id.action_view_transaction_details -> mPresenter.viewTransactionDetailsClicked()
+        }
+
+        return super.onOptionsItemSelected(item)
+    }
+
     override fun onBackPressed(): Boolean {
         // handle operations container backStack.
         if (childFragmentManager.backStackEntryCount > 1) {
@@ -149,11 +165,11 @@ class TransactionDetailsFragment : BaseFragment(), TransactionDetailsView, View.
     }
 
     override fun showSignersProgress(show: Boolean) {
-        binding.pbSigners.visibility = if (show) View.VISIBLE else View.GONE
+        binding.pbSigners.isVisible = show
     }
 
     override fun showSignersContainer(show: Boolean) {
-        binding.llSignersContainer.visibility = if (show) View.VISIBLE else View.GONE
+        binding.llSignersContainer.isVisible = show
     }
 
     override fun showSignersCount(count: String?) {
@@ -205,13 +221,19 @@ class TransactionDetailsFragment : BaseFragment(), TransactionDetailsView, View.
                 layoutInflater.inflate(R.layout.layout_additional_value, view as ViewGroup, false)
             val fieldName = root.findViewById<TextView>(R.id.tvFieldName)
             val fieldValue = root.findViewById<TextView>(R.id.tvFieldValue)
+
+            fieldValue.ellipsize = when (key) {
+                AppUtil.getString(R.string.text_tv_transaction_memo) -> TextUtils.TruncateAt.END
+                else -> TextUtils.TruncateAt.MIDDLE
+            }
+
             fieldName.text = key
             fieldValue.text = value
 
             // Show divider only fo first value.
             if (binding.llAdditionalInfo.childCount == 0) {
                 val divider = root.findViewById<View>(R.id.divider)
-                divider.visibility = View.VISIBLE
+                divider.isVisible = true
             }
 
             binding.llAdditionalInfo.addView(root)
@@ -219,17 +241,17 @@ class TransactionDetailsFragment : BaseFragment(), TransactionDetailsView, View.
     }
 
     override fun setActionBtnVisibility(isConfirmVisible: Boolean, isDenyVisible: Boolean) {
-        binding.btnConfirm.visibility = if (isConfirmVisible) View.VISIBLE else View.GONE
-        binding.btnDeny.visibility = if (isDenyVisible) View.VISIBLE else View.GONE
+        binding.btnConfirm.isVisible = isConfirmVisible
+        binding.btnDeny.isVisible = isDenyVisible
     }
 
     override fun showActionContainer(show: Boolean) {
-        binding.llActionContainer.visibility = if (show) View.VISIBLE else View.GONE
+        binding.llActionContainer.isVisible = show
     }
 
     override fun setTransactionValid(valid: Boolean) {
         binding.btnConfirm.isEnabled = valid
-        binding.tvErrorDescription.visibility = if (valid) View.GONE else View.VISIBLE
+        binding.tvErrorDescription.isVisible = !valid
     }
 
     override fun showMessage(message: String?) {
@@ -248,6 +270,10 @@ class TransactionDetailsFragment : BaseFragment(), TransactionDetailsView, View.
         intent.putExtra(EXTRA_TRANSACTION_ITEM, transactionItem)
         intent.putExtra(EXTRA_TRANSACTION_STATUS, Constant.Transaction.CANCELLED)
         activity?.setResult(Activity.RESULT_OK, intent)
+        setFragmentResult(Constant.RequestKey.TRANSACTION_DETAILS_FRAGMENT, Bundle().apply {
+            putParcelable(EXTRA_TRANSACTION_ITEM, transactionItem)
+            putInt(EXTRA_TRANSACTION_STATUS, Constant.Transaction.CANCELLED)
+        })
 
         // Close screen.
         (activity as? ContainerActivity)?.finish() ?: activity?.onBackPressed()
@@ -263,6 +289,10 @@ class TransactionDetailsFragment : BaseFragment(), TransactionDetailsView, View.
         intent.putExtra(EXTRA_TRANSACTION_ITEM, transactionItem)
         intent.putExtra(EXTRA_TRANSACTION_STATUS, Constant.Transaction.SIGNED)
         activity?.setResult(Activity.RESULT_OK, intent)
+        setFragmentResult(Constant.RequestKey.TRANSACTION_DETAILS_FRAGMENT, Bundle().apply {
+            putParcelable(EXTRA_TRANSACTION_ITEM,transactionItem)
+            putInt(EXTRA_TRANSACTION_STATUS, Constant.Transaction.SIGNED)
+        })
 
         // Mark Check Rate Us state.
         LVApplication.checkRateUsDialogState = Constant.RateUsSessionState.CHECK
@@ -291,9 +321,10 @@ class TransactionDetailsFragment : BaseFragment(), TransactionDetailsView, View.
         )
     }
 
-    override fun errorConfirmTransaction(errorMessage: String) {
+    override fun errorConfirmTransaction(errorMessage: String, envelopeXdr: String) {
         // Notify target about changes.
         activity?.setResult(Activity.RESULT_OK)
+        setFragmentResult(Constant.RequestKey.TRANSACTION_DETAILS_FRAGMENT, Bundle.EMPTY)
 
         // Close screen.
         parentFragment?.childFragmentManager?.popBackStack()
@@ -301,6 +332,7 @@ class TransactionDetailsFragment : BaseFragment(), TransactionDetailsView, View.
         // Show error screen.
         val bundle = Bundle()
         bundle.putString(Constant.Bundle.BUNDLE_ERROR_MESSAGE, errorMessage)
+        bundle.putString(Constant.Bundle.BUNDLE_ENVELOPE_XDR, envelopeXdr)
         val fragment = requireParentFragment().childFragmentManager.fragmentFactory.instantiate(
             requireContext().classLoader,
             ErrorFragment::class.qualifiedName!!
@@ -354,6 +386,10 @@ class TransactionDetailsFragment : BaseFragment(), TransactionDetailsView, View.
 
     override fun copyToClipBoard(text: String) {
         AppUtil.copyToClipboard(context, text)
+    }
+
+    override fun showWebPage(url: String) {
+        AppUtil.openWebPage(context, url)
     }
 
     override fun showTangemScreen(tangemInfo: TangemInfo) {

@@ -15,7 +15,7 @@ class TransactionOperationViewHolder(private val binding: AdapterItemOperationBi
         binding.divider.visibility = calculateDividerVisibility(itemsCount)
         binding.tvOperationTitle.text = capitalize(context.getString(title))
         itemView.setOnClickListener {
-            val position = this@TransactionOperationViewHolder.adapterPosition
+            val position = this@TransactionOperationViewHolder.bindingAdapterPosition
             if (position == RecyclerView.NO_POSITION) {
                 return@setOnClickListener
             }
@@ -34,7 +34,7 @@ class TransactionOperationViewHolder(private val binding: AdapterItemOperationBi
      * @return Visibility.
      */
     private fun calculateDividerVisibility(itemsCount: Int): Int {
-        return if (itemsCount == 1 || adapterPosition == itemsCount - 1) {
+        return if (itemsCount == 1 || bindingAdapterPosition == itemsCount - 1) {
             View.INVISIBLE
         } else {
             View.VISIBLE

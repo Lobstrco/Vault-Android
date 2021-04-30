@@ -189,8 +189,7 @@ class LVFirebaseMessagingService : FirebaseMessagingService() {
             },
             Intent(this, HomeActivity::class.java).apply {
                 addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_CLEAR_TOP)
-            },
-            priority = NotificationCompat.PRIORITY_HIGH
+            }
         )
     }
 

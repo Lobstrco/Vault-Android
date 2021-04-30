@@ -14,6 +14,7 @@ import android.view.*
 import android.view.animation.LinearInterpolator
 import android.widget.Toast
 import androidx.core.content.ContextCompat
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.lobstr.stellar.vault.R
@@ -158,8 +159,8 @@ class DashboardFragment : BaseFragment(), DashboardView, View.OnClickListener {
     }
 
     override fun showVaultInfo(hasTangem: Boolean, identityIconUrl: String, publicKey: String?) {
-        binding.ivSignerCard.visibility = if (hasTangem) View.VISIBLE else View.GONE
-        binding.flIdentityContainer.visibility = if (hasTangem) View.GONE else View.VISIBLE
+        binding.ivSignerCard.isVisible = hasTangem
+        binding.flIdentityContainer.isVisible = !hasTangem
 
         if (!hasTangem) {
             // Set user identity icon.
@@ -216,8 +217,8 @@ class DashboardFragment : BaseFragment(), DashboardView, View.OnClickListener {
         if (count != null) {
             binding.tvDashboardTransactionCount.text = count.toString()
         }
-        binding.pbDashboardTransactions.visibility = View.GONE
-        binding.llDashboardTransactionToSignContainer.visibility = View.VISIBLE
+        binding.pbDashboardTransactions.isVisible = false
+        binding.llDashboardTransactionToSignContainer.isVisible = true
     }
 
     override fun showSignersScreen() {
@@ -262,15 +263,15 @@ class DashboardFragment : BaseFragment(), DashboardView, View.OnClickListener {
     }
 
     override fun showSignersProgress(show: Boolean) {
-        binding.pbDashboardSigners.visibility = if (show) View.VISIBLE else View.GONE
-        binding.tvAddAccount.visibility = if (show) View.GONE else View.VISIBLE
-        binding.tvDashboardSignersCount.visibility = if (show) View.GONE else View.VISIBLE
+        binding.pbDashboardSigners.isVisible = show
+        binding.tvAddAccount.isVisible = !show
+        binding.tvDashboardSignersCount.isVisible = !show
     }
 
     override fun showSignersEmptyState(show: Boolean) {
-        binding.cvDashboardSignersInfo.visibility = if (show) View.GONE else View.VISIBLE
-        binding.cvDashboardSignersEmptyState.visibility = if (show) View.VISIBLE else View.GONE
-        binding.svTransactions.visibility = if (show) View.GONE else View.VISIBLE
+        binding.cvDashboardSignersInfo.isVisible = !show
+        binding.cvDashboardSignersEmptyState.isVisible = show
+        binding.svTransactions.isVisible = !show
     }
 
     override fun showRefreshAnimation(show: Boolean) {

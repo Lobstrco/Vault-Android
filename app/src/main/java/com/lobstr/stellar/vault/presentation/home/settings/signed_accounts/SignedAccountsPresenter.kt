@@ -11,7 +11,6 @@ import com.lobstr.stellar.vault.domain.util.event.Network
 import com.lobstr.stellar.vault.domain.util.event.Notification
 import com.lobstr.stellar.vault.presentation.BasePresenter
 import com.lobstr.stellar.vault.presentation.entities.account.Account
-import com.lobstr.stellar.vault.presentation.util.Constant
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.disposables.Disposable
@@ -24,9 +23,6 @@ class SignedAccountsPresenter @Inject constructor(
 ) : BasePresenter<SignedAccountsView>() {
 
     private val accounts: MutableList<Account> = mutableListOf()
-
-    // For restore RecycleView position after saveInstanceState (-1 - undefined state).
-    private var savedRvPosition: Int = Constant.Util.UNDEFINED_VALUE
 
     private var stellarAccountsDisposable: Disposable? = null
     private val cachedStellarAccounts: MutableList<Account> = mutableListOf()
@@ -87,10 +83,6 @@ class SignedAccountsPresenter @Inject constructor(
                 .doOnSubscribe { viewState.showProgress(true) }
                 .doOnEvent { _, _ -> viewState.showProgress(false) }
                 .subscribe({
-                    // Reset saved scroll position for avoid scroll to wrong position after
-                    // pagination action.
-                    savedRvPosition = Constant.Util.UNDEFINED_VALUE
-
                     accounts.clear()
                     accounts.addAll(it)
 
@@ -118,7 +110,9 @@ class SignedAccountsPresenter @Inject constructor(
                         }
                         is UserNotAuthorizedException -> {
                             when (it.action) {
-                                UserNotAuthorizedException.Action.AUTH_REQUIRED -> eventProviderModule.authEventSubject.onNext(Auth())
+                                UserNotAuthorizedException.Action.AUTH_REQUIRED -> eventProviderModule.authEventSubject.onNext(
+                                    Auth()
+                                )
                                 else -> loadSignedAccountsList()
                             }
                         }
@@ -183,20 +177,5 @@ class SignedAccountsPresenter @Inject constructor(
 
     fun signedAccountItemLongClicked(account: Account) {
         viewState.copyToClipBoard(account.address)
-    }
-
-    fun onSaveInstanceState(position: Int) {
-        // Save list position and restore it after if needed.
-        savedRvPosition = position
-    }
-
-    fun attemptRestoreRvPosition() {
-        if (savedRvPosition == Constant.Util.UNDEFINED_VALUE) {
-            return
-        }
-
-        viewState.scrollListToPosition(savedRvPosition)
-
-        savedRvPosition = Constant.Util.UNDEFINED_VALUE
     }
 }

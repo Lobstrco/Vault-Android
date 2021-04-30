@@ -39,9 +39,12 @@ class ErrorFragment : BaseFragment(), ErrorView, View.OnClickListener {
     // Constructors
     // ===========================================================
 
-    private val mPresenter by moxyPresenter { presenterProvider.get().apply {
+    private val mPresenter by moxyPresenter {
+        presenterProvider.get().apply {
             error = requireArguments().getString(Constant.Bundle.BUNDLE_ERROR_MESSAGE)!!
-        }}
+            envelopeXdr = requireArguments().getString(Constant.Bundle.BUNDLE_ENVELOPE_XDR)!!
+        }
+    }
 
     // ===========================================================
     // Getter & Setter
@@ -65,6 +68,7 @@ class ErrorFragment : BaseFragment(), ErrorView, View.OnClickListener {
     }
 
     private fun setListeners() {
+        binding.copyXdr.btnCopyXdr.setOnClickListener(this)
         binding.btnDone.setOnClickListener(this)
     }
 
@@ -76,6 +80,8 @@ class ErrorFragment : BaseFragment(), ErrorView, View.OnClickListener {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.action_info -> mPresenter.infoClicked()
+            R.id.action_view_transaction_details -> mPresenter.viewTransactionDetailsClicked()
+            R.id.action_copy_signed_xdr -> mPresenter.copySignedXdrClicked()
         }
 
         return super.onOptionsItemSelected(item)
@@ -92,12 +98,17 @@ class ErrorFragment : BaseFragment(), ErrorView, View.OnClickListener {
 
     override fun onClick(v: View?) {
         when (v?.id) {
+            binding.copyXdr.btnCopyXdr.id -> mPresenter.copySignedXdrClicked()
             binding.btnDone.id -> mPresenter.doneClicked()
         }
     }
 
     override fun vibrate(pattern: LongArray) {
         AppUtil.vibrate(requireContext(), pattern)
+    }
+
+    override fun setupXdr(xdr: String) {
+        binding.copyXdr.tvXdr.text = xdr
     }
 
     override fun setupErrorInfo(error: String) {
@@ -110,6 +121,14 @@ class ErrorFragment : BaseFragment(), ErrorView, View.OnClickListener {
 
     override fun showHelpScreen(userId: String?) {
         SupportManager.showZendeskHelpCenter(requireContext(), userId = userId)
+    }
+
+    override fun showWebPage(url: String) {
+        AppUtil.openWebPage(context, url)
+    }
+
+    override fun copyToClipBoard(text: String) {
+        AppUtil.copyToClipboard(context, text)
     }
 
     // ===========================================================

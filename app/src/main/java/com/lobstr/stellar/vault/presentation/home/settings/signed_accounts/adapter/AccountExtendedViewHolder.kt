@@ -2,6 +2,7 @@ package com.lobstr.stellar.vault.presentation.home.settings.signed_accounts.adap
 
 import android.text.TextUtils
 import android.view.View
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.lobstr.stellar.vault.R
@@ -30,12 +31,7 @@ class AccountExtendedViewHolder(
             .placeholder(R.drawable.ic_person)
             .into(binding.ivIdentity)
 
-        binding.tvAccount.visibility =
-            if (account.federation.isNullOrEmpty()) {
-                View.GONE
-            } else {
-                View.VISIBLE
-            }
+        binding.tvAccount.isVisible = !account.federation.isNullOrEmpty()
 
         binding.tvAccount.text = when {
             !account.federation.isNullOrEmpty() -> AppUtil.ellipsizeStrInMiddle(
@@ -60,7 +56,7 @@ class AccountExtendedViewHolder(
             }
 
         itemView.setOnClickListener {
-            val position = this@AccountExtendedViewHolder.adapterPosition
+            val position = this@AccountExtendedViewHolder.bindingAdapterPosition
             if (position == RecyclerView.NO_POSITION) {
                 return@setOnClickListener
             }
@@ -69,7 +65,7 @@ class AccountExtendedViewHolder(
         }
 
         itemView.setOnLongClickListener {
-            val position = this@AccountExtendedViewHolder.adapterPosition
+            val position = this@AccountExtendedViewHolder.bindingAdapterPosition
             if (position == RecyclerView.NO_POSITION) {
                 return@setOnLongClickListener false
             }
@@ -86,7 +82,7 @@ class AccountExtendedViewHolder(
      * @return Visibility.
      */
     private fun calculateDividerVisibility(itemsCount: Int): Int {
-        return if (itemsCount == 1 || adapterPosition == itemsCount - 1) {
+        return if (itemsCount == 1 || bindingAdapterPosition == itemsCount - 1) {
             View.INVISIBLE
         } else {
             View.VISIBLE

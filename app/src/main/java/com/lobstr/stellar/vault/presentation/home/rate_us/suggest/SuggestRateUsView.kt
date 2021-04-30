@@ -6,5 +6,5 @@ import moxy.viewstate.strategy.alias.Skip
 @Skip
 interface SuggestRateUsView : MvpView {
     fun showRateUsDialog()
-    fun sendMail(mail: String, subject: String, body: String? = null)
+    fun showFeedbackDialog()
 }

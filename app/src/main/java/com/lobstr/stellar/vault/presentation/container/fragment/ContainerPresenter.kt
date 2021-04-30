@@ -52,7 +52,7 @@ class ContainerPresenter(
 
             SUCCESS -> viewState.showSuccessFr(envelopeXdr!!, transactionSuccessStatus!!)
 
-            ERROR -> viewState.showErrorFr(errorMessage!!)
+            ERROR -> viewState.showErrorFr(errorMessage!!, envelopeXdr!!)
 
             SIGNED_ACCOUNTS -> viewState.showSignedAccountsFr()
 

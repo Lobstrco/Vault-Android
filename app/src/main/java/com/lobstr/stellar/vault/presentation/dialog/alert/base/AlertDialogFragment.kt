@@ -15,11 +15,13 @@ import com.lobstr.stellar.vault.R
 import com.lobstr.stellar.vault.presentation.BaseMvpAppCompatDialogFragment
 import com.lobstr.stellar.vault.presentation.dialog.alert.base.AlertDialogFragment.DialogIdentifier.APP_UPDATE
 import com.lobstr.stellar.vault.presentation.dialog.alert.base.AlertDialogFragment.DialogIdentifier.PROGRESS
+import com.lobstr.stellar.vault.presentation.dialog.alert.base.AlertDialogFragment.DialogIdentifier.PROVIDE_FEEDBACK
 import com.lobstr.stellar.vault.presentation.dialog.alert.base.AlertDialogFragment.DialogIdentifier.RATE_US
 import com.lobstr.stellar.vault.presentation.dialog.alert.base.AlertDialogFragment.DialogIdentifier.SUGGEST_RATE_US
 import com.lobstr.stellar.vault.presentation.dialog.alert.progress.ProgressDialog
 import com.lobstr.stellar.vault.presentation.home.app_update.AppUpdateDialogFragment
 import com.lobstr.stellar.vault.presentation.home.rate_us.common.RateUsDialogFragment
+import com.lobstr.stellar.vault.presentation.home.rate_us.feedback.ProvideFeedbackDialogFragment
 import com.lobstr.stellar.vault.presentation.home.rate_us.suggest.SuggestRateUsDialogFragment
 import com.lobstr.stellar.vault.presentation.util.AppUtil
 
@@ -64,6 +66,7 @@ open class AlertDialogFragment : BaseMvpAppCompatDialogFragment() {
         const val EDIT_ACCOUNT = "EDIT_ACCOUNT"
         const val RATE_US = "RATE_US"
         const val SUGGEST_RATE_US = "SUGGEST_RATE_US"
+        const val PROVIDE_FEEDBACK = "PROVIDE_FEEDBACK"
         const val COMMON_PIN_PATTERN = "COMMON_PIN_PATTERN"
         const val CLEAR_TRANSACTIONS = "CLEAR_TRANSACTIONS"
         const val NFC_INFO_DIALOG = "NFC_INFO_DIALOG"
@@ -76,7 +79,8 @@ open class AlertDialogFragment : BaseMvpAppCompatDialogFragment() {
         const val PROGRESS = 1
         const val SUGGEST_RATE_US = 2
         const val RATE_US = 3
-        const val APP_UPDATE = 4
+        const val PROVIDE_FEEDBACK = 4
+        const val APP_UPDATE = 5
     }
 
     companion object {
@@ -125,6 +129,11 @@ open class AlertDialogFragment : BaseMvpAppCompatDialogFragment() {
                     alertDialogFragment =
                         RateUsDialogFragment()
                     Log.i(LOG_TAG, " fabric: RateUsDialogFragment")
+                }
+
+                PROVIDE_FEEDBACK -> {
+                    alertDialogFragment = ProvideFeedbackDialogFragment()
+                    Log.i(LOG_TAG, " fabric: ProvideFeedbackDialogFragment")
                 }
 
                 APP_UPDATE -> {
@@ -205,7 +214,7 @@ open class AlertDialogFragment : BaseMvpAppCompatDialogFragment() {
      */
     override fun show(manager: FragmentManager, tag: String?) {
         // If dialog is showed - skip it.
-        if ((manager.findFragmentByTag(tag) as? AlertDialogFragment)?.dialog != null) {
+        if ((manager.findFragmentByTag(tag) as? AlertDialogFragment)?.dialog?.isShowing == true) {
             return
         }
 

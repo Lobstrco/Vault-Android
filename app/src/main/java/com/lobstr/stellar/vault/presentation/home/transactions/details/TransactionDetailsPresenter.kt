@@ -44,6 +44,9 @@ class TransactionDetailsPresenter @Inject constructor(
     private var confirmationInProcess = false
     private var cancellationInProcess = false
 
+    // Used for dividing Tangem action states in handleTangemInfo() method: true - Just Sign Transaction, false - confirm).
+    private var tangemSignTransactionState = false
+
     private var stellarAccountsDisposable: Disposable? = null
     private val cachedStellarAccounts: MutableList<Account> = mutableListOf()
 
@@ -51,7 +54,12 @@ class TransactionDetailsPresenter @Inject constructor(
         super.onFirstViewAttach()
 
         registerEventProvider()
-        viewState.setupToolbarTitle(R.string.title_toolbar_transaction_details)
+        viewState.setupToolbarTitle(
+            when (transactionItem.transactionType) {
+                AUTH_CHALLENGE -> R.string.text_transaction_challenge
+                else -> R.string.title_toolbar_transaction_details
+            }
+        )
         viewState.initSignersRecycledView()
         prepareUiAndOperationsList()
         getTransactionSigners()
@@ -251,8 +259,13 @@ class TransactionDetailsPresenter @Inject constructor(
     private fun checkTransactionInfo() {
         val map: MutableMap<String, String?> = mutableMapOf()
 
+        val memo = transactionItem.transaction.memo
         val sourceAccount = transactionItem.transaction.sourceAccount
         val addedAt = transactionItem.addedAt
+
+        if (!memo.isNullOrEmpty()) {
+            map[AppUtil.getString(R.string.text_tv_transaction_memo)] = memo
+        }
 
         if (!sourceAccount.isNullOrEmpty()) {
             map[AppUtil.getString(R.string.text_tv_transaction_source_account)] =
@@ -272,9 +285,55 @@ class TransactionDetailsPresenter @Inject constructor(
 
     fun handleTangemInfo(tangemInfo: TangemInfo?) {
         if (tangemInfo != null) {
-            // Confirm transaction after Tangem action.
-            confirmTransaction(tangemInfo.signedTransaction)
+            if (tangemSignTransactionState) {
+                // Save signed xdr to clipboard.
+                viewState.copyToClipBoard(tangemInfo.signedTransaction!!)
+            } else {
+                // Confirm transaction after Tangem action.
+                confirmTransaction(tangemInfo.signedTransaction)
+            }
         }
+    }
+
+    fun copyXdrClicked() {
+        viewState.copyToClipBoard(transactionItem.xdr!!)
+    }
+
+    fun copySignedXdrClicked() {
+        signTransaction()
+    }
+
+    private fun signTransaction() {
+        when {
+            interactor.hasMnemonics() -> {
+                unsubscribeOnDestroy(
+                    interactor.signTransaction(transactionItem.xdr!!)
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe({
+                            // Save signed xdr to clipboard.
+                            viewState.copyToClipBoard(it.toEnvelopeXdrBase64())
+                        }, {
+                            // Ignore errors.
+                        })
+                )
+            }
+            interactor.hasTangem() -> {
+                // Change state for Tangem action - sign.
+                tangemSignTransactionState = true
+                viewState.showTangemScreen(
+                    TangemInfo().apply {
+                        accountId = interactor.getUserPublicKey()
+                        cardId = interactor.getTangemCardId()
+                        pendingTransaction = transactionItem.xdr
+                    }
+                )
+            }
+        }
+    }
+
+    fun viewTransactionDetailsClicked() {
+        viewState.showWebPage(AppUtil.composeLaboratoryUrl(transactionItem.xdr!!))
     }
 
     fun btnConfirmClicked() {
@@ -286,6 +345,8 @@ class TransactionDetailsPresenter @Inject constructor(
                 }
             }
             interactor.hasTangem() -> {
+                // Change state for Tangem action - confirm.
+                tangemSignTransactionState = false
                 if (confirmationInProcess) {
                     return
                 }
@@ -420,10 +481,12 @@ class TransactionDetailsPresenter @Inject constructor(
 
                                     when {
                                         envelopXdr == null -> throw HorizonException(
-                                            errorToShow!!
+                                            errorToShow!!,
+                                            it.toEnvelopeXdrBase64()
                                         )
                                         transactionResultCode != null && transactionResultCode != "tx_bad_auth" -> throw HorizonException(
-                                            errorToShow!!
+                                            errorToShow!!,
+                                            it.toEnvelopeXdrBase64()
                                         )
                                         transactionResultCode != null && transactionResultCode == "tx_bad_auth" -> needAdditionalSignatures =
                                             true
@@ -477,7 +540,7 @@ class TransactionDetailsPresenter @Inject constructor(
                 }, {
                     when (it) {
                         is HorizonException -> {
-                            viewState.errorConfirmTransaction(it.details)
+                            viewState.errorConfirmTransaction(it.details, it.xdr)
                         }
                         is UserNotAuthorizedException -> {
                             when (it.action) {

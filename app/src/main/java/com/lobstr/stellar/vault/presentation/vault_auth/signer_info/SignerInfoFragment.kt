@@ -9,6 +9,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.view.*
 import android.widget.Toast
+import androidx.core.view.isVisible
 import com.lobstr.stellar.vault.R
 import com.lobstr.stellar.vault.databinding.FragmentSignerInfoBinding
 import com.lobstr.stellar.vault.presentation.base.fragment.BaseFragment
@@ -120,8 +121,8 @@ class SignerInfoFragment : BaseFragment(), SignerInfoView, View.OnClickListener 
             e.printStackTrace()
         }
 
-        binding.cvLobstrWalletInfo.visibility = if (applicationInfo != null) View.VISIBLE else View.GONE
-        binding.cvLobstrWalletInstall.visibility = if (applicationInfo != null) View.GONE else View.VISIBLE
+        binding.cvLobstrWalletInfo.isVisible = applicationInfo != null
+        binding.cvLobstrWalletInstall.isVisible = applicationInfo == null
 
         // Start check of Lobstr Wallet app install.
         mPresenter.startCheckExistenceLobstrAppWithInterval(applicationInfo == null)

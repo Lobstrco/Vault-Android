@@ -15,6 +15,7 @@ import android.widget.TextView
 import androidx.annotation.IdRes
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
+import androidx.core.view.isVisible
 import androidx.core.view.marginEnd
 import androidx.core.view.marginStart
 import com.lobstr.stellar.vault.R
@@ -117,7 +118,7 @@ class MnemonicsContainerView(context: Context?, attrs: AttributeSet?) : ScrollVi
 
                 if (isCounterEnabled) {
                     number.setTextColor(itemCounterTextColor)
-                    number.visibility = View.VISIBLE
+                    number.isVisible = true
                     number.text = (i + 1).toString()
                 }
 

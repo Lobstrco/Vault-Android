@@ -1,7 +1,5 @@
 package com.lobstr.stellar.vault.presentation.home.settings
 
-import android.app.Activity
-import android.content.Intent
 import com.lobstr.stellar.vault.BuildConfig
 import com.lobstr.stellar.vault.R
 import com.lobstr.stellar.vault.data.error.exeption.DefaultException
@@ -107,20 +105,24 @@ class SettingsPresenter @Inject constructor(private val interactor: SettingsInte
         viewState.setupSignersCount(interactor.getSignersCount())
     }
 
-    fun handleOnActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (resultCode == Activity.RESULT_OK) {
-            when (requestCode) {
-                Constant.Code.CHANGE_PIN -> viewState.showMessage(AppUtil.getString(R.string.text_success_change_pin))
-                Constant.Code.CONFIRM_PIN_FOR_MNEMONIC -> viewState.showMnemonicsScreen()
-                Constant.Code.Config.SPAM_PROTECTION -> viewState.setSpamProtection(
-                    AppUtil.getConfigText(
-                        AppUtil.getConfigType(!interactor.isSpamProtectionEnabled())
-                    )
+    fun handleChangePinResult() {
+        viewState.showMessage(AppUtil.getString(R.string.text_success_change_pin))
+    }
+
+    fun handleConfirmPinResult() {
+        viewState.showMnemonicsScreen()
+    }
+
+    fun handleConfigResult(config: Int) {
+        when(config){
+            Constant.Code.Config.SPAM_PROTECTION -> viewState.setSpamProtection(
+                AppUtil.getConfigText(
+                    AppUtil.getConfigType(!interactor.isSpamProtectionEnabled())
                 )
-                Constant.Code.Config.TRANSACTION_CONFIRMATIONS -> viewState.setTrConfirmation(
-                    AppUtil.getConfigText(AppUtil.getConfigType(interactor.isTrConfirmationEnabled()))
-                )
-            }
+            )
+            Constant.Code.Config.TRANSACTION_CONFIRMATIONS -> viewState.setTrConfirmation(
+                AppUtil.getConfigText(AppUtil.getConfigType(interactor.isTrConfirmationEnabled()))
+            )
         }
     }
 

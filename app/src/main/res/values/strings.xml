@@ -13,6 +13,7 @@
 
     <!-- Buttons -->
     <string name="text_btn_cancel">Cancel</string>
+    <string name="text_btn_close">Close</string>
     <string name="text_btn_ok">OK</string>
     <string name="text_btn_confirm">Confirm</string>
     <string name="text_btn_yes">Yes</string>
@@ -172,7 +173,6 @@
     <string name="text_operation_name_inflation">Inflation</string>
     <string name="text_operation_name_manage_data">Manage Data</string>
     <string name="text_operation_name_bump_sequence">Bump Sequence</string>
-    <string name="text_operation_name_challenge">Challenge</string>
     <string name="text_operation_name_several_operation">%s Operations</string>
     <string name="text_operation_name_begin_sponsoring_future_reserves">Begin Sponsoring Future Reserves</string>
     <string name="text_operation_name_end_sponsoring_future_reserves">End Sponsoring Future Reserves</string>
@@ -187,6 +187,7 @@
     <string name="text_operation_name_unknown">Unknown</string>
 
     <!-- Transaction details -->
+    <string name="text_transaction_challenge">Challenge</string>
     <string name="text_tv_sequence_number_invalid_description">Transaction can not be confirmed, its sequence number is
         invalid.
     </string>
@@ -195,6 +196,7 @@
     <string name="text_tv_of">of</string>
     <string name="text_tv_status_signed">Signed</string>
     <string name="text_tv_status_pending">Pending</string>
+    <string name="text_tv_transaction_memo">Memo</string>
     <string name="text_tv_transaction_source_account">Transaction Source</string>
     <string name="text_tv_added_at">Created</string>
 
@@ -236,6 +238,11 @@
     <!-- Rate us dialog -->
     <string name="title_rate_us_dialog">Rate Us</string>
     <string name="msg_rate_us_dialog">Thank you for your support! Please rate us on Google Play.</string>
+
+    <!-- Provide Feedback dialog -->
+    <string name="title_provide_feedback">Provide feedback</string>
+    <string name="msg_provide_feedback">We are always looking to improve LOBSTR Vault and would like to hear your feedback.</string>
+    <string name="text_btn_provide_feedback">Contact Us</string>
 
     <!-- Public key dialog -->
     <string name="text_tv_show_public_key_title">Vault Public Key</string>
@@ -304,13 +311,15 @@
     <string name="text_action_info">help</string>
     <string name="text_action_log_out">log out</string>
     <string name="text_action_refresh">update</string>
-
+    <string name="text_action_open_help_center">Open Help Center</string>
+    <string name="text_menu_copy_xdr">Copy Transaction XDR</string>
+    <string name="text_menu_copy_signed_xdr">Copy Signed XDR</string>
+    <string name="text_menu_view_transaction_details">View Transaction Details</string>
     <!-- NFC dialog -->
     <string name="title_nfc_dialog">Enable NFC?</string>
     <string name="msg_nfc_dialog">Scan is useless when NFC is disabled. Reader mode depends on it. Hit OK to go to Settings, where you can enable NFC.</string>
     <string name="title_nfc_not_available_dialog">NFC not supported</string>
     <string name="msg_nfc_not_available_dialog">Signer Card can\'t be scanned. This device does not support NFC functionality.</string>
-
 
     <!-- Tangem setup screen -->
     <string name="text_tv_tangem_setup_description">Vault Signer Card maximizes the security of digital assets. To proceed, choose the ‘Scan’ option and hold the Signer Card near the back of your device for a few seconds.</string>
@@ -390,7 +399,6 @@ Describe an issue or provide your feedback below:
     <string name="op_field_path">Path</string>
     <string name="op_field_send_amount">Send Amount</string>
     <string name="op_field_dest_min">Dest Min</string>
-    <string name="op_field_memo">Memo</string>
     <string name="op_field_inflation_destination">Inflation Destination</string>
     <string name="op_field_home_domain">Home Domain</string>
     <string name="op_field_clear_flags">Clear Flags</string>
@@ -418,4 +426,5 @@ Describe an issue or provide your feedback below:
     <string name="text_app_update_message_required">Your app is outdated and is no longer supported. Update the app to continue using LOBSTR Vault.</string>
     <string name="btn_text_app_update">Update</string>
     <string name="btn_text_app_update_skip">Skip</string>
+
 </resources>

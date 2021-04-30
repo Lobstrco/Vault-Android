@@ -215,9 +215,10 @@ class ContainerFragment : BaseContainerFragment(),
         )
     }
 
-    override fun showErrorFr(errorMessage: String) {
+    override fun showErrorFr(errorMessage: String, envelopeXdr: String) {
         val bundle = Bundle()
         bundle.putString(Constant.Bundle.BUNDLE_ERROR_MESSAGE, errorMessage)
+        bundle.putString(Constant.Bundle.BUNDLE_ENVELOPE_XDR, envelopeXdr)
         val fragment = childFragmentManager.fragmentFactory.instantiate(
             requireContext().classLoader,
             ErrorFragment::class.qualifiedName!!

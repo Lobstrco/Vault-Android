@@ -1,5 +1,6 @@
 package com.lobstr.stellar.vault.presentation.home.settings
 
+import android.app.Activity
 import android.content.ActivityNotFoundException
 import android.content.DialogInterface
 import android.content.Intent
@@ -15,8 +16,11 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.CompoundButton
 import android.widget.Toast
+import androidx.activity.result.ActivityResult
+import androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult
 import androidx.annotation.StringRes
 import androidx.core.content.ContextCompat
+import androidx.core.view.isVisible
 import com.lobstr.stellar.vault.R
 import com.lobstr.stellar.vault.databinding.FragmentSettingsBinding
 import com.lobstr.stellar.vault.presentation.auth.AuthActivity
@@ -32,6 +36,7 @@ import com.lobstr.stellar.vault.presentation.home.settings.signed_accounts.Signe
 import com.lobstr.stellar.vault.presentation.pin.PinActivity
 import com.lobstr.stellar.vault.presentation.util.AppUtil
 import com.lobstr.stellar.vault.presentation.util.Constant
+import com.lobstr.stellar.vault.presentation.util.Constant.Util.UNDEFINED_VALUE
 import com.lobstr.stellar.vault.presentation.util.manager.FragmentTransactionManager
 import com.lobstr.stellar.vault.presentation.util.manager.SupportManager
 import dagger.hilt.android.AndroidEntryPoint
@@ -67,6 +72,35 @@ class SettingsFragment : BaseFragment(), SettingsView, View.OnClickListener,
     // ===========================================================
 
     private val mPresenter by moxyPresenter { presenterProvider.get() }
+
+    private val mRegisterForConfirmPinCodeResult =
+        registerForActivityResult(StartActivityForResult()) { result: ActivityResult ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                mvpDelegate.onAttach()
+                mPresenter.handleConfirmPinResult()
+            }
+        }
+
+    private val mRegisterForChangePinResult =
+        registerForActivityResult(StartActivityForResult()) { result: ActivityResult ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                mvpDelegate.onAttach()
+                mPresenter.handleChangePinResult()
+            }
+        }
+
+    private val mRegisterForConfigScreenResult =
+        registerForActivityResult(StartActivityForResult()) { result: ActivityResult ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                mvpDelegate.onAttach()
+                mPresenter.handleConfigResult(
+                    result.data?.getIntExtra(
+                        Constant.Extra.EXTRA_CONFIG,
+                        UNDEFINED_VALUE
+                    ) ?: UNDEFINED_VALUE
+                )
+            }
+        }
 
     // ===========================================================
     // Getter & Setter
@@ -111,11 +145,6 @@ class SettingsFragment : BaseFragment(), SettingsView, View.OnClickListener,
         binding.tvSettingsRateUs.setOnClickListener(this)
         binding.tvSettingsContactSupport.setOnClickListener(this)
         binding.tvLogOut.setOnClickListener(this)
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        mPresenter.handleOnActivityResult(requestCode, resultCode, data)
     }
 
     override fun onDestroyView() {
@@ -163,17 +192,13 @@ class SettingsFragment : BaseFragment(), SettingsView, View.OnClickListener,
         isTransactionConfirmationAvailable: Boolean,
         isChangePinAvailable: Boolean
     ) {
-        binding.llBiometricContainer.visibility = if (isBiometricSupported) View.VISIBLE else View.GONE
+        binding.llBiometricContainer.isVisible = isBiometricSupported
         binding.tvSettingsVersion.text = buildVersion
 
-        binding.llSettingsMnemonicsContainer.visibility =
-            if (isRecoveryCodeAvailable) View.VISIBLE else View.GONE
-        binding.llSettingsSignerCardInfoContainer.visibility =
-            if (isSignerCardInfoAvailable) View.VISIBLE else View.GONE
-        binding.llSettingsTrConfirmationContainer.visibility =
-            if (isTransactionConfirmationAvailable) View.VISIBLE else View.GONE
-        binding.llSettingsChangePinContainer.visibility =
-            if (isChangePinAvailable) View.VISIBLE else View.GONE
+        binding.llSettingsMnemonicsContainer.isVisible = isRecoveryCodeAvailable
+        binding.llSettingsSignerCardInfoContainer.isVisible = isSignerCardInfoAvailable
+        binding.llSettingsTrConfirmationContainer.isVisible = isTransactionConfirmationAvailable
+        binding.llSettingsChangePinContainer.isVisible = isChangePinAvailable
     }
 
     override fun setupSignersCount(signersCount: Int) {
@@ -255,19 +280,19 @@ class SettingsFragment : BaseFragment(), SettingsView, View.OnClickListener,
     }
 
     override fun showConfirmPinCodeScreen() {
-        startActivityForResult(Intent(context, PinActivity::class.java).apply {
+        mRegisterForConfirmPinCodeResult.launch(Intent(context, PinActivity::class.java).apply {
             addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
             addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
             putExtra(Constant.Extra.EXTRA_PIN_MODE, Constant.PinMode.CONFIRM)
-        }, Constant.Code.CONFIRM_PIN_FOR_MNEMONIC)
+        })
     }
 
     override fun showChangePinScreen() {
-        startActivityForResult(Intent(context, PinActivity::class.java).apply {
+        mRegisterForChangePinResult.launch(Intent(context, PinActivity::class.java).apply {
             addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
             addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
             putExtra(Constant.Extra.EXTRA_PIN_MODE, Constant.PinMode.CHANGE)
-        }, Constant.Code.CHANGE_PIN)
+        })
     }
 
     override fun showHelpScreen(userId: String?) {
@@ -328,12 +353,12 @@ class SettingsFragment : BaseFragment(), SettingsView, View.OnClickListener,
     }
 
     override fun showConfigScreen(config: Int) {
-        val intent = Intent(context, ContainerActivity::class.java)
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-        intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
-        intent.putExtra(Constant.Extra.EXTRA_NAVIGATION_FR, Constant.Navigation.CONFIG)
-        intent.putExtra(Constant.Extra.EXTRA_CONFIG, config)
-        startActivityForResult(intent, config)
+        mRegisterForConfigScreenResult.launch(Intent(context, ContainerActivity::class.java).apply {
+            addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+            addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
+            putExtra(Constant.Extra.EXTRA_NAVIGATION_FR, Constant.Navigation.CONFIG)
+            putExtra(Constant.Extra.EXTRA_CONFIG, config)
+        })
     }
 
     override fun setupPolicyYear(id: Int) {

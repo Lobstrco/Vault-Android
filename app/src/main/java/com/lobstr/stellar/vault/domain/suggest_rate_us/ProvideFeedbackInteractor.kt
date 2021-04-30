@@ -1,6 +1,6 @@
 package com.lobstr.stellar.vault.domain.suggest_rate_us
 
 
-interface SuggestRateUsInteractor {
+interface ProvideFeedbackInteractor {
     fun getUserPublicKey(): String?
 }

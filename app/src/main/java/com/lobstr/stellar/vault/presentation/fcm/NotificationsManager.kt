@@ -30,6 +30,7 @@ class NotificationsManager(private val context: Context) {
         }
     }
 
+    // NOTE Don't forget to apply Channel name for the created channel [see createChannelName()].
     object ChannelId {
         const val LV_MAIN = "LV_MAIN"
         const val SIGNER_STATUS = "Signer status"
@@ -137,6 +138,7 @@ class NotificationsManager(private val context: Context) {
                     .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
                     .setGroupSummary(true)
                     .setGroup(groupName)
+                    .setGroupAlertBehavior(NotificationCompat.GROUP_ALERT_CHILDREN)
                     .setAutoCancel(true)
                     .setPriority(priority)
                     .setContentIntent(getPendingIntent(groupIntentClass))
@@ -225,6 +227,7 @@ class NotificationsManager(private val context: Context) {
                     .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
                     .setGroupSummary(true)
                     .setGroup(groupName)
+                    .setGroupAlertBehavior(NotificationCompat.GROUP_ALERT_CHILDREN)
                     .setAutoCancel(true)
                     .setPriority(priority)
                     .setContentIntent(getPendingIntent(groupIntent))

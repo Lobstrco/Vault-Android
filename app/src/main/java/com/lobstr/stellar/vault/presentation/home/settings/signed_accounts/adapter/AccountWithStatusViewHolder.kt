@@ -3,6 +3,7 @@ package com.lobstr.stellar.vault.presentation.home.settings.signed_accounts.adap
 import android.text.TextUtils
 import android.view.View
 import androidx.core.content.ContextCompat
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.lobstr.stellar.vault.R
@@ -32,12 +33,7 @@ class AccountWithStatusViewHolder(
             .into(binding.ivIdentity)
 
         // Show section for address with federation and vault account marker.
-        binding.tvAccount.visibility =
-            if (!account.federation.isNullOrEmpty() || account.isVaultAccount == true) {
-                View.VISIBLE
-            } else {
-                View.GONE
-            }
+        binding.tvAccount.isVisible = !account.federation.isNullOrEmpty() || account.isVaultAccount == true
 
         binding.tvAccount.text = when {
             !account.federation.isNullOrEmpty() -> AppUtil.ellipsizeStrInMiddle(
@@ -78,7 +74,7 @@ class AccountWithStatusViewHolder(
         )
 
         itemView.setOnLongClickListener {
-            val position = this@AccountWithStatusViewHolder.adapterPosition
+            val position = this@AccountWithStatusViewHolder.bindingAdapterPosition
             if (position == RecyclerView.NO_POSITION) {
                 return@setOnLongClickListener false
             }
@@ -95,7 +91,7 @@ class AccountWithStatusViewHolder(
      * @return Visibility.
      */
     private fun calculateDividerVisibility(itemsCount: Int): Int {
-        return if (itemsCount == 1 || adapterPosition == itemsCount - 1) {
+        return if (itemsCount == 1 || bindingAdapterPosition == itemsCount - 1) {
             View.INVISIBLE
         } else {
             View.VISIBLE

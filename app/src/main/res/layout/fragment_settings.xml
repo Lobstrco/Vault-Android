@@ -489,7 +489,7 @@
                 android:textColor="@color/color_9b9b9b"
                 android:alpha="0.6"
                 android:textSize="10sp"
-                app:drawableTopCompat="@drawable/ic_gray_logo" />
+                app:drawableTopCompat="@drawable/ic_ultra_stellar_logo" />
     </LinearLayout>
 </ScrollView>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

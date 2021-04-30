@@ -1,6 +1,5 @@
 package com.lobstr.stellar.vault.presentation.base.fragment
 
-import android.content.Intent
 import android.os.Bundle
 import com.lobstr.stellar.vault.presentation.BaseMvpAppCompatFragment
 import com.lobstr.stellar.vault.presentation.base.activity.BaseActivity
@@ -29,13 +28,6 @@ abstract class BaseFragment : BaseMvpAppCompatFragment(), BaseFragmentView {
         super.onCreate(savedInstanceState)
         // Check: has menu options or don't (by default true)
         setHasOptionsMenu(if (parentFragment is BaseContainerFragment) (parentFragment as BaseContainerFragment).isMenuVisible else true)
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (isAdded) {
-            mvpDelegate.onAttach()
-        }
     }
 
     /**

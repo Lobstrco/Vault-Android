@@ -12,6 +12,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.LinearLayout
+import androidx.core.view.isVisible
 
 import androidx.recyclerview.widget.RecyclerView
 
@@ -64,10 +65,10 @@ class PinLockAdapter(private val mContext: Context) : RecyclerView.Adapter<Recyc
     private fun configureNumberButtonHolder(holder: NumberViewHolder?, position: Int) {
         if (holder != null) {
             if (position == 9) {
-                holder.mNumberButton.visibility = View.GONE
+                holder.mNumberButton.isVisible = false
             } else {
                 holder.mNumberButton.text = mKeyValues!![position].toString()
-                holder.mNumberButton.visibility = View.VISIBLE
+                holder.mNumberButton.isVisible = true
                 holder.mNumberButton.tag = mKeyValues!![position]
             }
 
@@ -89,7 +90,7 @@ class PinLockAdapter(private val mContext: Context) : RecyclerView.Adapter<Recyc
     private fun configureDeleteButtonHolder(holder: DeleteViewHolder?) {
         if (holder != null) {
             if (customizationOptions!!.isShowDeleteButton && pinLength > 0) {
-                holder.mButtonImage.visibility = View.VISIBLE
+                holder.mButtonImage.isVisible = true
                 if (customizationOptions!!.deleteButtonDrawable != null) {
                     holder.mButtonImage.setImageDrawable(customizationOptions!!.deleteButtonDrawable)
                 }
@@ -100,7 +101,7 @@ class PinLockAdapter(private val mContext: Context) : RecyclerView.Adapter<Recyc
                         customizationOptions!!.deleteButtonSize)
                 holder.mButtonImage.layoutParams = params
             } else {
-                holder.mButtonImage.visibility = View.GONE
+                holder.mButtonImage.isVisible = false
             }
         }
     }

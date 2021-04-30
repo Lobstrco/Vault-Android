@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.lobstr.stellar.vault.databinding.FragmentSignedAccountsBinding
@@ -76,16 +77,6 @@ class SignedAccountsFragment : BaseFragment(), SignedAccountsView,
         binding.srlSignedAccounts.setOnRefreshListener(this)
     }
 
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-
-        // save RecycleView position for restore it after
-        mPresenter.onSaveInstanceState(
-            (_binding?.rvSignedAccounts?.layoutManager as? LinearLayoutManager)?.findFirstVisibleItemPosition()
-                ?: 0
-        )
-    }
-
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
@@ -116,7 +107,7 @@ class SignedAccountsFragment : BaseFragment(), SignedAccountsView,
     }
 
     override fun showEmptyState(show: Boolean) {
-        binding.tvSignedAccountsEmptyState.visibility = if (show) View.VISIBLE else View.GONE
+        binding.tvSignedAccountsEmptyState.isVisible = show
     }
 
     override fun showErrorMessage(message: String) {
@@ -125,8 +116,6 @@ class SignedAccountsFragment : BaseFragment(), SignedAccountsView,
 
     override fun notifyAdapter(accounts: List<Account>) {
         (binding.rvSignedAccounts.adapter as? AccountAdapter)?.setAccountList(accounts)
-
-        mPresenter.attemptRestoreRvPosition()
     }
 
     override fun scrollListToPosition(position: Int) {

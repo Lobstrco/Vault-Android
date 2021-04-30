@@ -27,7 +27,7 @@ interface ContainerView : MvpView {
 
     fun showSuccessFr(envelopeXdr: String, transactionSuccessStatus: Byte)
 
-    fun showErrorFr(errorMessage: String)
+    fun showErrorFr(errorMessage: String, envelopeXdr: String)
 
     fun showSignedAccountsFr()
 

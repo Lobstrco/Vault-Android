@@ -12,8 +12,8 @@ import com.lobstr.stellar.vault.presentation.entities.transaction.TransactionIte
 import com.lobstr.stellar.vault.presentation.entities.transaction.operation.CreateAccountOperation
 import com.lobstr.stellar.vault.presentation.entities.transaction.operation.Operation
 import com.lobstr.stellar.vault.presentation.entities.transaction.operation.OperationField
-import com.lobstr.stellar.vault.presentation.entities.transaction.operation.PaymentOperation
 import com.lobstr.stellar.vault.presentation.util.AppUtil
+import com.lobstr.stellar.vault.presentation.util.Constant.TransactionType.Item.AUTH_CHALLENGE
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Single
@@ -38,7 +38,12 @@ class OperationDetailsPresenter @Inject constructor(
         super.onFirstViewAttach()
         // Check case, when operations list is empty.
         if (transactionItem.transaction.operations.isNullOrEmpty()) {
-            viewState.setupToolbarTitle(R.string.title_toolbar_transaction_details)
+            viewState.setupToolbarTitle(
+                when (transactionItem.transactionType) {
+                    AUTH_CHALLENGE -> R.string.text_transaction_challenge
+                    else -> R.string.title_toolbar_transaction_details
+                }
+            )
             return
         }
 
@@ -48,21 +53,13 @@ class OperationDetailsPresenter @Inject constructor(
         operationFields = operation.getFields()
 
         viewState.setupToolbarTitle(
-            AppUtil.getTransactionOperationName(
-                operation,
-                transactionItem.transactionType
-            )
-        )
-
-        // Apply specific data to operations' fields UI based on Operation type.
-        when (operation) {
-            is PaymentOperation -> {
-                val memo = transactionItem.transaction.memo
-                if (!memo.isNullOrEmpty()) {
-                    operationFields.add(OperationField(AppUtil.getString(R.string.op_field_memo), memo))
+            when {
+                transactionItem.transaction.operations.size == 1 && transactionItem.transactionType == AUTH_CHALLENGE -> {
+                    R.string.text_transaction_challenge // Specific case for the 'Single Operation' Challenge Transaction.
                 }
+                else -> AppUtil.getTransactionOperationName(operation)
             }
-        }
+        )
 
         // Apply Operation Source Account in cases when Transaction Source Account doesn't equal it.
         if (transactionItem.transaction.sourceAccount != operation.sourceAccount) {
