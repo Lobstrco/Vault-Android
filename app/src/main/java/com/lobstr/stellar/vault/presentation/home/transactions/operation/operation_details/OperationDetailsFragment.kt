@@ -8,7 +8,10 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.lobstr.stellar.vault.databinding.FragmentOperationDetailsBinding
 import com.lobstr.stellar.vault.presentation.base.fragment.BaseFragment
+import com.lobstr.stellar.vault.presentation.dialog.alert.base.AlertDialogFragment
 import com.lobstr.stellar.vault.presentation.entities.transaction.operation.OperationField
+import com.lobstr.stellar.vault.presentation.home.transactions.details.TransactionDetailsFragment
+import com.lobstr.stellar.vault.presentation.home.transactions.operation.asset_info.AssetInfoDialogFragment
 import com.lobstr.stellar.vault.presentation.home.transactions.operation.operation_list.adapter.OperationDetailsAdapter
 import com.lobstr.stellar.vault.presentation.util.Constant
 import dagger.hilt.android.AndroidEntryPoint
@@ -58,7 +61,7 @@ class OperationDetailsFragment : BaseFragment(),
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = FragmentOperationDetailsBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -80,11 +83,24 @@ class OperationDetailsFragment : BaseFragment(),
         binding.rvOperationDetails.layoutManager = LinearLayoutManager(activity)
         binding.rvOperationDetails.itemAnimator = null
         binding.rvOperationDetails.isNestedScrollingEnabled = false
-        binding.rvOperationDetails.adapter = OperationDetailsAdapter(fields)
+        binding.rvOperationDetails.adapter = OperationDetailsAdapter(fields, mPresenter::operationItemClicked)
     }
 
     override fun notifyAdapter() {
         (binding.rvOperationDetails.adapter as? OperationDetailsAdapter)?.notifyDataSetChanged()
+    }
+
+    override fun showEditAccountDialog(address: String) {
+        (parentFragment as? TransactionDetailsFragment)?.showEditAccountDialog(address)
+    }
+
+    override fun showAssetInfoDialog(code: String, issuer: String?) {
+        AssetInfoDialogFragment().apply {
+            arguments = Bundle().apply {
+                putString(Constant.Bundle.BUNDLE_ASSET_CODE, code)
+                putString(Constant.Bundle.BUNDLE_ASSET_ISSUER, issuer)
+            }
+        }.show(childFragmentManager, AlertDialogFragment.DialogFragmentIdentifier.ASSET_INFO)
     }
 
     // ===========================================================

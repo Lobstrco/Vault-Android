@@ -7,11 +7,11 @@ import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.*
-import android.view.View
 import android.widget.Toast
 import androidx.annotation.ColorRes
 import androidx.annotation.StringRes
 import androidx.core.content.ContextCompat
+import androidx.core.view.WindowInsetsControllerCompat
 import androidx.core.view.isVisible
 import com.andrognito.pinlockview.PinLockListener
 import com.lobstr.stellar.vault.R
@@ -124,23 +124,7 @@ class PinFragment : BaseFragment(), PinFrView, PinLockListener, BiometricListene
     override fun setupNavigationBar(@ColorRes color: Int, light: Boolean) {
         if (Build.VERSION.SDK_INT > Build.VERSION_CODES.O) {
             activity?.window?.navigationBarColor = ContextCompat.getColor(requireContext(), color)
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-                // NOTE Android R behavior: check in future compat version of WindowInsetsController in AndroidX.
-                //  Added WindowInsetsControllerCompat to androidx.core:core-ktx:1.5.0-alpha05.
-                //  Use example:
-                //  WindowCompat.getInsetsController(window, decorView).isAppearanceLightNavigationBars = light
-                //  WindowInsetsControllerCompat(window, decorView).isAppearanceLightNavigationBars = light
-
-                // 0 statement clears APPEARANCE_LIGHT_NAVIGATION_BARS.
-                // https://developer.android.com/refezrence/android/view/WindowInsetsController#setSystemBarsAppearance(int,%20int)
-                activity?.window?.decorView?.windowInsetsController?.setSystemBarsAppearance(
-                    if (light) WindowInsetsController.APPEARANCE_LIGHT_NAVIGATION_BARS else 0,
-                    WindowInsetsController.APPEARANCE_LIGHT_NAVIGATION_BARS
-                )
-            } else {
-                activity?.window?.decorView?.systemUiVisibility =
-                    if (light) View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR else 0
-            }
+            WindowInsetsControllerCompat(requireActivity().window, requireActivity().window.decorView).isAppearanceLightNavigationBars = light
         }
     }
 
@@ -375,7 +359,7 @@ class PinFragment : BaseFragment(), PinFrView, PinLockListener, BiometricListene
             mBiometricManager = BiometricManager.BiometricBuilder(requireContext(), this)
                 .setTitle(getString(R.string.biometric_title))
                 .setSubtitle(getString(R.string.biometric_subtitle))
-                .setNegativeButtonText(getString(R.string.text_btn_cancel).toUpperCase())
+                .setNegativeButtonText(getString(R.string.text_btn_cancel).uppercase())
                 .build()
         }
         mBiometricManager?.authenticate(this)

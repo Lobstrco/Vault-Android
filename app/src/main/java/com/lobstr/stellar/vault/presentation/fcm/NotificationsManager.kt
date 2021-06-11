@@ -243,7 +243,7 @@ class NotificationsManager(private val context: Context) {
             context,
             0,
             intent.apply { action = System.currentTimeMillis().toString() },
-            PendingIntent.FLAG_UPDATE_CURRENT
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
     }
 
@@ -251,7 +251,7 @@ class NotificationsManager(private val context: Context) {
         return PendingIntent.getActivity(context, 0, Intent(context, targetClassName).apply {
             addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_CLEAR_TOP)
             action = System.currentTimeMillis().toString()
-        }, PendingIntent.FLAG_UPDATE_CURRENT)
+        }, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
     }
 
     // NotificationIntent - some data that we must pass from fcm
@@ -272,7 +272,7 @@ class NotificationsManager(private val context: Context) {
         // Adds the Intent that starts the Activity to the top of the stack.
         stackBuilder.addNextIntent(intent)
 
-        return stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT)
+        return stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
     }
 
     /**

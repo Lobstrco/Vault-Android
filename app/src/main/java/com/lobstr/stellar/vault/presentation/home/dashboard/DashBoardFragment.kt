@@ -28,13 +28,15 @@ import com.lobstr.stellar.vault.presentation.home.settings.signed_accounts.adapt
 import com.lobstr.stellar.vault.presentation.home.settings.signed_accounts.edit_account.EditAccountDialogFragment
 import com.lobstr.stellar.vault.presentation.util.AppUtil
 import com.lobstr.stellar.vault.presentation.util.Constant
+import com.lobstr.stellar.vault.presentation.util.Constant.Bundle.BUNDLE_PUBLIC_KEY
 import dagger.hilt.android.AndroidEntryPoint
 import moxy.ktx.moxyPresenter
 import javax.inject.Inject
 import javax.inject.Provider
 
 @AndroidEntryPoint
-class DashboardFragment : BaseFragment(), DashboardView, View.OnClickListener {
+class DashboardFragment : BaseFragment(), DashboardView, EditAccountDialogFragment.OnEditAccountDialogListener,
+    View.OnClickListener {
 
     // ===========================================================
     // Constants
@@ -252,6 +254,7 @@ class DashboardFragment : BaseFragment(), DashboardView, View.OnClickListener {
     override fun showEditAccountDialog(address: String) {
         val bundle = Bundle()
         bundle.putString(Constant.Bundle.BUNDLE_PUBLIC_KEY, address)
+        bundle.putBoolean(Constant.Bundle.BUNDLE_MANAGE_ACCOUNT_NAME, true)
 
         val dialog = EditAccountDialogFragment()
         dialog.arguments = bundle
@@ -281,6 +284,18 @@ class DashboardFragment : BaseFragment(), DashboardView, View.OnClickListener {
             mRefreshAnimation?.end()
             mRefreshAnimation?.cancel()
         }
+    }
+
+    override fun onSetAccountNickNameClicked(publicKey: String) {
+        AlertDialogFragment.Builder(true)
+            .setSpecificDialog(AlertDialogFragment.DialogIdentifier.ACCOUNT_NAME, Bundle().apply {
+                putString(BUNDLE_PUBLIC_KEY, publicKey)
+            })
+            .create()
+            .show(
+                childFragmentManager,
+                AlertDialogFragment.DialogFragmentIdentifier.ACCOUNT_NAME
+            )
     }
 
     // ===========================================================

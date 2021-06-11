@@ -8,6 +8,7 @@ import com.lobstr.stellar.vault.domain.util.EventProviderModule
 import com.lobstr.stellar.vault.domain.util.event.Auth
 import com.lobstr.stellar.vault.domain.util.event.Network
 import com.lobstr.stellar.vault.domain.util.event.Notification
+import com.lobstr.stellar.vault.domain.util.event.Update
 import com.lobstr.stellar.vault.presentation.BasePresenter
 import com.lobstr.stellar.vault.presentation.dialog.alert.base.AlertDialogFragment.DialogFragmentIdentifier.CONFIRM_TRANSACTION
 import com.lobstr.stellar.vault.presentation.dialog.alert.base.AlertDialogFragment.DialogFragmentIdentifier.DENY_TRANSACTION
@@ -25,8 +26,8 @@ import com.lobstr.stellar.vault.presentation.util.Constant.TransactionConfirmati
 import com.lobstr.stellar.vault.presentation.util.Constant.TransactionConfirmationSuccessStatus.SUCCESS_CHALLENGE
 import com.lobstr.stellar.vault.presentation.util.Constant.TransactionConfirmationSuccessStatus.SUCCESS_NEED_ADDITIONAL_SIGNATURES
 import com.lobstr.stellar.vault.presentation.util.Constant.TransactionType.Item.AUTH_CHALLENGE
-import com.lobstr.stellar.vault.presentation.util.Constant.Util.PK_TRUNCATE_COUNT
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.disposables.Disposable
@@ -48,6 +49,8 @@ class TransactionDetailsPresenter @Inject constructor(
     private var tangemSignTransactionState = false
 
     private var stellarAccountsDisposable: Disposable? = null
+
+    private val stellarAccounts: MutableList<Account> = mutableListOf()
     private val cachedStellarAccounts: MutableList<Account> = mutableListOf()
 
     override fun onFirstViewAttach() {
@@ -87,7 +90,21 @@ class TransactionDetailsPresenter @Inject constructor(
             eventProviderModule.updateEventSubject
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
-                    getTransactionSigners()
+                    when (it.type) {
+                        Update.Type.ACCOUNT_NAME -> {
+                            unsubscribeOnDestroy(Completable.fromCallable {
+                                checkAccountNames(stellarAccounts)
+                            }
+                                .subscribeOn(Schedulers.io())
+                                .observeOn(AndroidSchedulers.mainThread())
+                                .subscribe(
+                                    { viewState.notifySignersAdapter(stellarAccounts) },
+                                    Throwable::printStackTrace
+                                )
+                            )
+                        }
+                        else -> getTransactionSigners()
+                    }
                 }, {
                     it.printStackTrace()
                 })
@@ -115,6 +132,22 @@ class TransactionDetailsPresenter @Inject constructor(
                         targetSourceAccount
                     )
                 }
+                .doOnSuccess {
+                    stellarAccounts.apply {
+                        clear()
+                        addAll(it.signers)
+                    }
+
+                    checkAccountNames(stellarAccounts)
+
+                    // Check cached federation items.
+                    stellarAccounts.forEachIndexed { index, accountItem ->
+                        val federation =
+                            cachedStellarAccounts.find { account -> account.address == accountItem.address }
+                                ?.federation
+                        stellarAccounts[index].federation = federation
+                    }
+                }
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe {
@@ -125,20 +158,11 @@ class TransactionDetailsPresenter @Inject constructor(
                     viewState.showSignersProgress(false)
                 }
                 .subscribe({
-                    viewState.showSignersContainer(it.signers.isNotEmpty())
+                    viewState.showSignersContainer(stellarAccounts.isNotEmpty())
                     viewState.showSignersCount(calculateSignersCount(it))
-
-                    // Check cached federation items.
-                    it.signers.forEachIndexed { index, accountItem ->
-                        val federation =
-                            cachedStellarAccounts.find { account -> account.address == accountItem.address }
-                                ?.federation
-                        it.signers[index].federation = federation
-                    }
-                    viewState.notifySignersAdapter(it.signers)
-
+                    viewState.notifySignersAdapter(stellarAccounts)
                     // Try receive federations for accounts.
-                    getStellarAccounts(it.signers)
+                    getStellarAccounts(stellarAccounts)
                 }, {
                     when (it) {
                         is NoInternetConnectionException -> {
@@ -189,6 +213,18 @@ class TransactionDetailsPresenter @Inject constructor(
             else -> {
                 return null
             }
+        }
+    }
+
+    /**
+     * Check Accounts' names from cache.
+     *  TODO Places: Dashboard, SignedAccounts, Tr Details, Tr list.
+     *   Clear: Log Out and accounts list is empty.
+     */
+    private fun checkAccountNames(accounts: List<Account>) {
+        val names = interactor.getAccountNames()
+        for(account in accounts) {
+            account.name = names[account.address]
         }
     }
 
@@ -268,8 +304,7 @@ class TransactionDetailsPresenter @Inject constructor(
         }
 
         if (!sourceAccount.isNullOrEmpty()) {
-            map[AppUtil.getString(R.string.text_tv_transaction_source_account)] =
-                AppUtil.ellipsizeStrInMiddle(sourceAccount, PK_TRUNCATE_COUNT)
+            map[AppUtil.getString(R.string.text_tv_transaction_source_account)] = sourceAccount
         }
 
         if (!addedAt.isNullOrEmpty()) {
@@ -650,5 +685,12 @@ class TransactionDetailsPresenter @Inject constructor(
      */
     fun backStackChanged(backStackEntryCount: Int) {
         viewState.showActionContainer(backStackEntryCount == 1)
+    }
+
+    /**
+     * @param key Reserved for future implementations.
+     */
+    fun additionalInfoValueClicked(key: String, value: String?) {
+        value?.let { if (AppUtil.isPublicKey(value)) viewState.showEditAccountDialog(value) }
     }
 }

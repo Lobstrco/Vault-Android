@@ -1,5 +1,6 @@
 package com.lobstr.stellar.vault.presentation.dagger.module.pin
 
+import com.lobstr.stellar.vault.domain.account.AccountRepository
 import com.lobstr.stellar.vault.domain.key_store.KeyStoreRepository
 import com.lobstr.stellar.vault.domain.pin.PinInteractor
 import com.lobstr.stellar.vault.domain.pin.PinInteractorImpl
@@ -16,9 +17,10 @@ object PinModule {
     @Provides
     fun provideRecoveryKeyInteractor(
         keyStoreRepository: KeyStoreRepository,
+        accountRepository: AccountRepository,
         prefsUtil: PrefsUtil,
         fcmHelper: FcmHelper
     ): PinInteractor {
-        return PinInteractorImpl(keyStoreRepository, prefsUtil, fcmHelper)
+        return PinInteractorImpl(keyStoreRepository, accountRepository, prefsUtil, fcmHelper)
     }
 }

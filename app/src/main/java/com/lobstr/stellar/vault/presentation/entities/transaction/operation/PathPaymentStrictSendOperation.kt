@@ -19,11 +19,11 @@ data class PathPaymentStrictSendOperation(
 
     override fun getFields(): MutableList<OperationField> {
         val fields: MutableList<OperationField> = mutableListOf()
-        fields.add(OperationField(AppUtil.getString(R.string.op_field_send_asset), sendAsset.assetCode))
+        fields.add(OperationField(AppUtil.getString(R.string.op_field_send_asset), sendAsset.assetCode, sendAsset))
         if (sendAsset.assetIssuer != null) fields.add(OperationField(AppUtil.getString(R.string.op_field_asset_issuer), sendAsset.assetIssuer))
         fields.add(OperationField(AppUtil.getString(R.string.op_field_send_amount), sendAmount))
         if (destination.isNotEmpty()) fields.add(OperationField(AppUtil.getString(R.string.op_field_destination), destination))
-        fields.add(OperationField(AppUtil.getString(R.string.op_field_dest_asset), destAsset.assetCode))
+        fields.add(OperationField(AppUtil.getString(R.string.op_field_dest_asset), destAsset.assetCode, destAsset))
         if (destAsset.assetIssuer != null) fields.add(OperationField(AppUtil.getString(R.string.op_field_asset_issuer), destAsset.assetIssuer))
         fields.add(OperationField(AppUtil.getString(R.string.op_field_dest_min), destMin))
 

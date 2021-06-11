@@ -12,7 +12,6 @@ import android.os.Vibrator
 import android.util.DisplayMetrics
 import android.util.Log
 import android.view.View
-import android.view.WindowInsets
 import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
 import android.widget.TextView
@@ -22,6 +21,7 @@ import androidx.browser.customtabs.CustomTabColorSchemeParams
 import androidx.browser.customtabs.CustomTabsIntent
 import androidx.core.content.ContextCompat
 import androidx.core.content.pm.PackageInfoCompat
+import androidx.core.view.WindowInsetsCompat
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.GoogleApiAvailability
 import com.google.gson.Gson
@@ -34,6 +34,8 @@ import com.lobstr.stellar.vault.presentation.application.LVApplication
 import com.lobstr.stellar.vault.presentation.entities.transaction.operation.*
 import com.lobstr.stellar.vault.presentation.entities.transaction.operation.claimable_balance.ClaimClaimableBalanceOperation
 import com.lobstr.stellar.vault.presentation.entities.transaction.operation.claimable_balance.CreateClaimableBalanceOperation
+import com.lobstr.stellar.vault.presentation.entities.transaction.operation.clawback.ClawbackClaimableBalanceOperation
+import com.lobstr.stellar.vault.presentation.entities.transaction.operation.clawback.ClawbackOperation
 import com.lobstr.stellar.vault.presentation.entities.transaction.operation.offer.CancelSellOfferOperation
 import com.lobstr.stellar.vault.presentation.entities.transaction.operation.offer.CreatePassiveSellOfferOperation
 import com.lobstr.stellar.vault.presentation.entities.transaction.operation.offer.ManageBuyOfferOperation
@@ -185,6 +187,7 @@ object AppUtil {
             is SetOptionsOperation -> R.string.text_operation_name_set_options
             is ChangeTrustOperation -> R.string.text_operation_name_change_trust
             is AllowTrustOperation -> R.string.text_operation_name_allow_trust
+            is SetTrustlineFlagsOperation -> R.string.text_operation_name_set_trustline_flags
             is AccountMergeOperation -> R.string.text_operation_name_account_merge
             is InflationOperation -> R.string.text_operation_name_inflation
             is ManageDataOperation -> R.string.text_operation_name_manage_data
@@ -199,6 +202,8 @@ object AppUtil {
             is RevokeTrustlineSponsorshipOperation -> R.string.text_operation_name_revoke_trustline_sponsorship
             is CreateClaimableBalanceOperation -> R.string.text_operation_name_create_claimable_balance
             is ClaimClaimableBalanceOperation -> R.string.text_operation_name_claim_claimable_balance
+            is ClawbackClaimableBalanceOperation -> R.string.text_operation_name_clawback_claimable_balance
+            is ClawbackOperation -> R.string.text_operation_name_clawback
             else -> -1
         }
     }
@@ -223,15 +228,11 @@ object AppUtil {
 
     fun screenWidth(context: Context): Int {
         return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            // https://developer.android.com/reference/android/view/WindowMetrics?hl=com#getBounds()
-            // NOTE Android R behavior: check in future compat version of WindowMetrics in AndroidX.
-            //  Use WindowInsetsCompat instead after update androidx.core:core-ktx to version > 1.3.2
-            //  In 1.3.2 - getInsetsIgnoringVisibility don't added (added in 1.5.0-alpha04).
             val metrics = (context.getSystemService(Context.WINDOW_SERVICE) as WindowManager).currentWindowMetrics
             // Gets all excluding insets.
-            val windowInsets = metrics.windowInsets
-            val insets = windowInsets.getInsetsIgnoringVisibility(WindowInsets.Type.navigationBars()
-                    or WindowInsets.Type.displayCutout())
+            val windowInsets = WindowInsetsCompat.toWindowInsetsCompat(metrics.windowInsets)
+            val insets = windowInsets.getInsetsIgnoringVisibility(WindowInsetsCompat.Type.navigationBars()
+                    or WindowInsetsCompat.Type.displayCutout())
             val insetsWidth = insets.right + insets.left
             // Legacy size that Display#getSize reports.
             val bounds = metrics.bounds

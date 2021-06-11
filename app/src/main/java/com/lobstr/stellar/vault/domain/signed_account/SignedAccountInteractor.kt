@@ -7,5 +7,9 @@ interface SignedAccountInteractor {
 
     fun getSignedAccounts(): Single<List<Account>>
 
+    fun clearAccountNames()
+
+    fun getAccountNames(): Map<String, String?>
+
     fun getStellarAccount(stellarAddress: String): Single<Account>
 }

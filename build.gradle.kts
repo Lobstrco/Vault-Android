@@ -7,11 +7,11 @@ buildscript {
         gradlePluginPortal()
     }
     dependencies {
-        classpath("com.android.tools.build:gradle:4.1.3")
-        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:1.4.32")
-        classpath("com.google.gms:google-services:4.3.5")
-        classpath("com.google.firebase:firebase-crashlytics-gradle:2.5.2")
-        classpath("com.google.dagger:hilt-android-gradle-plugin:2.35")
+        classpath("com.android.tools.build:gradle:4.2.1")
+        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:1.5.10")
+        classpath("com.google.gms:google-services:4.3.8")
+        classpath("com.google.firebase:firebase-crashlytics-gradle:2.7.0")
+        classpath("com.google.dagger:hilt-android-gradle-plugin:2.37")
     }
 }
 

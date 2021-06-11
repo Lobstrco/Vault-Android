@@ -7,10 +7,10 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.WindowInsetsController.APPEARANCE_LIGHT_NAVIGATION_BARS
 import android.widget.Toast
 import androidx.annotation.ColorRes
 import androidx.core.content.ContextCompat
+import androidx.core.view.WindowInsetsControllerCompat
 import com.lobstr.stellar.vault.R
 import com.lobstr.stellar.vault.databinding.FragmentBiometricSetUpBinding
 import com.lobstr.stellar.vault.presentation.base.activity.BaseActivity
@@ -127,23 +127,7 @@ class BiometricSetUpFragment : BaseFragment(), BiometricSetUpView, BiometricList
     override fun setupNavigationBar(@ColorRes color: Int, light: Boolean) {
         if (Build.VERSION.SDK_INT > Build.VERSION_CODES.O) {
             activity?.window?.navigationBarColor = ContextCompat.getColor(requireContext(), color)
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-                // NOTE Android R behavior: check in future compat version of WindowInsetsController in AndroidX.
-                //  Added WindowInsetsControllerCompat to androidx.core:core-ktx:1.5.0-alpha05.
-                //  Use example:
-                //  WindowCompat.getInsetsController(window, decorView).isAppearanceLightNavigationBars = light
-                //  WindowInsetsControllerCompat(window, decorView).isAppearanceLightNavigationBars = light
-
-                // 0 statement clears APPEARANCE_LIGHT_NAVIGATION_BARS.
-                // https://developer.android.com/reference/android/view/WindowInsetsController#setSystemBarsAppearance(int,%20int)
-                activity?.window?.decorView?.windowInsetsController?.setSystemBarsAppearance(
-                    if (light) APPEARANCE_LIGHT_NAVIGATION_BARS else 0,
-                    APPEARANCE_LIGHT_NAVIGATION_BARS
-                )
-            } else {
-                activity?.window?.decorView?.systemUiVisibility =
-                    if (light) View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR else 0
-            }
+            WindowInsetsControllerCompat(requireActivity().window, requireActivity().window.decorView).isAppearanceLightNavigationBars = light
         }
     }
 
@@ -196,7 +180,7 @@ class BiometricSetUpFragment : BaseFragment(), BiometricSetUpView, BiometricList
             mBiometricManager = BiometricManager.BiometricBuilder(requireContext(), this)
                 .setTitle(getString(R.string.biometric_title))
                 .setSubtitle(getString(R.string.biometric_subtitle))
-                .setNegativeButtonText(getString(R.string.text_btn_cancel).toUpperCase())
+                .setNegativeButtonText(getString(R.string.text_btn_cancel).uppercase())
                 .build()
         }
         mBiometricManager?.authenticate(this)

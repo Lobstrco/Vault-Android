@@ -53,12 +53,18 @@ class TransactionViewHolder(private val binding: AdapterItemTransactionBinding, 
             if(DateFormat.is24HourFormat(context)) "MMM dd yyyy HH:mm" else "MMM dd yyyy h:mm a"
         )
 
-        binding.tvSourceAccount.ellipsize = if (item.federation.isNullOrEmpty()) TextUtils.TruncateAt.MIDDLE else TextUtils.TruncateAt.END
+        binding.tvSourceAccount.ellipsize = if (item.federation.isNullOrEmpty() && item.name.isNullOrEmpty()) TextUtils.TruncateAt.MIDDLE else TextUtils.TruncateAt.END
         binding.tvSourceAccount.text =
-            if (item.federation.isNullOrEmpty()) AppUtil.ellipsizeStrInMiddle(
+            if (item.federation.isNullOrEmpty() && item.name.isNullOrEmpty()) AppUtil.ellipsizeStrInMiddle(
                 item.transaction.sourceAccount,
                 PK_TRUNCATE_COUNT
-            ) else item.federation
+            ) else {
+                if(!item.name.isNullOrEmpty()){
+                    item.name
+                } else {
+                    item.federation
+                }
+            }
 
         binding.tvTransactionItemOperation.text = getTransactionName(context, item.transaction, item.transactionType)
         itemView.setOnClickListener {

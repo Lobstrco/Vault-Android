@@ -18,7 +18,7 @@ data class RevokeTrustlineSponsorshipOperation(
     override fun getFields(): MutableList<OperationField> {
         val fields: MutableList<OperationField> = mutableListOf()
         fields.add(OperationField(AppUtil.getString(R.string.op_field_account_id), accountId))
-        fields.add(OperationField(AppUtil.getString(R.string.op_field_asset), asset.assetCode))
+        fields.add(OperationField(AppUtil.getString(R.string.op_field_asset), asset.assetCode, asset))
 
         return fields
     }

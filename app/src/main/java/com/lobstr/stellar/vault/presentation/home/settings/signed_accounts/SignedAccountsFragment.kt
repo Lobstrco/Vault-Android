@@ -24,7 +24,7 @@ import javax.inject.Inject
 import javax.inject.Provider
 
 @AndroidEntryPoint
-class SignedAccountsFragment : BaseFragment(), SignedAccountsView,
+class SignedAccountsFragment : BaseFragment(), SignedAccountsView, EditAccountDialogFragment.OnEditAccountDialogListener,
     SwipeRefreshLayout.OnRefreshListener {
 
     // ===========================================================
@@ -125,6 +125,7 @@ class SignedAccountsFragment : BaseFragment(), SignedAccountsView,
     override fun showEditAccountDialog(address: String) {
         val bundle = Bundle()
         bundle.putString(Constant.Bundle.BUNDLE_PUBLIC_KEY, address)
+        bundle.putBoolean(Constant.Bundle.BUNDLE_MANAGE_ACCOUNT_NAME, true)
 
         val dialog = EditAccountDialogFragment()
         dialog.arguments = bundle
@@ -133,6 +134,18 @@ class SignedAccountsFragment : BaseFragment(), SignedAccountsView,
 
     override fun copyToClipBoard(text: String) {
         AppUtil.copyToClipboard(context, text)
+    }
+
+    override fun onSetAccountNickNameClicked(publicKey: String) {
+        AlertDialogFragment.Builder(true)
+            .setSpecificDialog(AlertDialogFragment.DialogIdentifier.ACCOUNT_NAME, Bundle().apply {
+                putString(Constant.Bundle.BUNDLE_PUBLIC_KEY, publicKey)
+            })
+            .create()
+            .show(
+                childFragmentManager,
+                AlertDialogFragment.DialogFragmentIdentifier.ACCOUNT_NAME
+            )
     }
 
     // ===========================================================

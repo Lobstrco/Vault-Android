@@ -1,30 +1,20 @@
 package com.lobstr.stellar.vault.data.error.util
 
-import androidx.annotation.NonNull
-import androidx.annotation.Nullable
+import android.text.TextUtils
 import com.google.gson.Gson
 import com.google.gson.JsonIOException
 import com.google.gson.JsonSyntaxException
 import com.google.gson.internal.Primitives
-import retrofit2.HttpException
 import java.io.IOException
 
 object ApiErrorUtil {
-
-    @Nullable
-    fun <T> convertJsonToPojo(@NonNull classOfT: Class<T>, @NonNull throwable: HttpException): T? {
-        if (throwable.response()?.errorBody() == null) {
-            return null
-        }
-
+    fun <T> convertJsonToPojo(classOfT: Class<T>, errorBody: String?): T? {
         try {
-            val error = throwable.response()?.errorBody()?.string()
-            if (error.isNullOrEmpty()) {
+            if (TextUtils.isEmpty(errorBody)) {
                 return null
             }
-
-            val result = Gson().fromJson(error, classOfT)
-            return Primitives.wrap(classOfT).cast(result)
+            val `object` = Gson().fromJson(errorBody, classOfT)
+            return Primitives.wrap(classOfT).cast(`object`)
         } catch (exc: JsonSyntaxException) {
             exc.printStackTrace()
         } catch (exc: JsonIOException) {

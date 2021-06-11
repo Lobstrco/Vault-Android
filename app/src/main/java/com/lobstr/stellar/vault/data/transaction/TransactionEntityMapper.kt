@@ -18,8 +18,14 @@ import com.lobstr.stellar.vault.presentation.entities.transaction.operation.Path
 import com.lobstr.stellar.vault.presentation.entities.transaction.operation.PathPaymentStrictSendOperation
 import com.lobstr.stellar.vault.presentation.entities.transaction.operation.PaymentOperation
 import com.lobstr.stellar.vault.presentation.entities.transaction.operation.SetOptionsOperation
+import com.lobstr.stellar.vault.presentation.entities.transaction.operation.SetTrustlineFlagsOperation
+import com.lobstr.stellar.vault.presentation.entities.transaction.operation.SetTrustlineFlagsOperation.Companion.AUTHORIZED_FLAG
+import com.lobstr.stellar.vault.presentation.entities.transaction.operation.SetTrustlineFlagsOperation.Companion.AUTHORIZED_TO_MAINTAIN_LIABILITIES_FLAG
+import com.lobstr.stellar.vault.presentation.entities.transaction.operation.SetTrustlineFlagsOperation.Companion.TRUSTLINE_CLAWBACK_ENABLED_FLAG
 import com.lobstr.stellar.vault.presentation.entities.transaction.operation.claimable_balance.ClaimClaimableBalanceOperation
 import com.lobstr.stellar.vault.presentation.entities.transaction.operation.claimable_balance.CreateClaimableBalanceOperation
+import com.lobstr.stellar.vault.presentation.entities.transaction.operation.clawback.ClawbackClaimableBalanceOperation
+import com.lobstr.stellar.vault.presentation.entities.transaction.operation.clawback.ClawbackOperation
 import com.lobstr.stellar.vault.presentation.entities.transaction.operation.offer.*
 import com.lobstr.stellar.vault.presentation.entities.transaction.operation.offer.CreatePassiveSellOfferOperation
 import com.lobstr.stellar.vault.presentation.entities.transaction.operation.offer.ManageBuyOfferOperation
@@ -32,10 +38,12 @@ import com.lobstr.stellar.vault.presentation.entities.transaction.operation.spon
 import com.lobstr.stellar.vault.presentation.entities.transaction.operation.sponsoring.RevokeOfferSponsorshipOperation
 import com.lobstr.stellar.vault.presentation.entities.transaction.operation.sponsoring.RevokeSignerSponsorshipOperation
 import com.lobstr.stellar.vault.presentation.entities.transaction.operation.sponsoring.RevokeTrustlineSponsorshipOperation
+import com.lobstr.stellar.vault.presentation.util.Constant
 import com.lobstr.stellar.vault.presentation.util.Constant.Transaction.IMPORT_XDR
 import com.lobstr.stellar.vault.presentation.util.Constant.TransactionType.Item.AUTH_CHALLENGE
 import com.lobstr.stellar.vault.presentation.util.Constant.TransactionType.Item.TRANSACTION
 import org.stellar.sdk.*
+import org.stellar.sdk.xdr.TrustLineFlags
 import java.math.BigDecimal
 
 class TransactionEntityMapper(private val network: Network) {
@@ -188,7 +196,8 @@ class TransactionEntityMapper(private val network: Network) {
                 )
                 is org.stellar.sdk.SetOptionsOperation -> operations.add(mapSetOptionsOperation(it))
                 is org.stellar.sdk.ChangeTrustOperation -> operations.add(mapChangeTrustOperation(it))
-                is org.stellar.sdk.AllowTrustOperation -> operations.add(mapAllowTrustOperation(it))
+                is org.stellar.sdk.AllowTrustOperation -> operations.add(mapAllowTrustOperation(it)) // NOTE Remove in Future (use instead SetTrustlineFlagsOperation).
+                is org.stellar.sdk.SetTrustlineFlagsOperation -> operations.add(mapSetTrustlineFlagsOperation(it))
                 is org.stellar.sdk.AccountMergeOperation -> operations.add(
                     mapAccountMergeOperation(
                         it
@@ -212,6 +221,8 @@ class TransactionEntityMapper(private val network: Network) {
                 is org.stellar.sdk.RevokeTrustlineSponsorshipOperation -> operations.add(mapRevokeTrustlineSponsorshipOperation(it))
                 is org.stellar.sdk.CreateClaimableBalanceOperation -> operations.add(mapCreateClaimableBalanceOperation(it))
                 is org.stellar.sdk.ClaimClaimableBalanceOperation -> operations.add(mapClaimClaimableBalanceOperation(it))
+                is org.stellar.sdk.ClawbackClaimableBalanceOperation -> operations.add(mapClawbackClaimableBalanceOperation(it))
+                is org.stellar.sdk.ClawbackOperation -> operations.add(mapClawbackOperation(it))
             }
         }
 
@@ -366,6 +377,25 @@ class TransactionEntityMapper(private val network: Network) {
         )
     }
 
+    private fun mapSetTrustlineFlagsOperation(operation: org.stellar.sdk.SetTrustlineFlagsOperation): SetTrustlineFlagsOperation {
+        return SetTrustlineFlagsOperation(
+            (operation as org.stellar.sdk.Operation).sourceAccount,
+            operation.trustor,
+            mapAsset(operation.asset),
+            if (!operation.clearFlags.isNullOrEmpty()) operation.clearFlags.map { mapTrustlineFlag(it) } else null,
+            if (!operation.setFlags.isNullOrEmpty()) operation.setFlags.map { mapTrustlineFlag(it) } else null
+        )
+    }
+
+    private fun mapTrustlineFlag(flag: TrustLineFlags): Int {
+        return when (flag) {
+            TrustLineFlags.AUTHORIZED_FLAG -> AUTHORIZED_FLAG
+            TrustLineFlags.AUTHORIZED_TO_MAINTAIN_LIABILITIES_FLAG -> AUTHORIZED_TO_MAINTAIN_LIABILITIES_FLAG
+            TrustLineFlags.TRUSTLINE_CLAWBACK_ENABLED_FLAG -> TRUSTLINE_CLAWBACK_ENABLED_FLAG
+            else -> Constant.Util.UNDEFINED_VALUE
+        }
+    }
+
     private fun mapAccountMergeOperation(operation: org.stellar.sdk.AccountMergeOperation): AccountMergeOperation {
         return AccountMergeOperation(
             (operation as org.stellar.sdk.Operation).sourceAccount,
@@ -474,6 +504,22 @@ class TransactionEntityMapper(private val network: Network) {
         return ClaimClaimableBalanceOperation(
             (operation as org.stellar.sdk.Operation).sourceAccount,
             operation.balanceId
+        )
+    }
+
+    private fun mapClawbackClaimableBalanceOperation(operation: org.stellar.sdk.ClawbackClaimableBalanceOperation): ClawbackClaimableBalanceOperation {
+        return ClawbackClaimableBalanceOperation(
+            (operation as org.stellar.sdk.Operation).sourceAccount,
+            operation.balanceId
+        )
+    }
+
+    private fun mapClawbackOperation(operation: org.stellar.sdk.ClawbackOperation): ClawbackOperation {
+        return ClawbackOperation(
+            (operation as org.stellar.sdk.Operation).sourceAccount,
+            operation.from,
+            mapAsset(operation.asset),
+            operation.amount
         )
     }
 

@@ -143,6 +143,10 @@ class TransactionDetailsInteractorImpl(
         return accountRepository.getSignedAccounts(AppUtil.getJwtToken(prefsUtil.authToken))
     }
 
+    override fun getAccountNames(): Map<String, String?> {
+        return accountRepository.getAccountNames()
+    }
+
     override fun getTransactionSigners(xdr: String, sourceAccount: String): Single<AccountResult> {
         return stellarRepository.getTransactionSigners(xdr, sourceAccount).map {
             // Trying to find current vault account in signers to mark it.

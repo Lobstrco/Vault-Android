@@ -1,5 +1,6 @@
 package com.lobstr.stellar.vault.domain.pin
 
+import com.lobstr.stellar.vault.domain.account.AccountRepository
 import com.lobstr.stellar.vault.domain.key_store.KeyStoreRepository
 import com.lobstr.stellar.vault.presentation.fcm.FcmHelper
 import com.lobstr.stellar.vault.presentation.util.Constant.BiometricState.ENABLED
@@ -10,6 +11,7 @@ import io.reactivex.rxjava3.core.Single
 
 class PinInteractorImpl(
     private val keyStoreRepository: KeyStoreRepository,
+    private val accountRepository: AccountRepository,
     private val prefsUtil: PrefsUtil,
     private val fcmHelper: FcmHelper
 ) : PinInteractor {
@@ -72,5 +74,6 @@ class PinInteractorImpl(
         fcmHelper.unregisterFcm()
         prefsUtil.clearUserPrefs()
         keyStoreRepository.clearAll()
+        accountRepository.clearAccountNames()
     }
 }

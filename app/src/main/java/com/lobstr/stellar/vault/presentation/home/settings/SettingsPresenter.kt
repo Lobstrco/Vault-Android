@@ -35,7 +35,7 @@ class SettingsPresenter @Inject constructor(private val interactor: SettingsInte
         viewState.setupToolbarTitle(R.string.title_toolbar_settings)
         registerEventProvider()
         viewState.setupSettingsData(
-            "${BuildConfig.VERSION_NAME} (${if (BuildConfig.FLAVOR == Constant.Flavor.QA) BuildConfig.FLAVOR.toUpperCase()
+            "${BuildConfig.VERSION_NAME} (${if (BuildConfig.FLAVOR == Constant.Flavor.QA) BuildConfig.FLAVOR.uppercase()
                 .plus("-").plus(AppUtil.getAppBehavior()) else BuildConfig.VERSION_CODE})",
             BiometricUtils.isBiometricSupported(AppUtil.getAppContext()) && interactor.hasMnemonics(),
             interactor.hasMnemonics(),

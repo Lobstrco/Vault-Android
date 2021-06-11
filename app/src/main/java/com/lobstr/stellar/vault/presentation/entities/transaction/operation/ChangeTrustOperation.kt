@@ -15,7 +15,7 @@ data class ChangeTrustOperation(
 
     override fun getFields(): MutableList<OperationField> {
         val fields: MutableList<OperationField> = mutableListOf()
-        fields.add(OperationField(AppUtil.getString(R.string.op_field_asset), asset.assetCode))
+        fields.add(OperationField(AppUtil.getString(R.string.op_field_asset), asset.assetCode, asset))
         if (asset.assetIssuer != null) fields.add(OperationField(AppUtil.getString(R.string.op_field_asset_issuer), asset.assetIssuer))
         fields.add(OperationField(AppUtil.getString(R.string.op_field_limit), limit))
 

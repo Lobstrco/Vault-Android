@@ -12,35 +12,10 @@
             android:layout_height="0.5dp"
             android:layout_marginStart="16dp"
             android:layout_marginEnd="0dp"
-            android:background="@color/color_979797"
             android:alpha="0.2"
+            android:background="@color/color_979797"
             android:visibility="invisible" />
 
-    <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@android:color/white"
-            android:gravity="center_vertical"
-            android:orientation="horizontal"
-            android:padding="16dp">
-
-        <TextView
-                android:id="@+id/tvFieldName"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="4dp"
-                android:fontFamily="sans-serif-medium"
-                android:textColor="@android:color/black"
-                android:textSize="15sp" />
-
-        <TextView
-                android:id="@+id/tvFieldValue"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:ellipsize="middle"
-                android:gravity="end"
-                android:singleLine="true"
-                android:textColor="@color/color_9b9b9b"
-                android:textSize="15sp" />
-    </LinearLayout>
+    <!-- Use operation details UI representation -->
+    <include layout="@layout/adapter_item_operation_details"/>
 </LinearLayout>

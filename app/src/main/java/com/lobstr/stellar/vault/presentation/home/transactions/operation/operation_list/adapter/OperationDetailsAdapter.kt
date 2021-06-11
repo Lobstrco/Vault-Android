@@ -6,8 +6,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.lobstr.stellar.vault.databinding.AdapterItemOperationDetailsBinding
 import com.lobstr.stellar.vault.presentation.entities.transaction.operation.OperationField
 
-class OperationDetailsAdapter(private val fields: MutableList<OperationField>) :
-    RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class OperationDetailsAdapter(
+    private val fields: MutableList<OperationField>,
+    private val itemClickListener: (key: String, value: String?, tag: Any?) -> Unit
+) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     override fun onCreateViewHolder(viewGroup: ViewGroup, i: Int): RecyclerView.ViewHolder {
         return OperationDetailsViewHolder(
@@ -15,14 +17,16 @@ class OperationDetailsAdapter(private val fields: MutableList<OperationField>) :
                 LayoutInflater.from(
                     viewGroup.context
                 ), viewGroup, false
-            )
+            ),
+            itemClickListener
         )
     }
 
     override fun onBindViewHolder(viewHolder: RecyclerView.ViewHolder, position: Int) {
         (viewHolder as OperationDetailsViewHolder).bind(
             fields[position].key,
-            fields[position].value
+            fields[position].value,
+            fields[position].tag
         )
     }
 

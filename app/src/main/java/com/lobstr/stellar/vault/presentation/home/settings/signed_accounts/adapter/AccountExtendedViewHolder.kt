@@ -31,28 +31,32 @@ class AccountExtendedViewHolder(
             .placeholder(R.drawable.ic_person)
             .into(binding.ivIdentity)
 
-        binding.tvAccount.isVisible = !account.federation.isNullOrEmpty()
+        binding.tvAccountNameBottom.isVisible = !(account.federation.isNullOrEmpty() && account.name.isNullOrEmpty())
 
-        binding.tvAccount.text = when {
-            !account.federation.isNullOrEmpty() -> AppUtil.ellipsizeStrInMiddle(
+        binding.tvAccountNameBottom.text = when {
+            !account.federation.isNullOrEmpty() || !account.name.isNullOrEmpty() -> AppUtil.ellipsizeStrInMiddle(
                 account.address,
                 PK_TRUNCATE_COUNT
             )
             else -> null
         }
 
-        binding.tvAccountFederation.ellipsize =
-            if (account.federation.isNullOrEmpty()) {
+        binding.tvAccountNameTop.ellipsize =
+            if (account.federation.isNullOrEmpty() && account.name.isNullOrEmpty()) {
                 TextUtils.TruncateAt.MIDDLE
             } else {
                 TextUtils.TruncateAt.END
             }
 
-        binding.tvAccountFederation.text =
-            if (account.federation.isNullOrEmpty()) {
+        binding.tvAccountNameTop.text =
+            if (account.federation.isNullOrEmpty() && account.name.isNullOrEmpty()) {
                 AppUtil.ellipsizeStrInMiddle(account.address, PK_TRUNCATE_COUNT)
             } else {
-                account.federation
+                if(!account.name.isNullOrEmpty()){
+                    account.name
+                } else {
+                    account.federation
+                }
             }
 
         itemView.setOnClickListener {

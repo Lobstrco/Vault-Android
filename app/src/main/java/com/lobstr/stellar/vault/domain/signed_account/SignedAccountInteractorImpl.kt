@@ -16,6 +16,14 @@ class SignedAccountInteractorImpl(
             .doOnSuccess { prefUtil.accountSignersCount = it.size }
     }
 
+    override fun clearAccountNames() {
+        accountRepository.clearAccountNames()
+    }
+
+    override fun getAccountNames(): Map<String, String?> {
+        return accountRepository.getAccountNames()
+    }
+
     override fun getStellarAccount(stellarAddress: String): Single<Account> {
         return accountRepository.getStellarAccount(stellarAddress, "id")
     }

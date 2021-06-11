@@ -18,9 +18,9 @@ open class ManageSellOfferOperation(
 
     override fun getFields(): MutableList<OperationField> {
         val fields: MutableList<OperationField> = mutableListOf()
-        fields.add(OperationField(AppUtil.getString(R.string.op_field_selling), selling.assetCode))
+        fields.add(OperationField(AppUtil.getString(R.string.op_field_selling), selling.assetCode, selling))
         if (selling.assetIssuer != null) fields.add(OperationField(AppUtil.getString(R.string.op_field_asset_issuer), selling.assetIssuer))
-        fields.add(OperationField(AppUtil.getString(R.string.op_field_buying), buying.assetCode))
+        fields.add(OperationField(AppUtil.getString(R.string.op_field_buying), buying.assetCode, buying))
         if (buying.assetIssuer != null) fields.add(OperationField(AppUtil.getString(R.string.op_field_asset_issuer), buying.assetIssuer))
         fields.add(OperationField(AppUtil.getString(R.string.op_field_price), price))
 

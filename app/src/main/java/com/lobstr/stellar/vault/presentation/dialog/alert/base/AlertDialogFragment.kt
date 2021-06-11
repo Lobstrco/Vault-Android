@@ -13,12 +13,14 @@ import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.FragmentManager
 import com.lobstr.stellar.vault.R
 import com.lobstr.stellar.vault.presentation.BaseMvpAppCompatDialogFragment
+import com.lobstr.stellar.vault.presentation.dialog.alert.base.AlertDialogFragment.DialogIdentifier.ACCOUNT_NAME
 import com.lobstr.stellar.vault.presentation.dialog.alert.base.AlertDialogFragment.DialogIdentifier.APP_UPDATE
 import com.lobstr.stellar.vault.presentation.dialog.alert.base.AlertDialogFragment.DialogIdentifier.PROGRESS
 import com.lobstr.stellar.vault.presentation.dialog.alert.base.AlertDialogFragment.DialogIdentifier.PROVIDE_FEEDBACK
 import com.lobstr.stellar.vault.presentation.dialog.alert.base.AlertDialogFragment.DialogIdentifier.RATE_US
 import com.lobstr.stellar.vault.presentation.dialog.alert.base.AlertDialogFragment.DialogIdentifier.SUGGEST_RATE_US
 import com.lobstr.stellar.vault.presentation.dialog.alert.progress.ProgressDialog
+import com.lobstr.stellar.vault.presentation.home.account_name.AccountNameDialogFragment
 import com.lobstr.stellar.vault.presentation.home.app_update.AppUpdateDialogFragment
 import com.lobstr.stellar.vault.presentation.home.rate_us.common.RateUsDialogFragment
 import com.lobstr.stellar.vault.presentation.home.rate_us.feedback.ProvideFeedbackDialogFragment
@@ -73,6 +75,8 @@ open class AlertDialogFragment : BaseMvpAppCompatDialogFragment() {
         const val TANGEM = "TANGEM"
         const val INFO = "INFO"
         const val APP_UPDATE = "APP_UPDATE"
+        const val ACCOUNT_NAME = "ACCOUNT_NAME"
+        const val ASSET_INFO = "ASSET_INFO"
     }
 
     object DialogIdentifier {
@@ -81,6 +85,7 @@ open class AlertDialogFragment : BaseMvpAppCompatDialogFragment() {
         const val RATE_US = 3
         const val PROVIDE_FEEDBACK = 4
         const val APP_UPDATE = 5
+        const val ACCOUNT_NAME = 6
     }
 
     companion object {
@@ -139,6 +144,11 @@ open class AlertDialogFragment : BaseMvpAppCompatDialogFragment() {
                 APP_UPDATE -> {
                     alertDialogFragment = AppUpdateDialogFragment()
                     Log.i(LOG_TAG, " fabric: AppUpdateDialogFragment")
+                }
+
+                ACCOUNT_NAME -> {
+                    alertDialogFragment = AccountNameDialogFragment()
+                    Log.i(LOG_TAG, " fabric: AccountNameDialogFragment")
                 }
 
                 else -> {

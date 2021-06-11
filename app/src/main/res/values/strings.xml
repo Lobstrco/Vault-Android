@@ -154,8 +154,19 @@
 
     <!-- Signed Accounts screen -->
     <string name="text_signed_account_empty_state">No signed accounts</string>
+
+    <!-- Edit Account Dialog -->
+    <string name="text_btn_clear_nick_name">Clear Account Nickname</string>
     <string name="text_btn_copy_public_key">Copy Public Key</string>
-    <string name="text_btn_open_explorer">Open Explorer</string>
+    <string name="text_btn_open_explorer">Open Network Explorer</string>
+
+    <!-- Account Name Dialog-->
+    <string name="text_tv_set_account_name">Set Account Nickname</string>
+    <string name="text_tv_change_account_name">Change Account Nickname</string>
+    <string name="text_tv_account_name_subtitle">Choose a short name for protected account</string>
+    <string name="hint_account_nickname">Enter account nickname</string>
+    <string name="text_tv_change_account_name_restriction">Limited to 30 symbols</string>
+    <string name="text_btn_save">Save</string>
 
     <!-- Stellar Operations -->
     <string name="text_operation_name_payment">Payment</string>
@@ -184,6 +195,9 @@
     <string name="text_operation_name_revoke_trustline_sponsorship">Revoke Trustline Sponsorship</string>
     <string name="text_operation_name_create_claimable_balance">Create Claimable Balance</string>
     <string name="text_operation_name_claim_claimable_balance">Claim Claimable Balance</string>
+    <string name="text_operation_name_clawback_claimable_balance">Clawback Claimable Balance</string>
+    <string name="text_operation_name_clawback">Clawback</string>
+    <string name="text_operation_name_set_trustline_flags">Set Trustline Flags</string>
     <string name="text_operation_name_unknown">Unknown</string>
 
     <!-- Transaction details -->
@@ -192,7 +206,7 @@
         invalid.
     </string>
     <string name="text_tv_signers">Signers</string>
-    <string name="text_tv_vault_account_marker">You</string>
+    <string name="text_tv_vault_account_marker">Your Vault account</string>
     <string name="text_tv_of">of</string>
     <string name="text_tv_status_signed">Signed</string>
     <string name="text_tv_status_pending">Pending</string>
@@ -417,7 +431,10 @@ Describe an issue or provide your feedback below:
     <string name="op_field_seller">Seller</string>
     <string name="op_field_claimants">Claimants</string>
     <string name="op_field_claimant">Claimant</string>
-
+    <string name="op_field_from">From</string>
+    <string name="op_value_authorized_flag">Authorized</string>
+    <string name="op_value_authorized_to_maintain_liabilities_flag">Authorized To Maintain Liabilities</string>
+    <string name="op_value_trustline_clawback_enabled_flag">Trustline Clawback Enabled</string>
 
     <!-- App Update Dialog -->
     <string name="text_app_update_title_weak">Update is available</string>

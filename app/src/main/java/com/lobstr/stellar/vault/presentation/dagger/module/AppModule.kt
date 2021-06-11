@@ -5,6 +5,7 @@ import android.content.SharedPreferences
 import androidx.preference.PreferenceManager
 import com.lobstr.stellar.vault.data.error.ExceptionMapper
 import com.lobstr.stellar.vault.domain.util.EventProviderModule
+import com.lobstr.stellar.vault.presentation.util.FileStreamUtil
 import com.lobstr.stellar.vault.presentation.util.PrefsUtil
 import dagger.Module
 import dagger.Provides
@@ -22,6 +23,12 @@ object AppModule{
     fun providePreferences(@ApplicationContext context: Context): PrefsUtil {
         val prefs: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
         return PrefsUtil(prefs)
+    }
+
+    @Provides
+    @Singleton
+    fun provideFileStreamUtil(@ApplicationContext context: Context): FileStreamUtil {
+        return FileStreamUtil(context)
     }
 
     @Provides

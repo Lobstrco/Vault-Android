@@ -1,30 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/flContent"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingStart="16dp"
-        android:paddingEnd="16dp"
-        android:padding="16dp"
-        android:orientation="horizontal"
         android:background="@android:color/white">
 
-    <TextView
-            android:id="@+id/tvOperationFieldName"
-            android:layout_width="wrap_content"
-            android:textSize="15sp"
-            android:fontFamily="sans-serif-medium"
-            android:textColor="@android:color/black"
-            android:layout_marginEnd="4dp"
-            android:layout_height="wrap_content" />
-
-    <TextView
-            android:id="@+id/tvOperationFieldValue"
+    <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:singleLine="true"
-            android:ellipsize="end"
-            android:textSize="15sp"
-            android:textColor="@color/color_9b9b9b"
-            android:gravity="end"/>
-</LinearLayout>
+            android:orientation="horizontal"
+            android:padding="16dp">
+
+        <TextView
+                android:id="@+id/tvFieldName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="4dp"
+                android:fontFamily="sans-serif-medium"
+                android:textColor="@android:color/black"
+                android:textSize="15sp" />
+
+        <TextView
+                android:id="@+id/tvFieldValue"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:gravity="end"
+                android:singleLine="true"
+                android:textColor="@color/color_9b9b9b"
+                android:textSize="15sp" />
+    </LinearLayout>
+</FrameLayout>

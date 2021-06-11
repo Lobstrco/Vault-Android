@@ -18,4 +18,6 @@ interface TransactionInteractor {
     fun cancelOutdatedTransactions(): Completable
 
     fun getStellarAccount(stellarAddress: String): Single<Account>
+
+    fun getAccountNames(): Map<String, String?>
 }

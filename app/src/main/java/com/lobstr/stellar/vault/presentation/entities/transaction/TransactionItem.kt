@@ -16,4 +16,5 @@ data class TransactionItem(
     val transactionType: String?,
     val transaction: Transaction,
     var federation: String? = null,
+    var name: String? = null
 ) : Parcelable

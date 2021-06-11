@@ -47,6 +47,7 @@ class SettingsInteractorImpl(
         fcmHelper.unregisterFcm()
         prefsUtil.clearUserPrefs()
         keyStoreRepository.clearAll()
+        accountRepository.clearAccountNames()
     }
 
     override fun isBiometricEnabled(): Boolean {

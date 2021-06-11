@@ -79,5 +79,8 @@ interface TransactionDetailsView : MvpView {
     fun showWebPage(url: String)
 
     @Skip
+    fun showEditAccountDialog(address: String)
+
+    @Skip
     fun showTangemScreen(tangemInfo: TangemInfo)
 }

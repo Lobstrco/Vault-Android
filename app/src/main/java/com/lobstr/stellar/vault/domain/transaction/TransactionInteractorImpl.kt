@@ -46,4 +46,8 @@ class TransactionInteractorImpl(
     override fun getStellarAccount(stellarAddress: String): Single<Account> {
         return accountRepository.getStellarAccount(stellarAddress, "id")
     }
+
+    override fun getAccountNames(): Map<String, String?> {
+        return accountRepository.getAccountNames()
+    }
 }

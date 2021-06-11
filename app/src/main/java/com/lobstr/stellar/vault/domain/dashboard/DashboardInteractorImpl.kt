@@ -32,6 +32,14 @@ class DashboardInteractorImpl(
             .doOnSuccess { prefsUtil.accountSignersCount = it.size }
     }
 
+    override fun clearAccountNames() {
+        accountRepository.clearAccountNames()
+    }
+
+    override fun getAccountNames(): Map<String, String?> {
+        return accountRepository.getAccountNames()
+    }
+
     override fun getSignersCount(): Int {
         return prefsUtil.accountSignersCount
     }

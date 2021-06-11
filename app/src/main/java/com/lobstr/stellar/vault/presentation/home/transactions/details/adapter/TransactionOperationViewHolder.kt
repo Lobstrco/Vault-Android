@@ -25,7 +25,7 @@ class TransactionOperationViewHolder(private val binding: AdapterItemOperationBi
     }
 
     private fun capitalize(str: String): String {
-        return str.substring(0, 1).toUpperCase() + str.subSequence(1, str.length)
+        return str.substring(0, 1).uppercase() + str.subSequence(1, str.length)
     }
 
     /**

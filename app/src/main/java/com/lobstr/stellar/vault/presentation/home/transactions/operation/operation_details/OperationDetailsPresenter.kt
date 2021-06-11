@@ -8,6 +8,7 @@ import com.lobstr.stellar.vault.domain.util.EventProviderModule
 import com.lobstr.stellar.vault.domain.util.event.Network
 import com.lobstr.stellar.vault.presentation.BasePresenter
 import com.lobstr.stellar.vault.presentation.entities.account.Account
+import com.lobstr.stellar.vault.presentation.entities.transaction.Asset
 import com.lobstr.stellar.vault.presentation.entities.transaction.TransactionItem
 import com.lobstr.stellar.vault.presentation.entities.transaction.operation.CreateAccountOperation
 import com.lobstr.stellar.vault.presentation.entities.transaction.operation.Operation
@@ -143,5 +144,16 @@ class OperationDetailsPresenter @Inject constructor(
             })
 
         unsubscribeOnDestroy(stellarAccountsDisposable!!)
+    }
+
+    /**
+     * @param key Reserved for future implementations.
+     * @param tag Additional info for field (e.g. Asset for asset code)
+     */
+    fun operationItemClicked(key: String, value: String?, tag: Any?) {
+        when {
+            AppUtil.isPublicKey(value) -> value?.let {viewState.showEditAccountDialog(value) }
+            tag is Asset -> viewState.showAssetInfoDialog(tag.assetCode, tag.assetIssuer)
+        }
     }
 }

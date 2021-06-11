@@ -39,6 +39,8 @@ interface TransactionDetailsInteractor {
 
     fun getSignedAccounts(): Single<List<Account>>
 
+    fun getAccountNames(): Map<String, String?>
+
     fun getTransactionSigners(
         xdr: String,
         sourceAccount: String

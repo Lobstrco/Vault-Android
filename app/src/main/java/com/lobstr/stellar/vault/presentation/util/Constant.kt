@@ -15,6 +15,7 @@ object Constant {
         const val EXTRA_ERROR_MESSAGE = "EXTRA_ERROR_MESSAGE"
         const val EXTRA_CONFIG = "EXTRA_CONFIG"
         const val EXTRA_TANGEM_INFO = "EXTRA_TANGEM_INFO"
+        const val EXTRA_PUBLIC_KEY = "EXTRA_PUBLIC_KEY"
     }
 
     object Bundle {
@@ -30,6 +31,9 @@ object Constant {
         const val BUNDLE_ERROR_MESSAGE = "BUNDLE_ERROR_MESSAGE"
         const val BUNDLE_CONFIG = "BUNDLE_CONFIG"
         const val BUNDLE_PIN_MODE = "BUNDLE_PIN_MODE"
+        const val BUNDLE_MANAGE_ACCOUNT_NAME = "BUNDLE_MANAGE_ACCOUNT_NAME"
+        const val BUNDLE_ASSET_CODE = "BUNDLE_ASSET_CODE"
+        const val BUNDLE_ASSET_ISSUER = "BUNDLE_ASSET_ISSUER"
     }
 
     object Navigation {
@@ -167,6 +171,7 @@ object Constant {
     object Explorer {
         private const val URL = "https://stellar.expert/explorer/public"
         const val ACCOUNT = URL.plus("/account/")
+        const val ASSET = URL.plus("/asset/")
         const val TRANSACTION = URL.plus("/tx/")
     }
 

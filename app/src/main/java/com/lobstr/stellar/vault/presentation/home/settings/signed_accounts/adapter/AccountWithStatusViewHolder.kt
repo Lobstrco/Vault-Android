@@ -33,29 +33,36 @@ class AccountWithStatusViewHolder(
             .into(binding.ivIdentity)
 
         // Show section for address with federation and vault account marker.
-        binding.tvAccount.isVisible = !account.federation.isNullOrEmpty() || account.isVaultAccount == true
+        binding.tvAccountNameBottom.isVisible = !account.federation.isNullOrEmpty() || account.isVaultAccount == true || !account.name.isNullOrEmpty()
 
-        binding.tvAccount.text = when {
-            !account.federation.isNullOrEmpty() -> AppUtil.ellipsizeStrInMiddle(
+        binding.tvAccountNameBottom.text = when {
+            !account.federation.isNullOrEmpty() || account.isVaultAccount == true || !account.name.isNullOrEmpty() -> AppUtil.ellipsizeStrInMiddle(
                 account.address,
                 PK_TRUNCATE_COUNT
             )
-            account.isVaultAccount == true -> itemView.context.getString(R.string.text_tv_vault_account_marker)
             else -> null
         }
 
-        binding.tvAccountFederation.ellipsize =
-            if (account.federation.isNullOrEmpty()) {
+        binding.tvAccountNameTop.ellipsize =
+            if (account.federation.isNullOrEmpty() && account.name.isNullOrEmpty()) {
                 TextUtils.TruncateAt.MIDDLE
             } else {
                 TextUtils.TruncateAt.END
             }
 
-        binding.tvAccountFederation.text =
-            if (account.federation.isNullOrEmpty()) {
-                AppUtil.ellipsizeStrInMiddle(account.address, PK_TRUNCATE_COUNT)
+        binding.tvAccountNameTop.text =
+            if (account.federation.isNullOrEmpty() && account.name.isNullOrEmpty()) {
+                if(account.isVaultAccount == true) {
+                    itemView.context.getString(R.string.text_tv_vault_account_marker)
+                } else {
+                    AppUtil.ellipsizeStrInMiddle(account.address, PK_TRUNCATE_COUNT)
+                }
             } else {
-                account.federation
+                if(!account.name.isNullOrEmpty()){
+                    account.name
+                } else {
+                    account.federation
+                }
             }
 
         binding.tvStatus.text =

@@ -5,9 +5,12 @@ import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
 import android.text.TextUtils
+import android.util.TypedValue
 import android.view.*
+import android.widget.FrameLayout
 import android.widget.TextView
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.setFragmentResult
@@ -24,6 +27,7 @@ import com.lobstr.stellar.vault.presentation.entities.account.Account
 import com.lobstr.stellar.vault.presentation.entities.tangem.TangemInfo
 import com.lobstr.stellar.vault.presentation.entities.transaction.TransactionItem
 import com.lobstr.stellar.vault.presentation.home.settings.signed_accounts.adapter.AccountAdapter
+import com.lobstr.stellar.vault.presentation.home.settings.signed_accounts.edit_account.EditAccountDialogFragment
 import com.lobstr.stellar.vault.presentation.home.transactions.operation.operation_details.OperationDetailsFragment
 import com.lobstr.stellar.vault.presentation.home.transactions.operation.operation_list.OperationListFragment
 import com.lobstr.stellar.vault.presentation.home.transactions.submit_error.ErrorFragment
@@ -222,13 +226,38 @@ class TransactionDetailsFragment : BaseFragment(), TransactionDetailsView, View.
             val fieldName = root.findViewById<TextView>(R.id.tvFieldName)
             val fieldValue = root.findViewById<TextView>(R.id.tvFieldValue)
 
+            val isValuePublicKey = AppUtil.isPublicKey(value)
+
+            // Set selectable foreground for public key values.
+            (root.findViewById<FrameLayout>(R.id.flContent))?.foreground = if(isValuePublicKey) {
+                val outValue = TypedValue()
+                if (requireContext().theme.resolveAttribute(android.R.attr.selectableItemBackground, outValue, true)) {
+                    ContextCompat.getDrawable(requireContext(), outValue.resourceId)
+                } else {
+                    null
+                }
+            } else {
+                null
+            }
+
             fieldValue.ellipsize = when (key) {
                 AppUtil.getString(R.string.text_tv_transaction_memo) -> TextUtils.TruncateAt.END
                 else -> TextUtils.TruncateAt.MIDDLE
             }
 
             fieldName.text = key
-            fieldValue.text = value
+            fieldValue.text = if (isValuePublicKey) {
+                AppUtil.ellipsizeStrInMiddle(value, Constant.Util.PK_TRUNCATE_COUNT)
+            } else {
+                value
+            }
+
+            // Set Click Listener only for public key values.
+            if(isValuePublicKey) {
+                root.setOnClickListener {
+                    mPresenter.additionalInfoValueClicked(key, value)
+                }
+            }
 
             // Show divider only fo first value.
             if (binding.llAdditionalInfo.childCount == 0) {
@@ -290,7 +319,7 @@ class TransactionDetailsFragment : BaseFragment(), TransactionDetailsView, View.
         intent.putExtra(EXTRA_TRANSACTION_STATUS, Constant.Transaction.SIGNED)
         activity?.setResult(Activity.RESULT_OK, intent)
         setFragmentResult(Constant.RequestKey.TRANSACTION_DETAILS_FRAGMENT, Bundle().apply {
-            putParcelable(EXTRA_TRANSACTION_ITEM,transactionItem)
+            putParcelable(EXTRA_TRANSACTION_ITEM, transactionItem)
             putInt(EXTRA_TRANSACTION_STATUS, Constant.Transaction.SIGNED)
         })
 
@@ -390,6 +419,15 @@ class TransactionDetailsFragment : BaseFragment(), TransactionDetailsView, View.
 
     override fun showWebPage(url: String) {
         AppUtil.openWebPage(context, url)
+    }
+
+    override fun showEditAccountDialog(address: String) {
+        val bundle = Bundle()
+        bundle.putString(Constant.Bundle.BUNDLE_PUBLIC_KEY, address)
+
+        val dialog = EditAccountDialogFragment()
+        dialog.arguments = bundle
+        dialog.show(childFragmentManager, AlertDialogFragment.DialogFragmentIdentifier.EDIT_ACCOUNT)
     }
 
     override fun showTangemScreen(tangemInfo: TangemInfo) {

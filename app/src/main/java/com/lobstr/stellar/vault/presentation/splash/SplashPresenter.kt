@@ -27,7 +27,7 @@ class SplashPresenter @Inject constructor(private val interactor: SplashInteract
                 .doOnComplete {
                     if (BuildConfig.FLAVOR == Constant.Flavor.QA) {
                         viewState.showFlavorDialog(
-                            BuildConfig.FLAVOR.toUpperCase().plus(" ").plus(AppUtil.getAppBehavior())
+                            BuildConfig.FLAVOR.uppercase().plus(" ").plus(AppUtil.getAppBehavior())
                         )
                     } else {
                         checkAppBehavior()

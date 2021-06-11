@@ -8,12 +8,14 @@ import com.lobstr.stellar.vault.domain.util.EventProviderModule
 import com.lobstr.stellar.vault.domain.util.event.Auth
 import com.lobstr.stellar.vault.domain.util.event.Network
 import com.lobstr.stellar.vault.domain.util.event.Notification
+import com.lobstr.stellar.vault.domain.util.event.Update.Type.ACCOUNT_NAME
 import com.lobstr.stellar.vault.presentation.BasePresenter
 import com.lobstr.stellar.vault.presentation.entities.account.Account
 import com.lobstr.stellar.vault.presentation.util.AppUtil
 import com.lobstr.stellar.vault.presentation.util.Constant
 import com.lobstr.stellar.vault.presentation.util.Constant.Util.PK_TRUNCATE_COUNT
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.disposables.Disposable
 import io.reactivex.rxjava3.schedulers.Schedulers
@@ -25,6 +27,8 @@ class DashboardPresenter @Inject constructor(
 ) : BasePresenter<DashboardView>() {
 
     private var stellarAccountsDisposable: Disposable? = null
+
+    private val stellarAccounts: MutableList<Account> = mutableListOf()
     private val cachedStellarAccounts: MutableList<Account> = mutableListOf()
 
     private var loadSignedAccountsInProcess = false
@@ -94,7 +98,21 @@ class DashboardPresenter @Inject constructor(
             eventProviderModule.updateEventSubject
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
-                    loadSignedAccountsAndTransactions()
+                    when (it.type) {
+                        ACCOUNT_NAME -> {
+                            unsubscribeOnDestroy(Completable.fromCallable {
+                                checkAccountNames(stellarAccounts)
+                            }
+                                .subscribeOn(Schedulers.io())
+                                .observeOn(AndroidSchedulers.mainThread())
+                                .subscribe(
+                                    { viewState.notifySignedAccountsAdapter(stellarAccounts) },
+                                    Throwable::printStackTrace
+                                )
+                            )
+                        }
+                        else -> loadSignedAccountsAndTransactions()
+                    }
                 }, {
                     it.printStackTrace()
                 })
@@ -147,6 +165,25 @@ class DashboardPresenter @Inject constructor(
 
         unsubscribeOnDestroy(
             interactor.getSignedAccounts()
+                .doOnSuccess {
+                    stellarAccounts.apply {
+                        clear()
+                        addAll(it)
+                    }
+                    if (stellarAccounts.isEmpty()) {
+                        interactor.clearAccountNames()
+                    }
+
+                    checkAccountNames(stellarAccounts)
+
+                    // Check cached federation items.
+                    stellarAccounts.forEachIndexed { index, accountItem ->
+                        val federation =
+                            cachedStellarAccounts.find { account -> account.address == accountItem.address }
+                                ?.federation
+                        stellarAccounts[index].federation = federation
+                    }
+                }
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe { loadSignedAccountsInProcess = true }
@@ -155,21 +192,12 @@ class DashboardPresenter @Inject constructor(
                     viewState.showSignersProgress(false)
                 }
                 .subscribe({
-                    viewState.showSignersCount(it.size)
-                    viewState.showSignersEmptyState(it.isEmpty())
-
-                    // Check cached federation items.
-                    it.forEachIndexed { index, accountItem ->
-                        val federation =
-                            cachedStellarAccounts.find { account -> account.address == accountItem.address }
-                                ?.federation
-                        it[index].federation = federation
-                    }
-
-                    viewState.notifySignedAccountsAdapter(it)
+                    viewState.showSignersCount(stellarAccounts.size)
+                    viewState.showSignersEmptyState(stellarAccounts.isEmpty())
+                    viewState.notifySignedAccountsAdapter(stellarAccounts)
 
                     // Try receive federations for accounts.
-                    getStellarAccounts(it)
+                    getStellarAccounts(stellarAccounts)
                 }, {
                     viewState.showSignersCount(interactor.getSignersCount())
                     viewState.showSignersEmptyState(interactor.getSignersCount() == 0)
@@ -196,6 +224,18 @@ class DashboardPresenter @Inject constructor(
                     }
                 })
         )
+    }
+
+    /**
+     * Check Accounts' names from cache.
+     *  TODO Places: Dashboard, SignedAccounts, Tr Details, Tr list.
+     *   Clear: Log Out and accounts list is empty.
+     */
+    private fun checkAccountNames(accounts: List<Account>) {
+        val names = interactor.getAccountNames()
+        for (account in accounts) {
+            account.name = names[account.address]
+        }
     }
 
     /**

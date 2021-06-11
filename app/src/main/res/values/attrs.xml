@@ -14,4 +14,9 @@
         <attr name="mnemonicsColumnCount" format="integer"/>
         <attr name="mnemonicsOuterMargin" format="dimension"/>
     </declare-styleable>
+
+    <declare-styleable name="SearchEditText">
+        <attr name="cleanSearchImg" format="reference"/>
+        <attr name="cleanSearchImgColor" format="color"/>
+    </declare-styleable>
 </resources>

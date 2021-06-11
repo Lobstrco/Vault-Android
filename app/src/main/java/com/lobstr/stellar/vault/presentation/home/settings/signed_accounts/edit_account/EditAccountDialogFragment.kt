@@ -4,13 +4,17 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import com.lobstr.stellar.vault.databinding.FragmentEditAccountBinding
 import com.lobstr.stellar.vault.presentation.BaseBottomSheetDialog
 import com.lobstr.stellar.vault.presentation.util.AppUtil
 import com.lobstr.stellar.vault.presentation.util.Constant
+import dagger.hilt.android.AndroidEntryPoint
 import moxy.ktx.moxyPresenter
+import javax.inject.Inject
+import javax.inject.Provider
 
-
+@AndroidEntryPoint
 class EditAccountDialogFragment : BaseBottomSheetDialog(), EditAccountView, View.OnClickListener {
 
     // ===========================================================
@@ -25,6 +29,9 @@ class EditAccountDialogFragment : BaseBottomSheetDialog(), EditAccountView, View
     // Fields
     // ===========================================================
 
+    @Inject
+    lateinit var presenterProvider: Provider<EditAccountPresenter>
+
     private var _binding: FragmentEditAccountBinding? = null
     private val binding get() = _binding!!
 
@@ -32,9 +39,12 @@ class EditAccountDialogFragment : BaseBottomSheetDialog(), EditAccountView, View
     // Constructors
     // ===========================================================
 
-    private val mPresenter by moxyPresenter { EditAccountPresenter(
-        arguments?.getString(Constant.Bundle.BUNDLE_PUBLIC_KEY)!!
-    )}
+    private val mPresenter by moxyPresenter {
+        presenterProvider.get().apply {
+            publicKey = arguments?.getString(Constant.Bundle.BUNDLE_PUBLIC_KEY)!!
+            manageAccountName = arguments?.getBoolean(Constant.Bundle.BUNDLE_MANAGE_ACCOUNT_NAME) ?: false
+        }
+    }
 
     // ===========================================================
     // Getter & Setter
@@ -47,7 +57,7 @@ class EditAccountDialogFragment : BaseBottomSheetDialog(), EditAccountView, View
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = FragmentEditAccountBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -60,6 +70,8 @@ class EditAccountDialogFragment : BaseBottomSheetDialog(), EditAccountView, View
     private fun setListeners() {
         binding.btnCopyPublicKey.setOnClickListener(this)
         binding.btnOpenExplorer.setOnClickListener(this)
+        binding.btnSetNickName.setOnClickListener(this)
+        binding.btnClearNickName.setOnClickListener(this)
     }
 
     override fun onDestroyView() {
@@ -75,17 +87,37 @@ class EditAccountDialogFragment : BaseBottomSheetDialog(), EditAccountView, View
         when (v?.id) {
             binding.btnCopyPublicKey.id -> mPresenter.copyPublicKeyClicked()
             binding.btnOpenExplorer.id -> mPresenter.openExplorerClicked()
+            binding.btnSetNickName.id -> mPresenter.setNickNameClicked()
+            binding.btnClearNickName.id -> mPresenter.clearNickNameClicked()
         }
     }
 
+    override fun setAccountActionButton(text: String?) {
+        binding.btnSetNickName.text = text
+        binding.btnSetNickName.isVisible = !text.isNullOrEmpty()
+    }
+
+    override fun showClearAccount(show: Boolean) {
+        binding.btnClearNickName.isVisible = show
+    }
+
+    override fun showSetNickNameFlow(publicKey: String) {
+        // Notify target about success.
+        ((parentFragment ?: activity) as? OnEditAccountDialogListener)?.onSetAccountNickNameClicked(
+            publicKey
+        )
+    }
+
     override fun copyToClipBoard(text: String) {
-        dismiss()
         AppUtil.copyToClipboard(context, text)
     }
 
     override fun openExplorer(url: String) {
-        dismiss()
         AppUtil.openWebPage(context, url)
+    }
+
+    override fun closeScreen() {
+        dismiss()
     }
 
     // ===========================================================
@@ -95,4 +127,8 @@ class EditAccountDialogFragment : BaseBottomSheetDialog(), EditAccountView, View
     // ===========================================================
     // Inner and Anonymous Classes
     // ===========================================================
+
+    interface OnEditAccountDialogListener {
+        fun onSetAccountNickNameClicked(publicKey: String)
+    }
 }

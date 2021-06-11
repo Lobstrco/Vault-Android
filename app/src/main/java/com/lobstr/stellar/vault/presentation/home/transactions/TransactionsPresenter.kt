@@ -9,12 +9,13 @@ import com.lobstr.stellar.vault.domain.util.EventProviderModule
 import com.lobstr.stellar.vault.domain.util.event.Auth
 import com.lobstr.stellar.vault.domain.util.event.Network
 import com.lobstr.stellar.vault.domain.util.event.Notification
+import com.lobstr.stellar.vault.domain.util.event.Update
 import com.lobstr.stellar.vault.presentation.BasePresenter
 import com.lobstr.stellar.vault.presentation.dialog.alert.base.AlertDialogFragment
 import com.lobstr.stellar.vault.presentation.entities.account.Account
 import com.lobstr.stellar.vault.presentation.entities.transaction.TransactionItem
-import com.lobstr.stellar.vault.presentation.util.Constant.Util.UNDEFINED_VALUE
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.disposables.Disposable
 import io.reactivex.rxjava3.schedulers.Schedulers
@@ -86,7 +87,21 @@ class TransactionsPresenter @Inject constructor(
             eventProviderModule.updateEventSubject
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
-                    refreshCalled()
+                    when (it.type) {
+                        Update.Type.ACCOUNT_NAME -> {
+                            unsubscribeOnDestroy(Completable.fromCallable {
+                                checkAccountNames(transactions)
+                            }
+                                .subscribeOn(Schedulers.io())
+                                .observeOn(AndroidSchedulers.mainThread())
+                                .subscribe(
+                                    { viewState.showTransactionList(transactions, !nextPageUrl.isNullOrEmpty()) },
+                                    Throwable::printStackTrace
+                                )
+                            )
+                        }
+                        else -> refreshCalled()
+                    }
                 }, {
                     it.printStackTrace()
                 })
@@ -98,6 +113,23 @@ class TransactionsPresenter @Inject constructor(
         transactionsLoadingDisposable?.dispose()
 
         transactionsLoadingDisposable = interactor.getPendingTransactionList(nextPageUrl)
+            .doOnSuccess {
+                if (newLoadTransactions) {
+                    transactions.clear()
+                }
+
+                transactions.addAll(it.results)
+
+                checkAccountNames(transactions)
+
+                // Check cached federation items.
+                transactions.forEachIndexed { index, transactionItem ->
+                    val federation =
+                        cachedStellarAccounts.find { account -> account.address == transactionItem.transaction.sourceAccount }
+                            ?.federation
+                    transactions[index].federation = federation
+                }
+            }
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .doOnSubscribe {
@@ -112,23 +144,9 @@ class TransactionsPresenter @Inject constructor(
                 viewState.showPullToRefresh(false)
             }
             .subscribe({ result ->
-                if (newLoadTransactions) {
-                    transactions.clear()
-                }
-
-                transactions.addAll(result.results)
-
                 viewState.showEmptyState(transactions.isEmpty())
 
                 nextPageUrl = result.next
-
-                // Check cached federation items.
-                transactions.forEachIndexed { index, transactionItem ->
-                    val federation =
-                        cachedStellarAccounts.find { account -> account.address == transactionItem.transaction.sourceAccount }
-                            ?.federation
-                    transactions[index].federation = federation
-                }
 
                 viewState.showTransactionList(transactions, !nextPageUrl.isNullOrEmpty())
 
@@ -166,6 +184,18 @@ class TransactionsPresenter @Inject constructor(
             })
 
         unsubscribeOnDestroy(transactionsLoadingDisposable!!)
+    }
+
+    /**
+     * Check Accounts' names from cache.
+     *  TODO Places: Dashboard, SignedAccounts, Tr Details, Tr list.
+     *   Clear: Log Out and accounts list is empty.
+     */
+    private fun checkAccountNames(transactions: List<TransactionItem>) {
+        val names = interactor.getAccountNames()
+        for(transaction in transactions) {
+            transaction.name = names[transaction.transaction.sourceAccount]
+        }
     }
 
     /**

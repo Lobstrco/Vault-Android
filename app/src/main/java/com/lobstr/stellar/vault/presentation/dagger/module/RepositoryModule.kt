@@ -28,6 +28,7 @@ import com.lobstr.stellar.vault.domain.stellar.StellarRepository
 import com.lobstr.stellar.vault.domain.tangem.TangemRepository
 import com.lobstr.stellar.vault.domain.transaction.TransactionRepository
 import com.lobstr.stellar.vault.domain.vault_auth.VaultAuthRepository
+import com.lobstr.stellar.vault.presentation.util.FileStreamUtil
 import com.lobstr.stellar.vault.presentation.util.PrefsUtil
 import dagger.Module
 import dagger.Provides
@@ -139,8 +140,9 @@ object RepositoryModule {
     @Provides
     fun provideAccountRepository(
         accountApi: AccountApi,
-        rxErrorUtils: RxErrorUtils
+        rxErrorUtils: RxErrorUtils,
+        fileStreamUtil: FileStreamUtil
     ): AccountRepository {
-        return AccountRepositoryImpl(accountApi, AccountEntityMapper(), rxErrorUtils)
+        return AccountRepositoryImpl(accountApi, AccountEntityMapper(), rxErrorUtils, fileStreamUtil)
     }
 }
