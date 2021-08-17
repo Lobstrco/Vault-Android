@@ -53,8 +53,8 @@
 
     <!-- Backup screen -->
     <string name="text_tv_backup_title">Backup Your Account</string>
-    <string name="text_tv_backup_description">You will be shown a 12 word recovery phrase.
-        It will allow you to recover access to your account in case your phone is lost or stolen.
+    <string name="text_tv_backup_description">You will be shown a 12 word recovery phrase. It will allow you to recover access to your account in case your phone is lost or stolen.\n\n
+        If you lose your Recovery Phrase, you may lose the control over your protected Stellar account and funds.
     </string>
     <string name="text_btn_backup_understand">I Understand</string>
 
@@ -213,6 +213,12 @@
     <string name="text_tv_transaction_memo">Memo</string>
     <string name="text_tv_transaction_source_account">Transaction Source</string>
     <string name="text_tv_added_at">Created</string>
+
+    <!-- Operations' list -->
+    <string name="text_tv_operations_list_title">Operations</string>
+
+    <!-- Operation details -->
+    <string name="text_tv_operation_details_title">Operation Details</string>
 
     <!-- Add XDR screen -->
     <string name="text_tv_import_xdr_subtitle">To submit transaction enter its XDR below</string>

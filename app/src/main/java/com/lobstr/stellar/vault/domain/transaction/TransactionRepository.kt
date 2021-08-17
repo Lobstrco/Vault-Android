@@ -25,4 +25,6 @@ interface TransactionRepository {
     fun cancelTransactions(token: String): Completable
 
     fun cancelOutdatedTransactions(token: String): Completable
+
+    fun createTransaction(xdr: String): Single<TransactionItem>
 }

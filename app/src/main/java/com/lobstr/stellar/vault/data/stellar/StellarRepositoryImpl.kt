@@ -1,7 +1,6 @@
 package com.lobstr.stellar.vault.data.stellar
 
 import com.lobstr.stellar.vault.data.mnemonic.MnemonicsMapper
-import com.lobstr.stellar.vault.data.transaction.TransactionEntityMapper
 import com.lobstr.stellar.vault.domain.error.RxErrorUtils
 import com.lobstr.stellar.vault.domain.stellar.StellarRepository
 import com.lobstr.stellar.vault.presentation.entities.account.Account
@@ -9,6 +8,7 @@ import com.lobstr.stellar.vault.presentation.entities.account.AccountResult
 import com.lobstr.stellar.vault.presentation.entities.account.Thresholds
 import com.lobstr.stellar.vault.presentation.entities.mnemonic.MnemonicItem
 import com.lobstr.stellar.vault.presentation.entities.transaction.TransactionItem
+import com.lobstr.stellar.vault.presentation.util.StrKey
 import com.soneso.stellarmnemonics.Wallet
 import com.tangem.commands.SignResponse
 import io.reactivex.rxjava3.core.Single
@@ -24,7 +24,6 @@ class StellarRepositoryImpl(
     private val network: Network,
     private val server: Server,
     private val mnemonicsMapper: MnemonicsMapper,
-    private val transactionEntityMapper: TransactionEntityMapper,
     private val rxErrorUtils: RxErrorUtils
 ) : StellarRepository {
 
@@ -71,17 +70,6 @@ class StellarRepositoryImpl(
             transaction.sign(signer)
 
             return@Callable transaction
-        })
-    }
-
-    /**
-     * Used for Create Transaction Item from XDR.
-     */
-    override fun createTransactionItem(envelopXdr: String): Single<TransactionItem> {
-        return fromCallable(Callable {
-            val transaction = AbstractTransaction.fromEnvelopeXdr(envelopXdr, network)
-            // Create Transaction Item for handle it in transaction Details
-            return@Callable transactionEntityMapper.transformTransactionItem(transaction)
         })
     }
 
@@ -187,5 +175,18 @@ class StellarRepositoryImpl(
         transaction.signatures.add(decoratedSignature)
 
         return transaction.toEnvelopeXdrBase64()
+    }
+
+    /**
+     * Use for simple encoding. E.g for the retrieve String representation of Public Key from the array of bytes.
+     * @param data Array of bytes.
+     * @return String or null in Exception case.
+     */
+    override fun encodeStellarAccountId(data: ByteArray?): String? {
+        return try {
+            StrKey.encodeStellarAccountId(data)
+        } catch (exc: Exception) {
+            null
+        }
     }
 }

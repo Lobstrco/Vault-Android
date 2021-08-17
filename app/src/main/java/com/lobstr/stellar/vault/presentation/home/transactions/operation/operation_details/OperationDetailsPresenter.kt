@@ -40,7 +40,7 @@ class OperationDetailsPresenter @Inject constructor(
         // Check case, when operations list is empty.
         if (transactionItem.transaction.operations.isNullOrEmpty()) {
             viewState.setupToolbarTitle(
-                when (transactionItem.transactionType) {
+                when (transactionItem.transaction.transactionType) {
                     AUTH_CHALLENGE -> R.string.text_transaction_challenge
                     else -> R.string.title_toolbar_transaction_details
                 }
@@ -55,7 +55,7 @@ class OperationDetailsPresenter @Inject constructor(
 
         viewState.setupToolbarTitle(
             when {
-                transactionItem.transaction.operations.size == 1 && transactionItem.transactionType == AUTH_CHALLENGE -> {
+                transactionItem.transaction.operations.size == 1 && transactionItem.transaction.transactionType == AUTH_CHALLENGE -> {
                     R.string.text_transaction_challenge // Specific case for the 'Single Operation' Challenge Transaction.
                 }
                 else -> AppUtil.getTransactionOperationName(operation)

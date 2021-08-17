@@ -227,5 +227,11 @@
 -keep class com.andrognito.** { *; }
 -dontwarn com.andrognito.**
 
+# Zendesk Sdk
+-keep public interface com.zendesk.** { *; }
+-keep public class com.zendesk.** { *; }
+-keep class zendesk.suppor.** { *; }
+-keep class zendesk.core.** { *; }
+
 
 

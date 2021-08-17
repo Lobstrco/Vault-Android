@@ -13,13 +13,13 @@ plugins {
 }
 
 android {
-    compileSdkVersion(30)
+    compileSdk = 30
     defaultConfig {
         applicationId = "com.lobstr.stellar.vault"
-        minSdkVersion(22)
-        targetSdkVersion(30)
-        versionCode = 26
-        versionName = "2.4.0"
+        minSdk = 22
+        targetSdk = 30
+        versionCode = 27
+        versionName = "2.4.1"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         multiDexEnabled = true
 
@@ -27,19 +27,19 @@ android {
         setProperty("archivesBaseName", "${applicationId}_${versionName}(${versionCode})_${SimpleDateFormat("dd.MM.yyyy").format(Date())})")
     }
 
-    dexOptions {
-        javaMaxHeapSize = "4g"
-    }
-
     packagingOptions {
-        exclude("META-INF/LICENSE")
-        exclude("META-INF/NOTICE")
-        exclude("META-INF/MANIFEST.MF")
-        exclude("META-INF/rxjava.properties")
-        exclude("META-INF/proguard/okhttp3.pro")
+        resources.excludes.addAll(
+            listOf(
+                "META-INF/LICENSE",
+                "META-INF/NOTICE",
+                "META-INF/MANIFEST.MF",
+                "META-INF/rxjava.properties",
+                "META-INF/proguard/okhttp3.pro"
+            )
+        )
     }
 
-    lintOptions {
+    lint {
         disable("RestrictedApi")
         disable("MissingTranslation")
     }
@@ -48,12 +48,12 @@ android {
         // Flag to enable support for the new language APIs.
         isCoreLibraryDesugaringEnabled = true
         // Sets Java compatibility to Java 8.
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_11
+        targetCompatibility = JavaVersion.VERSION_11
     }
 
     kotlinOptions {
-        jvmTarget = "1.8"
+        jvmTarget = "11"
     }
 
     signingConfigs {
@@ -75,7 +75,7 @@ android {
         }
     }
 
-    flavorDimensions("mode")
+    flavorDimensions.add("mode")
     productFlavors {
         create("qa") {
             applicationId = "com.lobstr.stellar.vault.qa"
@@ -144,38 +144,38 @@ android {
 
 val desugar_jdk_libs by extra("1.1.5")
 val dagger by extra("2.28.1")
-val rx_java by extra("3.0.13")
+val rx_java by extra("3.1.0")
 val rx_android by extra("3.0.0")
 val rx_kotlin by extra("3.0.1")
 val retrofit by extra("2.9.0")
 val okhttp by extra("4.9.0")
 val moxy by extra("2.2.2")
 val glide by extra("4.12.0")
-val material by extra("1.3.0")
+val material by extra("1.4.0")
 val browser by extra("1.3.0")
-val firebase_bom by extra("28.1.0")
+val firebase_bom by extra("28.3.0")
 val javax_annotation by extra("10.0-b28")
 val play_service_base by extra("17.6.0")
-val androidx_core by extra("1.5.0")
-val androidx_appcompat by extra("1.3.0")
-val fragment by extra("1.3.4")
+val androidx_core by extra("1.6.0")
+val androidx_appcompat by extra("1.3.1")
+val fragment by extra("1.3.6")
 val recyclerview by extra("1.2.1")
 val androidx_multidex by extra("2.0.1")
 val androidx_preference by extra("1.1.1")
-val androidx_constraintlayout by extra("2.0.4")
+val androidx_constraintlayout by extra("2.1.0")
 val androidx_legacy_support_v4 by extra("1.0.0")
 val junit by extra("4.13.2")
-val runner by extra("1.1.2")
-val espresso_core by extra("3.3.0")
-val stellar_sdk by extra("0.25.0")
+val runner by extra("1.1.3")
+val espresso_core by extra("3.4.0")
+val stellar_sdk by extra("0.26.0")
 val work_manager by extra("2.5.0")
 val biometric by extra("1.1.0")
-val lottieVersion by extra("3.7.0")
+val lottieVersion by extra("4.0.0")
 val qr_gen by extra("2.6.0")
 val viewpager2 by extra("1.0.0")
 val tangem by extra("0.9.0")
-val zendesk by extra("5.0.2")
-val hilt by extra("2.37")
+val zendesk by extra("5.0.3")
+val hilt by extra("2.38.1")
 val androidx_hilt by extra("1.0.0")
 val lifecycle by extra("2.3.1")
 

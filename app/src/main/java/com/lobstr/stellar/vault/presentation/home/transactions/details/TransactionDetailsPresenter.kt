@@ -58,7 +58,7 @@ class TransactionDetailsPresenter @Inject constructor(
 
         registerEventProvider()
         viewState.setupToolbarTitle(
-            when (transactionItem.transactionType) {
+            when (transactionItem.transaction.transactionType) {
                 AUTH_CHALLENGE -> R.string.text_transaction_challenge
                 else -> R.string.title_toolbar_transaction_details
             }
@@ -128,7 +128,7 @@ class TransactionDetailsPresenter @Inject constructor(
                     }
 
                     interactor.getTransactionSigners(
-                        transactionItem.xdr!!,
+                        transactionItem.transaction.envelopXdr,
                         targetSourceAccount
                     )
                 }
@@ -331,7 +331,7 @@ class TransactionDetailsPresenter @Inject constructor(
     }
 
     fun copyXdrClicked() {
-        viewState.copyToClipBoard(transactionItem.xdr!!)
+        viewState.copyToClipBoard(transactionItem.transaction.envelopXdr)
     }
 
     fun copySignedXdrClicked() {
@@ -342,7 +342,7 @@ class TransactionDetailsPresenter @Inject constructor(
         when {
             interactor.hasMnemonics() -> {
                 unsubscribeOnDestroy(
-                    interactor.signTransaction(transactionItem.xdr!!)
+                    interactor.signTransaction(transactionItem.transaction.envelopXdr)
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe({
@@ -360,7 +360,7 @@ class TransactionDetailsPresenter @Inject constructor(
                     TangemInfo().apply {
                         accountId = interactor.getUserPublicKey()
                         cardId = interactor.getTangemCardId()
-                        pendingTransaction = transactionItem.xdr
+                        pendingTransaction = transactionItem.transaction.envelopXdr
                     }
                 )
             }
@@ -368,7 +368,7 @@ class TransactionDetailsPresenter @Inject constructor(
     }
 
     fun viewTransactionDetailsClicked() {
-        viewState.showWebPage(AppUtil.composeLaboratoryUrl(transactionItem.xdr!!))
+        viewState.showWebPage(AppUtil.composeLaboratoryUrl(transactionItem.transaction.envelopXdr))
     }
 
     fun btnConfirmClicked() {
@@ -409,7 +409,7 @@ class TransactionDetailsPresenter @Inject constructor(
                                 TangemInfo().apply {
                                     accountId = interactor.getUserPublicKey()
                                     cardId = interactor.getTangemCardId()
-                                    pendingTransaction = it.xdr
+                                    pendingTransaction = it.transaction.envelopXdr
                                 }
                             )
                         }, {
@@ -480,14 +480,14 @@ class TransactionDetailsPresenter @Inject constructor(
 
                     if (signedTransaction.isNullOrEmpty()) {
                         // Case for transaction received via Mnemonics.
-                        interactor.signTransaction(it.xdr!!)
+                        interactor.signTransaction(it.transaction.envelopXdr)
                     } else {
                         // Case for transaction received via Tangem.
                         interactor.createTransaction(signedTransaction)
                     }
                 }
                 .flatMap {
-                    when (transactionItem.transactionType) {
+                    when (transactionItem.transaction.transactionType) {
                         AUTH_CHALLENGE -> {
                             needAdditionalSignatures = null
                             Single.fromCallable { it.toEnvelopeXdrBase64() }
@@ -559,7 +559,7 @@ class TransactionDetailsPresenter @Inject constructor(
                             true -> SUCCESS_NEED_ADDITIONAL_SIGNATURES
                             false -> SUCCESS
                             else -> {
-                                if (transactionItem.transactionType == AUTH_CHALLENGE) {
+                                if (transactionItem.transaction.transactionType == AUTH_CHALLENGE) {
                                     SUCCESS_CHALLENGE
                                 } else {
                                     SUCCESS

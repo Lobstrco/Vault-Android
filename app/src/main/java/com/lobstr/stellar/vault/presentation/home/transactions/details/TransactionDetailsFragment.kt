@@ -222,7 +222,7 @@ class TransactionDetailsFragment : BaseFragment(), TransactionDetailsView, View.
     override fun setupTransactionInfo(map: Map<String, String?>) {
         for ((key, value) in map) {
             val root =
-                layoutInflater.inflate(R.layout.layout_additional_value, view as ViewGroup, false)
+                layoutInflater.inflate(R.layout.adapter_item_operation_details, view as ViewGroup, false)
             val fieldName = root.findViewById<TextView>(R.id.tvFieldName)
             val fieldValue = root.findViewById<TextView>(R.id.tvFieldValue)
 
@@ -257,12 +257,6 @@ class TransactionDetailsFragment : BaseFragment(), TransactionDetailsView, View.
                 root.setOnClickListener {
                     mPresenter.additionalInfoValueClicked(key, value)
                 }
-            }
-
-            // Show divider only fo first value.
-            if (binding.llAdditionalInfo.childCount == 0) {
-                val divider = root.findViewById<View>(R.id.divider)
-                divider.isVisible = true
             }
 
             binding.llAdditionalInfo.addView(root)

@@ -13,7 +13,7 @@ class OperationListPresenter(private val transactionItem: TransactionItem) :
         super.onFirstViewAttach()
 
         viewState.setupToolbarTitle(
-            when (transactionItem.transactionType) {
+            when (transactionItem.transaction.transactionType) {
                 Constant.TransactionType.Item.AUTH_CHALLENGE -> R.string.text_transaction_challenge
                 else -> R.string.title_toolbar_transaction_details
             }

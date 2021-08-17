@@ -54,7 +54,6 @@ object RepositoryModule {
             network,
             server,
             MnemonicsMapper(),
-            TransactionEntityMapper(network),
             rxErrorUtils
         )
     }

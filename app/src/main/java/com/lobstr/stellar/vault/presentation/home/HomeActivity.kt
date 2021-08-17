@@ -6,7 +6,7 @@ import android.view.View
 import androidx.activity.addCallback
 import androidx.annotation.IdRes
 import androidx.fragment.app.FragmentManager.POP_BACK_STACK_INCLUSIVE
-import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.android.material.navigation.NavigationBarView
 import com.lobstr.stellar.vault.R
 import com.lobstr.stellar.vault.databinding.ActivityHomeBinding
 import com.lobstr.stellar.vault.presentation.base.activity.BaseActivity
@@ -21,7 +21,7 @@ import javax.inject.Provider
 
 @AndroidEntryPoint
 class HomeActivity : BaseActivity(), HomeActivityView,
-    BottomNavigationView.OnNavigationItemSelectedListener {
+    NavigationBarView.OnItemSelectedListener {
 
     // ===========================================================
     // Constants
@@ -73,7 +73,7 @@ class HomeActivity : BaseActivity(), HomeActivityView,
     }
 
     private fun setListeners() {
-        binding.bnvHomeTabs.setOnNavigationItemSelectedListener(this)
+        binding.bnvHomeTabs.setOnItemSelectedListener(this)
     }
 
     // ===========================================================

@@ -279,7 +279,7 @@ object AppUtil {
         }
 
         for (element in value) {
-            val letterCode = element.toInt()
+            val letterCode = element.code
             if (!(letterCode in 65..90 || letterCode in 48..57)) {
                 return false
             }

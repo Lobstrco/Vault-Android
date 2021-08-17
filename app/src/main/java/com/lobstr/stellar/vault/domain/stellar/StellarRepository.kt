@@ -2,7 +2,6 @@ package com.lobstr.stellar.vault.domain.stellar
 
 import com.lobstr.stellar.vault.presentation.entities.account.AccountResult
 import com.lobstr.stellar.vault.presentation.entities.mnemonic.MnemonicItem
-import com.lobstr.stellar.vault.presentation.entities.transaction.TransactionItem
 import com.tangem.commands.SignResponse
 import io.reactivex.rxjava3.core.Single
 import org.stellar.sdk.AbstractTransaction
@@ -22,11 +21,6 @@ interface StellarRepository {
     ): Single<SubmitTransactionResponse>
 
     fun signTransaction(signer: KeyPair, envelopXdr: String): Single<AbstractTransaction>
-
-    /**
-     * Used for Create Transaction Item from XDR.
-     */
-    fun createTransactionItem(envelopXdr: String): Single<TransactionItem>
 
     fun generate12WordMnemonic(): ArrayList<MnemonicItem>
 
@@ -48,4 +42,11 @@ interface StellarRepository {
         signResponse: SignResponse,
         accountId: String
     ): String?
+
+    /**
+     * Use for simple encoding. E.g for the retrieve String representation of Public Key from the array of bytes.
+     * @param data Array of bytes.
+     * @return String or null in Exception case.
+     */
+    fun encodeStellarAccountId(data: ByteArray?): String?
 }

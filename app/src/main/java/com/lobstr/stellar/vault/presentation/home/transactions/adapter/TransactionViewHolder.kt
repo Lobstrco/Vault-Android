@@ -66,7 +66,7 @@ class TransactionViewHolder(private val binding: AdapterItemTransactionBinding, 
                 }
             }
 
-        binding.tvTransactionItemOperation.text = getTransactionName(context, item.transaction, item.transactionType)
+        binding.tvTransactionItemOperation.text = getTransactionName(context, item.transaction, item.transaction.transactionType)
         itemView.setOnClickListener {
             val position = this@TransactionViewHolder.bindingAdapterPosition
             if (position == RecyclerView.NO_POSITION) {
@@ -75,7 +75,7 @@ class TransactionViewHolder(private val binding: AdapterItemTransactionBinding, 
 
             itemClickListener(item)
         }
-        item.transactionType
+        item.transaction.transactionType
     }
 
     private fun getTransactionName(context: Context, transaction: Transaction, type: String?): String {

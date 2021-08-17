@@ -72,4 +72,8 @@ class TransactionRepositoryImpl(
         return transactionApi.cancelOutdatedTransactions(token)
             .onErrorResumeNext { rxErrorUtils.handleCompletableRequestHttpError(it) }
     }
+
+    override fun createTransaction(xdr: String): Single<TransactionItem> {
+        return Single.fromCallable { transactionEntityMapper.transformTransactionXdr(xdr) }
+    }
 }

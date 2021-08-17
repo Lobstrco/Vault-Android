@@ -42,6 +42,7 @@ import com.lobstr.stellar.vault.presentation.util.Constant
 import com.lobstr.stellar.vault.presentation.util.Constant.Transaction.IMPORT_XDR
 import com.lobstr.stellar.vault.presentation.util.Constant.TransactionType.Item.AUTH_CHALLENGE
 import com.lobstr.stellar.vault.presentation.util.Constant.TransactionType.Item.TRANSACTION
+import com.lobstr.stellar.vault.presentation.util.StrKey
 import org.stellar.sdk.*
 import org.stellar.sdk.xdr.TrustLineFlags
 import java.math.BigDecimal
@@ -82,40 +83,28 @@ class TransactionEntityMapper(private val network: Network) {
         return TransactionItem(
             apiTransactionItem.cancelledAt,
             apiTransactionItem.addedAt,
-            apiTransactionItem.xdr,
             apiTransactionItem.signedAt,
             apiTransactionItem.hash!!,
             apiTransactionItem.getStatusDisplay,
             apiTransactionItem.status,
             apiTransactionItem.sequenceOutdatedAt,
-            apiTransactionItem.transactionType,
             getTransaction(
-                AbstractTransaction.fromEnvelopeXdr(apiTransactionItem.xdr, network)
+                apiTransactionItem.xdr!!,
+                apiTransactionItem.transactionType
             )
         )
     }
 
-    fun transformTransactionItem(transaction: AbstractTransaction): TransactionItem {
-        val innerTransaction = getTransaction(transaction)
+    fun transformTransactionXdr(xdr: String): TransactionItem {
         return TransactionItem(
             "",
             "",
-            transaction.toEnvelopeXdrBase64(),
             "",
-            /*transaction?.hash()?.joinToString("") { String.format("%02X", it) } ?:*/ "",
+            "",
             "",
             IMPORT_XDR,
             null,
-            getTransactionType(
-                transaction.toEnvelopeXdrBase64(), innerTransaction.sourceAccount,
-                // Verify that the first operation in the transaction is a Manage Data operation for determine AUTH_CHALLENGE transaction type. Else - TRANSACTION type.
-                if (innerTransaction.operations.isNotEmpty() && innerTransaction.operations[0] is ManageDataOperation)
-                    extractDomain((innerTransaction.operations[0] as ManageDataOperation).name) else null,
-                if (innerTransaction.operations.isNotEmpty() && innerTransaction.operations[0] is ManageDataOperation)
-                    (innerTransaction.operations.find { it is ManageDataOperation && it.name == WEB_AUTH_DOMAIN_MANAGER_DATA_NAME } as? ManageDataOperation)?.value
-                        ?.let { webAuthDomain -> String(webAuthDomain) } else null,
-            ),
-            innerTransaction
+            getTransaction(xdr)
         )
     }
 
@@ -131,16 +120,26 @@ class TransactionEntityMapper(private val network: Network) {
 
     /**
      * Check sep 10 challenge for determining transaction type.
-     * @param domainName Retrieved from 'name' field value of [ManageDataOperation] without [HOME_DOMAIN_MANAGER_DATA_NAME_FLAG].
-     * @param webAuthDomain The home domain that is expected to be included as the value of the [ManageDataOperation] with the 'web_auth_domain' key, if present.
+     * domainName Retrieved from 'name' field value of [ManageDataOperation] without [HOME_DOMAIN_MANAGER_DATA_NAME_FLAG].
+     * webAuthDomain The home domain that is expected to be included as the value of the [ManageDataOperation] with the 'web_auth_domain' key, if present.
      * @return transaction type: [TRANSACTION] or [AUTH_CHALLENGE].
      */
-    private fun getTransactionType(xdr: String, sourceAccount: String, domainName: String?, webAuthDomain: String?) =
-        if (domainName == null || getChallengeTransaction(xdr, sourceAccount, domainName, webAuthDomain) == null) {
+    fun getTransactionType(transaction: Transaction): String {
+        val xdr: String = transaction.envelopXdr
+        val sourceAccount: String = transaction.sourceAccount
+        // Verify that the first operation in the transaction is a Manage Data operation for determine AUTH_CHALLENGE transaction type. Else - TRANSACTION type.
+        val domainName: String? = if (transaction.operations.isNotEmpty() && transaction.operations[0] is ManageDataOperation)
+            extractDomain((transaction.operations[0] as ManageDataOperation).name) else null
+        val webAuthDomain: String? = if (transaction.operations.isNotEmpty() && transaction.operations[0] is ManageDataOperation)
+            (transaction.operations.find { it is ManageDataOperation && it.name == WEB_AUTH_DOMAIN_MANAGER_DATA_NAME } as? ManageDataOperation)?.value
+                ?.let { webAuthDomain -> String(webAuthDomain) } else null
+
+        return if (domainName == null || getChallengeTransaction(xdr, sourceAccount, domainName, webAuthDomain) == null) {
             TRANSACTION
         } else {
             AUTH_CHALLENGE
         }
+    }
 
     private fun getChallengeTransaction(
         challengeXdr: String,
@@ -160,7 +159,8 @@ class TransactionEntityMapper(private val network: Network) {
             null
         }
 
-    private fun getTransaction(transaction: AbstractTransaction): Transaction {
+    private fun getTransaction(xdr: String, type: String? = null): Transaction {
+        val transaction: AbstractTransaction = AbstractTransaction.fromEnvelopeXdr(xdr, network)
         val operations: MutableList<Operation> = mutableListOf()
 
         val targetTx = when (transaction) {
@@ -227,11 +227,14 @@ class TransactionEntityMapper(private val network: Network) {
         }
 
         return Transaction(
+            targetTx.toEnvelopeXdrBase64(),
             targetTx.sourceAccount,
             mapMemo(targetTx.memo),
             operations,
             targetTx.sequenceNumber
-        )
+        ).apply {
+            transactionType = if (type.isNullOrEmpty()) getTransactionType(this) else type
+        }
     }
 
     private fun mapPaymentOperation(
@@ -353,7 +356,7 @@ class TransactionEntityMapper(private val network: Network) {
             operation.homeDomain,
             operation.signerWeight,
             try {
-                KeyPair.fromXdrSignerKey(operation.signer).accountId
+                StrKey.encodeStellarAccountId(operation.signer.ed25519.uint256)
             } catch (e: Exception) {
                 null
             }

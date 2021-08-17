@@ -7,13 +7,11 @@ import kotlinx.parcelize.Parcelize
 data class TransactionItem(
     val cancelledAt: String?,
     val addedAt: String?,
-    val xdr: String?,
     val signedAt: String?,
     val hash: String,
     val getStatusDisplay: String?,
     var status: Int?,
     val sequenceOutdatedAt: String?,
-    val transactionType: String?,
     val transaction: Transaction,
     var federation: String? = null,
     var name: String? = null
