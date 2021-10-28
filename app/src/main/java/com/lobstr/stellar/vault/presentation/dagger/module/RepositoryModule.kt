@@ -1,6 +1,7 @@
 package com.lobstr.stellar.vault.presentation.dagger.module
 
 import android.content.Context
+import com.lobstr.stellar.tsmapper.data.transaction.TsMapper
 import com.lobstr.stellar.vault.data.account.AccountEntityMapper
 import com.lobstr.stellar.vault.data.account.AccountRepositoryImpl
 import com.lobstr.stellar.vault.data.error.ExceptionMapper
@@ -100,13 +101,13 @@ object RepositoryModule {
     @Provides
     fun provideFcmRepository(
         fcmApi: FcmApi,
-        network: Network,
+        tsMapper: TsMapper,
         rxErrorUtils: RxErrorUtils
     ): FcmRepository {
         return FcmRepositoryImpl(
             fcmApi,
             FcmEntityMapper(),
-            TransactionEntityMapper(network),
+            TransactionEntityMapper(tsMapper),
             AccountEntityMapper(),
             rxErrorUtils
         )
@@ -125,12 +126,12 @@ object RepositoryModule {
     @Provides
     fun provideTransactionRepository(
         transactionApi: TransactionApi,
-        network: Network,
+        tsMapper: TsMapper,
         rxErrorUtils: RxErrorUtils
     ): TransactionRepository {
         return TransactionRepositoryImpl(
             transactionApi,
-            TransactionEntityMapper(network),
+            TransactionEntityMapper(tsMapper),
             rxErrorUtils
         )
     }

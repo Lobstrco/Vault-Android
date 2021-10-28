@@ -244,6 +244,21 @@ open class AlertDialogFragment : BaseMvpAppCompatDialogFragment() {
         super.show(manager, tag)
     }
 
+    /**
+     * Used for cases when dialog must be immediately showing (e.g. some progress) for avoiding loosing dialog state.
+     * NOTE Usual version show() with commitNow().
+     */
+    override fun showNow(manager: FragmentManager, tag: String?) {
+        // If dialog is showed - skip it.
+        if ((manager.findFragmentByTag(tag) as? AlertDialogFragment)?.dialog?.isShowing == true) {
+            return
+        }
+
+        val ft = manager.beginTransaction()
+        ft.add(this, tag)
+        ft.commitNow()
+    }
+
     override fun onStart() {
         super.onStart()
         // Enable or disable buttons.

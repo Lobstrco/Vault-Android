@@ -16,7 +16,7 @@ object ProgressManager {
                 .setView(R.layout.layout_preloader)
                 .setSpecificDialog(PROGRESS)
                 .create()
-                .show(manager, PROGRESS_DIALOG)
+                .showNow(manager, PROGRESS_DIALOG)
         } else {
             (manager.findFragmentByTag(PROGRESS_DIALOG) as? AlertDialogFragment)?.dismissAllowingStateLoss()
         }

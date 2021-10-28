@@ -1,1 +1,1 @@
-include(":app", ":pinlockview")
+include(":app", ":pinlockview", ":tsmapper")

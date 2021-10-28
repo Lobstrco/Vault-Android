@@ -1,7 +1,7 @@
 package com.lobstr.stellar.vault.presentation.home.transactions.operation.operation_details
 
 import androidx.annotation.StringRes
-import com.lobstr.stellar.vault.presentation.entities.transaction.operation.OperationField
+import com.lobstr.stellar.tsmapper.presentation.entities.transaction.operation.OperationField
 import moxy.MvpView
 import moxy.viewstate.strategy.alias.AddToEndSingle
 import moxy.viewstate.strategy.alias.Skip

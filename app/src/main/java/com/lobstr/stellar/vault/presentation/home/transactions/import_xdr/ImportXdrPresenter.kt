@@ -37,11 +37,11 @@ class ImportXdrPresenter @Inject constructor(private val interactor: ImportXdrIn
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe {
                     transactionCreationInProcess = true
-                    viewState.showProgressDialog(true)
+                    viewState.setSubmitEnabled(false)
                 }
                 .doOnEvent { _, _ ->
-                    viewState.showProgressDialog(false)
                     transactionCreationInProcess = false
+                    viewState.setSubmitEnabled(true)
                 }
                 .subscribe({
                     viewState.showTransactionDetails(it)

@@ -1,5 +1,6 @@
 package com.lobstr.stellar.vault.data.stellar
 
+import com.lobstr.stellar.tsmapper.presentation.util.StrKey
 import com.lobstr.stellar.vault.data.mnemonic.MnemonicsMapper
 import com.lobstr.stellar.vault.domain.error.RxErrorUtils
 import com.lobstr.stellar.vault.domain.stellar.StellarRepository
@@ -7,8 +8,6 @@ import com.lobstr.stellar.vault.presentation.entities.account.Account
 import com.lobstr.stellar.vault.presentation.entities.account.AccountResult
 import com.lobstr.stellar.vault.presentation.entities.account.Thresholds
 import com.lobstr.stellar.vault.presentation.entities.mnemonic.MnemonicItem
-import com.lobstr.stellar.vault.presentation.entities.transaction.TransactionItem
-import com.lobstr.stellar.vault.presentation.util.StrKey
 import com.soneso.stellarmnemonics.Wallet
 import com.tangem.commands.SignResponse
 import io.reactivex.rxjava3.core.Single

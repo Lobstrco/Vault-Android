@@ -15,6 +15,7 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.setFragmentResult
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.lobstr.stellar.tsmapper.presentation.entities.transaction.operation.OperationField
 import com.lobstr.stellar.vault.R
 import com.lobstr.stellar.vault.databinding.FragmentTransactionDetailsBinding
 import com.lobstr.stellar.vault.presentation.application.LVApplication
@@ -219,17 +220,17 @@ class TransactionDetailsFragment : BaseFragment(), TransactionDetailsView, View.
         )
     }
 
-    override fun setupTransactionInfo(map: Map<String, String?>) {
-        for ((key, value) in map) {
+    override fun setupTransactionInfo(fields: List<OperationField>) {
+        for ((key, value, tag) in fields) {
             val root =
                 layoutInflater.inflate(R.layout.adapter_item_operation_details, view as ViewGroup, false)
             val fieldName = root.findViewById<TextView>(R.id.tvFieldName)
             val fieldValue = root.findViewById<TextView>(R.id.tvFieldValue)
 
-            val isValuePublicKey = AppUtil.isPublicKey(value)
+            val isPublicKeyField = AppUtil.isPublicKey(tag as? String)
 
-            // Set selectable foreground for public key values.
-            (root.findViewById<FrameLayout>(R.id.flContent))?.foreground = if(isValuePublicKey) {
+            // Set selectable foreground for public key fields.
+            (root.findViewById<FrameLayout>(R.id.flContent))?.foreground = if(isPublicKeyField) {
                 val outValue = TypedValue()
                 if (requireContext().theme.resolveAttribute(android.R.attr.selectableItemBackground, outValue, true)) {
                     ContextCompat.getDrawable(requireContext(), outValue.resourceId)
@@ -240,22 +241,29 @@ class TransactionDetailsFragment : BaseFragment(), TransactionDetailsView, View.
                 null
             }
 
+            fieldValue.isSingleLine = value?.contains("\n") != true
             fieldValue.ellipsize = when (key) {
                 AppUtil.getString(R.string.text_tv_transaction_memo) -> TextUtils.TruncateAt.END
-                else -> TextUtils.TruncateAt.MIDDLE
+                else -> {
+                    when {
+                        // Case for the Account Name.
+                        isPublicKeyField && !AppUtil.isPublicKey(value) -> TextUtils.TruncateAt.END
+                        else -> TextUtils.TruncateAt.MIDDLE
+                    }
+                }
             }
 
             fieldName.text = key
-            fieldValue.text = if (isValuePublicKey) {
+            fieldValue.text = if (AppUtil.isPublicKey(value)) {
                 AppUtil.ellipsizeStrInMiddle(value, Constant.Util.PK_TRUNCATE_COUNT)
             } else {
                 value
             }
 
             // Set Click Listener only for public key values.
-            if(isValuePublicKey) {
+            if(isPublicKeyField) {
                 root.setOnClickListener {
-                    mPresenter.additionalInfoValueClicked(key, value)
+                    mPresenter.additionalInfoValueClicked(key, tag as? String)
                 }
             }
 

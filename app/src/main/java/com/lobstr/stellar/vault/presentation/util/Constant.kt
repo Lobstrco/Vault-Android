@@ -123,21 +123,13 @@ object Constant {
     object TransactionType {
         const val PENDING = "pending/"
         const val INACTIVE = "inactive/"
-
-        /**
-         * Inner Transaction Type:
-         * @see com.lobstr.stellar.vault.data.net.entities.transaction.ApiTransactionItem.transactionType
-         */
-        object Item {
-            const val AUTH_CHALLENGE = "auth_challenge"
-            const val TRANSACTION = "transaction"
-        }
     }
 
     object Util {
         const val COUNT_MNEMONIC_WORDS_12 = 12
         const val COUNT_MNEMONIC_WORDS_24 = 24
         const val PK_TRUNCATE_COUNT = 8
+        const val PK_TRUNCATE_COUNT_SHORT = 4
         const val UNDEFINED_VALUE = -1
     }
 

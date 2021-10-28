@@ -5,5 +5,8 @@ import io.reactivex.rxjava3.core.Single
 
 
 interface OperationDetailsInteractor {
+
     fun getStellarAccount(stellarAddress: String): Single<Account>
+
+    fun getAccountNames(): Map<String, String?>
 }

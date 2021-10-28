@@ -74,6 +74,6 @@ class TransactionRepositoryImpl(
     }
 
     override fun createTransaction(xdr: String): Single<TransactionItem> {
-        return Single.fromCallable { transactionEntityMapper.transformTransactionXdr(xdr) }
+       return Single.fromCallable { transactionEntityMapper.transformTransactionXdr(xdr) }
     }
 }

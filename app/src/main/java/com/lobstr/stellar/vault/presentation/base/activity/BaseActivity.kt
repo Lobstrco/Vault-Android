@@ -124,8 +124,13 @@ abstract class BaseActivity : BaseMvpAppCompatActivity(),
     }
 
     override fun onPause() {
+        try {
+            nfcAdapter?.disableForegroundDispatch(this)
+        } catch (exc: IllegalStateException) {
+            // Handle case when the Activity has already been paused.
+            exc.printStackTrace()
+        }
         super.onPause()
-        nfcAdapter?.disableForegroundDispatch(this)
     }
 
     fun checkBackPress(container: Fragment?) {

@@ -1,8 +1,7 @@
 package com.lobstr.stellar.vault.presentation.application
 
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleObserver
-import androidx.lifecycle.OnLifecycleEvent
+import androidx.lifecycle.DefaultLifecycleObserver
+import androidx.lifecycle.LifecycleOwner
 
 
 /**
@@ -10,15 +9,16 @@ import androidx.lifecycle.OnLifecycleEvent
  * This is registered via {@link ProcessLifecycleOwner#get()} ()}. The events are designed
  * to be dispatched with delay (by design) so activity rotations (or screens transitions) don't trigger these calls.
  */
-class AppLifecycleListener : LifecycleObserver {
+class AppLifecycleListener : DefaultLifecycleObserver {
 
-    @OnLifecycleEvent(Lifecycle.Event.ON_START)
-    fun onMoveToForeground() {
-        // Add action if needed.
+    // Move To Foreground.
+    override fun onStart(owner: LifecycleOwner) {
+        super.onStart(owner)
     }
 
-    @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
-    fun onMoveToBackground() {
+    // Move To Background.
+    override fun onStop(owner: LifecycleOwner) {
+        super.onStop(owner)
         LVApplication.checkPinAppearance = true
     }
 }

@@ -34,6 +34,14 @@ class ErrorPresenter @Inject constructor(private val interactor: TransactionErro
             "tx_insufficient_fee" -> R.string.text_tv_tx_insufficient_fee
             "tx_bad_auth_extra" -> R.string.text_tv_tx_bad_auth_extra
             "tx_internal_error" -> R.string.text_tv_tx_internal_error
+
+            "op_inner" -> R.string.text_tv_op_inner
+            "op_bad_auth" -> R.string.text_tv_op_bad_auth
+            "op_no_account" -> R.string.text_tv_op_no_account
+            "op_not_supported" -> R.string.text_tv_op_not_supported
+            "op_too_many_subentries" -> R.string.text_tv_op_too_many_subentries
+            "op_exceeded_work_limit" -> R.string.text_tv_op_exceeded_work_limit
+            "op_too_many_sponsoring" -> R.string.text_tv_op_too_many_sponsoring
             "op_underfunded" -> R.string.text_tv_op_underfunded
             else -> 0
         }

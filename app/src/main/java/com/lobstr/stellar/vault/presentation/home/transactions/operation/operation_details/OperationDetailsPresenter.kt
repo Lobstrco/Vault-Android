@@ -1,20 +1,23 @@
 package com.lobstr.stellar.vault.presentation.home.transactions.operation.operation_details
 
+import com.lobstr.stellar.tsmapper.presentation.entities.transaction.asset.Asset
+import com.lobstr.stellar.tsmapper.presentation.entities.transaction.operation.CreateAccountOperation
+import com.lobstr.stellar.tsmapper.presentation.entities.transaction.operation.Operation
+import com.lobstr.stellar.tsmapper.presentation.entities.transaction.operation.OperationField
+import com.lobstr.stellar.tsmapper.presentation.util.Constant.TransactionType.AUTH_CHALLENGE
+import com.lobstr.stellar.tsmapper.presentation.util.TsUtil
 import com.lobstr.stellar.vault.R
 import com.lobstr.stellar.vault.data.error.exeption.HttpNotFoundException
 import com.lobstr.stellar.vault.data.error.exeption.NoInternetConnectionException
 import com.lobstr.stellar.vault.domain.operation_details.OperationDetailsInteractor
 import com.lobstr.stellar.vault.domain.util.EventProviderModule
 import com.lobstr.stellar.vault.domain.util.event.Network
+import com.lobstr.stellar.vault.domain.util.event.Update
 import com.lobstr.stellar.vault.presentation.BasePresenter
 import com.lobstr.stellar.vault.presentation.entities.account.Account
-import com.lobstr.stellar.vault.presentation.entities.transaction.Asset
 import com.lobstr.stellar.vault.presentation.entities.transaction.TransactionItem
-import com.lobstr.stellar.vault.presentation.entities.transaction.operation.CreateAccountOperation
-import com.lobstr.stellar.vault.presentation.entities.transaction.operation.Operation
-import com.lobstr.stellar.vault.presentation.entities.transaction.operation.OperationField
 import com.lobstr.stellar.vault.presentation.util.AppUtil
-import com.lobstr.stellar.vault.presentation.util.Constant.TransactionType.Item.AUTH_CHALLENGE
+import com.lobstr.stellar.vault.presentation.util.Constant.Util.PK_TRUNCATE_COUNT_SHORT
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Single
@@ -51,25 +54,59 @@ class OperationDetailsPresenter @Inject constructor(
         registerEventProvider()
 
         val operation: Operation = transactionItem.transaction.operations[position]
-        operationFields = operation.getFields()
+        operationFields = operation.getFields(AppUtil.getAppContext())
 
         viewState.setupToolbarTitle(
             when {
                 transactionItem.transaction.operations.size == 1 && transactionItem.transaction.transactionType == AUTH_CHALLENGE -> {
                     R.string.text_transaction_challenge // Specific case for the 'Single Operation' Challenge Transaction.
                 }
-                else -> AppUtil.getTransactionOperationName(operation)
+                else -> TsUtil.getTransactionOperationName(operation)
             }
         )
 
         // Apply Operation Source Account in cases when Transaction Source Account doesn't equal it.
         if (transactionItem.transaction.sourceAccount != operation.sourceAccount) {
-            operation.applyOperationSourceAccountTo(operationFields)
+            operation.applyOperationSourceAccountTo(AppUtil.getAppContext(),operationFields)
         }
 
         viewState.initRecycledView(operationFields)
 
+        checkAccountNames()
         getStellarAccounts()
+    }
+
+    /**
+     * Check Cashed Account Names for the Operation Fields.
+     */
+    private fun checkAccountNames () {
+        unsubscribeOnDestroy(
+            Single.fromCallable {
+                var needUpdateFields = false
+                val names = interactor.getAccountNames()
+
+                operationFields.forEach {
+                    if (AppUtil.isPublicKey(it.tag as? String)) {
+                        val cachedName = names[it.value]
+                        it.value = if(cachedName.isNullOrEmpty()) {
+                            it.value
+                        } else {
+                            needUpdateFields = true
+                            cachedName.plus(" (${AppUtil.ellipsizeStrInMiddle(it.value, PK_TRUNCATE_COUNT_SHORT)})")
+                        }
+                    }
+                }
+                return@fromCallable needUpdateFields
+            }
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                    {
+                        if(it) viewState.notifyAdapter()
+                    },
+                    Throwable::printStackTrace
+                )
+        )
     }
 
     private fun registerEventProvider() {
@@ -83,6 +120,20 @@ class OperationDetailsPresenter @Inject constructor(
                                 getStellarAccounts()
                             }
                             cancelNetworkWorker(false)
+                        }
+                    }
+                }, {
+                    it.printStackTrace()
+                })
+        )
+
+        unsubscribeOnDestroy(
+            eventProviderModule.updateEventSubject
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({
+                    when (it.type) {
+                        Update.Type.ACCOUNT_NAME -> {
+                            checkAccountNames()
                         }
                     }
                 }, {
@@ -109,14 +160,14 @@ class OperationDetailsPresenter @Inject constructor(
         stellarAccountsDisposable = Observable.fromIterable(destinations)
             .subscribeOn(Schedulers.io())
             .filter {
-                AppUtil.isPublicKey(it.value)
+                AppUtil.isPublicKey(it.tag as? String)
             }
             .flatMapSingle { field ->
-                interactor.getStellarAccount(field.value!!).onErrorResumeNext { throwable ->
+                interactor.getStellarAccount(field.tag as String).onErrorResumeNext { throwable ->
                     when (throwable) {
                         // Handle only Not Found exception.
                         is HttpNotFoundException -> {
-                            Single.fromCallable { Account(field.value!!) }
+                            Single.fromCallable { Account(field.tag as String) }
                         }
                         else -> Single.error(throwable)
                     }
@@ -125,7 +176,7 @@ class OperationDetailsPresenter @Inject constructor(
             .filter { it.federation != null }
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({ account ->
-                destinations.filter { field -> field.value == account.address }.forEach { field ->
+                destinations.filter { field -> field.tag == account.address }.forEach { field ->
                     account.federation?.let {
                         val position = operationFields.indexOf(field)
                         if (position != -1) {
@@ -148,11 +199,12 @@ class OperationDetailsPresenter @Inject constructor(
 
     /**
      * @param key Reserved for future implementations.
+     * @param value Reserved for future implementations.
      * @param tag Additional info for field (e.g. Asset for asset code)
      */
     fun operationItemClicked(key: String, value: String?, tag: Any?) {
         when {
-            AppUtil.isPublicKey(value) -> value?.let {viewState.showEditAccountDialog(value) }
+            AppUtil.isPublicKey(tag as? String) -> tag?.let {viewState.showEditAccountDialog(tag as String) }
             tag is Asset -> viewState.showAssetInfoDialog(tag.assetCode, tag.assetIssuer)
         }
     }

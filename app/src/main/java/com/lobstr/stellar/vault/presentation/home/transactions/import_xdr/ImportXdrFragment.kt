@@ -14,7 +14,6 @@ import com.lobstr.stellar.vault.presentation.home.transactions.details.Transacti
 import com.lobstr.stellar.vault.presentation.util.AppUtil
 import com.lobstr.stellar.vault.presentation.util.Constant
 import com.lobstr.stellar.vault.presentation.util.manager.FragmentTransactionManager
-import com.lobstr.stellar.vault.presentation.util.manager.ProgressManager
 import dagger.hilt.android.AndroidEntryPoint
 import moxy.ktx.moxyPresenter
 import javax.inject.Inject
@@ -99,10 +98,6 @@ class ImportXdrFragment : BaseFragment(), ImportXdrView, View.OnClickListener {
 
     override fun showMessage(message: String?) {
         Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
-    }
-
-    override fun showProgressDialog(show: Boolean) {
-        ProgressManager.show(show, childFragmentManager)
     }
 
     override fun showTransactionDetails(transactionItem: TransactionItem) {

@@ -1,6 +1,7 @@
 package com.lobstr.stellar.vault.presentation.entities.transaction
 
 import android.os.Parcelable
+import com.lobstr.stellar.tsmapper.presentation.entities.transaction.Transaction
 import kotlinx.parcelize.Parcelize
 
 @Parcelize

@@ -9,13 +9,14 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.lobstr.stellar.tsmapper.presentation.entities.transaction.Transaction
+import com.lobstr.stellar.tsmapper.presentation.util.Constant.TransactionType.AUTH_CHALLENGE
+import com.lobstr.stellar.tsmapper.presentation.util.TsUtil
 import com.lobstr.stellar.vault.R
 import com.lobstr.stellar.vault.databinding.AdapterItemTransactionBinding
-import com.lobstr.stellar.vault.presentation.entities.transaction.Transaction
 import com.lobstr.stellar.vault.presentation.entities.transaction.TransactionItem
 import com.lobstr.stellar.vault.presentation.util.AppUtil
 import com.lobstr.stellar.vault.presentation.util.Constant
-import com.lobstr.stellar.vault.presentation.util.Constant.TransactionType.Item.AUTH_CHALLENGE
 import com.lobstr.stellar.vault.presentation.util.Constant.Util.PK_TRUNCATE_COUNT
 import java.time.ZonedDateTime
 
@@ -83,7 +84,7 @@ class TransactionViewHolder(private val binding: AdapterItemTransactionBinding, 
             when(type) {
                 AUTH_CHALLENGE -> context.getString(R.string.text_transaction_challenge)
                 else -> if (transaction.operations.size == 1) {
-                    context.getString(AppUtil.getTransactionOperationName(transaction.operations[0]))
+                    context.getString(TsUtil.getTransactionOperationName(transaction.operations[0]))
                 } else {
                     String.format(
                         context.getString(R.string.text_operation_name_several_operation),

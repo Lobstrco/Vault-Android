@@ -188,8 +188,6 @@ class TransactionsPresenter @Inject constructor(
 
     /**
      * Check Accounts' names from cache.
-     *  TODO Places: Dashboard, SignedAccounts, Tr Details, Tr list.
-     *   Clear: Log Out and accounts list is empty.
      */
     private fun checkAccountNames(transactions: List<TransactionItem>) {
         val names = interactor.getAccountNames()

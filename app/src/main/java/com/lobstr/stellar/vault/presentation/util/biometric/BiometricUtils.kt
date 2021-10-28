@@ -29,7 +29,12 @@ object BiometricUtils {
      * */
     private fun isHardwareSupported(context: Context): Boolean {
         return try {
-            BiometricManager.from(context).canAuthenticate(BIOMETRIC_WEAK) != BiometricManager.BIOMETRIC_ERROR_NO_HARDWARE
+            when(BiometricManager.from(context).canAuthenticate(BIOMETRIC_WEAK)) {
+                BiometricManager.BIOMETRIC_ERROR_NO_HARDWARE,
+                BiometricManager.BIOMETRIC_ERROR_HW_UNAVAILABLE,
+                BiometricManager.BIOMETRIC_ERROR_UNSUPPORTED -> false
+                else -> true
+            }
         } catch (exc: SecurityException) {
             exc.printStackTrace()
             false

@@ -3,6 +3,7 @@ package com.lobstr.stellar.vault.presentation.dagger.module
 import android.content.Context
 import android.content.SharedPreferences
 import androidx.preference.PreferenceManager
+import com.lobstr.stellar.tsmapper.data.transaction.TsMapper
 import com.lobstr.stellar.vault.data.error.ExceptionMapper
 import com.lobstr.stellar.vault.domain.util.EventProviderModule
 import com.lobstr.stellar.vault.presentation.util.FileStreamUtil
@@ -12,6 +13,7 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import org.stellar.sdk.Network
 import javax.inject.Singleton
 
 @Module
@@ -35,6 +37,12 @@ object AppModule{
     @Singleton
     fun provideExceptionMapper(@ApplicationContext context: Context): ExceptionMapper {
         return ExceptionMapper(context)
+    }
+
+    @Provides
+    @Singleton
+    fun provideTsMapper(network: Network): TsMapper {
+        return TsMapper(network)
     }
 
     @Provides

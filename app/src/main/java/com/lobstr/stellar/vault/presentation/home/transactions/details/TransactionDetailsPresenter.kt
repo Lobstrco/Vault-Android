@@ -1,6 +1,8 @@
 package com.lobstr.stellar.vault.presentation.home.transactions.details
 
 import android.text.format.DateFormat
+import com.lobstr.stellar.tsmapper.presentation.entities.transaction.operation.OperationField
+import com.lobstr.stellar.tsmapper.presentation.util.Constant.TransactionType.AUTH_CHALLENGE
 import com.lobstr.stellar.vault.R
 import com.lobstr.stellar.vault.data.error.exeption.*
 import com.lobstr.stellar.vault.domain.transaction_details.TransactionDetailsInteractor
@@ -17,7 +19,6 @@ import com.lobstr.stellar.vault.presentation.entities.account.AccountResult
 import com.lobstr.stellar.vault.presentation.entities.tangem.TangemInfo
 import com.lobstr.stellar.vault.presentation.entities.transaction.TransactionItem
 import com.lobstr.stellar.vault.presentation.util.AppUtil
-import com.lobstr.stellar.vault.presentation.util.Constant
 import com.lobstr.stellar.vault.presentation.util.Constant.Transaction.CANCELLED
 import com.lobstr.stellar.vault.presentation.util.Constant.Transaction.IMPORT_XDR
 import com.lobstr.stellar.vault.presentation.util.Constant.Transaction.PENDING
@@ -25,7 +26,7 @@ import com.lobstr.stellar.vault.presentation.util.Constant.Transaction.SIGNED
 import com.lobstr.stellar.vault.presentation.util.Constant.TransactionConfirmationSuccessStatus.SUCCESS
 import com.lobstr.stellar.vault.presentation.util.Constant.TransactionConfirmationSuccessStatus.SUCCESS_CHALLENGE
 import com.lobstr.stellar.vault.presentation.util.Constant.TransactionConfirmationSuccessStatus.SUCCESS_NEED_ADDITIONAL_SIGNATURES
-import com.lobstr.stellar.vault.presentation.util.Constant.TransactionType.Item.AUTH_CHALLENGE
+import com.lobstr.stellar.vault.presentation.util.Constant.Util.PK_TRUNCATE_COUNT_SHORT
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
@@ -92,22 +93,27 @@ class TransactionDetailsPresenter @Inject constructor(
                 .subscribe({
                     when (it.type) {
                         Update.Type.ACCOUNT_NAME -> {
-                            unsubscribeOnDestroy(Completable.fromCallable {
-                                checkAccountNames(stellarAccounts)
-                            }
-                                .subscribeOn(Schedulers.io())
-                                .observeOn(AndroidSchedulers.mainThread())
-                                .subscribe(
-                                    { viewState.notifySignersAdapter(stellarAccounts) },
-                                    Throwable::printStackTrace
-                                )
-                            )
+                            updateAccountNames()
+                            checkTransactionInfo()
                         }
                         else -> getTransactionSigners()
                     }
                 }, {
                     it.printStackTrace()
                 })
+        )
+    }
+
+    private fun updateAccountNames() {
+        unsubscribeOnDestroy(Completable.fromCallable {
+            checkAccountNames(stellarAccounts)
+        }
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(
+                { viewState.notifySignersAdapter(stellarAccounts) },
+                Throwable::printStackTrace
+            )
         )
     }
 
@@ -218,8 +224,6 @@ class TransactionDetailsPresenter @Inject constructor(
 
     /**
      * Check Accounts' names from cache.
-     *  TODO Places: Dashboard, SignedAccounts, Tr Details, Tr list.
-     *   Clear: Log Out and accounts list is empty.
      */
     private fun checkAccountNames(accounts: List<Account>) {
         val names = interactor.getAccountNames()
@@ -293,29 +297,39 @@ class TransactionDetailsPresenter @Inject constructor(
     }
 
     private fun checkTransactionInfo() {
-        val map: MutableMap<String, String?> = mutableMapOf()
+        unsubscribeOnDestroy(
+            Single.fromCallable {
+                val fields = mutableListOf<OperationField>()
 
-        val memo = transactionItem.transaction.memo
-        val sourceAccount = transactionItem.transaction.sourceAccount
-        val addedAt = transactionItem.addedAt
+                val memo = transactionItem.transaction.memo
+                val sourceAccount = transactionItem.transaction.sourceAccount
+                val addedAt = transactionItem.addedAt
 
-        if (!memo.isNullOrEmpty()) {
-            map[AppUtil.getString(R.string.text_tv_transaction_memo)] = memo
-        }
+                if (!memo.isNullOrEmpty()) {
+                    fields.add(OperationField(AppUtil.getString(R.string.text_tv_transaction_memo), memo))
+                }
 
-        if (!sourceAccount.isNullOrEmpty()) {
-            map[AppUtil.getString(R.string.text_tv_transaction_source_account)] = sourceAccount
-        }
+                if (sourceAccount.isNotEmpty()) {
+                    fields.add(OperationField(AppUtil.getString(R.string.text_tv_transaction_source_account),
+                        interactor.getAccountNames()[sourceAccount]?.plus(" (${AppUtil.ellipsizeStrInMiddle(sourceAccount, PK_TRUNCATE_COUNT_SHORT)})") ?: sourceAccount, sourceAccount))
+                }
 
-        if (!addedAt.isNullOrEmpty()) {
-            map[AppUtil.getString(R.string.text_tv_added_at)] =
-                AppUtil.formatDate(
-                    ZonedDateTime.parse(addedAt).toInstant().toEpochMilli(),
-                    if (DateFormat.is24HourFormat(AppUtil.getAppContext())) "MMM dd yyyy HH:mm" else "MMM dd yyyy h:mm a"
+                if (!addedAt.isNullOrEmpty()) {
+                    fields.add(OperationField(AppUtil.getString(R.string.text_tv_added_at), AppUtil.formatDate(
+                        ZonedDateTime.parse(addedAt).toInstant().toEpochMilli(),
+                        if (DateFormat.is24HourFormat(AppUtil.getAppContext())) "MMM dd yyyy HH:mm" else "MMM dd yyyy h:mm a"
+                    )))
+                }
+
+                return@fromCallable fields
+            }
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                    { viewState.setupTransactionInfo(it) },
+                    Throwable::printStackTrace
                 )
-        }
-
-        viewState.setupTransactionInfo(map)
+        )
     }
 
     fun handleTangemInfo(tangemInfo: TangemInfo?) {
@@ -451,7 +465,7 @@ class TransactionDetailsPresenter @Inject constructor(
     /**
      * Cases:
      * 1. Is Vault Transaction -> retrieve actual transaction -> sign it on horizon -> notify vault server
-     * 2. Is [Constant.TransactionType.Item.AUTH_CHALLENGE] transaction type -> retrieve actual transaction -> sign it and notify vault server
+     * 2. Is [com.lobstr.stellar.tsmapper.presentation.util.Constant.TransactionType.AUTH_CHALLENGE] transaction type -> retrieve actual transaction -> sign it and notify vault server
      * 3. Is Transaction from IMPORT_XDR: only sign it on horizon
      * 4. Is Transaction after Tangem sign
      */
@@ -501,18 +515,16 @@ class TransactionDetailsPresenter @Inject constructor(
 
                                     val transactionResultCode =
                                         extras?.resultCodes?.transactionResultCode
-
                                     val operationResultCodes =
                                         extras?.resultCodes?.operationsResultCodes
 
-                                    val errorToShow =
-                                        when (val operationResultCode =
-                                            if (operationResultCodes.isNullOrEmpty()) null else operationResultCodes.first()) {
-                                            // Handle specific operation result code:
-                                            // op_underfunded - used to specify the operation failed due to a lack of funds.
-                                            "op_underfunded" -> operationResultCode
-                                            else -> transactionResultCode
+                                    val errorToShow = when (transactionResultCode == "tx_failed") {
+                                        true -> {
+                                            // tx_failed - one of the operations failed (none were applied). Show first error and exclude op_success.
+                                            operationResultCodes?.firstOrNull { code -> code != "op_success" } ?: transactionResultCode
                                         }
+                                        else -> transactionResultCode
+                                    }
 
                                     when {
                                         envelopXdr == null -> throw HorizonException(

@@ -165,40 +165,8 @@
     <string name="text_tv_change_account_name">Change Account Nickname</string>
     <string name="text_tv_account_name_subtitle">Choose a short name for protected account</string>
     <string name="hint_account_nickname">Enter account nickname</string>
-    <string name="text_tv_change_account_name_restriction">Limited to 30 symbols</string>
+    <string name="text_tv_change_account_name_restriction">Limited to 20 symbols</string>
     <string name="text_btn_save">Save</string>
-
-    <!-- Stellar Operations -->
-    <string name="text_operation_name_payment">Payment</string>
-    <string name="text_operation_name_create_account">Create Account</string>
-    <string name="text_operation_name_path_payment_strict_send">Path Payment Strict Send</string>
-    <string name="text_operation_name_path_payment_strict_receive">Path Payment Strict Receive</string>
-    <string name="text_operation_name_sell_offer">Sell Offer</string>
-    <string name="text_operation_name_cancel_offer">Cancel Offer</string>
-    <string name="text_operation_name_manage_buy_offer">Buy Offer</string>
-    <string name="text_operation_name_create_passive_sell_offer">Create Passive Offer</string>
-    <string name="text_operation_name_set_options">Set Options</string>
-    <string name="text_operation_name_change_trust">Change Trust</string>
-    <string name="text_operation_name_allow_trust">Allow Trust</string>
-    <string name="text_operation_name_account_merge">Account Merge</string>
-    <string name="text_operation_name_inflation">Inflation</string>
-    <string name="text_operation_name_manage_data">Manage Data</string>
-    <string name="text_operation_name_bump_sequence">Bump Sequence</string>
-    <string name="text_operation_name_several_operation">%s Operations</string>
-    <string name="text_operation_name_begin_sponsoring_future_reserves">Begin Sponsoring Future Reserves</string>
-    <string name="text_operation_name_end_sponsoring_future_reserves">End Sponsoring Future Reserves</string>
-    <string name="text_operation_name_revoke_account_sponsorship">Revoke Account Sponsorship</string>
-    <string name="text_operation_name_revoke_claimable_balance_sponsorship">Revoke Claimable Balance Sponsorship</string>
-    <string name="text_operation_name_revoke_data_sponsorship">Revoke Data Sponsorship</string>
-    <string name="text_operation_name_revoke_offer_sponsorship">Revoke Offer Sponsorship</string>
-    <string name="text_operation_name_revoke_signer_sponsorship">Revoke Signer Sponsorship</string>
-    <string name="text_operation_name_revoke_trustline_sponsorship">Revoke Trustline Sponsorship</string>
-    <string name="text_operation_name_create_claimable_balance">Create Claimable Balance</string>
-    <string name="text_operation_name_claim_claimable_balance">Claim Claimable Balance</string>
-    <string name="text_operation_name_clawback_claimable_balance">Clawback Claimable Balance</string>
-    <string name="text_operation_name_clawback">Clawback</string>
-    <string name="text_operation_name_set_trustline_flags">Set Trustline Flags</string>
-    <string name="text_operation_name_unknown">Unknown</string>
 
     <!-- Transaction details -->
     <string name="text_transaction_challenge">Challenge</string>
@@ -319,6 +287,13 @@
     <string name="text_tv_tx_bad_auth_extra">Unused signatures attached to transaction.</string>
     <string name="text_tv_tx_internal_error">An unknown error occurred.</string>
     <string name="text_tv_op_underfunded">Not enough funds.</string>
+    <string name="text_tv_op_inner">Inner object result is valid.</string>
+    <string name="text_tv_op_bad_auth">Too few valid signatures / wrong network.</string>
+    <string name="text_tv_op_no_account">Source account was not found.</string>
+    <string name="text_tv_op_not_supported">Source account was not found.</string>
+    <string name="text_tv_op_too_many_subentries">Your account has reached the Stellar subentries limit at 1000. You can\'t add more assets, signers or create more offers.</string>
+    <string name="text_tv_op_exceeded_work_limit">Operation did too much work.</string>
+    <string name="text_tv_op_too_many_sponsoring">Account is sponsoring too many entries</string>
 
     <!-- Notifications channels -->
     <string name="channel_signer_status">Signer status</string>
@@ -393,54 +368,6 @@ Describe an issue or provide your feedback below:
     <string name="text_tv_tangem_create_wallet_tittle">Create Signer Account</string>
     <string name="text_btn_tangem_create_wallet">Create Signer Account</string>
     <string name="text_tv_tangem_create_wallet_description">Your Vault Signer Card is not configured yet. \nIn order to use the Signer Card, you will need to authorize the creation of a signer Stellar account by scanning the Signer Card. This operation can only be performed once for a single card.</string>
-
-    <!-- Operation fields -->
-    <string name="op_field_selling">Selling</string>
-    <string name="op_field_asset_issuer">Asset Issuer</string>
-    <string name="op_field_buying">Buying</string>
-    <string name="op_field_price">Price</string>
-    <string name="op_field_offer_id">Offer ID</string>
-    <string name="op_field_amount">Amount</string>
-    <string name="op_field_destination">Destination</string>
-    <string name="op_field_destination_federation">Destination Federation</string>
-    <string name="op_field_asset_code">Asset Code</string>
-    <string name="op_field_trustor">Trustor</string>
-    <string name="op_field_authorize">Authorize</string>
-    <string name="op_field_bump_to">Bump To</string>
-    <string name="op_field_asset">Asset</string>
-    <string name="op_field_limit">Limit</string>
-    <string name="op_field_starting_balance">Starting Balance</string>
-    <string name="op_filed_name">Name</string>
-    <string name="op_field_value">Value</string>
-    <string name="op_field_send_asset">Send Asset</string>
-    <string name="op_field_send_max">Send Max</string>
-    <string name="op_field_dest_asset">Dest Asset</string>
-    <string name="op_filed_dest_amount">Dest Amount</string>
-    <string name="op_field_path">Path</string>
-    <string name="op_field_send_amount">Send Amount</string>
-    <string name="op_field_dest_min">Dest Min</string>
-    <string name="op_field_inflation_destination">Inflation Destination</string>
-    <string name="op_field_home_domain">Home Domain</string>
-    <string name="op_field_clear_flags">Clear Flags</string>
-    <string name="op_field_set_flags">Set Flags</string>
-    <string name="op_field_master_key_weight">Master Key Weight</string>
-    <string name="op_field_low_threshold">Low Threshold</string>
-    <string name="op_field_medium_threshold">Medium Threshold</string>
-    <string name="op_field_high_threshold">High Threshold</string>
-    <string name="op_field_signer_weight">Signer Weight</string>
-    <string name="op_field_signer_public_key">Signer Public Key</string>
-    <string name="op_field_source_account">Operation Source</string>
-    <string name="op_field_sponsored_id">Sponsored ID</string>
-    <string name="op_field_account_id">Account ID</string>
-    <string name="op_field_balance_id">Balance ID</string>
-    <string name="op_field_data_name">Data Name</string>
-    <string name="op_field_seller">Seller</string>
-    <string name="op_field_claimants">Claimants</string>
-    <string name="op_field_claimant">Claimant</string>
-    <string name="op_field_from">From</string>
-    <string name="op_value_authorized_flag">Authorized</string>
-    <string name="op_value_authorized_to_maintain_liabilities_flag">Authorized To Maintain Liabilities</string>
-    <string name="op_value_trustline_clawback_enabled_flag">Trustline Clawback Enabled</string>
 
     <!-- App Update Dialog -->
     <string name="text_app_update_title_weak">Update is available</string>

@@ -31,16 +31,6 @@ import com.google.gson.internal.Primitives
 import com.lobstr.stellar.vault.BuildConfig
 import com.lobstr.stellar.vault.R
 import com.lobstr.stellar.vault.presentation.application.LVApplication
-import com.lobstr.stellar.vault.presentation.entities.transaction.operation.*
-import com.lobstr.stellar.vault.presentation.entities.transaction.operation.claimable_balance.ClaimClaimableBalanceOperation
-import com.lobstr.stellar.vault.presentation.entities.transaction.operation.claimable_balance.CreateClaimableBalanceOperation
-import com.lobstr.stellar.vault.presentation.entities.transaction.operation.clawback.ClawbackClaimableBalanceOperation
-import com.lobstr.stellar.vault.presentation.entities.transaction.operation.clawback.ClawbackOperation
-import com.lobstr.stellar.vault.presentation.entities.transaction.operation.offer.CancelSellOfferOperation
-import com.lobstr.stellar.vault.presentation.entities.transaction.operation.offer.CreatePassiveSellOfferOperation
-import com.lobstr.stellar.vault.presentation.entities.transaction.operation.offer.ManageBuyOfferOperation
-import com.lobstr.stellar.vault.presentation.entities.transaction.operation.offer.SellOfferOperation
-import com.lobstr.stellar.vault.presentation.entities.transaction.operation.sponsoring.*
 import com.lobstr.stellar.vault.presentation.util.Constant.Symbol.NULL
 import java.io.IOException
 import java.net.URLEncoder
@@ -167,45 +157,6 @@ object AppUtil {
         }
 
         return null
-    }
-
-    /**
-     * Used for receive operation type.
-     * @param operation Operation.
-     * @param transactionType Target Transaction Type for determining Sep 10 Challenge.
-     */
-    fun getTransactionOperationName(operation: Operation): Int {
-        return when (operation) {
-            is PaymentOperation -> R.string.text_operation_name_payment
-            is CreateAccountOperation -> R.string.text_operation_name_create_account
-            is PathPaymentStrictSendOperation -> R.string.text_operation_name_path_payment_strict_send
-            is PathPaymentStrictReceiveOperation -> R.string.text_operation_name_path_payment_strict_receive
-            is SellOfferOperation -> R.string.text_operation_name_sell_offer
-            is CancelSellOfferOperation -> R.string.text_operation_name_cancel_offer
-            is ManageBuyOfferOperation -> R.string.text_operation_name_manage_buy_offer
-            is CreatePassiveSellOfferOperation -> R.string.text_operation_name_create_passive_sell_offer
-            is SetOptionsOperation -> R.string.text_operation_name_set_options
-            is ChangeTrustOperation -> R.string.text_operation_name_change_trust
-            is AllowTrustOperation -> R.string.text_operation_name_allow_trust
-            is SetTrustlineFlagsOperation -> R.string.text_operation_name_set_trustline_flags
-            is AccountMergeOperation -> R.string.text_operation_name_account_merge
-            is InflationOperation -> R.string.text_operation_name_inflation
-            is ManageDataOperation -> R.string.text_operation_name_manage_data
-            is BumpSequenceOperation -> R.string.text_operation_name_bump_sequence
-            is BeginSponsoringFutureReservesOperation -> R.string.text_operation_name_begin_sponsoring_future_reserves
-            is EndSponsoringFutureReservesOperation -> R.string.text_operation_name_end_sponsoring_future_reserves
-            is RevokeAccountSponsorshipOperation -> R.string.text_operation_name_revoke_account_sponsorship
-            is RevokeClaimableBalanceSponsorshipOperation -> R.string.text_operation_name_revoke_claimable_balance_sponsorship
-            is RevokeDataSponsorshipOperation -> R.string.text_operation_name_revoke_data_sponsorship
-            is RevokeOfferSponsorshipOperation -> R.string.text_operation_name_revoke_offer_sponsorship
-            is RevokeSignerSponsorshipOperation -> R.string.text_operation_name_revoke_signer_sponsorship
-            is RevokeTrustlineSponsorshipOperation -> R.string.text_operation_name_revoke_trustline_sponsorship
-            is CreateClaimableBalanceOperation -> R.string.text_operation_name_create_claimable_balance
-            is ClaimClaimableBalanceOperation -> R.string.text_operation_name_claim_claimable_balance
-            is ClawbackClaimableBalanceOperation -> R.string.text_operation_name_clawback_claimable_balance
-            is ClawbackOperation -> R.string.text_operation_name_clawback
-            else -> -1
-        }
     }
 
     fun convertPixelsToDp(context: Context, px: Int): Float {

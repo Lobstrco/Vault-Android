@@ -3,8 +3,8 @@ package com.lobstr.stellar.vault.presentation.home.transactions.operation.operat
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.lobstr.stellar.tsmapper.presentation.entities.transaction.operation.OperationField
 import com.lobstr.stellar.vault.databinding.AdapterItemOperationDetailsBinding
-import com.lobstr.stellar.vault.presentation.entities.transaction.operation.OperationField
 
 class OperationDetailsAdapter(
     private val fields: MutableList<OperationField>,

@@ -15,9 +15,6 @@ interface ImportXdrView : MvpView {
     @Skip
     fun showMessage(message: String?)
 
-    @AddToEndSingle
-    fun showProgressDialog(show: Boolean)
-
     @Skip
     fun showTransactionDetails(transactionItem: TransactionItem)
 
