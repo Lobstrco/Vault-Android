@@ -5,7 +5,7 @@ import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class LiquidityPoolShareChangeTrustAsset(
-    val liquidityPoolID: String,
+    val liquidityPoolID: String?,
     val fee: Int,
     val assetA: Asset,
     val assetB: Asset,

@@ -703,6 +703,6 @@ class TransactionDetailsPresenter @Inject constructor(
      * @param key Reserved for future implementations.
      */
     fun additionalInfoValueClicked(key: String, value: String?) {
-        value?.let { if (AppUtil.isPublicKey(value)) viewState.showEditAccountDialog(value) }
+        value?.let { if (AppUtil.isValidAccount(value)) viewState.showEditAccountDialog(value) }
     }
 }

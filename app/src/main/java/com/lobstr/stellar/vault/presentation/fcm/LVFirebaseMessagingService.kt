@@ -101,6 +101,7 @@ class LVFirebaseMessagingService : FirebaseMessagingService() {
                 else -> sendDefaultMessage(
                     Random.nextInt(),
                     NotificationsManager.ChannelId.OTHER,
+                    null,
                     messageTitle,
                     messageBody,
                     NotificationsManager.GroupId.OTHER,
@@ -127,6 +128,7 @@ class LVFirebaseMessagingService : FirebaseMessagingService() {
         sendDefaultMessage(
             NotificationsManager.NotificationId.SIGNERS_COUNT_CHANGED,
             NotificationsManager.ChannelId.SIGNER_STATUS,
+            null,
             messageTitle,
             messageBody,
             NotificationsManager.GroupId.SIGNER_STATUS,
@@ -149,6 +151,7 @@ class LVFirebaseMessagingService : FirebaseMessagingService() {
         sendDefaultMessage(
             NotificationsManager.NotificationId.SIGNERS_COUNT_CHANGED,
             NotificationsManager.ChannelId.SIGNER_STATUS,
+            null,
             messageTitle,
             messageBody,
             NotificationsManager.GroupId.SIGNER_STATUS,
@@ -174,6 +177,7 @@ class LVFirebaseMessagingService : FirebaseMessagingService() {
 
         notificationsManager.sendNotification(
             NotificationsManager.ChannelId.INCOMING_TRANSACTIONS,
+            null,
             NotificationsManager.NotificationId.LV_MAIN,
             messageTitle ?: getString(R.string.app_name),
             messageBody,
@@ -207,6 +211,7 @@ class LVFirebaseMessagingService : FirebaseMessagingService() {
         sendDefaultMessage(
             NotificationsManager.NotificationId.LV_MAIN,
             NotificationsManager.ChannelId.NEW_SIGNATURES,
+            null,
             messageTitle,
             messageBody,
             NotificationsManager.GroupId.LV_MAIN,
@@ -229,6 +234,7 @@ class LVFirebaseMessagingService : FirebaseMessagingService() {
         sendDefaultMessage(
             NotificationsManager.NotificationId.LV_MAIN,
             NotificationsManager.ChannelId.AUTHORIZED_TRANSACTIONS,
+            null,
             messageTitle,
             messageBody,
             NotificationsManager.GroupId.LV_MAIN,
@@ -244,6 +250,7 @@ class LVFirebaseMessagingService : FirebaseMessagingService() {
     private fun sendDefaultMessage(
         notificationId: Int,
         channelId: String,
+        channelGroupId: String?,
         messageTitle: String?,
         messageBody: String?,
         groupId: Int,
@@ -264,6 +271,7 @@ class LVFirebaseMessagingService : FirebaseMessagingService() {
 
         notificationsManager.sendNotification(
             channelId,
+            channelGroupId,
             notificationId,
             messageTitle ?: getString(R.string.app_name),
             messageBody,

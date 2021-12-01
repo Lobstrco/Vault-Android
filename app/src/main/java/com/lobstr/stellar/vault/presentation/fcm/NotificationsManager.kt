@@ -1,6 +1,7 @@
 package com.lobstr.stellar.vault.presentation.fcm
 
 import android.app.NotificationChannel
+import android.app.NotificationChannelGroup
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
@@ -40,6 +41,10 @@ class NotificationsManager(private val context: Context) {
         const val OTHER = "Other"
     }
 
+    object ChannelGroupId {
+        // NOTE Put Channel Group ID here (const val OTHER = "other"). Must be unique.
+    }
+
     // Must be unique (not equal GroupId).
     object NotificationId {
         const val LV_MAIN = 0
@@ -72,6 +77,7 @@ class NotificationsManager(private val context: Context) {
      */
     fun sendNotification(
         channelId: String,
+        channelGroupId: String?,
         notificationId: Int,
         notificationTitle: String,
         notificationMessage: String?,
@@ -87,7 +93,7 @@ class NotificationsManager(private val context: Context) {
         val notificationBuilder =
             NotificationCompat.Builder(
                 context,
-                createNotificationChannel(channelId, notificationManager, importance)
+                createNotificationChannel(channelId, channelGroupId, notificationManager, importance)
             )
                 .setSmallIcon(R.drawable.ic_stat_notif)
                 .setColor(
@@ -117,7 +123,7 @@ class NotificationsManager(private val context: Context) {
             val groupBuilder =
                 NotificationCompat.Builder(
                     context,
-                    createNotificationChannel(channelId, notificationManager, importance)
+                    createNotificationChannel(channelId, channelGroupId, notificationManager, importance)
                 )
                     .setSmallIcon(R.drawable.ic_stat_notif)
                     .setColor(
@@ -156,6 +162,7 @@ class NotificationsManager(private val context: Context) {
      */
     fun sendNotification(
         channelId: String,
+        channelGroupId: String?,
         notificationId: Int,
         notificationTitle: String,
         notificationMessage: String?,
@@ -170,7 +177,7 @@ class NotificationsManager(private val context: Context) {
 
         val notificationBuilder = NotificationCompat.Builder(
             context,
-            createNotificationChannel(channelId, notificationManager, importance)
+            createNotificationChannel(channelId, channelGroupId, notificationManager, importance)
         )
             .setSmallIcon(R.drawable.ic_stat_notif)
             .setColor(
@@ -206,7 +213,7 @@ class NotificationsManager(private val context: Context) {
             val groupBuilder =
                 NotificationCompat.Builder(
                     context,
-                    createNotificationChannel(channelId, notificationManager, importance)
+                    createNotificationChannel(channelId, channelGroupId, notificationManager, importance)
                 )
                     .setSmallIcon(R.drawable.ic_stat_notif)
                     .setColor(
@@ -280,6 +287,7 @@ class NotificationsManager(private val context: Context) {
      */
     private fun createNotificationChannel(
         channelId: String,
+        channelGroupId: String?,
         notificationManager: NotificationManagerCompat,
         importance: Int = NotificationManagerCompat.IMPORTANCE_HIGH
     ): String {
@@ -303,6 +311,7 @@ class NotificationsManager(private val context: Context) {
             notificationChannel.setShowBadge(true)
             notificationChannel.vibrationPattern =
                 longArrayOf(100, 200, 300, 400, 500, 400, 300, 200, 400)
+            createNotificationChannelGroup(channelGroupId, notificationManager)?.let { notificationChannel.group = it }
             notificationManager.createNotificationChannel(notificationChannel)
         }
 
@@ -324,6 +333,22 @@ class NotificationsManager(private val context: Context) {
     private fun createChannelDescription(chanelId: String): String? {
         // Add channel descriptions.
         return when (chanelId) {
+            else -> null
+        }
+    }
+
+    private fun createNotificationChannelGroup(channelGroupId: String?, notificationManager: NotificationManagerCompat): String? {
+        if(!channelGroupId.isNullOrEmpty()) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                notificationManager.createNotificationChannelGroup(NotificationChannelGroup(channelGroupId, createChannelGroupName(channelGroupId)))
+            }
+        }
+        return channelGroupId
+    }
+
+    private fun createChannelGroupName(channelGroupId: String): String? {
+        return when(channelGroupId) {
+            // Apply Section Names for the particular channelGroupId.
             else -> null
         }
     }

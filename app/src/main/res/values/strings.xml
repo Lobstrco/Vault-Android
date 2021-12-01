@@ -21,6 +21,7 @@
     <string name="text_btn_log_out">Log Out</string>
     <string name="text_btn_next">Next</string>
     <string name="text_btn_clip_to_board">Copy</string>
+    <string name="text_btn_paste_clipboard">Paste From Clipboard</string>
     <string name="text_btn_skip">Skip</string>
     <string name="text_btn_done">Done</string>
     <string name="text_btn_copy_key">Copy Key</string>
@@ -376,5 +377,4 @@ Describe an issue or provide your feedback below:
     <string name="text_app_update_message_required">Your app is outdated and is no longer supported. Update the app to continue using LOBSTR Vault.</string>
     <string name="btn_text_app_update">Update</string>
     <string name="btn_text_app_update_skip">Skip</string>
-
 </resources>

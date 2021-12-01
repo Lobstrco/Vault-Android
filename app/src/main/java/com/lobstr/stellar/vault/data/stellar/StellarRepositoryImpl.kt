@@ -8,6 +8,7 @@ import com.lobstr.stellar.vault.presentation.entities.account.Account
 import com.lobstr.stellar.vault.presentation.entities.account.AccountResult
 import com.lobstr.stellar.vault.presentation.entities.account.Thresholds
 import com.lobstr.stellar.vault.presentation.entities.mnemonic.MnemonicItem
+import com.lobstr.stellar.vault.presentation.util.AppUtil
 import com.soneso.stellarmnemonics.Wallet
 import com.tangem.commands.SignResponse
 import io.reactivex.rxjava3.core.Single
@@ -20,6 +21,7 @@ import org.stellar.sdk.xdr.Signature
 import java.util.concurrent.Callable
 
 class StellarRepositoryImpl(
+    private val accountConverter: AccountConverter,
     private val network: Network,
     private val server: Server,
     private val mnemonicsMapper: MnemonicsMapper,
@@ -42,7 +44,7 @@ class StellarRepositoryImpl(
 
     override fun createTransaction(envelopXdr: String): Single<AbstractTransaction> {
         return fromCallable {
-            return@fromCallable AbstractTransaction.fromEnvelopeXdr(envelopXdr, network)
+            return@fromCallable AbstractTransaction.fromEnvelopeXdr(accountConverter, envelopXdr, network)
         }
     }
 
@@ -63,7 +65,7 @@ class StellarRepositoryImpl(
 
     override fun signTransaction(signer: KeyPair, envelopXdr: String): Single<AbstractTransaction> {
         return fromCallable(Callable {
-            val transaction = AbstractTransaction.fromEnvelopeXdr(envelopXdr, network)
+            val transaction = AbstractTransaction.fromEnvelopeXdr(accountConverter, envelopXdr, network)
 
             // Sign the transaction to prove you are actually the person sending it.
             transaction.sign(signer)
@@ -81,13 +83,13 @@ class StellarRepositoryImpl(
     ): Single<AccountResult> {
         return Single.create<AccountResponse> {
             try {
-                it.onSuccess(server.accounts().account(sourceAccount))
+                it.onSuccess(server.accounts().account(AppUtil.decodeAccountStr(sourceAccount)))
             } catch (exc: Exception) {
                 if (it.isDisposed) exc.printStackTrace() else it.onError(exc)
             }
         }
             .map { accountResponse ->
-                val transaction = Transaction.fromEnvelopeXdr(envelopXdr, network)
+                val transaction = Transaction.fromEnvelopeXdr(accountConverter, envelopXdr, network)
 
                 val accountsList: MutableList<Account> = mutableListOf()
 
@@ -143,7 +145,7 @@ class StellarRepositoryImpl(
     }
 
     override fun getTransactionFromXDR(xdr: String): AbstractTransaction {
-        return AbstractTransaction.fromEnvelopeXdr(xdr, network)
+        return AbstractTransaction.fromEnvelopeXdr(accountConverter, xdr, network)
     }
 
     override fun readChallengeTransaction(

@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingStart="16dp"
-        android:paddingEnd="16dp"
-        android:paddingBottom="16dp"
-        android:orientation="vertical">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:paddingStart="16dp"
+    android:paddingEnd="16dp"
+    android:paddingBottom="16dp"
+    android:orientation="vertical">
 
     <TextView
             android:id="@+id/tvSubtitle"
@@ -33,17 +35,37 @@
             android:textColorHint="@color/color_4d000000"
             android:textSize="14sp" />
 
-    <TextView
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_marginBottom="19dp">
+
+        <TextView
             android:id="@+id/tvError"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginBottom="19dp"
+            android:layout_weight="1"
             android:ellipsize="end"
-            android:gravity="center"
+            android:gravity="center|start"
             android:maxLines="1"
+            android:padding="4dp"
             android:textColor="@color/color_d9534f"
-            android:textSize="12sp" />
+            android:textSize="13sp" />
+
+        <com.lobstr.stellar.vault.presentation.util.ClipboardView
+            android:id="@+id/clipboardView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:foreground="?android:attr/selectableItemBackground"
+            android:padding="4dp"
+            app:checkInUse="true"
+            app:clipDataType="1"
+            tools:ignore="UnusedAttribute" />
+
+    </LinearLayout>
 
     <Button
             android:id="@+id/btnNext"
@@ -55,5 +77,4 @@
             android:textAllCaps="false"
             android:textColor="@android:color/white"
             android:textSize="14sp" />
-
 </LinearLayout>

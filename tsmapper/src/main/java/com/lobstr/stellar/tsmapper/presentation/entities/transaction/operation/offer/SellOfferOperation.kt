@@ -14,11 +14,13 @@ class SellOfferOperation(
     private val selling: Asset,
     private val buying: Asset,
     private val amount: String,
-    private val price: String
+    private val price: String,
+    private val offerId: Long
 ) : ManageSellOfferOperation(sourceAccount, selling, buying, price), Parcelable {
 
     override fun getFields(context: Context): MutableList<OperationField> {
         val fields: MutableList<OperationField> = mutableListOf()
+        if(offerId != 0L) fields.add(OperationField(context.getString(R.string.op_field_offer_id), offerId.toString()))
         fields.add(OperationField(context.getString(R.string.op_field_selling), selling.assetCode, selling))
         if (selling.assetIssuer != null) fields.add(OperationField(context.getString(R.string.op_field_asset_issuer), selling.assetIssuer, selling.assetIssuer))
         fields.add(OperationField(context.getString(R.string.op_field_amount), amount))

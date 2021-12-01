@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.view.isVisible
 import androidx.core.widget.doAfterTextChanged
 import com.lobstr.stellar.vault.R
 import com.lobstr.stellar.vault.databinding.FragmentImportXdrBinding
@@ -68,9 +69,17 @@ class ImportXdrFragment : BaseFragment(), ImportXdrView, View.OnClickListener {
     }
 
     private fun setListeners() {
+        lifecycle.addObserver(binding.clipboardView)
+        binding.clipboardView.setClickListener {
+            binding.etImportXdr.setText(it)
+        }
         binding.btnNext.setOnClickListener(this)
-        binding.etImportXdr.doAfterTextChanged {
-            mPresenter.xdrChanged(it?.trim()?.length ?: 0)
+        binding.etImportXdr.doAfterTextChanged { editable ->
+            val text = editable?.trim()?.toString()
+            val clipBoardData = binding.clipboardView.data
+            clipBoardData?.let { binding.clipboardView.updateInUseData(text) }
+            binding.clipboardView.isVisible = if(clipBoardData.isNullOrEmpty()) false else clipBoardData != text
+            mPresenter.xdrChanged(editable?.trim()?.length ?: 0)
         }
     }
 

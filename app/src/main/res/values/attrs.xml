@@ -19,4 +19,9 @@
         <attr name="cleanSearchImg" format="reference"/>
         <attr name="cleanSearchImgColor" format="color"/>
     </declare-styleable>
+
+    <declare-styleable name="ClipboardView">
+        <attr name="clipDataType" format="integer"/>
+        <attr name="checkInUse" format="boolean"/>
+    </declare-styleable>
 </resources>

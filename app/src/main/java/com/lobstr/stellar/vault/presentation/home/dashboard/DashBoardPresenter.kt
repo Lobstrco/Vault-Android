@@ -12,7 +12,6 @@ import com.lobstr.stellar.vault.domain.util.event.Update.Type.ACCOUNT_NAME
 import com.lobstr.stellar.vault.presentation.BasePresenter
 import com.lobstr.stellar.vault.presentation.entities.account.Account
 import com.lobstr.stellar.vault.presentation.util.AppUtil
-import com.lobstr.stellar.vault.presentation.util.Constant
 import com.lobstr.stellar.vault.presentation.util.Constant.Util.PK_TRUNCATE_COUNT
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Completable
@@ -43,7 +42,7 @@ class DashboardPresenter @Inject constructor(
 
         viewState.showVaultInfo(
             interactor.hasTangem(),
-            Constant.Social.USER_ICON_LINK.plus(vaultPublicKey).plus(".png"),
+            AppUtil.createUserIconLink(vaultPublicKey),
             AppUtil.ellipsizeStrInMiddle(vaultPublicKey, PK_TRUNCATE_COUNT)
         )
 

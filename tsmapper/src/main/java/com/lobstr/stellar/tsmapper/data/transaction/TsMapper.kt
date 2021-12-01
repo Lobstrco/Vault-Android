@@ -47,7 +47,10 @@ import org.stellar.sdk.*
 import org.stellar.sdk.xdr.TrustLineFlags
 import java.math.BigDecimal
 
-class TsMapper(private val network: Network = Network.PUBLIC) {
+class TsMapper(
+    private val network: Network = Network.PUBLIC,
+    private val accountConverter: AccountConverter = AccountConverter.enableMuxed()
+) {
 
     companion object {
         const val HOME_DOMAIN_MANAGER_DATA_NAME_FLAG = "auth" // Equivalent of Sep10Challenge.HOME_DOMAIN_MANAGER_DATA_NAME_FLAG.
@@ -112,7 +115,7 @@ class TsMapper(private val network: Network = Network.PUBLIC) {
      * @return [Transaction].
      */
     fun getTransaction(xdr: String, type: String? = null): Transaction {
-        val transaction: AbstractTransaction = AbstractTransaction.fromEnvelopeXdr(xdr, network)
+        val transaction: AbstractTransaction = AbstractTransaction.fromEnvelopeXdr(accountConverter, xdr, network)
         val operations: MutableList<Operation> = mutableListOf()
 
         val targetTx = when (transaction) {
@@ -272,7 +275,8 @@ class TsMapper(private val network: Network = Network.PUBLIC) {
                 mapAsset(operation.selling),
                 mapAsset(operation.buying),
                 operation.amount,
-                BigDecimal(operation.price).stripTrailingZeros().toPlainString()
+                BigDecimal(operation.price).stripTrailingZeros().toPlainString(),
+                operation.offerId
             )
         }
     }
@@ -283,7 +287,8 @@ class TsMapper(private val network: Network = Network.PUBLIC) {
             mapAsset(operation.selling),
             mapAsset(operation.buying),
             operation.amount,
-            BigDecimal(operation.price).stripTrailingZeros().toPlainString()
+            BigDecimal(operation.price).stripTrailingZeros().toPlainString(),
+            operation.offerId
         )
     }
 
@@ -507,7 +512,7 @@ class TsMapper(private val network: Network = Network.PUBLIC) {
                 val targetAsset = asset as org.stellar.sdk.LiquidityPoolShareChangeTrustAsset
                 val liquidityPoolParameters = targetAsset.liquidityPoolParams as LiquidityPoolConstantProductParameters
                 LiquidityPoolShareChangeTrustAsset(
-                    targetAsset.liquidityPoolID.toString(),
+                    try { targetAsset.liquidityPoolID.toString()} catch (exc: Exception) { null }, // Handle errors for Liquidity Pool ID.
                     liquidityPoolParameters.fee,
                     mapAsset(liquidityPoolParameters.assetA),
                     mapAsset(liquidityPoolParameters.assetB)

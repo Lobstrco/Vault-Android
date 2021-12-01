@@ -9,7 +9,6 @@ import com.lobstr.stellar.vault.R
 import com.lobstr.stellar.vault.databinding.AdapterItemAccountExtendedBinding
 import com.lobstr.stellar.vault.presentation.entities.account.Account
 import com.lobstr.stellar.vault.presentation.util.AppUtil
-import com.lobstr.stellar.vault.presentation.util.Constant
 import com.lobstr.stellar.vault.presentation.util.Constant.Util.PK_TRUNCATE_COUNT
 
 class AccountExtendedViewHolder(
@@ -23,11 +22,7 @@ class AccountExtendedViewHolder(
 
         // Set user icon.
         Glide.with(itemView.context)
-            .load(
-                Constant.Social.USER_ICON_LINK
-                    .plus(account.address)
-                    .plus(".png")
-            )
+            .load(AppUtil.createUserIconLink(account.address))
             .placeholder(R.drawable.ic_person)
             .into(binding.ivIdentity)
 

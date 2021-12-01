@@ -21,7 +21,7 @@ open class Operation(open val sourceAccount: String?) : Parcelable {
     fun mapAssetFields(context: Context, fields: MutableList<OperationField>, asset: Asset): MutableList<OperationField>  {
         when (asset) {
             is LiquidityPoolShareChangeTrustAsset -> {
-                fields.add(OperationField(context.getString(R.string.op_field_liquidity_pool_id), asset.liquidityPoolID))
+                if (asset.liquidityPoolID != null) fields.add(OperationField(context.getString(R.string.op_field_liquidity_pool_id), asset.liquidityPoolID))
                 fields.add(OperationField(context.getString(R.string.op_field_asset_a), asset.assetA.assetCode, asset))
                 if (asset.assetA.assetIssuer != null) fields.add(OperationField(context.getString(R.string.op_field_asset_a_issuer), asset.assetA.assetIssuer, asset.assetA.assetIssuer))
                 fields.add(OperationField(context.getString(R.string.op_field_asset_b), asset.assetB.assetCode, asset))

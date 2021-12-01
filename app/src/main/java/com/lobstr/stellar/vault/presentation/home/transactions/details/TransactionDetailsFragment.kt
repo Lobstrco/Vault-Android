@@ -227,7 +227,7 @@ class TransactionDetailsFragment : BaseFragment(), TransactionDetailsView, View.
             val fieldName = root.findViewById<TextView>(R.id.tvFieldName)
             val fieldValue = root.findViewById<TextView>(R.id.tvFieldValue)
 
-            val isPublicKeyField = AppUtil.isPublicKey(tag as? String)
+            val isPublicKeyField = AppUtil.isValidAccount(tag as? String)
 
             // Set selectable foreground for public key fields.
             (root.findViewById<FrameLayout>(R.id.flContent))?.foreground = if(isPublicKeyField) {
@@ -247,14 +247,14 @@ class TransactionDetailsFragment : BaseFragment(), TransactionDetailsView, View.
                 else -> {
                     when {
                         // Case for the Account Name.
-                        isPublicKeyField && !AppUtil.isPublicKey(value) -> TextUtils.TruncateAt.END
+                        isPublicKeyField && !AppUtil.isValidAccount(value) -> TextUtils.TruncateAt.END
                         else -> TextUtils.TruncateAt.MIDDLE
                     }
                 }
             }
 
             fieldName.text = key
-            fieldValue.text = if (AppUtil.isPublicKey(value)) {
+            fieldValue.text = if (AppUtil.isValidAccount(value)) {
                 AppUtil.ellipsizeStrInMiddle(value, Constant.Util.PK_TRUNCATE_COUNT)
             } else {
                 value

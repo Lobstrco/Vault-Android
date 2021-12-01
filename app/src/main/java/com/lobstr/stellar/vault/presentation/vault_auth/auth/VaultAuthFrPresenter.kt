@@ -28,7 +28,7 @@ class VaultAuthFrPresenter @Inject constructor(
         viewState.setupInfo(
             interactor.hasMnemonics(),
             interactor.hasTangem(),
-            Constant.Social.USER_ICON_LINK.plus(interactor.getUserPublicKey()).plus(".png"),
+            AppUtil.createUserIconLink(interactor.getUserPublicKey()),
             if (interactor.hasMnemonics()) {
                 AppUtil.ellipsizeStrInMiddle(
                     interactor.getUserPublicKey(),

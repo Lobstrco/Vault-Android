@@ -16,7 +16,6 @@ import com.lobstr.stellar.vault.R
 import com.lobstr.stellar.vault.databinding.AdapterItemTransactionBinding
 import com.lobstr.stellar.vault.presentation.entities.transaction.TransactionItem
 import com.lobstr.stellar.vault.presentation.util.AppUtil
-import com.lobstr.stellar.vault.presentation.util.Constant
 import com.lobstr.stellar.vault.presentation.util.Constant.Util.PK_TRUNCATE_COUNT
 import java.time.ZonedDateTime
 
@@ -41,11 +40,7 @@ class TransactionViewHolder(private val binding: AdapterItemTransactionBinding, 
 
         // set user icon
         Glide.with(itemView.context)
-            .load(
-                Constant.Social.USER_ICON_LINK
-                    .plus(item.transaction.sourceAccount)
-                    .plus(".png")
-            )
+            .load(AppUtil.createUserIconLink(item.transaction.sourceAccount))
             .placeholder(R.drawable.ic_person)
             .into(binding.ivIdentity)
 

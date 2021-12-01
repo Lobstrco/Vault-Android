@@ -86,7 +86,7 @@ class OperationDetailsPresenter @Inject constructor(
                 val names = interactor.getAccountNames()
 
                 operationFields.forEach {
-                    if (AppUtil.isPublicKey(it.tag as? String)) {
+                    if (AppUtil.isValidAccount(it.tag as? String)) {
                         val cachedName = names[it.value]
                         it.value = if(cachedName.isNullOrEmpty()) {
                             it.value
@@ -160,7 +160,7 @@ class OperationDetailsPresenter @Inject constructor(
         stellarAccountsDisposable = Observable.fromIterable(destinations)
             .subscribeOn(Schedulers.io())
             .filter {
-                AppUtil.isPublicKey(it.tag as? String)
+                AppUtil.isValidAccount(it.tag as? String)
             }
             .flatMapSingle { field ->
                 interactor.getStellarAccount(field.tag as String).onErrorResumeNext { throwable ->
@@ -204,7 +204,7 @@ class OperationDetailsPresenter @Inject constructor(
      */
     fun operationItemClicked(key: String, value: String?, tag: Any?) {
         when {
-            AppUtil.isPublicKey(tag as? String) -> tag?.let {viewState.showEditAccountDialog(tag as String) }
+            AppUtil.isValidAccount(tag as? String) -> tag?.let {viewState.showEditAccountDialog(tag as String) }
             tag is Asset -> viewState.showAssetInfoDialog(tag.assetCode, tag.assetIssuer)
         }
     }

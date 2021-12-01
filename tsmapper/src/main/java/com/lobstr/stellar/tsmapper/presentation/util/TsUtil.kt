@@ -59,24 +59,6 @@ object TsUtil {
         }
     }
 
-    fun isPublicKey(value: String?): Boolean {
-        if (value.isNullOrEmpty() || value.length != 56) {
-            return false
-        }
-
-        if (value[0] != 'G') {
-            return false
-        }
-
-        for (element in value) {
-            val letterCode = element.code
-            if (!(letterCode in 65..90 || letterCode in 48..57)) {
-                return false
-            }
-        }
-        return true
-    }
-
     fun ellipsizeStrInMiddle(str: String?, count: Int): String? {
         return if (str.isNullOrEmpty() || count >= (str.length / 2 - 1)) {
             str

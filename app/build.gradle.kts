@@ -18,8 +18,8 @@ android {
         applicationId = "com.lobstr.stellar.vault"
         minSdk = 22
         targetSdk = 30
-        versionCode = 28
-        versionName = "2.5.0"
+        versionCode = 29
+        versionName = "2.6.0"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         multiDexEnabled = true
 
@@ -144,7 +144,7 @@ android {
 
 val desugar_jdk_libs by extra("1.1.5")
 val dagger by extra("2.28.1")
-val rx_java by extra("3.1.2")
+val rx_java by extra("3.1.3")
 val rx_android by extra("3.0.0")
 val rx_kotlin by extra("3.0.1")
 val retrofit by extra("2.9.0")
@@ -153,7 +153,7 @@ val moxy by extra("2.2.2")
 val glide by extra("4.12.0")
 val material by extra("1.4.0")
 val browser by extra("1.3.0")
-val firebase_bom by extra("28.4.2")
+val firebase_bom by extra("29.0.1")
 val javax_annotation by extra("10.0-b28")
 val play_service_base by extra("17.6.0")
 val androidx_core by extra("1.6.0")
@@ -162,7 +162,7 @@ val fragment by extra("1.3.6")
 val recyclerview by extra("1.2.1")
 val androidx_multidex by extra("2.0.1")
 val androidx_preference by extra("1.1.1")
-val androidx_constraintlayout by extra("2.1.1")
+val androidx_constraintlayout by extra("2.1.2")
 val androidx_legacy_support_v4 by extra("1.0.0")
 val junit by extra("4.13.2")
 val runner by extra("1.1.3")
@@ -170,12 +170,12 @@ val espresso_core by extra("3.4.0")
 val stellar_sdk by extra("0.29.0")
 val work_manager by extra("2.6.0")
 val biometric by extra("1.1.0")
-val lottieVersion by extra("4.2.0")
+val lottieVersion by extra("4.2.2")
 val qr_gen by extra("2.6.0")
 val viewpager2 by extra("1.0.0")
 val tangem by extra("0.9.0")
-val zendesk by extra("5.0.3")
-val hilt by extra("2.40")
+val zendesk by extra("5.0.5")
+val hilt by extra("2.40.3")
 val androidx_hilt by extra("1.0.0")
 val lifecycle by extra("2.3.1")
 

@@ -32,6 +32,8 @@ import com.lobstr.stellar.vault.BuildConfig
 import com.lobstr.stellar.vault.R
 import com.lobstr.stellar.vault.presentation.application.LVApplication
 import com.lobstr.stellar.vault.presentation.util.Constant.Symbol.NULL
+import org.stellar.sdk.AccountConverter
+import org.stellar.sdk.xdr.MuxedAccount
 import java.io.IOException
 import java.net.URLEncoder
 import java.text.SimpleDateFormat
@@ -133,11 +135,6 @@ object AppUtil {
         }
     }
 
-    fun showKeyboard(activity: Activity?) {
-        (activity?.getSystemService(Activity.INPUT_METHOD_SERVICE) as? InputMethodManager)
-            ?.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0)
-    }
-
     fun getJwtToken(token: String?) = "JWT $token"
 
     fun <T> convertJsonToPojo(jsonStr: String?, classOfT: Class<T>): T? {
@@ -220,24 +217,6 @@ object AppUtil {
 
     fun getAppContext(): Context = LVApplication.appContext
 
-    fun isPublicKey(value: String?): Boolean {
-        if (value.isNullOrEmpty() || value.length != 56) {
-            return false
-        }
-
-        if (value[0] != 'G') {
-            return false
-        }
-
-        for (element in value) {
-            val letterCode = element.code
-            if (!(letterCode in 65..90 || letterCode in 48..57)) {
-                return false
-            }
-        }
-        return true
-    }
-
     fun ellipsizeStrInMiddle(str: String?, count: Int): String? {
         return if (str.isNullOrEmpty() || count >= (str.length / 2 - 1)) {
             str
@@ -294,4 +273,47 @@ object AppUtil {
     ) = String.format(
         Constant.Laboratory.URL, URLEncoder.encode(input, "utf-8"), type, network
     )
+
+    /**
+     * Encode Account to MuxedAccount.
+     * @return null when invalid account. Otherwise - MuxedAccount.
+     */
+    fun encodeMuxedAccount(account: String?, enableMuxed: Boolean = true): MuxedAccount? {
+        return try {
+            if (account.isNullOrEmpty()) {
+                null
+            } else {
+                val converter = if(enableMuxed) AccountConverter.enableMuxed() else AccountConverter.disableMuxed()
+                converter.encode(account)
+            }
+        } catch (exc: Exception) {
+            null
+        }
+    }
+
+    /**
+     * Retrieve Account ID for any account.
+     */
+    fun decodeAccount(account: MuxedAccount): String {
+        return AccountConverter.disableMuxed().decode(account)
+    }
+
+    /**
+     * Get ED25519.
+     */
+    fun decodeAccountStr(account: String): String {
+        return encodeMuxedAccount(account)?.let { decodeAccount(it) } ?: ""
+    }
+
+    /**
+     * Make Account Validation (ED25519 or MUXED_ED25519).
+     * @return true - ED25519 or MUXED_ED25519. Otherwise - false.
+     */
+    fun isValidAccount(account: String?, enableMuxed: Boolean = true): Boolean {
+        return encodeMuxedAccount(account, enableMuxed) != null
+    }
+
+    fun createUserIconLink(key: String?): String {
+        return Constant.Social.USER_ICON_LINK.plus(key?.let { decodeAccountStr(it) }).plus(".png")
+    }
 }

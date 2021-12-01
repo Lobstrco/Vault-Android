@@ -5,12 +5,14 @@ import com.soneso.stellarmnemonics.Wallet
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.core.Single.fromCallable
 import org.stellar.sdk.AbstractTransaction
+import org.stellar.sdk.AccountConverter
 import org.stellar.sdk.KeyPair
 import org.stellar.sdk.Network
 import java.util.concurrent.Callable
 
 
 class RxErrorRepositoryImpl(
+    private val accountConverter: AccountConverter,
     private val network: Network
 ) : RxErrorRepository {
 
@@ -22,7 +24,7 @@ class RxErrorRepositoryImpl(
 
     override fun signTransaction(signer: KeyPair, envelopXdr: String): Single<AbstractTransaction> {
         return fromCallable(Callable {
-            val transaction = AbstractTransaction.fromEnvelopeXdr(envelopXdr, network)
+            val transaction = AbstractTransaction.fromEnvelopeXdr(AccountConverter.enableMuxed(), envelopXdr, network)
 
             // Sign the transaction to prove you are actually the person sending it.
             transaction.sign(signer)

@@ -16,7 +16,7 @@ class OperationDetailsViewHolder(
 ) : RecyclerView.ViewHolder(binding.root) {
 
     fun bind(name: String, value: String?, tag: Any?) {
-        val isPublicKeyField = AppUtil.isPublicKey(tag as? String)
+        val isPublicKeyField = AppUtil.isValidAccount(tag as? String)
         val isAssetTag = tag is Asset
 
         binding.tvFieldName.text = name
@@ -25,7 +25,7 @@ class OperationDetailsViewHolder(
             else -> {
                 when {
                     // Case for the Account Name.
-                    isPublicKeyField && !AppUtil.isPublicKey(value) -> TextUtils.TruncateAt.END
+                    isPublicKeyField && !AppUtil.isValidAccount(value) -> TextUtils.TruncateAt.END
                     else -> TextUtils.TruncateAt.MIDDLE
                 }
             }
@@ -33,7 +33,7 @@ class OperationDetailsViewHolder(
         binding.tvFieldValue.isSingleLine = value?.contains("\n") != true
 
         binding.tvFieldValue.text =
-            if (AppUtil.isPublicKey(value)) {
+            if (AppUtil.isValidAccount(value)) {
                 AppUtil.ellipsizeStrInMiddle(value, Constant.Util.PK_TRUNCATE_COUNT)
             } else {
                 value
