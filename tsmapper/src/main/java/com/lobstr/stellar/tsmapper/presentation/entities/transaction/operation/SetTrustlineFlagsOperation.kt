@@ -22,7 +22,7 @@ data class SetTrustlineFlagsOperation(
         const val TRUSTLINE_CLAWBACK_ENABLED_FLAG = 4
     }
 
-    override fun getFields(context: Context): MutableList<OperationField> {
+    override fun getFields(context: Context, amountFormatter: (value: String) -> String): MutableList<OperationField> {
         val fields: MutableList<OperationField> = mutableListOf()
         if (trustor.isNotEmpty()) fields.add(OperationField(context.getString(R.string.op_field_trustor), trustor, trustor))
         fields.add(OperationField(context.getString(R.string.op_field_asset), asset.assetCode, asset))

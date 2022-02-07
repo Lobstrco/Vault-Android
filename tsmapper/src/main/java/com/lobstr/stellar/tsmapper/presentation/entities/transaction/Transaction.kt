@@ -6,6 +6,7 @@ import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class Transaction(
+    val fee: Long,
     val envelopXdr: String,
     val sourceAccount: String,
     val memo: String?,

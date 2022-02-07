@@ -13,13 +13,13 @@ plugins {
 }
 
 android {
-    compileSdk = 30
+    compileSdk = 31
     defaultConfig {
         applicationId = "com.lobstr.stellar.vault"
         minSdk = 22
-        targetSdk = 30
-        versionCode = 29
-        versionName = "2.6.0"
+        targetSdk = 31
+        versionCode = 30
+        versionName = "2.6.1"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         multiDexEnabled = true
 
@@ -40,8 +40,10 @@ android {
     }
 
     lint {
-        disable("RestrictedApi")
-        disable("MissingTranslation")
+        disable.addAll(listOf(
+            "RestrictedApi",
+            "MissingTranslation"
+        ))
     }
 
     compileOptions {
@@ -151,39 +153,39 @@ val retrofit by extra("2.9.0")
 val okhttp by extra("4.9.0")
 val moxy by extra("2.2.2")
 val glide by extra("4.12.0")
-val material by extra("1.4.0")
-val browser by extra("1.3.0")
-val firebase_bom by extra("29.0.1")
+val material by extra("1.5.0")
+val browser by extra("1.4.0")
+val firebase_bom by extra("29.0.4")
 val javax_annotation by extra("10.0-b28")
-val play_service_base by extra("17.6.0")
-val androidx_core by extra("1.6.0")
-val androidx_appcompat by extra("1.3.1")
-val fragment by extra("1.3.6")
+val play_service_base by extra("18.0.1")
+val androidx_core by extra("1.7.0")
+val androidx_appcompat by extra("1.4.1")
+val fragment by extra("1.4.1")
 val recyclerview by extra("1.2.1")
 val androidx_multidex by extra("2.0.1")
-val androidx_preference by extra("1.1.1")
-val androidx_constraintlayout by extra("2.1.2")
+val androidx_preference by extra("1.2.0")
+val androidx_constraintlayout by extra("2.1.3")
 val androidx_legacy_support_v4 by extra("1.0.0")
 val junit by extra("4.13.2")
 val runner by extra("1.1.3")
 val espresso_core by extra("3.4.0")
-val stellar_sdk by extra("0.29.0")
-val work_manager by extra("2.6.0")
+val stellar_sdk by extra("0.31.0")
+val work_manager by extra("2.7.1")
 val biometric by extra("1.1.0")
 val lottieVersion by extra("4.2.2")
 val qr_gen by extra("2.6.0")
 val viewpager2 by extra("1.0.0")
 val tangem by extra("0.9.0")
-val zendesk by extra("5.0.5")
-val hilt by extra("2.40.3")
+val zendesk by extra("5.0.7")
+val hilt by extra("2.40.5")
 val androidx_hilt by extra("1.0.0")
-val lifecycle by extra("2.3.1")
+val lifecycle by extra("2.4.0")
 
 dependencies {
     implementation(fileTree(mapOf("dir" to "libs", "include" to listOf("*.jar"))))
 
-    implementation(project(":pinlockview"))
     implementation(project(mapOf("path" to ":tsmapper")))
+    implementation(project(mapOf("path" to ":pinlockview")))
     testImplementation("junit:junit:$junit")
     androidTestImplementation("androidx.test.ext:junit:$runner")
     androidTestImplementation("androidx.test.espresso:espresso-core:$espresso_core")
@@ -258,7 +260,7 @@ dependencies {
     // ProcessLifecycleOwner provides a lifecycle for the whole application process.
     implementation("androidx.lifecycle:lifecycle-process:$lifecycle")
     // Annotation processor (if using Java8, use the following instead of lifecycle-compiler).
-    implementation("androidx.lifecycle:lifecycle-common-java8:$lifecycle")
+    implementation("androidx.lifecycle:lifecycle-common:$lifecycle")
 }
 // NOTE Used for Dagger Hilt.
 kapt {

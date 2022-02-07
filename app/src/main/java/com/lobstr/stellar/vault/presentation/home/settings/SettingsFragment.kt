@@ -202,10 +202,7 @@ class SettingsFragment : BaseFragment(), SettingsView, View.OnClickListener,
     }
 
     override fun setupSignersCount(signersCount: Int) {
-        val message = String.format(
-            getString(if (signersCount == 1) R.string.text_settings_signer else R.string.text_settings_signers),
-            signersCount
-        )
+        val message = getString(if (signersCount == 1) R.string.text_settings_signer else R.string.text_settings_signers, signersCount)
         val spannedText = SpannableString(message)
         val startPosition = message.indexOf(signersCount.toString())
         val endPosition = startPosition + signersCount.toString().length
@@ -362,8 +359,7 @@ class SettingsFragment : BaseFragment(), SettingsView, View.OnClickListener,
     }
 
     override fun setupPolicyYear(id: Int) {
-        binding.tvCurrentPolicyDate.text =
-            String.format(getString(id), Calendar.getInstance().get(Calendar.YEAR))
+        binding.tvCurrentPolicyDate.text = getString(id, Calendar.getInstance().get(Calendar.YEAR))
     }
 
     override fun onPositiveBtnClick(tag: String?, dialogInterface: DialogInterface) {

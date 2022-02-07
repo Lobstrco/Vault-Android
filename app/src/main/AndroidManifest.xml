@@ -27,7 +27,9 @@
             android:label="@string/app_name"
             android:roundIcon="@mipmap/ic_launcher_round"
             android:supportsRtl="true"
-            android:theme="@style/AppTheme">
+            android:theme="@style/AppTheme"
+            android:fullBackupContent="false"
+            android:dataExtractionRules="@xml/data_extraction_rules">
 
         <service
                 android:name=".presentation.fcm.LVFirebaseMessagingService"
@@ -41,6 +43,7 @@
         <activity
                 android:name=".presentation.splash.SplashActivity"
                 android:launchMode="singleTop"
+                android:exported="true"
                 android:screenOrientation="portrait"
                 android:theme="@style/SplashTheme">
             <intent-filter>
@@ -79,7 +82,8 @@
                 android:name=".presentation.tangem.TangemCreateWalletActivity"
                 android:launchMode="singleTop"
                 android:screenOrientation="portrait"
-                android:windowSoftInputMode="adjustResize|stateAlwaysHidden">
+                android:windowSoftInputMode="adjustResize|stateAlwaysHidden"
+                android:exported="false">
             <intent-filter>
                 <action android:name="android.nfc.action.TECH_DISCOVERED" />
                 <category android:name="android.intent.category.DEFAULT" />

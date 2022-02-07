@@ -13,7 +13,7 @@ data class AllowTrustOperation(
     val authorize: Boolean
 ) : Operation(sourceAccount), Parcelable {
 
-    override fun getFields(context: Context): MutableList<OperationField> {
+    override fun getFields(context: Context, amountFormatter: (value: String) -> String): MutableList<OperationField> {
         val fields: MutableList<OperationField> = mutableListOf()
         if (trustor.isNotEmpty()) fields.add(OperationField(context.getString(R.string.op_field_trustor), trustor, trustor))
         if (assetCode.isNotEmpty()) fields.add(OperationField(context.getString(R.string.op_field_asset_code), assetCode))

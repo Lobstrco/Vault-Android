@@ -18,15 +18,15 @@ data class CreatePassiveSellOfferOperation(
     val price: String
 ) : Operation(sourceAccount), Parcelable {
 
-    override fun getFields(context: Context): MutableList<OperationField> {
+    override fun getFields(context: Context, amountFormatter: (value: String) -> String): MutableList<OperationField> {
         val fields: MutableList<OperationField> = mutableListOf()
         fields.add(OperationField(context.getString(R.string.op_field_selling), selling.assetCode, selling))
         if (selling.assetIssuer != null) fields.add(OperationField(context.getString(R.string.op_field_asset_issuer), selling.assetIssuer, selling.assetIssuer))
         fields.add(OperationField(context.getString(R.string.op_field_buying), buying.assetCode, buying))
         if (buying.assetIssuer != null) fields.add(OperationField(context.getString(R.string.op_field_asset_issuer), buying.assetIssuer, buying.assetIssuer))
-        fields.add(OperationField(context.getString(R.string.op_field_amount), amount))
-        fields.add(OperationField(context.getString(R.string.op_field_price), price))
-        fields.add(OperationField(context.getString(R.string.op_field_total), BigDecimal(amount).multiply(BigDecimal(price)).stripTrailingZeros().toPlainString()))
+        fields.add(OperationField(context.getString(R.string.op_field_amount), amountFormatter(amount)))
+        fields.add(OperationField(context.getString(R.string.op_field_price), amountFormatter(price)))
+        fields.add(OperationField(context.getString(R.string.op_field_total), amountFormatter(BigDecimal(amount).multiply(BigDecimal(price)).stripTrailingZeros().toPlainString())))
 
         return fields
     }

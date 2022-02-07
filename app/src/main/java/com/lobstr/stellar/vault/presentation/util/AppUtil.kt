@@ -9,6 +9,7 @@ import android.nfc.NfcAdapter
 import android.os.Build
 import android.os.VibrationEffect
 import android.os.Vibrator
+import android.os.VibratorManager
 import android.util.DisplayMetrics
 import android.util.Log
 import android.view.View
@@ -195,16 +196,23 @@ object AppUtil {
     }
 
     fun vibrate(context: Context, pattern: LongArray) {
-        val vibrator =
-            context.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator? ?: return
+        val vibrator  = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            val vibratorManager =  context.getSystemService(Context.VIBRATOR_MANAGER_SERVICE) as? VibratorManager
+            vibratorManager?.defaultVibrator
+        } else {
+            (context.getSystemService(Context.VIBRATOR_SERVICE) as? Vibrator)
+        }
 
-        if (!vibrator.hasVibrator()) {
+        if (vibrator == null || !vibrator.hasVibrator()) {
             return
         }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             vibrator.vibrate(
-                VibrationEffect.createWaveform(pattern, VibrationEffect.DEFAULT_AMPLITUDE)
+                VibrationEffect.createWaveform(
+                    pattern,
+                    VibrationEffect.DEFAULT_AMPLITUDE
+                )
             )
         } else {
             @Suppress("DEPRECATION")
@@ -214,6 +222,9 @@ object AppUtil {
 
     fun getString(@StringRes resId: Int): String =
         getAppContext().getString(resId)
+
+    fun getString(@StringRes resId: Int, vararg formatArgs: Any): String =
+        getAppContext().getString(resId, *formatArgs)
 
     fun getAppContext(): Context = LVApplication.appContext
 

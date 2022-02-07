@@ -17,15 +17,15 @@ data class PathPaymentStrictReceiveOperation(
     val path: List<Asset>?
 ) : Operation(sourceAccount), Parcelable {
 
-    override fun getFields(context: Context): MutableList<OperationField> {
+    override fun getFields(context: Context, amountFormatter: (value: String) -> String): MutableList<OperationField> {
         val fields: MutableList<OperationField> = mutableListOf()
         if (destination.isNotEmpty()) fields.add(OperationField(context.getString(R.string.op_field_destination), destination, destination))
         fields.add(OperationField(context.getString(R.string.op_field_send_asset), sendAsset.assetCode, sendAsset))
         if (sendAsset.assetIssuer != null) fields.add(OperationField(context.getString(R.string.op_field_asset_issuer), sendAsset.assetIssuer, sendAsset.assetIssuer))
-        fields.add(OperationField(context.getString(R.string.op_field_send_max), sendMax))
+        fields.add(OperationField(context.getString(R.string.op_field_send_max), amountFormatter(sendMax)))
         fields.add(OperationField(context.getString(R.string.op_field_dest_asset), destAsset.assetCode, destAsset))
         if (destAsset.assetIssuer != null) fields.add(OperationField(context.getString(R.string.op_field_asset_issuer), destAsset.assetIssuer, destAsset.assetIssuer))
-        fields.add(OperationField(context.getString(R.string.op_filed_dest_amount), destAmount))
+        fields.add(OperationField(context.getString(R.string.op_filed_dest_amount), amountFormatter(destAmount)))
 
         if (!path.isNullOrEmpty()) fields.add(OperationField(context.getString(R.string.op_field_path), path.joinToString(separator = " ") { it.assetCode }, if(path.size == 1) path.first() else null))
 

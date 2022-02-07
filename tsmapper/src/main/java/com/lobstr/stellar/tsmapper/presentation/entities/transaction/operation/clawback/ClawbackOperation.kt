@@ -16,12 +16,12 @@ data class ClawbackOperation(
     val amount: String
     ) : Operation(sourceAccount), Parcelable {
 
-    override fun getFields(context: Context): MutableList<OperationField> {
+    override fun getFields(context: Context, amountFormatter: (value: String) -> String): MutableList<OperationField> {
         val fields: MutableList<OperationField> = mutableListOf()
         fields.add(OperationField(context.getString(R.string.op_field_from), from, from))
         fields.add(OperationField(context.getString(R.string.op_field_asset), asset.assetCode, asset))
         if (asset.assetIssuer != null) fields.add(OperationField(context.getString(R.string.op_field_asset_issuer), asset.assetIssuer, asset.assetIssuer))
-        fields.add(OperationField(context.getString(R.string.op_field_amount), amount))
+        fields.add(OperationField(context.getString(R.string.op_field_amount), amountFormatter(amount)))
 
         return fields
     }

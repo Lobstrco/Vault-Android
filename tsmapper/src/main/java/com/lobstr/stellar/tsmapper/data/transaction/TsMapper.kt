@@ -183,6 +183,7 @@ class TsMapper(
         }
 
         return Transaction(
+            targetTx.fee,
             targetTx.toEnvelopeXdrBase64(),
             targetTx.sourceAccount,
             mapMemo(targetTx.memo),
@@ -266,6 +267,7 @@ class TsMapper(
                 (operation as org.stellar.sdk.Operation).sourceAccount,
                 mapAsset(operation.selling),
                 mapAsset(operation.buying),
+                operation.amount,
                 BigDecimal(operation.price).stripTrailingZeros().toPlainString(),
                 operation.offerId
             )
@@ -282,14 +284,26 @@ class TsMapper(
     }
 
     private fun mapManageBuyOfferOperation(operation: org.stellar.sdk.ManageBuyOfferOperation): ManageBuyOfferOperation {
-        return ManageBuyOfferOperation(
-            (operation as org.stellar.sdk.Operation).sourceAccount,
-            mapAsset(operation.selling),
-            mapAsset(operation.buying),
-            operation.amount,
-            BigDecimal(operation.price).stripTrailingZeros().toPlainString(),
-            operation.offerId
-        )
+        // Determine buy offer operation type: BuyOfferOperation or CancelBuyOfferOperation.
+        return if (operation.amount.isEmpty() || operation.amount == "0") {
+            CancelBuyOfferOperation(
+                (operation as org.stellar.sdk.Operation).sourceAccount,
+                mapAsset(operation.selling),
+                mapAsset(operation.buying),
+                operation.amount,
+                BigDecimal(operation.price).stripTrailingZeros().toPlainString(),
+                operation.offerId
+            )
+        } else {
+            BuyOfferOperation(
+                (operation as org.stellar.sdk.Operation).sourceAccount,
+                mapAsset(operation.selling),
+                mapAsset(operation.buying),
+                operation.amount,
+                BigDecimal(operation.price).stripTrailingZeros().toPlainString(),
+                operation.offerId
+            )
+        }
     }
 
     private fun mapCreatePassiveSellOfferOperation(operation: org.stellar.sdk.CreatePassiveSellOfferOperation): CreatePassiveSellOfferOperation {

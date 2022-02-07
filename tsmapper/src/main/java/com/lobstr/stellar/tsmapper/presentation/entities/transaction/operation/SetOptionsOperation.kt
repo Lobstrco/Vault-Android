@@ -20,7 +20,7 @@ data class SetOptionsOperation(
     val signerPublicKey: String?
 ) : Operation(sourceAccount), Parcelable {
 
-    override fun getFields(context: Context): MutableList<OperationField> {
+    override fun getFields(context: Context, amountFormatter: (value: String) -> String): MutableList<OperationField> {
         val fields: MutableList<OperationField> = mutableListOf()
         if (!inflationDestination.isNullOrEmpty()) fields.add(OperationField(context.getString(R.string.op_field_inflation_destination), inflationDestination, inflationDestination))
         if (!homeDomain.isNullOrEmpty()) fields.add(OperationField(context.getString(R.string.op_field_home_domain), homeDomain))

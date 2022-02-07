@@ -145,29 +145,25 @@ object SupportManager {
         )
     }
 
-    private fun createZendeskDeviceInfoTag(context: Context = AppUtil.getAppContext()) =
-        String.format(
-            AppUtil.getString(R.string.zd_info),
-            Build.VERSION.RELEASE, BuildConfig.VERSION_NAME,
-            AppUtil.getAppVersionCode(context),
-            Build.DEVICE, Build.MODEL, Build.BRAND
-        )
-
-    private fun createZendeskUserInfoTag(userId: String? = "not provided") = String.format(
-        AppUtil.getString(R.string.zd_user_id),
-        userId ?: "not provided"
+    private fun createZendeskDeviceInfoTag(context: Context = AppUtil.getAppContext()) = AppUtil.getString(
+        R.string.zd_info,
+        Build.VERSION.RELEASE, BuildConfig.VERSION_NAME,
+        AppUtil.getAppVersionCode(context),
+        Build.DEVICE, Build.MODEL, Build.BRAND
     )
 
-    fun createSupportMailSubject(context: Context = AppUtil.getAppContext()) = String.format(
-        AppUtil.getString(R.string.text_mail_support_subject),
-        BuildConfig.VERSION_NAME, AppUtil.getAppVersionCode(context)
+    private fun createZendeskUserInfoTag(userId: String? = "not provided") = AppUtil.getString(
+        R.string.zd_user_id, userId ?: "not provided"
+    )
+
+    fun createSupportMailSubject(context: Context = AppUtil.getAppContext()) = AppUtil.getString(
+        R.string.text_mail_support_subject, BuildConfig.VERSION_NAME, AppUtil.getAppVersionCode(context)
     )
 
     fun createSupportMailBody(
         context: Context = AppUtil.getAppContext(),
         userId: String? = "not provided"
-    ) = String.format(
-        AppUtil.getString(R.string.text_mail_support_body),
+    ) = AppUtil.getString(R.string.text_mail_support_body,
         BuildConfig.VERSION_NAME, AppUtil.getAppVersionCode(context),
         userId ?: "not provided",
         Build.BRAND,

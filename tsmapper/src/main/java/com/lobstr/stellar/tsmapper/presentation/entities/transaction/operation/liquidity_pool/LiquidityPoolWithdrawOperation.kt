@@ -16,12 +16,12 @@ class LiquidityPoolWithdrawOperation(
     val minAmountB: String
 ) : Operation(sourceAccount), Parcelable {
 
-    override fun getFields(context: Context): MutableList<OperationField> {
+    override fun getFields(context: Context, amountFormatter: (value: String) -> String): MutableList<OperationField> {
         val fields: MutableList<OperationField> = mutableListOf()
         fields.add(OperationField(context.getString(R.string.op_field_liquidity_pool_id), liquidityPoolID))
-        fields.add(OperationField(context.getString(R.string.op_field_amount), amount))
-        fields.add(OperationField(context.getString(R.string.op_field_min_amount_a), minAmountA))
-        fields.add(OperationField(context.getString(R.string.op_field_min_amount_b), minAmountB))
+        fields.add(OperationField(context.getString(R.string.op_field_amount), amountFormatter(amount)))
+        fields.add(OperationField(context.getString(R.string.op_field_min_amount_a), amountFormatter(minAmountA)))
+        fields.add(OperationField(context.getString(R.string.op_field_min_amount_b), amountFormatter(minAmountB)))
 
         return fields
     }

@@ -12,7 +12,7 @@ data class ManageDataOperation(
     val value: ByteArray?
 ) : Operation(sourceAccount), Parcelable {
 
-    override fun getFields(context: Context): MutableList<OperationField> {
+    override fun getFields(context: Context, amountFormatter: (value: String) -> String): MutableList<OperationField> {
         val fields: MutableList<OperationField> = mutableListOf()
         fields.add(OperationField(context.getString(R.string.op_filed_name), name))
         value?.let {

@@ -14,7 +14,7 @@ data class RevokeDataSponsorshipOperation(
     val dataName: String
 ) : Operation(sourceAccount), Parcelable {
 
-    override fun getFields(context: Context): MutableList<OperationField> {
+    override fun getFields(context: Context, amountFormatter: (value: String) -> String): MutableList<OperationField> {
         val fields: MutableList<OperationField> = mutableListOf()
         fields.add(OperationField(context.getString(R.string.op_field_account_id), accountId, accountId))
         fields.add(OperationField(context.getString(R.string.op_field_data_name), dataName))

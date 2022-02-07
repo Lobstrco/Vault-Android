@@ -11,7 +11,7 @@ data class EndSponsoringFutureReservesOperation(
     override val sourceAccount: String?
 ) : Operation(sourceAccount), Parcelable {
 
-    override fun getFields(context: Context): MutableList<OperationField> {
-        return super.getFields(context)
+    override fun getFields(context: Context, amountFormatter: (value: String) -> String): MutableList<OperationField> {
+        return super.getFields(context, amountFormatter)
     }
 }

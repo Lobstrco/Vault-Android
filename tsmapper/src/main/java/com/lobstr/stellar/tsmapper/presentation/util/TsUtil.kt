@@ -9,11 +9,11 @@ import com.lobstr.stellar.tsmapper.presentation.entities.transaction.operation.c
 import com.lobstr.stellar.tsmapper.presentation.entities.transaction.operation.clawback.ClawbackOperation
 import com.lobstr.stellar.tsmapper.presentation.entities.transaction.operation.liquidity_pool.LiquidityPoolDepositOperation
 import com.lobstr.stellar.tsmapper.presentation.entities.transaction.operation.liquidity_pool.LiquidityPoolWithdrawOperation
-import com.lobstr.stellar.tsmapper.presentation.entities.transaction.operation.offer.CancelSellOfferOperation
-import com.lobstr.stellar.tsmapper.presentation.entities.transaction.operation.offer.CreatePassiveSellOfferOperation
-import com.lobstr.stellar.tsmapper.presentation.entities.transaction.operation.offer.ManageBuyOfferOperation
-import com.lobstr.stellar.tsmapper.presentation.entities.transaction.operation.offer.SellOfferOperation
+import com.lobstr.stellar.tsmapper.presentation.entities.transaction.operation.offer.*
 import com.lobstr.stellar.tsmapper.presentation.entities.transaction.operation.sponsoring.*
+import java.math.BigDecimal
+import java.text.DecimalFormat
+import java.text.NumberFormat
 import java.util.*
 
 
@@ -31,7 +31,8 @@ object TsUtil {
             is PathPaymentStrictReceiveOperation -> R.string.text_operation_name_path_payment_strict_receive
             is SellOfferOperation -> R.string.text_operation_name_sell_offer
             is CancelSellOfferOperation -> R.string.text_operation_name_cancel_offer
-            is ManageBuyOfferOperation -> R.string.text_operation_name_manage_buy_offer
+            is BuyOfferOperation -> R.string.text_operation_name_manage_buy_offer
+            is CancelBuyOfferOperation -> R.string.text_operation_name_cancel_offer
             is CreatePassiveSellOfferOperation -> R.string.text_operation_name_create_passive_sell_offer
             is SetOptionsOperation -> R.string.text_operation_name_set_options
             is ChangeTrustOperation -> R.string.text_operation_name_change_trust
@@ -63,5 +64,48 @@ object TsUtil {
         return if (str.isNullOrEmpty() || count >= (str.length / 2 - 1)) {
             str
         } else str.substring(0, count) + "…" + str.substring(str.length - count)
+    }
+
+    /**
+     * Get Amount representation for the provided String value.
+     * @param minFractionDigits Min fraction digits. -1 - use locale currency rule (.xx).
+     * @return Formatted amount or original 'number' value in case exception or empty string.
+     */
+    fun getFormattedAmount(number: String, locale: Locale = Locale.US, minFractionDigits: Int = 0, maxFractionDigits: Int = 12): String {
+        return try {
+            number.trim().let { if (it.isNotEmpty()) getCurrencyFormatInstance(locale, minFractionDigits, maxFractionDigits).format(BigDecimal(it)).trim() else number }
+        } catch (exc: Exception) {
+            number
+        }
+    }
+
+    fun getAmountRepresentationFromStr(number: String): String {
+        return getFormattedAmount(number)
+    }
+
+    /**
+     * Method for parsing formatted string (1.000.000,50 - 1000000.5)
+     * @param number String representation of the number. Can be usual number like 1000.50 for avoiding wrong number parsing.
+     */
+    fun parseFormattedAmount(number: String, locale: Locale = Locale.US, minFractionDigits: Int = 0, maxFractionDigits: Int = 12): String {
+        val formatInstance =  getCurrencyFormatInstance(locale, minFractionDigits, maxFractionDigits)
+
+        return try {
+            number.replace(formatInstance.decimalFormatSymbols.groupingSeparator.toString(), "").replace(formatInstance.decimalFormatSymbols.decimalSeparator.toString(), ".").replace(formatInstance.decimalFormatSymbols.currencySymbol, "").trim()
+        } catch (exc: Exception) {
+            "0"
+        }
+    }
+
+    /**
+     * Get Currency Format Instance.
+     * @param minFractionDigits Min fraction digits. -1 - use locale currency rule (.xx).
+     */
+    private fun getCurrencyFormatInstance(locale: Locale = Locale.US, minFractionDigits: Int = 0, maxFractionDigits: Int = 12): DecimalFormat {
+        return (NumberFormat.getCurrencyInstance(locale) as DecimalFormat).apply {
+            if(minFractionDigits != -1) minimumFractionDigits = minFractionDigits
+            maximumFractionDigits = maxFractionDigits
+            decimalFormatSymbols = decimalFormatSymbols.apply { currencySymbol = "" }
+        }
     }
 }

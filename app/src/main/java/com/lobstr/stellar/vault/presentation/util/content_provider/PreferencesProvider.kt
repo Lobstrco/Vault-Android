@@ -26,7 +26,7 @@ class PreferencesProvider : ContentProvider() {
     private val uriMatcher = UriMatcher(UriMatcher.NO_MATCH)
 
     override fun onCreate(): Boolean {
-        prefsUtil = PrefsUtil(PreferenceManager.getDefaultSharedPreferences(context))
+        prefsUtil = PrefsUtil(PreferenceManager.getDefaultSharedPreferences(context!!))
         // See authority in product flavor resValue.
         uriMatcher.addURI(context?.getString(R.string.authority), PUBLIC_KEY_PATH, PUBLIC_KEY_CODE)
         return true

@@ -6,19 +6,23 @@ import com.lobstr.stellar.tsmapper.R
 import com.lobstr.stellar.tsmapper.presentation.entities.transaction.asset.Asset
 import com.lobstr.stellar.tsmapper.presentation.entities.transaction.asset.LiquidityPoolShareChangeTrustAsset
 import com.lobstr.stellar.tsmapper.presentation.entities.transaction.asset.LiquidityPoolShareTrustLineAsset
+import com.lobstr.stellar.tsmapper.presentation.util.TsUtil.getAmountRepresentationFromStr
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
 open class Operation(open val sourceAccount: String?) : Parcelable {
 
-    open fun getFields(context: Context): MutableList<OperationField> = mutableListOf()
+    /**
+     * @param amountFormatter Formatter for the Amount data representation.
+     */
+    open fun getFields(context: Context, amountFormatter: (value: String) -> String = ::getAmountRepresentationFromStr): MutableList<OperationField> = mutableListOf()
 
     fun applyOperationSourceAccountTo(context: Context, fields: MutableList<OperationField>): MutableList<OperationField> {
         if(!sourceAccount.isNullOrEmpty()) fields.add(OperationField(context.getString(R.string.op_field_source_account), sourceAccount, sourceAccount))
         return fields
     }
 
-    fun mapAssetFields(context: Context, fields: MutableList<OperationField>, asset: Asset): MutableList<OperationField>  {
+    fun mapAssetFields(context: Context, fields: MutableList<OperationField>, asset: Asset, amountFormatter: (value: String) -> String): MutableList<OperationField>  {
         when (asset) {
             is LiquidityPoolShareChangeTrustAsset -> {
                 if (asset.liquidityPoolID != null) fields.add(OperationField(context.getString(R.string.op_field_liquidity_pool_id), asset.liquidityPoolID))
@@ -26,7 +30,7 @@ open class Operation(open val sourceAccount: String?) : Parcelable {
                 if (asset.assetA.assetIssuer != null) fields.add(OperationField(context.getString(R.string.op_field_asset_a_issuer), asset.assetA.assetIssuer, asset.assetA.assetIssuer))
                 fields.add(OperationField(context.getString(R.string.op_field_asset_b), asset.assetB.assetCode, asset))
                 if (asset.assetB.assetIssuer != null) fields.add(OperationField(context.getString(R.string.op_field_asset_b_issuer), asset.assetB.assetIssuer, asset.assetB.assetIssuer))
-                fields.add(OperationField(context.getString(R.string.op_field_fee), asset.fee.toString()))
+                fields.add(OperationField(context.getString(R.string.op_field_fee), amountFormatter(asset.fee.toString())))
             }
             is LiquidityPoolShareTrustLineAsset -> {
                 fields.add(OperationField(context.getString(R.string.op_field_liquidity_pool_id), asset.liquidityPoolID))

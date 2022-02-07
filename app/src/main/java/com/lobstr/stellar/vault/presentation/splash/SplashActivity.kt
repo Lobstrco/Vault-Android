@@ -81,7 +81,7 @@ class SplashActivity : BaseMvpAppCompatActivity(), SplashView,
     override fun showFlavorDialog(flavor: String) {
         AlertDialogFragment.Builder(false)
             .setCancelable(false)
-            .setMessage(String.format(getString(R.string.msg_flavor_dialog), flavor))
+            .setMessage(getString(R.string.msg_flavor_dialog, flavor))
             .setPositiveBtnText(R.string.text_btn_ok)
             .create()
             .show(

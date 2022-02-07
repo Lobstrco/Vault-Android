@@ -81,10 +81,7 @@ class TransactionViewHolder(private val binding: AdapterItemTransactionBinding, 
                 else -> if (transaction.operations.size == 1) {
                     context.getString(TsUtil.getTransactionOperationName(transaction.operations[0]))
                 } else {
-                    String.format(
-                        context.getString(R.string.text_operation_name_several_operation),
-                        transaction.operations.size
-                    )
+                    context.getString(R.string.text_operation_name_several_operation, transaction.operations.size)
                 }
             }
         } else {

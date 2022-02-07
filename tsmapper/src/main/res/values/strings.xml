@@ -17,7 +17,7 @@
     <string name="text_operation_name_inflation">Inflation</string>
     <string name="text_operation_name_manage_data">Manage Data</string>
     <string name="text_operation_name_bump_sequence">Bump Sequence</string>
-    <string name="text_operation_name_several_operation">%s Operations</string>
+    <string name="text_operation_name_several_operation">%d Operations</string>
     <string name="text_operation_name_begin_sponsoring_future_reserves">Begin Sponsoring Future Reserves</string>
     <string name="text_operation_name_end_sponsoring_future_reserves">End Sponsoring Future Reserves</string>
     <string name="text_operation_name_revoke_account_sponsorship">Revoke Account Sponsorship</string>

@@ -13,10 +13,10 @@ data class ChangeTrustOperation(
     val limit: String
 ) : Operation(sourceAccount), Parcelable {
 
-    override fun getFields(context: Context): MutableList<OperationField> {
+    override fun getFields(context: Context, amountFormatter: (value: String) -> String): MutableList<OperationField> {
         val fields: MutableList<OperationField> = mutableListOf()
-        mapAssetFields(context, fields, asset)
-        fields.add(OperationField(context.getString(R.string.op_field_limit), limit))
+        mapAssetFields(context, fields, asset, amountFormatter)
+        fields.add(OperationField(context.getString(R.string.op_field_limit), amountFormatter(limit)))
 
         return fields
     }

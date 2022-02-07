@@ -131,7 +131,7 @@ class MnemonicsFragment : BaseFragment(),
     }
 
     override fun setupMnemonics(mnemonicItems: List<MnemonicItem>) {
-        binding.tvMnemonicsInstruction.text = String.format(getString(R.string.text_tv_mnemonics_instruction), mnemonicItems.size)
+        binding.tvMnemonicsInstruction.text = getString(R.string.text_tv_mnemonics_instruction, mnemonicItems.size)
         binding.mnemonicContainerView.mMnemonicList = mnemonicItems
         binding.mnemonicContainerView.setupMnemonics()
     }

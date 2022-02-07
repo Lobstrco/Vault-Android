@@ -90,11 +90,12 @@ abstract class BaseActivity : BaseMvpAppCompatActivity(),
         setupToolbar()
 
         nfcAdapter = NfcAdapter.getDefaultAdapter(this)
+        PendingIntent.FLAG_CANCEL_CURRENT
         nfcPendingIntent = PendingIntent.getActivity(
             this,
             0,
             Intent(this, javaClass).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP),
-            0
+            PendingIntent.FLAG_IMMUTABLE
         )
 
         onBackPressedDispatcher.addCallback(this) {

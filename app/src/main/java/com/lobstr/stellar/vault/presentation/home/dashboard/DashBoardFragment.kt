@@ -177,10 +177,7 @@ class DashboardFragment : BaseFragment(), DashboardView, EditAccountDialogFragme
 
     override fun showSignersCount(count: Int) {
 
-        val message = String.format(
-            getString(if (count == 1) R.string.text_settings_signer else R.string.text_settings_signers),
-            count
-        )
+        val message = getString(if (count == 1) R.string.text_settings_signer else R.string.text_settings_signers, count)
         val spannedText = SpannableString(message)
         val startPosition = message.indexOf(count.toString())
         val endPosition = startPosition + count.toString().length

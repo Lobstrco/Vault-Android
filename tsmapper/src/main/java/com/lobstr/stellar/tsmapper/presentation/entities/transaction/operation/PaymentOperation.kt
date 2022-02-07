@@ -13,11 +13,11 @@ data class PaymentOperation(
     val amount: String
 ) : Operation(sourceAccount) {
 
-    override fun getFields(context: Context): MutableList<OperationField> {
+    override fun getFields(context: Context, amountFormatter: (value: String) -> String): MutableList<OperationField> {
         val fields: MutableList<OperationField> = mutableListOf()
         if (destination.isNotEmpty()) fields.add(OperationField(context.getString(R.string.op_field_destination), destination, destination))
         fields.add(OperationField(context.getString(R.string.op_field_asset), asset.assetCode, asset))
-        fields.add(OperationField(context.getString(R.string.op_field_amount), amount))
+        fields.add(OperationField(context.getString(R.string.op_field_amount), amountFormatter(amount)))
         if (asset.assetIssuer != null) fields.add(OperationField(context.getString(R.string.op_field_asset_issuer), asset.assetIssuer, asset.assetIssuer))
 
         return fields
