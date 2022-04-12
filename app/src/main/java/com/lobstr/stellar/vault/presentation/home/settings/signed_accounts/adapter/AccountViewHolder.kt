@@ -10,6 +10,7 @@ import com.lobstr.stellar.vault.databinding.AdapterItemAccountBinding
 import com.lobstr.stellar.vault.presentation.entities.account.Account
 import com.lobstr.stellar.vault.presentation.util.AppUtil
 import com.lobstr.stellar.vault.presentation.util.Constant.Util.PK_TRUNCATE_COUNT
+import com.lobstr.stellar.vault.presentation.util.setSafeOnClickListener
 
 class AccountViewHolder(
     private val binding: AdapterItemAccountBinding,
@@ -54,10 +55,10 @@ class AccountViewHolder(
                 }
             }
 
-        itemView.setOnClickListener {
+        itemView.setSafeOnClickListener {
             val position = this@AccountViewHolder.bindingAdapterPosition
             if (position == RecyclerView.NO_POSITION) {
-                return@setOnClickListener
+                return@setSafeOnClickListener
             }
 
             itemClickListener(account)

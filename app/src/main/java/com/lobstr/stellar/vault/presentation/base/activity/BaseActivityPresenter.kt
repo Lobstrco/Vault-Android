@@ -9,9 +9,9 @@ import com.lobstr.stellar.vault.domain.util.EventProviderModule
 import com.lobstr.stellar.vault.domain.util.event.Update
 import com.lobstr.stellar.vault.domain.util.event.Update.Type.AUTH_EVENT_SUCCESS
 import com.lobstr.stellar.vault.presentation.BasePresenter
-import com.lobstr.stellar.vault.presentation.application.LVApplication
 import com.lobstr.stellar.vault.presentation.app_version.AppVersionLoader
 import com.lobstr.stellar.vault.presentation.app_version.AppVersionLoader.State.REQUIRED
+import com.lobstr.stellar.vault.presentation.application.LVApplication
 import com.lobstr.stellar.vault.presentation.entities.tangem.TangemInfo
 import com.lobstr.stellar.vault.presentation.util.AppUtil
 import com.lobstr.stellar.vault.presentation.util.Constant.Social.STORE_URL
@@ -25,10 +25,16 @@ class BaseActivityPresenter @Inject constructor(
     private val appVersionLoader: AppVersionLoader
 ) : BasePresenter<BaseActivityView>() {
 
+    var userAccount: String? = null
     private var authInProcess = false
 
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
+
+        userAccount?.apply {
+            interactor.changePublicKeyInfo(this)
+        }
+
         registerEventProvider()
     }
 
@@ -190,7 +196,8 @@ class BaseActivityPresenter @Inject constructor(
                 appVersionLoader.checkAppVersionFlow(appVersionInfo)
                     .subscribe({
                         if (it || appVersionLoader.isShowDialogState) {
-                            viewState.showAppUpdateDialog(true,
+                            viewState.showAppUpdateDialog(
+                                true,
                                 AppUtil.getString(if (appVersionLoader.appUpdateState == REQUIRED) R.string.text_app_update_title_required else R.string.text_app_update_title_weak),
                                 AppUtil.getString(if (appVersionLoader.appUpdateState == REQUIRED) R.string.text_app_update_message_required else R.string.text_app_update_message_weak),
                                 AppUtil.getString(R.string.btn_text_app_update),
@@ -204,13 +211,14 @@ class BaseActivityPresenter @Inject constructor(
         } else {
             // Additional check required flag for dialog.
             if (appVersionLoader.isShowDialogState) {
-                viewState.showAppUpdateDialog(true,
+                viewState.showAppUpdateDialog(
+                    true,
                     AppUtil.getString(if (appVersionLoader.appUpdateState == REQUIRED) R.string.text_app_update_title_required else R.string.text_app_update_title_weak),
                     AppUtil.getString(if (appVersionLoader.appUpdateState == REQUIRED) R.string.text_app_update_message_required else R.string.text_app_update_message_weak),
                     AppUtil.getString(R.string.btn_text_app_update),
                     if (appVersionLoader.appUpdateState != REQUIRED) AppUtil.getString(R.string.btn_text_app_update_skip) else null
                 )
-            } else{
+            } else {
                 viewState.showAppUpdateDialog(false)
             }
         }
@@ -231,5 +239,12 @@ class BaseActivityPresenter @Inject constructor(
         // Reset data.
         appVersionLoader.resetAppVersionInfo()
         appVersionLoader.isShowDialogState = false
+    }
+
+    fun onNewIntentCalled(userAccount: String?) {
+        if (!userAccount.isNullOrEmpty() && interactor.getUserPublicKey() != userAccount) {
+            interactor.changePublicKeyInfo(userAccount)
+            viewState.reloadAccountData()
+        }
     }
 }

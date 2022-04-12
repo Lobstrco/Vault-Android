@@ -1,5 +1,6 @@
 package com.lobstr.stellar.vault.presentation.application
 
+import android.app.Application
 import android.content.Context
 import android.content.Intent
 import android.os.Build
@@ -7,7 +8,6 @@ import android.os.StrictMode
 import android.util.Log
 import androidx.hilt.work.HiltWorkerFactory
 import androidx.lifecycle.ProcessLifecycleOwner
-import androidx.multidex.MultiDexApplication
 import androidx.work.Configuration
 import com.google.android.gms.security.ProviderInstaller
 import com.google.firebase.analytics.ktx.analytics
@@ -28,7 +28,7 @@ import java.security.Security
 import javax.inject.Inject
 
 @HiltAndroidApp
-class LVApplication : MultiDexApplication(), Configuration.Provider {
+class LVApplication : Application(), Configuration.Provider {
 
     // ===========================================================
     // Constants

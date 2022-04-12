@@ -13,33 +13,39 @@ import com.lobstr.stellar.vault.presentation.entities.transaction.TransactionIte
 import com.lobstr.stellar.vault.presentation.util.AppUtil
 import io.reactivex.rxjava3.core.Single
 
-
 class FcmRepositoryImpl(
     private val fcmApi: FcmApi,
     private val fcmEntityMapper: FcmEntityMapper,
     private val transactionEntityMapper: TransactionEntityMapper,
     private val accountEntityMapper: AccountEntityMapper,
     private val rxErrorUtils: RxErrorUtils
-) :
-    FcmRepository {
-    override fun fcmDeviceRegistration(token: String, type: String, registrationId: String, active: Boolean): Single<FcmResult> {
-        return fcmApi.fcmDeviceRegistration(token, type, registrationId, active)
-            .onErrorResumeNext { rxErrorUtils.handleSingleRequestHttpError(it) }
-            .map {
-                fcmEntityMapper.transformFcmResponse(it)
-            }
-    }
+) : FcmRepository {
 
-    override fun transformApiAccountResponse(apiAccountStr: String): Account {
-        return accountEntityMapper.transformAccount(AppUtil.convertJsonToPojo(apiAccountStr, ApiAccount::class.java)!!)
-    }
+    override fun fcmDeviceRegistration(
+        token: String,
+        type: String,
+        registrationId: String,
+        active: Boolean,
+        publicKey: String
+    ): Single<FcmResult> = fcmApi.fcmDeviceRegistration(token, type, registrationId, active)
+        .onErrorResumeNext { rxErrorUtils.handleSingleRequestHttpError(it, publicKey = publicKey) }
+        .map {
+            fcmEntityMapper.transformFcmResponse(it)
+        }
 
-    override fun transformApiTransactionResponse(apiTransactionItemStr: String): TransactionItem {
-        return transactionEntityMapper.transformTransactionItem(
+    override fun transformApiAccountResponse(apiAccountStr: String): Account =
+        accountEntityMapper.transformAccount(
+            AppUtil.convertJsonToPojo(
+                apiAccountStr,
+                ApiAccount::class.java
+            )!!
+        )
+
+    override fun transformApiTransactionResponse(apiTransactionItemStr: String): TransactionItem =
+        transactionEntityMapper.transformTransactionItem(
             AppUtil.convertJsonToPojo(
                 apiTransactionItemStr,
                 ApiTransactionItem::class.java
             )!!
         )
-    }
 }

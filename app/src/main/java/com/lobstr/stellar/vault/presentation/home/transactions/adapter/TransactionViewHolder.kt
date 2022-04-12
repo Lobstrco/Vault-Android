@@ -17,6 +17,7 @@ import com.lobstr.stellar.vault.databinding.AdapterItemTransactionBinding
 import com.lobstr.stellar.vault.presentation.entities.transaction.TransactionItem
 import com.lobstr.stellar.vault.presentation.util.AppUtil
 import com.lobstr.stellar.vault.presentation.util.Constant.Util.PK_TRUNCATE_COUNT
+import com.lobstr.stellar.vault.presentation.util.setSafeOnClickListener
 import java.time.ZonedDateTime
 
 class TransactionViewHolder(private val binding: AdapterItemTransactionBinding, private val itemClickListener: (transactionItem: TransactionItem) -> Unit) :
@@ -63,10 +64,10 @@ class TransactionViewHolder(private val binding: AdapterItemTransactionBinding, 
             }
 
         binding.tvTransactionItemOperation.text = getTransactionName(context, item.transaction, item.transaction.transactionType)
-        itemView.setOnClickListener {
+        itemView.setSafeOnClickListener {
             val position = this@TransactionViewHolder.bindingAdapterPosition
             if (position == RecyclerView.NO_POSITION) {
-                return@setOnClickListener
+                return@setSafeOnClickListener
             }
 
             itemClickListener(item)

@@ -1,6 +1,7 @@
 package com.lobstr.stellar.vault.domain.dashboard
 
 import com.lobstr.stellar.vault.domain.account.AccountRepository
+import com.lobstr.stellar.vault.domain.local_data.LocalDataRepository
 import com.lobstr.stellar.vault.domain.transaction.TransactionRepository
 import com.lobstr.stellar.vault.presentation.entities.account.Account
 import com.lobstr.stellar.vault.presentation.entities.transaction.TransactionResult
@@ -12,6 +13,7 @@ import io.reactivex.rxjava3.core.Single
 class DashboardInteractorImpl(
     private val transactionRepository: TransactionRepository,
     private val accountRepository: AccountRepository,
+    private val localDataRepository: LocalDataRepository,
     private val prefsUtil: PrefsUtil
 ) : DashboardInteractor {
 
@@ -27,17 +29,17 @@ class DashboardInteractorImpl(
         return prefsUtil.publicKey
     }
 
+    override fun getUserPublicKeyIndex(): Int {
+        return prefsUtil.getPublicKeyIndex(getUserPublicKey())
+    }
+
     override fun getSignedAccounts(): Single<List<Account>> {
         return accountRepository.getSignedAccounts(AppUtil.getJwtToken(prefsUtil.authToken))
             .doOnSuccess { prefsUtil.accountSignersCount = it.size }
     }
 
-    override fun clearAccountNames() {
-        accountRepository.clearAccountNames()
-    }
-
     override fun getAccountNames(): Map<String, String?> {
-        return accountRepository.getAccountNames()
+        return localDataRepository.getAccountNames()
     }
 
     override fun getSignersCount(): Int {

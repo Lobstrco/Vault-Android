@@ -6,7 +6,6 @@ import com.lobstr.stellar.vault.presentation.entities.account.AppVersion
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Single
 
-
 interface AccountRepository {
 
     fun updateAccountSigners(token: String, account: String): Completable
@@ -20,10 +19,4 @@ interface AccountRepository {
     fun updateAccountConfig(token: String, spamProtectionEnabled: Boolean): Single<AccountConfig>
 
     fun getAppVersion(): Single<AppVersion>
-
-    fun getAccountNames(): MutableMap<String, String?>
-
-    fun saveAccountName(publicKey: String, name: String?)
-
-    fun clearAccountNames()
 }

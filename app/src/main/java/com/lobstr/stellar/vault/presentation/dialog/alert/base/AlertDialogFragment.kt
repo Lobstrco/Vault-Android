@@ -77,6 +77,7 @@ open class AlertDialogFragment : BaseMvpAppCompatDialogFragment() {
         const val APP_UPDATE = "APP_UPDATE"
         const val ACCOUNT_NAME = "ACCOUNT_NAME"
         const val ASSET_INFO = "ASSET_INFO"
+        const val ACCOUNTS = "ACCOUNTS"
     }
 
     object DialogIdentifier {

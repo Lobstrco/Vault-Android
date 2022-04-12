@@ -8,6 +8,7 @@ import com.lobstr.stellar.vault.data.net.VaultAuthApi
 import com.lobstr.stellar.vault.domain.error.RxErrorRepository
 import com.lobstr.stellar.vault.domain.error.RxErrorUtils
 import com.lobstr.stellar.vault.domain.key_store.KeyStoreRepository
+import com.lobstr.stellar.vault.domain.local_data.LocalDataRepository
 import com.lobstr.stellar.vault.presentation.util.Constant
 import com.lobstr.stellar.vault.presentation.util.PrefsUtil
 import io.reactivex.rxjava3.core.Completable
@@ -19,44 +20,67 @@ class RxErrorUtilsImpl(
     private val vaultAuthApi: VaultAuthApi,
     private val rxErrorRepository: RxErrorRepository,
     private val keyStoreRepository: KeyStoreRepository,
+    private val localDataRepository: LocalDataRepository,
     private val prefsUtil: PrefsUtil
 ) : RxErrorUtils {
 
-    override fun <T> handleObservableRequestHttpError(throwable: Throwable, tag: Int): Observable<T> {
+    override fun <T> handleObservableRequestHttpError(
+        throwable: Throwable,
+        tag: Int,
+        publicKey: String?
+    ): Observable<T> {
         val ex = exceptionMapper.transformHttpToDomain(throwable)
 
         if (ex is ExpiredSignatureException) {
-            return refreshObservableAuthentication()
+            return refreshObservableAuthentication(publicKey)
         }
 
         // Token renewal is handled in TokenExpiryAuthenticator. Here we can just logout user.
         return if (ex is UserNotAuthorizedException) {
             when (tag) {
                 Constant.ApiRequestTag.REFRESH_AUTH -> Observable.error(ex)
-                else -> refreshObservableAuthentication()
+                else -> refreshObservableAuthentication(publicKey)
             }
         } else {
             Observable.error(ex)
         }
     }
 
-    private fun <T> refreshObservableAuthentication(): Observable<T> {
+    private fun <T> refreshObservableAuthentication(publicKey: String?): Observable<T> {
         // Throw UserNotAuthorizedException with AUTH_REQUIRED action for non mnemonics case.
-        if(prefsUtil.encryptedPhrases.isNullOrEmpty()){
-            return Observable.error(UserNotAuthorizedException("User Not Authorized", AUTH_REQUIRED))
+        if (prefsUtil.encryptedPhrases.isNullOrEmpty()) {
+            return Observable.error(
+                UserNotAuthorizedException(
+                    "User Not Authorized",
+                    AUTH_REQUIRED
+                )
+            )
         }
-        return vaultAuthApi.getChallenge(prefsUtil.publicKey)
+
+        val key = publicKey ?: prefsUtil.publicKey
+        return vaultAuthApi.getChallenge(key)
             .flatMap { apiGetChallenge ->
-                getPhrases().flatMap { rxErrorRepository.createKeyPair(it.toCharArray(), 0) }
-                    .flatMap { rxErrorRepository.signTransaction(it, apiGetChallenge.transaction!!) }
+                getPhrases().flatMap {
+                    rxErrorRepository.createKeyPair(
+                        it.toCharArray(),
+                        prefsUtil.getPublicKeyIndex(key)
+                    )
+                }
+                    .flatMap {
+                        rxErrorRepository.signTransaction(
+                            it,
+                            apiGetChallenge.transaction!!
+                        )
+                    }
             }
             .flatMap { vaultAuthApi.submitChallenge(it.toEnvelopeXdrBase64()) }
             .doOnSuccess {
                 prefsUtil.authToken = it.token
+                localDataRepository.saveAuthToken(key!!, it.token!!)
                 throw UserNotAuthorizedException("User Not Authorized")
             }
             .toObservable()
-            .onErrorResumeNext { it: Throwable ->
+            .onErrorResumeNext {
                 handleObservableRequestHttpError(
                     it,
                     Constant.ApiRequestTag.REFRESH_AUTH
@@ -65,40 +89,62 @@ class RxErrorUtilsImpl(
             .map { throw DefaultException("") }
     }
 
-    override fun <T> handleSingleRequestHttpError(throwable: Throwable, tag: Int): Single<T> {
+    override fun <T> handleSingleRequestHttpError(
+        throwable: Throwable,
+        tag: Int,
+        publicKey: String?
+    ): Single<T> {
         val ex = exceptionMapper.transformHttpToDomain(throwable)
 
         if (ex is ExpiredSignatureException) {
-            return refreshSingleAuthentication()
+            return refreshSingleAuthentication(publicKey)
         }
 
         // Token renewal is handled in TokenExpiryAuthenticator. Here we can just logout user.
         return if (ex is UserNotAuthorizedException) {
             when (tag) {
                 Constant.ApiRequestTag.REFRESH_AUTH -> Single.error(ex)
-                else -> refreshSingleAuthentication()
+                else -> refreshSingleAuthentication(publicKey)
             }
         } else {
             Single.error(ex)
         }
     }
 
-    private fun <T> refreshSingleAuthentication(): Single<T> {
+    private fun <T> refreshSingleAuthentication(publicKey: String?): Single<T> {
         // Throw UserNotAuthorizedException with AUTH_REQUIRED action for non mnemonics case.
-        if(prefsUtil.encryptedPhrases.isNullOrEmpty()){
+        if (prefsUtil.encryptedPhrases.isNullOrEmpty()) {
             return Single.error(UserNotAuthorizedException("User Not Authorized", AUTH_REQUIRED))
         }
-        return vaultAuthApi.getChallenge(prefsUtil.publicKey)
+
+        val key = publicKey ?: prefsUtil.publicKey
+        return vaultAuthApi.getChallenge(key)
             .flatMap { apiGetChallenge ->
-                getPhrases().flatMap { rxErrorRepository.createKeyPair(it.toCharArray(), 0) }
-                    .flatMap { rxErrorRepository.signTransaction(it, apiGetChallenge.transaction!!) }
+                getPhrases().flatMap {
+                    rxErrorRepository.createKeyPair(
+                        it.toCharArray(),
+                        prefsUtil.getPublicKeyIndex(key)
+                    )
+                }
+                    .flatMap {
+                        rxErrorRepository.signTransaction(
+                            it,
+                            apiGetChallenge.transaction!!
+                        )
+                    }
             }
             .flatMap { vaultAuthApi.submitChallenge(it.toEnvelopeXdrBase64()) }
             .doOnSuccess {
                 prefsUtil.authToken = it.token
+                localDataRepository.saveAuthToken(key!!, it.token!!)
                 throw UserNotAuthorizedException("User Not Authorized")
             }
-            .onErrorResumeNext { handleSingleRequestHttpError(it, Constant.ApiRequestTag.REFRESH_AUTH) }
+            .onErrorResumeNext {
+                handleSingleRequestHttpError(
+                    it,
+                    Constant.ApiRequestTag.REFRESH_AUTH
+                )
+            }
             .map { throw DefaultException("") }
     }
 
@@ -111,37 +157,59 @@ class RxErrorUtilsImpl(
         }
     }
 
-    override fun handleCompletableRequestHttpError(throwable: Throwable, tag: Int): Completable {
+    override fun handleCompletableRequestHttpError(
+        throwable: Throwable,
+        tag: Int,
+        publicKey: String?
+    ): Completable {
         val ex = exceptionMapper.transformHttpToDomain(throwable)
 
         if (ex is ExpiredSignatureException) {
-            return refreshCompletableAuthentication()
+            return refreshCompletableAuthentication(publicKey)
         }
 
         // Token renewal is handled in TokenExpiryAuthenticator. Here we can just logout user.
         return if (ex is UserNotAuthorizedException) {
             when (tag) {
                 Constant.ApiRequestTag.REFRESH_AUTH -> Completable.error(ex)
-                else -> refreshCompletableAuthentication()
+                else -> refreshCompletableAuthentication(publicKey)
             }
         } else {
             Completable.error(ex)
         }
     }
 
-    private fun refreshCompletableAuthentication(): Completable {
+    private fun refreshCompletableAuthentication(publicKey: String?): Completable {
         // Throw UserNotAuthorizedException with AUTH_REQUIRED action for non mnemonics case.
-        if(prefsUtil.encryptedPhrases.isNullOrEmpty()){
-            return Completable.error(UserNotAuthorizedException("User Not Authorized", AUTH_REQUIRED))
+        if (prefsUtil.encryptedPhrases.isNullOrEmpty()) {
+            return Completable.error(
+                UserNotAuthorizedException(
+                    "User Not Authorized",
+                    AUTH_REQUIRED
+                )
+            )
         }
-        return vaultAuthApi.getChallenge(prefsUtil.publicKey)
+
+        val key = publicKey ?: prefsUtil.publicKey
+        return vaultAuthApi.getChallenge(key)
             .flatMap { apiGetChallenge ->
-                getPhrases().flatMap { rxErrorRepository.createKeyPair(it.toCharArray(), 0) }
-                    .flatMap { rxErrorRepository.signTransaction(it, apiGetChallenge.transaction!!) }
+                getPhrases().flatMap {
+                    rxErrorRepository.createKeyPair(
+                        it.toCharArray(),
+                        prefsUtil.getPublicKeyIndex(key)
+                    )
+                }
+                    .flatMap {
+                        rxErrorRepository.signTransaction(
+                            it,
+                            apiGetChallenge.transaction!!
+                        )
+                    }
             }
             .flatMap { vaultAuthApi.submitChallenge(it.toEnvelopeXdrBase64()) }
             .doOnSuccess {
                 prefsUtil.authToken = it.token
+                localDataRepository.saveAuthToken(key!!, it.token!!)
                 throw UserNotAuthorizedException("User Not Authorized")
             }
             .ignoreElement()

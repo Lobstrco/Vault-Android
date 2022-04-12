@@ -60,7 +60,7 @@ class HomeActivity : BaseActivity(), HomeActivityView,
 
         onBackPressedDispatcher.addCallback(this) {
             try {
-                checkBackPress(supportFragmentManager.fragments[binding.vpHome.currentItem])
+                checkBackPress((binding.vpHome.adapter as? HomeViewPagerAdapter)?.getFragment(binding.vpHome.currentItem))
             } catch (exc: IndexOutOfBoundsException) {
                 super.onBackPressed()
             }
@@ -86,9 +86,15 @@ class HomeActivity : BaseActivity(), HomeActivityView,
     }
 
     override fun setupViewPager() {
-        binding.vpHome.offscreenPageLimit = 4
-        binding.vpHome.isUserInputEnabled = false
-        binding.vpHome.adapter = HomeViewPagerAdapter(supportFragmentManager, lifecycle)
+        binding.vpHome.apply {
+            if (adapter == null) {
+                offscreenPageLimit = 4
+                isUserInputEnabled = false
+                adapter = HomeViewPagerAdapter(supportFragmentManager, lifecycle)
+            } else {
+                (adapter as HomeViewPagerAdapter).update()
+            }
+        }
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
@@ -117,7 +123,7 @@ class HomeActivity : BaseActivity(), HomeActivityView,
 
     override fun resetBackStack() {
         try {
-            val currentContainer = supportFragmentManager.fragments[binding.vpHome.currentItem]
+            val currentContainer = (binding.vpHome.adapter as? HomeViewPagerAdapter)?.getFragment(binding.vpHome.currentItem)
 
             if (currentContainer == null) {
                 return
@@ -157,6 +163,10 @@ class HomeActivity : BaseActivity(), HomeActivityView,
     // ===========================================================
     // Methods
     // ===========================================================
+
+    fun accountWasChanged() {
+        mHomePresenter.accountWasChanged()
+    }
 
     // ===========================================================
     // Inner and Anonymous Classes

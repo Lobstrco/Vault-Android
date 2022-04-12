@@ -54,14 +54,19 @@ class ContainerFragment : BaseContainerFragment(),
      * BUNDLE_NAVIGATION_FR - flag for setup main (initial) fragment in container.
      * @see Constant.Navigation
      */
-    private val mPresenter by moxyPresenter { ContainerPresenter(
-        arguments?.getInt(BUNDLE_NAVIGATION_FR)!!,
-        arguments?.getParcelable(Constant.Bundle.BUNDLE_TRANSACTION_ITEM),
-        arguments?.getString(Constant.Bundle.BUNDLE_ENVELOPE_XDR),
-        arguments?.getByte(Constant.Bundle.BUNDLE_TRANSACTION_CONFIRMATION_SUCCESS_STATUS, SUCCESS),
-        arguments?.getString(Constant.Bundle.BUNDLE_ERROR_MESSAGE),
-        arguments?.getInt(Constant.Bundle.BUNDLE_CONFIG, UNDEFINED_VALUE) ?: UNDEFINED_VALUE
-    ) }
+    private val mPresenter by moxyPresenter {
+        ContainerPresenter(
+            arguments?.getInt(BUNDLE_NAVIGATION_FR)!!,
+            arguments?.getParcelable(Constant.Bundle.BUNDLE_TRANSACTION_ITEM),
+            arguments?.getString(Constant.Bundle.BUNDLE_ENVELOPE_XDR),
+            arguments?.getByte(
+                Constant.Bundle.BUNDLE_TRANSACTION_CONFIRMATION_SUCCESS_STATUS,
+                SUCCESS
+            ),
+            arguments?.getString(Constant.Bundle.BUNDLE_ERROR_MESSAGE),
+            arguments?.getInt(Constant.Bundle.BUNDLE_CONFIG, UNDEFINED_VALUE) ?: UNDEFINED_VALUE
+        )
+    }
 
     // ===========================================================
     // Getter & Setter

@@ -5,11 +5,11 @@ plugins {
 }
 
 android {
-    compileSdk = 30
+    compileSdk = 32
 
     defaultConfig {
         minSdk = 16
-        targetSdk = 30
+        targetSdk = 32
     }
     buildTypes {
         getByName("debug") {
@@ -31,6 +31,6 @@ android {
 dependencies {
     implementation(fileTree(mapOf("dir" to "libs", "include" to listOf("*.jar"))))
     implementation("com.github.stellar:java-stellar-sdk:0.31.0")
-    implementation ("com.google.code.gson:gson:2.8.9")
+    implementation ("com.google.code.gson:gson:2.9.0")
     implementation("androidx.annotation:annotation:1.3.0")
 }

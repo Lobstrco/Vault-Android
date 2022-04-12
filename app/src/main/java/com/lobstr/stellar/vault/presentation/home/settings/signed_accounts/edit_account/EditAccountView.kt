@@ -10,7 +10,7 @@ interface EditAccountView : MvpView {
     fun setAccountActionButton(text: String?)
 
     @AddToEndSingle
-    fun showClearAccount(show: Boolean)
+    fun showClearAccountButton(show: Boolean)
 
     @Skip
     fun showSetNickNameFlow(publicKey: String)
@@ -23,4 +23,7 @@ interface EditAccountView : MvpView {
 
     @AddToEndSingle
     fun closeScreen()
+
+    @AddToEndSingle
+    fun showNetworkExplorerButton(show: Boolean)
 }

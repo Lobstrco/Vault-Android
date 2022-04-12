@@ -15,6 +15,7 @@ import com.lobstr.stellar.vault.presentation.fcm.LVFirebaseMessagingService.Fiel
 import com.lobstr.stellar.vault.presentation.fcm.LVFirebaseMessagingService.Field.MESSAGE_BODY
 import com.lobstr.stellar.vault.presentation.fcm.LVFirebaseMessagingService.Field.MESSAGE_TITLE
 import com.lobstr.stellar.vault.presentation.fcm.LVFirebaseMessagingService.Field.TRANSACTION
+import com.lobstr.stellar.vault.presentation.fcm.LVFirebaseMessagingService.Field.USER_ACCOUNT
 import com.lobstr.stellar.vault.presentation.home.HomeActivity
 import com.lobstr.stellar.vault.presentation.util.Constant
 import dagger.hilt.android.AndroidEntryPoint
@@ -40,6 +41,7 @@ class LVFirebaseMessagingService : FirebaseMessagingService() {
         const val EVENT_TYPE = "event_type"
         const val ACCOUNT = "account"
         const val TRANSACTION = "transaction"
+        const val USER_ACCOUNT = "user_account"
     }
 
     object Type {
@@ -74,34 +76,37 @@ class LVFirebaseMessagingService : FirebaseMessagingService() {
             val eventType: String? = data[EVENT_TYPE]
             val messageBody: String? = data[MESSAGE_BODY]
 
+            val userAccount: String? = mFcmHelper.userAccountReceived(data[USER_ACCOUNT])
+
             val notificationsManager = NotificationsManager(this)
 
             when (eventType) {
 
                 Type.SIGNED_NEW_ACCOUNT -> wrapSignedNewAccountMessage(
-                    data[ACCOUNT], messageTitle, messageBody, notificationsManager
+                    data[ACCOUNT], userAccount, messageTitle, messageBody, notificationsManager
                 )
 
                 Type.REMOVED_SIGNER -> wrapRemovedSignerMessage(
-                    data[ACCOUNT], messageTitle, messageBody, notificationsManager
+                    data[ACCOUNT], userAccount, messageTitle, messageBody, notificationsManager
                 )
 
                 Type.ADDED_NEW_TRANSACTION -> wrapAddedNewTransactionMessage(
-                    data[TRANSACTION], messageTitle, messageBody, notificationsManager
+                    data[TRANSACTION], userAccount, messageTitle, messageBody, notificationsManager
                 )
 
                 Type.ADDED_NEW_SIGNATURE -> wrapAddedNewSignatureMessage(
-                    data[TRANSACTION], messageTitle, messageBody, notificationsManager
+                    data[TRANSACTION], userAccount, messageTitle, messageBody, notificationsManager
                 )
 
                 Type.TRANSACTION_SUBMITTED -> wrapTransactionSubmittedMessage(
-                    data[TRANSACTION], messageTitle, messageBody, notificationsManager
+                    data[TRANSACTION], userAccount, messageTitle, messageBody, notificationsManager
                 )
 
                 else -> sendDefaultMessage(
                     Random.nextInt(),
                     NotificationsManager.ChannelId.OTHER,
                     null,
+                    userAccount,
                     messageTitle,
                     messageBody,
                     NotificationsManager.GroupId.OTHER,
@@ -116,19 +121,23 @@ class LVFirebaseMessagingService : FirebaseMessagingService() {
 
     private fun wrapSignedNewAccountMessage(
         jsonStr: String?,
+        userAccount: String?,
         messageTitle: String?,
         messageBody: String?,
         notificationsManager: NotificationsManager
     ) {
         val account = mFcmHelper.signedNewAccount(jsonStr)
-        mEventProviderModule.notificationEventSubject.onNext(
-            Notification(Notification.Type.SIGNED_NEW_ACCOUNT, account)
-        )
+        if (!userAccount.isNullOrEmpty() && mFcmHelper.getCurrentPublicKey() == userAccount) {
+            mEventProviderModule.notificationEventSubject.onNext(
+                Notification(Notification.Type.SIGNED_NEW_ACCOUNT, account)
+            )
+        }
 
         sendDefaultMessage(
             NotificationsManager.NotificationId.SIGNERS_COUNT_CHANGED,
             NotificationsManager.ChannelId.SIGNER_STATUS,
             null,
+            userAccount,
             messageTitle,
             messageBody,
             NotificationsManager.GroupId.SIGNER_STATUS,
@@ -139,19 +148,23 @@ class LVFirebaseMessagingService : FirebaseMessagingService() {
 
     private fun wrapRemovedSignerMessage(
         jsonStr: String?,
+        userAccount: String?,
         messageTitle: String?,
         messageBody: String?,
         notificationsManager: NotificationsManager
     ) {
         val account = mFcmHelper.removedSigner(jsonStr)
-        mEventProviderModule.notificationEventSubject.onNext(
-            Notification(Notification.Type.REMOVED_SIGNER, account)
-        )
+        if (!userAccount.isNullOrEmpty() && mFcmHelper.getCurrentPublicKey() == userAccount) {
+            mEventProviderModule.notificationEventSubject.onNext(
+                Notification(Notification.Type.REMOVED_SIGNER, account)
+            )
+        }
 
         sendDefaultMessage(
             NotificationsManager.NotificationId.SIGNERS_COUNT_CHANGED,
             NotificationsManager.ChannelId.SIGNER_STATUS,
             null,
+            userAccount,
             messageTitle,
             messageBody,
             NotificationsManager.GroupId.SIGNER_STATUS,
@@ -162,16 +175,19 @@ class LVFirebaseMessagingService : FirebaseMessagingService() {
 
     private fun wrapAddedNewTransactionMessage(
         jsonStr: String?,
+        userAccount: String?,
         messageTitle: String?,
         messageBody: String?,
         notificationsManager: NotificationsManager
     ) {
         val transaction = mFcmHelper.addedNewTransaction(jsonStr)
-        mEventProviderModule.notificationEventSubject.onNext(
-            Notification(Notification.Type.ADDED_NEW_TRANSACTION, transaction)
-        )
+        if (!userAccount.isNullOrEmpty() && mFcmHelper.getCurrentPublicKey() == userAccount) {
+            mEventProviderModule.notificationEventSubject.onNext(
+                Notification(Notification.Type.ADDED_NEW_TRANSACTION, transaction)
+            )
+        }
 
-        if (!mFcmHelper.isNotificationsEnabled()) {
+        if (userAccount.isNullOrEmpty() || !mFcmHelper.isNotificationsEnabled(userAccount)) {
             return
         }
 
@@ -185,6 +201,7 @@ class LVFirebaseMessagingService : FirebaseMessagingService() {
             NotificationsManager.GroupName.LV_MAIN,
             // Show transaction details screen after click on notification.
             Intent(this, ContainerActivity::class.java).apply {
+                putExtra(Constant.Extra.EXTRA_USER_ACCOUNT, userAccount)
                 putExtra(
                     Constant.Extra.EXTRA_NAVIGATION_FR,
                     Constant.Navigation.TRANSACTION_DETAILS
@@ -192,6 +209,7 @@ class LVFirebaseMessagingService : FirebaseMessagingService() {
                 putExtra(Constant.Extra.EXTRA_TRANSACTION_ITEM, transaction)
             },
             Intent(this, HomeActivity::class.java).apply {
+                putExtra(Constant.Extra.EXTRA_USER_ACCOUNT, userAccount)
                 addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_CLEAR_TOP)
             }
         )
@@ -199,19 +217,23 @@ class LVFirebaseMessagingService : FirebaseMessagingService() {
 
     private fun wrapAddedNewSignatureMessage(
         jsonStr: String?,
+        userAccount: String?,
         messageTitle: String?,
         messageBody: String?,
         notificationsManager: NotificationsManager
     ) {
         val transaction = mFcmHelper.addedNewSignature(jsonStr)
-        mEventProviderModule.notificationEventSubject.onNext(
-            Notification(Notification.Type.ADDED_NEW_SIGNATURE, transaction)
-        )
+        if (!userAccount.isNullOrEmpty() && mFcmHelper.getCurrentPublicKey() == userAccount) {
+            mEventProviderModule.notificationEventSubject.onNext(
+                Notification(Notification.Type.ADDED_NEW_SIGNATURE, transaction)
+            )
+        }
 
         sendDefaultMessage(
             NotificationsManager.NotificationId.LV_MAIN,
             NotificationsManager.ChannelId.NEW_SIGNATURES,
             null,
+            userAccount,
             messageTitle,
             messageBody,
             NotificationsManager.GroupId.LV_MAIN,
@@ -222,19 +244,23 @@ class LVFirebaseMessagingService : FirebaseMessagingService() {
 
     private fun wrapTransactionSubmittedMessage(
         jsonStr: String?,
+        userAccount: String?,
         messageTitle: String?,
         messageBody: String?,
         notificationsManager: NotificationsManager
     ) {
         val transaction = mFcmHelper.transactionSubmitted(jsonStr)
-        mEventProviderModule.notificationEventSubject.onNext(
-            Notification(Notification.Type.TRANSACTION_SUBMITTED, transaction)
-        )
+        if (!userAccount.isNullOrEmpty() && mFcmHelper.getCurrentPublicKey() == userAccount) {
+            mEventProviderModule.notificationEventSubject.onNext(
+                Notification(Notification.Type.TRANSACTION_SUBMITTED, transaction)
+            )
+        }
 
         sendDefaultMessage(
             NotificationsManager.NotificationId.LV_MAIN,
             NotificationsManager.ChannelId.AUTHORIZED_TRANSACTIONS,
             null,
+            userAccount,
             messageTitle,
             messageBody,
             NotificationsManager.GroupId.LV_MAIN,
@@ -251,6 +277,7 @@ class LVFirebaseMessagingService : FirebaseMessagingService() {
         notificationId: Int,
         channelId: String,
         channelGroupId: String?,
+        userAccount: String?,
         messageTitle: String?,
         messageBody: String?,
         groupId: Int,
@@ -261,7 +288,7 @@ class LVFirebaseMessagingService : FirebaseMessagingService() {
         importance: Int = NotificationManagerCompat.IMPORTANCE_HIGH,
         priority: Int = NotificationCompat.PRIORITY_DEFAULT
     ) {
-        if (!mFcmHelper.isNotificationsEnabled()) {
+        if (userAccount.isNullOrEmpty() || !mFcmHelper.isNotificationsEnabled(userAccount)) {
             return
         }
 
@@ -279,6 +306,52 @@ class LVFirebaseMessagingService : FirebaseMessagingService() {
             groupName,
             notificationIntentClass,
             groupIntentClass,
+            importance,
+            priority
+        )
+    }
+
+    /**
+     * @param importance Importance level for the notification channel (Android 8.0 and higher). Use [NotificationManagerCompat] constants.
+     * @param priority Notification priority (Android 7.1 and lower).
+     */
+    private fun sendDefaultMessage(
+        notificationId: Int,
+        channelId: String,
+        channelGroupId: String?,
+        userAccount: String?,
+        messageTitle: String?,
+        messageBody: String?,
+        groupId: Int,
+        groupName: String,
+        notificationsManager: NotificationsManager,
+        importance: Int = NotificationManagerCompat.IMPORTANCE_HIGH,
+        priority: Int = NotificationCompat.PRIORITY_DEFAULT
+    ) {
+        if (userAccount.isNullOrEmpty() || !mFcmHelper.isNotificationsEnabled(userAccount)) {
+            return
+        }
+
+        if (TextUtils.isEmpty(messageBody)) {
+            return
+        }
+
+        notificationsManager.sendNotification(
+            channelId,
+            channelGroupId,
+            notificationId,
+            messageTitle ?: getString(R.string.app_name),
+            messageBody,
+            groupId,
+            groupName,
+            Intent(this, HomeActivity::class.java).apply {
+                putExtra(Constant.Extra.EXTRA_USER_ACCOUNT, userAccount)
+                addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_CLEAR_TOP)
+            },
+            Intent(this, HomeActivity::class.java).apply {
+                putExtra(Constant.Extra.EXTRA_USER_ACCOUNT, userAccount)
+                addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_CLEAR_TOP)
+            },
             importance,
             priority
         )

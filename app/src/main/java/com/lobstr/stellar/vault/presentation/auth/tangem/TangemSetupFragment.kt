@@ -18,6 +18,7 @@ import com.lobstr.stellar.vault.presentation.tangem.dialog.TangemDialogFragment
 import com.lobstr.stellar.vault.presentation.util.AppUtil
 import com.lobstr.stellar.vault.presentation.util.Constant
 import com.lobstr.stellar.vault.presentation.util.manager.SupportManager
+import com.lobstr.stellar.vault.presentation.util.setSafeOnClickListener
 import com.lobstr.stellar.vault.presentation.vault_auth.VaultAuthActivity
 import dagger.hilt.android.AndroidEntryPoint
 import moxy.ktx.moxyPresenter
@@ -25,8 +26,7 @@ import javax.inject.Inject
 import javax.inject.Provider
 
 @AndroidEntryPoint
-class TangemSetupFragment : BaseFragment(), TangemView, View.OnClickListener,
-    TangemDialogFragment.OnTangemDialogListener {
+class TangemSetupFragment : BaseFragment(), TangemView, TangemDialogFragment.OnTangemDialogListener {
 
     // ===========================================================
     // Constants
@@ -83,9 +83,9 @@ class TangemSetupFragment : BaseFragment(), TangemView, View.OnClickListener,
     }
 
     private fun setListeners() {
-        binding.btnScan.setOnClickListener(this)
-        binding.btnLearnMore.setOnClickListener(this)
-        binding.btnBuyNow.setOnClickListener(this)
+        binding.btnScan.setSafeOnClickListener { mPresenter.scanClicked() }
+        binding.btnLearnMore.setSafeOnClickListener { mPresenter.learnMoreClicked() }
+        binding.btnBuyNow.setSafeOnClickListener { mPresenter.buyNowClicked() }
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -109,14 +109,6 @@ class TangemSetupFragment : BaseFragment(), TangemView, View.OnClickListener,
     // ===========================================================
     // Listeners, methods for/from Interfaces
     // ===========================================================
-
-    override fun onClick(v: View?) {
-        when (v?.id) {
-            binding.btnScan.id -> mPresenter.scanClicked()
-            binding.btnLearnMore.id -> mPresenter.learnMoreClicked()
-            binding.btnBuyNow.id -> mPresenter.buyNowClicked()
-        }
-    }
 
     override fun setupToolbar(color: Int) {
         (activity as? AuthActivity)?.updateToolbar(toolbarColor = color)

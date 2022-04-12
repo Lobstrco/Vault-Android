@@ -1,6 +1,6 @@
 package com.lobstr.stellar.vault.presentation.home
 
-import android.os.Bundle
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.Lifecycle
@@ -33,10 +33,32 @@ class HomeViewPagerAdapter(fm: FragmentManager, lifecycle: Lifecycle) :
     // Fields
     // ===========================================================
 
+    private val mFragments = mutableListOf<Fragment>()
+
     // ===========================================================
     // Constructors
     // ===========================================================
 
+    init {
+        prepareHomeFragments()
+    }
+
+    private fun prepareHomeFragments() {
+        (0 until VIEW_PAGER_COUNT).forEach { position ->
+            mFragments.add(ContainerFragment().apply {
+                arguments = bundleOf(
+                    BUNDLE_NAVIGATION_FR to when (position) {
+                        Position.DASHBOARD -> DASHBOARD
+                        Position.TRANSACTIONS -> TRANSACTIONS
+                        Position.SETTINGS -> SETTINGS
+                        else -> DASHBOARD
+                    }
+                )
+                // Used for setup default user visibility hint.
+                setMenuVisibility(false)
+            })
+        }
+    }
 
     // ===========================================================
     // Getter & Setter
@@ -46,35 +68,26 @@ class HomeViewPagerAdapter(fm: FragmentManager, lifecycle: Lifecycle) :
     // Methods for/from SuperClass/Interfaces
     // ===========================================================
 
-    override fun createFragment(position: Int): Fragment {
-        val bundle = Bundle()
+    override fun createFragment(position: Int): Fragment = mFragments[position]
 
-        when (position) {
-            Position.DASHBOARD -> {
-                bundle.putInt(BUNDLE_NAVIGATION_FR, DASHBOARD)
-            }
+    override fun containsItem(itemId: Long): Boolean =
+        mFragments.any { it.hashCode().toLong() == itemId }
 
-            Position.TRANSACTIONS -> {
-                bundle.putInt(BUNDLE_NAVIGATION_FR, TRANSACTIONS)
-            }
+    override fun getItemCount() = mFragments.size
 
-            Position.SETTINGS -> {
-                bundle.putInt(BUNDLE_NAVIGATION_FR, SETTINGS)
-            }
-        }
-
-        val fragment = ContainerFragment()
-        fragment.arguments = bundle
-        // Used for setup default user visibility hint.
-        fragment.setMenuVisibility(false)
-        return fragment
-    }
-
-    override fun getItemCount() = VIEW_PAGER_COUNT
+    override fun getItemId(position: Int): Long = mFragments[position].hashCode().toLong()
 
     // ===========================================================
     // Methods
     // ===========================================================
+
+    fun getFragment(position: Int) = mFragments.getOrNull(position)
+
+    fun update() {
+        mFragments.clear()
+        prepareHomeFragments()
+        notifyDataSetChanged()
+    }
 
     // ===========================================================
     // Inner and Anonymous Classes

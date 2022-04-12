@@ -9,13 +9,14 @@ import com.lobstr.stellar.vault.databinding.FragmentEditAccountBinding
 import com.lobstr.stellar.vault.presentation.BaseBottomSheetDialog
 import com.lobstr.stellar.vault.presentation.util.AppUtil
 import com.lobstr.stellar.vault.presentation.util.Constant
+import com.lobstr.stellar.vault.presentation.util.setSafeOnClickListener
 import dagger.hilt.android.AndroidEntryPoint
 import moxy.ktx.moxyPresenter
 import javax.inject.Inject
 import javax.inject.Provider
 
 @AndroidEntryPoint
-class EditAccountDialogFragment : BaseBottomSheetDialog(), EditAccountView, View.OnClickListener {
+class EditAccountDialogFragment : BaseBottomSheetDialog(), EditAccountView {
 
     // ===========================================================
     // Constants
@@ -42,7 +43,8 @@ class EditAccountDialogFragment : BaseBottomSheetDialog(), EditAccountView, View
     private val mPresenter by moxyPresenter {
         presenterProvider.get().apply {
             publicKey = arguments?.getString(Constant.Bundle.BUNDLE_PUBLIC_KEY)!!
-            manageAccountName = arguments?.getBoolean(Constant.Bundle.BUNDLE_MANAGE_ACCOUNT_NAME) ?: false
+            manageAccountName =
+                arguments?.getBoolean(Constant.Bundle.BUNDLE_MANAGE_ACCOUNT_NAME) ?: false
         }
     }
 
@@ -68,10 +70,10 @@ class EditAccountDialogFragment : BaseBottomSheetDialog(), EditAccountView, View
     }
 
     private fun setListeners() {
-        binding.btnCopyPublicKey.setOnClickListener(this)
-        binding.btnOpenExplorer.setOnClickListener(this)
-        binding.btnSetNickName.setOnClickListener(this)
-        binding.btnClearNickName.setOnClickListener(this)
+        binding.btnCopyPublicKey.setSafeOnClickListener { mPresenter.copyPublicKeyClicked() }
+        binding.btnOpenExplorer.setSafeOnClickListener { mPresenter.openExplorerClicked() }
+        binding.btnSetNickName.setSafeOnClickListener { mPresenter.setNickNameClicked() }
+        binding.btnClearNickName.setSafeOnClickListener { mPresenter.clearNickNameClicked() }
     }
 
     override fun onDestroyView() {
@@ -83,21 +85,12 @@ class EditAccountDialogFragment : BaseBottomSheetDialog(), EditAccountView, View
     // Listeners, methods for/from Interfaces
     // ===========================================================
 
-    override fun onClick(v: View?) {
-        when (v?.id) {
-            binding.btnCopyPublicKey.id -> mPresenter.copyPublicKeyClicked()
-            binding.btnOpenExplorer.id -> mPresenter.openExplorerClicked()
-            binding.btnSetNickName.id -> mPresenter.setNickNameClicked()
-            binding.btnClearNickName.id -> mPresenter.clearNickNameClicked()
-        }
-    }
-
     override fun setAccountActionButton(text: String?) {
         binding.btnSetNickName.text = text
         binding.btnSetNickName.isVisible = !text.isNullOrEmpty()
     }
 
-    override fun showClearAccount(show: Boolean) {
+    override fun showClearAccountButton(show: Boolean) {
         binding.btnClearNickName.isVisible = show
     }
 
@@ -118,6 +111,10 @@ class EditAccountDialogFragment : BaseBottomSheetDialog(), EditAccountView, View
 
     override fun closeScreen() {
         dismiss()
+    }
+
+    override fun showNetworkExplorerButton(show: Boolean) {
+        binding.btnOpenExplorer.isVisible = show
     }
 
     // ===========================================================

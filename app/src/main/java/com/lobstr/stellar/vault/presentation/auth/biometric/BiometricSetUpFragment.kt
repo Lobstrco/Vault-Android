@@ -10,7 +10,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.annotation.ColorRes
 import androidx.core.content.ContextCompat
-import androidx.core.view.WindowInsetsControllerCompat
+import androidx.core.view.ViewCompat
 import com.lobstr.stellar.vault.R
 import com.lobstr.stellar.vault.databinding.FragmentBiometricSetUpBinding
 import com.lobstr.stellar.vault.presentation.base.activity.BaseActivity
@@ -20,6 +20,7 @@ import com.lobstr.stellar.vault.presentation.pin.PinActivity
 import com.lobstr.stellar.vault.presentation.util.Constant
 import com.lobstr.stellar.vault.presentation.util.biometric.BiometricListener
 import com.lobstr.stellar.vault.presentation.util.biometric.BiometricManager
+import com.lobstr.stellar.vault.presentation.util.setSafeOnClickListener
 import com.lobstr.stellar.vault.presentation.vault_auth.VaultAuthActivity
 import dagger.hilt.android.AndroidEntryPoint
 import moxy.ktx.moxyPresenter
@@ -27,8 +28,7 @@ import javax.inject.Inject
 import javax.inject.Provider
 
 @AndroidEntryPoint
-class BiometricSetUpFragment : BaseFragment(), BiometricSetUpView, BiometricListener,
-    View.OnClickListener {
+class BiometricSetUpFragment : BaseFragment(), BiometricSetUpView, BiometricListener {
 
     // ===========================================================
     // Constants
@@ -86,8 +86,8 @@ class BiometricSetUpFragment : BaseFragment(), BiometricSetUpView, BiometricList
     }
 
     private fun setListeners() {
-        binding.btnTurOn.setOnClickListener(this)
-        binding.btnSkip.setOnClickListener(this)
+        binding.btnTurOn.setSafeOnClickListener { mPresenter.turnOnClicked() }
+        binding.btnSkip.setSafeOnClickListener { mPresenter.skipClicked() }
     }
 
     override fun onBackPressed(): Boolean {
@@ -103,13 +103,6 @@ class BiometricSetUpFragment : BaseFragment(), BiometricSetUpView, BiometricList
     // ===========================================================
     // Listeners, methods for/from Interfaces
     // ===========================================================
-
-    override fun onClick(v: View?) {
-        when (v?.id) {
-            binding.btnTurOn.id -> mPresenter.turnOnClicked()
-            binding.btnSkip.id -> mPresenter.skipClicked()
-        }
-    }
 
     override fun setWindowBackground() {
         (activity as? PinActivity)?.window?.decorView?.setBackgroundColor(
@@ -127,7 +120,7 @@ class BiometricSetUpFragment : BaseFragment(), BiometricSetUpView, BiometricList
     override fun setupNavigationBar(@ColorRes color: Int, light: Boolean) {
         if (Build.VERSION.SDK_INT > Build.VERSION_CODES.O) {
             activity?.window?.navigationBarColor = ContextCompat.getColor(requireContext(), color)
-            WindowInsetsControllerCompat(requireActivity().window, requireActivity().window.decorView).isAppearanceLightNavigationBars = light
+            ViewCompat.getWindowInsetsController(requireActivity().window.decorView)?.isAppearanceLightNavigationBars = light
         }
     }
 

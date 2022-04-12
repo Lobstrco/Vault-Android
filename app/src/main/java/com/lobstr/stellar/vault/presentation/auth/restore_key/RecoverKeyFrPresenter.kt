@@ -8,13 +8,16 @@ import com.lobstr.stellar.vault.presentation.auth.restore_key.entities.RecoveryP
 import com.lobstr.stellar.vault.presentation.util.Constant.Support.RECOVER_ACCOUNT
 import com.lobstr.stellar.vault.presentation.util.Constant.Util.COUNT_MNEMONIC_WORDS_12
 import com.lobstr.stellar.vault.presentation.util.Constant.Util.COUNT_MNEMONIC_WORDS_24
+import com.lobstr.stellar.vault.presentation.util.Constant.Util.PUBLIC_KEY_LIMIT
 import com.soneso.stellarmnemonics.mnemonic.MnemonicException
 import com.soneso.stellarmnemonics.mnemonic.WordList
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.schedulers.Schedulers
 import javax.inject.Inject
 
-class RecoverKeyFrPresenter @Inject constructor(private val interactor: RecoverKeyInteractor) : BasePresenter<RecoverKeyFrView>() {
+class RecoverKeyFrPresenter @Inject constructor(private val interactor: RecoverKeyInteractor) :
+    BasePresenter<RecoverKeyFrView>() {
 
     private lateinit var phrases: String
 
@@ -66,9 +69,23 @@ class RecoverKeyFrPresenter @Inject constructor(private val interactor: RecoverK
 
         for (phrase in phraseArray) {
             if (!availableWords.contains(phrase) && !phrase.isEmpty()) {
-                wordsInfoList.add(RecoveryPhraseInfo(phrase, firstWordIndexPosition, phrase.length, true))
+                wordsInfoList.add(
+                    RecoveryPhraseInfo(
+                        phrase,
+                        firstWordIndexPosition,
+                        phrase.length,
+                        true
+                    )
+                )
             } else {
-                wordsInfoList.add(RecoveryPhraseInfo(phrase, firstWordIndexPosition, phrase.length, false))
+                wordsInfoList.add(
+                    RecoveryPhraseInfo(
+                        phrase,
+                        firstWordIndexPosition,
+                        phrase.length,
+                        false
+                    )
+                )
             }
             firstWordIndexPosition += phrase.length + 1
         }
@@ -79,21 +96,38 @@ class RecoverKeyFrPresenter @Inject constructor(private val interactor: RecoverK
     /**
      * Checking if entered words has minimum 3 symbol.
      */
-    private fun checkSmallWords(phraseArray: List<String>, phrases: String): List<RecoveryPhraseInfo> {
+    private fun checkSmallWords(
+        phraseArray: List<String>,
+        phrases: String
+    ): List<RecoveryPhraseInfo> {
         val incorrectWords: MutableList<RecoveryPhraseInfo> = mutableListOf()
         var firstWordIndexPosition: Int = if (phrases.isEmpty()) 0 else phrases.indexOf(phrases[0])
 
         if (phrases[phrases.length - 1] == ' ') {
             for (phrase in phraseArray) {
                 if (phrase.length < 3 && phrase.isNotEmpty()) {
-                    incorrectWords.add(RecoveryPhraseInfo(phrase, firstWordIndexPosition, phrase.length, true))
+                    incorrectWords.add(
+                        RecoveryPhraseInfo(
+                            phrase,
+                            firstWordIndexPosition,
+                            phrase.length,
+                            true
+                        )
+                    )
                 }
                 firstWordIndexPosition += phrase.length + 1
             }
         } else {
             for ((itemCount, phrase) in phraseArray.withIndex()) {
                 if (phrase.length < 3 && phrase.isNotEmpty() && itemCount != phraseArray.size - 1) {
-                    incorrectWords.add(RecoveryPhraseInfo(phrase, firstWordIndexPosition, phrase.length, true))
+                    incorrectWords.add(
+                        RecoveryPhraseInfo(
+                            phrase,
+                            firstWordIndexPosition,
+                            phrase.length,
+                            true
+                        )
+                    )
                 }
                 firstWordIndexPosition += phrase.length + 1
             }
@@ -136,14 +170,73 @@ class RecoverKeyFrPresenter @Inject constructor(private val interactor: RecoverK
                     viewState.showProgressDialog(true)
                 }
                 .doOnEvent { _: String?, _: Throwable? ->
-                    viewState.showProgressDialog(false)
                 }
                 .subscribe({
-                    viewState.showPinScreen()
+                    createAdditionalPublicKeys()
                 }, { throwable ->
+                    viewState.showProgressDialog(false)
                     if (throwable is MnemonicException) {
                         viewState.showErrorMessage(R.string.text_error_incorrect_mnemonic)
                     }
+                })
+        )
+    }
+
+    private fun createAdditionalPublicKeys() {
+        unsubscribeOnDestroy(
+            Observable.fromIterable(1 until PUBLIC_KEY_LIMIT)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .flatMapSingle { index ->
+                    interactor.createAdditionalPublicKey(phrases.toCharArray(), index)
+                        .map { Pair(index, it) }
+                        .onErrorReturnItem(Pair(index, ""))
+                }
+                .toList()
+                .subscribe({ keyData ->
+                    checkActiveAccounts(keyData.filter { it.second.isNotEmpty() })
+                }, {
+
+                })
+        )
+    }
+
+    private fun checkActiveAccounts(keyList: List<Pair<Int, String>>) {
+        unsubscribeOnDestroy(
+            Observable.fromIterable(keyList)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .flatMapSingle { keyData ->
+                    interactor.checkAccount(keyData.second)
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .map { Pair(keyData.first, it.isNotEmpty()) }
+                        .onErrorReturnItem(Pair(keyData.first, false))
+                }
+                .toList()
+                .subscribe({ result ->
+                    val maxIndex: Int = result.filter { it.second }.let { list ->
+                        var index = 0
+                        list.forEach {
+                            if (it.first > index) index = it.first
+                        }
+                        index
+                    }
+
+                    if (maxIndex > 0) {
+                        (1..maxIndex).forEach { index ->
+                            interactor.savePublicKeyToList(
+                                keyList.find { it.first == index }?.second ?: "",
+                                index
+                            )
+                        }
+                    }
+
+                    viewState.showProgressDialog(false)
+                    viewState.showPinScreen()
+                }, {
+                    viewState.showProgressDialog(false)
+                    viewState.showPinScreen()
                 })
         )
     }

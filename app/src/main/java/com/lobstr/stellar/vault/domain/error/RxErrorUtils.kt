@@ -7,9 +7,21 @@ import io.reactivex.rxjava3.core.Single
 
 interface RxErrorUtils {
 
-    fun <T> handleObservableRequestHttpError(throwable: Throwable, tag: Int = Constant.ApiRequestTag.DEFAULT): Observable<T>
+    fun <T> handleObservableRequestHttpError(
+        throwable: Throwable,
+        tag: Int = Constant.ApiRequestTag.DEFAULT,
+        publicKey: String? = null
+    ): Observable<T>
 
-    fun <T> handleSingleRequestHttpError(throwable: Throwable, tag: Int = Constant.ApiRequestTag.DEFAULT): Single<T>
+    fun <T> handleSingleRequestHttpError(
+        throwable: Throwable,
+        tag: Int = Constant.ApiRequestTag.DEFAULT,
+        publicKey: String? = null
+    ): Single<T>
 
-    fun handleCompletableRequestHttpError(throwable: Throwable, tag: Int = Constant.ApiRequestTag.DEFAULT): Completable
+    fun handleCompletableRequestHttpError(
+        throwable: Throwable,
+        tag: Int = Constant.ApiRequestTag.DEFAULT,
+        publicKey: String? = null
+    ): Completable
 }

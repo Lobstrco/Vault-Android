@@ -73,7 +73,8 @@
         <activity
                 android:name=".presentation.container.activity.ContainerActivity"
                 android:screenOrientation="portrait"
-                android:windowSoftInputMode="adjustResize|stateAlwaysHidden">
+                android:windowSoftInputMode="adjustResize|stateAlwaysHidden"
+                android:parentActivityName="com.lobstr.stellar.vault.presentation.home.HomeActivity">
             <meta-data
                     android:name="android.support.PARENT_ACTIVITY"
                     android:value="com.lobstr.stellar.vault.presentation.home.HomeActivity" />

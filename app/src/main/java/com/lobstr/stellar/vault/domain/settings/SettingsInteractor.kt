@@ -10,7 +10,7 @@ interface SettingsInteractor {
 
     fun clearUserData()
 
-    fun getUserPublicKey(): String?
+    fun getUserPublicKey(): String
 
     fun getSignersCount(): Int
 
@@ -31,8 +31,6 @@ interface SettingsInteractor {
     fun setSpamProtectionEnabled(enabled: Boolean)
 
     fun setNotificationsEnabled(enabled: Boolean)
-
-    fun setTrConfirmationEnabled(enabled: Boolean)
 
     fun getSignedAccounts(): Single<List<Account>>
 

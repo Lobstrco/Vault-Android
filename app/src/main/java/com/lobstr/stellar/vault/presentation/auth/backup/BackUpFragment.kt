@@ -10,9 +10,10 @@ import com.lobstr.stellar.vault.presentation.base.fragment.BaseFragment
 import com.lobstr.stellar.vault.presentation.util.Constant
 import com.lobstr.stellar.vault.presentation.util.manager.FragmentTransactionManager
 import com.lobstr.stellar.vault.presentation.util.manager.SupportManager
+import com.lobstr.stellar.vault.presentation.util.setSafeOnClickListener
 import moxy.ktx.moxyPresenter
 
-class BackUpFragment : BaseFragment(), BackUpView, View.OnClickListener {
+class BackUpFragment : BaseFragment(), BackUpView {
 
     // ===========================================================
     // Constants
@@ -57,7 +58,7 @@ class BackUpFragment : BaseFragment(), BackUpView, View.OnClickListener {
     }
 
     private fun setListeners() {
-        binding.btnNext.setOnClickListener(this)
+        binding.btnNext.setSafeOnClickListener { mPresenter.nextClicked() }
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -81,12 +82,6 @@ class BackUpFragment : BaseFragment(), BackUpView, View.OnClickListener {
     // ===========================================================
     // Listeners, methods for/from Interfaces
     // ===========================================================
-
-    override fun onClick(v: View?) {
-        when (v?.id) {
-            binding.btnNext.id -> mPresenter.nextClicked()
-        }
-    }
 
     override fun showCreateMnemonicsScreen() {
         val bundle = Bundle()

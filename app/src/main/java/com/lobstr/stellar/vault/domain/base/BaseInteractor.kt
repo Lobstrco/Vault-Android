@@ -16,4 +16,6 @@ interface BaseInteractor {
     fun authorizeVault(transaction: String): Single<String>
 
     fun hasEncryptedPin(): Boolean
+
+    fun changePublicKeyInfo(publicKey: String)
 }

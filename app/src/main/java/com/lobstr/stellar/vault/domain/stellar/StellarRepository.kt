@@ -1,5 +1,6 @@
 package com.lobstr.stellar.vault.domain.stellar
 
+import com.lobstr.stellar.vault.presentation.entities.account.Account
 import com.lobstr.stellar.vault.presentation.entities.account.AccountResult
 import com.lobstr.stellar.vault.presentation.entities.mnemonic.MnemonicItem
 import com.tangem.commands.SignResponse
@@ -7,6 +8,7 @@ import io.reactivex.rxjava3.core.Single
 import org.stellar.sdk.AbstractTransaction
 import org.stellar.sdk.KeyPair
 import org.stellar.sdk.Sep10Challenge
+import org.stellar.sdk.requests.RequestBuilder
 import org.stellar.sdk.responses.SubmitTransactionResponse
 
 interface StellarRepository {
@@ -49,4 +51,10 @@ interface StellarRepository {
      * @return String or null in Exception case.
      */
     fun encodeStellarAccountId(data: ByteArray?): String?
+
+    fun getAccountsForSigner(
+        signer: String, cursor: String? = null,
+        order: RequestBuilder.Order = RequestBuilder.Order.ASC,
+        limit: Int? = 1
+    ): Single<List<Account>>
 }

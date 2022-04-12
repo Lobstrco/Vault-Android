@@ -1,6 +1,7 @@
 package com.lobstr.stellar.vault.presentation.dagger.module.signed_account
 
 import com.lobstr.stellar.vault.domain.account.AccountRepository
+import com.lobstr.stellar.vault.domain.local_data.LocalDataRepository
 import com.lobstr.stellar.vault.domain.signed_account.SignedAccountInteractor
 import com.lobstr.stellar.vault.domain.signed_account.SignedAccountInteractorImpl
 import com.lobstr.stellar.vault.presentation.util.PrefsUtil
@@ -15,8 +16,11 @@ object SignedAccountModule {
     @Provides
     fun provideSignedAccountInteractor(
         accountRepository: AccountRepository,
+        localDataRepository: LocalDataRepository,
         prefsUtil: PrefsUtil
-    ): SignedAccountInteractor {
-        return SignedAccountInteractorImpl(accountRepository, prefsUtil)
-    }
+    ): SignedAccountInteractor = SignedAccountInteractorImpl(
+        accountRepository,
+        localDataRepository,
+        prefsUtil
+    )
 }

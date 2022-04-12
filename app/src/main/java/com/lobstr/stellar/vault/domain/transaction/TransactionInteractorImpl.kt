@@ -1,6 +1,7 @@
 package com.lobstr.stellar.vault.domain.transaction
 
 import com.lobstr.stellar.vault.domain.account.AccountRepository
+import com.lobstr.stellar.vault.domain.local_data.LocalDataRepository
 import com.lobstr.stellar.vault.presentation.entities.account.Account
 import com.lobstr.stellar.vault.presentation.entities.transaction.TransactionResult
 import com.lobstr.stellar.vault.presentation.util.AppUtil
@@ -12,11 +13,16 @@ import io.reactivex.rxjava3.core.Single
 class TransactionInteractorImpl(
     private val accountRepository: AccountRepository,
     private val transactionRepository: TransactionRepository,
+    private val localDataRepository: LocalDataRepository,
     private val prefUtil: PrefsUtil
 ) : TransactionInteractor {
 
     override fun getTransactionList(nextPageUrl: String?): Single<TransactionResult> {
-        return transactionRepository.getTransactionList(AppUtil.getJwtToken(prefUtil.authToken), null, nextPageUrl)
+        return transactionRepository.getTransactionList(
+            AppUtil.getJwtToken(prefUtil.authToken),
+            null,
+            nextPageUrl
+        )
     }
 
     override fun getPendingTransactionList(nextPageUrl: String?): Single<TransactionResult> {
@@ -48,6 +54,6 @@ class TransactionInteractorImpl(
     }
 
     override fun getAccountNames(): Map<String, String?> {
-        return accountRepository.getAccountNames()
+        return localDataRepository.getAccountNames()
     }
 }

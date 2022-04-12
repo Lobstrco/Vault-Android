@@ -15,13 +15,14 @@ import com.lobstr.stellar.vault.presentation.home.transactions.details.Transacti
 import com.lobstr.stellar.vault.presentation.util.AppUtil
 import com.lobstr.stellar.vault.presentation.util.Constant
 import com.lobstr.stellar.vault.presentation.util.manager.FragmentTransactionManager
+import com.lobstr.stellar.vault.presentation.util.setSafeOnClickListener
 import dagger.hilt.android.AndroidEntryPoint
 import moxy.ktx.moxyPresenter
 import javax.inject.Inject
 import javax.inject.Provider
 
 @AndroidEntryPoint
-class ImportXdrFragment : BaseFragment(), ImportXdrView, View.OnClickListener {
+class ImportXdrFragment : BaseFragment(), ImportXdrView {
 
     // ===========================================================
     // Constants
@@ -73,7 +74,10 @@ class ImportXdrFragment : BaseFragment(), ImportXdrView, View.OnClickListener {
         binding.clipboardView.setClickListener {
             binding.etImportXdr.setText(it)
         }
-        binding.btnNext.setOnClickListener(this)
+        binding.btnNext.setSafeOnClickListener {
+            AppUtil.closeKeyboard(activity)
+            mPresenter.nextClicked(binding.etImportXdr.text.toString().trim())
+        }
         binding.etImportXdr.doAfterTextChanged { editable ->
             val text = editable?.trim()?.toString()
             val clipBoardData = binding.clipboardView.data
@@ -91,15 +95,6 @@ class ImportXdrFragment : BaseFragment(), ImportXdrView, View.OnClickListener {
     // ===========================================================
     // Listeners, methods for/from Interfaces
     // ===========================================================
-
-    override fun onClick(v: View?) {
-        when (v?.id) {
-            binding.btnNext.id -> {
-                AppUtil.closeKeyboard(activity)
-                mPresenter.nextClicked(binding.etImportXdr.text.toString().trim())
-            }
-        }
-    }
 
     override fun setupToolbarTitle(titleRes: Int) {
         saveActionBarTitle(titleRes)

@@ -9,11 +9,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.lobstr.stellar.vault.R
 import com.lobstr.stellar.vault.databinding.FragmentOperationListBinding
 import com.lobstr.stellar.vault.presentation.base.fragment.BaseFragment
-import com.lobstr.stellar.vault.presentation.entities.transaction.TransactionItem
+import com.lobstr.stellar.vault.presentation.home.transactions.details.TransactionDetailsFragment
 import com.lobstr.stellar.vault.presentation.home.transactions.details.adapter.TransactionOperationAdapter
-import com.lobstr.stellar.vault.presentation.home.transactions.operation.operation_details.OperationDetailsFragment
 import com.lobstr.stellar.vault.presentation.util.Constant
-import com.lobstr.stellar.vault.presentation.util.manager.FragmentTransactionManager
 import moxy.ktx.moxyPresenter
 
 class OperationListFragment : BaseFragment(), OperationListView {
@@ -37,9 +35,12 @@ class OperationListFragment : BaseFragment(), OperationListView {
     // Constructors
     // ===========================================================
 
-    private val mPresenter by moxyPresenter { OperationListPresenter(
-        arguments?.getParcelable(Constant.Bundle.BUNDLE_TRANSACTION_ITEM)!!
-    ) }
+    private val mPresenter by moxyPresenter {
+        OperationListPresenter(
+            requireArguments().getInt(Constant.Bundle.BUNDLE_TRANSACTION_TITLE, R.string.title_toolbar_transaction_details),
+            requireArguments().getIntegerArrayList(Constant.Bundle.BUNDLE_OPERATIONS_LIST)!!
+        )
+    }
 
     // ===========================================================
     // Getter & Setter
@@ -79,19 +80,8 @@ class OperationListFragment : BaseFragment(), OperationListView {
         }
     }
 
-    override fun showOperationDetailsScreen(transactionItem: TransactionItem, position: Int) {
-        val bundle = Bundle()
-        bundle.putParcelable(Constant.Bundle.BUNDLE_TRANSACTION_ITEM, transactionItem)
-        bundle.putInt(Constant.Bundle.BUNDLE_OPERATION_POSITION, position)
-
-        val fragment = requireParentFragment().childFragmentManager.fragmentFactory.instantiate(requireContext().classLoader, OperationDetailsFragment::class.qualifiedName!!)
-        fragment.arguments = bundle
-
-        FragmentTransactionManager.displayFragment(
-            requireParentFragment().childFragmentManager,
-            fragment,
-            R.id.flContainer
-        )
+    override fun showOperationDetailsScreen(position: Int) {
+        (parentFragment as? TransactionDetailsFragment)?.operationDetailsClicked(position)
     }
 
     // ===========================================================

@@ -41,7 +41,8 @@ import javax.inject.Provider
 
 @AndroidEntryPoint
 abstract class BaseActivity : BaseMvpAppCompatActivity(),
-    BaseActivityView, TangemDialogFragment.OnTangemDialogListener, AppUpdateDialogFragment.OnAppUpdateDialogListener {
+    BaseActivityView, TangemDialogFragment.OnTangemDialogListener,
+    AppUpdateDialogFragment.OnAppUpdateDialogListener {
 
     // ===========================================================
     // Constants
@@ -73,7 +74,11 @@ abstract class BaseActivity : BaseMvpAppCompatActivity(),
     // Constructors
     // ===========================================================
 
-    val mPresenter: BaseActivityPresenter by moxyPresenter { presenterProvider.get() }
+    val mPresenter: BaseActivityPresenter by moxyPresenter {
+        presenterProvider.get().apply {
+            userAccount = intent?.getStringExtra(Constant.Extra.EXTRA_USER_ACCOUNT)
+        }
+    }
 
     // ===========================================================
     // Getter & Setter
@@ -108,6 +113,12 @@ abstract class BaseActivity : BaseMvpAppCompatActivity(),
 
             checkBackPress(container)
         }
+    }
+
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+
+        mPresenter.onNewIntentCalled(intent?.getStringExtra(Constant.Extra.EXTRA_USER_ACCOUNT))
     }
 
     override fun onResume() {
@@ -279,11 +290,13 @@ abstract class BaseActivity : BaseMvpAppCompatActivity(),
         }
     }
 
-    override fun showAppUpdateDialog(show: Boolean,
-                                     title: String?,
-                                     message: String?,
-                                     positiveBtnText: String?,
-                                     negativeBtnText: String?) {
+    override fun showAppUpdateDialog(
+        show: Boolean,
+        title: String?,
+        message: String?,
+        positiveBtnText: String?,
+        negativeBtnText: String?
+    ) {
         if (show) {
             AlertDialogFragment.Builder(false)
                 .setSpecificDialog(AlertDialogFragment.DialogIdentifier.APP_UPDATE)
@@ -293,7 +306,10 @@ abstract class BaseActivity : BaseMvpAppCompatActivity(),
                 .setPositiveBtnText(positiveBtnText)
                 .setNegativeBtnText(negativeBtnText)
                 .create()
-                .showInstant(supportFragmentManager, AlertDialogFragment.DialogFragmentIdentifier.APP_UPDATE)
+                .showInstant(
+                    supportFragmentManager,
+                    AlertDialogFragment.DialogFragmentIdentifier.APP_UPDATE
+                )
         } else {
             (supportFragmentManager.findFragmentByTag(AlertDialogFragment.DialogFragmentIdentifier.APP_UPDATE) as? DialogFragment)?.dismiss()
         }
@@ -309,5 +325,11 @@ abstract class BaseActivity : BaseMvpAppCompatActivity(),
 
     override fun showStore(storeUrl: String) {
         AppUtil.openWebPage(this, storeUrl)
+    }
+
+    override fun reloadAccountData() {
+        when (this) {
+            is HomeActivity -> accountWasChanged()
+        }
     }
 }

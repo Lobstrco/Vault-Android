@@ -10,17 +10,15 @@ class PrefsUtil(private val sharedPreferences: SharedPreferences) {
     internal companion object {
         const val PREF_AUTH_TOKEN = "PREF_AUTH_TOKEN"
         const val PREF_PUBLIC_KEY = "PREF_PUBLIC_KEY"
+        const val PREF_PUBLIC_KEY_DATA_LIST = "PREF_PUBLIC_KEY_DATA_LIST"
         const val PREF_ENCRYPTED_PHRASES = "PREF_ENCRYPTED_PHRASES"
         const val PREF_ENCRYPTED_PIN = "PREF_ENCRYPTED_PIN"
         const val PREF_PHRASES_IV = "PREF_PHRASES_IV"
         const val PREF_PIN_IV = "PREF_PIN_IV"
         const val PREF_FCM_TOKEN = "PREF_FCM_TOKEN"
-        const val PREF_IS_FCM_REGISTERED_SUCCESSFULLY = "PREF_IS_FCM_REGISTERED_SUCCESSFULLY"
         const val PREF_ACCOUNT_HAS_SIGNERS = "PREF_ACCOUNT_HAS_SIGNERS"
         const val PREF_BIOMETRIC_STATE = "PREF_BIOMETRIC_STATE"
         const val PREF_RATE_US_STATE = "PREF_RATE_US_STATE"
-        const val PREF_IS_NOTIFICATIONS_ENABLED = "PREF_IS_NOTIFICATIONS_ENABLED"
-        const val PREF_IS_TR_CONFIRMATION_ENABLED = "PREF_IS_TR_CONFIRMATION_ENABLED"
         const val PREF_ACCOUNT_SIGNERS_COUNT = "PREF_ACCOUNT_SIGNERS_COUNT"
         const val PREF_IS_SPAM_PROTECTION_ENABLED = "PREF_IS_SPAM_PROTECTION_ENABLED"
         const val PREF_TANGEM_CARD_ID = "PREF_TANGEM_CARD_ID"
@@ -35,6 +33,55 @@ class PrefsUtil(private val sharedPreferences: SharedPreferences) {
     var publicKey: String?
         get() = getString(PREF_PUBLIC_KEY)
         set(publicKey) = set(PREF_PUBLIC_KEY, publicKey)
+
+    private var publicKeyDataList: String?
+        get() = getString(PREF_PUBLIC_KEY_DATA_LIST)
+        set(publicKeyList) = set(PREF_PUBLIC_KEY_DATA_LIST, publicKeyList)
+
+    /**
+     * @return list with data: Pair<PublicKey,Index>
+     */
+    fun getPublicKeyDataList(): List<Pair<String, Int>> = when {
+        publicKeyDataList.isNullOrEmpty() && publicKey.isNullOrEmpty() -> emptyList()
+        publicKeyDataList.isNullOrEmpty() && !publicKey.isNullOrEmpty() -> {
+            savePublicKeyToList(publicKey!!, 0)
+            listOf(Pair(publicKey!!, 0))
+        }
+        else -> publicKeyDataList!!.split("#").map {
+            val data = it.split(":")
+            Pair(data[0], data[1].toInt())
+        }
+    }
+
+    fun getPublicKeyList(): List<String> =
+        getPublicKeyDataList().sortedBy { it.second }.map { it.first }
+
+    fun getPublicKeyIndex(key: String?): Int =
+        getPublicKeyDataList().find { it.first == key }.let { it?.second ?: 0 }
+
+    fun getCurrentPublicKeyIndex(): Int = getPublicKeyIndex(publicKey)
+
+    fun getNewPublicKeyIndex(): Int {
+        val createdIndexes = getPublicKeyDataList().map { it.second }
+        (0 until Constant.Util.PUBLIC_KEY_LIMIT).forEach { newIndex ->
+            if (createdIndexes.none { newIndex == it }) {
+                return newIndex
+            }
+        }
+
+        return 0
+    }
+
+    fun savePublicKeyToList(key: String, index: Int) {
+        if (!publicKeyDataList.isNullOrEmpty() && getPublicKeyDataList().any { it.first == key }) {
+            return
+        }
+
+        publicKeyDataList = when {
+            publicKeyDataList.isNullOrEmpty() -> "$key:$index"
+            else -> "$publicKeyDataList#$key:$index"
+        }
+    }
 
     var tangemCardId: String?
         get() = getString(PREF_TANGEM_CARD_ID)
@@ -60,10 +107,6 @@ class PrefsUtil(private val sharedPreferences: SharedPreferences) {
         get() = getString(PREF_FCM_TOKEN)
         set(fcmToken) = set(PREF_FCM_TOKEN, fcmToken)
 
-    var isFcmRegisteredSuccessfully: Boolean
-        get() = getBoolean(PREF_IS_FCM_REGISTERED_SUCCESSFULLY)
-        set(isRegistered) = set(PREF_IS_FCM_REGISTERED_SUCCESSFULLY, isRegistered)
-
     var accountHasSigners: Boolean
         get() = getBoolean(PREF_ACCOUNT_HAS_SIGNERS)
         set(hasSigners) = set(PREF_ACCOUNT_HAS_SIGNERS, hasSigners)
@@ -85,14 +128,6 @@ class PrefsUtil(private val sharedPreferences: SharedPreferences) {
     var isSpamProtectionEnabled: Boolean
         get() = getBoolean(PREF_IS_SPAM_PROTECTION_ENABLED)
         set(enabled) = set(PREF_IS_SPAM_PROTECTION_ENABLED, enabled)
-
-    var isNotificationsEnabled: Boolean
-        get() = getBoolean(PREF_IS_NOTIFICATIONS_ENABLED)
-        set(enabled) = set(PREF_IS_NOTIFICATIONS_ENABLED, enabled)
-
-    var isTrConfirmationEnabled: Boolean
-        get() = getBoolean(PREF_IS_TR_CONFIRMATION_ENABLED)
-        set(enabled) = set(PREF_IS_TR_CONFIRMATION_ENABLED, enabled)
 
     var accountSignersCount: Int
         get() = getInt(PREF_ACCOUNT_SIGNERS_COUNT)
@@ -139,8 +174,6 @@ class PrefsUtil(private val sharedPreferences: SharedPreferences) {
 
         // Set default value for specific cases.
         when (key) {
-            PREF_IS_NOTIFICATIONS_ENABLED -> devValue = true
-            PREF_IS_TR_CONFIRMATION_ENABLED -> devValue = true
             PREF_APP_UPDATE_RECOMMENDED_STATE -> devValue = true
         }
 
@@ -172,7 +205,7 @@ class PrefsUtil(private val sharedPreferences: SharedPreferences) {
                 // Put here excluded keys.
                 PREF_RATE_US_STATE,
                 PREF_APP_UPDATE_COUNTER_TIMER,
-                PREF_APP_UPDATE_RECOMMENDED_STATE-> {
+                PREF_APP_UPDATE_RECOMMENDED_STATE -> {
                     /* do nothing*/
                 }
                 else -> editor.remove(key)

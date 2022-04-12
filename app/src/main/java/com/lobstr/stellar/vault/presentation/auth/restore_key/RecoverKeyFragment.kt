@@ -21,13 +21,14 @@ import com.lobstr.stellar.vault.presentation.util.AppUtil
 import com.lobstr.stellar.vault.presentation.util.Constant
 import com.lobstr.stellar.vault.presentation.util.manager.ProgressManager
 import com.lobstr.stellar.vault.presentation.util.manager.SupportManager
+import com.lobstr.stellar.vault.presentation.util.setSafeOnClickListener
 import dagger.hilt.android.AndroidEntryPoint
 import moxy.ktx.moxyPresenter
 import javax.inject.Inject
 import javax.inject.Provider
 
 @AndroidEntryPoint
-class RecoverKeyFragment : BaseFragment(), RecoverKeyFrView, View.OnClickListener {
+class RecoverKeyFragment : BaseFragment(), RecoverKeyFrView {
 
     // ===========================================================
     // Constants
@@ -93,7 +94,7 @@ class RecoverKeyFragment : BaseFragment(), RecoverKeyFrView, View.OnClickListene
         mTextWatcher = binding.etRecoveryPhrase.doAfterTextChanged {
             mPresenter.phrasesChanged(it.toString())
         }
-        binding.btnRecoverKey.setOnClickListener(this)
+        binding.btnRecoverKey.setSafeOnClickListener { mPresenter.btnRecoverClicked() }
     }
 
     override fun onPause() {
@@ -123,12 +124,6 @@ class RecoverKeyFragment : BaseFragment(), RecoverKeyFrView, View.OnClickListene
     // ===========================================================
     // Listeners, methods for/from Interfaces
     // ===========================================================
-
-    override fun onClick(v: View?) {
-        when (v?.id) {
-            binding.btnRecoverKey.id -> mPresenter.btnRecoverClicked()
-        }
-    }
 
     override fun showInputErrorIfNeeded(recoveryPhrasesInfo: List<RecoveryPhraseInfo>, phrases: String) {
         for (phrasesInfo in recoveryPhrasesInfo) {

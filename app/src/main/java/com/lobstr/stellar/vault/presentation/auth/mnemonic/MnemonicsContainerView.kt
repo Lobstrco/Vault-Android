@@ -25,6 +25,7 @@ import com.lobstr.stellar.vault.presentation.auth.mnemonic.MnemonicsContainerVie
 import com.lobstr.stellar.vault.presentation.auth.mnemonic.MnemonicsContainerView.Extra.EXTRA_PARENT_ID
 import com.lobstr.stellar.vault.presentation.entities.mnemonic.MnemonicItem
 import com.lobstr.stellar.vault.presentation.util.AppUtil
+import com.lobstr.stellar.vault.presentation.util.setSafeOnClickListener
 import java.lang.ref.WeakReference
 
 
@@ -139,7 +140,7 @@ class MnemonicsContainerView(context: Context?, attrs: AttributeSet?) : ScrollVi
                 binding.glMnemonicItemContainer.addView(itemMnemonic, i, layoutParams)
 
                 if (!mnemonicItem.hide) {
-                    itemMnemonic.setOnClickListener {
+                    itemMnemonic.setSafeOnClickListener {
                         mMnemonicItemActionListener?.get()
                             ?.onMnemonicItemClick(this, i, mnemonicStr)
                     }

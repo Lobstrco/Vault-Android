@@ -3,6 +3,7 @@ package com.lobstr.stellar.vault.domain.transaction_details
 import com.lobstr.stellar.vault.data.error.exeption.ForbiddenException
 import com.lobstr.stellar.vault.domain.account.AccountRepository
 import com.lobstr.stellar.vault.domain.key_store.KeyStoreRepository
+import com.lobstr.stellar.vault.domain.local_data.LocalDataRepository
 import com.lobstr.stellar.vault.domain.stellar.StellarRepository
 import com.lobstr.stellar.vault.domain.transaction.TransactionRepository
 import com.lobstr.stellar.vault.presentation.entities.account.Account
@@ -16,12 +17,12 @@ import io.reactivex.rxjava3.core.Single
 import org.stellar.sdk.AbstractTransaction
 import org.stellar.sdk.responses.SubmitTransactionResponse
 
-
 class TransactionDetailsInteractorImpl(
     private val accountRepository: AccountRepository,
     private val transactionRepository: TransactionRepository,
     private val stellarRepository: StellarRepository,
     private val keyStoreRepository: KeyStoreRepository,
+    private val localDataRepository: LocalDataRepository,
     private val prefsUtil: PrefsUtil
 ) : TransactionDetailsInteractor {
 
@@ -136,7 +137,7 @@ class TransactionDetailsInteractorImpl(
     }
 
     override fun isTrConfirmationEnabled(): Boolean {
-        return prefsUtil.isTrConfirmationEnabled
+        return localDataRepository.getTransactionConfirmationData()[getUserPublicKey()] ?: true
     }
 
     override fun getSignedAccounts(): Single<List<Account>> {
@@ -144,7 +145,7 @@ class TransactionDetailsInteractorImpl(
     }
 
     override fun getAccountNames(): Map<String, String?> {
-        return accountRepository.getAccountNames()
+        return localDataRepository.getAccountNames()
     }
 
     override fun getTransactionSigners(xdr: String, sourceAccount: String): Single<AccountResult> {
@@ -161,7 +162,7 @@ class TransactionDetailsInteractorImpl(
     }
 
     override fun signTransaction(transaction: String): Single<AbstractTransaction> {
-        return getPhrases().flatMap { stellarRepository.createKeyPair(it.toCharArray(), 0) }
+        return getPhrases().flatMap { stellarRepository.createKeyPair(it.toCharArray(), prefsUtil.getCurrentPublicKeyIndex()) }
             .flatMap { stellarRepository.signTransaction(it, transaction) }
     }
 

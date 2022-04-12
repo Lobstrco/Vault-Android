@@ -14,10 +14,13 @@ import com.tangem.commands.SignResponse
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.core.Single.fromCallable
 import org.stellar.sdk.*
+import org.stellar.sdk.requests.AccountsRequestBuilder
+import org.stellar.sdk.requests.RequestBuilder
 import org.stellar.sdk.responses.AccountResponse
 import org.stellar.sdk.responses.SubmitTransactionResponse
 import org.stellar.sdk.xdr.DecoratedSignature
 import org.stellar.sdk.xdr.Signature
+import shadow.com.google.gson.JsonSyntaxException
 import java.util.concurrent.Callable
 
 class StellarRepositoryImpl(
@@ -188,6 +191,40 @@ class StellarRepositoryImpl(
             StrKey.encodeStellarAccountId(data)
         } catch (exc: Exception) {
             null
+        }
+    }
+
+    override fun getAccountsForSigner(signer: String, cursor: String?, order: RequestBuilder.Order, limit: Int?): Single<List<Account>> {
+        return fromCallable {
+            createAccountsBuilder(cursor, order, limit).forSigner(signer).execute()
+        }
+            .map {
+                mutableListOf<Account>().apply {
+                    it.records.forEach { account ->
+                        add(Account(account.accountId))
+                    }
+                }.toList()
+            }
+            .onErrorReturn {
+                mutableListOf<Account>().apply {
+                    // TODO FIXME
+                    // There is a bug in SDK when parsing liquidity pool fields.
+                    // JsonSyntaxException Expected BEGIN_OBJECT but was STRING at path $.records[0].balances[0].liquidity_pool_id
+                    // https://github.com/stellar/java-stellar-sdk/issues/404
+                    if (it is JsonSyntaxException) {
+                        add(Account(signer))
+                    }
+                }.toList()
+            }
+    }
+
+    private fun createAccountsBuilder(cursor: String? = null,
+                                   order: RequestBuilder.Order = RequestBuilder.Order.ASC,
+                                   limit: Int? = 1): AccountsRequestBuilder  {
+        return server.accounts().apply {
+            cursor?.let { cursor(cursor) }
+            order(order)
+            limit?.let { limit(limit) }
         }
     }
 }

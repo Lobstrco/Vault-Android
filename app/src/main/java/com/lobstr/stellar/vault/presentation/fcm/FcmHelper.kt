@@ -1,6 +1,5 @@
 package com.lobstr.stellar.vault.presentation.fcm
 
-
 import android.content.Context
 import android.util.Log
 import com.google.firebase.messaging.FirebaseMessaging
@@ -12,14 +11,17 @@ import com.lobstr.stellar.vault.presentation.entities.account.Account
 import com.lobstr.stellar.vault.presentation.entities.transaction.TransactionItem
 import com.lobstr.stellar.vault.presentation.util.AppUtil
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.disposables.Disposable
 import io.reactivex.rxjava3.schedulers.Schedulers
 
 class FcmHelper(private val context: Context, private val fcmInteractor: FcmInteractor) {
 
     companion object {
-        val LOG_TAG = FcmHelper::class.simpleName
-        const val OS_TYPE = "android"
-
+        private val LOG_TAG = FcmHelper::class.simpleName
+        private const val OS_TYPE = "android"
+        private const val FCM_REGISTERED_ERROR = "error"
+        private const val FCM_REGISTERED_SUCCESS = "success"
     }
 
     object FcmRegStatus {
@@ -27,6 +29,8 @@ class FcmHelper(private val context: Context, private val fcmInteractor: FcmInte
         internal const val NO_VALID_GOOGLE_PLAY = 2
         internal const val TRYING_REGISTER_FCM = 3
     }
+
+    private var fsmDisposable: Disposable? = null
 
     fun checkFcmRegistration() {
         when (requestFcmTokenStatus()) {
@@ -36,7 +40,7 @@ class FcmHelper(private val context: Context, private val fcmInteractor: FcmInte
 
     fun unregisterFcm() {
         fcmInteractor.getFcmToken()?.let {
-            registerDevice(it, false)
+            registerDevice(it, fcmInteractor.getAuthTokenList(true), false)
         }
     }
 
@@ -57,75 +61,103 @@ class FcmHelper(private val context: Context, private val fcmInteractor: FcmInte
         }
     }
 
-    internal fun requestToRefreshFcmToken(newToken: String) {
+    internal fun requestToRefreshFcmToken(newFcmToken: String) {
         // Update token if needed (when device was registered).
         val fcmToken = fcmInteractor.getFcmToken()
-        if (!fcmToken.isNullOrEmpty() && fcmToken != newToken) {
-            fcmInteractor.setFcmRegistered(false)
-            fcmInteractor.saveFcmToken(newToken)
-            registerDevice(newToken)
+        if (!fcmToken.isNullOrEmpty() && fcmToken != newFcmToken) {
+            fcmInteractor.setFcmNotRegistered()
+            fcmInteractor.saveFcmToken(newFcmToken)
+            registerDevice(newFcmToken, fcmInteractor.getAuthTokenList())
         }
     }
 
     private fun createAndSendFcmToken() {
         FirebaseMessaging.getInstance().token.addOnSuccessListener {
-            val token = it
-            fcmInteractor.saveFcmToken(token)
-            Log.i(LOG_TAG, "Device registered: REG_ID = $token")
-            registerDevice(token)
+            val fcmToken = it
+            if (fcmToken != fcmInteractor.getFcmToken()) {
+                fcmInteractor.setFcmNotRegistered()
+                fcmInteractor.saveFcmToken(fcmToken)
+            }
+            Log.i(LOG_TAG, "Device registered: REG_ID = $fcmToken")
+            registerDevice(fcmToken, fcmInteractor.getAuthTokenList())
         }
     }
 
-    private fun registerDevice(token: String, active: Boolean = true) {
-        fcmInteractor.fcmDeviceRegistration(OS_TYPE, token, active)
+    private fun registerDevice(
+        fcmToken: String,
+        authTokenList: List<Pair<String, String>>,
+        active: Boolean = true
+    ) {
+        fsmDisposable?.dispose()
+        fsmDisposable = Observable.fromIterable(authTokenList)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({
-                fcmInteractor.setFcmRegistered(active)
-            }, {
-                when (it) {
-                    is UserNotAuthorizedException -> {
-                        when (it.action) {
-                            DEFAULT -> registerDevice(token)
+            .flatMapSingle { authTokenInfo ->
+                fcmInteractor.fcmDeviceRegistrationByToken(
+                    OS_TYPE,
+                    fcmToken,
+                    active,
+                    authTokenInfo.second,
+                    authTokenInfo.first
+                )
+                    .map { Pair(authTokenInfo.first, FCM_REGISTERED_SUCCESS) }
+                    .onErrorReturn {
+                        when (it) {
+                            is UserNotAuthorizedException -> {
+                                when (it.action) {
+                                    DEFAULT -> authTokenInfo
+                                    else -> Pair(authTokenInfo.first, FCM_REGISTERED_ERROR)
+                                }
+                            }
+                            is DefaultException -> {
+                                Log.e(LOG_TAG, it.details)
+                                Pair(authTokenInfo.first, FCM_REGISTERED_ERROR)
+                            }
+                            else -> {
+                                Log.e(LOG_TAG, it.message ?: "")
+                                Pair(authTokenInfo.first, FCM_REGISTERED_ERROR)
+                            }
                         }
                     }
-                    is DefaultException -> {
-                        Log.e(LOG_TAG, it.details)
+            }
+            .toList()
+            .subscribe(
+                { resultList ->
+                    resultList.filter { it.second == FCM_REGISTERED_SUCCESS }.forEach {
+                        fcmInteractor.saveRegisteredFcmPublicKey(it.first, active)
                     }
-                    else -> {
-                        Log.e(LOG_TAG, it.message ?: "")
+
+                    resultList.filter { it.second.isEmpty() }.apply {
+                        if (isNotEmpty()) {
+                            registerDevice(fcmToken, fcmInteractor.getAuthTokenList(), active)
+                        }
                     }
+                }, {
+
                 }
-            })
+            )
     }
 
-    fun isUserAuthorized(): Boolean {
-        return fcmInteractor.isUserAuthorized()
-    }
+    fun isUserAuthorized(): Boolean = fcmInteractor.isUserAuthorized()
 
-    fun isNotificationsEnabled(): Boolean {
-        return fcmInteractor.isNotificationsEnabled()
-    }
+    fun isNotificationsEnabled(userAccount: String): Boolean = fcmInteractor.isNotificationsEnabled(userAccount)
 
     // Handle specific notifications
 
-    fun signedNewAccount(jsonStr: String?): Account? {
-        return fcmInteractor.signedNewAccount(jsonStr)
-    }
+    fun userAccountReceived(jsonStr: String?): String? = fcmInteractor.userAccountReceived(jsonStr)
 
-    fun removedSigner(jsonStr: String?): Account? {
-        return fcmInteractor.removedSigner(jsonStr)
-    }
+    fun signedNewAccount(jsonStr: String?): Account? = fcmInteractor.signedNewAccount(jsonStr)
 
-    fun addedNewTransaction(jsonStr: String?): TransactionItem? {
-        return fcmInteractor.transformTransactionResponse(jsonStr)
-    }
+    fun removedSigner(jsonStr: String?): Account? = fcmInteractor.removedSigner(jsonStr)
 
-    fun addedNewSignature(jsonStr: String?): TransactionItem? {
-        return fcmInteractor.transformTransactionResponse(jsonStr)
-    }
+    fun getCurrentPublicKey(): String? = fcmInteractor.getCurrentPublicKey()
 
-    fun transactionSubmitted(jsonStr: String?): TransactionItem? {
-        return fcmInteractor.transformTransactionResponse(jsonStr)
-    }
+    fun addedNewTransaction(jsonStr: String?): TransactionItem? =
+        fcmInteractor.transformTransactionResponse(jsonStr)
+
+    fun addedNewSignature(jsonStr: String?): TransactionItem? =
+        fcmInteractor.transformTransactionResponse(jsonStr)
+
+    fun transactionSubmitted(jsonStr: String?): TransactionItem? =
+        fcmInteractor.transformTransactionResponse(jsonStr)
 }

@@ -24,12 +24,11 @@ class EditAccountPresenter @Inject constructor(
 
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
+
         if (manageAccountName) {
             // Find account name for the relevant public key.
             unsubscribeOnDestroy(
-                Single.fromCallable {
-                    return@fromCallable interactor.getAccountName(publicKey) ?: ""
-                }
+                Single.fromCallable { interactor.getAccountName(publicKey) ?: "" }
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe({
@@ -38,7 +37,8 @@ class EditAccountPresenter @Inject constructor(
                                 R.string.text_tv_change_account_name
                             )
                         )
-                        viewState.showClearAccount(!it.isNullOrEmpty())
+                        viewState.showClearAccountButton(!it.isNullOrEmpty())
+                        viewState.showNetworkExplorerButton(publicKey != interactor.getCurrentPublicKey())
                     }, Throwable::printStackTrace)
             )
         }

@@ -19,6 +19,7 @@ import com.lobstr.stellar.vault.presentation.tangem.dialog.TangemDialogFragment
 import com.lobstr.stellar.vault.presentation.util.AppUtil
 import com.lobstr.stellar.vault.presentation.util.Constant
 import com.lobstr.stellar.vault.presentation.util.manager.ProgressManager
+import com.lobstr.stellar.vault.presentation.util.setSafeOnClickListener
 import com.lobstr.stellar.vault.presentation.vault_auth.VaultAuthActivity
 import dagger.hilt.android.AndroidEntryPoint
 import moxy.ktx.moxyPresenter
@@ -26,9 +27,8 @@ import javax.inject.Inject
 import javax.inject.Provider
 
 @AndroidEntryPoint
-class VaultAuthFragment : BaseFragment(),
-    VaultAuthFrView, View.OnClickListener, AlertDialogFragment.OnDefaultAlertDialogListener,
-    TangemDialogFragment.OnTangemDialogListener {
+class VaultAuthFragment : BaseFragment(), VaultAuthFrView,
+    AlertDialogFragment.OnDefaultAlertDialogListener, TangemDialogFragment.OnTangemDialogListener {
 
     // ===========================================================
     // Constants
@@ -76,7 +76,7 @@ class VaultAuthFragment : BaseFragment(),
     }
 
     private fun setListeners() {
-        binding.btnAuth.setOnClickListener(this)
+        binding.btnAuth.setSafeOnClickListener { mPresenter.authClicked() }
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -105,12 +105,6 @@ class VaultAuthFragment : BaseFragment(),
     // ===========================================================
     // Listeners, methods for/from Interfaces
     // ===========================================================
-
-    override fun onClick(v: View?) {
-        when (v?.id) {
-            binding.btnAuth.id -> mPresenter.authClicked()
-        }
-    }
 
     override fun setupInfo(
         showIdentityLogo: Boolean,

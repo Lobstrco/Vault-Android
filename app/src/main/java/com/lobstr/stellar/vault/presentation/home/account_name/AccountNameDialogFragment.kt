@@ -10,13 +10,14 @@ import com.lobstr.stellar.vault.databinding.FragmentAccountNameBinding
 import com.lobstr.stellar.vault.presentation.dialog.alert.base.AlertDialogFragment
 import com.lobstr.stellar.vault.presentation.util.AppUtil
 import com.lobstr.stellar.vault.presentation.util.Constant
+import com.lobstr.stellar.vault.presentation.util.setSafeOnClickListener
 import dagger.hilt.android.AndroidEntryPoint
 import moxy.ktx.moxyPresenter
 import javax.inject.Inject
 import javax.inject.Provider
 
 @AndroidEntryPoint
-class AccountNameDialogFragment : AlertDialogFragment(), AccountNameView, View.OnClickListener,
+class AccountNameDialogFragment : AlertDialogFragment(), AccountNameView,
     TextView.OnEditorActionListener {
 
     // ===========================================================
@@ -68,8 +69,11 @@ class AccountNameDialogFragment : AlertDialogFragment(), AccountNameView, View.O
     }
 
     private fun setListeners() {
-        binding.btnSave.setOnClickListener(this)
-        binding.btnCancel.setOnClickListener(this)
+        binding.btnSave.setSafeOnClickListener {
+            AppUtil.closeKeyboard(activity)
+            mPresenter.saveClicked(binding.edtAccountName.text.toString().trim())
+        }
+        binding.btnCancel.setSafeOnClickListener { mPresenter.cancelClicked() }
         binding.edtAccountName.setOnEditorActionListener(this)
     }
 
@@ -81,16 +85,6 @@ class AccountNameDialogFragment : AlertDialogFragment(), AccountNameView, View.O
     // ===========================================================
     // Listeners, methods for/from Interfaces
     // ===========================================================
-
-    override fun onClick(v: View?) {
-        when (v?.id) {
-            binding.btnSave.id -> {
-                AppUtil.closeKeyboard(activity)
-                mPresenter.saveClicked(binding.edtAccountName.text.toString().trim())
-            }
-            binding.btnCancel.id -> mPresenter.cancelClicked()
-        }
-    }
 
     override fun onEditorAction(v: TextView?, actionId: Int, event: KeyEvent?): Boolean {
         when (v?.id) {

@@ -158,10 +158,6 @@
  public static final android.os.Parcelable$Creator *;
 }
 
--keepclassmembers class **.R$* {
- public static <fields>;
-}
-
 -keepclassmembers class ** {
    @com.google.common.eventbus.Subscribe public *;
 }

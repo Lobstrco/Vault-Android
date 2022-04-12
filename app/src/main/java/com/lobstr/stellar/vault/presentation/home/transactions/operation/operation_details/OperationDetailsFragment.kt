@@ -46,8 +46,9 @@ class OperationDetailsFragment : BaseFragment(),
     // ===========================================================
 
     private val mPresenter by moxyPresenter { presenterProvider.get().apply {
-        transactionItem = arguments?.getParcelable(Constant.Bundle.BUNDLE_TRANSACTION_ITEM)!!
-        position = arguments?.getInt(Constant.Bundle.BUNDLE_OPERATION_POSITION)!!
+        title = requireArguments().getInt(Constant.Bundle.BUNDLE_OPERATION_TITLE, Constant.Util.UNDEFINED_VALUE)
+        operation = requireArguments().getParcelable(Constant.Bundle.BUNDLE_OPERATION)!!
+        transactionSourceAccount = requireArguments().getString(Constant.Bundle.BUNDLE_TRANSACTION_SOURCE_ACCOUNT)!!
     } }
 
     // ===========================================================

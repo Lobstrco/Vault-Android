@@ -39,6 +39,7 @@ import com.lobstr.stellar.vault.presentation.util.Constant
 import com.lobstr.stellar.vault.presentation.util.Constant.Util.UNDEFINED_VALUE
 import com.lobstr.stellar.vault.presentation.util.manager.FragmentTransactionManager
 import com.lobstr.stellar.vault.presentation.util.manager.SupportManager
+import com.lobstr.stellar.vault.presentation.util.setSafeOnClickListener
 import dagger.hilt.android.AndroidEntryPoint
 import moxy.ktx.moxyPresenter
 import java.util.*
@@ -46,8 +47,8 @@ import javax.inject.Inject
 import javax.inject.Provider
 
 @AndroidEntryPoint
-class SettingsFragment : BaseFragment(), SettingsView, View.OnClickListener,
-    CompoundButton.OnCheckedChangeListener, AlertDialogFragment.OnDefaultAlertDialogListener {
+class SettingsFragment : BaseFragment(), SettingsView, CompoundButton.OnCheckedChangeListener,
+    AlertDialogFragment.OnDefaultAlertDialogListener {
 
     // ===========================================================
     // Constants
@@ -131,20 +132,20 @@ class SettingsFragment : BaseFragment(), SettingsView, View.OnClickListener,
     }
 
     private fun setListeners() {
-        binding.llPublicKey.setOnClickListener(this)
-        binding.tvSettingsSigners.setOnClickListener(this)
-        binding.tvSettingsMnemonics.setOnClickListener(this)
-        binding.tvSettingsChangePin.setOnClickListener(this)
-        binding.llSettingsSpamProtection.setOnClickListener(this)
-        binding.tvSettingsHelp.setOnClickListener(this)
+        binding.llPublicKey.setSafeOnClickListener { mPresenter.publicKeyClicked() }
+        binding.tvSettingsSigners.setSafeOnClickListener { mPresenter.signersClicked() }
+        binding.tvSettingsMnemonics.setSafeOnClickListener { mPresenter.mnemonicsClicked() }
+        binding.tvSettingsChangePin.setSafeOnClickListener { mPresenter.changePinClicked() }
+        binding.llSettingsSpamProtection.setSafeOnClickListener { mPresenter.spamProtectionClicked() }
+        binding.tvSettingsHelp.setSafeOnClickListener { mPresenter.helpClicked() }
         binding.swSettingsBiometric.setOnCheckedChangeListener(this)
         binding.swSettingsNotifications.setOnCheckedChangeListener(this)
-        binding.llSettingsSignerCardInfoContainer.setOnClickListener(this)
-        binding.llSettingsTrConfirmation.setOnClickListener(this)
-        binding.tvSettingsLicense.setOnClickListener(this)
-        binding.tvSettingsRateUs.setOnClickListener(this)
-        binding.tvSettingsContactSupport.setOnClickListener(this)
-        binding.tvLogOut.setOnClickListener(this)
+        binding.llSettingsSignerCardInfoContainer.setSafeOnClickListener { mPresenter.signerCardClicked() }
+        binding.llSettingsTrConfirmation.setSafeOnClickListener { mPresenter.trConfirmationClicked() }
+        binding.tvSettingsLicense.setSafeOnClickListener { mPresenter.licenseClicked() }
+        binding.tvSettingsRateUs.setSafeOnClickListener { mPresenter.rateUsClicked() }
+        binding.tvSettingsContactSupport.setSafeOnClickListener { mPresenter.contactSupportClicked() }
+        binding.tvLogOut.setSafeOnClickListener { mPresenter.logOutClicked() }
     }
 
     override fun onDestroyView() {
@@ -155,23 +156,6 @@ class SettingsFragment : BaseFragment(), SettingsView, View.OnClickListener,
     // ===========================================================
     // Listeners, methods for/from Interfaces
     // ===========================================================
-
-    override fun onClick(v: View?) {
-        when (v?.id) {
-            binding.llPublicKey.id -> mPresenter.publicKeyClicked()
-            binding.tvSettingsSigners.id -> mPresenter.signersClicked()
-            binding.tvSettingsMnemonics.id -> mPresenter.mnemonicsClicked()
-            binding.tvSettingsChangePin.id -> mPresenter.changePinClicked()
-            binding.llSettingsSpamProtection.id -> mPresenter.spamProtectionClicked()
-            binding.tvSettingsHelp.id -> mPresenter.helpClicked()
-            binding.llSettingsSignerCardInfoContainer.id -> mPresenter.signerCardClicked()
-            binding.llSettingsTrConfirmation.id -> mPresenter.trConfirmationClicked()
-            binding.tvSettingsLicense.id -> mPresenter.licenseClicked()
-            binding.tvSettingsRateUs.id -> mPresenter.rateUsClicked()
-            binding.tvSettingsContactSupport.id -> mPresenter.contactSupportClicked()
-            binding.tvLogOut.id -> mPresenter.logOutClicked()
-        }
-    }
 
     override fun onCheckedChanged(buttonView: CompoundButton?, isChecked: Boolean) {
         when (buttonView?.id) {

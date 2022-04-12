@@ -11,7 +11,7 @@ import android.widget.Toast
 import androidx.annotation.ColorRes
 import androidx.annotation.StringRes
 import androidx.core.content.ContextCompat
-import androidx.core.view.WindowInsetsControllerCompat
+import androidx.core.view.ViewCompat
 import androidx.core.view.isVisible
 import com.andrognito.pinlockview.PinLockListener
 import com.lobstr.stellar.vault.R
@@ -31,6 +31,7 @@ import com.lobstr.stellar.vault.presentation.util.biometric.BiometricListener
 import com.lobstr.stellar.vault.presentation.util.biometric.BiometricManager
 import com.lobstr.stellar.vault.presentation.util.manager.FragmentTransactionManager
 import com.lobstr.stellar.vault.presentation.util.manager.ProgressManager
+import com.lobstr.stellar.vault.presentation.util.setSafeOnClickListener
 import com.lobstr.stellar.vault.presentation.vault_auth.VaultAuthActivity
 import dagger.hilt.android.AndroidEntryPoint
 import moxy.ktx.moxyPresenter
@@ -39,7 +40,7 @@ import javax.inject.Provider
 
 @AndroidEntryPoint
 class PinFragment : BaseFragment(), PinFrView, PinLockListener, BiometricListener,
-    View.OnClickListener, AlertDialogFragment.OnDefaultAlertDialogListener {
+    AlertDialogFragment.OnDefaultAlertDialogListener {
 
     // ===========================================================
     // Constants
@@ -94,7 +95,7 @@ class PinFragment : BaseFragment(), PinFrView, PinLockListener, BiometricListene
 
         val itemNeedHelp = menu.findItem(R.id.action_need_help)
 
-        itemNeedHelp?.actionView?.setOnClickListener {
+        itemNeedHelp?.actionView?.setSafeOnClickListener {
             onOptionsItemSelected(itemNeedHelp)
         }
 
@@ -124,7 +125,7 @@ class PinFragment : BaseFragment(), PinFrView, PinLockListener, BiometricListene
     override fun setupNavigationBar(@ColorRes color: Int, light: Boolean) {
         if (Build.VERSION.SDK_INT > Build.VERSION_CODES.O) {
             activity?.window?.navigationBarColor = ContextCompat.getColor(requireContext(), color)
-            WindowInsetsControllerCompat(requireActivity().window, requireActivity().window.decorView).isAppearanceLightNavigationBars = light
+            ViewCompat.getWindowInsetsController(requireActivity().window.decorView)?.isAppearanceLightNavigationBars = light
         }
     }
 
@@ -135,13 +136,7 @@ class PinFragment : BaseFragment(), PinFrView, PinLockListener, BiometricListene
 
     private fun setListeners() {
         binding.pinLockView.setPinLockListener(this)
-        binding.tvPinLogOut.setOnClickListener(this)
-    }
-
-    override fun onClick(v: View?) {
-        when (v?.id) {
-            binding.tvPinLogOut.id -> mPresenter.logoutClicked()
-        }
+        binding.tvPinLogOut.setSafeOnClickListener { mPresenter.logoutClicked() }
     }
 
     override fun onDestroyView() {

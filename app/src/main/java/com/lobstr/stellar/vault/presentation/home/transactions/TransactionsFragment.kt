@@ -22,6 +22,7 @@ import com.lobstr.stellar.vault.presentation.entities.transaction.TransactionIte
 import com.lobstr.stellar.vault.presentation.home.transactions.adapter.TransactionAdapter
 import com.lobstr.stellar.vault.presentation.util.Constant
 import com.lobstr.stellar.vault.presentation.util.manager.ProgressManager
+import com.lobstr.stellar.vault.presentation.util.setSafeOnClickListener
 import dagger.hilt.android.AndroidEntryPoint
 import moxy.ktx.moxyPresenter
 import javax.inject.Inject
@@ -29,7 +30,6 @@ import javax.inject.Provider
 
 @AndroidEntryPoint
 class TransactionsFragment : BaseFragment(), TransactionsView, SwipeRefreshLayout.OnRefreshListener,
-    View.OnClickListener,
     AlertDialogFragment.OnDefaultAlertDialogListener {
 
     // ===========================================================
@@ -85,7 +85,7 @@ class TransactionsFragment : BaseFragment(), TransactionsView, SwipeRefreshLayou
 
         val itemClear = menu.findItem(R.id.action_clear)
 
-        itemClear?.actionView?.setOnClickListener {
+        itemClear?.actionView?.setSafeOnClickListener {
             onOptionsItemSelected(itemClear)
         }
 
@@ -111,7 +111,9 @@ class TransactionsFragment : BaseFragment(), TransactionsView, SwipeRefreshLayou
 
     private fun setListeners() {
         binding.srlTransactions.setOnRefreshListener(this)
-        binding.fabAddTransaction.setOnClickListener(this)
+        binding.fabAddTransaction.setSafeOnClickListener {
+            mPresenter.addTransactionClicked()
+        }
     }
 
     override fun onDestroyView() {
@@ -122,12 +124,6 @@ class TransactionsFragment : BaseFragment(), TransactionsView, SwipeRefreshLayou
     // ===========================================================
     // Listeners, methods for/from Interfaces
     // ===========================================================
-
-    override fun onClick(v: View?) {
-        when (v?.id) {
-            binding.fabAddTransaction.id -> mPresenter.addTransactionClicked()
-        }
-    }
 
     override fun onRefresh() {
         mPresenter.refreshCalled()

@@ -15,13 +15,14 @@ import com.lobstr.stellar.vault.presentation.pin.PinActivity
 import com.lobstr.stellar.vault.presentation.util.Constant
 import com.lobstr.stellar.vault.presentation.util.manager.ProgressManager
 import com.lobstr.stellar.vault.presentation.util.manager.SupportManager
+import com.lobstr.stellar.vault.presentation.util.setSafeOnClickListener
 import dagger.hilt.android.AndroidEntryPoint
 import moxy.ktx.moxyPresenter
 import javax.inject.Inject
 import javax.inject.Provider
 
 @AndroidEntryPoint
-class ConfirmMnemonicsFragment : BaseFragment(), ConfirmMnemonicsView, View.OnClickListener,
+class ConfirmMnemonicsFragment : BaseFragment(), ConfirmMnemonicsView,
     MnemonicsContainerView.MnemonicItemActionListener {
 
     // ===========================================================
@@ -72,8 +73,8 @@ class ConfirmMnemonicsFragment : BaseFragment(), ConfirmMnemonicsView, View.OnCl
     }
 
     private fun setListeners() {
-        binding.btnClear.setOnClickListener(this)
-        binding.btnNext.setOnClickListener(this)
+        binding.btnClear.setSafeOnClickListener { mPresenter.btnClearClicked() }
+        binding.btnNext.setSafeOnClickListener { mPresenter.btnNextClicked() }
         binding.mnemonicContainerToSelectView.setMnemonicItemActionListener(this)
         binding.mnemonicContainerToConfirmView.setMnemonicItemActionListener(this)
     }
@@ -111,13 +112,6 @@ class ConfirmMnemonicsFragment : BaseFragment(), ConfirmMnemonicsView, View.OnCl
         when (from) {
             R.id.mnemonicContainerToConfirmView -> mPresenter.mnemonicItemToConfirmClicked(position, value)
             R.id.mnemonicContainerToSelectView -> mPresenter.mnemonicItemToSelectClicked(position, value)
-        }
-    }
-
-    override fun onClick(v: View?) {
-        when (v?.id) {
-            binding.btnClear.id -> mPresenter.btnClearClicked()
-            binding.btnNext.id -> mPresenter.btnNextClicked()
         }
     }
 

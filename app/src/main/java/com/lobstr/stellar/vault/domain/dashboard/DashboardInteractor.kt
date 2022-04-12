@@ -10,9 +10,9 @@ interface DashboardInteractor {
 
     fun getUserPublicKey(): String?
 
-    fun getSignedAccounts(): Single<List<Account>>
+    fun getUserPublicKeyIndex(): Int
 
-    fun clearAccountNames()
+    fun getSignedAccounts(): Single<List<Account>>
 
     fun getAccountNames(): Map<String, String?>
 

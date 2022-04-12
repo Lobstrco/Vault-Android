@@ -21,13 +21,14 @@ import com.lobstr.stellar.vault.presentation.util.Constant.LobstrWallet.DEEP_LIN
 import com.lobstr.stellar.vault.presentation.util.Constant.LobstrWallet.PACKAGE_NAME
 import com.lobstr.stellar.vault.presentation.util.Constant.Social.STORE_URL
 import com.lobstr.stellar.vault.presentation.util.manager.SupportManager
+import com.lobstr.stellar.vault.presentation.util.setSafeOnClickListener
 import dagger.hilt.android.AndroidEntryPoint
 import moxy.ktx.moxyPresenter
 import javax.inject.Inject
 import javax.inject.Provider
 
 @AndroidEntryPoint
-class SignerInfoFragment : BaseFragment(), SignerInfoView, View.OnClickListener {
+class SignerInfoFragment : BaseFragment(), SignerInfoView {
 
     // ===========================================================
     // Constants
@@ -75,10 +76,10 @@ class SignerInfoFragment : BaseFragment(), SignerInfoView, View.OnClickListener 
     }
 
     private fun setListeners() {
-        binding.btnDownloadLobstrApp.setOnClickListener(this)
-        binding.btnOpenLobstrApp.setOnClickListener(this)
-        binding.btnCopyUserPk.setOnClickListener(this)
-        binding.btnShowQr.setOnClickListener(this)
+        binding.btnDownloadLobstrApp.setSafeOnClickListener { mPresenter.downloadLobstrAppClicked() }
+        binding.btnOpenLobstrApp.setSafeOnClickListener { mPresenter.openLobstrAppClicked() }
+        binding.btnCopyUserPk.setSafeOnClickListener { mPresenter.copyUserPublicKeyClicked() }
+        binding.btnShowQr.setSafeOnClickListener { mPresenter.showQrClicked() }
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -102,15 +103,6 @@ class SignerInfoFragment : BaseFragment(), SignerInfoView, View.OnClickListener 
     // ===========================================================
     // Listeners, methods for/from Interfaces
     // ===========================================================
-
-    override fun onClick(v: View?) {
-        when (v?.id) {
-            binding.btnDownloadLobstrApp.id -> mPresenter.downloadLobstrAppClicked()
-            binding.btnOpenLobstrApp.id -> mPresenter.openLobstrAppClicked()
-            binding.btnCopyUserPk.id -> mPresenter.copyUserPublicKeyClicked()
-            binding.btnShowQr.id -> mPresenter.showQrClicked()
-        }
-    }
 
     override fun checkExistenceLobstrApp() {
         val packageManager = requireActivity().packageManager

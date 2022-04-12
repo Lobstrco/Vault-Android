@@ -11,12 +11,12 @@ import com.lobstr.stellar.vault.presentation.BaseBottomSheetDialog
 import com.lobstr.stellar.vault.presentation.util.AppUtil
 import com.lobstr.stellar.vault.presentation.util.Constant
 import com.lobstr.stellar.vault.presentation.util.Constant.Util.PK_TRUNCATE_COUNT
+import com.lobstr.stellar.vault.presentation.util.setSafeOnClickListener
 import moxy.ktx.moxyPresenter
 import net.glxn.qrgen.android.QRCode
 
 
-class ShowPublicKeyDialogFragment : BaseBottomSheetDialog(), ShowPublicKeyView,
-    View.OnClickListener {
+class ShowPublicKeyDialogFragment : BaseBottomSheetDialog(), ShowPublicKeyView {
 
     // ===========================================================
     // Constants
@@ -63,7 +63,10 @@ class ShowPublicKeyDialogFragment : BaseBottomSheetDialog(), ShowPublicKeyView,
     }
 
     private fun setListeners() {
-        binding.btnCopyKey.setOnClickListener(this)
+        binding.btnCopyKey.setSafeOnClickListener {
+            AppUtil.closeKeyboard(activity)
+            mPresenter.copyPublicKeyClicked()
+        }
     }
 
     override fun onDestroyView() {
@@ -74,15 +77,6 @@ class ShowPublicKeyDialogFragment : BaseBottomSheetDialog(), ShowPublicKeyView,
     // ===========================================================
     // Listeners, methods for/from Interfaces
     // ===========================================================
-
-    override fun onClick(v: View?) {
-        when (v?.id) {
-            binding.btnCopyKey.id -> {
-                AppUtil.closeKeyboard(activity)
-                mPresenter.copyPublicKeyClicked()
-            }
-        }
-    }
 
     override fun setupPublicKey(publicKey: String) {
         val qrCodeImage = QRCode.from(publicKey).withColor(

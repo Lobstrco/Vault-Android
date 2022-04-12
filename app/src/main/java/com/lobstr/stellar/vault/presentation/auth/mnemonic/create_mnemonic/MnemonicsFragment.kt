@@ -17,6 +17,7 @@ import com.lobstr.stellar.vault.presentation.util.AppUtil
 import com.lobstr.stellar.vault.presentation.util.Constant
 import com.lobstr.stellar.vault.presentation.util.manager.FragmentTransactionManager
 import com.lobstr.stellar.vault.presentation.util.manager.SupportManager
+import com.lobstr.stellar.vault.presentation.util.setSafeOnClickListener
 import dagger.hilt.android.AndroidEntryPoint
 import moxy.ktx.moxyPresenter
 import javax.inject.Inject
@@ -27,7 +28,7 @@ import javax.inject.Provider
  */
 @AndroidEntryPoint
 class MnemonicsFragment : BaseFragment(),
-    MnemonicsView, View.OnClickListener, AlertDialogFragment.OnDefaultAlertDialogListener {
+    MnemonicsView, AlertDialogFragment.OnDefaultAlertDialogListener {
 
     // ===========================================================
     // Constants
@@ -77,8 +78,8 @@ class MnemonicsFragment : BaseFragment(),
     }
 
     private fun setListeners() {
-        binding.btnNext.setOnClickListener(this)
-        binding.btnClipToBoard.setOnClickListener(this)
+        binding.btnNext.setSafeOnClickListener { mPresenter.nextClicked() }
+        binding.btnClipToBoard.setSafeOnClickListener { mPresenter.clipToBordClicked() }
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -114,13 +115,6 @@ class MnemonicsFragment : BaseFragment(),
     // ===========================================================
     // Listeners, methods for/from Interfaces
     // ===========================================================
-
-    override fun onClick(v: View?) {
-        when (v?.id) {
-            binding.btnNext.id -> mPresenter.nextClicked()
-            binding.btnClipToBoard.id -> mPresenter.clipToBordClicked()
-        }
-    }
 
     override fun setupToolbarTitle(titleRes: Int) {
         saveActionBarTitle(titleRes)

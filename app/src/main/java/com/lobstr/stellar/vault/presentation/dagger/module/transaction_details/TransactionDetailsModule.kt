@@ -2,6 +2,7 @@ package com.lobstr.stellar.vault.presentation.dagger.module.transaction_details
 
 import com.lobstr.stellar.vault.domain.account.AccountRepository
 import com.lobstr.stellar.vault.domain.key_store.KeyStoreRepository
+import com.lobstr.stellar.vault.domain.local_data.LocalDataRepository
 import com.lobstr.stellar.vault.domain.stellar.StellarRepository
 import com.lobstr.stellar.vault.domain.transaction.TransactionRepository
 import com.lobstr.stellar.vault.domain.transaction_details.TransactionDetailsInteractor
@@ -21,14 +22,14 @@ object TransactionDetailsModule {
         transactionRepository: TransactionRepository,
         stellarRepository: StellarRepository,
         keyStoreRepository: KeyStoreRepository,
+        localDataRepository: LocalDataRepository,
         prefsUtil: PrefsUtil
-    ): TransactionDetailsInteractor {
-        return TransactionDetailsInteractorImpl(
-            accountRepository,
-            transactionRepository,
-            stellarRepository,
-            keyStoreRepository,
-            prefsUtil
-        )
-    }
+    ): TransactionDetailsInteractor = TransactionDetailsInteractorImpl(
+        accountRepository,
+        transactionRepository,
+        stellarRepository,
+        keyStoreRepository,
+        localDataRepository,
+        prefsUtil
+    )
 }

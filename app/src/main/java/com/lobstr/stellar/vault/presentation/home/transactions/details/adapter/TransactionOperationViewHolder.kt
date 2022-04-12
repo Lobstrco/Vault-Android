@@ -5,6 +5,7 @@ import android.view.View
 import androidx.annotation.StringRes
 import androidx.recyclerview.widget.RecyclerView
 import com.lobstr.stellar.vault.databinding.AdapterItemOperationBinding
+import com.lobstr.stellar.vault.presentation.util.setSafeOnClickListener
 
 
 class TransactionOperationViewHolder(private val binding: AdapterItemOperationBinding, private val itemClickListener: (position: Int) -> Unit) :
@@ -14,10 +15,10 @@ class TransactionOperationViewHolder(private val binding: AdapterItemOperationBi
         val context: Context = itemView.context
         binding.divider.visibility = calculateDividerVisibility(itemsCount)
         binding.tvOperationTitle.text = capitalize(context.getString(title))
-        itemView.setOnClickListener {
+        itemView.setSafeOnClickListener {
             val position = this@TransactionOperationViewHolder.bindingAdapterPosition
             if (position == RecyclerView.NO_POSITION) {
-                return@setOnClickListener
+                return@setSafeOnClickListener
             }
 
             itemClickListener(position)

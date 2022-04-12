@@ -17,10 +17,10 @@ import com.lobstr.stellar.vault.presentation.entities.tangem.TangemInfo
 import com.lobstr.stellar.vault.presentation.tangem.dialog.TangemDialogFragment
 import com.lobstr.stellar.vault.presentation.util.Constant
 import com.lobstr.stellar.vault.presentation.util.manager.SupportManager
+import com.lobstr.stellar.vault.presentation.util.setSafeOnClickListener
 import moxy.ktx.moxyPresenter
 
 class TangemCreateWalletActivity : BaseActivity(), TangemCreateWalletView,
-    View.OnClickListener,
     AlertDialogFragment.OnDefaultAlertDialogListener, TangemDialogFragment.OnTangemDialogListener {
 
     // ===========================================================
@@ -62,7 +62,7 @@ class TangemCreateWalletActivity : BaseActivity(), TangemCreateWalletView,
     }
 
     private fun setListeners() {
-        binding.btnCreateWallet.setOnClickListener(this)
+        binding.btnCreateWallet.setSafeOnClickListener { mCreateWalletPresenter.createWalletClicked() }
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -81,12 +81,6 @@ class TangemCreateWalletActivity : BaseActivity(), TangemCreateWalletView,
     // ===========================================================
     // Listeners, methods for/from Interfaces
     // ===========================================================
-
-    override fun onClick(v: View?) {
-        when (v?.id) {
-            R.id.btnCreateWallet -> mCreateWalletPresenter.createWalletClicked()
-        }
-    }
 
     override fun showNfcCheckDialog() {
         AlertDialogFragment.Builder(false)

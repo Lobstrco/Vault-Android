@@ -9,6 +9,7 @@ import com.lobstr.stellar.vault.R
 import com.lobstr.stellar.vault.databinding.AdapterItemOperationDetailsBinding
 import com.lobstr.stellar.vault.presentation.util.AppUtil
 import com.lobstr.stellar.vault.presentation.util.Constant
+import com.lobstr.stellar.vault.presentation.util.setSafeOnClickListener
 
 class OperationDetailsViewHolder(
     private val binding: AdapterItemOperationDetailsBinding,
@@ -53,10 +54,10 @@ class OperationDetailsViewHolder(
 
         // Set Click Listener only for public key values and asset code (fields with Asset tag).
         if(isPublicKeyField || isAssetTag) {
-            itemView.setOnClickListener {
+            itemView.setSafeOnClickListener {
                 val position = this@OperationDetailsViewHolder.bindingAdapterPosition
                 if (position == RecyclerView.NO_POSITION) {
-                    return@setOnClickListener
+                    return@setSafeOnClickListener
                 }
 
                 itemClickListener(name, value, tag)

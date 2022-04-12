@@ -9,13 +9,14 @@ import com.lobstr.stellar.vault.presentation.base.fragment.BaseFragment
 import com.lobstr.stellar.vault.presentation.util.AppUtil
 import com.lobstr.stellar.vault.presentation.util.Constant
 import com.lobstr.stellar.vault.presentation.util.manager.SupportManager
+import com.lobstr.stellar.vault.presentation.util.setSafeOnClickListener
 import dagger.hilt.android.AndroidEntryPoint
 import moxy.ktx.moxyPresenter
 import javax.inject.Inject
 import javax.inject.Provider
 
 @AndroidEntryPoint
-class ErrorFragment : BaseFragment(), ErrorView, View.OnClickListener {
+class ErrorFragment : BaseFragment(), ErrorView {
 
     // ===========================================================
     // Constants
@@ -68,8 +69,8 @@ class ErrorFragment : BaseFragment(), ErrorView, View.OnClickListener {
     }
 
     private fun setListeners() {
-        binding.copyXdr.btnCopyXdr.setOnClickListener(this)
-        binding.btnDone.setOnClickListener(this)
+        binding.copyXdr.btnCopyXdr.setSafeOnClickListener { mPresenter.copySignedXdrClicked() }
+        binding.btnDone.setSafeOnClickListener { mPresenter.doneClicked() }
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -95,13 +96,6 @@ class ErrorFragment : BaseFragment(), ErrorView, View.OnClickListener {
     // ===========================================================
     // Listeners, methods for/from Interfaces
     // ===========================================================
-
-    override fun onClick(v: View?) {
-        when (v?.id) {
-            binding.copyXdr.btnCopyXdr.id -> mPresenter.copySignedXdrClicked()
-            binding.btnDone.id -> mPresenter.doneClicked()
-        }
-    }
 
     override fun vibrate(pattern: LongArray) {
         AppUtil.vibrate(requireContext(), pattern)

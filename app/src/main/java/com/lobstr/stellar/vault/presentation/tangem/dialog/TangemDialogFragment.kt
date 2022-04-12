@@ -20,6 +20,7 @@ import com.lobstr.stellar.vault.presentation.dialog.alert.base.AlertDialogFragme
 import com.lobstr.stellar.vault.presentation.entities.tangem.TangemInfo
 import com.lobstr.stellar.vault.presentation.util.AppUtil
 import com.lobstr.stellar.vault.presentation.util.Constant
+import com.lobstr.stellar.vault.presentation.util.setSafeOnClickListener
 import com.lobstr.stellar.vault.presentation.util.tangem.CustomCardManagerDelegate
 import com.lobstr.stellar.vault.presentation.util.tangem.customInit
 import com.tangem.TangemSdk
@@ -31,7 +32,7 @@ import javax.inject.Provider
 
 @AndroidEntryPoint
 class TangemDialogFragment : BaseBottomSheetDialog(), TangemDialogView,
-    View.OnClickListener, AlertDialogFragment.OnDefaultAlertDialogListener,
+    AlertDialogFragment.OnDefaultAlertDialogListener,
     CustomCardManagerDelegate.CustomCardManagerDelegateListener {
 
     // ===========================================================
@@ -191,8 +192,8 @@ class TangemDialogFragment : BaseBottomSheetDialog(), TangemDialogView,
     }
 
     private fun setListeners() {
-        binding.btnTryAgainFr.setOnClickListener(this)
-        binding.btnCancel.setOnClickListener(this)
+        binding.btnTryAgainFr.setSafeOnClickListener { mPresenter.tryAgainClicked() }
+        binding.btnCancel.setSafeOnClickListener { mPresenter.cancelClicked() }
         binding.ivScanStatus.addAnimatorListener(object : Animator.AnimatorListener {
             override fun onAnimationRepeat(animation: Animator?) {
 
@@ -210,13 +211,6 @@ class TangemDialogFragment : BaseBottomSheetDialog(), TangemDialogView,
                 mPresenter.successAnimationStarted()
             }
         })
-    }
-
-    override fun onClick(v: View?) {
-        when (v?.id) {
-            R.id.btnCancel -> mPresenter.cancelClicked()
-            R.id.btnTryAgainFr -> mPresenter.tryAgainClicked()
-        }
     }
 
     override fun onLostCard() {

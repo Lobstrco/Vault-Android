@@ -61,9 +61,7 @@
 
     <!-- Mnemonic Code screen -->
     <string name="text_tv_mnemonics_title">Recovery Phrase</string>
-    <string name="text_tv_mnemonics_description">Recovery phrase can help you to recover access to your account in case
-        your phone is lost or stolen.
-    </string>
+    <string name="text_tv_mnemonics_description">Recovery phrase can help you to recover access to your account and associated signer keys in case your phone is lost or stolen.</string>
     <string name="text_tv_mnemonics_instruction">Write down these %d words and keep them secure. Don\'t email them or
         screenshot them.
     </string>
@@ -112,8 +110,7 @@
     <!-- Dashboard screen -->
     <string name="text_dashboard_transactions">Transactions to Sign</string>
     <string name="text_dashboard_show_list">View Transactions List</string>
-    <string name="text_title_dashboard_public_key">Vault Public Key</string>
-    <string name="text_title_dashboard_signers">Signer For</string>
+    <string name="text_title_dashboard_public_key">Vault Signer Key</string>
     <string name="text_tv_dashboard_signers_empty_state_title">No Protected Accounts</string>
     <string name="text_tv_dashboard_signers_empty_state_description">Add the Stellar account you want to protect</string>
 
@@ -127,14 +124,14 @@
     <string name="title_settings_security">Security</string>
     <string name="title_settings_help">Help</string>
     <string name="title_settings_other">Other</string>
-    <string name="text_settings_public_key">Vault Public Key</string>
-    <string name="text_settings_signer">Signer for %d account</string>
-    <string name="text_settings_signers">Signer for %d accounts</string>
+    <string name="text_settings_public_key">Vault Signer Key</string>
+    <string name="text_settings_signer">Protects %d Account</string>
+    <string name="text_settings_signers">Protects %d Accounts</string>
     <string name="text_settings_mnemonic_code">Recovery Phrase</string>
     <string name="text_settings_change_pin">Change PIN</string>
     <string name="text_settings_biometric_login">Biometric Login</string>
     <string name="text_settings_spam_protection">Allow Unsigned Transactions</string>
-    <string name="text_settings_notifications">Notifications</string>
+    <string name="text_settings_notifications">Enable Push Notifications</string>
     <string name="text_settings_signer_card_info">Learn about the Signer Card</string>
     <string name="text_settings_version">Version</string>
     <string name="text_settings_help">Help Center</string>
@@ -151,10 +148,10 @@
     <string name="text_config_yes">Yes</string>
     <string name="text_config_confirm_transactions_title">Confirm Transactions</string>
     <string name="text_config_confirm_transactions_description">Show additional confirmation alert before signing transaction requests to avoid mistakes.</string>
-    <string name="text_config_spam_protection_description">Select whether you want to receive transaction requests that don\'t contain any valid signatures from the protected account or other signers. Choose ‘No’ to protect your account from spam transactions.</string>
+    <string name="text_config_spam_protection_description">Select whether you want to receive transaction requests that don\'t contain any valid signatures from protected accounts or other signers. Choose ‘No’ to protect your signer account from spam transactions.</string>
 
     <!-- Signed Accounts screen -->
-    <string name="text_signed_account_empty_state">No signed accounts</string>
+    <string name="text_signed_account_empty_state">No protected accounts</string>
 
     <!-- Edit Account Dialog -->
     <string name="text_btn_clear_nick_name">Clear Account Nickname</string>
@@ -164,7 +161,7 @@
     <!-- Account Name Dialog-->
     <string name="text_tv_set_account_name">Set Account Nickname</string>
     <string name="text_tv_change_account_name">Change Account Nickname</string>
-    <string name="text_tv_account_name_subtitle">Choose a short name for protected account</string>
+    <string name="text_tv_account_name_subtitle">Choose a short name for this account</string>
     <string name="hint_account_nickname">Enter account nickname</string>
     <string name="text_tv_change_account_name_restriction">Limited to 20 symbols</string>
     <string name="text_btn_save">Save</string>
@@ -175,7 +172,7 @@
         invalid.
     </string>
     <string name="text_tv_signers">Signers</string>
-    <string name="text_tv_vault_account_marker">Your Vault account</string>
+    <string name="text_tv_vault_account_marker">Your Signer Account</string>
     <string name="text_tv_of">of</string>
     <string name="text_tv_status_signed">Signed</string>
     <string name="text_tv_status_pending">Pending</string>
@@ -234,7 +231,7 @@
     <string name="text_btn_provide_feedback">Contact Us</string>
 
     <!-- Public key dialog -->
-    <string name="text_tv_show_public_key_title">Vault Public Key</string>
+    <string name="text_tv_show_public_key_title">Vault Signer Key</string>
 
     <!-- Biometric prompt -->
     <string name="biometric_error_permission_not_granted">Permission is not granted by user</string>
@@ -377,4 +374,9 @@ Describe an issue or provide your feedback below:
     <string name="text_app_update_message_required">Your app is outdated and is no longer supported. Update the app to continue using LOBSTR Vault.</string>
     <string name="btn_text_app_update">Update</string>
     <string name="btn_text_app_update_skip">Skip</string>
+
+    <!-- Accounts Dialog -->
+    <string name="text_tv_choose_active_account">Choose Signer Account</string>
+    <string name="text_btn_add_new_account">New Signer Key</string>
+    <string name="text_tv_account_name">Vault Signer Key %s</string>
 </resources>

@@ -11,7 +11,8 @@ interface FcmRepository {
         token: String,
         type: String,
         registrationId: String,
-        active: Boolean
+        active: Boolean,
+        publicKey: String
     ): Single<FcmResult>
 
     fun transformApiAccountResponse(apiAccountStr: String): Account

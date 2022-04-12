@@ -11,10 +11,11 @@ import android.widget.FrameLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.core.content.ContextCompat
+import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
-import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.setFragmentResult
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.lobstr.stellar.tsmapper.presentation.entities.transaction.operation.Operation
 import com.lobstr.stellar.tsmapper.presentation.entities.transaction.operation.OperationField
 import com.lobstr.stellar.vault.R
 import com.lobstr.stellar.vault.databinding.FragmentTransactionDetailsBinding
@@ -36,18 +37,24 @@ import com.lobstr.stellar.vault.presentation.home.transactions.submit_success.Su
 import com.lobstr.stellar.vault.presentation.tangem.dialog.TangemDialogFragment
 import com.lobstr.stellar.vault.presentation.util.AppUtil
 import com.lobstr.stellar.vault.presentation.util.Constant
+import com.lobstr.stellar.vault.presentation.util.Constant.Bundle.BUNDLE_OPERATION
+import com.lobstr.stellar.vault.presentation.util.Constant.Bundle.BUNDLE_OPERATIONS_LIST
+import com.lobstr.stellar.vault.presentation.util.Constant.Bundle.BUNDLE_OPERATION_TITLE
 import com.lobstr.stellar.vault.presentation.util.Constant.Bundle.BUNDLE_TRANSACTION_ITEM
+import com.lobstr.stellar.vault.presentation.util.Constant.Bundle.BUNDLE_TRANSACTION_SOURCE_ACCOUNT
+import com.lobstr.stellar.vault.presentation.util.Constant.Bundle.BUNDLE_TRANSACTION_TITLE
 import com.lobstr.stellar.vault.presentation.util.Constant.Extra.EXTRA_TRANSACTION_ITEM
 import com.lobstr.stellar.vault.presentation.util.Constant.Extra.EXTRA_TRANSACTION_STATUS
 import com.lobstr.stellar.vault.presentation.util.manager.FragmentTransactionManager
 import com.lobstr.stellar.vault.presentation.util.manager.ProgressManager
+import com.lobstr.stellar.vault.presentation.util.setSafeOnClickListener
 import dagger.hilt.android.AndroidEntryPoint
 import moxy.ktx.moxyPresenter
 import javax.inject.Inject
 import javax.inject.Provider
 
 @AndroidEntryPoint
-class TransactionDetailsFragment : BaseFragment(), TransactionDetailsView, View.OnClickListener,
+class TransactionDetailsFragment : BaseFragment(), TransactionDetailsView,
     AlertDialogFragment.OnDefaultAlertDialogListener, TangemDialogFragment.OnTangemDialogListener {
 
     // ===========================================================
@@ -101,8 +108,8 @@ class TransactionDetailsFragment : BaseFragment(), TransactionDetailsView, View.
     }
 
     private fun setListeners() {
-        binding.btnConfirm.setOnClickListener(this)
-        binding.btnDeny.setOnClickListener(this)
+        binding.btnConfirm.setSafeOnClickListener { mPresenter.btnConfirmClicked() }
+        binding.btnDeny.setSafeOnClickListener { mPresenter.btnDenyClicked() }
 
         childFragmentManager.addOnBackStackChangedListener {
             mPresenter.backStackChanged(childFragmentManager.backStackEntryCount)
@@ -144,13 +151,6 @@ class TransactionDetailsFragment : BaseFragment(), TransactionDetailsView, View.
     // Listeners, methods for/from Interfaces
     // ===========================================================
 
-    override fun onClick(v: View?) {
-        when (v?.id) {
-            binding.btnConfirm.id -> mPresenter.btnConfirmClicked()
-            binding.btnDeny.id -> mPresenter.btnDenyClicked()
-        }
-    }
-
     override fun setupToolbarTitle(titleRes: Int) {
         saveActionBarTitle(titleRes)
     }
@@ -181,43 +181,61 @@ class TransactionDetailsFragment : BaseFragment(), TransactionDetailsView, View.
         binding.tvSignersCount.text = count
     }
 
-    override fun showOperationList(transactionItem: TransactionItem) {
-        // Reset backStack after resetup operations.
-        childFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
+    override fun initOperationList(title: Int, operations: List<Int>) {
+        if (childFragmentManager.findFragmentById(R.id.flContainer) == null) {
+            FragmentTransactionManager.displayFragment(
+                childFragmentManager,
+                childFragmentManager.fragmentFactory.instantiate(
+                    requireContext().classLoader,
+                    OperationListFragment::class.qualifiedName!!
+                ).apply {
+                    arguments = bundleOf(
+                        BUNDLE_TRANSACTION_TITLE to title,
+                        BUNDLE_OPERATIONS_LIST to operations
+                    )
+                },
+                R.id.flContainer
+            )
+        }
+    }
 
-        val bundle = Bundle()
-        bundle.putParcelable(BUNDLE_TRANSACTION_ITEM, transactionItem)
-        val fragment = childFragmentManager.fragmentFactory.instantiate(
-            requireContext().classLoader,
-            OperationListFragment::class.qualifiedName!!
-        )
-        fragment.arguments = bundle
+    override fun initOperationDetailsScreen(
+        title: Int,
+        operation: Operation,
+        transactionSourceAccount: String
+    ) {
+        if (childFragmentManager.findFragmentById(R.id.flContainer) == null) {
+            showOperationDetailsScreen(
+                title,
+                operation,
+                transactionSourceAccount
+            )
+        }
+    }
 
+    override fun showOperationDetailsScreen(
+        title: Int,
+        operation: Operation,
+        transactionSourceAccount: String
+    ) {
         FragmentTransactionManager.displayFragment(
             childFragmentManager,
-            fragment,
+            childFragmentManager.fragmentFactory.instantiate(
+                requireContext().classLoader,
+                OperationDetailsFragment::class.qualifiedName!!
+            ).apply {
+                arguments = bundleOf(
+                    BUNDLE_OPERATION_TITLE to title,
+                    BUNDLE_OPERATION to operation,
+                    BUNDLE_TRANSACTION_SOURCE_ACCOUNT to transactionSourceAccount
+                )
+            },
             R.id.flContainer
         )
     }
 
-    override fun showOperationDetailsScreen(transactionItem: TransactionItem, position: Int) {
-        // Reset backStack after re-setup operations.
-        childFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
-
-        val bundle = Bundle()
-        bundle.putParcelable(BUNDLE_TRANSACTION_ITEM, transactionItem)
-        bundle.putInt(Constant.Bundle.BUNDLE_OPERATION_POSITION, position)
-        val fragment = childFragmentManager.fragmentFactory.instantiate(
-            requireContext().classLoader,
-            OperationDetailsFragment::class.qualifiedName!!
-        )
-        fragment.arguments = bundle
-
-        FragmentTransactionManager.displayFragment(
-            childFragmentManager,
-            fragment,
-            R.id.flContainer
-        )
+    override fun operationDetailsClicked(position: Int) {
+        mPresenter.operationDetailsClicked(position)
     }
 
     override fun setupTransactionInfo(fields: List<OperationField>) {
@@ -262,7 +280,7 @@ class TransactionDetailsFragment : BaseFragment(), TransactionDetailsView, View.
 
             // Set Click Listener only for public key values.
             if(isPublicKeyField) {
-                root.setOnClickListener {
+                root.setSafeOnClickListener {
                     mPresenter.additionalInfoValueClicked(key, tag as? String)
                 }
             }

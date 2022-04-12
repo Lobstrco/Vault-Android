@@ -3,11 +3,14 @@ package com.lobstr.stellar.vault.presentation.util
 import android.content.Context
 import java.io.*
 
-
 class FileStreamUtil(private val context: Context) {
 
     companion object {
+        const val TRANSACTION_CONFIRMATION_STORAGE = "TRANSACTION_CONFIRMATION_STORAGE"
         const val ACCOUNT_NAME_STORAGE = "ACCOUNT_NAME_STORAGE"
+        const val AUTH_TOKEN_STORAGE = "AUTH_TOKEN_STORAGE"
+        const val NOTIFICATION_STORAGE = "NOTIFICATION_STORAGE"
+        const val FCM_STORAGE = "FCM_STORAGE"
     }
 
     fun <T> write(

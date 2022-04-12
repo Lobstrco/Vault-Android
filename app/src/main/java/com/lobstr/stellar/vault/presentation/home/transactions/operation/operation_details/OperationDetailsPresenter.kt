@@ -4,7 +4,6 @@ import com.lobstr.stellar.tsmapper.presentation.entities.transaction.asset.Asset
 import com.lobstr.stellar.tsmapper.presentation.entities.transaction.operation.CreateAccountOperation
 import com.lobstr.stellar.tsmapper.presentation.entities.transaction.operation.Operation
 import com.lobstr.stellar.tsmapper.presentation.entities.transaction.operation.OperationField
-import com.lobstr.stellar.tsmapper.presentation.util.Constant.TransactionType.AUTH_CHALLENGE
 import com.lobstr.stellar.tsmapper.presentation.util.TsUtil
 import com.lobstr.stellar.vault.R
 import com.lobstr.stellar.vault.data.error.exeption.HttpNotFoundException
@@ -15,8 +14,8 @@ import com.lobstr.stellar.vault.domain.util.event.Network
 import com.lobstr.stellar.vault.domain.util.event.Update
 import com.lobstr.stellar.vault.presentation.BasePresenter
 import com.lobstr.stellar.vault.presentation.entities.account.Account
-import com.lobstr.stellar.vault.presentation.entities.transaction.TransactionItem
 import com.lobstr.stellar.vault.presentation.util.AppUtil
+import com.lobstr.stellar.vault.presentation.util.Constant
 import com.lobstr.stellar.vault.presentation.util.Constant.Util.PK_TRUNCATE_COUNT_SHORT
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
@@ -31,8 +30,9 @@ class OperationDetailsPresenter @Inject constructor(
 
 ) : BasePresenter<OperationDetailsView>() {
 
-    lateinit var transactionItem: TransactionItem
-    var position: Int = 0
+    var title: Int = Constant.Util.UNDEFINED_VALUE
+    lateinit var operation: Operation
+    lateinit var transactionSourceAccount: String
 
     private lateinit var operationFields: MutableList<OperationField>
 
@@ -40,33 +40,17 @@ class OperationDetailsPresenter @Inject constructor(
 
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
-        // Check case, when operations list is empty.
-        if (transactionItem.transaction.operations.isNullOrEmpty()) {
-            viewState.setupToolbarTitle(
-                when (transactionItem.transaction.transactionType) {
-                    AUTH_CHALLENGE -> R.string.text_transaction_challenge
-                    else -> R.string.title_toolbar_transaction_details
-                }
-            )
-            return
-        }
+
+        viewState.setupToolbarTitle(title.run {
+           if (this == Constant.Util.UNDEFINED_VALUE) TsUtil.getTransactionOperationName(operation) else this
+        })
 
         registerEventProvider()
 
-        val operation: Operation = transactionItem.transaction.operations[position]
         operationFields = operation.getFields(AppUtil.getAppContext())
 
-        viewState.setupToolbarTitle(
-            when {
-                transactionItem.transaction.operations.size == 1 && transactionItem.transaction.transactionType == AUTH_CHALLENGE -> {
-                    R.string.text_transaction_challenge // Specific case for the 'Single Operation' Challenge Transaction.
-                }
-                else -> TsUtil.getTransactionOperationName(operation)
-            }
-        )
-
         // Apply Operation Source Account in cases when Transaction Source Account doesn't equal it.
-        if (transactionItem.transaction.sourceAccount != operation.sourceAccount) {
+        if (transactionSourceAccount != operation.sourceAccount) {
             operation.applyOperationSourceAccountTo(AppUtil.getAppContext(),operationFields)
         }
 
@@ -147,7 +131,7 @@ class OperationDetailsPresenter @Inject constructor(
      */
     private fun getStellarAccounts() {
         // Exclude some operations if needed.
-        when(transactionItem.transaction.operations[position]) {
+        when (operation) {
             is CreateAccountOperation -> return
         }
 

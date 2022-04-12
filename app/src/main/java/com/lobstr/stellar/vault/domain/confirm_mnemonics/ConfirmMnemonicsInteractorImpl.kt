@@ -6,7 +6,6 @@ import com.lobstr.stellar.vault.presentation.util.PrefsUtil
 import io.reactivex.rxjava3.core.Single
 import org.stellar.sdk.KeyPair
 
-
 class ConfirmMnemonicsInteractorImpl(
     private val stellarRepository: StellarRepository,
     private val keyStoreRepository: KeyStoreRepository,
@@ -14,13 +13,15 @@ class ConfirmMnemonicsInteractorImpl(
 ) : ConfirmMnemonicsInteractor {
 
     override fun createAndSaveSecretKey(mnemonics: CharArray): Single<String> {
-        return stellarRepository.createKeyPair(mnemonics, 0)
+        val newKeyIndex: Int = prefUtil.getNewPublicKeyIndex()
+        return stellarRepository.createKeyPair(mnemonics, newKeyIndex)
             .map { keyPair: KeyPair ->
                 keyStoreRepository.encryptData(
                     String(mnemonics),
                     PrefsUtil.PREF_ENCRYPTED_PHRASES,
                     PrefsUtil.PREF_PHRASES_IV
                 )
+                prefUtil.savePublicKeyToList(keyPair.accountId, newKeyIndex)
                 prefUtil.publicKey = keyPair.accountId
                 return@map String(keyPair.secretSeed)
             }

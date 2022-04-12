@@ -10,6 +10,7 @@ import com.lobstr.stellar.vault.data.error.RxErrorUtilsImpl
 import com.lobstr.stellar.vault.data.fcm.FcmEntityMapper
 import com.lobstr.stellar.vault.data.fcm.FcmRepositoryImpl
 import com.lobstr.stellar.vault.data.key_store.KeyStoreRepositoryImpl
+import com.lobstr.stellar.vault.data.local_data.LocalDataRepositoryImpl
 import com.lobstr.stellar.vault.data.mnemonic.MnemonicsMapper
 import com.lobstr.stellar.vault.data.net.AccountApi
 import com.lobstr.stellar.vault.data.net.FcmApi
@@ -25,6 +26,7 @@ import com.lobstr.stellar.vault.domain.error.RxErrorRepository
 import com.lobstr.stellar.vault.domain.error.RxErrorUtils
 import com.lobstr.stellar.vault.domain.fcm.FcmRepository
 import com.lobstr.stellar.vault.domain.key_store.KeyStoreRepository
+import com.lobstr.stellar.vault.domain.local_data.LocalDataRepository
 import com.lobstr.stellar.vault.domain.stellar.StellarRepository
 import com.lobstr.stellar.vault.domain.tangem.TangemRepository
 import com.lobstr.stellar.vault.domain.transaction.TransactionRepository
@@ -70,7 +72,10 @@ object RepositoryModule {
 
     @Singleton
     @Provides
-    fun provideKeyStoreRepository(@ApplicationContext context: Context, prefsUtil: PrefsUtil): KeyStoreRepository {
+    fun provideKeyStoreRepository(
+        @ApplicationContext context: Context,
+        prefsUtil: PrefsUtil
+    ): KeyStoreRepository {
         return KeyStoreRepositoryImpl(context, prefsUtil, MnemonicsMapper())
     }
 
@@ -81,6 +86,7 @@ object RepositoryModule {
         apiVaultAuthApi: VaultAuthApi,
         rxErrorRepository: RxErrorRepository,
         keyStoreRepository: KeyStoreRepository,
+        localDataRepository: LocalDataRepository,
         prefsUtil: PrefsUtil
     ): RxErrorUtils {
         return RxErrorUtilsImpl(
@@ -88,6 +94,7 @@ object RepositoryModule {
             apiVaultAuthApi,
             rxErrorRepository,
             keyStoreRepository,
+            localDataRepository,
             prefsUtil
         )
     }
@@ -144,9 +151,20 @@ object RepositoryModule {
     @Provides
     fun provideAccountRepository(
         accountApi: AccountApi,
-        rxErrorUtils: RxErrorUtils,
-        fileStreamUtil: FileStreamUtil
+        rxErrorUtils: RxErrorUtils
     ): AccountRepository {
-        return AccountRepositoryImpl(accountApi, AccountEntityMapper(), rxErrorUtils, fileStreamUtil)
+        return AccountRepositoryImpl(
+            accountApi,
+            AccountEntityMapper(),
+            rxErrorUtils
+        )
+    }
+
+    @Singleton
+    @Provides
+    fun provideLocalDataRepository(
+        fileStreamUtil: FileStreamUtil
+    ): LocalDataRepository {
+        return LocalDataRepositoryImpl(fileStreamUtil)
     }
 }

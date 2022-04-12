@@ -15,9 +15,10 @@ import com.lobstr.stellar.vault.presentation.auth.tangem.TangemSetupFragment
 import com.lobstr.stellar.vault.presentation.base.fragment.BaseFragment
 import com.lobstr.stellar.vault.presentation.util.manager.FragmentTransactionManager
 import com.lobstr.stellar.vault.presentation.util.manager.SupportManager
+import com.lobstr.stellar.vault.presentation.util.setSafeOnClickListener
 import moxy.ktx.moxyPresenter
 
-class AuthFragment : BaseFragment(), AuthFrView, View.OnClickListener {
+class AuthFragment : BaseFragment(), AuthFrView {
 
     // ===========================================================
     // Constants
@@ -62,10 +63,10 @@ class AuthFragment : BaseFragment(), AuthFrView, View.OnClickListener {
     }
 
     private fun setListeners() {
-        binding.btnAuthNew.setOnClickListener(this)
-        binding.btnAuthRestore.setOnClickListener(this)
-        binding.btnTangemSignIn.setOnClickListener(this)
-        binding.tvHelp.setOnClickListener(this)
+        binding.btnAuthNew.setSafeOnClickListener { mPresenter.newClicked() }
+        binding.btnAuthRestore.setSafeOnClickListener { mPresenter.restoreClicked() }
+        binding.btnTangemSignIn.setSafeOnClickListener { mPresenter.tangemClicked() }
+        binding.tvHelp.setSafeOnClickListener { mPresenter.helpClicked() }
     }
 
     override fun onDestroyView() {
@@ -76,15 +77,6 @@ class AuthFragment : BaseFragment(), AuthFrView, View.OnClickListener {
     // ===========================================================
     // Listeners, methods for/from Interfaces
     // ===========================================================
-
-    override fun onClick(v: View?) {
-        when (v?.id) {
-            binding.btnAuthNew.id -> mPresenter.newClicked()
-            binding.btnAuthRestore.id -> mPresenter.restoreClicked()
-            binding.btnTangemSignIn.id -> mPresenter.tangemClicked()
-            binding.tvHelp.id -> mPresenter.helpClicked()
-        }
-    }
 
     override fun setMovementMethods() {
         binding.tvTermsAndPrivacyPolicy.movementMethod = LinkMovementMethod.getInstance()

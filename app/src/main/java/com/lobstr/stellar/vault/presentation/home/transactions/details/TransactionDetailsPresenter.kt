@@ -3,6 +3,7 @@ package com.lobstr.stellar.vault.presentation.home.transactions.details
 import android.text.format.DateFormat
 import com.lobstr.stellar.tsmapper.presentation.entities.transaction.operation.OperationField
 import com.lobstr.stellar.tsmapper.presentation.util.Constant.TransactionType.AUTH_CHALLENGE
+import com.lobstr.stellar.tsmapper.presentation.util.TsUtil
 import com.lobstr.stellar.vault.R
 import com.lobstr.stellar.vault.data.error.exeption.*
 import com.lobstr.stellar.vault.domain.transaction_details.TransactionDetailsInteractor
@@ -19,6 +20,7 @@ import com.lobstr.stellar.vault.presentation.entities.account.AccountResult
 import com.lobstr.stellar.vault.presentation.entities.tangem.TangemInfo
 import com.lobstr.stellar.vault.presentation.entities.transaction.TransactionItem
 import com.lobstr.stellar.vault.presentation.util.AppUtil
+import com.lobstr.stellar.vault.presentation.util.Constant
 import com.lobstr.stellar.vault.presentation.util.Constant.Transaction.CANCELLED
 import com.lobstr.stellar.vault.presentation.util.Constant.Transaction.IMPORT_XDR
 import com.lobstr.stellar.vault.presentation.util.Constant.Transaction.PENDING
@@ -287,13 +289,60 @@ class TransactionDetailsPresenter @Inject constructor(
         // Prepare operations list or show single operation:
         // when transaction has only one operation - show operation details screen immediately, else - list.
         if (transactionItem.transaction.operations.size > 1) {
-            viewState.showOperationList(transactionItem)
+            viewState.initOperationList(
+                when (transactionItem.transaction.transactionType) {
+                    AUTH_CHALLENGE -> R.string.text_transaction_challenge
+                    else -> R.string.title_toolbar_transaction_details
+                },
+                mutableListOf<Int>().apply {
+                    // Prepare operations list for show it.
+                    for (operation in transactionItem.transaction.operations) {
+                        val resId: Int =
+                            TsUtil.getTransactionOperationName(operation)
+                        if (resId != -1) {
+                            add(resId)
+                        }
+                    }
+                })
         } else {
-            viewState.showOperationDetailsScreen(transactionItem, 0)
+            prepareOperationDetails(0, isInitState = true)
         }
 
         // Check and setup additional info like Source Account and date.
         checkTransactionInfo()
+    }
+
+    fun operationDetailsClicked(opPosition: Int) {
+        prepareOperationDetails(opPosition, isInitState = false)
+    }
+
+    /**
+     * Prepare Operation Details screen.
+     * @param opPosition Operation position in the list.
+     * @param isInitState Single or 'From Operations List' state.
+     */
+    private fun prepareOperationDetails(opPosition: Int, isInitState: Boolean) {
+        transactionItem.transaction.operations.getOrNull(opPosition)?.let { operation ->
+            val title = when {
+                transactionItem.transaction.operations.size == 1 && transactionItem.transaction.transactionType == AUTH_CHALLENGE -> {
+                    R.string.text_transaction_challenge // Specific case for the 'Single Operation' Challenge Transaction.
+                }
+                else -> Constant.Util.UNDEFINED_VALUE
+            }
+            if (isInitState) {
+                viewState.initOperationDetailsScreen(
+                    title,
+                    operation,
+                    transactionItem.transaction.sourceAccount
+                )
+            } else {
+                viewState.showOperationDetailsScreen(
+                    title,
+                    operation,
+                    transactionItem.transaction.sourceAccount
+                )
+            }
+        }
     }
 
     private fun checkTransactionInfo() {

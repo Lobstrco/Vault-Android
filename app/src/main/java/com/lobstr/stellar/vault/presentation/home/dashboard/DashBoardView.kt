@@ -15,7 +15,12 @@ interface DashboardView : MvpView {
     fun notifySignedAccountsAdapter(accounts: List<Account>)
 
     @AddToEndSingle
-    fun showVaultInfo(hasTangem: Boolean, identityIconUrl: String, publicKey: String?)
+    fun showVaultInfo(
+        hasTangem: Boolean,
+        identityIconUrl: String,
+        publicKey: String,
+        publicKeyTitle: String
+    )
 
     @AddToEndSingle
     fun showSignersCount(count: Int)
@@ -36,6 +41,9 @@ interface DashboardView : MvpView {
     fun navigateToTransactionList()
 
     @Skip
+    fun showAccountsDialog()
+
+    @Skip
     fun showEditAccountDialog(address: String)
 
     @Skip
@@ -49,4 +57,7 @@ interface DashboardView : MvpView {
 
     @Skip
     fun showRefreshAnimation(show: Boolean)
+
+    @AddToEndSingle
+    fun changeAccountName(name: String)
 }

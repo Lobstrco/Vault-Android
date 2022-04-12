@@ -1,7 +1,6 @@
 package com.lobstr.stellar.vault.presentation.home.transactions.operation.operation_list
 
 import androidx.annotation.StringRes
-import com.lobstr.stellar.vault.presentation.entities.transaction.TransactionItem
 import moxy.MvpView
 import moxy.viewstate.strategy.alias.AddToEndSingle
 import moxy.viewstate.strategy.alias.Skip
@@ -16,5 +15,5 @@ interface OperationListView : MvpView {
     fun initRecycledView(operations: List<Int>)
 
     @Skip
-    fun showOperationDetailsScreen(transactionItem: TransactionItem, position: Int)
+    fun showOperationDetailsScreen(position: Int)
 }

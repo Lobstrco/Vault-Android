@@ -71,4 +71,7 @@ interface BaseActivityView : MvpView {
 
     @Skip
     fun showStore(storeUrl: String)
+
+    @Skip
+    fun reloadAccountData()
 }

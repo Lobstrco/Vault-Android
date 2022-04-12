@@ -1,6 +1,7 @@
 package com.lobstr.stellar.vault.presentation.home.transactions.details
 
 import androidx.annotation.StringRes
+import com.lobstr.stellar.tsmapper.presentation.entities.transaction.operation.Operation
 import com.lobstr.stellar.tsmapper.presentation.entities.transaction.operation.OperationField
 import com.lobstr.stellar.vault.presentation.entities.account.Account
 import com.lobstr.stellar.vault.presentation.entities.tangem.TangemInfo
@@ -30,8 +31,25 @@ interface TransactionDetailsView : MvpView {
     @AddToEndSingle
     fun showSignersCount(count: String?)
 
+    @AddToEndSingle
+    fun initOperationList(title: Int, operations: List<Int>)
+
+    @AddToEndSingle
+    fun initOperationDetailsScreen(
+        title: Int,
+        operation: Operation,
+        transactionSourceAccount: String
+    )
+
     @Skip
-    fun showOperationList(transactionItem: TransactionItem)
+    fun showOperationDetailsScreen(
+        title: Int,
+        operation: Operation,
+        transactionSourceAccount: String
+    )
+
+    @Skip
+    fun operationDetailsClicked(position: Int)
 
     @Skip
     fun showMessage(message: String?)
@@ -60,9 +78,6 @@ interface TransactionDetailsView : MvpView {
 
     @AddToEndSingle
     fun errorConfirmTransaction(errorMessage: String, envelopeXdr: String)
-
-    @AddToEndSingle
-    fun showOperationDetailsScreen(transactionItem: TransactionItem, position: Int)
 
     @AddToEndSingle
     fun setupTransactionInfo(fields: List<OperationField>)

@@ -7,19 +7,29 @@ import io.reactivex.rxjava3.core.Single
 
 interface FcmInteractor {
 
-    fun fcmDeviceRegistration(
+    fun fcmDeviceRegistrationByToken(
         type: String,
         registrationId: String,
-        active: Boolean
+        active: Boolean,
+        authToken: String,
+        publicKey: String
     ): Single<FcmResult>
+
+    fun getAuthTokenList(isLogout: Boolean = false): List<Pair<String, String>>
 
     fun saveFcmToken(token: String)
 
     fun getFcmToken(): String?
 
-    fun setFcmRegistered(registered: Boolean)
+    fun getCurrentPublicKey(): String?
+
+    fun saveRegisteredFcmPublicKey(key: String, active: Boolean)
+
+    fun setFcmNotRegistered()
 
     fun isFcmRegistered(): Boolean
+
+    fun userAccountReceived(jsonStr: String?): String?
 
     fun signedNewAccount(jsonStr: String?): Account?
 
@@ -27,7 +37,7 @@ interface FcmInteractor {
 
     fun isUserAuthorized(): Boolean
 
-    fun isNotificationsEnabled(): Boolean
+    fun isNotificationsEnabled(userAccount: String): Boolean
 
     fun transformTransactionResponse(jsonStr: String?): TransactionItem?
 }

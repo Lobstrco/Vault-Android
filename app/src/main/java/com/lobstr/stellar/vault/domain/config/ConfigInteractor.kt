@@ -16,5 +16,5 @@ interface ConfigInteractor {
 
     fun updatedAccountConfig(spamProtectionEnabled: Boolean): Single<AccountConfig>
 
-    fun getUserPublicKey(): String?
+    fun getUserPublicKey(): String
 }

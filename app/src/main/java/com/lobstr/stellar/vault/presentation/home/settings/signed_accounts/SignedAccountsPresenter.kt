@@ -100,10 +100,6 @@ class SignedAccountsPresenter @Inject constructor(
                         addAll(it)
                     }
 
-                    if(stellarAccounts.isEmpty()) {
-                        interactor.clearAccountNames()
-                    }
-
                     checkAccountNames(stellarAccounts)
 
                     // check cached federation items

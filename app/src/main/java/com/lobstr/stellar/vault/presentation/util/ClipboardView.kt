@@ -96,7 +96,7 @@ class ClipboardView(context: Context, attrs: AttributeSet?) : ConstraintLayout(c
     }
 
     fun setClickListener(listener: (text: String) -> Unit) {
-        setOnClickListener {
+        setSafeOnClickListener {
             inUseData = data
             data?.let { listener(it) }
             isVisible = false

@@ -4,6 +4,7 @@ import android.app.Dialog
 import android.content.DialogInterface
 import androidx.appcompat.app.AlertDialog
 import com.lobstr.stellar.vault.presentation.dialog.alert.base.AlertDialogFragment
+import com.lobstr.stellar.vault.presentation.util.setSafeOnClickListener
 
 
 class AppUpdateDialogFragment : AlertDialogFragment() {
@@ -11,7 +12,7 @@ class AppUpdateDialogFragment : AlertDialogFragment() {
     override fun onStart() {
         super.onStart()
         // Prevent dialog dismissing after onClick action.
-        (dialog as? AlertDialog)?.getButton(Dialog.BUTTON_POSITIVE)?.setOnClickListener {
+        (dialog as? AlertDialog)?.getButton(Dialog.BUTTON_POSITIVE)?.setSafeOnClickListener {
             onPositiveBtnClick(dialog!!)
         }
     }

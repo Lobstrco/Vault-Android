@@ -23,8 +23,10 @@ import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.schedulers.Schedulers
 import javax.inject.Inject
 
-class SettingsPresenter @Inject constructor(private val interactor: SettingsInteractor,
-                        private val eventProviderModule: EventProviderModule) : BasePresenter<SettingsView>() {
+class SettingsPresenter @Inject constructor(
+    private val interactor: SettingsInteractor,
+    private val eventProviderModule: EventProviderModule
+) : BasePresenter<SettingsView>() {
 
     private var loadSignedAccountsInProcess = false
 
@@ -35,8 +37,10 @@ class SettingsPresenter @Inject constructor(private val interactor: SettingsInte
         viewState.setupToolbarTitle(R.string.title_toolbar_settings)
         registerEventProvider()
         viewState.setupSettingsData(
-            "${BuildConfig.VERSION_NAME} (${if (BuildConfig.FLAVOR == Constant.Flavor.QA) BuildConfig.FLAVOR.uppercase()
-                .plus("-").plus(AppUtil.getAppBehavior()) else BuildConfig.VERSION_CODE})",
+            "${BuildConfig.VERSION_NAME} (${
+                if (BuildConfig.FLAVOR == Constant.Flavor.QA) BuildConfig.FLAVOR.uppercase()
+                    .plus("-").plus(AppUtil.getAppBehavior()) else BuildConfig.VERSION_CODE
+            })",
             BiometricUtils.isBiometricSupported(AppUtil.getAppContext()) && interactor.hasMnemonics(),
             interactor.hasMnemonics(),
             interactor.hasMnemonics(),
@@ -114,7 +118,7 @@ class SettingsPresenter @Inject constructor(private val interactor: SettingsInte
     }
 
     fun handleConfigResult(config: Int) {
-        when(config){
+        when (config) {
             Constant.Code.Config.SPAM_PROTECTION -> viewState.setSpamProtection(
                 AppUtil.getConfigText(
                     AppUtil.getConfigType(!interactor.isSpamProtectionEnabled())
@@ -190,7 +194,7 @@ class SettingsPresenter @Inject constructor(private val interactor: SettingsInte
     }
 
     fun publicKeyClicked() {
-        interactor.getUserPublicKey()?.let { viewState.showPublicKeyDialog(it) }
+        viewState.showPublicKeyDialog(interactor.getUserPublicKey())
     }
 
     fun signerCardClicked() {

@@ -2,6 +2,7 @@ package com.lobstr.stellar.vault.presentation.dagger.module.base
 
 import com.lobstr.stellar.vault.domain.base.BaseInteractor
 import com.lobstr.stellar.vault.domain.base.BaseInteractorImpl
+import com.lobstr.stellar.vault.domain.local_data.LocalDataRepository
 import com.lobstr.stellar.vault.domain.vault_auth.VaultAuthRepository
 import com.lobstr.stellar.vault.presentation.util.PrefsUtil
 import dagger.Module
@@ -15,8 +16,7 @@ object BaseModule {
     @Provides
     fun provideBaseInteractor(
         vaultAuthRepository: VaultAuthRepository,
+        localDataRepository: LocalDataRepository,
         prefsUtil: PrefsUtil
-    ): BaseInteractor {
-        return BaseInteractorImpl(vaultAuthRepository, prefsUtil)
-    }
+    ): BaseInteractor = BaseInteractorImpl(vaultAuthRepository, localDataRepository, prefsUtil)
 }

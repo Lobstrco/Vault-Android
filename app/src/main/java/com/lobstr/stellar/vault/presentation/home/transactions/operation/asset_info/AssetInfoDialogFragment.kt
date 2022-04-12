@@ -8,9 +8,10 @@ import com.lobstr.stellar.vault.databinding.FragmentAssetInfoDialogBinding
 import com.lobstr.stellar.vault.presentation.BaseBottomSheetDialog
 import com.lobstr.stellar.vault.presentation.util.AppUtil
 import com.lobstr.stellar.vault.presentation.util.Constant
+import com.lobstr.stellar.vault.presentation.util.setSafeOnClickListener
 import moxy.ktx.moxyPresenter
 
-class AssetInfoDialogFragment : BaseBottomSheetDialog(), AssetInfoView, View.OnClickListener {
+class AssetInfoDialogFragment : BaseBottomSheetDialog(), AssetInfoView {
 
     // ===========================================================
     // Constants
@@ -60,7 +61,7 @@ class AssetInfoDialogFragment : BaseBottomSheetDialog(), AssetInfoView, View.OnC
     }
 
     private fun setListeners() {
-        binding.btnOpenExplorer.setOnClickListener(this)
+        binding.btnOpenExplorer.setSafeOnClickListener { mPresenter.openExplorerClicked() }
     }
 
     override fun onDestroyView() {
@@ -71,12 +72,6 @@ class AssetInfoDialogFragment : BaseBottomSheetDialog(), AssetInfoView, View.OnC
     // ===========================================================
     // Listeners, methods for/from Interfaces
     // ===========================================================
-
-    override fun onClick(v: View?) {
-        when (v?.id) {
-            binding.btnOpenExplorer.id -> mPresenter.openExplorerClicked()
-        }
-    }
 
     override fun openExplorer(url: String) {
         dismiss()

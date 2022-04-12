@@ -14,11 +14,13 @@ class HomeActivityPresenter @Inject constructor(private var interactor: HomeInte
         super.onFirstViewAttach()
 
         viewState.setupToolbar(R.drawable.ic_arrow_back, android.R.color.white)
+        initData()
+    }
 
+    private fun initData() {
         interactor.checkFcmRegistration()
 
         viewState.initBottomNavigationView()
-
         viewState.setupViewPager()
     }
 
@@ -43,5 +45,9 @@ class HomeActivityPresenter @Inject constructor(private var interactor: HomeInte
 
             viewState.suggestRateUsDialog()
         }
+    }
+
+    fun accountWasChanged() {
+        initData()
     }
 }

@@ -1,6 +1,5 @@
 package com.lobstr.stellar.vault.presentation.home.dashboard
 
-
 import android.animation.ObjectAnimator
 import android.content.Intent
 import android.graphics.Typeface
@@ -24,19 +23,20 @@ import com.lobstr.stellar.vault.presentation.container.activity.ContainerActivit
 import com.lobstr.stellar.vault.presentation.dialog.alert.base.AlertDialogFragment
 import com.lobstr.stellar.vault.presentation.entities.account.Account
 import com.lobstr.stellar.vault.presentation.home.HomeActivity
+import com.lobstr.stellar.vault.presentation.home.dashboard.account.AccountsDialogFragment
 import com.lobstr.stellar.vault.presentation.home.settings.signed_accounts.adapter.AccountAdapter
 import com.lobstr.stellar.vault.presentation.home.settings.signed_accounts.edit_account.EditAccountDialogFragment
 import com.lobstr.stellar.vault.presentation.util.AppUtil
 import com.lobstr.stellar.vault.presentation.util.Constant
-import com.lobstr.stellar.vault.presentation.util.Constant.Bundle.BUNDLE_PUBLIC_KEY
+import com.lobstr.stellar.vault.presentation.util.setSafeOnClickListener
 import dagger.hilt.android.AndroidEntryPoint
 import moxy.ktx.moxyPresenter
 import javax.inject.Inject
 import javax.inject.Provider
 
 @AndroidEntryPoint
-class DashboardFragment : BaseFragment(), DashboardView, EditAccountDialogFragment.OnEditAccountDialogListener,
-    View.OnClickListener {
+class DashboardFragment : BaseFragment(), DashboardView,
+    EditAccountDialogFragment.OnEditAccountDialogListener {
 
     // ===========================================================
     // Constants
@@ -93,12 +93,35 @@ class DashboardFragment : BaseFragment(), DashboardView, EditAccountDialogFragme
     }
 
     private fun setListeners() {
-        binding.tvDashboardShowList.setOnClickListener(this)
-        binding.tvDashboardCopyPublicKey.setOnClickListener(this)
-        binding.tvDashboardTransactionCount.setOnClickListener(this)
-        binding.tvDashboardSignersCount.setOnClickListener(this)
-        binding.tvEmptyStateAction.setOnClickListener(this)
-        binding.tvAddAccount.setOnClickListener(this)
+        binding.apply {
+            ivMore.setSafeOnClickListener {
+                mPresenter.editCurrentAccountClicked()
+            }
+            flIdentityContainer.setSafeOnClickListener {
+                mPresenter.showAccountsClicked()
+            }
+            tvDashboardPublicKeyTitle.setSafeOnClickListener {
+                mPresenter.showAccountsClicked()
+            }
+            tvDashboardShowList.setSafeOnClickListener {
+                mPresenter.showTransactionListClicked()
+            }
+            tvDashboardCopyPublicKey.setSafeOnClickListener {
+                mPresenter.copyKeyClicked()
+            }
+            tvDashboardTransactionCount.setSafeOnClickListener {
+                mPresenter.transactionCountClicked()
+            }
+            tvDashboardSignersCount.setSafeOnClickListener {
+                mPresenter.signersCountClicked()
+            }
+            tvEmptyStateAction.setSafeOnClickListener {
+                mPresenter.addAccountClicked()
+            }
+            tvAddAccount.setSafeOnClickListener {
+                mPresenter.addAccountClicked()
+            }
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -110,7 +133,7 @@ class DashboardFragment : BaseFragment(), DashboardView, EditAccountDialogFragme
         mRefreshAnimation?.repeatCount = 1
         mRefreshAnimation?.interpolator = LinearInterpolator()
 
-        refreshView?.setOnClickListener {
+        refreshView?.setSafeOnClickListener {
             mPresenter.refreshClicked()
         }
 
@@ -136,20 +159,9 @@ class DashboardFragment : BaseFragment(), DashboardView, EditAccountDialogFragme
     // Listeners, methods for/from Interfaces
     // ===========================================================
 
-    override fun onClick(v: View?) {
-        when (v?.id) {
-            binding.tvDashboardTransactionCount.id -> mPresenter.transactionCountClicked()
-            binding.tvDashboardShowList.id -> mPresenter.showTransactionListClicked()
-            binding.tvDashboardCopyPublicKey.id -> mPresenter.copyKeyClicked()
-            binding.tvDashboardSignersCount.id -> mPresenter.signersCountClicked()
-            binding.tvAddAccount.id -> mPresenter.addAccountClicked()
-            binding.tvEmptyStateAction.id -> mPresenter.addAccountClicked()
-        }
-    }
-
     override fun initSignedAccountsRecycledView() {
         binding.rvSignedAccounts.layoutManager = LinearLayoutManager(activity)
-        binding. rvSignedAccounts.itemAnimator = null
+        binding.rvSignedAccounts.itemAnimator = null
         binding.rvSignedAccounts.isNestedScrollingEnabled = false
         binding.rvSignedAccounts.adapter = AccountAdapter(AccountAdapter.ACCOUNT,
             { mPresenter.signedAccountItemClicked(it) },
@@ -160,24 +172,38 @@ class DashboardFragment : BaseFragment(), DashboardView, EditAccountDialogFragme
         (binding.rvSignedAccounts.adapter as? AccountAdapter)?.setAccountList(accounts)
     }
 
-    override fun showVaultInfo(hasTangem: Boolean, identityIconUrl: String, publicKey: String?) {
-        binding.ivSignerCard.isVisible = hasTangem
-        binding.flIdentityContainer.isVisible = !hasTangem
+    override fun showVaultInfo(
+        hasTangem: Boolean, identityIconUrl: String, publicKey: String, publicKeyTitle: String
+    ) {
+        binding.apply {
+            ivSignerCard.isVisible = hasTangem
+            flIdentityContainer.isVisible = !hasTangem
 
-        if (!hasTangem) {
-            // Set user identity icon.
-            Glide.with(requireContext())
-                .load(identityIconUrl)
-                .placeholder(R.drawable.ic_person)
-                .into(binding.ivIdentity)
+            if (!hasTangem) {
+                tvDashboardPublicKeyTitle.setCompoundDrawablesWithIntrinsicBounds(
+                    0,
+                    0,
+                    R.drawable.ic_arrow_down,
+                    0
+                )
+                // Set user identity icon.
+                Glide.with(requireContext())
+                    .load(identityIconUrl)
+                    .placeholder(R.drawable.ic_person)
+                    .into(ivIdentity)
+            }
+
+            tvDashboardPublicKeyTitle.text = publicKeyTitle
+            tvDashboardPublicKey.text = publicKey
         }
-
-        binding.tvDashboardPublicKey.text = publicKey
     }
 
     override fun showSignersCount(count: Int) {
 
-        val message = getString(if (count == 1) R.string.text_settings_signer else R.string.text_settings_signers, count)
+        val message = getString(
+            if (count == 1) R.string.text_settings_signer else R.string.text_settings_signers,
+            count
+        )
         val spannedText = SpannableString(message)
         val startPosition = message.indexOf(count.toString())
         val endPosition = startPosition + count.toString().length
@@ -248,6 +274,13 @@ class DashboardFragment : BaseFragment(), DashboardView, EditAccountDialogFragme
         (activity as? HomeActivity)?.setSelectedBottomNavigationItem(R.id.action_transactions)
     }
 
+    override fun showAccountsDialog() {
+        AccountsDialogFragment().show(
+            childFragmentManager,
+            AlertDialogFragment.DialogFragmentIdentifier.ACCOUNTS
+        )
+    }
+
     override fun showEditAccountDialog(address: String) {
         val bundle = Bundle()
         bundle.putString(Constant.Bundle.BUNDLE_PUBLIC_KEY, address)
@@ -283,10 +316,14 @@ class DashboardFragment : BaseFragment(), DashboardView, EditAccountDialogFragme
         }
     }
 
+    override fun changeAccountName(name: String) {
+        binding.tvDashboardPublicKeyTitle.text = name
+    }
+
     override fun onSetAccountNickNameClicked(publicKey: String) {
         AlertDialogFragment.Builder(true)
             .setSpecificDialog(AlertDialogFragment.DialogIdentifier.ACCOUNT_NAME, Bundle().apply {
-                putString(BUNDLE_PUBLIC_KEY, publicKey)
+                putString(Constant.Bundle.BUNDLE_PUBLIC_KEY, publicKey)
             })
             .create()
             .show(

@@ -1,5 +1,6 @@
 package com.lobstr.stellar.vault.presentation.home.dashboard
 
+import com.lobstr.stellar.vault.R
 import com.lobstr.stellar.vault.data.error.exeption.DefaultException
 import com.lobstr.stellar.vault.data.error.exeption.NoInternetConnectionException
 import com.lobstr.stellar.vault.data.error.exeption.UserNotAuthorizedException
@@ -38,16 +39,28 @@ class DashboardPresenter @Inject constructor(
 
         viewState.initSignedAccountsRecycledView()
 
-        val vaultPublicKey = interactor.getUserPublicKey()
+        val vaultPublicKey = interactor.getUserPublicKey() ?: ""
 
         viewState.showVaultInfo(
             interactor.hasTangem(),
             AppUtil.createUserIconLink(vaultPublicKey),
-            AppUtil.ellipsizeStrInMiddle(vaultPublicKey, PK_TRUNCATE_COUNT)
+            AppUtil.ellipsizeStrInMiddle(vaultPublicKey, PK_TRUNCATE_COUNT) ?: "",
+            getAccountName(vaultPublicKey)
         )
 
         registerEventProvider()
         loadSignedAccountsAndTransactions()
+    }
+
+    private fun getAccountName(
+        publicKey: String,
+        defaultTitle: String = AppUtil.getString(R.string.text_title_dashboard_public_key)
+    ): String = interactor.getAccountNames().let {
+        when {
+            !it[publicKey].isNullOrEmpty() -> it[publicKey]!!
+            interactor.hasTangem() -> defaultTitle
+            else -> """$defaultTitle ${interactor.getUserPublicKeyIndex() + 1}"""
+        }
     }
 
     private fun loadSignedAccountsAndTransactions() {
@@ -96,7 +109,7 @@ class DashboardPresenter @Inject constructor(
         unsubscribeOnDestroy(
             eventProviderModule.updateEventSubject
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({
+                .subscribe({ it ->
                     when (it.type) {
                         ACCOUNT_NAME -> {
                             unsubscribeOnDestroy(Completable.fromCallable {
@@ -104,10 +117,14 @@ class DashboardPresenter @Inject constructor(
                             }
                                 .subscribeOn(Schedulers.io())
                                 .observeOn(AndroidSchedulers.mainThread())
-                                .subscribe(
-                                    { viewState.notifySignedAccountsAdapter(stellarAccounts) },
-                                    Throwable::printStackTrace
-                                )
+                                .subscribe({
+                                    viewState.notifySignedAccountsAdapter(stellarAccounts)
+                                    viewState.changeAccountName(
+                                        getAccountName(interactor.getUserPublicKey() ?: "")
+                                    )
+                                }, { throwable ->
+                                    throwable.printStackTrace()
+                                })
                             )
                         }
                         else -> loadSignedAccountsAndTransactions()
@@ -168,9 +185,6 @@ class DashboardPresenter @Inject constructor(
                     stellarAccounts.apply {
                         clear()
                         addAll(it)
-                    }
-                    if (stellarAccounts.isEmpty()) {
-                        interactor.clearAccountNames()
                     }
 
                     checkAccountNames(stellarAccounts)
@@ -277,6 +291,18 @@ class DashboardPresenter @Inject constructor(
 
     fun transactionCountClicked() {
         viewState.navigateToTransactionList()
+    }
+
+    fun editCurrentAccountClicked() {
+        interactor.getUserPublicKey()?.let {
+            viewState.showEditAccountDialog(it)
+        }
+    }
+
+    fun showAccountsClicked() {
+        if (!interactor.hasTangem()) {
+            viewState.showAccountsDialog()
+        }
     }
 
     fun showTransactionListClicked() {
