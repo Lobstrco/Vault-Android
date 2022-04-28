@@ -15,8 +15,8 @@ import com.lobstr.stellar.vault.presentation.entities.account.Account
 import com.lobstr.stellar.vault.presentation.util.AppUtil
 import com.lobstr.stellar.vault.presentation.util.Constant.Util.PK_TRUNCATE_COUNT
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
-import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.disposables.Disposable
 import io.reactivex.rxjava3.schedulers.Schedulers
 import javax.inject.Inject
@@ -112,13 +112,13 @@ class DashboardPresenter @Inject constructor(
                 .subscribe({ it ->
                     when (it.type) {
                         ACCOUNT_NAME -> {
-                            unsubscribeOnDestroy(Completable.fromCallable {
+                            unsubscribeOnDestroy(Single.fromCallable {
                                 checkAccountNames(stellarAccounts)
                             }
                                 .subscribeOn(Schedulers.io())
                                 .observeOn(AndroidSchedulers.mainThread())
                                 .subscribe({
-                                    viewState.notifySignedAccountsAdapter(stellarAccounts)
+                                    if (it) viewState.notifySignedAccountsAdapter(stellarAccounts)
                                     viewState.changeAccountName(
                                         getAccountName(interactor.getUserPublicKey() ?: "")
                                     )
@@ -241,12 +241,18 @@ class DashboardPresenter @Inject constructor(
 
     /**
      * Check Accounts' names from cache.
+     * @return true when Accounts' names was changed.
      */
-    private fun checkAccountNames(accounts: List<Account>) {
+    private fun checkAccountNames(accounts: List<Account>): Boolean {
         val names = interactor.getAccountNames()
+        var accountNamesChanged = false
         for (account in accounts) {
-            account.name = names[account.address]
+            val name = names[account.address]
+            if (!accountNamesChanged) accountNamesChanged = account.name != name
+            account.name = name
         }
+
+        return accountNamesChanged
     }
 
     /**

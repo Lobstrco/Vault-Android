@@ -10,6 +10,7 @@ import com.lobstr.stellar.vault.presentation.util.Constant
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Single
+import io.reactivex.rxjava3.functions.BiFunction
 import io.reactivex.rxjava3.schedulers.Schedulers
 import javax.inject.Inject
 
@@ -21,14 +22,25 @@ class EditAccountPresenter @Inject constructor(
     lateinit var publicKey: String
 
     var manageAccountName: Boolean = false
+    var showNetworkExplorer: Boolean = true
 
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
 
         if (manageAccountName) {
-            // Find account name for the relevant public key.
+            // Find account name for the relevant public key and check exemptions for the 'Open Explorer' option.
             unsubscribeOnDestroy(
-                Single.fromCallable { interactor.getAccountName(publicKey) ?: "" }
+                Single.zip(
+                    Single.fromCallable { interactor.getAccountName(publicKey) ?: "" },
+                    Single.fromCallable { if (showNetworkExplorer) interactor.getPublicKeyList() else listOf() },
+                    BiFunction<String, List<Pair<String, Int>>, String> { name, keys ->
+                        // Check showNetworkExplorer flag for the user accounts cases and default value.
+                        if (showNetworkExplorer) {
+                            showNetworkExplorer = keys.find { it.first == publicKey } == null
+                        }
+                        name
+                    }
+                )
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe({
@@ -38,7 +50,7 @@ class EditAccountPresenter @Inject constructor(
                             )
                         )
                         viewState.showClearAccountButton(!it.isNullOrEmpty())
-                        viewState.showNetworkExplorerButton(publicKey != interactor.getCurrentPublicKey())
+                        viewState.showNetworkExplorerButton(showNetworkExplorer)
                     }, Throwable::printStackTrace)
             )
         }

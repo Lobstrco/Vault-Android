@@ -75,7 +75,7 @@ class RxErrorUtilsImpl(
             }
             .flatMap { vaultAuthApi.submitChallenge(it.toEnvelopeXdrBase64()) }
             .doOnSuccess {
-                prefsUtil.authToken = it.token
+                if(prefsUtil.publicKey == key) prefsUtil.authToken = it.token
                 localDataRepository.saveAuthToken(key!!, it.token!!)
                 throw UserNotAuthorizedException("User Not Authorized")
             }
@@ -135,7 +135,7 @@ class RxErrorUtilsImpl(
             }
             .flatMap { vaultAuthApi.submitChallenge(it.toEnvelopeXdrBase64()) }
             .doOnSuccess {
-                prefsUtil.authToken = it.token
+                if(prefsUtil.publicKey == key) prefsUtil.authToken = it.token
                 localDataRepository.saveAuthToken(key!!, it.token!!)
                 throw UserNotAuthorizedException("User Not Authorized")
             }
@@ -208,7 +208,7 @@ class RxErrorUtilsImpl(
             }
             .flatMap { vaultAuthApi.submitChallenge(it.toEnvelopeXdrBase64()) }
             .doOnSuccess {
-                prefsUtil.authToken = it.token
+                if(prefsUtil.publicKey == key) prefsUtil.authToken = it.token
                 localDataRepository.saveAuthToken(key!!, it.token!!)
                 throw UserNotAuthorizedException("User Not Authorized")
             }

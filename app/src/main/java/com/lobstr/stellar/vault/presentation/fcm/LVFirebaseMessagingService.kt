@@ -31,10 +31,6 @@ class LVFirebaseMessagingService : FirebaseMessagingService() {
     @Inject
     lateinit var mEventProviderModule: EventProviderModule
 
-    companion object {
-        val LOG_TAG = LVFirebaseMessagingService::class.simpleName
-    }
-
     object Field {
         const val MESSAGE_BODY = "message_body"
         const val MESSAGE_TITLE = "message_title"

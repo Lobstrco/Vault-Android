@@ -9,7 +9,7 @@ data class Transaction(
     val fee: Long,
     val envelopXdr: String,
     val sourceAccount: String,
-    val memo: String?,
+    val memo: TsMemo,
     val operations: List<Operation>,
     var mSequenceNumber: Long = 0,
     var transactionType: String? = null

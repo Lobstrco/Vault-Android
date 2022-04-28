@@ -10,6 +10,7 @@ import com.google.android.material.navigation.NavigationBarView
 import com.lobstr.stellar.vault.R
 import com.lobstr.stellar.vault.databinding.ActivityHomeBinding
 import com.lobstr.stellar.vault.presentation.base.activity.BaseActivity
+import com.lobstr.stellar.vault.presentation.container.fragment.ContainerFragment
 import com.lobstr.stellar.vault.presentation.dialog.alert.base.AlertDialogFragment
 import com.lobstr.stellar.vault.presentation.home.HomeViewPagerAdapter.Position.DASHBOARD
 import com.lobstr.stellar.vault.presentation.home.HomeViewPagerAdapter.Position.SETTINGS
@@ -90,10 +91,19 @@ class HomeActivity : BaseActivity(), HomeActivityView,
             if (adapter == null) {
                 offscreenPageLimit = 4
                 isUserInputEnabled = false
-                adapter = HomeViewPagerAdapter(supportFragmentManager, lifecycle)
             } else {
-                (adapter as HomeViewPagerAdapter).update()
+                // Clear old fragments.
+                supportFragmentManager.apply {
+                    fragments.filterIsInstance<ContainerFragment>().forEach {
+                        try {
+                            this.beginTransaction().remove(it).commit()
+                        } catch (exc: IllegalStateException) {
+                            // Ignore exception.
+                        }
+                    }
+                }
             }
+            adapter = HomeViewPagerAdapter(supportFragmentManager, lifecycle)
         }
     }
 

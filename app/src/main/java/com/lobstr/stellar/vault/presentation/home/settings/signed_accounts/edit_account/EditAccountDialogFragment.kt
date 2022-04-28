@@ -42,9 +42,11 @@ class EditAccountDialogFragment : BaseBottomSheetDialog(), EditAccountView {
 
     private val mPresenter by moxyPresenter {
         presenterProvider.get().apply {
-            publicKey = arguments?.getString(Constant.Bundle.BUNDLE_PUBLIC_KEY)!!
+            publicKey = requireArguments().getString(Constant.Bundle.BUNDLE_PUBLIC_KEY)!!
             manageAccountName =
-                arguments?.getBoolean(Constant.Bundle.BUNDLE_MANAGE_ACCOUNT_NAME) ?: false
+                requireArguments().getBoolean(Constant.Bundle.BUNDLE_MANAGE_ACCOUNT_NAME, false)
+            showNetworkExplorer =
+                requireArguments().getBoolean(Constant.Bundle.BUNDLE_SHOW_NETWORK_EXPLORER, true)
         }
     }
 

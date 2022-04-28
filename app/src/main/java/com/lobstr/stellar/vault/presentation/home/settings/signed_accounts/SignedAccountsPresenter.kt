@@ -13,8 +13,8 @@ import com.lobstr.stellar.vault.domain.util.event.Update
 import com.lobstr.stellar.vault.presentation.BasePresenter
 import com.lobstr.stellar.vault.presentation.entities.account.Account
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
-import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.disposables.Disposable
 import io.reactivex.rxjava3.schedulers.Schedulers
 import javax.inject.Inject
@@ -72,13 +72,13 @@ class SignedAccountsPresenter @Inject constructor(
                 .subscribe({
                     when (it.type) {
                         Update.Type.ACCOUNT_NAME -> {
-                            unsubscribeOnDestroy(Completable.fromCallable {
+                            unsubscribeOnDestroy(Single.fromCallable {
                                 checkAccountNames(stellarAccounts)
                             }
                                 .subscribeOn(Schedulers.io())
                                 .observeOn(AndroidSchedulers.mainThread())
                                 .subscribe(
-                                    { viewState.notifyAdapter(stellarAccounts) },
+                                    { changed -> if (changed) viewState.notifyAdapter(stellarAccounts) },
                                     Throwable::printStackTrace
                                 )
                             )
@@ -151,12 +151,18 @@ class SignedAccountsPresenter @Inject constructor(
 
     /**
      * Check Accounts' names from cache.
+     * @return true when Accounts' names was changed.
      */
-    private fun checkAccountNames(accounts: List<Account>) {
+    private fun checkAccountNames(accounts: List<Account>): Boolean {
         val names = interactor.getAccountNames()
-        for(account in accounts) {
-            account.name = names[account.address]
+        var accountNamesChanged = false
+        for (account in accounts) {
+            val name = names[account.address]
+            if (!accountNamesChanged) accountNamesChanged = account.name != name
+            account.name = name
         }
+
+        return accountNamesChanged
     }
 
     /**

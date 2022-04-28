@@ -2,6 +2,8 @@ package com.lobstr.stellar.tsmapper.data.transaction
 
 import com.lobstr.stellar.tsmapper.presentation.entities.transaction.Claimant
 import com.lobstr.stellar.tsmapper.presentation.entities.transaction.Transaction
+import com.lobstr.stellar.tsmapper.presentation.entities.transaction.TsMemo
+import com.lobstr.stellar.tsmapper.presentation.entities.transaction.TsMemo.*
 import com.lobstr.stellar.tsmapper.presentation.entities.transaction.asset.Asset
 import com.lobstr.stellar.tsmapper.presentation.entities.transaction.asset.LiquidityPoolShareChangeTrustAsset
 import com.lobstr.stellar.tsmapper.presentation.entities.transaction.asset.LiquidityPoolShareTrustLineAsset
@@ -205,10 +207,13 @@ class TsMapper(
         )
     }
 
-    private fun mapMemo(memo: Memo): String = when(memo) {
-        is MemoHash -> memo.hexValue
-        is MemoReturnHash -> memo.hexValue
-        else -> memo.toString()
+    private fun mapMemo(memo: Memo): TsMemo = when(memo) {
+        is MemoHash -> MEMO_HASH.apply { value = memo.hexValue }
+        is MemoReturnHash -> MEMO_RETURN.apply { value = memo.hexValue }
+        is MemoId -> MEMO_ID.apply { value = memo.toString() }
+        is MemoText -> MEMO_TEXT.apply { value = memo.toString() }
+        is MemoNone -> MEMO_NONE.apply { value = memo.toString() }
+        else -> MEMO_NONE.apply { value = memo.toString() }
     }
 
     private fun mapCreateAccountOperation(operation: org.stellar.sdk.CreateAccountOperation): CreateAccountOperation {

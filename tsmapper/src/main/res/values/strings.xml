@@ -1,6 +1,14 @@
 <resources>
     <string name="app_name">TsMapper</string>
 
+    <!-- Transaction fields -->
+    <string name="text_tv_transaction_memo">Memo</string>
+    <string name="text_tv_transaction_memo_text">text</string>
+    <string name="text_tv_transaction_memo_id">id</string>
+    <string name="text_tv_transaction_memo_hash">hash</string>
+    <string name="text_tv_transaction_memo_return">return</string>
+    <string name="text_tv_transaction_source_account">Transaction Source</string>
+
     <!-- Stellar Operations -->
     <string name="text_operation_name_payment">Payment</string>
     <string name="text_operation_name_create_account">Create Account</string>

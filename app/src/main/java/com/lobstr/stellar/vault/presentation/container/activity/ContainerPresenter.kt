@@ -2,16 +2,10 @@ package com.lobstr.stellar.vault.presentation.container.activity
 
 import com.lobstr.stellar.vault.R
 import com.lobstr.stellar.vault.presentation.entities.transaction.TransactionItem
+import com.lobstr.stellar.vault.presentation.util.Constant
 import com.lobstr.stellar.vault.presentation.util.Constant.Navigation.CONFIG
-import com.lobstr.stellar.vault.presentation.util.Constant.Navigation.DASHBOARD
 import com.lobstr.stellar.vault.presentation.util.Constant.Navigation.ERROR
-import com.lobstr.stellar.vault.presentation.util.Constant.Navigation.IMPORT_XDR
-import com.lobstr.stellar.vault.presentation.util.Constant.Navigation.MNEMONICS
-import com.lobstr.stellar.vault.presentation.util.Constant.Navigation.SETTINGS
-import com.lobstr.stellar.vault.presentation.util.Constant.Navigation.SIGNED_ACCOUNTS
-import com.lobstr.stellar.vault.presentation.util.Constant.Navigation.SIGNER_INFO
 import com.lobstr.stellar.vault.presentation.util.Constant.Navigation.SUCCESS
-import com.lobstr.stellar.vault.presentation.util.Constant.Navigation.TRANSACTIONS
 import com.lobstr.stellar.vault.presentation.util.Constant.Navigation.TRANSACTION_DETAILS
 import moxy.MvpPresenter
 
@@ -34,32 +28,32 @@ class ContainerPresenter(
             android.R.color.black
         )
 
-        navigateTo()
+        viewState.showContainerFr(*createArgs(targetFr))
     }
 
-    private fun navigateTo() {
-        when (targetFr) {
-            DASHBOARD -> viewState.showDashBoardFr()
-
-            TRANSACTIONS -> viewState.showTransactionsFr()
-
-            SETTINGS -> viewState.showSettingsFr()
-
-            TRANSACTION_DETAILS -> viewState.showTransactionDetails(transactionItem!!)
-
-            IMPORT_XDR -> viewState.showImportXdrFr()
-
-            MNEMONICS -> viewState.showMnemonicsFr()
-
-            SUCCESS -> viewState.showSuccessFr(envelopeXdr!!, transactionConfirmationSuccessStatus!!)
-
-            ERROR -> viewState.showErrorFr(errorMessage!!)
-
-            SIGNED_ACCOUNTS -> viewState.showSignedAccountsFr()
-
-            SIGNER_INFO -> viewState.showSignerInfoFr()
-
-            CONFIG -> viewState.showConfigFr(config)
-        }
+    private fun createArgs(targetFr: Int): Array<Pair<String, Any?>> {
+        return mutableListOf<Pair<String, Any?>>().apply {
+            add(Pair(Constant.Bundle.BUNDLE_NAVIGATION_FR, targetFr))
+            // Apply specific values here.
+            when (targetFr) {
+                TRANSACTION_DETAILS -> add(
+                    Pair(
+                        Constant.Bundle.BUNDLE_TRANSACTION_ITEM,
+                        transactionItem
+                    )
+                )
+                SUCCESS -> {
+                    add(Pair(Constant.Bundle.BUNDLE_ENVELOPE_XDR, envelopeXdr))
+                    add(
+                        Pair(
+                            Constant.Bundle.BUNDLE_TRANSACTION_CONFIRMATION_SUCCESS_STATUS,
+                            transactionConfirmationSuccessStatus
+                        )
+                    )
+                }
+                ERROR -> add(Pair(Constant.Bundle.BUNDLE_ERROR_MESSAGE, errorMessage))
+                CONFIG -> add(Pair(Constant.Bundle.BUNDLE_CONFIG, config))
+            }
+        }.toTypedArray()
     }
 }

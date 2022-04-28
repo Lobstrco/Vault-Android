@@ -13,6 +13,7 @@ import android.view.*
 import android.view.animation.LinearInterpolator
 import android.widget.Toast
 import androidx.core.content.ContextCompat
+import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
@@ -282,13 +283,12 @@ class DashboardFragment : BaseFragment(), DashboardView,
     }
 
     override fun showEditAccountDialog(address: String) {
-        val bundle = Bundle()
-        bundle.putString(Constant.Bundle.BUNDLE_PUBLIC_KEY, address)
-        bundle.putBoolean(Constant.Bundle.BUNDLE_MANAGE_ACCOUNT_NAME, true)
-
-        val dialog = EditAccountDialogFragment()
-        dialog.arguments = bundle
-        dialog.show(childFragmentManager, AlertDialogFragment.DialogFragmentIdentifier.EDIT_ACCOUNT)
+        EditAccountDialogFragment().apply {
+            arguments = bundleOf(
+                Constant.Bundle.BUNDLE_PUBLIC_KEY to address,
+                Constant.Bundle.BUNDLE_MANAGE_ACCOUNT_NAME to true
+            )
+        }.show(childFragmentManager, AlertDialogFragment.DialogFragmentIdentifier.EDIT_ACCOUNT)
     }
 
     override fun copyToClipBoard(text: String) {

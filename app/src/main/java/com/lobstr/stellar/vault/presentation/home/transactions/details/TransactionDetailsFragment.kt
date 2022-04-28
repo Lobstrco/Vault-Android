@@ -55,7 +55,8 @@ import javax.inject.Provider
 
 @AndroidEntryPoint
 class TransactionDetailsFragment : BaseFragment(), TransactionDetailsView,
-    AlertDialogFragment.OnDefaultAlertDialogListener, TangemDialogFragment.OnTangemDialogListener {
+    AlertDialogFragment.OnDefaultAlertDialogListener, EditAccountDialogFragment.OnEditAccountDialogListener,
+    TangemDialogFragment.OnTangemDialogListener {
 
     // ===========================================================
     // Constants
@@ -161,7 +162,7 @@ class TransactionDetailsFragment : BaseFragment(), TransactionDetailsView,
         binding.rvSigners.isNestedScrollingEnabled = false
         binding.rvSigners.adapter = AccountAdapter(
             AccountAdapter.ACCOUNT_WITH_STATUS,
-            { /*Implement logic if needed.*/ },
+            { mPresenter.signedAccountItemClicked(it) },
             { mPresenter.signedAccountItemLongClicked(it) })
     }
 
@@ -239,6 +240,7 @@ class TransactionDetailsFragment : BaseFragment(), TransactionDetailsView,
     }
 
     override fun setupTransactionInfo(fields: List<OperationField>) {
+        binding.llAdditionalInfo.removeAllViews()
         for ((key, value, tag) in fields) {
             val root =
                 layoutInflater.inflate(R.layout.adapter_item_operation_details, view as ViewGroup, false)
@@ -281,7 +283,7 @@ class TransactionDetailsFragment : BaseFragment(), TransactionDetailsView,
             // Set Click Listener only for public key values.
             if(isPublicKeyField) {
                 root.setSafeOnClickListener {
-                    mPresenter.additionalInfoValueClicked(key, tag as? String)
+                    mPresenter.additionalInfoValueClicked(key, value, tag)
                 }
             }
 
@@ -442,12 +444,24 @@ class TransactionDetailsFragment : BaseFragment(), TransactionDetailsView,
     }
 
     override fun showEditAccountDialog(address: String) {
-        val bundle = Bundle()
-        bundle.putString(Constant.Bundle.BUNDLE_PUBLIC_KEY, address)
+        EditAccountDialogFragment().apply {
+            arguments = bundleOf(
+                Constant.Bundle.BUNDLE_PUBLIC_KEY to address,
+                Constant.Bundle.BUNDLE_MANAGE_ACCOUNT_NAME to true
+            )
+        }.show(childFragmentManager, AlertDialogFragment.DialogFragmentIdentifier.EDIT_ACCOUNT)
+    }
 
-        val dialog = EditAccountDialogFragment()
-        dialog.arguments = bundle
-        dialog.show(childFragmentManager, AlertDialogFragment.DialogFragmentIdentifier.EDIT_ACCOUNT)
+    override fun onSetAccountNickNameClicked(publicKey: String) {
+        AlertDialogFragment.Builder(true)
+            .setSpecificDialog(AlertDialogFragment.DialogIdentifier.ACCOUNT_NAME, Bundle().apply {
+                putString(Constant.Bundle.BUNDLE_PUBLIC_KEY, publicKey)
+            })
+            .create()
+            .show(
+                childFragmentManager,
+                AlertDialogFragment.DialogFragmentIdentifier.ACCOUNT_NAME
+            )
     }
 
     override fun showTangemScreen(tangemInfo: TangemInfo) {

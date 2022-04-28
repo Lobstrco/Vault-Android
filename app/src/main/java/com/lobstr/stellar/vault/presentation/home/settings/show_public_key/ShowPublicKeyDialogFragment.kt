@@ -12,10 +12,13 @@ import com.lobstr.stellar.vault.presentation.util.AppUtil
 import com.lobstr.stellar.vault.presentation.util.Constant
 import com.lobstr.stellar.vault.presentation.util.Constant.Util.PK_TRUNCATE_COUNT
 import com.lobstr.stellar.vault.presentation.util.setSafeOnClickListener
+import dagger.hilt.android.AndroidEntryPoint
 import moxy.ktx.moxyPresenter
 import net.glxn.qrgen.android.QRCode
+import javax.inject.Inject
+import javax.inject.Provider
 
-
+@AndroidEntryPoint
 class ShowPublicKeyDialogFragment : BaseBottomSheetDialog(), ShowPublicKeyView {
 
     // ===========================================================
@@ -33,13 +36,18 @@ class ShowPublicKeyDialogFragment : BaseBottomSheetDialog(), ShowPublicKeyView {
     private var _binding: FragmentShowPublicKeyBinding? = null
     private val binding get() = _binding!!
 
+    @Inject
+    lateinit var presenterProvider: Provider<ShowPublicKeyPresenter>
+
     // ===========================================================
     // Constructors
     // ===========================================================
 
-    private val mPresenter by moxyPresenter { ShowPublicKeyPresenter(
-        arguments?.getString(Constant.Bundle.BUNDLE_PUBLIC_KEY)!!
-    ) }
+    private val mPresenter by moxyPresenter {
+        presenterProvider.get().apply {
+            publicKey = arguments?.getString(Constant.Bundle.BUNDLE_PUBLIC_KEY)!!
+        }
+    }
 
     // ===========================================================
     // Getter & Setter
@@ -77,6 +85,10 @@ class ShowPublicKeyDialogFragment : BaseBottomSheetDialog(), ShowPublicKeyView {
     // ===========================================================
     // Listeners, methods for/from Interfaces
     // ===========================================================
+
+    override fun setupTitle(title: String) {
+        binding.tvTitle.text = title
+    }
 
     override fun setupPublicKey(publicKey: String) {
         val qrCodeImage = QRCode.from(publicKey).withColor(

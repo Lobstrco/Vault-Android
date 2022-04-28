@@ -15,8 +15,8 @@ import com.lobstr.stellar.vault.presentation.dialog.alert.base.AlertDialogFragme
 import com.lobstr.stellar.vault.presentation.entities.account.Account
 import com.lobstr.stellar.vault.presentation.entities.transaction.TransactionItem
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
-import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.disposables.Disposable
 import io.reactivex.rxjava3.schedulers.Schedulers
 import javax.inject.Inject
@@ -89,13 +89,13 @@ class TransactionsPresenter @Inject constructor(
                 .subscribe({
                     when (it.type) {
                         Update.Type.ACCOUNT_NAME -> {
-                            unsubscribeOnDestroy(Completable.fromCallable {
+                            unsubscribeOnDestroy(Single.fromCallable {
                                 checkAccountNames(transactions)
                             }
                                 .subscribeOn(Schedulers.io())
                                 .observeOn(AndroidSchedulers.mainThread())
                                 .subscribe(
-                                    { viewState.showTransactionList(transactions, !nextPageUrl.isNullOrEmpty()) },
+                                    { changed -> if (changed) viewState.showTransactionList(transactions, !nextPageUrl.isNullOrEmpty()) },
                                     Throwable::printStackTrace
                                 )
                             )
@@ -188,12 +188,18 @@ class TransactionsPresenter @Inject constructor(
 
     /**
      * Check Accounts' names from cache.
+     * @return true when Accounts' names was changed.
      */
-    private fun checkAccountNames(transactions: List<TransactionItem>) {
+    private fun checkAccountNames(transactions: List<TransactionItem>): Boolean {
         val names = interactor.getAccountNames()
-        for(transaction in transactions) {
-            transaction.name = names[transaction.transaction.sourceAccount]
+        var accountNamesChanged = false
+        for (transaction in transactions) {
+            val name = names[transaction.transaction.sourceAccount]
+            if (!accountNamesChanged) accountNamesChanged = transaction.name != name
+            transaction.name = name
         }
+
+        return accountNamesChanged
     }
 
     /**

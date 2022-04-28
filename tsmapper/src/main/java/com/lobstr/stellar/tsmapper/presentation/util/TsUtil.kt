@@ -2,6 +2,7 @@ package com.lobstr.stellar.tsmapper.presentation.util
 
 import android.content.*
 import com.lobstr.stellar.tsmapper.R
+import com.lobstr.stellar.tsmapper.presentation.entities.transaction.TsMemo
 import com.lobstr.stellar.tsmapper.presentation.entities.transaction.operation.*
 import com.lobstr.stellar.tsmapper.presentation.entities.transaction.operation.claimable_balance.ClaimClaimableBalanceOperation
 import com.lobstr.stellar.tsmapper.presentation.entities.transaction.operation.claimable_balance.CreateClaimableBalanceOperation
@@ -57,6 +58,20 @@ object TsUtil {
             is LiquidityPoolDepositOperation -> R.string.text_operation_name_liquidity_pool_deposit
             is LiquidityPoolWithdrawOperation -> R.string.text_operation_name_liquidity_pool_withdraw
             else -> -1
+        }
+    }
+
+    /**
+     * Used for receive memo type.
+     * @param memo Target Memo.
+     */
+    fun getMemoTypeStr(context: Context, memo: TsMemo): String {
+        return when (memo) {
+            TsMemo.MEMO_TEXT -> context.getString(R.string.text_tv_transaction_memo_text)
+            TsMemo.MEMO_ID -> context.getString(R.string.text_tv_transaction_memo_id)
+            TsMemo.MEMO_HASH -> context.getString(R.string.text_tv_transaction_memo_hash)
+            TsMemo.MEMO_RETURN -> context.getString(R.string.text_tv_transaction_memo_return)
+            TsMemo.MEMO_NONE -> ""
         }
     }
 

@@ -176,7 +176,7 @@ class StellarRepositoryImpl(
         decoratedSignature.hint = keyPair.signatureHint
         decoratedSignature.signature = signature
 
-        transaction.signatures.add(decoratedSignature)
+        transaction.addSignature(decoratedSignature)
 
         return transaction.toEnvelopeXdrBase64()
     }

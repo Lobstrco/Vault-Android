@@ -41,7 +41,7 @@ class AccountAdapter(
             )
             ACCOUNT_WITH_STATUS -> AccountWithStatusViewHolder(
                 AdapterItemAccountWithStatusBinding.inflate(LayoutInflater.from(viewGroup.context), viewGroup, false),
-                itemLongClickListener
+                itemClickListener, itemLongClickListener
             )
             else -> AccountExtendedViewHolder(
                 AdapterItemAccountExtendedBinding.inflate(LayoutInflater.from(viewGroup.context), viewGroup, false),

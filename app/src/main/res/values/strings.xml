@@ -176,8 +176,6 @@
     <string name="text_tv_of">of</string>
     <string name="text_tv_status_signed">Signed</string>
     <string name="text_tv_status_pending">Pending</string>
-    <string name="text_tv_transaction_memo">Memo</string>
-    <string name="text_tv_transaction_source_account">Transaction Source</string>
     <string name="text_tv_added_at">Created</string>
 
     <!-- Operations' list -->

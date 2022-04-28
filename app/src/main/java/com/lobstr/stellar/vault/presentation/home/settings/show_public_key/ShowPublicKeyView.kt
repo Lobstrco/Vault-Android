@@ -8,6 +8,9 @@ import moxy.viewstate.strategy.alias.Skip
 interface ShowPublicKeyView : MvpView {
 
     @AddToEndSingle
+    fun setupTitle(title: String)
+
+    @AddToEndSingle
     fun setupPublicKey(publicKey: String)
 
     @Skip

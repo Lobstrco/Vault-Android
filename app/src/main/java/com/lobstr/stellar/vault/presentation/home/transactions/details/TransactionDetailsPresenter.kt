@@ -30,7 +30,6 @@ import com.lobstr.stellar.vault.presentation.util.Constant.TransactionConfirmati
 import com.lobstr.stellar.vault.presentation.util.Constant.TransactionConfirmationSuccessStatus.SUCCESS_NEED_ADDITIONAL_SIGNATURES
 import com.lobstr.stellar.vault.presentation.util.Constant.Util.PK_TRUNCATE_COUNT_SHORT
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
-import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.disposables.Disposable
@@ -107,13 +106,13 @@ class TransactionDetailsPresenter @Inject constructor(
     }
 
     private fun updateAccountNames() {
-        unsubscribeOnDestroy(Completable.fromCallable {
+        unsubscribeOnDestroy(Single.fromCallable {
             checkAccountNames(stellarAccounts)
         }
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(
-                { viewState.notifySignersAdapter(stellarAccounts) },
+                { if (it) viewState.notifySignersAdapter(stellarAccounts) },
                 Throwable::printStackTrace
             )
         )
@@ -226,12 +225,18 @@ class TransactionDetailsPresenter @Inject constructor(
 
     /**
      * Check Accounts' names from cache.
+     * @return true when Accounts' names was changed.
      */
-    private fun checkAccountNames(accounts: List<Account>) {
+    private fun checkAccountNames(accounts: List<Account>): Boolean {
         val names = interactor.getAccountNames()
-        for(account in accounts) {
-            account.name = names[account.address]
+        var accountNamesChanged = false
+        for (account in accounts) {
+            val name = names[account.address]
+            if (!accountNamesChanged) accountNamesChanged = account.name != name
+            account.name = name
         }
+
+        return accountNamesChanged
     }
 
     /**
@@ -354,8 +359,12 @@ class TransactionDetailsPresenter @Inject constructor(
                 val sourceAccount = transactionItem.transaction.sourceAccount
                 val addedAt = transactionItem.addedAt
 
-                if (!memo.isNullOrEmpty()) {
-                    fields.add(OperationField(AppUtil.getString(R.string.text_tv_transaction_memo), memo))
+                if (!memo.value.isNullOrEmpty()) {
+                    val memoTitle = TsUtil.getMemoTypeStr(AppUtil.getAppContext(), memo).run {
+                        if (isEmpty()) AppUtil.getString(R.string.text_tv_transaction_memo) else "${AppUtil.getString(R.string.text_tv_transaction_memo)} ($this)"
+                    }
+
+                    fields.add(OperationField(memoTitle, memo.value))
                 }
 
                 if (sourceAccount.isNotEmpty()) {
@@ -736,6 +745,10 @@ class TransactionDetailsPresenter @Inject constructor(
         }
     }
 
+    fun signedAccountItemClicked(account: Account) {
+        viewState.showEditAccountDialog(account.address)
+    }
+
     fun signedAccountItemLongClicked(account: Account) {
         viewState.copyToClipBoard(account.address)
     }
@@ -750,8 +763,10 @@ class TransactionDetailsPresenter @Inject constructor(
 
     /**
      * @param key Reserved for future implementations.
+     * @param value Reserved for future implementations.
+     * @param tag Additional info for field (e.g. Asset for asset code)
      */
-    fun additionalInfoValueClicked(key: String, value: String?) {
-        value?.let { if (AppUtil.isValidAccount(value)) viewState.showEditAccountDialog(value) }
+    fun additionalInfoValueClicked(key: String, value: String?, tag: Any?) {
+        tag?.let { if (AppUtil.isValidAccount(tag as? String)) viewState.showEditAccountDialog(tag as String) }
     }
 }

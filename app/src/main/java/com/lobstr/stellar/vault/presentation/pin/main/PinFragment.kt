@@ -11,7 +11,7 @@ import android.widget.Toast
 import androidx.annotation.ColorRes
 import androidx.annotation.StringRes
 import androidx.core.content.ContextCompat
-import androidx.core.view.ViewCompat
+import androidx.core.view.WindowCompat
 import androidx.core.view.isVisible
 import com.andrognito.pinlockview.PinLockListener
 import com.lobstr.stellar.vault.R
@@ -124,8 +124,10 @@ class PinFragment : BaseFragment(), PinFrView, PinLockListener, BiometricListene
      */
     override fun setupNavigationBar(@ColorRes color: Int, light: Boolean) {
         if (Build.VERSION.SDK_INT > Build.VERSION_CODES.O) {
-            activity?.window?.navigationBarColor = ContextCompat.getColor(requireContext(), color)
-            ViewCompat.getWindowInsetsController(requireActivity().window.decorView)?.isAppearanceLightNavigationBars = light
+            requireActivity().window?.let {
+                it.navigationBarColor = ContextCompat.getColor(requireContext(), color)
+                WindowCompat.getInsetsController(it, it.decorView)?.isAppearanceLightNavigationBars = light
+            }
         }
     }
 

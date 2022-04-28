@@ -71,13 +71,14 @@ class OperationDetailsPresenter @Inject constructor(
 
                 operationFields.forEach {
                     if (AppUtil.isValidAccount(it.tag as? String)) {
-                        val cachedName = names[it.value]
-                        it.value = if(cachedName.isNullOrEmpty()) {
-                            it.value
+                        val cachedName = names[it.tag]
+                        val value = if(cachedName.isNullOrEmpty()) {
+                            it.tag as? String
                         } else {
-                            needUpdateFields = true
-                            cachedName.plus(" (${AppUtil.ellipsizeStrInMiddle(it.value, PK_TRUNCATE_COUNT_SHORT)})")
+                            cachedName.plus(" (${AppUtil.ellipsizeStrInMiddle(it.tag as String, PK_TRUNCATE_COUNT_SHORT)})")
                         }
+                        if (!needUpdateFields) needUpdateFields = it.value != value
+                        it.value = value
                     }
                 }
                 return@fromCallable needUpdateFields

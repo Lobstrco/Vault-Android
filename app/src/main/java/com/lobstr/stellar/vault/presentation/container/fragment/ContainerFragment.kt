@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.os.bundleOf
 import com.lobstr.stellar.vault.R
 import com.lobstr.stellar.vault.presentation.auth.enter_screen.AuthFragment
 import com.lobstr.stellar.vault.presentation.auth.mnemonic.create_mnemonic.MnemonicsFragment
@@ -88,178 +89,116 @@ class ContainerFragment : BaseContainerFragment(),
     // ===========================================================
 
     override fun showAuthFr() {
-        FragmentTransactionManager.displayFragment(
-            childFragmentManager,
-            childFragmentManager.fragmentFactory.instantiate(
-                requireContext().classLoader,
-                AuthFragment::class.qualifiedName!!
-            ),
-            R.id.flContainer
+        displayFragment(
+            fragmentName = AuthFragment::class.qualifiedName!!
         )
     }
 
     override fun showVaultAuthFr() {
-        FragmentTransactionManager.displayFragment(
-            childFragmentManager,
-            childFragmentManager.fragmentFactory.instantiate(
-                requireContext().classLoader,
-                VaultAuthFragment::class.qualifiedName!!
-            ),
-            R.id.flContainer
+        displayFragment(
+            fragmentName = VaultAuthFragment::class.qualifiedName!!
         )
     }
 
     override fun showSignerInfoFr() {
-        FragmentTransactionManager.displayFragment(
-            childFragmentManager,
-            childFragmentManager.fragmentFactory.instantiate(
-                requireContext().classLoader,
-                SignerInfoFragment::class.qualifiedName!!
-            ),
-            R.id.flContainer
+        displayFragment(
+            fragmentName = SignerInfoFragment::class.qualifiedName!!
         )
     }
 
     // Base unique home tabs fragment.
     override fun showDashBoardFr() {
-        // Unique fragment must be first in container.
-        if (childFragmentManager.findFragmentById(R.id.flContainer) != null) return
-        FragmentTransactionManager.displayFragment(
-            childFragmentManager,
-            childFragmentManager.fragmentFactory.instantiate(
-                requireContext().classLoader,
-                DashboardFragment::class.qualifiedName!!
-            ),
-            R.id.flContainer
+        displayFragment(
+            fragmentName = DashboardFragment::class.qualifiedName!!,
+            checkIsUnique = true
         )
     }
 
     // Base unique home tabs fragment.
     override fun showSettingsFr() {
-        // Unique fragment must be first in container.
-        if (childFragmentManager.findFragmentById(R.id.flContainer) != null) return
-        FragmentTransactionManager.displayFragment(
-            childFragmentManager,
-            childFragmentManager.fragmentFactory.instantiate(
-                requireContext().classLoader,
-                SettingsFragment::class.qualifiedName!!
-            ),
-            R.id.flContainer
+        displayFragment(
+            fragmentName = SettingsFragment::class.qualifiedName!!,
+            checkIsUnique = true
         )
     }
 
     // Base unique home tabs fragment.
     override fun showTransactionsFr() {
-        // Unique fragment must be first in container.
-        if (childFragmentManager.findFragmentById(R.id.flContainer) != null) return
-        FragmentTransactionManager.displayFragment(
-            childFragmentManager,
-            childFragmentManager.fragmentFactory.instantiate(
-                requireContext().classLoader,
-                TransactionsFragment::class.qualifiedName!!
-            ),
-            R.id.flContainer
+        displayFragment(
+            fragmentName = TransactionsFragment::class.qualifiedName!!,
+            checkIsUnique = true
         )
     }
 
     override fun showTransactionDetails(transactionItem: TransactionItem) {
-        val bundle = Bundle()
-        bundle.putParcelable(Constant.Bundle.BUNDLE_TRANSACTION_ITEM, transactionItem)
-        val fragment = childFragmentManager.fragmentFactory.instantiate(
-            requireContext().classLoader,
-            TransactionDetailsFragment::class.qualifiedName!!
-        )
-        fragment.arguments = bundle
-
-        FragmentTransactionManager.displayFragment(
-            childFragmentManager,
-            fragment,
-            R.id.flContainer
+        displayFragment(
+            fragmentName = TransactionDetailsFragment::class.qualifiedName!!,
+            bundle = bundleOf(Constant.Bundle.BUNDLE_TRANSACTION_ITEM to transactionItem)
         )
     }
 
     override fun showImportXdrFr() {
-        FragmentTransactionManager.displayFragment(
-            childFragmentManager,
-            childFragmentManager.fragmentFactory.instantiate(
-                requireContext().classLoader,
-                ImportXdrFragment::class.qualifiedName!!
-            ),
-            R.id.flContainer
+        displayFragment(
+            fragmentName = ImportXdrFragment::class.qualifiedName!!
         )
     }
 
     override fun showMnemonicsFr() {
-        FragmentTransactionManager.displayFragment(
-            childFragmentManager,
-            childFragmentManager.fragmentFactory.instantiate(
-                requireContext().classLoader,
-                MnemonicsFragment::class.qualifiedName!!
-            ),
-            R.id.flContainer
+        displayFragment(
+            fragmentName = MnemonicsFragment::class.qualifiedName!!
         )
     }
 
     override fun showSuccessFr(envelopeXdr: String, transactionSuccessStatus: Byte) {
-        val bundle = Bundle()
-        bundle.putString(Constant.Bundle.BUNDLE_ENVELOPE_XDR, envelopeXdr)
-        bundle.putByte(
-            Constant.Bundle.BUNDLE_TRANSACTION_CONFIRMATION_SUCCESS_STATUS,
-            transactionSuccessStatus
-        )
-        val fragment = childFragmentManager.fragmentFactory.instantiate(
-            requireContext().classLoader,
-            SuccessFragment::class.qualifiedName!!
-        )
-        fragment.arguments = bundle
-
-        FragmentTransactionManager.displayFragment(
-            childFragmentManager,
-            fragment,
-            R.id.flContainer
+        displayFragment(
+            fragmentName = SuccessFragment::class.qualifiedName!!,
+            bundle = bundleOf(
+                Constant.Bundle.BUNDLE_ENVELOPE_XDR to envelopeXdr,
+                Constant.Bundle.BUNDLE_TRANSACTION_CONFIRMATION_SUCCESS_STATUS to transactionSuccessStatus
+            )
         )
     }
 
     override fun showErrorFr(errorMessage: String, envelopeXdr: String) {
-        val bundle = Bundle()
-        bundle.putString(Constant.Bundle.BUNDLE_ERROR_MESSAGE, errorMessage)
-        bundle.putString(Constant.Bundle.BUNDLE_ENVELOPE_XDR, envelopeXdr)
-        val fragment = childFragmentManager.fragmentFactory.instantiate(
-            requireContext().classLoader,
-            ErrorFragment::class.qualifiedName!!
-        )
-        fragment.arguments = bundle
-
-        FragmentTransactionManager.displayFragment(
-            childFragmentManager,
-            fragment,
-            R.id.flContainer
+        displayFragment(
+            fragmentName = ErrorFragment::class.qualifiedName!!,
+            bundle = bundleOf(
+                Constant.Bundle.BUNDLE_ERROR_MESSAGE to errorMessage,
+                Constant.Bundle.BUNDLE_ENVELOPE_XDR to envelopeXdr
+            )
         )
     }
 
     override fun showSignedAccountsFr() {
-        FragmentTransactionManager.displayFragment(
-            childFragmentManager,
-            childFragmentManager.fragmentFactory.instantiate(
-                requireContext().classLoader,
-                SignedAccountsFragment::class.qualifiedName!!
-            ),
-            R.id.flContainer
+        displayFragment(
+            fragmentName = SignedAccountsFragment::class.qualifiedName!!
         )
     }
 
     override fun showConfigFr(config: Int) {
-        val bundle = Bundle()
-        bundle.putInt(Constant.Bundle.BUNDLE_CONFIG, config)
-        val fragment = childFragmentManager.fragmentFactory.instantiate(
-            requireContext().classLoader,
-            ConfigFragment::class.qualifiedName!!
+        displayFragment(
+            fragmentName = ConfigFragment::class.qualifiedName!!,
+            bundle = bundleOf(Constant.Bundle.BUNDLE_CONFIG to config)
         )
-        fragment.arguments = bundle
+    }
 
+    private fun displayFragment(
+        fragmentName: String,
+        bundle: Bundle? = null,
+        checkIsUnique: Boolean = false
+    ) {
+        if (checkIsUnique) {
+            // Unique fragment must be first in container.
+            if (childFragmentManager.findFragmentById(R.id.flContainer) != null) return
+        }
         FragmentTransactionManager.displayFragment(
             childFragmentManager,
-            fragment,
+            childFragmentManager.fragmentFactory.instantiate(
+                requireContext().classLoader,
+                fragmentName
+            ).apply {
+                arguments = bundle
+            },
             R.id.flContainer
         )
     }

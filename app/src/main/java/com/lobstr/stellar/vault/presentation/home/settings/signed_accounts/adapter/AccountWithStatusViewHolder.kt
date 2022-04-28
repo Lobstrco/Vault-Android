@@ -11,9 +11,11 @@ import com.lobstr.stellar.vault.databinding.AdapterItemAccountWithStatusBinding
 import com.lobstr.stellar.vault.presentation.entities.account.Account
 import com.lobstr.stellar.vault.presentation.util.AppUtil
 import com.lobstr.stellar.vault.presentation.util.Constant.Util.PK_TRUNCATE_COUNT
+import com.lobstr.stellar.vault.presentation.util.setSafeOnClickListener
 
 class AccountWithStatusViewHolder(
     private val binding: AdapterItemAccountWithStatusBinding,
+    private val itemClickListener: (account: Account) -> Unit,
     private val itemLongClickListener: (account: Account) -> Unit
 ) :
     RecyclerView.ViewHolder(binding.root) {
@@ -74,6 +76,15 @@ class AccountWithStatusViewHolder(
                 ContextCompat.getColor(itemView.context, R.color.color_fb9e00)
             }
         )
+
+        itemView.setSafeOnClickListener {
+            val position = this@AccountWithStatusViewHolder.bindingAdapterPosition
+            if (position == RecyclerView.NO_POSITION) {
+                return@setSafeOnClickListener
+            }
+
+            itemClickListener(account)
+        }
 
         itemView.setOnLongClickListener {
             val position = this@AccountWithStatusViewHolder.bindingAdapterPosition
