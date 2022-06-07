@@ -177,6 +177,8 @@
     <string name="text_tv_status_signed">Signed</string>
     <string name="text_tv_status_pending">Pending</string>
     <string name="text_tv_added_at">Created</string>
+    <string name="text_tv_signatures_count_to_submit">%d signatures required to submit this transaction to the network</string>
+    <string name="text_tv_signature_count_to_submit">%d signature required to submit this transaction to the network</string>
 
     <!-- Operations' list -->
     <string name="text_tv_operations_list_title">Operations</string>

@@ -134,17 +134,10 @@ class HomeActivity : BaseActivity(), HomeActivityView,
     override fun resetBackStack() {
         try {
             val currentContainer = (binding.vpHome.adapter as? HomeViewPagerAdapter)?.getFragment(binding.vpHome.currentItem)
-
-            if (currentContainer == null) {
-                return
-            } else {
-                val backStackCount = currentContainer.childFragmentManager.backStackEntryCount
-
-                if (backStackCount > 1) {
-                    val childFragmentManager = currentContainer.childFragmentManager
-
-                    childFragmentManager.popBackStack(
-                        childFragmentManager.getBackStackEntryAt(1).id,
+            currentContainer?.childFragmentManager?.apply {
+                if (backStackEntryCount > 1) {
+                    popBackStack(
+                        getBackStackEntryAt(1).id,
                         POP_BACK_STACK_INCLUSIVE
                     )
                 }

@@ -13,11 +13,17 @@ import com.soneso.stellarmnemonics.mnemonic.MnemonicException
 import com.soneso.stellarmnemonics.mnemonic.WordList
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.schedulers.Schedulers
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 class RecoverKeyFrPresenter @Inject constructor(private val interactor: RecoverKeyInteractor) :
     BasePresenter<RecoverKeyFrView>() {
+
+    companion object {
+        private const val DELAY_MILLISECONDS = 200L
+    }
 
     private lateinit var phrases: String
 
@@ -32,31 +38,51 @@ class RecoverKeyFrPresenter @Inject constructor(private val interactor: RecoverK
     }
 
     fun phrasesChanged(phrases: String) {
-        this.phrases = phrases
-        val phraseArray = phrases.split(" ")
-        val wordsInfoList: MutableList<RecoveryPhraseInfo> = mutableListOf()
+        unsubscribeNow()
+        // Always disable Next button for prevent wrong state detection.
+        viewState.enableNextButton(false)
+        unsubscribeOnDestroy(
+            Single.timer(DELAY_MILLISECONDS, TimeUnit.MILLISECONDS)
+                .flatMap {
+                    this.phrases = phrases
 
-        if (phrases.isNotEmpty()) {
-            wordsInfoList.addAll(checkWords(phraseArray, phrases))
-            wordsInfoList.addAll(checkSmallWords(phraseArray, phrases))
-        }
+                    val phraseArray = phrases.split(" ")
+                    val wordsInfoList: MutableList<RecoveryPhraseInfo> = mutableListOf()
 
-        viewState.changeTextBackground(false)
-        viewState.showInputErrorIfNeeded(wordsInfoList, phrases)
+                    if (phrases.isNotEmpty()) {
+                        wordsInfoList.addAll(checkWords(phraseArray, phrases))
+                        wordsInfoList.addAll(checkSmallWords(phraseArray, phrases))
+                    }
 
-        // Handling "Next" button state.
-        val words: List<String> = getPhraseList(phraseArray.toMutableList())
-        when {
-            wordsInfoList.isEmpty() -> viewState.enableNextButton(false)
-            haveIncorrectWords(wordsInfoList) -> {
-                viewState.enableNextButton(false)
-                viewState.changeTextBackground(true)
-            }
+                    val words: List<String> = getPhraseList(phraseArray.toMutableList())
 
-            (words.size == COUNT_MNEMONIC_WORDS_12 || words.size == COUNT_MNEMONIC_WORDS_24)
-                    && words[words.size - 1].length > 2 -> viewState.enableNextButton(true)
-            else -> viewState.enableNextButton(false)
-        }
+                    return@flatMap Single.fromCallable {
+                        Pair(wordsInfoList, words)
+                    }
+                }
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({
+                    val (wordsInfoList, words) = it
+                    viewState.changeTextBackground(false)
+                    viewState.showInputErrorIfNeeded(wordsInfoList, phrases)
+
+                    // Handling "Next" button state.
+                    when {
+                        wordsInfoList.isEmpty() -> viewState.enableNextButton(false)
+                        haveIncorrectWords(wordsInfoList) -> {
+                            viewState.enableNextButton(false)
+                            viewState.changeTextBackground(true)
+                        }
+
+                        (words.size == COUNT_MNEMONIC_WORDS_12 || words.size == COUNT_MNEMONIC_WORDS_24)
+                                && words[words.size - 1].length > 2 -> viewState.enableNextButton(
+                            true
+                        )
+                        else -> viewState.enableNextButton(false)
+                    }
+                }, {/*Ignore*/ })
+        )
     }
 
     /**

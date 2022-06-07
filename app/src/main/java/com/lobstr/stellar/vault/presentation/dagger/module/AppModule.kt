@@ -3,6 +3,7 @@ package com.lobstr.stellar.vault.presentation.dagger.module
 import android.content.Context
 import android.content.SharedPreferences
 import androidx.preference.PreferenceManager
+import com.lobstr.stellar.tsmapper.data.claim.ClaimantMapper
 import com.lobstr.stellar.tsmapper.data.transaction.TsMapper
 import com.lobstr.stellar.vault.data.error.ExceptionMapper
 import com.lobstr.stellar.vault.domain.util.EventProviderModule
@@ -43,7 +44,7 @@ object AppModule{
     @Provides
     @Singleton
     fun provideTsMapper(network: Network, accountConverter: AccountConverter): TsMapper {
-        return TsMapper(network, accountConverter)
+        return TsMapper(network, accountConverter, ClaimantMapper())
     }
 
     @Provides

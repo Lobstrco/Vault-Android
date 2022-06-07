@@ -181,12 +181,12 @@ class MnemonicsFragment : BaseFragment(),
 
     override fun showAuthFr() {
         // Show first fragment in container - AuthFragment.
-        val containerFragmentManager = parentFragment?.childFragmentManager
-
-        containerFragmentManager?.popBackStack(
-            containerFragmentManager.getBackStackEntryAt(1).id,
-            FragmentManager.POP_BACK_STACK_INCLUSIVE
-        )
+        parentFragment?.childFragmentManager?.apply {
+            popBackStack(
+                getBackStackEntryAt(1).id,
+                FragmentManager.POP_BACK_STACK_INCLUSIVE
+            )
+        }
     }
 
     // ===========================================================

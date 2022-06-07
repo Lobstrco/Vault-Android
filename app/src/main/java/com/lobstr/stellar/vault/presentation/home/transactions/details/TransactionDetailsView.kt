@@ -29,7 +29,7 @@ interface TransactionDetailsView : MvpView {
     fun showSignersContainer(show: Boolean)
 
     @AddToEndSingle
-    fun showSignersCount(count: String?)
+    fun showSignersCount(countSummary: String?, countToSubmit: String?)
 
     @AddToEndSingle
     fun initOperationList(title: Int, operations: List<Int>)

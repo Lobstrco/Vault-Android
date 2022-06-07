@@ -40,14 +40,14 @@
                         android:id="@+id/llSignersContainer"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:background="@android:color/white"
                         android:orientation="vertical"
                         android:visibility="gone">
 
                     <FrameLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_margin="16dp">
+                            android:background="@android:color/white"
+                            android:padding="16dp">
 
                         <TextView
                                 android:layout_width="wrap_content"
@@ -69,9 +69,20 @@
 
                     <androidx.recyclerview.widget.RecyclerView
                             android:id="@+id/rvSigners"
+                            android:background="@android:color/white"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:paddingBottom="9dp" />
+
+                    <TextView
+                        android:id="@+id/tvSignaturesCountToSubmit"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingHorizontal="16dp"
+                        android:paddingVertical="8dp"
+                        android:textColor="@color/color_9b9b9b"
+                        android:textSize="12sp"
+                        android:visibility="gone" />
                 </LinearLayout>
 
                 <ProgressBar

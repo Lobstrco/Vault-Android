@@ -13,8 +13,10 @@ import com.lobstr.stellar.tsmapper.presentation.entities.transaction.operation.l
 import com.lobstr.stellar.tsmapper.presentation.entities.transaction.operation.offer.*
 import com.lobstr.stellar.tsmapper.presentation.entities.transaction.operation.sponsoring.*
 import java.math.BigDecimal
+import java.math.RoundingMode
 import java.text.DecimalFormat
 import java.text.NumberFormat
+import java.text.SimpleDateFormat
 import java.util.*
 
 
@@ -81,21 +83,33 @@ object TsUtil {
         } else str.substring(0, count) + "…" + str.substring(str.length - count)
     }
 
+    fun formatDate(date: Date, datePattern: String): String? {
+        try {
+            val format =
+                SimpleDateFormat(datePattern, Locale(Locale.getDefault().language))
+            return format.format(date)
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+
+        return null
+    }
+
     /**
      * Get Amount representation for the provided String value.
      * @param minFractionDigits Min fraction digits. -1 - use locale currency rule (.xx).
      * @return Formatted amount or original 'number' value in case exception or empty string.
      */
-    fun getFormattedAmount(number: String, locale: Locale = Locale.US, minFractionDigits: Int = 0, maxFractionDigits: Int = 12): String {
+    fun getFormattedAmount(number: String, locale: Locale = Locale.US, minFractionDigits: Int = 0, maxFractionDigits: Int = 12, rounding: RoundingMode = RoundingMode.HALF_EVEN): String {
         return try {
-            number.trim().let { if (it.isNotEmpty()) getCurrencyFormatInstance(locale, minFractionDigits, maxFractionDigits).format(BigDecimal(it)).trim() else number }
+            number.trim().let { if (it.isNotEmpty()) getCurrencyFormatInstance(locale, minFractionDigits, maxFractionDigits, rounding).format(BigDecimal(it)).trim() else number }
         } catch (exc: Exception) {
             number
         }
     }
 
     fun getAmountRepresentationFromStr(number: String): String {
-        return getFormattedAmount(number)
+        return getFormattedAmount(number, maxFractionDigits = 7, rounding = RoundingMode.DOWN)
     }
 
     /**
@@ -116,10 +130,11 @@ object TsUtil {
      * Get Currency Format Instance.
      * @param minFractionDigits Min fraction digits. -1 - use locale currency rule (.xx).
      */
-    private fun getCurrencyFormatInstance(locale: Locale = Locale.US, minFractionDigits: Int = 0, maxFractionDigits: Int = 12): DecimalFormat {
+    private fun getCurrencyFormatInstance(locale: Locale = Locale.US, minFractionDigits: Int = 0, maxFractionDigits: Int = 12, rounding: RoundingMode = RoundingMode.HALF_EVEN): DecimalFormat {
         return (NumberFormat.getCurrencyInstance(locale) as DecimalFormat).apply {
             if(minFractionDigits != -1) minimumFractionDigits = minFractionDigits
             maximumFractionDigits = maxFractionDigits
+            roundingMode = rounding
             decimalFormatSymbols = decimalFormatSymbols.apply { currencySymbol = "" }
         }
     }

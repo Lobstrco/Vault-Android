@@ -274,7 +274,7 @@ class NotificationsManager(private val context: Context) {
         val stackBuilder = TaskStackBuilder.create(context)
 
         // Adds the back stack for the Intent (but not the Intent itself).
-        stackBuilder.addParentStack(intent.component)
+        stackBuilder.addParentStack(intent.component!!)
 
         // Adds the Intent that starts the Activity to the top of the stack.
         stackBuilder.addNextIntent(intent)

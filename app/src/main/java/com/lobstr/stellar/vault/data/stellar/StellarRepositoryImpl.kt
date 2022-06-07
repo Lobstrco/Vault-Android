@@ -205,17 +205,6 @@ class StellarRepositoryImpl(
                     }
                 }.toList()
             }
-            .onErrorReturn {
-                mutableListOf<Account>().apply {
-                    // TODO FIXME
-                    // There is a bug in SDK when parsing liquidity pool fields.
-                    // JsonSyntaxException Expected BEGIN_OBJECT but was STRING at path $.records[0].balances[0].liquidity_pool_id
-                    // https://github.com/stellar/java-stellar-sdk/issues/404
-                    if (it is JsonSyntaxException) {
-                        add(Account(signer))
-                    }
-                }.toList()
-            }
     }
 
     private fun createAccountsBuilder(cursor: String? = null,

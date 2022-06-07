@@ -8,4 +8,4 @@ import kotlinx.parcelize.RawValue
  * @param tag Additional info for field.
  */
 @Parcelize
-data class OperationField(val key: String, var value: String? = null, val tag: @RawValue Any? = null) : Parcelable
+data class OperationField(var key: String, var value: String? = null, var tag: @RawValue Any? = null) : Parcelable

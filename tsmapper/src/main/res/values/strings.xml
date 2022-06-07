@@ -103,4 +103,11 @@
     <string name="op_field_asset_b_issuer">Asset B Issuer</string>
     <string name="op_field_fee">Fee</string>
 
+    <!-- Claimant Intervals fields -->
+    <string name="op_field_claim_conditions">Claim conditions</string>
+    <string name="op_field_claim_before">Claim before</string>
+    <string name="op_field_claim_after">Claim after</string>
+    <string name="op_field_claim_between">Claim between</string>
+    <string name="op_field_claim_not_set">Claim now</string>
+    <string name="op_field_claim_non_claimable">Can\'t be claimed</string>
 </resources>

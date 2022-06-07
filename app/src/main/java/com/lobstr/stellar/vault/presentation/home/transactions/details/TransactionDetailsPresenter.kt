@@ -166,7 +166,7 @@ class TransactionDetailsPresenter @Inject constructor(
                 }
                 .subscribe({
                     viewState.showSignersContainer(stellarAccounts.isNotEmpty())
-                    viewState.showSignersCount(calculateSignersCount(it))
+                    calculateSignersCount(it)
                     viewState.notifySignersAdapter(stellarAccounts)
                     // Try receive federations for accounts.
                     getStellarAccounts(stellarAccounts)
@@ -189,7 +189,10 @@ class TransactionDetailsPresenter @Inject constructor(
         )
     }
 
-    private fun calculateSignersCount(accountResult: AccountResult): String? {
+    private fun calculateSignersCount(accountResult: AccountResult) {
+        var countSummaryStr: String? = null
+        var countToSubmitStr: String? = null
+
         when {
             accountResult.signers.isNotEmpty() -> {
 
@@ -204,23 +207,32 @@ class TransactionDetailsPresenter @Inject constructor(
                 val isWeightsSameAndNotZero =
                     accountResult.signers.first().weight != 0 && accountResult.signers.filter { it.weight == accountResult.signers.first().weight }.size == accountResult.signers.size
 
-                return if (isThresholdsSameAndNotZero and isWeightsSameAndNotZero) {
-                    "${accountResult.signers.filter { it.signed == true }.size} ${
+                if (isThresholdsSameAndNotZero and isWeightsSameAndNotZero) {
+                    val countToConfirm =
+                        kotlin.math.ceil((highThreshold.toFloat() / accountResult.signers.first().weight!!.toFloat()))
+                            .toInt()
+
+                    countSummaryStr = "${accountResult.signers.filter { it.signed == true }.size} ${
                         AppUtil.getString(
                             R.string.text_tv_of
                         )
-                    } ${
-                        kotlin.math.ceil((highThreshold.toFloat() / accountResult.signers.first().weight!!.toFloat()))
-                            .toInt()
-                    }"
-                } else {
-                    null
+                    } $countToConfirm"
+
+                    // Show signatures count to submit additional info only for non AUTH_CHALLENGE transactions.
+                    if (transactionItem.transaction.transactionType != AUTH_CHALLENGE) {
+                        countToSubmitStr = AppUtil.getString(
+                            if (countToConfirm > 1) {
+                                R.string.text_tv_signatures_count_to_submit
+                            } else {
+                                R.string.text_tv_signature_count_to_submit
+                            }, countToConfirm
+                        )
+                    }
                 }
             }
-            else -> {
-                return null
-            }
         }
+
+        viewState.showSignersCount(countSummaryStr, countToSubmitStr)
     }
 
     /**

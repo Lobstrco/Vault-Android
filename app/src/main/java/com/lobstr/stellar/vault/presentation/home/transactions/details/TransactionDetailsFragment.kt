@@ -178,8 +178,10 @@ class TransactionDetailsFragment : BaseFragment(), TransactionDetailsView,
         binding.llSignersContainer.isVisible = show
     }
 
-    override fun showSignersCount(count: String?) {
-        binding.tvSignersCount.text = count
+    override fun showSignersCount(countSummary: String?, countToSubmit: String?) {
+        binding.tvSignersCount.text = countSummary
+        binding.tvSignaturesCountToSubmit.text = countToSubmit
+        binding.tvSignaturesCountToSubmit.isVisible = !countToSubmit.isNullOrEmpty()
     }
 
     override fun initOperationList(title: Int, operations: List<Int>) {

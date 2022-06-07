@@ -214,17 +214,6 @@ class TangemDialogPresenter @Inject constructor(private val interactor: TangemIn
         viewState.changeActionContainerVisibility(true)
         viewState.changeErrorContainerVisibility(false)
         repeatAction()
-        // TODO check.
-//        viewState.showMessage(tangemError.text ?: "Error")
-//        val subscription = Completable.complete()
-//            .delay(1000, TimeUnit.MILLISECONDS)
-//            .observeOn(AndroidSchedulers.mainThread())
-//            .subscribe({
-//                viewState.showMessage("Hold the correct card")
-//                repeatAction()
-//            }, { it.printStackTrace() })
-//
-//        unsubscribeOnDestroy(subscription)
     }
 
     private fun repeatAction() {

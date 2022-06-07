@@ -1,6 +1,6 @@
 package com.lobstr.stellar.tsmapper.data.transaction
 
-import com.lobstr.stellar.tsmapper.presentation.entities.transaction.Claimant
+import com.lobstr.stellar.tsmapper.data.claim.ClaimantMapper
 import com.lobstr.stellar.tsmapper.presentation.entities.transaction.Transaction
 import com.lobstr.stellar.tsmapper.presentation.entities.transaction.TsMemo
 import com.lobstr.stellar.tsmapper.presentation.entities.transaction.TsMemo.*
@@ -51,7 +51,8 @@ import java.math.BigDecimal
 
 class TsMapper(
     private val network: Network = Network.PUBLIC,
-    private val accountConverter: AccountConverter = AccountConverter.enableMuxed()
+    private val accountConverter: AccountConverter = AccountConverter.enableMuxed(),
+    private val claimantMapper: ClaimantMapper = ClaimantMapper()
 ) {
 
     companion object {
@@ -473,11 +474,7 @@ class TsMapper(
             (operation as org.stellar.sdk.Operation).sourceAccount,
             operation.amount,
             mapAsset(operation.asset),
-            mutableListOf<Claimant>().apply {
-                operation.claimants.forEach {
-                    add(mapClaimant(it))
-                }
-            }
+            claimantMapper.mapClaimants(operation.claimants)
         )
     }
 
@@ -560,9 +557,5 @@ class TsMapper(
             is AssetTypeNative -> Asset("XLM", "native", null)
             else -> Asset("XLM", "native", null)
         }
-    }
-
-    private fun mapClaimant(claimant: org.stellar.sdk.Claimant): Claimant {
-        return Claimant(claimant.destination)
     }
 }
