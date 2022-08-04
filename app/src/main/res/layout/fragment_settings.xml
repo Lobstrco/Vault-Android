@@ -1,31 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        tools:context=".presentation.home.settings.SettingsFragment">
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".presentation.home.settings.SettingsFragment">
 
-<ScrollView
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fillViewport="true"
         tools:context=".presentation.home.settings.SettingsFragment">
 
-    <LinearLayout
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-        <!-- Account -->
-        <LinearLayout
+            <!-- Account -->
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@android:color/white"
                 android:orientation="vertical">
 
-            <TextView
+                <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:fontFamily="sans-serif-medium"
@@ -34,7 +33,7 @@
                     android:textColor="@color/color_primary"
                     android:textSize="14sp" />
 
-            <LinearLayout
+                <LinearLayout
                     android:id="@+id/llPublicKey"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -43,7 +42,7 @@
                     android:orientation="horizontal"
                     android:padding="16dp">
 
-                <TextView
+                    <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -51,52 +50,48 @@
                         android:textColor="@android:color/black"
                         android:textSize="16sp" />
 
-                <TextView
+                    <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="0"
+                        android:ellipsize="end"
                         android:maxWidth="150dp"
                         android:maxLines="1"
-                        android:ellipsize="end"
                         android:text="@string/text_settings_show"
                         android:textColor="@color/color_primary"
                         android:textSize="14sp" />
-            </LinearLayout>
+                </LinearLayout>
 
-            <View
+                <View
                     android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginEnd="0dp"
-                    android:background="@color/color_979797"
-                    android:alpha="0.2" />
+                    android:layout_height="wrap_content"
+                    android:alpha="0.2"
+                    android:background="@drawable/divider_left_offset" />
 
-            <TextView
+                <TextView
                     android:id="@+id/tvSettingsSigners"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="?android:attr/selectableItemBackground"
                     android:padding="16dp"
-                    android:text="@string/text_settings_signer"
                     android:textColor="@android:color/black"
                     android:textSize="16sp"
-                    app:drawableEndCompat="@drawable/ic_arrow_right" />
+                    app:drawableEndCompat="@drawable/ic_arrow_right"
+                    tools:text="Protects 1 Account" />
 
-            <View
+                <View
                     android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginEnd="0dp"
-                    android:background="@color/color_979797"
-                    android:alpha="0.2" />
+                    android:layout_height="wrap_content"
+                    android:alpha="0.2"
+                    android:background="@drawable/divider_left_offset" />
 
-            <LinearLayout
+                <LinearLayout
                     android:id="@+id/llSettingsTrConfirmationContainer"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
 
-                <LinearLayout
+                    <LinearLayout
                         android:id="@+id/llSettingsTrConfirmation"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -105,7 +100,7 @@
                         android:orientation="horizontal"
                         android:padding="16dp">
 
-                    <TextView
+                        <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginEnd="8dp"
@@ -116,37 +111,35 @@
                             android:textColor="@android:color/black"
                             android:textSize="16sp" />
 
-                    <TextView
+                        <TextView
                             android:id="@+id/tvTrConfirmationConfig"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginEnd="4dp"
                             android:layout_weight="0"
-                            android:gravity="center"
-                            android:paddingBottom="2dp"
-                            android:maxLines="1"
-                            android:ellipsize="end"
-                            android:textColor="@android:color/black"
                             android:alpha="0.6"
+                            android:ellipsize="end"
+                            android:gravity="center"
+                            android:maxLines="1"
+                            android:paddingBottom="2dp"
+                            android:textColor="@android:color/black"
                             android:textSize="16sp" />
 
-                    <ImageView
+                        <ImageView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:src="@drawable/ic_arrow_right"
                             tools:ignore="ContentDescription" />
+                    </LinearLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:alpha="0.2"
+                        android:background="@drawable/divider_left_offset" />
                 </LinearLayout>
 
-                <View
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:layout_marginStart="16dp"
-                        android:layout_marginEnd="0dp"
-                        android:background="@color/color_979797"
-                        android:alpha="0.2" />
-            </LinearLayout>
-
-            <androidx.appcompat.widget.SwitchCompat
+                <androidx.appcompat.widget.SwitchCompat
                     android:id="@+id/swSettingsNotifications"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -159,17 +152,34 @@
                     android:textColor="@android:color/black"
                     android:textSize="16sp" />
 
-        </LinearLayout>
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:alpha="0.2"
+                    android:background="@drawable/divider_left_offset" />
 
-        <!-- Security -->
-        <LinearLayout
+                <TextView
+                    android:id="@+id/tvSettingsManageNicknames"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="?android:attr/selectableItemBackground"
+                    android:padding="16dp"
+                    android:text="@string/text_settings_manage_nicknames"
+                    android:textColor="@android:color/black"
+                    android:textSize="16sp"
+                    app:drawableEndCompat="@drawable/ic_arrow_right" />
+
+            </LinearLayout>
+
+            <!-- Security -->
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:background="@android:color/white"
                 android:orientation="vertical">
 
-            <TextView
+                <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:fontFamily="sans-serif-medium"
@@ -178,13 +188,13 @@
                     android:textColor="@color/color_primary"
                     android:textSize="14sp" />
 
-            <LinearLayout
+                <LinearLayout
                     android:id="@+id/llSettingsMnemonicsContainer"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
 
-                <TextView
+                    <TextView
                         android:id="@+id/tvSettingsMnemonics"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -195,22 +205,20 @@
                         android:textSize="16sp"
                         app:drawableEndCompat="@drawable/ic_arrow_right" />
 
-                <View
+                    <View
                         android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:layout_marginStart="16dp"
-                        android:layout_marginEnd="0dp"
-                        android:background="@color/color_979797"
-                        android:alpha="0.2" />
-            </LinearLayout>
+                        android:layout_height="wrap_content"
+                        android:alpha="0.2"
+                        android:background="@drawable/divider_left_offset" />
+                </LinearLayout>
 
-            <LinearLayout
+                <LinearLayout
                     android:id="@+id/llSettingsChangePinContainer"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
 
-                <TextView
+                    <TextView
                         android:id="@+id/tvSettingsChangePin"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -221,22 +229,20 @@
                         android:textSize="16sp"
                         app:drawableEndCompat="@drawable/ic_arrow_right" />
 
-                <View
+                    <View
                         android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:layout_marginStart="16dp"
-                        android:layout_marginEnd="0dp"
-                        android:background="@color/color_979797"
-                        android:alpha="0.2" />
-            </LinearLayout>
+                        android:layout_height="wrap_content"
+                        android:alpha="0.2"
+                        android:background="@drawable/divider_left_offset" />
+                </LinearLayout>
 
-            <LinearLayout
+                <LinearLayout
                     android:id="@+id/llBiometricContainer"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
 
-                <androidx.appcompat.widget.SwitchCompat
+                    <androidx.appcompat.widget.SwitchCompat
                         android:id="@+id/swSettingsBiometric"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -249,16 +255,14 @@
                         android:textColor="@android:color/black"
                         android:textSize="16sp" />
 
-                <View
+                    <View
                         android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:layout_marginStart="16dp"
-                        android:layout_marginEnd="0dp"
-                        android:background="@color/color_979797"
-                        android:alpha="0.2" />
-            </LinearLayout>
+                        android:layout_height="wrap_content"
+                        android:alpha="0.2"
+                        android:background="@drawable/divider_left_offset" />
+                </LinearLayout>
 
-            <LinearLayout
+                <LinearLayout
                     android:id="@+id/llSettingsSpamProtection"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -267,7 +271,7 @@
                     android:orientation="horizontal"
                     android:padding="16dp">
 
-                <TextView
+                    <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="8dp"
@@ -278,38 +282,38 @@
                         android:textColor="@android:color/black"
                         android:textSize="16sp" />
 
-                <TextView
+                    <TextView
                         android:id="@+id/tvSpamProtectionConfig"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="4dp"
                         android:layout_weight="0"
-                        android:gravity="center"
-                        android:paddingBottom="2dp"
-                        android:maxLines="1"
-                        android:ellipsize="end"
-                        android:textColor="@android:color/black"
                         android:alpha="0.6"
+                        android:ellipsize="end"
+                        android:gravity="center"
+                        android:maxLines="1"
+                        android:paddingBottom="2dp"
+                        android:textColor="@android:color/black"
                         android:textSize="16sp" />
 
-                <ImageView
+                    <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:src="@drawable/ic_arrow_right"
                         tools:ignore="ContentDescription" />
 
+                </LinearLayout>
             </LinearLayout>
-        </LinearLayout>
 
-        <!-- Help -->
-        <LinearLayout
+            <!-- Help -->
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:background="@android:color/white"
                 android:orientation="vertical">
 
-            <TextView
+                <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:fontFamily="sans-serif-medium"
@@ -318,7 +322,7 @@
                     android:textColor="@color/color_primary"
                     android:textSize="14sp" />
 
-            <TextView
+                <TextView
                     android:id="@+id/tvSettingsHelp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -329,15 +333,13 @@
                     android:textSize="16sp"
                     app:drawableEndCompat="@drawable/ic_arrow_right" />
 
-            <View
+                <View
                     android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginEnd="0dp"
-                    android:background="@color/color_979797"
-                    android:alpha="0.2" />
+                    android:layout_height="wrap_content"
+                    android:alpha="0.2"
+                    android:background="@drawable/divider_left_offset" />
 
-            <TextView
+                <TextView
                     android:id="@+id/tvSettingsContactSupport"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -347,17 +349,17 @@
                     android:textColor="@android:color/black"
                     android:textSize="16sp"
                     app:drawableEndCompat="@drawable/ic_arrow_right" />
-        </LinearLayout>
+            </LinearLayout>
 
-        <!-- Other -->
-        <LinearLayout
+            <!-- Other -->
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:background="@android:color/white"
                 android:orientation="vertical">
 
-            <TextView
+                <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:fontFamily="sans-serif-medium"
@@ -366,13 +368,13 @@
                     android:textColor="@color/color_primary"
                     android:textSize="14sp" />
 
-            <LinearLayout
+                <LinearLayout
                     android:id="@+id/llSettingsSignerCardInfoContainer"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
 
-                <TextView
+                    <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="?android:attr/selectableItemBackground"
@@ -382,16 +384,14 @@
                         android:textSize="16sp"
                         app:drawableEndCompat="@drawable/ic_arrow_right" />
 
-                <View
+                    <View
                         android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:layout_marginStart="16dp"
-                        android:layout_marginEnd="0dp"
-                        android:background="@color/color_979797"
-                        android:alpha="0.2" />
-            </LinearLayout>
+                        android:layout_height="wrap_content"
+                        android:alpha="0.2"
+                        android:background="@drawable/divider_left_offset" />
+                </LinearLayout>
 
-            <TextView
+                <TextView
                     android:id="@+id/tvSettingsRateUs"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -402,15 +402,13 @@
                     android:textSize="16sp"
                     app:drawableEndCompat="@drawable/ic_arrow_right" />
 
-            <View
+                <View
                     android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginEnd="0dp"
-                    android:background="@color/color_979797"
-                    android:alpha="0.2" />
+                    android:layout_height="wrap_content"
+                    android:alpha="0.2"
+                    android:background="@drawable/divider_left_offset" />
 
-            <TextView
+                <TextView
                     android:id="@+id/tvSettingsLicense"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -421,15 +419,13 @@
                     android:textSize="16sp"
                     app:drawableEndCompat="@drawable/ic_arrow_right" />
 
-            <View
+                <View
                     android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginEnd="0dp"
-                    android:background="@color/color_979797"
-                    android:alpha="0.2" />
+                    android:layout_height="wrap_content"
+                    android:alpha="0.2"
+                    android:background="@drawable/divider_left_offset" />
 
-            <LinearLayout
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center_vertical"
@@ -439,7 +435,7 @@
                     android:paddingEnd="16dp"
                     android:paddingBottom="18dp">
 
-                <TextView
+                    <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -447,24 +443,22 @@
                         android:textColor="@android:color/black"
                         android:textSize="16sp" />
 
-                <TextView
+                    <TextView
                         android:id="@+id/tvSettingsVersion"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="0"
                         android:textColor="@color/color_8a000000"
                         android:textSize="14sp" />
-            </LinearLayout>
+                </LinearLayout>
 
-            <View
+                <View
                     android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginEnd="0dp"
-                    android:background="@color/color_979797"
-                    android:alpha="0.2" />
+                    android:layout_height="wrap_content"
+                    android:alpha="0.2"
+                    android:background="@drawable/divider_left_offset" />
 
-            <TextView
+                <TextView
                     android:id="@+id/tvLogOut"
                     android:layout_width="match_parent"
                     android:layout_height="57dp"
@@ -475,21 +469,21 @@
                     android:text="@string/text_settings_log_out"
                     android:textColor="@color/color_d9534f"
                     android:textSize="16sp" />
-        </LinearLayout>
+            </LinearLayout>
 
-        <TextView
+            <TextView
                 android:id="@+id/tvCurrentPolicyDate"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom"
+                android:alpha="0.6"
                 android:drawablePadding="8dp"
                 android:gravity="center"
                 android:padding="16dp"
                 android:text="@string/text_all_rights_reserved"
                 android:textColor="@color/color_9b9b9b"
-                android:alpha="0.6"
                 android:textSize="10sp"
                 app:drawableTopCompat="@drawable/ic_ultra_stellar_logo" />
-    </LinearLayout>
-</ScrollView>
+        </LinearLayout>
+    </ScrollView>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

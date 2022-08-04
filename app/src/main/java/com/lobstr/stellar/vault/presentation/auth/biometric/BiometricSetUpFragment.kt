@@ -8,6 +8,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
+import androidx.activity.addCallback
 import androidx.annotation.ColorRes
 import androidx.core.content.ContextCompat
 import androidx.core.view.WindowCompat
@@ -44,6 +46,7 @@ class BiometricSetUpFragment : BaseFragment(), BiometricSetUpView, BiometricList
 
     private var _binding: FragmentBiometricSetUpBinding? = null
     private val binding get() = _binding!!
+    private var backPressedCallback: OnBackPressedCallback? = null
 
     @Inject
     lateinit var presenterProvider: Provider<BiometricSetUpPresenter>
@@ -86,17 +89,16 @@ class BiometricSetUpFragment : BaseFragment(), BiometricSetUpView, BiometricList
     }
 
     private fun setListeners() {
+        backPressedCallback = requireActivity().onBackPressedDispatcher.addCallback(requireActivity()) {
+            mPresenter.onBackPressed()
+        }
         binding.btnTurOn.setSafeOnClickListener { mPresenter.turnOnClicked() }
         binding.btnSkip.setSafeOnClickListener { mPresenter.skipClicked() }
     }
 
-    override fun onBackPressed(): Boolean {
-        mPresenter.onBackPressed()
-        return true
-    }
-
     override fun onDestroyView() {
         super.onDestroyView()
+        backPressedCallback?.remove()
         _binding = null
     }
 

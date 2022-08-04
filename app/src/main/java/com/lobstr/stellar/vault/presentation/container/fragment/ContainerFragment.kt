@@ -10,6 +10,7 @@ import com.lobstr.stellar.vault.presentation.auth.enter_screen.AuthFragment
 import com.lobstr.stellar.vault.presentation.auth.mnemonic.create_mnemonic.MnemonicsFragment
 import com.lobstr.stellar.vault.presentation.base.fragment.BaseContainerFragment
 import com.lobstr.stellar.vault.presentation.entities.transaction.TransactionItem
+import com.lobstr.stellar.vault.presentation.home.account_name.add.AddAccountNameFragment
 import com.lobstr.stellar.vault.presentation.home.dashboard.DashboardFragment
 import com.lobstr.stellar.vault.presentation.home.settings.SettingsFragment
 import com.lobstr.stellar.vault.presentation.home.settings.config.ConfigFragment
@@ -179,6 +180,12 @@ class ContainerFragment : BaseContainerFragment(),
         displayFragment(
             fragmentName = ConfigFragment::class.qualifiedName!!,
             bundle = bundleOf(Constant.Bundle.BUNDLE_CONFIG to config)
+        )
+    }
+
+    override fun showAddAccountNameFr() {
+        displayFragment(
+            fragmentName = AddAccountNameFragment::class.qualifiedName!!,
         )
     }
 

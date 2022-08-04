@@ -1,6 +1,7 @@
 package com.lobstr.stellar.vault.presentation.container.fragment
 
 import com.lobstr.stellar.vault.presentation.entities.transaction.TransactionItem
+import com.lobstr.stellar.vault.presentation.util.Constant.Navigation.ADD_ACCOUNT_NAME
 import com.lobstr.stellar.vault.presentation.util.Constant.Navigation.AUTH
 import com.lobstr.stellar.vault.presentation.util.Constant.Navigation.CONFIG
 import com.lobstr.stellar.vault.presentation.util.Constant.Navigation.DASHBOARD
@@ -57,6 +58,8 @@ class ContainerPresenter(
             SIGNED_ACCOUNTS -> viewState.showSignedAccountsFr()
 
             CONFIG -> viewState.showConfigFr(config)
+
+            ADD_ACCOUNT_NAME -> viewState.showAddAccountNameFr()
         }
     }
 }

@@ -205,6 +205,10 @@ class SettingsPresenter @Inject constructor(
         viewState.showConfigScreen(Constant.Code.Config.TRANSACTION_CONFIRMATIONS)
     }
 
+    fun manageNicknamesClicked() {
+        viewState.showManageNicknamesScreen()
+    }
+
     fun licenseClicked() {
         viewState.showLicenseScreen()
     }

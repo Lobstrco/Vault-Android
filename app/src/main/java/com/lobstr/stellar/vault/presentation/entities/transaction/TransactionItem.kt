@@ -6,11 +6,8 @@ import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class TransactionItem(
-    val cancelledAt: String?,
     val addedAt: String?,
-    val signedAt: String?,
     val hash: String,
-    val getStatusDisplay: String?,
     var status: Int?,
     val sequenceOutdatedAt: String?,
     val transaction: Transaction,

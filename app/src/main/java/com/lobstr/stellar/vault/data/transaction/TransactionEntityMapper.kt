@@ -36,11 +36,8 @@ class TransactionEntityMapper(private val tsMapper: TsMapper) {
 
     fun transformTransactionItem(apiTransactionItem: ApiTransactionItem): TransactionItem {
         return TransactionItem(
-            apiTransactionItem.cancelledAt,
             apiTransactionItem.addedAt,
-            apiTransactionItem.signedAt,
             apiTransactionItem.hash!!,
-            apiTransactionItem.getStatusDisplay,
             apiTransactionItem.status,
             apiTransactionItem.sequenceOutdatedAt,
             tsMapper.getTransaction(
@@ -52,9 +49,6 @@ class TransactionEntityMapper(private val tsMapper: TsMapper) {
 
     fun transformTransactionXdr(xdr: String): TransactionItem {
         return TransactionItem(
-            "",
-            "",
-            "",
             "",
             "",
             IMPORT_XDR,

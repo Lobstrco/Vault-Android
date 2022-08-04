@@ -52,9 +52,9 @@ class AccountAdapter(
 
     override fun onBindViewHolder(viewHolder: RecyclerView.ViewHolder, position: Int) {
         when (viewHolder) {
-            is AccountExtendedViewHolder -> viewHolder.bind(accounts[position], itemCount)
-            is AccountViewHolder -> viewHolder.bind(accounts[position], itemCount)
-            is AccountWithStatusViewHolder -> viewHolder.bind(accounts[position], itemCount)
+            is AccountExtendedViewHolder -> viewHolder.bind(accounts[position])
+            is AccountViewHolder -> viewHolder.bind(accounts[position])
+            is AccountWithStatusViewHolder -> viewHolder.bind(accounts[position])
         }
     }
 

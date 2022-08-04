@@ -84,5 +84,8 @@ interface SettingsView : MvpView {
     fun showConfigScreen(config: Int)
 
     @Skip
+    fun showManageNicknamesScreen()
+
+    @Skip
     fun showMessage(message: String)
 }

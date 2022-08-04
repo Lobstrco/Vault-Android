@@ -10,6 +10,8 @@ import android.view.*
 import android.widget.FrameLayout
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
+import androidx.activity.addCallback
 import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
@@ -45,6 +47,7 @@ import com.lobstr.stellar.vault.presentation.util.Constant.Bundle.BUNDLE_TRANSAC
 import com.lobstr.stellar.vault.presentation.util.Constant.Bundle.BUNDLE_TRANSACTION_TITLE
 import com.lobstr.stellar.vault.presentation.util.Constant.Extra.EXTRA_TRANSACTION_ITEM
 import com.lobstr.stellar.vault.presentation.util.Constant.Extra.EXTRA_TRANSACTION_STATUS
+import com.lobstr.stellar.vault.presentation.util.CustomDividerItemDecoration
 import com.lobstr.stellar.vault.presentation.util.manager.FragmentTransactionManager
 import com.lobstr.stellar.vault.presentation.util.manager.ProgressManager
 import com.lobstr.stellar.vault.presentation.util.setSafeOnClickListener
@@ -72,6 +75,7 @@ class TransactionDetailsFragment : BaseFragment(), TransactionDetailsView,
 
     private var _binding: FragmentTransactionDetailsBinding? = null
     private val binding get() = _binding!!
+    private var backPressedCallback: OnBackPressedCallback? = null
 
     @Inject
     lateinit var presenterProvider: Provider<TransactionDetailsPresenter>
@@ -109,6 +113,17 @@ class TransactionDetailsFragment : BaseFragment(), TransactionDetailsView,
     }
 
     private fun setListeners() {
+        backPressedCallback = requireActivity().onBackPressedDispatcher.addCallback(requireActivity()) {
+            // handle operations container backStack.
+            if (childFragmentManager.backStackEntryCount > 1) {
+                childFragmentManager.popBackStack()
+            } else {
+                // When operations container backStack has one item - handle backStack through base container.
+                isEnabled = false
+                requireActivity().onBackPressedDispatcher.onBackPressed()
+            }
+        }
+
         binding.btnConfirm.setSafeOnClickListener { mPresenter.btnConfirmClicked() }
         binding.btnDeny.setSafeOnClickListener { mPresenter.btnDenyClicked() }
 
@@ -132,19 +147,9 @@ class TransactionDetailsFragment : BaseFragment(), TransactionDetailsView,
         return super.onOptionsItemSelected(item)
     }
 
-    override fun onBackPressed(): Boolean {
-        // handle operations container backStack.
-        if (childFragmentManager.backStackEntryCount > 1) {
-            childFragmentManager.popBackStack()
-            return true
-        }
-
-        // When operations container backStack has one item - handle backStack through base container.
-        return super.onBackPressed()
-    }
-
     override fun onDestroyView() {
         super.onDestroyView()
+        backPressedCallback?.remove()
         _binding = null
     }
 
@@ -160,6 +165,12 @@ class TransactionDetailsFragment : BaseFragment(), TransactionDetailsView,
         binding.rvSigners.layoutManager = LinearLayoutManager(activity)
         binding.rvSigners.itemAnimator = null
         binding.rvSigners.isNestedScrollingEnabled = false
+        binding.rvSigners.addItemDecoration(
+            CustomDividerItemDecoration(
+                ContextCompat.getDrawable(requireContext(), R.drawable.divider_left_offset)!!.apply {
+                    alpha = 51 // Alpha 0.2.
+                })
+        )
         binding.rvSigners.adapter = AccountAdapter(
             AccountAdapter.ACCOUNT_WITH_STATUS,
             { mPresenter.signedAccountItemClicked(it) },

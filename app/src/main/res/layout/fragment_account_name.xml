@@ -53,6 +53,7 @@
             android:id="@+id/tvRestriction"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:alpha="0.6"
             android:ellipsize="end"
             android:gravity="center"
             android:maxLines="1"

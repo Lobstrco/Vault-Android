@@ -10,11 +10,10 @@ import com.lobstr.stellar.vault.presentation.util.setSafeOnClickListener
 class ConfigViewHolder(private val binding: AdapterItemConfigBinding, private val itemClickListener: (config: Config, selectedType: Byte) -> Unit) :
     RecyclerView.ViewHolder(binding.root) {
 
-    fun bind(config: Config, selectedType: Byte, itemsCount: Int) {
+    fun bind(config: Config, selectedType: Byte) {
         binding.tvConfig.text = config.text
         binding.ivConfigStatus.visibility =
             if (config.type == selectedType) View.VISIBLE else View.INVISIBLE
-        binding.divider.visibility = calculateDividerVisibility(itemsCount)
 
         itemView.setSafeOnClickListener {
             val position = this@ConfigViewHolder.bindingAdapterPosition
@@ -23,19 +22,6 @@ class ConfigViewHolder(private val binding: AdapterItemConfigBinding, private va
             }
 
             itemClickListener(config, selectedType)
-        }
-    }
-
-    /**
-     * Don't show divider for last ore one item.
-     * @param itemsCount Count of items.
-     * @return Visibility.
-     */
-    private fun calculateDividerVisibility(itemsCount: Int): Int {
-        return if (itemsCount == 1 || bindingAdapterPosition == itemsCount - 1) {
-            View.INVISIBLE
-        } else {
-            View.VISIBLE
         }
     }
 }

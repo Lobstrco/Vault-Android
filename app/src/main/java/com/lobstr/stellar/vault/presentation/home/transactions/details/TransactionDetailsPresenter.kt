@@ -220,12 +220,10 @@ class TransactionDetailsPresenter @Inject constructor(
 
                     // Show signatures count to submit additional info only for non AUTH_CHALLENGE transactions.
                     if (transactionItem.transaction.transactionType != AUTH_CHALLENGE) {
-                        countToSubmitStr = AppUtil.getString(
-                            if (countToConfirm > 1) {
-                                R.string.text_tv_signatures_count_to_submit
-                            } else {
-                                R.string.text_tv_signature_count_to_submit
-                            }, countToConfirm
+                        countToSubmitStr = AppUtil.getQuantityString(
+                            R.plurals.text_tv_signatures_count_to_submit,
+                            countToConfirm,
+                            countToConfirm
                         )
                     }
                 }

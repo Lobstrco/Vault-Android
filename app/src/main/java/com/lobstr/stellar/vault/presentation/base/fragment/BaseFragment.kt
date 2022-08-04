@@ -30,13 +30,6 @@ abstract class BaseFragment : BaseMvpAppCompatFragment(), BaseFragmentView {
         setHasOptionsMenu(if (parentFragment is BaseContainerFragment) (parentFragment as BaseContainerFragment).isMenuVisible else true)
     }
 
-    /**
-     * @return False to allow normal back press processing to
-     * proceed, true to consume it here.
-     * @see BaseActivity.onBackPressed
-     */
-    open fun onBackPressed() = false
-
     override fun saveOptionsMenuVisibility(visible: Boolean) {
         mBasePresenter.saveOptionsMenuVisibilityCalled(visible)
     }

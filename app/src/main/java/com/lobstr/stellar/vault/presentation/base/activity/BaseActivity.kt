@@ -21,7 +21,6 @@ import androidx.fragment.app.Fragment
 import com.lobstr.stellar.vault.R
 import com.lobstr.stellar.vault.presentation.BaseMvpAppCompatActivity
 import com.lobstr.stellar.vault.presentation.application.LVApplication
-import com.lobstr.stellar.vault.presentation.base.fragment.BaseFragment
 import com.lobstr.stellar.vault.presentation.container.activity.ContainerActivity
 import com.lobstr.stellar.vault.presentation.container.fragment.ContainerFragment
 import com.lobstr.stellar.vault.presentation.dialog.alert.base.AlertDialogFragment
@@ -104,14 +103,7 @@ abstract class BaseActivity : BaseMvpAppCompatActivity(),
         )
 
         onBackPressedDispatcher.addCallback(this) {
-            val container = supportFragmentManager.findFragmentById(R.id.flContainer)
-
-            // Handle back press in fragment if needed.
-            val childFragment =
-                container?.childFragmentManager?.findFragmentById(R.id.flContainer) ?: container
-            if ((childFragment as? BaseFragment)?.onBackPressed() == true) return@addCallback
-
-            checkBackPress(container)
+            checkBackPress(supportFragmentManager.findFragmentById(R.id.flContainer))
         }
     }
 

@@ -5,6 +5,8 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.*
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
+import androidx.activity.addCallback
 import androidx.core.view.isVisible
 import com.bumptech.glide.Glide
 import com.lobstr.stellar.vault.R
@@ -44,6 +46,7 @@ class VaultAuthFragment : BaseFragment(), VaultAuthFrView,
 
     private var _binding: FragmentVaultAuthBinding? = null
     private val binding get() = _binding!!
+    private var backPressedCallback: OnBackPressedCallback? = null
 
     @Inject
     lateinit var presenterProvider: Provider<VaultAuthFrPresenter>
@@ -76,6 +79,10 @@ class VaultAuthFragment : BaseFragment(), VaultAuthFrView,
     }
 
     private fun setListeners() {
+        backPressedCallback = requireActivity().onBackPressedDispatcher.addCallback(requireActivity()) {
+            mPresenter.logOutClicked()
+        }
+
         binding.btnAuth.setSafeOnClickListener { mPresenter.authClicked() }
     }
 
@@ -92,13 +99,9 @@ class VaultAuthFragment : BaseFragment(), VaultAuthFrView,
         return super.onOptionsItemSelected(item)
     }
 
-    override fun onBackPressed(): Boolean {
-        mPresenter.logOutClicked()
-        return true
-    }
-
     override fun onDestroyView() {
         super.onDestroyView()
+        backPressedCallback?.remove()
         _binding = null
     }
 

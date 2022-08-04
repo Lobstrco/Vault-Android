@@ -57,6 +57,7 @@ object Constant {
         const val SIGNED_ACCOUNTS = 11
         const val CONFIG = 12
         const val VAULT_AUTH = 13
+        const val ADD_ACCOUNT_NAME = 14
     }
 
     object Transaction {

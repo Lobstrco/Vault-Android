@@ -32,4 +32,6 @@ interface ContainerView : MvpView {
     fun showSignedAccountsFr()
 
     fun showConfigFr(config: Int)
+
+    fun showAddAccountNameFr()
 }

@@ -18,7 +18,7 @@ class TransactionOperationAdapter(
     }
 
     override fun onBindViewHolder(viewHolder: RecyclerView.ViewHolder, position: Int) {
-        (viewHolder as TransactionOperationViewHolder).bind(operations[position], itemCount)
+        (viewHolder as TransactionOperationViewHolder).bind(operations[position])
     }
 
     override fun getItemCount(): Int {

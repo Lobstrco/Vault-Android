@@ -10,6 +10,8 @@
     <string name="title_toolbar_license">Licenses</string>
     <string name="title_toolbar_import_xdr">Add Transaction XDR</string>
     <string name="title_toolbar_spam_protection">Unsigned Transactions</string>
+    <string name="title_toolbar_manage_accounts_names">Manage Account Nicknames</string>
+    <string name="title_toolbar_add_account_name">Set Nickname for Account</string>
 
     <!-- Buttons -->
     <string name="text_btn_cancel">Cancel</string>
@@ -125,8 +127,11 @@
     <string name="title_settings_help">Help</string>
     <string name="title_settings_other">Other</string>
     <string name="text_settings_public_key">Vault Signer Key</string>
-    <string name="text_settings_signer">Protects %d Account</string>
-    <string name="text_settings_signers">Protects %d Accounts</string>
+    <plurals name="text_settings_signers">
+        <item quantity="one">Protects %d Account</item>
+        <item quantity="other">Protects %d Accounts</item>
+    </plurals>
+    <string name="text_settings_manage_nicknames">Manage Account Nicknames</string>
     <string name="text_settings_mnemonic_code">Recovery Phrase</string>
     <string name="text_settings_change_pin">Change PIN</string>
     <string name="text_settings_biometric_login">Biometric Login</string>
@@ -177,8 +182,10 @@
     <string name="text_tv_status_signed">Signed</string>
     <string name="text_tv_status_pending">Pending</string>
     <string name="text_tv_added_at">Created</string>
-    <string name="text_tv_signatures_count_to_submit">%d signatures required to submit this transaction to the network</string>
-    <string name="text_tv_signature_count_to_submit">%d signature required to submit this transaction to the network</string>
+    <plurals name="text_tv_signatures_count_to_submit">
+        <item quantity="one">%d signature required to submit this transaction to the network</item>
+        <item quantity="other">%d signatures required to submit this transaction to the network</item>
+    </plurals>
 
     <!-- Operations' list -->
     <string name="text_tv_operations_list_title">Operations</string>
@@ -379,4 +386,12 @@ Describe an issue or provide your feedback below:
     <string name="text_tv_choose_active_account">Choose Signer Account</string>
     <string name="text_btn_add_new_account">New Signer Key</string>
     <string name="text_tv_account_name">Vault Signer Key %s</string>
+
+    <!-- Manage Accounts' Names -->
+    <string name="text_empty_state_accounts_names_list">No account nicknames</string>
+
+    <!-- Add Account Name -->
+    <string name="text_tv_add_account_name_subtitle">Enter a public key and choose a short nickname</string>
+    <string name="hint_add_account_name_public_key">Enter public key</string>
+    <string name="text_tv_add_account_name_public_key_restriction">A sequence of 56 characters starting with the letter “G”</string>
 </resources>

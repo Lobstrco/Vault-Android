@@ -4,6 +4,8 @@ package com.lobstr.stellar.vault.presentation.auth.mnemonic.create_mnemonic
 import android.content.DialogInterface
 import android.os.Bundle
 import android.view.*
+import androidx.activity.OnBackPressedCallback
+import androidx.activity.addCallback
 import androidx.core.view.isVisible
 import androidx.fragment.app.FragmentManager
 import com.lobstr.stellar.vault.R
@@ -44,6 +46,7 @@ class MnemonicsFragment : BaseFragment(),
 
     private var _binding: FragmentMnemonicsBinding? = null
     private val binding get() = _binding!!
+    private var backPressedCallback: OnBackPressedCallback? = null
 
     @Inject
     lateinit var presenterProvider: Provider<MnemonicsPresenter>
@@ -78,6 +81,15 @@ class MnemonicsFragment : BaseFragment(),
     }
 
     private fun setListeners() {
+        backPressedCallback = requireActivity().onBackPressedDispatcher.addCallback(requireActivity()) {
+            // Handle back press only for mnemonics in authentication container.
+            if (activity is AuthActivity) {
+                mPresenter.backPressed()
+            } else {
+                isEnabled = false
+                requireActivity().onBackPressedDispatcher.onBackPressed()
+            }
+        }
         binding.btnNext.setSafeOnClickListener { mPresenter.nextClicked() }
         binding.btnClipToBoard.setSafeOnClickListener { mPresenter.clipToBordClicked() }
     }
@@ -97,18 +109,9 @@ class MnemonicsFragment : BaseFragment(),
         return super.onOptionsItemSelected(item)
     }
 
-    override fun onBackPressed(): Boolean {
-        // Handle back press only for mnemonics in authentication container.
-        if (activity is AuthActivity) {
-            mPresenter.backPressed()
-            return true
-        }
-
-        return super.onBackPressed()
-    }
-
     override fun onDestroyView() {
         super.onDestroyView()
+        backPressedCallback?.remove()
         _binding = null
     }
 

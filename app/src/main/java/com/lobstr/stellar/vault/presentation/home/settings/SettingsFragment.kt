@@ -30,6 +30,7 @@ import com.lobstr.stellar.vault.presentation.dialog.alert.base.AlertDialogFragme
 import com.lobstr.stellar.vault.presentation.dialog.alert.base.AlertDialogFragment.DialogFragmentIdentifier.BIOMETRIC_INFO_DIALOG
 import com.lobstr.stellar.vault.presentation.dialog.alert.base.AlertDialogFragment.DialogFragmentIdentifier.PUBLIC_KEY
 import com.lobstr.stellar.vault.presentation.fcm.NotificationsManager
+import com.lobstr.stellar.vault.presentation.home.account_name.manage.ManageAccountsNamesFragment
 import com.lobstr.stellar.vault.presentation.home.settings.license.LicenseFragment
 import com.lobstr.stellar.vault.presentation.home.settings.show_public_key.ShowPublicKeyDialogFragment
 import com.lobstr.stellar.vault.presentation.home.settings.signed_accounts.SignedAccountsFragment
@@ -142,6 +143,7 @@ class SettingsFragment : BaseFragment(), SettingsView, CompoundButton.OnCheckedC
         binding.swSettingsNotifications.setOnCheckedChangeListener(this)
         binding.llSettingsSignerCardInfoContainer.setSafeOnClickListener { mPresenter.signerCardClicked() }
         binding.llSettingsTrConfirmation.setSafeOnClickListener { mPresenter.trConfirmationClicked() }
+        binding.tvSettingsManageNicknames.setSafeOnClickListener { mPresenter.manageNicknamesClicked() }
         binding.tvSettingsLicense.setSafeOnClickListener { mPresenter.licenseClicked() }
         binding.tvSettingsRateUs.setSafeOnClickListener { mPresenter.rateUsClicked() }
         binding.tvSettingsContactSupport.setSafeOnClickListener { mPresenter.contactSupportClicked() }
@@ -186,7 +188,8 @@ class SettingsFragment : BaseFragment(), SettingsView, CompoundButton.OnCheckedC
     }
 
     override fun setupSignersCount(signersCount: Int) {
-        val message = getString(if (signersCount == 1) R.string.text_settings_signer else R.string.text_settings_signers, signersCount)
+        val message =
+            AppUtil.getQuantityString(R.plurals.text_settings_signers, signersCount, signersCount)
         val spannedText = SpannableString(message)
         val startPosition = message.indexOf(signersCount.toString())
         val endPosition = startPosition + signersCount.toString().length
@@ -340,6 +343,17 @@ class SettingsFragment : BaseFragment(), SettingsView, CompoundButton.OnCheckedC
             putExtra(Constant.Extra.EXTRA_NAVIGATION_FR, Constant.Navigation.CONFIG)
             putExtra(Constant.Extra.EXTRA_CONFIG, config)
         })
+    }
+
+    override fun showManageNicknamesScreen() {
+        FragmentTransactionManager.displayFragment(
+            requireParentFragment().childFragmentManager,
+            requireParentFragment().childFragmentManager.fragmentFactory.instantiate(
+                requireContext().classLoader,
+                ManageAccountsNamesFragment::class.qualifiedName!!
+            ),
+            R.id.flContainer
+        )
     }
 
     override fun setupPolicyYear(id: Int) {

@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true"
+        android:padding="16dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="start"
+                android:layout_marginBottom="24dp"
+                android:alpha="0.6"
+                android:text="@string/text_tv_add_account_name_subtitle"
+                android:textColor="@color/color_071c33"
+                android:textSize="15sp" />
+
+            <com.lobstr.stellar.vault.presentation.util.SearchEditText
+                android:id="@+id/edtAccountPublicKey"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginBottom="8dp"
+                android:background="@drawable/shape_input_edit_text"
+                android:drawablePadding="10dp"
+                android:gravity="top"
+                android:hint="@string/hint_add_account_name_public_key"
+                android:imeOptions="actionDone"
+                android:inputType="textCapWords|textCapSentences"
+                android:maxLength="56"
+                android:maxLines="1"
+                android:padding="16dp"
+                android:textColorHint="@color/color_4d000000"
+                android:textSize="15sp"
+                app:cleanSearchImgColor="@color/color_757575" />
+
+            <TextView
+                android:id="@+id/tvAccountPublicKeyRestriction"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="24dp"
+                android:alpha="0.6"
+                android:gravity="start"
+                android:text="@string/text_tv_add_account_name_public_key_restriction"
+                android:textColor="@color/color_4a4a4a"
+                android:textSize="13sp" />
+
+            <com.lobstr.stellar.vault.presentation.util.SearchEditText
+                android:id="@+id/edtAccountName"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginBottom="8dp"
+                android:background="@drawable/shape_input_edit_text"
+                android:drawablePadding="10dp"
+                android:gravity="top"
+                android:hint="@string/hint_account_nickname"
+                android:imeOptions="actionDone"
+                android:inputType="textCapWords|textCapSentences"
+                android:maxLength="20"
+                android:maxLines="1"
+                android:padding="16dp"
+                android:textColorHint="@color/color_4d000000"
+                android:textSize="15sp"
+                app:cleanSearchImgColor="@color/color_757575" />
+
+            <TextView
+                android:id="@+id/tvAccountNameRestriction"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:alpha="0.6"
+                android:gravity="start"
+                android:text="@string/text_tv_change_account_name_restriction"
+                android:textColor="@color/color_4a4a4a"
+                android:textSize="13sp" />
+
+            <Button
+                android:id="@+id/btnSave"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="30dp"
+                android:background="@drawable/selector_default_button_with_round"
+                android:enabled="false"
+                android:text="@string/text_btn_save"
+                android:textAllCaps="false"
+                android:textColor="@android:color/white"
+                android:textSize="15sp" />
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

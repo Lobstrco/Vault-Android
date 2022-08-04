@@ -29,6 +29,7 @@ import com.lobstr.stellar.vault.presentation.home.settings.signed_accounts.adapt
 import com.lobstr.stellar.vault.presentation.home.settings.signed_accounts.edit_account.EditAccountDialogFragment
 import com.lobstr.stellar.vault.presentation.util.AppUtil
 import com.lobstr.stellar.vault.presentation.util.Constant
+import com.lobstr.stellar.vault.presentation.util.CustomDividerItemDecoration
 import com.lobstr.stellar.vault.presentation.util.setSafeOnClickListener
 import dagger.hilt.android.AndroidEntryPoint
 import moxy.ktx.moxyPresenter
@@ -163,6 +164,12 @@ class DashboardFragment : BaseFragment(), DashboardView,
     override fun initSignedAccountsRecycledView() {
         binding.rvSignedAccounts.layoutManager = LinearLayoutManager(activity)
         binding.rvSignedAccounts.itemAnimator = null
+        binding.rvSignedAccounts.addItemDecoration(
+            CustomDividerItemDecoration(
+            ContextCompat.getDrawable(requireContext(), R.drawable.divider_left_right_offset)!!.apply {
+                alpha = 51 // Alpha 0.2.
+            })
+        )
         binding.rvSignedAccounts.isNestedScrollingEnabled = false
         binding.rvSignedAccounts.adapter = AccountAdapter(AccountAdapter.ACCOUNT,
             { mPresenter.signedAccountItemClicked(it) },
@@ -201,10 +208,7 @@ class DashboardFragment : BaseFragment(), DashboardView,
 
     override fun showSignersCount(count: Int) {
 
-        val message = getString(
-            if (count == 1) R.string.text_settings_signer else R.string.text_settings_signers,
-            count
-        )
+        val message = AppUtil.getQuantityString(R.plurals.text_settings_signers, count, count)
         val spannedText = SpannableString(message)
         val startPosition = message.indexOf(count.toString())
         val endPosition = startPosition + count.toString().length

@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.*
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.lobstr.stellar.vault.R
 import com.lobstr.stellar.vault.databinding.FragmentConfigBinding
@@ -12,6 +13,7 @@ import com.lobstr.stellar.vault.presentation.base.fragment.BaseFragment
 import com.lobstr.stellar.vault.presentation.entities.config.Config
 import com.lobstr.stellar.vault.presentation.home.settings.config.adapter.ConfigAdapter
 import com.lobstr.stellar.vault.presentation.util.Constant
+import com.lobstr.stellar.vault.presentation.util.CustomDividerItemDecoration
 import com.lobstr.stellar.vault.presentation.util.manager.ProgressManager
 import com.lobstr.stellar.vault.presentation.util.manager.SupportManager
 import dagger.hilt.android.AndroidEntryPoint
@@ -98,6 +100,12 @@ class ConfigFragment : BaseFragment(), ConfigView {
 
     override fun initListComponents(configs: List<Config>, selectedType: Byte) {
         binding.rvConfig.layoutManager = LinearLayoutManager(context)
+        binding.rvConfig.addItemDecoration(
+            CustomDividerItemDecoration(
+                ContextCompat.getDrawable(requireContext(), R.drawable.divider_left_offset)!!.apply {
+                    alpha = 51 // Alpha 0.2.
+                })
+        )
         binding.rvConfig.adapter = ConfigAdapter(configs, selectedType) { config, type ->
             mPresenter.configItemClicked(config, type)
         }

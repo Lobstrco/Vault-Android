@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.lobstr.stellar.vault.R
 import com.lobstr.stellar.vault.databinding.FragmentOperationListBinding
@@ -12,6 +13,7 @@ import com.lobstr.stellar.vault.presentation.base.fragment.BaseFragment
 import com.lobstr.stellar.vault.presentation.home.transactions.details.TransactionDetailsFragment
 import com.lobstr.stellar.vault.presentation.home.transactions.details.adapter.TransactionOperationAdapter
 import com.lobstr.stellar.vault.presentation.util.Constant
+import com.lobstr.stellar.vault.presentation.util.CustomDividerItemDecoration
 import moxy.ktx.moxyPresenter
 
 class OperationListFragment : BaseFragment(), OperationListView {
@@ -75,6 +77,12 @@ class OperationListFragment : BaseFragment(), OperationListView {
         binding.rvTransactionOperations.layoutManager = LinearLayoutManager(context)
         binding.rvTransactionOperations.itemAnimator = null
         binding.rvTransactionOperations.isNestedScrollingEnabled = false
+        binding.rvTransactionOperations.addItemDecoration(
+            CustomDividerItemDecoration(
+                ContextCompat.getDrawable(requireContext(), R.drawable.divider_left_offset)!!.apply {
+                    alpha = 51 // Alpha 0.2.
+                })
+        )
         binding.rvTransactionOperations.adapter = TransactionOperationAdapter(operations) { position ->
             mPresenter.operationItemClicked(position)
         }

@@ -17,6 +17,7 @@ import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
 import android.widget.TextView
 import android.widget.Toast
+import androidx.annotation.PluralsRes
 import androidx.annotation.StringRes
 import androidx.browser.customtabs.CustomTabColorSchemeParams
 import androidx.browser.customtabs.CustomTabsIntent
@@ -34,6 +35,7 @@ import com.lobstr.stellar.vault.R
 import com.lobstr.stellar.vault.presentation.application.LVApplication
 import com.lobstr.stellar.vault.presentation.util.Constant.Symbol.NULL
 import org.stellar.sdk.AccountConverter
+import org.stellar.sdk.xdr.CryptoKeyType
 import org.stellar.sdk.xdr.MuxedAccount
 import java.io.IOException
 import java.net.URLEncoder
@@ -226,6 +228,9 @@ object AppUtil {
     fun getString(@StringRes resId: Int, vararg formatArgs: Any): String =
         getAppContext().getString(resId, *formatArgs)
 
+    fun getQuantityString(@PluralsRes resId: Int, count: Int, vararg formatArgs: Any): String =
+        getAppContext().resources.getQuantityString(resId, count, *formatArgs)
+
     fun getAppContext(): Context = LVApplication.appContext
 
     fun ellipsizeStrInMiddle(str: String?, count: Int): String? {
@@ -326,5 +331,15 @@ object AppUtil {
 
     fun createUserIconLink(key: String?): String {
         return Constant.Social.USER_ICON_LINK.plus(key?.let { decodeAccountStr(it) }).plus(".png")
+    }
+
+    /**
+     * Check Key is ED25519.
+     */
+    fun isPublicKey(account: String?): Boolean {
+        return when (encodeMuxedAccount(account)?.discriminant) {
+            CryptoKeyType.KEY_TYPE_ED25519 -> true
+            else -> false
+        }
     }
 }

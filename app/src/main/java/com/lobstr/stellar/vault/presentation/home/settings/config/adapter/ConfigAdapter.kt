@@ -23,7 +23,7 @@ class ConfigAdapter(
     }
 
     override fun onBindViewHolder(viewHolder: RecyclerView.ViewHolder, position: Int) {
-        (viewHolder as ConfigViewHolder).bind(configs[position], selectedType, itemCount)
+        (viewHolder as ConfigViewHolder).bind(configs[position], selectedType)
     }
 
     override fun getItemCount(): Int {

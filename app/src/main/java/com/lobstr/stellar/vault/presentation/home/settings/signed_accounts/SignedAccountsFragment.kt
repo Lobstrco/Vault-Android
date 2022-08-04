@@ -6,10 +6,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import com.lobstr.stellar.vault.R
 import com.lobstr.stellar.vault.databinding.FragmentSignedAccountsBinding
 import com.lobstr.stellar.vault.presentation.base.fragment.BaseFragment
 import com.lobstr.stellar.vault.presentation.dialog.alert.base.AlertDialogFragment
@@ -19,6 +21,7 @@ import com.lobstr.stellar.vault.presentation.home.settings.signed_accounts.adapt
 import com.lobstr.stellar.vault.presentation.home.settings.signed_accounts.edit_account.EditAccountDialogFragment
 import com.lobstr.stellar.vault.presentation.util.AppUtil
 import com.lobstr.stellar.vault.presentation.util.Constant
+import com.lobstr.stellar.vault.presentation.util.CustomDividerItemDecoration
 import dagger.hilt.android.AndroidEntryPoint
 import moxy.ktx.moxyPresenter
 import javax.inject.Inject
@@ -98,6 +101,12 @@ class SignedAccountsFragment : BaseFragment(), SignedAccountsView, EditAccountDi
     override fun initRecycledView() {
         binding.rvSignedAccounts.layoutManager = LinearLayoutManager(activity)
         binding.rvSignedAccounts.itemAnimator = null
+        binding.rvSignedAccounts.addItemDecoration(
+            CustomDividerItemDecoration(
+                ContextCompat.getDrawable(requireContext(), R.drawable.divider_left_offset)!!.apply {
+                    alpha = 51 // Alpha 0.2.
+                })
+        )
         binding.rvSignedAccounts.adapter = AccountAdapter(ACCOUNT_EXTENDED,
             { mPresenter.signedAccountItemClicked(it) },
             { mPresenter.signedAccountItemLongClicked(it) })

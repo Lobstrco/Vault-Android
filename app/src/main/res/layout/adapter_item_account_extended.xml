@@ -67,13 +67,4 @@
                 android:src="@drawable/ic_more_purple"
                 tools:ignore="ContentDescription" />
     </LinearLayout>
-
-    <View
-            android:id="@+id/divider"
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginStart="16dp"
-            android:layout_gravity="bottom"
-            android:background="@color/color_979797"
-            android:alpha="0.2" />
 </FrameLayout>

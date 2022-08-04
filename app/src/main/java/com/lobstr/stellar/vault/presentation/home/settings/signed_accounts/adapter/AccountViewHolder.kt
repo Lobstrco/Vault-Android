@@ -1,7 +1,6 @@
 package com.lobstr.stellar.vault.presentation.home.settings.signed_accounts.adapter
 
 import android.text.TextUtils
-import android.view.View
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -18,9 +17,7 @@ class AccountViewHolder(
     private val itemLongClickListener: (account: Account) -> Unit
 ) : RecyclerView.ViewHolder(binding.root) {
 
-    fun bind(account: Account, itemsCount: Int) {
-        binding.divider.visibility = calculateDividerVisibility(itemsCount)
-
+    fun bind(account: Account) {
         // Set user icon.
         Glide.with(itemView.context)
             .load(AppUtil.createUserIconLink(account.address))
@@ -73,19 +70,6 @@ class AccountViewHolder(
             itemLongClickListener(account)
 
             true
-        }
-    }
-
-    /**
-     * Don't show divider for last ore one item.
-     * @param itemsCount Count of items.
-     * @return Visibility.
-     */
-    private fun calculateDividerVisibility(itemsCount: Int): Int {
-        return if (itemsCount == 1 || bindingAdapterPosition == itemsCount - 1) {
-            View.INVISIBLE
-        } else {
-            View.VISIBLE
         }
     }
 }

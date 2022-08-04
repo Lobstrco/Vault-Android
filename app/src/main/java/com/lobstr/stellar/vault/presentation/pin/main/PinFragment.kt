@@ -8,6 +8,8 @@ import android.os.Bundle
 import android.util.Log
 import android.view.*
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
+import androidx.activity.addCallback
 import androidx.annotation.ColorRes
 import androidx.annotation.StringRes
 import androidx.core.content.ContextCompat
@@ -58,6 +60,7 @@ class PinFragment : BaseFragment(), PinFrView, PinLockListener, BiometricListene
 
     private var _binding: FragmentPinBinding? = null
     private val binding get() = _binding!!
+    private var backPressedCallback: OnBackPressedCallback? = null
 
     @Inject
     lateinit var presenterProvider: Provider<PinFrPresenter>
@@ -113,11 +116,6 @@ class PinFragment : BaseFragment(), PinFrView, PinLockListener, BiometricListene
         return super.onOptionsItemSelected(item)
     }
 
-    override fun onBackPressed(): Boolean {
-        mPresenter.onBackPressed()
-        return true
-    }
-
     /**
      * Set navigation buttons color.
      * @param light when true - gray, else - white.
@@ -137,12 +135,16 @@ class PinFragment : BaseFragment(), PinFrView, PinLockListener, BiometricListene
     }
 
     private fun setListeners() {
+        backPressedCallback = requireActivity().onBackPressedDispatcher.addCallback(requireActivity()) {
+            mPresenter.onBackPressed()
+        }
         binding.pinLockView.setPinLockListener(this)
         binding.tvPinLogOut.setSafeOnClickListener { mPresenter.logoutClicked() }
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
+        backPressedCallback?.remove()
         _binding = null
     }
 
