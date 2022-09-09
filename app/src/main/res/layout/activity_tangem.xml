@@ -22,7 +22,7 @@
         android:gravity="center"
         android:orientation="vertical"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
-        <!-- INSERT SOME CONTENT -->
+
         <TextView
             android:id="@+id/tvStateTitle"
             android:layout_width="wrap_content"

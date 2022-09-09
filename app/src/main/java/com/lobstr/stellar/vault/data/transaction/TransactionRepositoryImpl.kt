@@ -76,4 +76,12 @@ class TransactionRepositoryImpl(
     override fun createTransaction(xdr: String): Single<TransactionItem> {
        return Single.fromCallable { transactionEntityMapper.transformTransactionXdr(xdr) }
     }
+
+    override fun getCountSequenceNumber(token: String, account: String, sequenceNumber: Long): Single<Long> {
+        return transactionApi.getCountSequenceNumber(token, account, sequenceNumber)
+            .onErrorResumeNext { rxErrorUtils.handleSingleRequestHttpError(it) }
+            .map {
+                it.count
+            }
+    }
 }

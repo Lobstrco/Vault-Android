@@ -20,6 +20,7 @@ import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult
 import androidx.annotation.StringRes
 import androidx.core.content.ContextCompat
+import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import com.lobstr.stellar.vault.R
 import com.lobstr.stellar.vault.databinding.FragmentSettingsBinding
@@ -28,7 +29,6 @@ import com.lobstr.stellar.vault.presentation.base.fragment.BaseFragment
 import com.lobstr.stellar.vault.presentation.container.activity.ContainerActivity
 import com.lobstr.stellar.vault.presentation.dialog.alert.base.AlertDialogFragment
 import com.lobstr.stellar.vault.presentation.dialog.alert.base.AlertDialogFragment.DialogFragmentIdentifier.BIOMETRIC_INFO_DIALOG
-import com.lobstr.stellar.vault.presentation.dialog.alert.base.AlertDialogFragment.DialogFragmentIdentifier.PUBLIC_KEY
 import com.lobstr.stellar.vault.presentation.fcm.NotificationsManager
 import com.lobstr.stellar.vault.presentation.home.account_name.manage.ManageAccountsNamesFragment
 import com.lobstr.stellar.vault.presentation.home.settings.license.LicenseFragment
@@ -229,19 +229,18 @@ class SettingsFragment : BaseFragment(), SettingsView, CompoundButton.OnCheckedC
 
     override fun showAuthScreen() {
         NotificationsManager.clearNotifications(requireContext())
-        val intent = Intent(context, AuthActivity::class.java)
-        intent.putExtra(Constant.Extra.EXTRA_NAVIGATION_FR, Constant.Navigation.AUTH)
-        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-        startActivity(intent)
+        startActivity(Intent(context, AuthActivity::class.java).apply {
+            putExtra(Constant.Extra.EXTRA_NAVIGATION_FR, Constant.Navigation.AUTH)
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        })
     }
 
     override fun showPublicKeyDialog(publicKey: String) {
-        val bundle = Bundle()
-        bundle.putString(Constant.Bundle.BUNDLE_PUBLIC_KEY, publicKey)
-
-        val dialog = ShowPublicKeyDialogFragment()
-        dialog.arguments = bundle
-        dialog.show(childFragmentManager, PUBLIC_KEY)
+        ShowPublicKeyDialogFragment().apply {
+            arguments = bundleOf(
+                Constant.Bundle.BUNDLE_PUBLIC_KEY to publicKey
+            )
+        }.show(childFragmentManager, AlertDialogFragment.DialogFragmentIdentifier.PUBLIC_KEY)
     }
 
     override fun showSignersScreen() {
@@ -256,11 +255,11 @@ class SettingsFragment : BaseFragment(), SettingsView, CompoundButton.OnCheckedC
     }
 
     override fun showMnemonicsScreen() {
-        val intent = Intent(context, ContainerActivity::class.java)
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-        intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
-        intent.putExtra(Constant.Extra.EXTRA_NAVIGATION_FR, Constant.Navigation.MNEMONICS)
-        startActivity(intent)
+        startActivity(Intent(context, ContainerActivity::class.java).apply {
+            addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+            addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
+            putExtra(Constant.Extra.EXTRA_NAVIGATION_FR, Constant.Navigation.MNEMONICS)
+        })
     }
 
     override fun showConfirmPinCodeScreen() {

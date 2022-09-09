@@ -82,11 +82,14 @@ interface TransactionDetailsView : MvpView {
     @AddToEndSingle
     fun setupTransactionInfo(fields: List<OperationField>)
 
-    @Skip
-    fun showConfirmTransactionDialog()
+    @AddToEndSingle
+    fun showConfirmTransactionDialog(show: Boolean)
 
     @Skip
     fun showDenyTransactionDialog()
+
+    @AddToEndSingle
+    fun showSequenceNumberWarningDialog(show: Boolean)
 
     @Skip
     fun copyToClipBoard(text: String)

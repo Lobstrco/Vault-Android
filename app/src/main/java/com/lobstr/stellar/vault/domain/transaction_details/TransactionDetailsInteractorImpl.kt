@@ -169,4 +169,12 @@ class TransactionDetailsInteractorImpl(
     override fun createTransaction(transaction: String): Single<AbstractTransaction> {
         return stellarRepository.createTransaction(transaction)
     }
+
+    override fun getCountSequenceNumber(sourceAccount: String, sequenceNumber: Long): Single<Long> {
+        return transactionRepository.getCountSequenceNumber(
+            AppUtil.getJwtToken(prefsUtil.authToken),
+            sourceAccount,
+            sequenceNumber
+        )
+    }
 }

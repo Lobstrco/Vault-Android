@@ -78,6 +78,7 @@ open class AlertDialogFragment : BaseMvpAppCompatDialogFragment() {
         const val ACCOUNT_NAME = "ACCOUNT_NAME"
         const val ASSET_INFO = "ASSET_INFO"
         const val ACCOUNTS = "ACCOUNTS"
+        const val SEQUENCE_NUMBER_WARNING = "SEQUENCE_NUMBER_WARNING"
     }
 
     object DialogIdentifier {

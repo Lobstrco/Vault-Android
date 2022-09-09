@@ -18,7 +18,7 @@
         android:textColor="@android:color/black"
         android:textSize="18sp"
         android:textStyle="bold"
-        android:visibility="visible"
+        android:visibility="gone"
         app:drawableTopCompat="@drawable/img_empty_signers" />
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout

@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.*
 import android.widget.Toast
 import androidx.annotation.StringRes
+import androidx.core.view.isInvisible
 import com.lobstr.stellar.vault.R
 import com.lobstr.stellar.vault.databinding.FragmentConfirmMnemonicsBinding
 import com.lobstr.stellar.vault.presentation.auth.mnemonic.MnemonicsContainerView
@@ -123,7 +124,7 @@ class ConfirmMnemonicsFragment : BaseFragment(), ConfirmMnemonicsView,
     override fun setupMnemonicsToConfirm(mnemonics: List<MnemonicItem>) {
         binding.mnemonicContainerToConfirmView.mMnemonicList = mnemonics
         binding.mnemonicContainerToConfirmView.setupMnemonics()
-        binding.btnClear.visibility = if (mnemonics.isEmpty()) View.INVISIBLE else View.VISIBLE
+        binding.btnClear.isInvisible = mnemonics.isEmpty()
     }
 
     override fun showMessage(message: String) {

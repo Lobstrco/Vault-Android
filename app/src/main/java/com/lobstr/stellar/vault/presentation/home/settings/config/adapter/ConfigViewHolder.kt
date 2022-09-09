@@ -1,6 +1,6 @@
 package com.lobstr.stellar.vault.presentation.home.settings.config.adapter
 
-import android.view.View
+import androidx.core.view.isInvisible
 import androidx.recyclerview.widget.RecyclerView
 import com.lobstr.stellar.vault.databinding.AdapterItemConfigBinding
 import com.lobstr.stellar.vault.presentation.entities.config.Config
@@ -11,9 +11,10 @@ class ConfigViewHolder(private val binding: AdapterItemConfigBinding, private va
     RecyclerView.ViewHolder(binding.root) {
 
     fun bind(config: Config, selectedType: Byte) {
-        binding.tvConfig.text = config.text
-        binding.ivConfigStatus.visibility =
-            if (config.type == selectedType) View.VISIBLE else View.INVISIBLE
+        binding.apply {
+            tvConfig.text = config.text
+            ivConfigStatus.isInvisible = config.type != selectedType
+        }
 
         itemView.setSafeOnClickListener {
             val position = this@ConfigViewHolder.bindingAdapterPosition

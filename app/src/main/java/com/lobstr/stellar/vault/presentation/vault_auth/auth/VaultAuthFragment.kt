@@ -7,6 +7,7 @@ import android.view.*
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.addCallback
+import androidx.core.view.isInvisible
 import androidx.core.view.isVisible
 import com.bumptech.glide.Glide
 import com.lobstr.stellar.vault.R
@@ -148,7 +149,7 @@ class VaultAuthFragment : BaseFragment(), VaultAuthFrView,
 
     override fun showIdentityContent(show: Boolean) {
         (activity as? VaultAuthActivity)?.window?.decorView
-            ?.findViewById<View>(android.R.id.content)?.visibility = if(show) View.VISIBLE else View.INVISIBLE
+            ?.findViewById<View>(android.R.id.content)?.isInvisible = !show
     }
 
     override fun showProgressDialog(show: Boolean) {

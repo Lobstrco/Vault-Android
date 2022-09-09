@@ -51,4 +51,6 @@ interface TransactionDetailsInteractor {
     fun signTransaction(transaction: String): Single<AbstractTransaction>
 
     fun createTransaction(transaction: String): Single<AbstractTransaction>
+
+    fun getCountSequenceNumber(sourceAccount: String, sequenceNumber: Long): Single<Long>
 }

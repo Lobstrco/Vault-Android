@@ -27,4 +27,11 @@ interface TransactionRepository {
     fun cancelOutdatedTransactions(token: String): Completable
 
     fun createTransaction(xdr: String): Single<TransactionItem>
+
+    /**
+     * @param account Source Account.
+     * @param sequenceNumber Transaction's sequence number.
+     * @return The number of transactions for the specified sequence.
+     */
+    fun getCountSequenceNumber(token: String, account: String, sequenceNumber: Long): Single<Long>
 }

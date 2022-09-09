@@ -27,6 +27,7 @@ import com.lobstr.stellar.vault.presentation.container.activity.ContainerActivit
 import com.lobstr.stellar.vault.presentation.dialog.alert.base.AlertDialogFragment
 import com.lobstr.stellar.vault.presentation.dialog.alert.base.AlertDialogFragment.DialogFragmentIdentifier.CONFIRM_TRANSACTION
 import com.lobstr.stellar.vault.presentation.dialog.alert.base.AlertDialogFragment.DialogFragmentIdentifier.DENY_TRANSACTION
+import com.lobstr.stellar.vault.presentation.dialog.alert.base.AlertDialogFragment.DialogFragmentIdentifier.SEQUENCE_NUMBER_WARNING
 import com.lobstr.stellar.vault.presentation.entities.account.Account
 import com.lobstr.stellar.vault.presentation.entities.tangem.TangemInfo
 import com.lobstr.stellar.vault.presentation.entities.transaction.TransactionItem
@@ -410,15 +411,19 @@ class TransactionDetailsFragment : BaseFragment(), TransactionDetailsView,
         )
     }
 
-    override fun showConfirmTransactionDialog() {
-        AlertDialogFragment.Builder(true)
-            .setCancelable(true)
-            .setTitle(R.string.title_transaction_action_dialog)
-            .setMessage(R.string.msg_confirm_transaction_dialog)
-            .setNegativeBtnText(R.string.text_btn_cancel)
-            .setPositiveBtnText(R.string.text_btn_yes)
-            .create()
-            .show(childFragmentManager, CONFIRM_TRANSACTION)
+    override fun showConfirmTransactionDialog(show: Boolean) {
+        if (show) {
+            AlertDialogFragment.Builder(true)
+                .setCancelable(true)
+                .setTitle(R.string.title_transaction_action_dialog)
+                .setMessage(R.string.msg_confirm_transaction_dialog)
+                .setNegativeBtnText(R.string.text_btn_cancel)
+                .setPositiveBtnText(R.string.text_btn_yes)
+                .create()
+                .showInstant(childFragmentManager, CONFIRM_TRANSACTION)
+        } else {
+            (childFragmentManager.findFragmentByTag(CONFIRM_TRANSACTION) as? AlertDialogFragment)?.dismissAllowingStateLoss()
+        }
     }
 
     override fun showDenyTransactionDialog() {
@@ -432,11 +437,27 @@ class TransactionDetailsFragment : BaseFragment(), TransactionDetailsView,
             .show(childFragmentManager, DENY_TRANSACTION)
     }
 
+    override fun showSequenceNumberWarningDialog(show: Boolean) {
+        if (show) {
+            AlertDialogFragment.Builder(true)
+                .setCancelable(true)
+                .setTitle(R.string.title_sequence_number_warning_dialog)
+                .setMessage(R.string.msg_sequence_number_warning_dialog)
+                .setNegativeBtnText(R.string.text_btn_cancel)
+                .setPositiveBtnText(R.string.text_btn_confirm)
+                .create()
+                .showInstant(childFragmentManager, SEQUENCE_NUMBER_WARNING)
+        } else {
+            (childFragmentManager.findFragmentByTag(SEQUENCE_NUMBER_WARNING) as? AlertDialogFragment)?.dismissAllowingStateLoss()
+        }
+    }
+
     override fun onPositiveBtnClick(tag: String?, dialogInterface: DialogInterface) {
         mPresenter.onAlertDialogPositiveButtonClicked(tag)
     }
 
     override fun onNegativeBtnClick(tag: String?, dialogInterface: DialogInterface) {
+        mPresenter.onAlertDialogNegativeButtonClicked(tag)
         // Add logic if needed.
     }
 
@@ -445,7 +466,7 @@ class TransactionDetailsFragment : BaseFragment(), TransactionDetailsView,
     }
 
     override fun onCancel(tag: String?, dialogInterface: DialogInterface) {
-        // Add logic if needed.
+        mPresenter.onAlertDialogCanceled(tag)
     }
 
     override fun copyToClipBoard(text: String) {

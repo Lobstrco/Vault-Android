@@ -18,8 +18,8 @@ android {
         applicationId = "com.lobstr.stellar.vault"
         minSdk = 22
         targetSdk = 32
-        versionCode = 35
-        versionName = "3.0.4"
+        versionCode = 36
+        versionName = "3.0.5"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
         // Used for setup Bundle name.
@@ -162,12 +162,12 @@ val moxy by extra("2.2.2")
 val glide by extra("4.13.2")
 val material by extra("1.6.1")
 val browser by extra("1.4.0")
-val firebase_bom by extra("30.3.1")
+val firebase_bom by extra("30.4.1")
 val javax_annotation by extra("10.0-b28")
 val play_service_base by extra("18.1.0")
 val androidx_core by extra("1.8.0")
-val androidx_appcompat by extra("1.4.2")
-val fragment by extra("1.5.1")
+val androidx_appcompat by extra("1.5.1")
+val fragment by extra("1.5.2")
 val recyclerview by extra("1.2.1")
 val androidx_preference by extra("1.2.0")
 val androidx_constraintlayout by extra("2.1.4")

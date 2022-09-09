@@ -124,18 +124,20 @@
                                 android:paddingRight="16dp">
 
                             <TextView
-                                    android:id="@+id/tvDashboardPublicKeyTitle"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:drawablePadding="8dp"
-                                    android:gravity="center_horizontal"
-                                    android:paddingHorizontal="20dp"
-                                    android:paddingTop="34dp"
-                                    android:paddingBottom="7dp"
-                                    android:text="@string/text_title_dashboard_public_key"
-                                    android:textColor="@android:color/black"
-                                    android:textSize="17sp"
-                                    android:textStyle="bold" />
+                                android:id="@+id/tvDashboardPublicKeyTitle"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:drawablePadding="8dp"
+                                android:ellipsize="end"
+                                android:gravity="center_horizontal"
+                                android:maxLines="1"
+                                android:paddingHorizontal="20dp"
+                                android:paddingTop="34dp"
+                                android:paddingBottom="7dp"
+                                android:text="@string/text_title_dashboard_public_key"
+                                android:textColor="@android:color/black"
+                                android:textSize="17sp"
+                                android:textStyle="bold" />
 
                             <TextView
                                     android:id="@+id/tvDashboardPublicKey"

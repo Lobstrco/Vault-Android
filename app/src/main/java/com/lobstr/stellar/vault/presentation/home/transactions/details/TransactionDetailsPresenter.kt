@@ -15,6 +15,7 @@ import com.lobstr.stellar.vault.domain.util.event.Update
 import com.lobstr.stellar.vault.presentation.BasePresenter
 import com.lobstr.stellar.vault.presentation.dialog.alert.base.AlertDialogFragment.DialogFragmentIdentifier.CONFIRM_TRANSACTION
 import com.lobstr.stellar.vault.presentation.dialog.alert.base.AlertDialogFragment.DialogFragmentIdentifier.DENY_TRANSACTION
+import com.lobstr.stellar.vault.presentation.dialog.alert.base.AlertDialogFragment.DialogFragmentIdentifier.SEQUENCE_NUMBER_WARNING
 import com.lobstr.stellar.vault.presentation.entities.account.Account
 import com.lobstr.stellar.vault.presentation.entities.account.AccountResult
 import com.lobstr.stellar.vault.presentation.entities.tangem.TangemInfo
@@ -454,66 +455,131 @@ class TransactionDetailsPresenter @Inject constructor(
     }
 
     fun btnConfirmClicked() {
+        retrieveCountSequenceNumber()
+    }
+
+    /**
+     * @param isSequenceWarningState Indicate state after receiving
+     * 'Sequence Number' warning. True - don't show any other warnings.
+     */
+    private fun proceedConfirmAction(isSequenceWarningState: Boolean) {
         when {
             interactor.hasMnemonics() -> {
                 when {
-                    interactor.isTrConfirmationEnabled() -> viewState.showConfirmTransactionDialog()
+                    !isSequenceWarningState && interactor.isTrConfirmationEnabled() -> {
+                        viewState.showProgressDialog(false)
+                        viewState.showConfirmTransactionDialog(true)
+                    }
                     else -> confirmTransaction()
                 }
             }
             interactor.hasTangem() -> {
                 // Change state for Tangem action - confirm.
                 tangemSignTransactionState = false
-                if (confirmationInProcess) {
-                    return
-                }
-
-                unsubscribeOnDestroy(
-                    interactor.retrieveActualTransaction(transactionItem)
-                        .subscribeOn(Schedulers.io())
-                        .doOnSuccess {
-                            transactionItem = it
-                            when (transactionItem.status) {
-                                CANCELLED, SIGNED -> throw DefaultException(AppUtil.getString(R.string.msg_transaction_already_signed_or_denied))
-                            }
-                        }
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .doOnSubscribe {
-                            confirmationInProcess = true
-                            viewState.showProgressDialog(true)
-                        }
-                        .doOnEvent { _, _ ->
-                            confirmationInProcess = false
-                            viewState.showProgressDialog(false)
-                        }
-                        .subscribe({
-                            viewState.showTangemScreen(
-                                TangemInfo().apply {
-                                    accountId = interactor.getUserPublicKey()
-                                    cardId = interactor.getTangemCardId()
-                                    pendingTransaction = it.transaction.envelopXdr
-                                }
-                            )
-                        }, {
-                            when (it) {
-                                is UserNotAuthorizedException -> {
-                                    when (it.action) {
-                                        UserNotAuthorizedException.Action.AUTH_REQUIRED -> eventProviderModule.authEventSubject.onNext(
-                                            Auth()
-                                        )
-                                    }
-                                }
-                                is DefaultException -> {
-                                    viewState.showMessage(it.details)
-                                }
-                                else -> {
-                                    viewState.showMessage(it.message ?: "")
-                                }
-                            }
-                        })
-                )
+                getTransactionInfo()
             }
         }
+    }
+
+    private fun getTransactionInfo() {
+        if (confirmationInProcess) {
+            return
+        }
+
+        unsubscribeOnDestroy(
+            interactor.retrieveActualTransaction(transactionItem)
+                .subscribeOn(Schedulers.io())
+                .doOnSuccess {
+                    transactionItem = it
+                    when (transactionItem.status) {
+                        CANCELLED, SIGNED -> throw DefaultException(AppUtil.getString(R.string.msg_transaction_already_signed_or_denied))
+                    }
+                }
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnSubscribe {
+                    confirmationInProcess = true
+                    viewState.showProgressDialog(true)
+                }
+                .doOnEvent { _, _ ->
+                    confirmationInProcess = false
+                    viewState.showProgressDialog(false)
+                }
+                .subscribe({
+                    viewState.showTangemScreen(
+                        TangemInfo().apply {
+                            accountId = interactor.getUserPublicKey()
+                            cardId = interactor.getTangemCardId()
+                            pendingTransaction = it.transaction.envelopXdr
+                        }
+                    )
+                }, {
+                    when (it) {
+                        is UserNotAuthorizedException -> {
+                            when (it.action) {
+                                UserNotAuthorizedException.Action.AUTH_REQUIRED -> eventProviderModule.authEventSubject.onNext(
+                                    Auth()
+                                )
+                            }
+                        }
+                        is DefaultException -> {
+                            viewState.showMessage(it.details)
+                        }
+                        else -> {
+                            viewState.showMessage(it.message ?: "")
+                        }
+                    }
+                })
+        )
+    }
+
+    /**
+     * Retrieve the number of transactions for the specified sequence
+     * and show the alert when a user has multiple transactions with the same sequence number in the list.
+     */
+    private fun retrieveCountSequenceNumber() {
+        unsubscribeOnDestroy(
+            interactor.getCountSequenceNumber(transactionItem.transaction.sourceAccount, transactionItem.transaction.sequenceNumber)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnSubscribe {
+                    viewState.showProgressDialog(true)
+                }
+                .subscribe({ count ->
+                    // When the Transactions Count for the specified sequence number grater than 1 (or 0 for the IMPORT_XDR flow) - show warning dialog. Else - proceed default behavior.
+                    if (count > if (transactionItem.status == IMPORT_XDR) 0 else 1) {
+                        viewState.showProgressDialog(false)
+                        viewState.showSequenceNumberWarningDialog(true)
+                    } else {
+                        proceedConfirmAction(false)
+                    }
+                }, {
+                    when (it) {
+                        // Proceed default behavior for 404.
+                        is HttpNotFoundException -> {
+                            proceedConfirmAction(false)
+                            return@subscribe
+                        }
+                        is UserNotAuthorizedException -> {
+                            when (it.action) {
+                                UserNotAuthorizedException.Action.AUTH_REQUIRED -> eventProviderModule.authEventSubject.onNext(
+                                    Auth()
+                                )
+                                else -> {
+                                    retrieveCountSequenceNumber()
+                                    return@subscribe
+                                }
+                            }
+                        }
+                        is DefaultException -> {
+                            viewState.showMessage(it.details)
+                        }
+                        else -> {
+                            viewState.showMessage(it.message ?: "")
+                        }
+                    }
+                    viewState.showProgressDialog(false)
+                })
+        )
     }
 
     fun btnDenyClicked() {
@@ -751,7 +817,28 @@ class TransactionDetailsPresenter @Inject constructor(
     fun onAlertDialogPositiveButtonClicked(tag: String?) {
         when (tag) {
             DENY_TRANSACTION -> denyTransaction()
-            CONFIRM_TRANSACTION -> confirmTransaction()
+            CONFIRM_TRANSACTION -> {
+                viewState.showConfirmTransactionDialog(false)
+                confirmTransaction()
+            }
+            SEQUENCE_NUMBER_WARNING -> {
+                viewState.showSequenceNumberWarningDialog(false)
+                proceedConfirmAction(true)
+            }
+        }
+    }
+
+    fun onAlertDialogNegativeButtonClicked(tag: String?) {
+        when (tag) {
+            CONFIRM_TRANSACTION -> viewState.showConfirmTransactionDialog(false)
+            SEQUENCE_NUMBER_WARNING -> viewState.showSequenceNumberWarningDialog(false)
+        }
+    }
+
+    fun onAlertDialogCanceled(tag: String?) {
+        when (tag) {
+            CONFIRM_TRANSACTION -> viewState.showConfirmTransactionDialog(false)
+            SEQUENCE_NUMBER_WARNING -> viewState.showSequenceNumberWarningDialog(false)
         }
     }
 

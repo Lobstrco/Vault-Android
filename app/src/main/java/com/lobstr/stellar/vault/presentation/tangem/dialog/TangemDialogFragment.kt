@@ -11,6 +11,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.Toast
+import androidx.core.view.isInvisible
+import androidx.core.view.isVisible
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.lobstr.stellar.vault.R
@@ -173,11 +175,11 @@ class TangemDialogFragment : BaseBottomSheetDialog(), TangemDialogView,
     }
 
     override fun changeActionContainerVisibility(show: Boolean) {
-        binding.llActionContainer.visibility = if (show) View.VISIBLE else View.INVISIBLE
+        binding.llActionContainer.isInvisible = !show
     }
 
     override fun changeErrorContainerVisibility(show: Boolean) {
-        binding.llErrorContainer.visibility = if(show) View.VISIBLE else View.INVISIBLE
+        binding.llErrorContainer.isInvisible = !show
     }
 
     override fun setErrorContainerData(errorTitle: String, errorDescription: String) {
@@ -186,8 +188,8 @@ class TangemDialogFragment : BaseBottomSheetDialog(), TangemDialogView,
     }
 
     override fun showSuccessAnimation() {
-        binding.idNFCChipLocationContainer.visibility = View.INVISIBLE
-        binding.idSuccessContainer.visibility = View.VISIBLE
+        binding.idNFCChipLocationContainer.isInvisible = true
+        binding.idSuccessContainer.isVisible = true
         binding.ivScanStatus.playAnimation()
     }
 

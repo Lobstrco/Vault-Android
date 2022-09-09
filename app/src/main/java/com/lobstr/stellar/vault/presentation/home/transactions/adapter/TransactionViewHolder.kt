@@ -72,7 +72,6 @@ class TransactionViewHolder(private val binding: AdapterItemTransactionBinding, 
 
             itemClickListener(item)
         }
-        item.transaction.transactionType
     }
 
     private fun getTransactionName(context: Context, transaction: Transaction, type: String?): String {

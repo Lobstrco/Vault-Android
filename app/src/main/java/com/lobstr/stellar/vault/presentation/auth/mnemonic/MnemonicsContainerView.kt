@@ -14,10 +14,7 @@ import android.widget.ScrollView
 import android.widget.TextView
 import androidx.annotation.IdRes
 import androidx.core.content.ContextCompat
-import androidx.core.view.ViewCompat
-import androidx.core.view.isVisible
-import androidx.core.view.marginEnd
-import androidx.core.view.marginStart
+import androidx.core.view.*
 import com.lobstr.stellar.vault.R
 import com.lobstr.stellar.vault.databinding.MnemonicItemContainerBinding
 import com.lobstr.stellar.vault.presentation.auth.mnemonic.MnemonicsContainerView.Extra.EXTRA_ITEM_POSITION
@@ -125,7 +122,7 @@ class MnemonicsContainerView(context: Context?, attrs: AttributeSet?) : ScrollVi
 
                 word.text = mnemonicStr
 
-                word.visibility = if (mnemonicItem.hide) View.INVISIBLE else View.VISIBLE
+                word.isInvisible = mnemonicItem.hide
 
                 val layoutParams = GridLayout.LayoutParams()
                 layoutParams.width = AppUtil.convertDpToPixels(context, itemWidth)

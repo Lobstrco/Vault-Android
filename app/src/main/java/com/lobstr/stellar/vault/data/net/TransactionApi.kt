@@ -1,5 +1,6 @@
 package com.lobstr.stellar.vault.data.net
 
+import com.lobstr.stellar.vault.data.net.entities.transaction.ApiCountSequenceNumber
 import com.lobstr.stellar.vault.data.net.entities.transaction.ApiSubmitTransaction
 import com.lobstr.stellar.vault.data.net.entities.transaction.ApiTransactionItem
 import com.lobstr.stellar.vault.data.net.entities.transaction.ApiTransactionResult
@@ -74,4 +75,14 @@ interface TransactionApi {
     fun cancelOutdatedTransactions(
         @Header("Authorization") token: String
     ): Completable
+
+    /**
+     * Return the number of transactions for the specified sequence.
+     */
+    @GET("count-sequence-number/{account}/{sequence_number}/")
+    fun getCountSequenceNumber(
+        @Header("Authorization") token: String,
+        @Path("account") account: String,
+        @Path("sequence_number") sequenceNumber: Long,
+    ): Single<ApiCountSequenceNumber>
 }
