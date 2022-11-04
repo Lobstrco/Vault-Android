@@ -9,7 +9,9 @@ import android.view.*
 import android.widget.Toast
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult
+import androidx.core.view.MenuProvider
 import androidx.core.view.isVisible
+import androidx.lifecycle.Lifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
@@ -78,29 +80,6 @@ class TransactionsFragment : BaseFragment(), TransactionsView, SwipeRefreshLayou
     ): View? {
         _binding = FragmentTransactionsBinding.inflate(inflater, container, false)
         return binding.root
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.transactions, menu)
-
-        val itemClear = menu.findItem(R.id.action_clear)
-
-        itemClear?.actionView?.setSafeOnClickListener {
-            onOptionsItemSelected(itemClear)
-        }
-
-        super.onCreateOptionsMenu(menu, inflater)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.action_clear -> {
-                mPresenter.clearClicked()
-                return true
-            }
-        }
-
-        return super.onOptionsItemSelected(item)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -174,7 +153,12 @@ class TransactionsFragment : BaseFragment(), TransactionsView, SwipeRefreshLayou
     }
 
     override fun showOptionsMenu(show: Boolean) {
-        super.saveOptionsMenuVisibility(show)
+        if (show) {
+            requireActivity().removeMenuProvider(mMenuProvider)
+            requireActivity().addMenuProvider(mMenuProvider, viewLifecycleOwner, Lifecycle.State.RESUMED)
+        } else {
+            requireActivity().removeMenuProvider(mMenuProvider)
+        }
     }
 
     override fun showPullToRefresh(show: Boolean) {
@@ -250,6 +234,26 @@ class TransactionsFragment : BaseFragment(), TransactionsView, SwipeRefreshLayou
                 firstVisibleItemPosition,
                 lastVisibleItemPosition
             )
+        }
+    }
+
+    private val mMenuProvider = object : MenuProvider {
+        override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+            menuInflater.inflate(R.menu.transactions, menu)
+
+            val itemClear = menu.findItem(R.id.action_clear)
+
+            itemClear?.actionView?.setSafeOnClickListener {
+                onMenuItemSelected(itemClear)
+            }
+        }
+
+        override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+            when (menuItem.itemId) {
+                R.id.action_clear -> mPresenter.clearClicked()
+                else -> return false
+            }
+            return true
         }
     }
 }

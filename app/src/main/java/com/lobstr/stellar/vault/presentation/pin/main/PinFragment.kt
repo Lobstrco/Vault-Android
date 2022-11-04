@@ -13,6 +13,7 @@ import androidx.activity.addCallback
 import androidx.annotation.ColorRes
 import androidx.annotation.StringRes
 import androidx.core.content.ContextCompat
+import androidx.core.view.MenuProvider
 import androidx.core.view.WindowCompat
 import androidx.core.view.isVisible
 import com.andrognito.pinlockview.PinLockListener
@@ -93,29 +94,6 @@ class PinFragment : BaseFragment(), PinFrView, PinLockListener, BiometricListene
         return binding.root
     }
 
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.pin, menu)
-
-        val itemNeedHelp = menu.findItem(R.id.action_need_help)
-
-        itemNeedHelp?.actionView?.setSafeOnClickListener {
-            onOptionsItemSelected(itemNeedHelp)
-        }
-
-        super.onCreateOptionsMenu(menu, inflater)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.action_need_help -> {
-                mPresenter.needHelpClicked()
-                return true
-            }
-        }
-
-        return super.onOptionsItemSelected(item)
-    }
-
     /**
      * Set navigation buttons color.
      * @param light when true - gray, else - white.
@@ -124,14 +102,37 @@ class PinFragment : BaseFragment(), PinFrView, PinLockListener, BiometricListene
         if (Build.VERSION.SDK_INT > Build.VERSION_CODES.O) {
             requireActivity().window?.let {
                 it.navigationBarColor = ContextCompat.getColor(requireContext(), color)
-                WindowCompat.getInsetsController(it, it.decorView)?.isAppearanceLightNavigationBars = light
+                WindowCompat.getInsetsController(it, it.decorView).isAppearanceLightNavigationBars = light
             }
         }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        addMenuProvider()
         setListeners()
+    }
+
+    private fun addMenuProvider() {
+        requireActivity().addMenuProvider(object : MenuProvider {
+            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+                menuInflater.inflate(R.menu.pin, menu)
+
+                val itemNeedHelp = menu.findItem(R.id.action_need_help)
+
+                itemNeedHelp?.actionView?.setSafeOnClickListener {
+                    onMenuItemSelected(itemNeedHelp)
+                }
+            }
+
+            override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+                when (menuItem.itemId) {
+                    R.id.action_need_help -> mPresenter.needHelpClicked()
+                    else -> return false
+                }
+                return true
+            }
+        }, viewLifecycleOwner)
     }
 
     private fun setListeners() {
@@ -158,7 +159,6 @@ class PinFragment : BaseFragment(), PinFrView, PinLockListener, BiometricListene
         upArrow: Int,
         upArrowColor: Int
     ) {
-        setHasOptionsMenu(hasMenu)
         (activity as? BaseActivity)?.setActionBarBackground(toolbarColor)
         (activity as? BaseActivity)?.setActionBarIcon(upArrow, upArrowColor)
     }

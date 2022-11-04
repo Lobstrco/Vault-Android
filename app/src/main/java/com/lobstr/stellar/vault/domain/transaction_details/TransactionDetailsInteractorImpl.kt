@@ -117,7 +117,7 @@ class TransactionDetailsInteractorImpl(
                     }
                 }
             }
-        }
+        }.map { transaction } // Always return original (signed) xdr for the future processing.
     }
 
     override fun cancelTransaction(hash: String): Single<TransactionItem> {

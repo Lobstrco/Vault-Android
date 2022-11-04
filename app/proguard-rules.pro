@@ -241,5 +241,21 @@
     <init>();
 }
 
-
-
+-dontwarn javax.naming.NamingEnumeration
+-dontwarn javax.naming.NamingException
+-dontwarn javax.naming.directory.Attribute
+-dontwarn javax.naming.directory.Attributes
+-dontwarn javax.naming.directory.DirContext
+-dontwarn javax.naming.directory.InitialDirContext
+-dontwarn javax.naming.directory.SearchControls
+-dontwarn javax.naming.directory.SearchResult
+-dontwarn lombok.NonNull
+-dontwarn org.conscrypt.Conscrypt$Version
+-dontwarn org.conscrypt.Conscrypt
+-dontwarn org.conscrypt.ConscryptHostnameVerifier
+-dontwarn org.openjsse.javax.net.ssl.SSLParameters
+-dontwarn org.openjsse.javax.net.ssl.SSLSocket
+-dontwarn org.openjsse.net.ssl.OpenJSSE
+-dontwarn org.threeten.bp.zone.TzdbZoneRulesProvider
+-dontwarn sun.security.x509.X509Key
+-dontwarn org.threeten.bp.zone.ZoneRulesProvider

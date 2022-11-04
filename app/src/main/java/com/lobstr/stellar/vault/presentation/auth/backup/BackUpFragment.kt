@@ -3,6 +3,7 @@ package com.lobstr.stellar.vault.presentation.auth.backup
 
 import android.os.Bundle
 import android.view.*
+import androidx.core.view.MenuProvider
 import com.lobstr.stellar.vault.R
 import com.lobstr.stellar.vault.databinding.FragmentBackUpBinding
 import com.lobstr.stellar.vault.presentation.auth.mnemonic.create_mnemonic.MnemonicsFragment
@@ -54,24 +55,28 @@ class BackUpFragment : BaseFragment(), BackUpView {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        addMenuProvider()
         setListeners()
+    }
+
+    private fun addMenuProvider() {
+        requireActivity().addMenuProvider(object : MenuProvider {
+            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+                menuInflater.inflate(R.menu.backup, menu)
+            }
+
+            override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+                when (menuItem.itemId) {
+                    R.id.action_info -> mPresenter.infoClicked()
+                    else -> return false
+                }
+                return true
+            }
+        }, viewLifecycleOwner)
     }
 
     private fun setListeners() {
         binding.btnNext.setSafeOnClickListener { mPresenter.nextClicked() }
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.backup, menu)
-        super.onCreateOptionsMenu(menu, inflater)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.action_info -> mPresenter.infoClicked()
-        }
-
-        return super.onOptionsItemSelected(item)
     }
 
     override fun onDestroyView() {

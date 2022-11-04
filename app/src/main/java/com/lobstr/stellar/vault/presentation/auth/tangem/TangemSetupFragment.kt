@@ -7,6 +7,7 @@ import android.view.*
 import android.widget.Toast
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult
+import androidx.core.view.MenuProvider
 import com.lobstr.stellar.vault.R
 import com.lobstr.stellar.vault.databinding.FragmentTangemSetupBinding
 import com.lobstr.stellar.vault.presentation.auth.AuthActivity
@@ -79,26 +80,30 @@ class TangemSetupFragment : BaseFragment(), TangemView, TangemDialogFragment.OnT
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        addMenuProvider()
         setListeners()
+    }
+
+    private fun addMenuProvider() {
+        requireActivity().addMenuProvider(object : MenuProvider {
+            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+                menuInflater.inflate(R.menu.tangem_setup, menu)
+            }
+
+            override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+                when (menuItem.itemId) {
+                    R.id.action_info -> mPresenter.infoClicked()
+                    else -> return false
+                }
+                return true
+            }
+        }, viewLifecycleOwner)
     }
 
     private fun setListeners() {
         binding.btnScan.setSafeOnClickListener { mPresenter.scanClicked() }
         binding.btnLearnMore.setSafeOnClickListener { mPresenter.learnMoreClicked() }
         binding.btnBuyNow.setSafeOnClickListener { mPresenter.buyNowClicked() }
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.tangem_setup, menu)
-        super.onCreateOptionsMenu(menu, inflater)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.action_info -> mPresenter.infoClicked()
-        }
-
-        return super.onOptionsItemSelected(item)
     }
 
     override fun onDestroyView() {

@@ -32,6 +32,6 @@ android {
 dependencies {
     implementation(fileTree(mapOf("dir" to "libs", "include" to listOf("*.jar"))))
     implementation("com.github.stellar:java-stellar-sdk:0.34.2")
-    implementation ("com.google.code.gson:gson:2.9.1")
-    implementation("androidx.annotation:annotation:1.4.0")
+    implementation ("com.google.code.gson:gson:2.10")
+    implementation("androidx.annotation:annotation:1.5.0")
 }

@@ -12,11 +12,6 @@ import com.lobstr.stellar.vault.presentation.vault_auth.VaultAuthActivity
 
 abstract class BaseContainerFragment : BaseMvpAppCompatFragment() {
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setHasOptionsMenu(true)
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -31,8 +26,6 @@ abstract class BaseContainerFragment : BaseMvpAppCompatFragment() {
 
     override fun setMenuVisibility(menuVisible: Boolean) {
         super.setMenuVisibility(menuVisible)
-
-        setHasOptionsMenu(menuVisible)
 
         if (isAdded) {
             val fragment = childFragmentManager.findFragmentById(R.id.flContainer)

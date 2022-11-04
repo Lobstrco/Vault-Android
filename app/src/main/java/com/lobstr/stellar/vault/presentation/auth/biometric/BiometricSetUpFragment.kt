@@ -123,7 +123,7 @@ class BiometricSetUpFragment : BaseFragment(), BiometricSetUpView, BiometricList
         if (Build.VERSION.SDK_INT > Build.VERSION_CODES.O) {
             requireActivity().window?.let {
                 it.navigationBarColor = ContextCompat.getColor(requireContext(), color)
-                WindowCompat.getInsetsController(it, it.decorView)?.isAppearanceLightNavigationBars = light
+                WindowCompat.getInsetsController(it, it.decorView).isAppearanceLightNavigationBars = light
             }
         }
     }

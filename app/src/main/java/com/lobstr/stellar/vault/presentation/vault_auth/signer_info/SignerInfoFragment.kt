@@ -9,6 +9,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.view.*
 import android.widget.Toast
+import androidx.core.view.MenuProvider
 import androidx.core.view.isVisible
 import com.lobstr.stellar.vault.R
 import com.lobstr.stellar.vault.databinding.FragmentSignerInfoBinding
@@ -72,7 +73,24 @@ class SignerInfoFragment : BaseFragment(), SignerInfoView {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        addMenuProvider()
         setListeners()
+    }
+
+    private fun addMenuProvider() {
+        requireActivity().addMenuProvider(object : MenuProvider {
+            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+                menuInflater.inflate(R.menu.auth_token, menu)
+            }
+
+            override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+                when (menuItem.itemId) {
+                    R.id.action_info -> mPresenter.infoClicked()
+                    else -> return false
+                }
+                return true
+            }
+        }, viewLifecycleOwner)
     }
 
     private fun setListeners() {
@@ -80,19 +98,6 @@ class SignerInfoFragment : BaseFragment(), SignerInfoView {
         binding.btnOpenLobstrApp.setSafeOnClickListener { mPresenter.openLobstrAppClicked() }
         binding.btnCopyUserPk.setSafeOnClickListener { mPresenter.copyUserPublicKeyClicked() }
         binding.btnShowQr.setSafeOnClickListener { mPresenter.showQrClicked() }
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.auth_token, menu)
-        super.onCreateOptionsMenu(menu, inflater)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.action_info -> mPresenter.infoClicked()
-        }
-
-        return super.onOptionsItemSelected(item)
     }
 
     override fun onDestroyView() {

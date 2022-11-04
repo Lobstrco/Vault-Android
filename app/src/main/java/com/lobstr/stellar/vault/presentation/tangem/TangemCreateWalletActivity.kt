@@ -6,9 +6,11 @@ import android.content.Intent
 import android.os.Bundle
 import android.provider.Settings
 import android.view.Menu
+import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
+import androidx.core.view.MenuProvider
 import com.lobstr.stellar.vault.R
 import com.lobstr.stellar.vault.databinding.ActivityTangemCreateWalletBinding
 import com.lobstr.stellar.vault.presentation.base.activity.BaseActivity
@@ -53,7 +55,24 @@ class TangemCreateWalletActivity : BaseActivity(), TangemCreateWalletView,
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        addMenuProvider()
         setListeners()
+    }
+
+    private fun addMenuProvider() {
+        addMenuProvider(object : MenuProvider {
+            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+                menuInflater.inflate(R.menu.tangem_create_wallet, menu)
+            }
+
+            override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+                when (menuItem.itemId) {
+                    R.id.action_info -> mCreateWalletPresenter.infoClicked()
+                    else -> return false
+                }
+                return true
+            }
+        })
     }
 
     override fun getContentView(): View {
@@ -63,19 +82,6 @@ class TangemCreateWalletActivity : BaseActivity(), TangemCreateWalletView,
 
     private fun setListeners() {
         binding.btnCreateWallet.setSafeOnClickListener { mCreateWalletPresenter.createWalletClicked() }
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        menuInflater.inflate(R.menu.tangem_create_wallet, menu)
-        return true
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.action_info -> mCreateWalletPresenter.infoClicked()
-        }
-
-        return super.onOptionsItemSelected(item)
     }
 
     // ===========================================================

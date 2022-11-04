@@ -332,6 +332,11 @@ class LVFirebaseMessagingService : FirebaseMessagingService() {
             return
         }
 
+        val defaultIntent = Intent(this, HomeActivity::class.java).apply {
+            putExtra(Constant.Extra.EXTRA_USER_ACCOUNT, userAccount)
+            addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_CLEAR_TOP)
+        }
+
         notificationsManager.sendNotification(
             channelId,
             channelGroupId,
@@ -340,14 +345,8 @@ class LVFirebaseMessagingService : FirebaseMessagingService() {
             messageBody,
             groupId,
             groupName,
-            Intent(this, HomeActivity::class.java).apply {
-                putExtra(Constant.Extra.EXTRA_USER_ACCOUNT, userAccount)
-                addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_CLEAR_TOP)
-            },
-            Intent(this, HomeActivity::class.java).apply {
-                putExtra(Constant.Extra.EXTRA_USER_ACCOUNT, userAccount)
-                addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_CLEAR_TOP)
-            },
+            defaultIntent,
+            defaultIntent,
             importance,
             priority
         )

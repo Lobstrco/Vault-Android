@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.*
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.addCallback
+import androidx.core.view.MenuProvider
 import androidx.core.view.isVisible
 import androidx.fragment.app.FragmentManager
 import com.lobstr.stellar.vault.R
@@ -77,7 +78,26 @@ class MnemonicsFragment : BaseFragment(),
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        addMenuProvider()
         setListeners()
+    }
+
+    private fun addMenuProvider() {
+        if (activity is AuthActivity) {
+            requireActivity().addMenuProvider(object : MenuProvider {
+                override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+                    menuInflater.inflate(R.menu.mnemonics, menu)
+                }
+
+                override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+                    when (menuItem.itemId) {
+                        R.id.action_info -> mPresenter.infoClicked()
+                        else -> return false
+                    }
+                    return true
+                }
+            }, viewLifecycleOwner)
+        }
     }
 
     private fun setListeners() {
@@ -92,21 +112,6 @@ class MnemonicsFragment : BaseFragment(),
         }
         binding.btnNext.setSafeOnClickListener { mPresenter.nextClicked() }
         binding.btnClipToBoard.setSafeOnClickListener { mPresenter.clipToBordClicked() }
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        if (activity is AuthActivity) {
-            inflater.inflate(R.menu.mnemonics, menu)
-        }
-        super.onCreateOptionsMenu(menu, inflater)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.action_info -> mPresenter.infoClicked()
-        }
-
-        return super.onOptionsItemSelected(item)
     }
 
     override fun onDestroyView() {

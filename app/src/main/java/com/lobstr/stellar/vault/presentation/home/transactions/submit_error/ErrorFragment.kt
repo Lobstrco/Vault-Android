@@ -3,6 +3,7 @@ package com.lobstr.stellar.vault.presentation.home.transactions.submit_error
 
 import android.os.Bundle
 import android.view.*
+import androidx.core.view.MenuProvider
 import com.lobstr.stellar.vault.R
 import com.lobstr.stellar.vault.databinding.FragmentErrorBinding
 import com.lobstr.stellar.vault.presentation.base.fragment.BaseFragment
@@ -65,27 +66,31 @@ class ErrorFragment : BaseFragment(), ErrorView {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        addMenuProvider()
         setListeners()
+    }
+
+    private fun addMenuProvider() {
+        requireActivity().addMenuProvider(object : MenuProvider {
+            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+                menuInflater.inflate(R.menu.error, menu)
+            }
+
+            override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+                when (menuItem.itemId) {
+                    R.id.action_info -> mPresenter.infoClicked()
+                    R.id.action_view_transaction_details -> mPresenter.viewTransactionDetailsClicked()
+                    R.id.action_copy_signed_xdr -> mPresenter.copySignedXdrClicked()
+                    else -> return false
+                }
+                return true
+            }
+        }, viewLifecycleOwner)
     }
 
     private fun setListeners() {
         binding.copyXdr.btnCopyXdr.setSafeOnClickListener { mPresenter.copySignedXdrClicked() }
         binding.btnDone.setSafeOnClickListener { mPresenter.doneClicked() }
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.error, menu)
-        super.onCreateOptionsMenu(menu, inflater)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.action_info -> mPresenter.infoClicked()
-            R.id.action_view_transaction_details -> mPresenter.viewTransactionDetailsClicked()
-            R.id.action_copy_signed_xdr -> mPresenter.copySignedXdrClicked()
-        }
-
-        return super.onOptionsItemSelected(item)
     }
 
     override fun onDestroyView() {

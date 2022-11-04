@@ -11,6 +11,7 @@ import android.view.inputmethod.EditorInfo
 import android.widget.Toast
 import androidx.annotation.StringRes
 import androidx.core.content.ContextCompat
+import androidx.core.view.MenuProvider
 import androidx.core.widget.doAfterTextChanged
 import com.lobstr.stellar.vault.R
 import com.lobstr.stellar.vault.databinding.FragmentRecoveryKeyBinding
@@ -74,9 +75,25 @@ class RecoverKeyFragment : BaseFragment(), RecoverKeyFrView {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        addMenuProvider()
         binding.etRecoveryPhrase.imeOptions = EditorInfo.IME_ACTION_DONE
         binding.etRecoveryPhrase.setRawInputType(InputType.TYPE_CLASS_TEXT)
+    }
+
+    private fun addMenuProvider() {
+        requireActivity().addMenuProvider(object : MenuProvider {
+            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+                menuInflater.inflate(R.menu.recovery_key, menu)
+            }
+
+            override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+                when (menuItem.itemId) {
+                    R.id.action_info -> mPresenter.infoClicked()
+                    else -> return false
+                }
+                return true
+            }
+        }, viewLifecycleOwner)
     }
 
     override fun onDestroyView() {
@@ -101,19 +118,6 @@ class RecoverKeyFragment : BaseFragment(), RecoverKeyFrView {
         super.onPause()
 
         AppUtil.closeKeyboard(activity)
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.recovery_key, menu)
-        super.onCreateOptionsMenu(menu, inflater)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.action_info -> mPresenter.infoClicked()
-        }
-
-        return super.onOptionsItemSelected(item)
     }
 
     override fun onStop() {

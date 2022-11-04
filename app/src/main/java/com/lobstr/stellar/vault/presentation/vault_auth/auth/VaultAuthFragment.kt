@@ -8,6 +8,7 @@ import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.addCallback
 import androidx.core.view.isInvisible
+import androidx.core.view.MenuProvider
 import androidx.core.view.isVisible
 import com.bumptech.glide.Glide
 import com.lobstr.stellar.vault.R
@@ -76,7 +77,24 @@ class VaultAuthFragment : BaseFragment(), VaultAuthFrView,
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        addMenuProvider()
         setListeners()
+    }
+
+    private fun addMenuProvider() {
+        requireActivity().addMenuProvider(object : MenuProvider {
+            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+                menuInflater.inflate(R.menu.auth_token, menu)
+            }
+
+            override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+                when (menuItem.itemId) {
+                    // NOTE add some items in menu if needed.
+                    else -> return false
+                }
+                return true
+            }
+        }, viewLifecycleOwner)
     }
 
     private fun setListeners() {
@@ -85,19 +103,6 @@ class VaultAuthFragment : BaseFragment(), VaultAuthFrView,
         }
 
         binding.btnAuth.setSafeOnClickListener { mPresenter.authClicked() }
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.auth_token, menu)
-        super.onCreateOptionsMenu(menu, inflater)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            // NOTE add some items in menu if needed.
-        }
-
-        return super.onOptionsItemSelected(item)
     }
 
     override fun onDestroyView() {

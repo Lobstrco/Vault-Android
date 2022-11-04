@@ -634,15 +634,15 @@ class TransactionDetailsPresenter @Inject constructor(
                         interactor.createTransaction(signedTransaction)
                     }
                 }
-                .flatMap {
+                .flatMap { transaction ->
                     when (transactionItem.transaction.transactionType) {
                         AUTH_CHALLENGE -> {
                             needAdditionalSignatures = null
-                            Single.fromCallable { it.toEnvelopeXdrBase64() }
+                            Single.fromCallable { transaction.toEnvelopeXdrBase64() }
                         }
                         else -> {
                             needAdditionalSignatures = false
-                            interactor.confirmTransactionOnHorizon(it)
+                            interactor.confirmTransactionOnHorizon(transaction)
                                 .flatMap { submitTransactionResponse ->
                                     val envelopXdr = submitTransactionResponse.envelopeXdr.get()
                                     val extras = submitTransactionResponse.extras
@@ -663,28 +663,28 @@ class TransactionDetailsPresenter @Inject constructor(
                                     when {
                                         envelopXdr == null -> throw HorizonException(
                                             errorToShow!!,
-                                            it.toEnvelopeXdrBase64()
+                                            transaction.toEnvelopeXdrBase64()
                                         )
                                         transactionResultCode != null && transactionResultCode != "tx_bad_auth" -> throw HorizonException(
                                             errorToShow!!,
-                                            it.toEnvelopeXdrBase64()
+                                            transaction.toEnvelopeXdrBase64()
                                         )
                                         transactionResultCode != null && transactionResultCode == "tx_bad_auth" -> needAdditionalSignatures =
                                             true
                                     }
 
                                     hash = submitTransactionResponse.hash
-                                    Single.fromCallable { envelopXdr }
+                                    Single.fromCallable { transaction.toEnvelopeXdrBase64() }
                                 }
                         }
                     }
                 }
-                .flatMap {
+                .flatMap { signedXdr ->
                     interactor.confirmTransactionOnServer(
                         needAdditionalSignatures ?: true,
                         transactionItem.status,
                         hash,
-                        it
+                        signedXdr
                     )
                 }
                 .observeOn(AndroidSchedulers.mainThread())

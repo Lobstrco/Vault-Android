@@ -7,10 +7,6 @@ import moxy.viewstate.strategy.alias.AddToEndSingle
 @AddToEndSingle
 interface BaseFragmentView : MvpView {
 
-    fun saveOptionsMenuVisibility(visible: Boolean)
-
-    fun setOptionsMenuVisible(visible: Boolean)
-
     fun setActionBarTitle(title: String?)
 
     fun saveActionBarTitle(@StringRes titleRes: Int)

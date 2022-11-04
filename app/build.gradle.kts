@@ -18,8 +18,8 @@ android {
         applicationId = "com.lobstr.stellar.vault"
         minSdk = 22
         targetSdk = 32
-        versionCode = 36
-        versionName = "3.0.5"
+        versionCode = 37
+        versionName = "3.0.6"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
         // Used for setup Bundle name.
@@ -151,7 +151,7 @@ android {
     namespace = "com.lobstr.stellar.vault"
 }
 
-val desugar_jdk_libs by extra("1.1.6") // 1.2.0 Will require AGP version 7.3.0-beta03 or later (Android Studio Dolphin).
+val desugar_jdk_libs by extra("1.2.2")
 val dagger by extra("2.28.1")
 val rx_java by extra("3.1.5")
 val rx_android by extra("3.0.0")
@@ -159,15 +159,15 @@ val rx_kotlin by extra("3.0.1")
 val retrofit by extra("2.9.0")
 val okhttp by extra("4.10.0")
 val moxy by extra("2.2.2")
-val glide by extra("4.13.2")
-val material by extra("1.6.1")
+val glide by extra("4.14.2")
+val material by extra("1.7.0")
 val browser by extra("1.4.0")
-val firebase_bom by extra("30.4.1")
+val firebase_bom by extra("31.0.2")
 val javax_annotation by extra("10.0-b28")
 val play_service_base by extra("18.1.0")
 val androidx_core by extra("1.8.0")
 val androidx_appcompat by extra("1.5.1")
-val fragment by extra("1.5.2")
+val fragment by extra("1.5.4")
 val recyclerview by extra("1.2.1")
 val androidx_preference by extra("1.2.0")
 val androidx_constraintlayout by extra("2.1.4")
@@ -183,7 +183,7 @@ val qr_gen by extra("2.6.0")
 val viewpager2 by extra("1.0.0")
 val tangem by extra("0.9.0")
 val zendesk by extra("5.0.9")
-val hilt by extra("2.43.2")
+val hilt by extra("2.44")
 val androidx_hilt by extra("1.0.0")
 val lifecycle by extra("2.5.1")
 

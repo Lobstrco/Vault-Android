@@ -7,6 +7,7 @@ import android.view.*
 import android.widget.Toast
 import androidx.annotation.StringRes
 import androidx.core.view.isInvisible
+import androidx.core.view.MenuProvider
 import com.lobstr.stellar.vault.R
 import com.lobstr.stellar.vault.databinding.FragmentConfirmMnemonicsBinding
 import com.lobstr.stellar.vault.presentation.auth.mnemonic.MnemonicsContainerView
@@ -70,7 +71,24 @@ class ConfirmMnemonicsFragment : BaseFragment(), ConfirmMnemonicsView,
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        addMenuProvider()
         setListeners()
+    }
+
+    private fun addMenuProvider() {
+        requireActivity().addMenuProvider(object : MenuProvider {
+            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+                menuInflater.inflate(R.menu.confirm_mnemonics, menu)
+            }
+
+            override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+                when (menuItem.itemId) {
+                    R.id.action_info -> mPresenter.infoClicked()
+                    else -> return false
+                }
+                return true
+            }
+        }, viewLifecycleOwner)
     }
 
     private fun setListeners() {
@@ -78,19 +96,6 @@ class ConfirmMnemonicsFragment : BaseFragment(), ConfirmMnemonicsView,
         binding.btnNext.setSafeOnClickListener { mPresenter.btnNextClicked() }
         binding.mnemonicContainerToSelectView.setMnemonicItemActionListener(this)
         binding.mnemonicContainerToConfirmView.setMnemonicItemActionListener(this)
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.confirm_mnemonics, menu)
-        super.onCreateOptionsMenu(menu, inflater)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.action_info -> mPresenter.infoClicked()
-        }
-
-        return super.onOptionsItemSelected(item)
     }
 
     override fun onDestroyView() {

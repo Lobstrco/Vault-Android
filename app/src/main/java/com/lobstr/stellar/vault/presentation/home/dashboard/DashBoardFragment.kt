@@ -13,8 +13,10 @@ import android.view.*
 import android.view.animation.LinearInterpolator
 import android.widget.Toast
 import androidx.core.content.ContextCompat
+import androidx.core.view.MenuProvider
 import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
+import androidx.lifecycle.Lifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.lobstr.stellar.vault.R
@@ -90,8 +92,34 @@ class DashboardFragment : BaseFragment(), DashboardView,
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        addMenuProvider()
         setListeners()
+    }
+
+    private fun addMenuProvider() {
+        requireActivity().addMenuProvider(object : MenuProvider {
+            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+                menuInflater.inflate(R.menu.dashboard, menu)
+                val refreshView = menu.findItem(R.id.action_refresh).actionView
+
+                mRefreshAnimation = ObjectAnimator.ofFloat(refreshView, View.ROTATION, 0.0f, 360.0f)
+                mRefreshAnimation?.duration = 800
+                mRefreshAnimation?.repeatCount = 1
+                mRefreshAnimation?.interpolator = LinearInterpolator()
+
+                refreshView?.setSafeOnClickListener {
+                    mPresenter.refreshClicked()
+                }
+            }
+
+            override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+                when (menuItem.itemId) {
+                    R.id.action_refresh -> mPresenter.refreshClicked()
+                    else -> return false
+                }
+                return true
+            }
+        }, viewLifecycleOwner, Lifecycle.State.RESUMED)
     }
 
     private fun setListeners() {
@@ -124,32 +152,6 @@ class DashboardFragment : BaseFragment(), DashboardView,
                 mPresenter.addAccountClicked()
             }
         }
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.dashboard, menu)
-        val refreshView = menu.findItem(R.id.action_refresh).actionView
-
-        mRefreshAnimation = ObjectAnimator.ofFloat(refreshView, View.ROTATION, 0.0f, 360.0f)
-        mRefreshAnimation?.duration = 800
-        mRefreshAnimation?.repeatCount = 1
-        mRefreshAnimation?.interpolator = LinearInterpolator()
-
-        refreshView?.setSafeOnClickListener {
-            mPresenter.refreshClicked()
-        }
-
-        super.onCreateOptionsMenu(menu, inflater)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.action_refresh -> {
-                mPresenter.refreshClicked()
-            }
-        }
-
-        return super.onOptionsItemSelected(item)
     }
 
     override fun onDestroyView() {
