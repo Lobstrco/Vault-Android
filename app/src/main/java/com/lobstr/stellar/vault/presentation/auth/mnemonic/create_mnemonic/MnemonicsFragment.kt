@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.*
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.addCallback
+import androidx.core.os.bundleOf
 import androidx.core.view.MenuProvider
 import androidx.core.view.isVisible
 import androidx.fragment.app.FragmentManager
@@ -110,8 +111,10 @@ class MnemonicsFragment : BaseFragment(),
                 requireActivity().onBackPressedDispatcher.onBackPressed()
             }
         }
-        binding.btnNext.setSafeOnClickListener { mPresenter.nextClicked() }
-        binding.btnClipToBoard.setSafeOnClickListener { mPresenter.clipToBordClicked() }
+        binding.apply {
+            btnNext.setSafeOnClickListener { mPresenter.nextClicked() }
+            btnClipToBoard.setSafeOnClickListener { mPresenter.clipToBordClicked() }
+        }
     }
 
     override fun onDestroyView() {
@@ -133,21 +136,23 @@ class MnemonicsFragment : BaseFragment(),
     }
 
     override fun setupMnemonics(mnemonicItems: List<MnemonicItem>) {
-        binding.tvMnemonicsInstruction.text = getString(R.string.text_tv_mnemonics_instruction, mnemonicItems.size)
-        binding.mnemonicContainerView.mMnemonicList = mnemonicItems
-        binding.mnemonicContainerView.setupMnemonics()
+        binding.apply {
+            tvMnemonicsInstruction.text = getString(R.string.text_tv_mnemonics_instruction, mnemonicItems.size)
+            mnemonicContainerView.mMnemonicList = mnemonicItems
+            mnemonicContainerView.setupMnemonics()
+        }
     }
 
     override fun showConfirmationScreen(mnemonics: ArrayList<MnemonicItem>) {
-        // Pass created mnemonics to confirmation screen.
-        val bundle = Bundle()
-        bundle.putParcelableArrayList(Constant.Bundle.BUNDLE_MNEMONICS_ARRAY, mnemonics)
-        val fragment = requireParentFragment().childFragmentManager.fragmentFactory.instantiate(requireContext().classLoader, ConfirmMnemonicsFragment::class.qualifiedName!!)
-        fragment.arguments = bundle
-
         FragmentTransactionManager.displayFragment(
             requireParentFragment().childFragmentManager,
-            fragment,
+            requireParentFragment().childFragmentManager.fragmentFactory.instantiate(requireContext().classLoader,
+                ConfirmMnemonicsFragment::class.qualifiedName!!).apply {
+                // Pass created mnemonics to confirmation screen.
+                arguments = bundleOf(
+                    Constant.Bundle.BUNDLE_MNEMONICS_ARRAY to mnemonics
+                )
+            },
             R.id.flContainer
         )
     }

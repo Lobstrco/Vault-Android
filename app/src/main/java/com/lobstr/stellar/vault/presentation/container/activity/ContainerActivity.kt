@@ -57,7 +57,7 @@ class ContainerActivity : BaseActivity(), ContainerView {
                 Constant.Extra.EXTRA_TRANSACTION_CONFIRMATION_SUCCESS_STATUS,
                 SUCCESS
             ),
-            intent?.getStringExtra(Constant.Extra.EXTRA_ERROR_MESSAGE),
+            intent?.getParcelableExtra(Constant.Extra.EXTRA_ERROR),
             intent?.getIntExtra(Constant.Extra.EXTRA_CONFIG, UNDEFINED_VALUE) ?: UNDEFINED_VALUE
         )
     }

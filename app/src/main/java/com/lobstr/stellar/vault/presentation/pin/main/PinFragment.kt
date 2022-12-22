@@ -13,6 +13,7 @@ import androidx.activity.addCallback
 import androidx.annotation.ColorRes
 import androidx.annotation.StringRes
 import androidx.core.content.ContextCompat
+import androidx.core.os.bundleOf
 import androidx.core.view.MenuProvider
 import androidx.core.view.WindowCompat
 import androidx.core.view.isVisible
@@ -25,7 +26,6 @@ import com.lobstr.stellar.vault.presentation.auth.biometric.BiometricSetUpFragme
 import com.lobstr.stellar.vault.presentation.base.activity.BaseActivity
 import com.lobstr.stellar.vault.presentation.base.fragment.BaseFragment
 import com.lobstr.stellar.vault.presentation.dialog.alert.base.AlertDialogFragment
-import com.lobstr.stellar.vault.presentation.fcm.NotificationsManager
 import com.lobstr.stellar.vault.presentation.home.HomeActivity
 import com.lobstr.stellar.vault.presentation.pin.PinActivity
 import com.lobstr.stellar.vault.presentation.util.AppUtil
@@ -139,8 +139,10 @@ class PinFragment : BaseFragment(), PinFrView, PinLockListener, BiometricListene
         backPressedCallback = requireActivity().onBackPressedDispatcher.addCallback(requireActivity()) {
             mPresenter.onBackPressed()
         }
-        binding.pinLockView.setPinLockListener(this)
-        binding.tvPinLogOut.setSafeOnClickListener { mPresenter.logoutClicked() }
+        binding.apply {
+            pinLockView.setPinLockListener(this@PinFragment)
+            tvPinLogOut.setSafeOnClickListener { mPresenter.logoutClicked() }
+        }
     }
 
     override fun onDestroyView() {
@@ -159,8 +161,10 @@ class PinFragment : BaseFragment(), PinFrView, PinLockListener, BiometricListene
         upArrow: Int,
         upArrowColor: Int
     ) {
-        (activity as? BaseActivity)?.setActionBarBackground(toolbarColor)
-        (activity as? BaseActivity)?.setActionBarIcon(upArrow, upArrowColor)
+        (activity as? BaseActivity)?.apply {
+            setActionBarBackground(toolbarColor)
+            setActionBarIcon(upArrow, upArrowColor)
+        }
     }
 
     override fun showHomeAsUp(show: Boolean) {
@@ -168,39 +172,41 @@ class PinFragment : BaseFragment(), PinFrView, PinLockListener, BiometricListene
     }
 
     override fun setScreenStyle(style: Int) {
-        binding.pinLockView.pinLength = 6
+        binding.apply {
+            pinLockView.pinLength = 6
 
-        if (style == STYLE_ENTER_PIN) {
-            // Dark style.
-            binding.indicatorDotsWhite.pinLength = 6
-            binding.pinLockView.attachIndicatorDots(binding.indicatorDotsWhite)
-            (activity as? PinActivity)?.window?.decorView?.setBackgroundColor(
-                ContextCompat.getColor(
-                    requireContext(),
-                    R.color.color_primary
+            if (style == STYLE_ENTER_PIN) {
+                // Dark style.
+                indicatorDotsWhite.pinLength = 6
+                pinLockView.attachIndicatorDots(binding.indicatorDotsWhite)
+                (activity as? PinActivity)?.window?.decorView?.setBackgroundColor(
+                    ContextCompat.getColor(
+                        requireContext(),
+                        R.color.color_primary
+                    )
                 )
-            )
-            binding.pinLockView.textColor =
-                ContextCompat.getColor(requireContext(), android.R.color.white)
+                pinLockView.textColor =
+                    ContextCompat.getColor(requireContext(), android.R.color.white)
 
-            binding.tvPinTitle.isVisible = false
-            binding.ivPinLogo.isVisible = true
-            binding.indicatorDotsWhite.isVisible = true
-            binding.indicatorDots.isVisible = false
-            binding.tvPinLogOut.isVisible = true
-        } else {
-            // White style.
-            binding.indicatorDots.pinLength = 6
-            binding.pinLockView.attachIndicatorDots(binding.indicatorDots)
-            // NOTE By default AppTheme has android:windowBackground = white.
-            binding.pinLockView.textColor =
-                ContextCompat.getColor(requireContext(), android.R.color.black)
+                tvPinTitle.isVisible = false
+                ivPinLogo.isVisible = true
+                indicatorDotsWhite.isVisible = true
+                indicatorDots.isVisible = false
+                tvPinLogOut.isVisible = true
+            } else {
+                // White style.
+                indicatorDots.pinLength = 6
+                pinLockView.attachIndicatorDots(indicatorDots)
+                // NOTE By default AppTheme has android:windowBackground = white.
+                pinLockView.textColor =
+                    ContextCompat.getColor(requireContext(), android.R.color.black)
 
-            binding.tvPinTitle.isVisible = true
-            binding.ivPinLogo.isVisible = false
-            binding.indicatorDotsWhite.isVisible = false
-            binding.indicatorDots.isVisible = true
-            binding.tvPinLogOut.isVisible = false
+                tvPinTitle.isVisible = true
+                ivPinLogo.isVisible = false
+                indicatorDotsWhite.isVisible = false
+                indicatorDots.isVisible = true
+                tvPinLogOut.isVisible = false
+            }
         }
     }
 
@@ -213,29 +219,26 @@ class PinFragment : BaseFragment(), PinFrView, PinLockListener, BiometricListene
     }
 
     override fun showHomeScreen() {
-        val intent = Intent(requireContext(), HomeActivity::class.java)
-        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-        startActivity(intent)
+        startActivity(Intent(requireContext(), HomeActivity::class.java).apply {
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        })
     }
 
     override fun showVaultAuthScreen() {
-        val intent = Intent(requireContext(), VaultAuthActivity::class.java)
-        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-        startActivity(intent)
+        startActivity(Intent(requireContext(), VaultAuthActivity::class.java).apply {
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        })
     }
 
     override fun showBiometricSetUpScreen(pinMode: Byte) {
-        val bundle = Bundle()
-        bundle.putByte(Constant.Bundle.BUNDLE_PIN_MODE, pinMode)
-        val fragment = childFragmentManager.fragmentFactory.instantiate(
-            requireContext().classLoader,
-            BiometricSetUpFragment::class.qualifiedName!!
-        )
-        fragment.arguments = bundle
-
         FragmentTransactionManager.displayFragment(
             requireActivity().supportFragmentManager,
-            fragment,
+            childFragmentManager.fragmentFactory.instantiate(
+                requireContext().classLoader,
+                BiometricSetUpFragment::class.qualifiedName!!
+            ).apply {
+                arguments = bundleOf(Constant.Bundle.BUNDLE_PIN_MODE to pinMode)
+            },
             R.id.flContainer,
             false
         )
@@ -252,15 +255,17 @@ class PinFragment : BaseFragment(), PinFrView, PinLockListener, BiometricListene
     override fun finishScreen(resultCode: Int) {
         // NOTE Skip pin appearance check for prevent pin screen duplication after finish.
         LVApplication.checkPinAppearance = false
-        activity?.setResult(resultCode)
-        activity?.finish()
+        activity?.apply {
+            setResult(resultCode)
+            finish()
+        }
     }
 
     override fun finishApp() {
-        val intent = Intent(Intent.ACTION_MAIN)
-        intent.addCategory(Intent.CATEGORY_HOME)
-        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-        startActivity(intent)
+        startActivity(Intent(Intent.ACTION_MAIN).apply {
+            addCategory(Intent.CATEGORY_HOME)
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK
+        })
     }
 
     override fun showProgressDialog(show: Boolean) {
@@ -268,11 +273,10 @@ class PinFragment : BaseFragment(), PinFrView, PinLockListener, BiometricListene
     }
 
     override fun showAuthScreen() {
-        NotificationsManager.clearNotifications(requireContext())
-        val intent = Intent(requireContext(), AuthActivity::class.java)
-        intent.putExtra(Constant.Extra.EXTRA_NAVIGATION_FR, Constant.Navigation.AUTH)
-        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-        startActivity(intent)
+        startActivity(Intent(requireContext(), AuthActivity::class.java).apply {
+            putExtra(Constant.Extra.EXTRA_NAVIGATION_FR, Constant.Navigation.AUTH)
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        })
     }
 
     // Pin Lock listeners callbacks.

@@ -95,68 +95,69 @@ class MnemonicsContainerView(context: Context?, attrs: AttributeSet?) : ScrollVi
 
     fun setupMnemonics() {
         if (mMnemonicList != null) {
-            binding.glMnemonicItemContainer.removeAllViews()
-            binding.glMnemonicItemContainer.columnCount = mnemonicsColumnCount
-            for (i in mMnemonicList!!.indices) {
-                val mnemonicItem = mMnemonicList!![i]
-                val itemMnemonic = inflate(context, R.layout.item_mnemonic, null)
+            binding.apply {
+                glMnemonicItemContainer.removeAllViews()
+                glMnemonicItemContainer.columnCount = mnemonicsColumnCount
+                for (i in mMnemonicList!!.indices) {
+                    val mnemonicItem = mMnemonicList!![i]
+                    val itemMnemonic = inflate(context, R.layout.item_mnemonic, null)
 
-                val itemWidth: Float = calculateItemWidth(binding.glMnemonicItemContainer, mnemonicsColumnCount)
+                    val itemWidth: Float = calculateItemWidth(glMnemonicItemContainer, mnemonicsColumnCount)
 
-                itemMnemonic.background =
-                    if (mnemonicItem.hide) itemEmptyBackground?.constantState?.newDrawable()
-                    else itemBackground?.constantState?.newDrawable()
+                    itemMnemonic.background =
+                        if (mnemonicItem.hide) itemEmptyBackground?.constantState?.newDrawable()
+                        else itemBackground?.constantState?.newDrawable()
 
-                val number = itemMnemonic!!.findViewById<TextView>(R.id.tvMnemonicNumber)
-                val word = itemMnemonic.findViewById<TextView>(R.id.tvMnemonicWord)
+                    val number = itemMnemonic!!.findViewById<TextView>(R.id.tvMnemonicNumber)
+                    val word = itemMnemonic.findViewById<TextView>(R.id.tvMnemonicWord)
 
-                word.setTextColor(itemTextColor)
+                    word.setTextColor(itemTextColor)
 
-                val mnemonicStr = mnemonicItem.value
+                    val mnemonicStr = mnemonicItem.value
 
-                if (isCounterEnabled) {
-                    number.setTextColor(itemCounterTextColor)
-                    number.isVisible = true
-                    number.text = (i + 1).toString()
-                }
-
-                word.text = mnemonicStr
-
-                word.isInvisible = mnemonicItem.hide
-
-                val layoutParams = GridLayout.LayoutParams()
-                layoutParams.width = AppUtil.convertDpToPixels(context, itemWidth)
-
-                layoutParams.setMargins(
-                    AppUtil.convertDpToPixels(context, itemMarginStart),
-                    AppUtil.convertDpToPixels(context, itemMarginTop),
-                    AppUtil.convertDpToPixels(context, itemMarginEnd),
-                    AppUtil.convertDpToPixels(context, itemMarginBottom)
-                )
-
-                binding.glMnemonicItemContainer.addView(itemMnemonic, i, layoutParams)
-
-                if (!mnemonicItem.hide) {
-                    itemMnemonic.setSafeOnClickListener {
-                        mMnemonicItemActionListener?.get()
-                            ?.onMnemonicItemClick(this, i, mnemonicStr)
+                    if (isCounterEnabled) {
+                        number.setTextColor(itemCounterTextColor)
+                        number.isVisible = true
+                        number.text = (i + 1).toString()
                     }
-                }
 
-                if (isDraggable && !mnemonicItem.hide) {
-                    itemMnemonic.setOnLongClickListener {
-                        val intent = Intent()
-                        intent.putExtra(EXTRA_PARENT_ID, this.id)
-                        intent.putExtra(
-                            EXTRA_ITEM_POSITION,
-                            binding.glMnemonicItemContainer.indexOfChild(itemMnemonic)
-                        )
-                        intent.putExtra(EXTRA_ITEM_VALUE, mnemonicStr)
+                    word.text = mnemonicStr
 
-                        val data = ClipData.newIntent("", intent)
-                        val shadowBuilder = DragShadowBuilder(it)
+                    word.isInvisible = mnemonicItem.hide
 
-                        ViewCompat.startDragAndDrop(it, data, shadowBuilder, null, 0)
+                    val layoutParams = GridLayout.LayoutParams()
+                    layoutParams.width = AppUtil.convertDpToPixels(context, itemWidth)
+
+                    layoutParams.setMargins(
+                        AppUtil.convertDpToPixels(context, itemMarginStart),
+                        AppUtil.convertDpToPixels(context, itemMarginTop),
+                        AppUtil.convertDpToPixels(context, itemMarginEnd),
+                        AppUtil.convertDpToPixels(context, itemMarginBottom)
+                    )
+
+                    glMnemonicItemContainer.addView(itemMnemonic, i, layoutParams)
+
+                    if (!mnemonicItem.hide) {
+                        itemMnemonic.setSafeOnClickListener {
+                            mMnemonicItemActionListener?.get()
+                                ?.onMnemonicItemClick(this@MnemonicsContainerView, i, mnemonicStr)
+                        }
+                    }
+
+                    if (isDraggable && !mnemonicItem.hide) {
+                        itemMnemonic.setOnLongClickListener {
+                            val data = ClipData.newIntent("", Intent().apply {
+                                putExtra(EXTRA_PARENT_ID, this@MnemonicsContainerView.id)
+                                putExtra(
+                                    EXTRA_ITEM_POSITION,
+                                    binding.glMnemonicItemContainer.indexOfChild(itemMnemonic)
+                                )
+                                putExtra(EXTRA_ITEM_VALUE, mnemonicStr)
+                            })
+                            val shadowBuilder = DragShadowBuilder(it)
+
+                            ViewCompat.startDragAndDrop(it, data, shadowBuilder, null, 0)
+                        }
                     }
                 }
             }

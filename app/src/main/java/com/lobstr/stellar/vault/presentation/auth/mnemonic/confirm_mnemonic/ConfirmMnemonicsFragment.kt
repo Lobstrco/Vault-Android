@@ -6,8 +6,8 @@ import android.os.Bundle
 import android.view.*
 import android.widget.Toast
 import androidx.annotation.StringRes
-import androidx.core.view.isInvisible
 import androidx.core.view.MenuProvider
+import androidx.core.view.isInvisible
 import com.lobstr.stellar.vault.R
 import com.lobstr.stellar.vault.databinding.FragmentConfirmMnemonicsBinding
 import com.lobstr.stellar.vault.presentation.auth.mnemonic.MnemonicsContainerView
@@ -92,10 +92,12 @@ class ConfirmMnemonicsFragment : BaseFragment(), ConfirmMnemonicsView,
     }
 
     private fun setListeners() {
-        binding.btnClear.setSafeOnClickListener { mPresenter.btnClearClicked() }
-        binding.btnNext.setSafeOnClickListener { mPresenter.btnNextClicked() }
-        binding.mnemonicContainerToSelectView.setMnemonicItemActionListener(this)
-        binding.mnemonicContainerToConfirmView.setMnemonicItemActionListener(this)
+        binding.apply {
+            btnClear.setSafeOnClickListener { mPresenter.btnClearClicked() }
+            btnNext.setSafeOnClickListener { mPresenter.btnNextClicked() }
+            mnemonicContainerToSelectView.setMnemonicItemActionListener(this@ConfirmMnemonicsFragment)
+            mnemonicContainerToConfirmView.setMnemonicItemActionListener(this@ConfirmMnemonicsFragment)
+        }
     }
 
     override fun onDestroyView() {
@@ -122,14 +124,18 @@ class ConfirmMnemonicsFragment : BaseFragment(), ConfirmMnemonicsView,
     }
 
     override fun setupMnemonicsToSelect(mnemonics: List<MnemonicItem>) {
-        binding.mnemonicContainerToSelectView.mMnemonicList = mnemonics
-        binding.mnemonicContainerToSelectView.setupMnemonics()
+        binding.apply {
+            mnemonicContainerToSelectView.mMnemonicList = mnemonics
+            mnemonicContainerToSelectView.setupMnemonics()
+        }
     }
 
     override fun setupMnemonicsToConfirm(mnemonics: List<MnemonicItem>) {
-        binding.mnemonicContainerToConfirmView.mMnemonicList = mnemonics
-        binding.mnemonicContainerToConfirmView.setupMnemonics()
-        binding.btnClear.isInvisible = mnemonics.isEmpty()
+        binding.apply {
+            mnemonicContainerToConfirmView.mMnemonicList = mnemonics
+            mnemonicContainerToConfirmView.setupMnemonics()
+            btnClear.isInvisible = mnemonics.isEmpty()
+        }
     }
 
     override fun showMessage(message: String) {

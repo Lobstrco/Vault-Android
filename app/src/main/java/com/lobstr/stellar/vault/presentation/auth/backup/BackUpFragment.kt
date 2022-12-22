@@ -3,6 +3,7 @@ package com.lobstr.stellar.vault.presentation.auth.backup
 
 import android.os.Bundle
 import android.view.*
+import androidx.core.os.bundleOf
 import androidx.core.view.MenuProvider
 import com.lobstr.stellar.vault.R
 import com.lobstr.stellar.vault.databinding.FragmentBackUpBinding
@@ -89,17 +90,14 @@ class BackUpFragment : BaseFragment(), BackUpView {
     // ===========================================================
 
     override fun showCreateMnemonicsScreen() {
-        val bundle = Bundle()
-        bundle.putBoolean(Constant.Bundle.BUNDLE_GENERATE_MNEMONICS, true)
-        val fragment = requireParentFragment().childFragmentManager.fragmentFactory.instantiate(
-            requireContext().classLoader,
-            MnemonicsFragment::class.qualifiedName!!
-        )
-        fragment.arguments = bundle
-
         FragmentTransactionManager.displayFragment(
             requireParentFragment().childFragmentManager,
-            fragment,
+            requireParentFragment().childFragmentManager.fragmentFactory.instantiate(
+                requireContext().classLoader,
+                MnemonicsFragment::class.qualifiedName!!
+            ).apply {
+                arguments = bundleOf(Constant.Bundle.BUNDLE_GENERATE_MNEMONICS to true)
+            },
             R.id.flContainer
         )
     }

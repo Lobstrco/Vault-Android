@@ -20,59 +20,61 @@ class AccountWithStatusViewHolder(
     RecyclerView.ViewHolder(binding.root) {
 
     fun bind(account: Account) {
-        // Set user icon.
-        Glide.with(itemView.context)
-            .load(AppUtil.createUserIconLink(account.address))
-            .placeholder(R.drawable.ic_person)
-            .into(binding.ivIdentity)
+        binding.apply {
+            // Set user icon.
+            Glide.with(itemView.context)
+                .load(AppUtil.createUserIconLink(account.address))
+                .placeholder(R.drawable.ic_person)
+                .into(ivIdentity)
 
-        // Show section for address with federation and vault account marker.
-        binding.tvAccountNameBottom.isVisible = !account.federation.isNullOrEmpty() || account.isVaultAccount == true || !account.name.isNullOrEmpty()
+            // Show section for address with federation and vault account marker.
+            tvAccountNameBottom.isVisible = !account.federation.isNullOrEmpty() || account.isVaultAccount == true || !account.name.isNullOrEmpty()
 
-        binding.tvAccountNameBottom.text = when {
-            !account.federation.isNullOrEmpty() || account.isVaultAccount == true || !account.name.isNullOrEmpty() -> AppUtil.ellipsizeStrInMiddle(
-                account.address,
-                PK_TRUNCATE_COUNT
+            tvAccountNameBottom.text = when {
+                !account.federation.isNullOrEmpty() || account.isVaultAccount == true || !account.name.isNullOrEmpty() -> AppUtil.ellipsizeStrInMiddle(
+                    account.address,
+                    PK_TRUNCATE_COUNT
+                )
+                else -> null
+            }
+
+            tvAccountNameTop.ellipsize =
+                if (account.federation.isNullOrEmpty() && account.name.isNullOrEmpty()) {
+                    TextUtils.TruncateAt.MIDDLE
+                } else {
+                    TextUtils.TruncateAt.END
+                }
+
+            tvAccountNameTop.text =
+                if (account.federation.isNullOrEmpty() && account.name.isNullOrEmpty()) {
+                    if(account.isVaultAccount == true) {
+                        itemView.context.getString(R.string.text_tv_vault_account_marker)
+                    } else {
+                        AppUtil.ellipsizeStrInMiddle(account.address, PK_TRUNCATE_COUNT)
+                    }
+                } else {
+                    if(!account.name.isNullOrEmpty()){
+                        account.name
+                    } else {
+                        account.federation
+                    }
+                }
+
+            tvStatus.text =
+                if (account.signed == true) {
+                    itemView.context.getString(R.string.text_tv_status_signed)
+                } else {
+                    itemView.context.getString(R.string.text_tv_status_pending)
+                }
+
+            tvStatus.setTextColor(
+                if (account.signed == true) {
+                    ContextCompat.getColor(itemView.context, R.color.color_5cb87f)
+                } else {
+                    ContextCompat.getColor(itemView.context, R.color.color_fb9e00)
+                }
             )
-            else -> null
         }
-
-        binding.tvAccountNameTop.ellipsize =
-            if (account.federation.isNullOrEmpty() && account.name.isNullOrEmpty()) {
-                TextUtils.TruncateAt.MIDDLE
-            } else {
-                TextUtils.TruncateAt.END
-            }
-
-        binding.tvAccountNameTop.text =
-            if (account.federation.isNullOrEmpty() && account.name.isNullOrEmpty()) {
-                if(account.isVaultAccount == true) {
-                    itemView.context.getString(R.string.text_tv_vault_account_marker)
-                } else {
-                    AppUtil.ellipsizeStrInMiddle(account.address, PK_TRUNCATE_COUNT)
-                }
-            } else {
-                if(!account.name.isNullOrEmpty()){
-                    account.name
-                } else {
-                    account.federation
-                }
-            }
-
-        binding.tvStatus.text =
-            if (account.signed == true) {
-                itemView.context.getString(R.string.text_tv_status_signed)
-            } else {
-                itemView.context.getString(R.string.text_tv_status_pending)
-            }
-
-        binding.tvStatus.setTextColor(
-            if (account.signed == true) {
-                ContextCompat.getColor(itemView.context, R.color.color_5cb87f)
-            } else {
-                ContextCompat.getColor(itemView.context, R.color.color_fb9e00)
-            }
-        )
 
         itemView.setSafeOnClickListener {
             val position = this@AccountWithStatusViewHolder.bindingAdapterPosition

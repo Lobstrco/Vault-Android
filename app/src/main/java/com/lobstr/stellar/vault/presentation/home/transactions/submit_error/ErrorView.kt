@@ -14,7 +14,7 @@ interface ErrorView : MvpView {
     fun setupXdr(xdr: String)
 
     @AddToEndSingle
-    fun setupErrorInfo(error: String)
+    fun setupErrorInfo(error: String, showViewDetails: Boolean)
 
     @Skip
     fun finishScreen()
@@ -27,4 +27,7 @@ interface ErrorView : MvpView {
 
     @Skip
     fun copyToClipBoard(text: String)
+
+    @Skip
+    fun showErrorDetails(details: String)
 }

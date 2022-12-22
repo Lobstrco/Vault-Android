@@ -9,6 +9,7 @@ import com.lobstr.stellar.vault.R
 import com.lobstr.stellar.vault.presentation.auth.enter_screen.AuthFragment
 import com.lobstr.stellar.vault.presentation.auth.mnemonic.create_mnemonic.MnemonicsFragment
 import com.lobstr.stellar.vault.presentation.base.fragment.BaseContainerFragment
+import com.lobstr.stellar.vault.presentation.entities.error.Error
 import com.lobstr.stellar.vault.presentation.entities.transaction.TransactionItem
 import com.lobstr.stellar.vault.presentation.home.account_name.add.AddAccountNameFragment
 import com.lobstr.stellar.vault.presentation.home.dashboard.DashboardFragment
@@ -65,7 +66,7 @@ class ContainerFragment : BaseContainerFragment(),
                 Constant.Bundle.BUNDLE_TRANSACTION_CONFIRMATION_SUCCESS_STATUS,
                 SUCCESS
             ),
-            arguments?.getString(Constant.Bundle.BUNDLE_ERROR_MESSAGE),
+            arguments?.getParcelable(Constant.Bundle.BUNDLE_ERROR),
             arguments?.getInt(Constant.Bundle.BUNDLE_CONFIG, UNDEFINED_VALUE) ?: UNDEFINED_VALUE
         )
     }
@@ -160,12 +161,11 @@ class ContainerFragment : BaseContainerFragment(),
         )
     }
 
-    override fun showErrorFr(errorMessage: String, envelopeXdr: String) {
+    override fun showErrorFr(error: Error) {
         displayFragment(
             fragmentName = ErrorFragment::class.qualifiedName!!,
             bundle = bundleOf(
-                Constant.Bundle.BUNDLE_ERROR_MESSAGE to errorMessage,
-                Constant.Bundle.BUNDLE_ENVELOPE_XDR to envelopeXdr
+                Constant.Bundle.BUNDLE_ERROR to error,
             )
         )
     }

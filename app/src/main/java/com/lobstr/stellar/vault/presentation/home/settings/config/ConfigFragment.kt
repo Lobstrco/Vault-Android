@@ -5,8 +5,8 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.*
 import android.widget.Toast
-import androidx.core.view.MenuProvider
 import androidx.core.content.ContextCompat
+import androidx.core.view.MenuProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.lobstr.stellar.vault.R
 import com.lobstr.stellar.vault.databinding.FragmentConfigBinding
@@ -108,15 +108,17 @@ class ConfigFragment : BaseFragment(), ConfigView {
     }
 
     override fun initListComponents(configs: List<Config>, selectedType: Byte) {
-        binding.rvConfig.layoutManager = LinearLayoutManager(context)
-        binding.rvConfig.addItemDecoration(
-            CustomDividerItemDecoration(
-                ContextCompat.getDrawable(requireContext(), R.drawable.divider_left_offset)!!.apply {
-                    alpha = 51 // Alpha 0.2.
-                })
-        )
-        binding.rvConfig.adapter = ConfigAdapter(configs, selectedType) { config, type ->
-            mPresenter.configItemClicked(config, type)
+        binding.apply {
+            rvConfig.layoutManager = LinearLayoutManager(context)
+            rvConfig.addItemDecoration(
+                CustomDividerItemDecoration(
+                    ContextCompat.getDrawable(requireContext(), R.drawable.divider_left_offset)!!.apply {
+                        alpha = 51 // Alpha 0.2.
+                    })
+            )
+            rvConfig.adapter = ConfigAdapter(configs, selectedType) { config, type ->
+                mPresenter.configItemClicked(config, type)
+            }
         }
     }
 

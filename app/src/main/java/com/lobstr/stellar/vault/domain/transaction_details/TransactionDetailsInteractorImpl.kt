@@ -8,6 +8,7 @@ import com.lobstr.stellar.vault.domain.stellar.StellarRepository
 import com.lobstr.stellar.vault.domain.transaction.TransactionRepository
 import com.lobstr.stellar.vault.presentation.entities.account.Account
 import com.lobstr.stellar.vault.presentation.entities.account.AccountResult
+import com.lobstr.stellar.vault.presentation.entities.stellar.SubmitTransactionResult
 import com.lobstr.stellar.vault.presentation.entities.transaction.TransactionItem
 import com.lobstr.stellar.vault.presentation.util.AppUtil
 import com.lobstr.stellar.vault.presentation.util.Constant
@@ -15,7 +16,6 @@ import com.lobstr.stellar.vault.presentation.util.Constant.Transaction.IMPORT_XD
 import com.lobstr.stellar.vault.presentation.util.PrefsUtil
 import io.reactivex.rxjava3.core.Single
 import org.stellar.sdk.AbstractTransaction
-import org.stellar.sdk.responses.SubmitTransactionResponse
 
 class TransactionDetailsInteractorImpl(
     private val accountRepository: AccountRepository,
@@ -74,7 +74,7 @@ class TransactionDetailsInteractorImpl(
         }
     }
 
-    override fun confirmTransactionOnHorizon(transaction: AbstractTransaction): Single<SubmitTransactionResponse> {
+    override fun confirmTransactionOnHorizon(transaction: AbstractTransaction): Single<SubmitTransactionResult> {
         return stellarRepository.submitTransaction(transaction)
     }
 

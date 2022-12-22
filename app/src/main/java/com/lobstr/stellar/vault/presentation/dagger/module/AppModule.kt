@@ -5,6 +5,7 @@ import android.content.SharedPreferences
 import androidx.preference.PreferenceManager
 import com.lobstr.stellar.tsmapper.data.claim.ClaimantMapper
 import com.lobstr.stellar.tsmapper.data.transaction.TsMapper
+import com.lobstr.stellar.tsmapper.data.transaction.result.TsResultMapper
 import com.lobstr.stellar.vault.data.error.ExceptionMapper
 import com.lobstr.stellar.vault.domain.util.EventProviderModule
 import com.lobstr.stellar.vault.presentation.util.FileStreamUtil
@@ -45,6 +46,12 @@ object AppModule{
     @Singleton
     fun provideTsMapper(network: Network, accountConverter: AccountConverter): TsMapper {
         return TsMapper(network, accountConverter, ClaimantMapper())
+    }
+
+    @Provides
+    @Singleton
+    fun provideTsResultMapper(@ApplicationContext context: Context): TsResultMapper {
+        return TsResultMapper(context)
     }
 
     @Provides

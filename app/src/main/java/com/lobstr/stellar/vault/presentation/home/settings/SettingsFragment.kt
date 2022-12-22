@@ -6,11 +6,6 @@ import android.content.DialogInterface
 import android.content.Intent
 import android.graphics.Typeface
 import android.os.Bundle
-import android.text.SpannableString
-import android.text.Spanned
-import android.text.style.ForegroundColorSpan
-import android.text.style.RelativeSizeSpan
-import android.text.style.StyleSpan
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -35,12 +30,10 @@ import com.lobstr.stellar.vault.presentation.home.settings.license.LicenseFragme
 import com.lobstr.stellar.vault.presentation.home.settings.show_public_key.ShowPublicKeyDialogFragment
 import com.lobstr.stellar.vault.presentation.home.settings.signed_accounts.SignedAccountsFragment
 import com.lobstr.stellar.vault.presentation.pin.PinActivity
-import com.lobstr.stellar.vault.presentation.util.AppUtil
-import com.lobstr.stellar.vault.presentation.util.Constant
+import com.lobstr.stellar.vault.presentation.util.*
 import com.lobstr.stellar.vault.presentation.util.Constant.Util.UNDEFINED_VALUE
 import com.lobstr.stellar.vault.presentation.util.manager.FragmentTransactionManager
 import com.lobstr.stellar.vault.presentation.util.manager.SupportManager
-import com.lobstr.stellar.vault.presentation.util.setSafeOnClickListener
 import dagger.hilt.android.AndroidEntryPoint
 import moxy.ktx.moxyPresenter
 import java.util.*
@@ -188,39 +181,21 @@ class SettingsFragment : BaseFragment(), SettingsView, CompoundButton.OnCheckedC
     }
 
     override fun setupSignersCount(signersCount: Int) {
-        val message =
-            AppUtil.getQuantityString(R.plurals.text_settings_signers, signersCount, signersCount)
-        val spannedText = SpannableString(message)
-        val startPosition = message.indexOf(signersCount.toString())
-        val endPosition = startPosition + signersCount.toString().length
-
-        if (startPosition != Constant.Util.UNDEFINED_VALUE) {
-            spannedText.setSpan(
-                ForegroundColorSpan(
-                    ContextCompat.getColor(
-                        this.requireContext(),
+        binding.tvSettingsSigners.text = AppUtil.getQuantityString(R.plurals.text_settings_signers, signersCount, signersCount).run {
+            val startPosition = indexOf(signersCount.toString())
+            val endPosition = startPosition + signersCount.toString().length
+            if (startPosition != Constant.Util.UNDEFINED_VALUE) {
+                this
+                    .applyColor(ContextCompat.getColor(
+                        requireContext(),
                         R.color.color_primary
-                    )
-                ),
-                startPosition,
-                endPosition,
-                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
-            )
-            spannedText.setSpan(
-                RelativeSizeSpan(1.2f),
-                startPosition,
-                endPosition,
-                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
-            )
-            spannedText.setSpan(
-                StyleSpan(Typeface.BOLD),
-                startPosition,
-                endPosition,
-                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
-            )
+                    ), startPosition, endPosition)
+                    .applySize(1.2f, startPosition, endPosition)
+                    .applyStyle(Typeface.BOLD, startPosition, endPosition)
+            } else {
+                this
+            }
         }
-
-        binding.tvSettingsSigners.text = spannedText
     }
 
     override fun showSuccessMessage(@StringRes message: Int) {

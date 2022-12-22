@@ -8,6 +8,7 @@ import com.lobstr.stellar.vault.presentation.entities.account.Account
 import com.lobstr.stellar.vault.presentation.entities.account.AccountResult
 import com.lobstr.stellar.vault.presentation.entities.account.Thresholds
 import com.lobstr.stellar.vault.presentation.entities.mnemonic.MnemonicItem
+import com.lobstr.stellar.vault.presentation.entities.stellar.SubmitTransactionResult
 import com.lobstr.stellar.vault.presentation.util.AppUtil
 import com.soneso.stellarmnemonics.Wallet
 import com.tangem.commands.SignResponse
@@ -17,10 +18,8 @@ import org.stellar.sdk.*
 import org.stellar.sdk.requests.AccountsRequestBuilder
 import org.stellar.sdk.requests.RequestBuilder
 import org.stellar.sdk.responses.AccountResponse
-import org.stellar.sdk.responses.SubmitTransactionResponse
 import org.stellar.sdk.xdr.DecoratedSignature
 import org.stellar.sdk.xdr.Signature
-import shadow.com.google.gson.JsonSyntaxException
 import java.util.concurrent.Callable
 
 class StellarRepositoryImpl(
@@ -28,6 +27,7 @@ class StellarRepositoryImpl(
     private val network: Network,
     private val server: Server,
     private val mnemonicsMapper: MnemonicsMapper,
+    private val submitMapper: SubmitTransactionMapper,
     private val rxErrorUtils: RxErrorUtils
 ) : StellarRepository {
 
@@ -54,7 +54,7 @@ class StellarRepositoryImpl(
     override fun submitTransaction(
         transaction: AbstractTransaction,
         skipMemoRequiredCheck: Boolean
-    ): Single<SubmitTransactionResponse> {
+    ): Single<SubmitTransactionResult> {
         return fromCallable(Callable {
             return@Callable when(transaction) {
                 is Transaction-> server.submitTransaction(transaction, skipMemoRequiredCheck)
@@ -63,6 +63,8 @@ class StellarRepositoryImpl(
             }
         }).onErrorResumeNext {
             rxErrorUtils.handleSingleRequestHttpError(it)
+        }.map {
+            submitMapper.transformSubmitResponse(it)
         }
     }
 

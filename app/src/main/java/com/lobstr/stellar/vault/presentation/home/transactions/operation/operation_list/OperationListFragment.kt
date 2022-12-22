@@ -74,17 +74,19 @@ class OperationListFragment : BaseFragment(), OperationListView {
     }
 
     override fun initRecycledView(operations: List<Int>) {
-        binding.rvTransactionOperations.layoutManager = LinearLayoutManager(context)
-        binding.rvTransactionOperations.itemAnimator = null
-        binding.rvTransactionOperations.isNestedScrollingEnabled = false
-        binding.rvTransactionOperations.addItemDecoration(
-            CustomDividerItemDecoration(
-                ContextCompat.getDrawable(requireContext(), R.drawable.divider_left_offset)!!.apply {
-                    alpha = 51 // Alpha 0.2.
-                })
-        )
-        binding.rvTransactionOperations.adapter = TransactionOperationAdapter(operations) { position ->
-            mPresenter.operationItemClicked(position)
+        binding.apply {
+            rvTransactionOperations.layoutManager = LinearLayoutManager(context)
+            rvTransactionOperations.itemAnimator = null
+            rvTransactionOperations.isNestedScrollingEnabled = false
+            rvTransactionOperations.addItemDecoration(
+                CustomDividerItemDecoration(
+                    ContextCompat.getDrawable(requireContext(), R.drawable.divider_left_offset)!!.apply {
+                        alpha = 51 // Alpha 0.2.
+                    })
+            )
+            rvTransactionOperations.adapter = TransactionOperationAdapter(operations) { position ->
+                mPresenter.operationItemClicked(position)
+            }
         }
     }
 

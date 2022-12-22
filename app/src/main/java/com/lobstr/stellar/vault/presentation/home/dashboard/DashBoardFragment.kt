@@ -4,17 +4,12 @@ import android.animation.ObjectAnimator
 import android.content.Intent
 import android.graphics.Typeface
 import android.os.Bundle
-import android.text.SpannableString
-import android.text.Spanned
-import android.text.style.ForegroundColorSpan
-import android.text.style.RelativeSizeSpan
-import android.text.style.StyleSpan
 import android.view.*
 import android.view.animation.LinearInterpolator
 import android.widget.Toast
 import androidx.core.content.ContextCompat
-import androidx.core.view.MenuProvider
 import androidx.core.os.bundleOf
+import androidx.core.view.MenuProvider
 import androidx.core.view.isVisible
 import androidx.lifecycle.Lifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -29,10 +24,7 @@ import com.lobstr.stellar.vault.presentation.home.HomeActivity
 import com.lobstr.stellar.vault.presentation.home.dashboard.account.AccountsDialogFragment
 import com.lobstr.stellar.vault.presentation.home.settings.signed_accounts.adapter.AccountAdapter
 import com.lobstr.stellar.vault.presentation.home.settings.signed_accounts.edit_account.EditAccountDialogFragment
-import com.lobstr.stellar.vault.presentation.util.AppUtil
-import com.lobstr.stellar.vault.presentation.util.Constant
-import com.lobstr.stellar.vault.presentation.util.CustomDividerItemDecoration
-import com.lobstr.stellar.vault.presentation.util.setSafeOnClickListener
+import com.lobstr.stellar.vault.presentation.util.*
 import dagger.hilt.android.AndroidEntryPoint
 import moxy.ktx.moxyPresenter
 import javax.inject.Inject
@@ -164,18 +156,20 @@ class DashboardFragment : BaseFragment(), DashboardView,
     // ===========================================================
 
     override fun initSignedAccountsRecycledView() {
-        binding.rvSignedAccounts.layoutManager = LinearLayoutManager(activity)
-        binding.rvSignedAccounts.itemAnimator = null
-        binding.rvSignedAccounts.addItemDecoration(
-            CustomDividerItemDecoration(
-            ContextCompat.getDrawable(requireContext(), R.drawable.divider_left_right_offset)!!.apply {
-                alpha = 51 // Alpha 0.2.
-            })
-        )
-        binding.rvSignedAccounts.isNestedScrollingEnabled = false
-        binding.rvSignedAccounts.adapter = AccountAdapter(AccountAdapter.ACCOUNT,
-            { mPresenter.signedAccountItemClicked(it) },
-            { mPresenter.signedAccountItemLongClicked(it) })
+        binding.apply {
+            rvSignedAccounts.layoutManager = LinearLayoutManager(activity)
+            rvSignedAccounts.itemAnimator = null
+            rvSignedAccounts.addItemDecoration(
+                CustomDividerItemDecoration(
+                    ContextCompat.getDrawable(requireContext(), R.drawable.divider_left_right_offset)!!.apply {
+                        alpha = 51 // Alpha 0.2.
+                    })
+            )
+            rvSignedAccounts.isNestedScrollingEnabled = false
+            rvSignedAccounts.adapter = AccountAdapter(AccountAdapter.ACCOUNT,
+                { mPresenter.signedAccountItemClicked(it) },
+                { mPresenter.signedAccountItemLongClicked(it) })
+        }
     }
 
     override fun notifySignedAccountsAdapter(accounts: List<Account>) {
@@ -209,48 +203,33 @@ class DashboardFragment : BaseFragment(), DashboardView,
     }
 
     override fun showSignersCount(count: Int) {
-
-        val message = AppUtil.getQuantityString(R.plurals.text_settings_signers, count, count)
-        val spannedText = SpannableString(message)
-        val startPosition = message.indexOf(count.toString())
-        val endPosition = startPosition + count.toString().length
-
-        if (startPosition != Constant.Util.UNDEFINED_VALUE) {
-            spannedText.setSpan(
-                ForegroundColorSpan(
-                    ContextCompat.getColor(
-                        this.requireContext(),
-                        R.color.color_primary
-                    )
-                ),
-                startPosition,
-                endPosition,
-                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
-            )
-            spannedText.setSpan(
-                RelativeSizeSpan(1.5f),
-                startPosition,
-                endPosition,
-                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
-            )
-            spannedText.setSpan(
-                StyleSpan(Typeface.BOLD),
-                startPosition,
-                endPosition,
-                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
-            )
-        }
-
-        binding.tvDashboardSignersCount.text = spannedText
+        binding.tvDashboardSignersCount.text =
+            AppUtil.getQuantityString(R.plurals.text_settings_signers, count, count).run {
+                val startPosition = indexOf(count.toString())
+                val endPosition = startPosition + count.toString().length
+                if (startPosition != Constant.Util.UNDEFINED_VALUE) {
+                    this
+                        .applyColor(ContextCompat.getColor(
+                            requireContext(),
+                            R.color.color_primary
+                        ), startPosition, endPosition)
+                        .applySize(1.5f, startPosition, endPosition)
+                        .applyStyle(Typeface.BOLD, startPosition, endPosition)
+                } else {
+                    this
+                }
+            }
     }
 
     override fun showDashboardInfo(count: Int?) {
-        // Nullable value mean undefined value.
-        if (count != null) {
-            binding.tvDashboardTransactionCount.text = count.toString()
+        binding.apply {
+            // Nullable value mean undefined value.
+            if (count != null) {
+                tvDashboardTransactionCount.text = count.toString()
+            }
+            pbDashboardTransactions.isVisible = false
+            llDashboardTransactionToSignContainer.isVisible = true
         }
-        binding.pbDashboardTransactions.isVisible = false
-        binding.llDashboardTransactionToSignContainer.isVisible = true
     }
 
     override fun showSignersScreen() {
@@ -302,15 +281,19 @@ class DashboardFragment : BaseFragment(), DashboardView,
     }
 
     override fun showSignersProgress(show: Boolean) {
-        binding.pbDashboardSigners.isVisible = show
-        binding.tvAddAccount.isVisible = !show
-        binding.tvDashboardSignersCount.isVisible = !show
+        binding.apply {
+            pbDashboardSigners.isVisible = show
+            tvAddAccount.isVisible = !show
+            tvDashboardSignersCount.isVisible = !show
+        }
     }
 
     override fun showSignersEmptyState(show: Boolean) {
-        binding.cvDashboardSignersInfo.isVisible = !show
-        binding.cvDashboardSignersEmptyState.isVisible = show
-        binding.svTransactions.isVisible = !show
+        binding.apply {
+            cvDashboardSignersInfo.isVisible = !show
+            cvDashboardSignersEmptyState.isVisible = show
+            svTransactions.isVisible = !show
+        }
     }
 
     override fun showRefreshAnimation(show: Boolean) {

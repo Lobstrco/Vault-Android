@@ -101,15 +101,18 @@ class ManageAccountsNamesFragment : BaseFragment(), ManageAccountsNamesView,
     }
 
     override fun initRecycledView() {
-        binding.rvAccountsNames.layoutManager = LinearLayoutManager(activity)
-        binding.rvAccountsNames.addItemDecoration(CustomDividerItemDecoration(
-            ContextCompat.getDrawable(requireContext(), R.drawable.divider_left_right_offset)!!.apply {
-                alpha = 51 // Alpha 0.2.
-            }))
+        binding.apply {
+            rvAccountsNames.layoutManager = LinearLayoutManager(activity)
+            rvAccountsNames.addItemDecoration(CustomDividerItemDecoration(
+                ContextCompat.getDrawable(requireContext(), R.drawable.divider_left_right_offset)!!
+                    .apply {
+                        alpha = 51 // Alpha 0.2.
+                    }))
 
-        binding.rvAccountsNames.adapter = AccountNameAdapter(
-            { mPresenter.accountItemClicked(it) },
-            { mPresenter.accountItemLongClicked(it) })
+            rvAccountsNames.adapter = AccountNameAdapter(
+                { mPresenter.accountItemClicked(it) },
+                { mPresenter.accountItemLongClicked(it) })
+        }
     }
 
     override fun showAccountsNamesList(items: List<Account>?) {

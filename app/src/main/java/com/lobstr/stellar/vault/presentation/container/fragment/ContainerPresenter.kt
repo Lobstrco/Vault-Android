@@ -1,5 +1,6 @@
 package com.lobstr.stellar.vault.presentation.container.fragment
 
+import com.lobstr.stellar.vault.presentation.entities.error.Error
 import com.lobstr.stellar.vault.presentation.entities.transaction.TransactionItem
 import com.lobstr.stellar.vault.presentation.util.Constant.Navigation.ADD_ACCOUNT_NAME
 import com.lobstr.stellar.vault.presentation.util.Constant.Navigation.AUTH
@@ -22,7 +23,7 @@ class ContainerPresenter(
     private val transactionItem: TransactionItem?,
     private val envelopeXdr: String?,
     private val transactionSuccessStatus: Byte?,
-    private val errorMessage: String?,
+    private val error: Error?,
     private val config: Int
 ) : MvpPresenter<ContainerView>() {
 
@@ -53,7 +54,7 @@ class ContainerPresenter(
 
             SUCCESS -> viewState.showSuccessFr(envelopeXdr!!, transactionSuccessStatus!!)
 
-            ERROR -> viewState.showErrorFr(errorMessage!!, envelopeXdr!!)
+            ERROR -> viewState.showErrorFr(error!!)
 
             SIGNED_ACCOUNTS -> viewState.showSignedAccountsFr()
 

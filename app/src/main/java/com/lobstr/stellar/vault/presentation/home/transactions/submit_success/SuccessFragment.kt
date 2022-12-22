@@ -89,8 +89,10 @@ class SuccessFragment : BaseFragment(), SuccessView {
     }
 
     private fun setListeners() {
-        binding.copyXdr.btnCopyXdr.setSafeOnClickListener { mPresenter.copyXdrClicked() }
-        binding.btnDone.setSafeOnClickListener { mPresenter.doneClicked() }
+        binding.apply {
+            copyXdr.btnCopyXdr.setSafeOnClickListener { mPresenter.copyXdrClicked() }
+            btnDone.setSafeOnClickListener { mPresenter.doneClicked() }
+        }
     }
 
     override fun onDestroyView() {
@@ -115,8 +117,10 @@ class SuccessFragment : BaseFragment(), SuccessView {
     }
 
     override fun setAdditionalSignaturesInfoEnabled(enabled: Boolean) {
-        binding.tvAdditionalSignaturesDescription.isVisible = enabled
-        binding.copyXdr.root.isVisible = enabled
+        binding.apply {
+            tvAdditionalSignaturesDescription.isVisible = enabled
+            copyXdr.root.isVisible = enabled
+        }
     }
 
     override fun showXdrContainer(show: Boolean) {

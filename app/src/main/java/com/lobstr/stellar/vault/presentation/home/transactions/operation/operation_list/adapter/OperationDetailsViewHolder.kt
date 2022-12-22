@@ -17,53 +17,55 @@ class OperationDetailsViewHolder(
 ) : RecyclerView.ViewHolder(binding.root) {
 
     fun bind(name: String, value: String?, tag: Any?) {
-        val isPublicKeyField = AppUtil.isValidAccount(tag as? String)
-        val isAssetTag = tag is Asset
+        binding.apply {
+            val isPublicKeyField = AppUtil.isValidAccount(tag as? String)
+            val isAssetTag = tag is Asset
 
-        binding.tvFieldName.text = name
-        binding.tvFieldValue.ellipsize = when (name) {
-            AppUtil.getString(R.string.op_field_destination_federation) -> TextUtils.TruncateAt.END
-            else -> {
-                when {
-                    // Case for the Account Name.
-                    isPublicKeyField && !AppUtil.isValidAccount(value) -> TextUtils.TruncateAt.END
-                    else -> TextUtils.TruncateAt.MIDDLE
+            tvFieldName.text = name
+            tvFieldValue.ellipsize = when (name) {
+                AppUtil.getString(R.string.op_field_destination_federation) -> TextUtils.TruncateAt.END
+                else -> {
+                    when {
+                        // Case for the Account Name.
+                        isPublicKeyField && !AppUtil.isValidAccount(value) -> TextUtils.TruncateAt.END
+                        else -> TextUtils.TruncateAt.MIDDLE
+                    }
                 }
             }
-        }
-        binding.tvFieldValue.isSingleLine = value?.contains("\n") != true
+            tvFieldValue.isSingleLine = value?.contains("\n") != true
 
-        binding.tvFieldValue.text =
-            if (AppUtil.isValidAccount(value)) {
-                AppUtil.ellipsizeStrInMiddle(value, Constant.Util.PK_TRUNCATE_COUNT)
-            } else {
-                value
-            }
+            tvFieldValue.text =
+                if (AppUtil.isValidAccount(value)) {
+                    AppUtil.ellipsizeStrInMiddle(value, Constant.Util.PK_TRUNCATE_COUNT)
+                } else {
+                    value
+                }
 
-        // Set selectable foreground for public key values and asset code (fields with Asset tag).
-        binding.root.foreground = if(isPublicKeyField || isAssetTag) {
-            val outValue = TypedValue()
-            if (itemView.context.theme.resolveAttribute(android.R.attr.selectableItemBackground, outValue, true)) {
-                ContextCompat.getDrawable(itemView.context, outValue.resourceId)
+            // Set selectable foreground for public key values and asset code (fields with Asset tag).
+            root.foreground = if(isPublicKeyField || isAssetTag) {
+                val outValue = TypedValue()
+                if (itemView.context.theme.resolveAttribute(android.R.attr.selectableItemBackground, outValue, true)) {
+                    ContextCompat.getDrawable(itemView.context, outValue.resourceId)
+                } else {
+                    null
+                }
             } else {
                 null
             }
-        } else {
-            null
-        }
 
-        // Set Click Listener only for public key values and asset code (fields with Asset tag).
-        if(isPublicKeyField || isAssetTag) {
-            itemView.setSafeOnClickListener {
-                val position = this@OperationDetailsViewHolder.bindingAdapterPosition
-                if (position == RecyclerView.NO_POSITION) {
-                    return@setSafeOnClickListener
+            // Set Click Listener only for public key values and asset code (fields with Asset tag).
+            if(isPublicKeyField || isAssetTag) {
+                itemView.setSafeOnClickListener {
+                    val position = this@OperationDetailsViewHolder.bindingAdapterPosition
+                    if (position == RecyclerView.NO_POSITION) {
+                        return@setSafeOnClickListener
+                    }
+
+                    itemClickListener(name, value, tag)
                 }
-
-                itemClickListener(name, value, tag)
+            } else {
+                itemView.setOnClickListener(null)
             }
-        } else {
-            itemView.setOnClickListener(null)
         }
     }
 }

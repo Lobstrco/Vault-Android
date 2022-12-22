@@ -1,5 +1,6 @@
 package com.lobstr.stellar.vault.presentation.container.fragment
 
+import com.lobstr.stellar.vault.presentation.entities.error.Error
 import com.lobstr.stellar.vault.presentation.entities.transaction.TransactionItem
 import moxy.MvpView
 import moxy.viewstate.strategy.alias.Skip
@@ -27,7 +28,7 @@ interface ContainerView : MvpView {
 
     fun showSuccessFr(envelopeXdr: String, transactionSuccessStatus: Byte)
 
-    fun showErrorFr(errorMessage: String, envelopeXdr: String)
+    fun showErrorFr(error: Error)
 
     fun showSignedAccountsFr()
 

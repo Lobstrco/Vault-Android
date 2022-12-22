@@ -4,9 +4,11 @@ package com.lobstr.stellar.vault.presentation.home.transactions.submit_error
 import android.os.Bundle
 import android.view.*
 import androidx.core.view.MenuProvider
+import androidx.core.view.isVisible
 import com.lobstr.stellar.vault.R
 import com.lobstr.stellar.vault.databinding.FragmentErrorBinding
 import com.lobstr.stellar.vault.presentation.base.fragment.BaseFragment
+import com.lobstr.stellar.vault.presentation.dialog.alert.base.AlertDialogFragment
 import com.lobstr.stellar.vault.presentation.util.AppUtil
 import com.lobstr.stellar.vault.presentation.util.Constant
 import com.lobstr.stellar.vault.presentation.util.manager.SupportManager
@@ -43,8 +45,7 @@ class ErrorFragment : BaseFragment(), ErrorView {
 
     private val mPresenter by moxyPresenter {
         presenterProvider.get().apply {
-            error = requireArguments().getString(Constant.Bundle.BUNDLE_ERROR_MESSAGE)!!
-            envelopeXdr = requireArguments().getString(Constant.Bundle.BUNDLE_ENVELOPE_XDR)!!
+            error = requireArguments().getParcelable(Constant.Bundle.BUNDLE_ERROR)!!
         }
     }
 
@@ -89,8 +90,11 @@ class ErrorFragment : BaseFragment(), ErrorView {
     }
 
     private fun setListeners() {
-        binding.copyXdr.btnCopyXdr.setSafeOnClickListener { mPresenter.copySignedXdrClicked() }
-        binding.btnDone.setSafeOnClickListener { mPresenter.doneClicked() }
+        binding.apply {
+            btnViewDetails.setSafeOnClickListener { mPresenter.viewErrorDetailsClicked() }
+            copyXdr.btnCopyXdr.setSafeOnClickListener { mPresenter.copySignedXdrClicked() }
+            btnDone.setSafeOnClickListener { mPresenter.doneClicked() }
+        }
     }
 
     override fun onDestroyView() {
@@ -110,8 +114,11 @@ class ErrorFragment : BaseFragment(), ErrorView {
         binding.copyXdr.tvXdr.text = xdr
     }
 
-    override fun setupErrorInfo(error: String) {
-        binding.tvErrorDescription.text = error
+    override fun setupErrorInfo(error: String, showViewDetails: Boolean) {
+        binding.apply {
+            tvErrorDescription.text = error
+            btnViewDetails.isVisible = showViewDetails
+        }
     }
 
     override fun finishScreen() {
@@ -128,6 +135,19 @@ class ErrorFragment : BaseFragment(), ErrorView {
 
     override fun copyToClipBoard(text: String) {
         AppUtil.copyToClipboard(context, text)
+    }
+
+    override fun showErrorDetails(details: String) {
+        AlertDialogFragment.Builder(true)
+            .setCancelable(false)
+            .setTitle(R.string.title_error_operation_details)
+            .setMessage(details)
+            .setNegativeBtnText(R.string.text_btn_close)
+            .create()
+            .show(
+                childFragmentManager,
+                AlertDialogFragment.DialogFragmentIdentifier.INFO
+            )
     }
 
     // ===========================================================

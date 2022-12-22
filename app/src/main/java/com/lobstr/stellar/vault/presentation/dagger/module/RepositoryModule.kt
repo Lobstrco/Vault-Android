@@ -2,6 +2,7 @@ package com.lobstr.stellar.vault.presentation.dagger.module
 
 import android.content.Context
 import com.lobstr.stellar.tsmapper.data.transaction.TsMapper
+import com.lobstr.stellar.tsmapper.data.transaction.result.TsResultMapper
 import com.lobstr.stellar.vault.data.account.AccountEntityMapper
 import com.lobstr.stellar.vault.data.account.AccountRepositoryImpl
 import com.lobstr.stellar.vault.data.error.ExceptionMapper
@@ -17,6 +18,7 @@ import com.lobstr.stellar.vault.data.net.FcmApi
 import com.lobstr.stellar.vault.data.net.TransactionApi
 import com.lobstr.stellar.vault.data.net.VaultAuthApi
 import com.lobstr.stellar.vault.data.stellar.StellarRepositoryImpl
+import com.lobstr.stellar.vault.data.stellar.SubmitTransactionMapper
 import com.lobstr.stellar.vault.data.tangem.TangemRepositoryImpl
 import com.lobstr.stellar.vault.data.transaction.TransactionEntityMapper
 import com.lobstr.stellar.vault.data.transaction.TransactionRepositoryImpl
@@ -53,6 +55,7 @@ object RepositoryModule {
         accountConverter: AccountConverter,
         network: Network,
         server: Server,
+        tsResultMapper: TsResultMapper,
         rxErrorUtils: RxErrorUtils
     ): StellarRepository {
         return StellarRepositoryImpl(
@@ -60,6 +63,7 @@ object RepositoryModule {
             network,
             server,
             MnemonicsMapper(),
+            SubmitTransactionMapper(tsResultMapper),
             rxErrorUtils
         )
     }

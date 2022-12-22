@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Transaction -->
+
+    <string name="tx_undefined">Undefined.</string>
+
+    <string name="tx_fee_bump_inner_success">Fee bump inner transaction succeeded.</string>
+    <string name="tx_success">All operations succeeded.</string>
+    <string name="tx_bad_seq">Sequence number does not match source account.</string>
+    <string name="tx_failed">One of the operations failed.</string>
+    <string name="tx_too_early">Ledger closeTime before minTime value in the transaction.</string>
+    <string name="tx_too_late">Ledger closeTime after maxTime value in the transaction.</string>
+    <string name="tx_missing_operation">No operation was specified.</string>
+    <string name="tx_bad_auth">Additional signatures are needed to authorize this transaction, please copy XDR and sign it.</string>
+    <string name="tx_insufficient_balance">The network transaction fee would bring your XLM balance below minimum reserve. Fund the account with extra XLM to complete the transaction.</string>
+    <string name="tx_no_account">Source account not found.</string>
+    <string name="tx_insufficient_fee">Fee is too small.</string>
+    <string name="tx_bad_auth_extra">Unused signatures attached to transaction.</string>
+    <string name="tx_internal_error">An unknown error occurred.</string>
+    <string name="tx_not_supported">Transaction type not supported.</string>
+    <string name="tx_bump_inner_failed">Fee bump inner transaction failed.</string>
+    <string name="tx_bad_sponsorship">Sponsorship not confirmed.</string>
+    <string name="tx_bad_min_sec_age_or_gap">minSeqAge or minSeqLedgerGap conditions not met.</string>
+    <string name="tx_malformed">Precondition is invalid.</string>
+
+    <!-- Operations -->
+
+    <string name="op_success">Success.</string>
+    <string name="op_undefined">Undefined.</string>
+
+    <!-- Common -->
+    <string name="op_inner">The inner object result is valid and the operation was a success.</string>
+    <string name="op_bad_auth">There are too few valid signatures, or the transaction was submitted to the wrong network.</string>
+    <string name="op_no_account">Source account was not found.</string>
+    <string name="op_not_supported">Operation not supported at this time.</string>
+    <string name="op_to_many_subentries">Max number of subentries (1000) already reached.</string>
+    <string name="op_exceed_work_limit">Operation did too much work.</string>
+    <string name="op_too_many_sponsoring">Account is sponsoring too many entries.</string>
+
+    <!-- Operations: https://developers.stellar.org/docs/start/list-of-operations-->
+
+    <!-- Manage Sell/buy offer, Create passive sell -->
+    <string name="manage_offer_malformed">The input is incorrect and would result in an invalid offer.</string>
+    <string name="manage_offer_sell_no_trust">The account creating the offer does not have a trustline for the asset it is selling.</string>
+    <string name="manage_offer_buy_no_trust">The account creating the offer does not have a trustline for the asset it is buying.</string>
+    <string name="manage_offer_sell_not_authorized">The account creating the offer is not authorized to sell this asset.</string>
+    <string name="manage_offer_buy_not_authorized">The account creating the offer is not authorized to buy this asset.</string>
+    <string name="manage_offer_line_full">The account creating the offer only trusts the issuer of buying asset to a certain credit limit. If this offer succeeded, the account would exceed its trust limit with the issuer.</string>
+    <string name="manage_offer_underfunded">The account does not have enough of selling asset to fund this offer.</string>
+    <string name="manage_offer_cross_self">The account has opposite offer of equal or lesser price active, so the account creating this offer would immediately cross itself.</string>
+    <string name="manage_offer_sell_no_issuer">The issuer of selling asset does not exist.</string>
+    <string name="manage_offer_buy_no_issuer">The issuer of buying asset does not exist.</string>
+    <string name="manage_offer_not_found">The offer could not be found.</string>
+    <string name="manage_offer_low_reserve">The account creating this offer does not have enough XLM. For every offer an account creates, the minimum amount of XLM that account must hold will increase.</string>
+
+    <!-- Set Options -->
+    <string name="set_options_low_reserve">This account does not have enough XLM to satisfy the minimum XLM reserve increase caused by adding a subentry and still satisfy its XLM selling liabilities. For every new signer added to an account, the minimum reserve of XLM that account must hold increases.</string>
+    <string name="set_options_too_many_signers">20 is the maximum number of signers an account can have, and adding another signer would exceed that.</string>
+    <string name="set_options_bad_flags">The flags set and/or cleared are invalid by themselves or in combination.</string>
+    <string name="set_options_invalid_inflation">The destination account set in the inflation field does not exist.</string>
+    <string name="set_options_cant_change">This account can no longer change the option it wants to change.</string>
+    <string name="set_options_unknown_flag">The account is trying to set a flag that is unknown.</string>
+    <string name="set_options_threshold_out_of_range">The value for a key weight or threshold is invalid.</string>
+    <string name="set_options_bad_signer">Any additional signers added to the account cannot be the master key.</string>
+    <string name="set_options_invalid_home_domain">Home domain is malformed.</string>
+    <string name="set_options_auth_revocable_required">Auth revocable is required for clawback</string>
+
+    <!-- Change Trust -->
+    <string name="change_trust_low_reserve">You don\'t have enough XLM available to perform this transaction.</string>
+    <string name="change_trust_malformed">The input to this operation is invalid.</string>
+    <string name="change_trust_no_issuer">The issuer of the asset cannot be found.</string>
+    <string name="change_trust_invalid_limit">The limit is not sufficient to hold the current balance of the trustline and still satisfy its buying liabilities.</string>
+    <string name="change_trust_self_not_allowed">The source account attempted to create a trustline for itself, which is not allowed.</string>
+    <string name="change_trust_cannot_delete">Asset trustline can\'t be removed. Stellar account provides liquidity into a pool that involves this asset.</string>
+    <string name="change_trust_trust_line_missing">The asset trustline is missing for the liquidity pool.</string>
+    <string name="change_trust_not_auth_maintain_liabilities">Asset trustline is deauthorized.</string>
+
+    <!-- Payment -->
+    <string name="payment_malformed">The input to the payment is invalid.</string>
+    <string name="payment_underfunded">The source account (sender) does not have enough funds to send amount and still satisfy its selling liabilities. Note that if sending XLM then the sender must additionally maintain its minimum XLM reserve.</string>
+    <string name="payment_src_no_trust">The source account does not trust the issuer of the asset it is trying to send.</string>
+    <string name="payment_src_not_authorized">The source account is not authorized to send this payment.</string>
+    <string name="payment_no_destination">The receiving account does not exist.</string>
+    <string name="payment_no_trust">The receiver does not trust the issuer of the asset being sent.</string>
+    <string name="payment_not_authorized">The destination account is not authorized by the asset\'s issuer to hold the asset.</string>
+    <string name="payment_line_full">The destination account (receiver) does not have sufficient limits to receive amount and still satisfy its buying liabilities.</string>
+    <string name="payment_no_issuer">The issuer of the asset does not exist.</string>
+
+    <!-- Path Payment Strict (common) -->
+    <string name="path_payment_strict_malformed">The input to this path payment is invalid.</string>
+    <string name="path_payment_strict_underfunded">The source account (sender) does not have enough funds to send amount and still satisfy its selling liabilities. Note that if sending XLM then the sender must additionally maintain its minimum XLM reserve.</string>
+    <string name="path_payment_strict_src_no_trust">The source account does not trust the issuer of the asset it is trying to send.</string>
+    <string name="path_payment_strict_src_not_authorized">The source account is not authorized to send this payment.</string>
+    <string name="path_payment_strict_no_destination">The receiving account does not exist.</string>
+    <string name="path_payment_strict_no_trust">The receiver does not trust the issuer of the asset being sent.</string>
+    <string name="path_payment_strict_not_authorized">The receiving account is not authorized by the asset\'s issuer to hold the asset.</string>
+    <string name="path_payment_strict_line_full">The receiving account does not have sufficient limits to receive amount and still satisfy its buying liabilities.</string>
+    <string name="path_payment_strict_no_issuer">The issuer of the asset does not exist.</string>
+    <string name="path_payment_strict_too_few_offers">There is no path of offers connecting the send asset and destination asset. Stellar only considers paths of length 5 or shorter.</string>
+    <string name="path_payment_strict_offer_cross_self">Couldn\'t complete the transaction. The payment or asset swap would cross one of your own trading offers.</string>
+
+    <!-- Path Payment Strict Receive -->
+    <string name="path_payment_strict_receive_over_sendmax">The paths that could send destination amount of destination asset would exceed send max.</string>
+
+    <!-- Path Payment Strict Send -->
+    <string name="path_payment_strict_send_under_destmin">The paths that could send destination amount of destination asset would fall short of destination min.</string>
+
+    <!-- Create Account -->
+    <string name="create_account_malformed">The destination is invalid.</string>
+    <string name="create_account_underfunded">The source account performing the command does not have enough funds to give destination the starting balance amount of XLM and still maintain its minimum XLM reserve plus satisfy its XLM selling liabilities.</string>
+    <string name="create_account_low_reserve">This operation would create an account with fewer than the minimum number of XLM an account must hold.</string>
+    <string name="create_account_already_exist">The destination account already exists.</string>
+
+    <!-- Allow Trust -->
+    <string name="allow_trust_malformed">The asset specified in type is invalid. In addition, this error happens when the native asset is specified.</string>
+    <string name="allow_trust_no_trust_line">The trustor does not have a trustline with the issuer performing this operation.</string>
+    <string name="allow_trust_trust_not_required">The source account (issuer performing this operation) does not require trust. In other words, it does not have the flag AUTH_REQUIRED_FLAG set.</string>
+    <string name="allow_trust_cant_revoke">The source account is trying to revoke the trustline of the trustor, but it cannot do so.</string>
+    <string name="allow_trust_self_not_allowed">The source account attempted to allow a trustline for itself, which is not allowed because an account cannot create a trustline with itself.</string>
+    <string name="allow_trust_low_reserve">Claimable balances can\'t be created on revocation of asset (or pool share) trustlines associated with a liquidity pool due to low reserves.</string>
+
+    <!-- Account Merge -->
+    <string name="account_merge_malformed">The operation is malformed because the source account cannot merge with itself. The destination must be a different account.</string>
+    <string name="account_merge_no_account">The destination account does not exist.</string>
+    <string name="account_merge_immutable_set">The source account has AUTH_IMMUTABLE flag set.</string>
+    <string name="account_merge_has_sub_entries">The source account has trust lines/offers.</string>
+    <string name="account_merge_seqnum_to_far">Source\'s account sequence number is too high. It must be less than (ledgerSeq &lt;&lt; 32) = (ledgerSeq * 0x100000000).</string>
+    <string name="account_merge_dest_full">The destination account cannot receive the balance of the source account and still satisfy its lumen buying liabilities.</string>
+    <string name="account_merge_is_sponsor">Can\'t merge account that is a sponsor.</string>
+
+    <!-- Manage Data -->
+    <string name="manage_data_not_supported_yet">The network hasn\'t moved to this protocol change yet. This failure means the network doesn\'t support this feature yet.</string>
+    <string name="manage_data_name_not_found">Trying to remove a Data Entry that isn\'t there. This will happen if Name is set (and Value isn\'t) but the Account doesn\'t have a DataEntry with that Name.</string>
+    <string name="manage_data_low_reserve">This account does not have enough XLM to satisfy the minimum XLM reserve increase caused by adding a subentry and still satisfy its XLM selling liabilities. For every new DataEntry added to an account, the minimum reserve of XLM that account must hold increases.</string>
+    <string name="manage_data_invalid_name">Name not a valid string.</string>
+
+    <!-- Claim Claimable Balance -->
+    <string name="claim_claimable_balance_does_not_exist">There is no existing ClaimableBalanceEntry that matches the input BalanceID.</string>
+    <string name="claim_claimable_balance_cannot_claim">There is no claimant that matches the source account, or the claimants predicate is not satisfied.</string>
+    <string name="claim_claimable_balance_line_full">The account claiming the ClaimableBalanceEntry does not have sufficient limits to receive amount of the asset and still satisfy its buying liabilities.</string>
+    <string name="claim_claimable_balance_no_trust">The source account does not trust the issuer of the asset it is trying to claim in the ClaimableBalanceEntry.</string>
+    <string name="claim_claimable_balance_not_authorized">The source account is not authorized to claim the asset in the ClaimableBalanceEntry.</string>
+
+    <!-- Create Claimable Balance -->
+    <string name="create_claimable_balance_malformed">The input to this operation is invalid.</string>
+    <string name="create_claimable_balance_low_reserve">The account creating this entry does not have enough XLM to satisfy the minimum XLM reserve increase caused by adding a ClaimableBalanceEntry. For every claimant in the list, the minimum amount of XLM this account must hold will increase by baseReserve.</string>
+    <string name="create_claimable_balance_no_trust">The source account does not trust the issuer of the asset it is trying to include in the ClaimableBalanceEntry.</string>
+    <string name="create_claimable_balance_not_authorized">The source account is not authorized to transfer this asset.</string>
+    <string name="create_claimable_balance_underfunded">The source account does not have enough funds to transfer amount of this asset to the ClaimableBalanceEntry.</string>
+
+    <!-- Inflation -->
+    <string name="inflation_not_time">Codes considered as \'failure\' for the operation.</string>
+
+    <!-- Bump Sequence -->
+    <string name="bump_sequnce_bad_seq">The specified bumpTo sequence number is not a valid sequence number. It must be between 0 and INT64_MAX (9223372036854775807 or 0x7fffffffffffffff).</string>
+
+    <!-- Begin Sponsoring Future Reserves -->
+    <string name="begin_sponsoring_future_reserves_malformed">Source account is equal to sponsoredID.</string>
+    <string name="begin_sponsoring_future_reserves_already_sponsored">Source account is already sponsoring sponsoredID.</string>
+    <string name="begin_sponsoring_future_reserves_recursive">Either source account is currently being sponsored, or sponsoredID is sponsoring another account.</string>
+
+    <!-- End Sponsoring Future Reserves -->
+    <string name="end_sponsoring_future_reserves_not_sponsored">Source account is not sponsored.</string>
+
+    <!-- Revoke Sponsorship -->
+    <string name="revoke_sponsorship_does_not_exist">The ledgerEntry for LedgerKey doesn\'t exist, the account ID on signer doesn\'t exist, or the Signer Key doesn\'t exist on account ID\'s account.</string>
+    <string name="revoke_sponsorship_not_sponsor">If the ledgerEntry/signer is sponsored, then the source account must be the sponsor. If the ledgerEntry/signer is not sponsored, the source account must be the owner. This error will be thrown otherwise.</string>
+    <string name="revoke_sponsorship_low_reserve">The sponsored account does not have enough XLM to satisfy the minimum balance increase caused by revoking sponsorship on a ledgerEntry/signer it owns, or the sponsor of the source account doesn\'t have enough XLM to satisfy the minimum balance increase caused by sponsoring a transferred ledgerEntry/signer.</string>
+    <string name="revoke_sponsorship_only_transferable">Sponsorship cannot be removed from this ledgerEntry. This error will happen if the user tries to remove the sponsorship from a ClaimableBalanceEntry.</string>
+    <string name="revoke_sponsorship_malformed">One or more of the inputs to the operation was malformed.</string>
+
+    <!-- Clawback -->
+    <string name="clawback_malformed">The input to the clawback is invalid.</string>
+    <string name="clawback_not_clawback_enabled">The trustline between From and the issuer account for this Asset does not have clawback enabled.</string>
+    <string name="clawback_no_trust">The From account does not trust the issuer of the asset.</string>
+    <string name="clawback_underfunded">The From account does not have a sufficient available balance of the asset (after accounting for selling liabilities).</string>
+
+    <!-- Clawback Claimable Balance -->
+    <string name="clawback_claimable_balance_does_not_exist">There is no existing ClaimableBalanceEntry that matches the input BalanceID.</string>
+    <string name="clawback_claimable_balance_not_issuer">The source account is not the issuer of the asset in the claimable balance.</string>
+    <string name="clawback_claimable_balance_not_clawback_enabled">The CLAIMABLE_BALANCE_CLAWBACK_ENABLED_FLAG is not set for this trustline.</string>
+
+    <!-- Set Trust Line Flags -->
+    <string name="set_trust_line_flags_malformed">This can happen for a number of reasons: the asset specified by AssetCode and AssetIssuer is invalid; the asset issuer isn\'t the source account; the Trustor is the source account; the native asset is specified; or the flags being set/cleared conflict or are otherwise invalid.</string>
+    <string name="set_trust_line_flags_no_trust_line">The Trustor does not have a trustline with the issuer performing this operation.</string>
+    <string name="set_trust_line_flags_cant_revoke">The issuer is trying to revoke the trustline authorization of Trustor, but it cannot do so because AUTH_REVOCABLE_FLAG is not set on the account.</string>
+    <string name="set_trust_line_flags_invalid_state">If the final state of the trustline has both AUTHORIZED_FLAG (1) and AUTHORIZED_TO_MAINTAIN_LIABILITIES_FLAG (2) set, which are mutually exclusive.</string>
+    <string name="set_trust_line_flags_low_reserve">Claimable balances can\'t be created on revocation of asset (or pool share) trustlines associated with a liquidity pool due to low reserves.</string>
+
+    <!-- Liquidity Pool Deposit -->
+    <string name="liquidity_pool_deposit_malformed">One or more of the inputs to the operation was malformed.</string>
+    <string name="liquidity_pool_deposit_no_trust">No trustline exists for one of the assets being deposited.</string>
+    <string name="liquidity_pool_deposit_not_authorized">The account does not have authorization for one of the assets.</string>
+    <string name="liquidity_pool_deposit_underfunded">There is not enough balance of one of the assets to perform the deposit.</string>
+    <string name="liquidity_pool_deposit_line_full">The pool share trustline does not have a sufficient limit.</string>
+    <string name="liquidity_pool_deposit_bad_price">The deposit price is outside of the given bounds.</string>
+    <string name="liquidity_pool_deposit_pool_full">The liquidity pool reserves are full.</string>
+
+    <!-- Liquidity Pool Withdraw  -->
+    <string name="liquidity_pool_withdraw_malformed">One or more of the inputs to the operation was malformed.</string>
+    <string name="liquidity_pool_withdraw_no_trust">There is no trustline for one of the assets.</string>
+    <string name="liquidity_pool_withdraw_underfunded">Insufficient balance for the pool shares.</string>
+    <string name="liquidity_pool_withdraw_line_full">The withdrawal would exceed the trustline limit for one of the assets.</string>
+    <string name="liquidity_pool_withdraw_under_minimum">Unable to withdraw enough to satisfy the minimum price.</string>
+
+</resources>

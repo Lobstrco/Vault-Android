@@ -69,12 +69,14 @@ class AccountNameDialogFragment : AlertDialogFragment(), AccountNameView,
     }
 
     private fun setListeners() {
-        binding.btnSave.setSafeOnClickListener {
-            AppUtil.closeKeyboard(activity)
-            mPresenter.saveClicked(binding.edtAccountName.text.toString().trim())
+        binding.apply {
+            btnSave.setSafeOnClickListener {
+                AppUtil.closeKeyboard(activity)
+                mPresenter.saveClicked(edtAccountName.text.toString().trim())
+            }
+            btnCancel.setSafeOnClickListener { mPresenter.cancelClicked() }
+            edtAccountName.setOnEditorActionListener(this@AccountNameDialogFragment)
         }
-        binding.btnCancel.setSafeOnClickListener { mPresenter.cancelClicked() }
-        binding.edtAccountName.setOnEditorActionListener(this)
     }
 
     override fun onDestroyView() {

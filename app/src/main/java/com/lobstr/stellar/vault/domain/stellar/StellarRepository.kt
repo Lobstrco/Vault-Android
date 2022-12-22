@@ -3,13 +3,13 @@ package com.lobstr.stellar.vault.domain.stellar
 import com.lobstr.stellar.vault.presentation.entities.account.Account
 import com.lobstr.stellar.vault.presentation.entities.account.AccountResult
 import com.lobstr.stellar.vault.presentation.entities.mnemonic.MnemonicItem
+import com.lobstr.stellar.vault.presentation.entities.stellar.SubmitTransactionResult
 import com.tangem.commands.SignResponse
 import io.reactivex.rxjava3.core.Single
 import org.stellar.sdk.AbstractTransaction
 import org.stellar.sdk.KeyPair
 import org.stellar.sdk.Sep10Challenge
 import org.stellar.sdk.requests.RequestBuilder
-import org.stellar.sdk.responses.SubmitTransactionResponse
 
 interface StellarRepository {
 
@@ -20,7 +20,7 @@ interface StellarRepository {
     fun submitTransaction(
         transaction: AbstractTransaction,
         skipMemoRequiredCheck: Boolean = true
-    ): Single<SubmitTransactionResponse>
+    ): Single<SubmitTransactionResult>
 
     fun signTransaction(signer: KeyPair, envelopXdr: String): Single<AbstractTransaction>
 

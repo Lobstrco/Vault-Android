@@ -18,39 +18,41 @@ class AccountExtendedViewHolder(
 ) : RecyclerView.ViewHolder(binding.root) {
 
     fun bind(account: Account) {
-        // Set user icon.
-        Glide.with(itemView.context)
-            .load(AppUtil.createUserIconLink(account.address))
-            .placeholder(R.drawable.ic_person)
-            .into(binding.ivIdentity)
+        binding.apply {
+            // Set user icon.
+            Glide.with(itemView.context)
+                .load(AppUtil.createUserIconLink(account.address))
+                .placeholder(R.drawable.ic_person)
+                .into(ivIdentity)
 
-        binding.tvAccountNameBottom.isVisible = !(account.federation.isNullOrEmpty() && account.name.isNullOrEmpty())
+            tvAccountNameBottom.isVisible = !(account.federation.isNullOrEmpty() && account.name.isNullOrEmpty())
 
-        binding.tvAccountNameBottom.text = when {
-            !account.federation.isNullOrEmpty() || !account.name.isNullOrEmpty() -> AppUtil.ellipsizeStrInMiddle(
-                account.address,
-                PK_TRUNCATE_COUNT
-            )
-            else -> null
-        }
-
-        binding.tvAccountNameTop.ellipsize =
-            if (account.federation.isNullOrEmpty() && account.name.isNullOrEmpty()) {
-                TextUtils.TruncateAt.MIDDLE
-            } else {
-                TextUtils.TruncateAt.END
+            tvAccountNameBottom.text = when {
+                !account.federation.isNullOrEmpty() || !account.name.isNullOrEmpty() -> AppUtil.ellipsizeStrInMiddle(
+                    account.address,
+                    PK_TRUNCATE_COUNT
+                )
+                else -> null
             }
 
-        binding.tvAccountNameTop.text =
-            if (account.federation.isNullOrEmpty() && account.name.isNullOrEmpty()) {
-                AppUtil.ellipsizeStrInMiddle(account.address, PK_TRUNCATE_COUNT)
-            } else {
-                if(!account.name.isNullOrEmpty()){
-                    account.name
+            tvAccountNameTop.ellipsize =
+                if (account.federation.isNullOrEmpty() && account.name.isNullOrEmpty()) {
+                    TextUtils.TruncateAt.MIDDLE
                 } else {
-                    account.federation
+                    TextUtils.TruncateAt.END
                 }
-            }
+
+            tvAccountNameTop.text =
+                if (account.federation.isNullOrEmpty() && account.name.isNullOrEmpty()) {
+                    AppUtil.ellipsizeStrInMiddle(account.address, PK_TRUNCATE_COUNT)
+                } else {
+                    if(!account.name.isNullOrEmpty()){
+                        account.name
+                    } else {
+                        account.federation
+                    }
+                }
+        }
 
         itemView.setSafeOnClickListener {
             val position = this@AccountExtendedViewHolder.bindingAdapterPosition

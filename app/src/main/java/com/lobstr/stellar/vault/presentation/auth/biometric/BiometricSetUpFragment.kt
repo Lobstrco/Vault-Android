@@ -92,8 +92,10 @@ class BiometricSetUpFragment : BaseFragment(), BiometricSetUpView, BiometricList
         backPressedCallback = requireActivity().onBackPressedDispatcher.addCallback(requireActivity()) {
             mPresenter.onBackPressed()
         }
-        binding.btnTurOn.setSafeOnClickListener { mPresenter.turnOnClicked() }
-        binding.btnSkip.setSafeOnClickListener { mPresenter.skipClicked() }
+        binding.apply {
+            btnTurOn.setSafeOnClickListener { mPresenter.turnOnClicked() }
+            btnSkip.setSafeOnClickListener { mPresenter.skipClicked() }
+        }
     }
 
     override fun onDestroyView() {
@@ -140,9 +142,9 @@ class BiometricSetUpFragment : BaseFragment(), BiometricSetUpView, BiometricList
     }
 
     override fun showVaultAuthScreen() {
-        val intent = Intent(activity, VaultAuthActivity::class.java)
-        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-        startActivity(intent)
+        startActivity(Intent(activity, VaultAuthActivity::class.java).apply {
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        })
     }
 
     override fun finishScreen() {
@@ -150,10 +152,10 @@ class BiometricSetUpFragment : BaseFragment(), BiometricSetUpView, BiometricList
     }
 
     override fun finishApp() {
-        val intent = Intent(Intent.ACTION_MAIN)
-        intent.addCategory(Intent.CATEGORY_HOME)
-        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-        startActivity(intent)
+        startActivity(Intent(Intent.ACTION_MAIN).apply {
+            addCategory(Intent.CATEGORY_HOME)
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK
+        })
     }
 
     // Biometric.

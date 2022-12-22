@@ -30,6 +30,7 @@ import com.lobstr.stellar.vault.presentation.dialog.alert.base.AlertDialogFragme
 import com.lobstr.stellar.vault.presentation.dialog.alert.base.AlertDialogFragment.DialogFragmentIdentifier.DENY_TRANSACTION
 import com.lobstr.stellar.vault.presentation.dialog.alert.base.AlertDialogFragment.DialogFragmentIdentifier.SEQUENCE_NUMBER_WARNING
 import com.lobstr.stellar.vault.presentation.entities.account.Account
+import com.lobstr.stellar.vault.presentation.entities.error.Error
 import com.lobstr.stellar.vault.presentation.entities.tangem.TangemInfo
 import com.lobstr.stellar.vault.presentation.entities.transaction.TransactionItem
 import com.lobstr.stellar.vault.presentation.home.settings.signed_accounts.adapter.AccountAdapter
@@ -390,7 +391,7 @@ class TransactionDetailsFragment : BaseFragment(), TransactionDetailsView,
         )
     }
 
-    override fun errorConfirmTransaction(errorMessage: String, envelopeXdr: String) {
+    override fun errorConfirmTransaction(error: Error) {
         // Notify target about changes.
         activity?.setResult(Activity.RESULT_OK)
         setFragmentResult(Constant.RequestKey.TRANSACTION_DETAILS_FRAGMENT, Bundle.EMPTY)
@@ -399,18 +400,14 @@ class TransactionDetailsFragment : BaseFragment(), TransactionDetailsView,
         parentFragment?.childFragmentManager?.popBackStack()
 
         // Show error screen.
-        val bundle = Bundle()
-        bundle.putString(Constant.Bundle.BUNDLE_ERROR_MESSAGE, errorMessage)
-        bundle.putString(Constant.Bundle.BUNDLE_ENVELOPE_XDR, envelopeXdr)
-        val fragment = requireParentFragment().childFragmentManager.fragmentFactory.instantiate(
-            requireContext().classLoader,
-            ErrorFragment::class.qualifiedName!!
-        )
-        fragment.arguments = bundle
-
         FragmentTransactionManager.displayFragment(
             requireParentFragment().childFragmentManager,
-            fragment,
+            requireParentFragment().childFragmentManager.fragmentFactory.instantiate(
+                requireContext().classLoader,
+                ErrorFragment::class.qualifiedName!!
+            ).apply {
+                arguments = bundleOf(Constant.Bundle.BUNDLE_ERROR to error)
+            },
             R.id.flContainer
         )
     }

@@ -4,6 +4,7 @@ import androidx.annotation.StringRes
 import com.lobstr.stellar.tsmapper.presentation.entities.transaction.operation.Operation
 import com.lobstr.stellar.tsmapper.presentation.entities.transaction.operation.OperationField
 import com.lobstr.stellar.vault.presentation.entities.account.Account
+import com.lobstr.stellar.vault.presentation.entities.error.Error
 import com.lobstr.stellar.vault.presentation.entities.tangem.TangemInfo
 import com.lobstr.stellar.vault.presentation.entities.transaction.TransactionItem
 import moxy.MvpView
@@ -77,7 +78,7 @@ interface TransactionDetailsView : MvpView {
     )
 
     @AddToEndSingle
-    fun errorConfirmTransaction(errorMessage: String, envelopeXdr: String)
+    fun errorConfirmTransaction(error: Error)
 
     @AddToEndSingle
     fun setupTransactionInfo(fields: List<OperationField>)

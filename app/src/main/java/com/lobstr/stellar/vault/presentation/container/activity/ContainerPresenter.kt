@@ -1,6 +1,7 @@
 package com.lobstr.stellar.vault.presentation.container.activity
 
 import com.lobstr.stellar.vault.R
+import com.lobstr.stellar.vault.presentation.entities.error.Error
 import com.lobstr.stellar.vault.presentation.entities.transaction.TransactionItem
 import com.lobstr.stellar.vault.presentation.util.Constant
 import com.lobstr.stellar.vault.presentation.util.Constant.Navigation.CONFIG
@@ -14,7 +15,7 @@ class ContainerPresenter(
     private val transactionItem: TransactionItem?,
     private val envelopeXdr: String?,
     private val transactionConfirmationSuccessStatus: Byte?,
-    private val errorMessage: String?,
+    private val error: Error?,
     private val config: Int
 ) : MvpPresenter<ContainerView>() {
 
@@ -51,7 +52,7 @@ class ContainerPresenter(
                         )
                     )
                 }
-                ERROR -> add(Pair(Constant.Bundle.BUNDLE_ERROR_MESSAGE, errorMessage))
+                ERROR -> add(Pair(Constant.Bundle.BUNDLE_ERROR, error))
                 CONFIG -> add(Pair(Constant.Bundle.BUNDLE_CONFIG, config))
             }
         }.toTypedArray()

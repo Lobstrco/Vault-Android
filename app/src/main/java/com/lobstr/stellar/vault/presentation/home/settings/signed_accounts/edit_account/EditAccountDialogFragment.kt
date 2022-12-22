@@ -72,10 +72,12 @@ class EditAccountDialogFragment : BaseBottomSheetDialog(), EditAccountView {
     }
 
     private fun setListeners() {
-        binding.btnCopyPublicKey.setSafeOnClickListener { mPresenter.copyPublicKeyClicked() }
-        binding.btnOpenExplorer.setSafeOnClickListener { mPresenter.openExplorerClicked() }
-        binding.btnSetNickName.setSafeOnClickListener { mPresenter.setNickNameClicked() }
-        binding.btnClearNickName.setSafeOnClickListener { mPresenter.clearNickNameClicked() }
+        binding.apply {
+            btnCopyPublicKey.setSafeOnClickListener { mPresenter.copyPublicKeyClicked() }
+            btnOpenExplorer.setSafeOnClickListener { mPresenter.openExplorerClicked() }
+            btnSetNickName.setSafeOnClickListener { mPresenter.setNickNameClicked() }
+            btnClearNickName.setSafeOnClickListener { mPresenter.clearNickNameClicked() }
+        }
     }
 
     override fun onDestroyView() {
@@ -88,8 +90,10 @@ class EditAccountDialogFragment : BaseBottomSheetDialog(), EditAccountView {
     // ===========================================================
 
     override fun setAccountActionButton(text: String?) {
-        binding.btnSetNickName.text = text
-        binding.btnSetNickName.isVisible = !text.isNullOrEmpty()
+        binding.apply {
+            btnSetNickName.text = text
+            btnSetNickName.isVisible = !text.isNullOrEmpty()
+        }
     }
 
     override fun showClearAccountButton(show: Boolean) {

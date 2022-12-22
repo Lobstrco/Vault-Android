@@ -2,7 +2,14 @@ package com.lobstr.stellar.vault.presentation.home.transactions.details
 
 import android.text.format.DateFormat
 import com.lobstr.stellar.tsmapper.presentation.entities.transaction.operation.OperationField
+import com.lobstr.stellar.tsmapper.presentation.entities.transaction.result.TxResultCode.Code.TX_BAD_AUTH
+import com.lobstr.stellar.tsmapper.presentation.entities.transaction.result.TxResultCode.Code.TX_FAILED
+import com.lobstr.stellar.tsmapper.presentation.entities.transaction.result.TxResultCode.Code.TX_FEE_BUMP_INNER_SUCCESS
+import com.lobstr.stellar.tsmapper.presentation.entities.transaction.result.TxResultCode.Code.TX_SUCCESS
+import com.lobstr.stellar.tsmapper.presentation.entities.transaction.result.operation.OpResultCode.Code.OP_INNER
+import com.lobstr.stellar.tsmapper.presentation.entities.transaction.result.operation.OpResultCode.Code.OP_SUCCESS
 import com.lobstr.stellar.tsmapper.presentation.util.Constant.TransactionType.AUTH_CHALLENGE
+import com.lobstr.stellar.tsmapper.presentation.util.Constant.Util.UNDEFINED_VALUE
 import com.lobstr.stellar.tsmapper.presentation.util.TsUtil
 import com.lobstr.stellar.vault.R
 import com.lobstr.stellar.vault.data.error.exeption.*
@@ -18,6 +25,7 @@ import com.lobstr.stellar.vault.presentation.dialog.alert.base.AlertDialogFragme
 import com.lobstr.stellar.vault.presentation.dialog.alert.base.AlertDialogFragment.DialogFragmentIdentifier.SEQUENCE_NUMBER_WARNING
 import com.lobstr.stellar.vault.presentation.entities.account.Account
 import com.lobstr.stellar.vault.presentation.entities.account.AccountResult
+import com.lobstr.stellar.vault.presentation.entities.error.Error
 import com.lobstr.stellar.vault.presentation.entities.tangem.TangemInfo
 import com.lobstr.stellar.vault.presentation.entities.transaction.TransactionItem
 import com.lobstr.stellar.vault.presentation.util.AppUtil
@@ -315,7 +323,7 @@ class TransactionDetailsPresenter @Inject constructor(
                     for (operation in transactionItem.transaction.operations) {
                         val resId: Int =
                             TsUtil.getTransactionOperationName(operation)
-                        if (resId != -1) {
+                        if (resId != UNDEFINED_VALUE) {
                             add(resId)
                         }
                     }
@@ -644,33 +652,30 @@ class TransactionDetailsPresenter @Inject constructor(
                             needAdditionalSignatures = false
                             interactor.confirmTransactionOnHorizon(transaction)
                                 .flatMap { submitTransactionResponse ->
-                                    val envelopXdr = submitTransactionResponse.envelopeXdr.get()
-                                    val extras = submitTransactionResponse.extras
-
-                                    val transactionResultCode =
-                                        extras?.resultCodes?.transactionResultCode
-                                    val operationResultCodes =
-                                        extras?.resultCodes?.operationsResultCodes
-
-                                    val errorToShow = when (transactionResultCode == "tx_failed") {
-                                        true -> {
-                                            // tx_failed - one of the operations failed (none were applied). Show first error and exclude op_success.
-                                            operationResultCodes?.firstOrNull { code -> code != "op_success" } ?: transactionResultCode
+                                    when (submitTransactionResponse.tsResult.txResultCode.code) {
+                                        TX_SUCCESS, TX_FEE_BUMP_INNER_SUCCESS -> {
+                                            // Success status. Proceed default behavior.
                                         }
-                                        else -> transactionResultCode
-                                    }
-
-                                    when {
-                                        envelopXdr == null -> throw HorizonException(
-                                            errorToShow!!,
-                                            transaction.toEnvelopeXdrBase64()
-                                        )
-                                        transactionResultCode != null && transactionResultCode != "tx_bad_auth" -> throw HorizonException(
-                                            errorToShow!!,
-                                            transaction.toEnvelopeXdrBase64()
-                                        )
-                                        transactionResultCode != null && transactionResultCode == "tx_bad_auth" -> needAdditionalSignatures =
-                                            true
+                                        TX_BAD_AUTH -> needAdditionalSignatures = true
+                                        TX_FAILED -> {
+                                            // One of the operations failed (none were applied). Try to take the first readable error.
+                                            val opResultCodes = submitTransactionResponse.tsResult.opResultCodes
+                                            val firstOpResultCode = opResultCodes.firstOrNull { resCode ->
+                                                (resCode.code != OP_SUCCESS && resCode.code != OP_INNER)
+                                            }
+                                            throw HorizonException(
+                                                details = firstOpResultCode?.message ?: submitTransactionResponse.tsResult.txResultCode.message,
+                                                shortDetails = firstOpResultCode?.let { code -> AppUtil.createOpResultShortDescription(code, opResultCodes.indexOf(code) + 1, opResultCodes.size) },
+                                                xdr = transaction.toEnvelopeXdrBase64()
+                                            )
+                                        }
+                                        else -> {
+                                            // Error.
+                                            throw HorizonException(
+                                                details = submitTransactionResponse.tsResult.txResultCode.message,
+                                                xdr = transaction.toEnvelopeXdrBase64()
+                                            )
+                                        }
                                     }
 
                                     hash = submitTransactionResponse.hash
@@ -721,7 +726,7 @@ class TransactionDetailsPresenter @Inject constructor(
                 }, {
                     when (it) {
                         is HorizonException -> {
-                            viewState.errorConfirmTransaction(it.details, it.xdr)
+                            viewState.errorConfirmTransaction(Error(it.details, it.shortDetails, it.xdr))
                         }
                         is UserNotAuthorizedException -> {
                             when (it.action) {

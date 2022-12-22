@@ -99,17 +99,19 @@ class SignedAccountsFragment : BaseFragment(), SignedAccountsView, EditAccountDi
     }
 
     override fun initRecycledView() {
-        binding.rvSignedAccounts.layoutManager = LinearLayoutManager(activity)
-        binding.rvSignedAccounts.itemAnimator = null
-        binding.rvSignedAccounts.addItemDecoration(
-            CustomDividerItemDecoration(
-                ContextCompat.getDrawable(requireContext(), R.drawable.divider_left_offset)!!.apply {
-                    alpha = 51 // Alpha 0.2.
-                })
-        )
-        binding.rvSignedAccounts.adapter = AccountAdapter(ACCOUNT_EXTENDED,
-            { mPresenter.signedAccountItemClicked(it) },
-            { mPresenter.signedAccountItemLongClicked(it) })
+        binding.apply {
+            rvSignedAccounts.layoutManager = LinearLayoutManager(activity)
+            rvSignedAccounts.itemAnimator = null
+            rvSignedAccounts.addItemDecoration(
+                CustomDividerItemDecoration(
+                    ContextCompat.getDrawable(requireContext(), R.drawable.divider_left_offset)!!.apply {
+                        alpha = 51 // Alpha 0.2.
+                    })
+            )
+            rvSignedAccounts.adapter = AccountAdapter(ACCOUNT_EXTENDED,
+                { mPresenter.signedAccountItemClicked(it) },
+                { mPresenter.signedAccountItemLongClicked(it) })
+        }
     }
 
     override fun showProgress(show: Boolean) {

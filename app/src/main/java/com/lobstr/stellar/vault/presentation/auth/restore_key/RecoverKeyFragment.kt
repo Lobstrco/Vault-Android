@@ -3,9 +3,7 @@ package com.lobstr.stellar.vault.presentation.auth.restore_key
 import android.content.Intent
 import android.os.Bundle
 import android.text.InputType
-import android.text.Spannable
 import android.text.TextWatcher
-import android.text.style.ForegroundColorSpan
 import android.view.*
 import android.view.inputmethod.EditorInfo
 import android.widget.Toast
@@ -20,6 +18,7 @@ import com.lobstr.stellar.vault.presentation.base.fragment.BaseFragment
 import com.lobstr.stellar.vault.presentation.pin.PinActivity
 import com.lobstr.stellar.vault.presentation.util.AppUtil
 import com.lobstr.stellar.vault.presentation.util.Constant
+import com.lobstr.stellar.vault.presentation.util.applyColor
 import com.lobstr.stellar.vault.presentation.util.manager.ProgressManager
 import com.lobstr.stellar.vault.presentation.util.manager.SupportManager
 import com.lobstr.stellar.vault.presentation.util.setSafeOnClickListener
@@ -76,8 +75,10 @@ class RecoverKeyFragment : BaseFragment(), RecoverKeyFrView {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         addMenuProvider()
-        binding.etRecoveryPhrase.imeOptions = EditorInfo.IME_ACTION_DONE
-        binding.etRecoveryPhrase.setRawInputType(InputType.TYPE_CLASS_TEXT)
+        binding.apply {
+            etRecoveryPhrase.imeOptions = EditorInfo.IME_ACTION_DONE
+            etRecoveryPhrase.setRawInputType(InputType.TYPE_CLASS_TEXT)
+        }
     }
 
     private fun addMenuProvider() {
@@ -108,10 +109,12 @@ class RecoverKeyFragment : BaseFragment(), RecoverKeyFrView {
     }
 
     private fun setListeners() {
-        mTextWatcher = binding.etRecoveryPhrase.doAfterTextChanged {
-            mPresenter.phrasesChanged(it.toString())
+        binding.apply {
+            mTextWatcher = etRecoveryPhrase.doAfterTextChanged {
+                mPresenter.phrasesChanged(it.toString())
+            }
+            btnRecoverKey.setSafeOnClickListener { mPresenter.btnRecoverClicked() }
         }
-        binding.btnRecoverKey.setSafeOnClickListener { mPresenter.btnRecoverClicked() }
     }
 
     override fun onPause() {
@@ -131,27 +134,17 @@ class RecoverKeyFragment : BaseFragment(), RecoverKeyFrView {
 
     override fun showInputErrorIfNeeded(recoveryPhrasesInfo: List<RecoveryPhraseInfo>, phrases: String) {
         for (phrasesInfo in recoveryPhrasesInfo) {
-            val color = if (phrasesInfo.incorrect) {
-                ForegroundColorSpan(ContextCompat.getColor(requireContext(), android.R.color.holo_red_light))
-            } else {
-                ForegroundColorSpan(ContextCompat.getColor(requireContext(), android.R.color.black))
-            }
-
-            binding.etRecoveryPhrase.text.setSpan(
-                color,
+            binding.etRecoveryPhrase.text.applyColor(
+                ContextCompat.getColor(requireContext(),
+                    if (phrasesInfo.incorrect) android.R.color.holo_red_light else android.R.color.black),
                 phrasesInfo.startPosition,
-                phrasesInfo.startPosition + phrasesInfo.length,
-                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+                phrasesInfo.startPosition + phrasesInfo.length
             )
         }
     }
 
     override fun changeTextBackground(isError: Boolean) {
-        if (isError) {
-            binding.etRecoveryPhrase.setBackgroundResource(R.drawable.bg_mnemonics_error)
-        } else {
-            binding.etRecoveryPhrase.setBackgroundResource(R.drawable.bg_mnemonics)
-        }
+        binding.etRecoveryPhrase.setBackgroundResource(if (isError) R.drawable.bg_mnemonics_error else R.drawable.bg_mnemonics)
     }
 
     override fun enableNextButton(enable: Boolean) {

@@ -30,6 +30,9 @@ import com.google.gson.Gson
 import com.google.gson.JsonIOException
 import com.google.gson.JsonSyntaxException
 import com.google.gson.internal.Primitives
+import com.lobstr.stellar.tsmapper.presentation.entities.transaction.result.operation.OpResultCode
+import com.lobstr.stellar.tsmapper.presentation.util.Constant.Util.UNDEFINED_VALUE
+import com.lobstr.stellar.tsmapper.presentation.util.TsUtil
 import com.lobstr.stellar.vault.BuildConfig
 import com.lobstr.stellar.vault.R
 import com.lobstr.stellar.vault.presentation.application.LVApplication
@@ -340,6 +343,28 @@ object AppUtil {
         return when (encodeMuxedAccount(account)?.discriminant) {
             CryptoKeyType.KEY_TYPE_ED25519 -> true
             else -> false
+        }
+    }
+
+    /**
+     * Create Operation Result short description.
+     * @param opResultCode Operation Result Code.
+     * @param opOrder Operation Result Code order in the list + 1.
+     * @param opSize Operation Result Code list size.
+     */
+    fun createOpResultShortDescription(
+        opResultCode: OpResultCode,
+        opOrder: Int,
+        opSize: Int,
+    ): String {
+        return TsUtil.getTransactionOperationName(opResultCode).run {
+            getString(if (this == UNDEFINED_VALUE) R.string.text_operation_name_unknown else this)
+        }.run {
+            if (opSize > 1) {
+                getString(R.string.text_tv_error_short_description_with_number, this, opOrder)
+            } else {
+                getString(R.string.text_tv_error_short_description, this)
+            }
         }
     }
 }

@@ -14,9 +14,11 @@
     <string name="text_operation_name_create_account">Create Account</string>
     <string name="text_operation_name_path_payment_strict_send">Path Payment Strict Send</string>
     <string name="text_operation_name_path_payment_strict_receive">Path Payment Strict Receive</string>
+    <string name="text_operation_name_manage_sell_offer">Manage Sell Offer</string>
+    <string name="text_operation_name_manage_buy_offer">Manage Buy Offer</string>
     <string name="text_operation_name_sell_offer">Sell Offer</string>
     <string name="text_operation_name_cancel_offer">Cancel Offer</string>
-    <string name="text_operation_name_manage_buy_offer">Buy Offer</string>
+    <string name="text_operation_name_buy_offer">Buy Offer</string>
     <string name="text_operation_name_create_passive_sell_offer">Create Passive Offer</string>
     <string name="text_operation_name_set_options">Set Options</string>
     <string name="text_operation_name_change_trust">Change Trust</string>
@@ -28,6 +30,7 @@
     <string name="text_operation_name_several_operation">%d Operations</string>
     <string name="text_operation_name_begin_sponsoring_future_reserves">Begin Sponsoring Future Reserves</string>
     <string name="text_operation_name_end_sponsoring_future_reserves">End Sponsoring Future Reserves</string>
+    <string name="text_operation_name_revoke_sponsorship">Revoke Sponsorship</string>
     <string name="text_operation_name_revoke_account_sponsorship">Revoke Account Sponsorship</string>
     <string name="text_operation_name_revoke_claimable_balance_sponsorship">Revoke Claimable Balance Sponsorship</string>
     <string name="text_operation_name_revoke_data_sponsorship">Revoke Data Sponsorship</string>

@@ -1,7 +1,7 @@
 package com.lobstr.stellar.vault.presentation.pin
 
-import android.os.Bundle
 import android.view.View
+import androidx.core.os.bundleOf
 import com.lobstr.stellar.vault.R
 import com.lobstr.stellar.vault.databinding.ActivityPinBinding
 import com.lobstr.stellar.vault.presentation.base.activity.BaseActivity
@@ -49,17 +49,14 @@ class PinActivity : BaseActivity(), PinView {
     // ===========================================================
 
     override fun showPinFr(pinMode: Byte) {
-        val bundle = Bundle()
-        bundle.putByte(Constant.Bundle.BUNDLE_PIN_MODE, pinMode)
-        val fragment = supportFragmentManager.fragmentFactory.instantiate(
-            this.classLoader,
-            PinFragment::class.qualifiedName!!
-        )
-        fragment.arguments = bundle
-
         FragmentTransactionManager.displayFragment(
             supportFragmentManager,
-            fragment,
+            supportFragmentManager.fragmentFactory.instantiate(
+                this.classLoader,
+                PinFragment::class.qualifiedName!!
+            ).apply {
+                arguments = bundleOf(Constant.Bundle.BUNDLE_PIN_MODE to pinMode)
+            },
             R.id.flContainer,
             false
         )

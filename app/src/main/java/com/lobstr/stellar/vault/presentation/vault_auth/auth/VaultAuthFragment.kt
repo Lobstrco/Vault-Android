@@ -7,8 +7,9 @@ import android.view.*
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.addCallback
-import androidx.core.view.isInvisible
+import androidx.core.os.bundleOf
 import androidx.core.view.MenuProvider
+import androidx.core.view.isInvisible
 import androidx.core.view.isVisible
 import com.bumptech.glide.Glide
 import com.lobstr.stellar.vault.R
@@ -124,21 +125,23 @@ class VaultAuthFragment : BaseFragment(), VaultAuthFrView,
         descriptionMain: String,
         button: String
     ) {
-        binding.ivBgIdentity.isVisible = showIdentityLogo
-        binding.ivTangem.isVisible = showTangemLogo
-        binding.tvDescription.isVisible = !description.isNullOrEmpty()
-        if (showIdentityLogo) {
-            // Set user identity icon.
-            Glide.with(requireContext())
-                .load(identityIconUrl)
-                .placeholder(R.drawable.ic_person)
-                .into(binding.ivIdentity)
-        }
+        binding.apply {
+            ivBgIdentity.isVisible = showIdentityLogo
+            ivTangem.isVisible = showTangemLogo
+            tvDescription.isVisible = !description.isNullOrEmpty()
+            if (showIdentityLogo) {
+                // Set user identity icon.
+                Glide.with(requireContext())
+                    .load(identityIconUrl)
+                    .placeholder(R.drawable.ic_person)
+                    .into(ivIdentity)
+            }
 
-        binding.tvTitle.text = title
-        binding.tvDescription.text = description
-        binding.tvDescriptionMain.text = descriptionMain
-        binding.btnAuth.text = button
+            tvTitle.text = title
+            tvDescription.text = description
+            tvDescriptionMain.text = descriptionMain
+            btnAuth.text = button
+        }
     }
 
     override fun copyToClipBoard(text: String) {
@@ -147,8 +150,7 @@ class VaultAuthFragment : BaseFragment(), VaultAuthFrView,
 
     override fun showTangemScreen(tangemInfo: TangemInfo) {
         TangemDialogFragment().apply {
-            this.arguments =
-                Bundle().apply { putParcelable(Constant.Extra.EXTRA_TANGEM_INFO, tangemInfo) }
+            arguments = bundleOf(Constant.Extra.EXTRA_TANGEM_INFO to tangemInfo)
         }.show(childFragmentManager, AlertDialogFragment.DialogFragmentIdentifier.TANGEM)
     }
 
@@ -166,17 +168,17 @@ class VaultAuthFragment : BaseFragment(), VaultAuthFrView,
     }
 
     override fun showHomeScreen() {
-        val intent = Intent(context, HomeActivity::class.java)
-        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-        startActivity(intent)
+        startActivity(Intent(context, HomeActivity::class.java).apply {
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        })
     }
 
     override fun showAuthScreen() {
         NotificationsManager.clearNotifications(requireContext())
-        val intent = Intent(context, AuthActivity::class.java)
-        intent.putExtra(Constant.Extra.EXTRA_NAVIGATION_FR, Constant.Navigation.AUTH)
-        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-        startActivity(intent)
+        startActivity(Intent(context, AuthActivity::class.java).apply {
+            putExtra(Constant.Extra.EXTRA_NAVIGATION_FR, Constant.Navigation.AUTH)
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        })
     }
 
     // Dialogs.

@@ -24,8 +24,10 @@ abstract class BaseFragment : BaseMvpAppCompatFragment(), BaseFragmentView {
             return
         }
 
-        (activity as? BaseActivity)?.mvpDelegate?.onAttach()
-        (activity as? BaseActivity)?.mPresenter?.setActionBarTitle(title)
+        (activity as? BaseActivity)?.apply {
+            mvpDelegate.onAttach()
+            mPresenter.setActionBarTitle(title)
+        }
     }
 
     override fun saveActionBarTitle(titleRes: Int) {

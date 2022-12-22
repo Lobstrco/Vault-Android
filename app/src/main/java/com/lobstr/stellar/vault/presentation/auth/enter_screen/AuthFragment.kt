@@ -63,10 +63,12 @@ class AuthFragment : BaseFragment(), AuthFrView {
     }
 
     private fun setListeners() {
-        binding.btnAuthNew.setSafeOnClickListener { mPresenter.newClicked() }
-        binding.btnAuthRestore.setSafeOnClickListener { mPresenter.restoreClicked() }
-        binding.btnTangemSignIn.setSafeOnClickListener { mPresenter.tangemClicked() }
-        binding.tvHelp.setSafeOnClickListener { mPresenter.helpClicked() }
+        binding.apply {
+            btnAuthNew.setSafeOnClickListener { mPresenter.newClicked() }
+            btnAuthRestore.setSafeOnClickListener { mPresenter.restoreClicked() }
+            btnTangemSignIn.setSafeOnClickListener { mPresenter.tangemClicked() }
+            tvHelp.setSafeOnClickListener { mPresenter.helpClicked() }
+        }
     }
 
     override fun onDestroyView() {

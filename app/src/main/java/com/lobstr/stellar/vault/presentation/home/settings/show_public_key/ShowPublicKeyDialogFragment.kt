@@ -96,9 +96,10 @@ class ShowPublicKeyDialogFragment : BaseBottomSheetDialog(), ShowPublicKeyView {
             ContextCompat.getColor(requireContext(), android.R.color.transparent)
         ).bitmap()
 
-        binding.ivUserPublicKeyQrCode.setImageBitmap(qrCodeImage)
-
-        binding.tvPublicKey.text = AppUtil.ellipsizeStrInMiddle(publicKey, PK_TRUNCATE_COUNT)
+        binding.apply {
+            ivUserPublicKeyQrCode.setImageBitmap(qrCodeImage)
+            tvPublicKey.text = AppUtil.ellipsizeStrInMiddle(publicKey, PK_TRUNCATE_COUNT)
+        }
     }
 
     override fun copyToClipBoard(text: String) {

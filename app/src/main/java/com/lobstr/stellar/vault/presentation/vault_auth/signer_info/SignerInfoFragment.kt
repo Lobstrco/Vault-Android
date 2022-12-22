@@ -9,6 +9,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.view.*
 import android.widget.Toast
+import androidx.core.os.bundleOf
 import androidx.core.view.MenuProvider
 import androidx.core.view.isVisible
 import com.lobstr.stellar.vault.R
@@ -94,10 +95,12 @@ class SignerInfoFragment : BaseFragment(), SignerInfoView {
     }
 
     private fun setListeners() {
-        binding.btnDownloadLobstrApp.setSafeOnClickListener { mPresenter.downloadLobstrAppClicked() }
-        binding.btnOpenLobstrApp.setSafeOnClickListener { mPresenter.openLobstrAppClicked() }
-        binding.btnCopyUserPk.setSafeOnClickListener { mPresenter.copyUserPublicKeyClicked() }
-        binding.btnShowQr.setSafeOnClickListener { mPresenter.showQrClicked() }
+        binding.apply {
+            btnDownloadLobstrApp.setSafeOnClickListener { mPresenter.downloadLobstrAppClicked() }
+            btnOpenLobstrApp.setSafeOnClickListener { mPresenter.openLobstrAppClicked() }
+            btnCopyUserPk.setSafeOnClickListener { mPresenter.copyUserPublicKeyClicked() }
+            btnShowQr.setSafeOnClickListener { mPresenter.showQrClicked() }
+        }
     }
 
     override fun onDestroyView() {
@@ -118,8 +121,10 @@ class SignerInfoFragment : BaseFragment(), SignerInfoView {
             e.printStackTrace()
         }
 
-        binding.cvLobstrWalletInfo.isVisible = applicationInfo != null
-        binding.cvLobstrWalletInstall.isVisible = applicationInfo == null
+        binding.apply {
+            cvLobstrWalletInfo.isVisible = applicationInfo != null
+            cvLobstrWalletInstall.isVisible = applicationInfo == null
+        }
 
         // Start check of Lobstr Wallet app install.
         mPresenter.startCheckExistenceLobstrAppWithInterval(applicationInfo == null)
@@ -138,12 +143,9 @@ class SignerInfoFragment : BaseFragment(), SignerInfoView {
     }
 
     override fun showPublicKeyDialog(publicKey: String) {
-        val bundle = Bundle()
-        bundle.putString(Constant.Bundle.BUNDLE_PUBLIC_KEY, publicKey)
-
-        val dialog = ShowPublicKeyDialogFragment()
-        dialog.arguments = bundle
-        dialog.show(childFragmentManager, AlertDialogFragment.DialogFragmentIdentifier.PUBLIC_KEY)
+        ShowPublicKeyDialogFragment().apply {
+            arguments = bundleOf(Constant.Bundle.BUNDLE_PUBLIC_KEY to publicKey)
+        }.show(childFragmentManager, AlertDialogFragment.DialogFragmentIdentifier.PUBLIC_KEY)
     }
 
     override fun downloadLobstrApp() {

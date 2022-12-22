@@ -101,9 +101,11 @@ class TangemSetupFragment : BaseFragment(), TangemView, TangemDialogFragment.OnT
     }
 
     private fun setListeners() {
-        binding.btnScan.setSafeOnClickListener { mPresenter.scanClicked() }
-        binding.btnLearnMore.setSafeOnClickListener { mPresenter.learnMoreClicked() }
-        binding.btnBuyNow.setSafeOnClickListener { mPresenter.buyNowClicked() }
+        binding.apply {
+            btnScan.setSafeOnClickListener { mPresenter.scanClicked() }
+            btnLearnMore.setSafeOnClickListener { mPresenter.learnMoreClicked() }
+            btnBuyNow.setSafeOnClickListener { mPresenter.buyNowClicked() }
+        }
     }
 
     override fun onDestroyView() {
@@ -139,9 +141,9 @@ class TangemSetupFragment : BaseFragment(), TangemView, TangemDialogFragment.OnT
     }
 
     override fun showVaultAuthScreen() {
-        val intent = Intent(activity, VaultAuthActivity::class.java)
-        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-        startActivity(intent)
+        startActivity(Intent(activity, VaultAuthActivity::class.java).apply {
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        })
     }
 
     override fun showHelpScreen(articleId: Long) {
