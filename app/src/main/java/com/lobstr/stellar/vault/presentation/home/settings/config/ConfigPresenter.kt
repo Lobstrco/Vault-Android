@@ -14,6 +14,7 @@ import com.lobstr.stellar.vault.presentation.util.Constant
 import com.lobstr.stellar.vault.presentation.util.Constant.Code.Config.SPAM_PROTECTION
 import com.lobstr.stellar.vault.presentation.util.Constant.Code.Config.TRANSACTION_CONFIRMATIONS
 import com.lobstr.stellar.vault.presentation.util.Constant.Util.UNDEFINED_VALUE
+import com.lobstr.stellar.vault.presentation.util.manager.SupportManager
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.schedulers.Schedulers
 import javax.inject.Inject
@@ -140,10 +141,10 @@ class ConfigPresenter @Inject constructor(
     fun infoClicked() {
         viewState.showHelpScreen(
             when (config) {
-                TRANSACTION_CONFIRMATIONS -> Constant.Support.TRANSACTION_CONFIRMATIONS
+                SPAM_PROTECTION -> SupportManager.ArticleID.SPAM_PROTECTION
+                TRANSACTION_CONFIRMATIONS -> SupportManager.ArticleID.TRANSACTION_CONFIRMATIONS
                 else -> -1
-            },
-            interactor.getUserPublicKey()
+            }
         )
     }
 }

@@ -19,6 +19,7 @@ import com.lobstr.stellar.vault.presentation.tangem.dialog.TangemDialogFragment
 import com.lobstr.stellar.vault.presentation.util.AppUtil
 import com.lobstr.stellar.vault.presentation.util.Constant
 import com.lobstr.stellar.vault.presentation.util.manager.SupportManager
+import com.lobstr.stellar.vault.presentation.util.parcelable
 import com.lobstr.stellar.vault.presentation.util.setSafeOnClickListener
 import com.lobstr.stellar.vault.presentation.vault_auth.VaultAuthActivity
 import dagger.hilt.android.AndroidEntryPoint
@@ -58,7 +59,7 @@ class TangemSetupFragment : BaseFragment(), TangemView, TangemDialogFragment.OnT
             if (result.resultCode == Activity.RESULT_OK) {
                 // Handle create wallet result.
                 mvpDelegate.onAttach()
-                mPresenter.handleTangemInfo(result.data?.getParcelableExtra(Constant.Extra.EXTRA_TANGEM_INFO))
+                mPresenter.handleTangemInfo(result.data?.parcelable(Constant.Extra.EXTRA_TANGEM_INFO))
             }
         }
 
@@ -147,7 +148,7 @@ class TangemSetupFragment : BaseFragment(), TangemView, TangemDialogFragment.OnT
     }
 
     override fun showHelpScreen(articleId: Long) {
-        SupportManager.showZendeskArticle(requireContext(), articleId)
+        SupportManager.showFreshdeskArticle(requireContext(), articleId)
     }
 
     override fun showMessage(message: String?) {

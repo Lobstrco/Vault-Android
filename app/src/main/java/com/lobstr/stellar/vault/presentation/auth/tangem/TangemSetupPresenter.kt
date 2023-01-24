@@ -7,7 +7,7 @@ import com.lobstr.stellar.vault.presentation.util.AppUtil
 import com.lobstr.stellar.vault.presentation.util.Constant
 import com.lobstr.stellar.vault.presentation.util.Constant.Social.SIGNER_CARD_BUY
 import com.lobstr.stellar.vault.presentation.util.Constant.Social.SIGNER_CARD_INFO
-import com.lobstr.stellar.vault.presentation.util.Constant.Support.SIGNING_WITH_VAULT_SIGNER_CARD
+import com.lobstr.stellar.vault.presentation.util.manager.SupportManager.ArticleID.SIGNING_WITH_VAULT_SIGNER_CARD
 import moxy.MvpPresenter
 import javax.inject.Inject
 

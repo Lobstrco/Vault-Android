@@ -1,19 +1,24 @@
 package com.lobstr.stellar.vault.presentation.home.settings
 
+import android.Manifest
 import android.app.Activity
 import android.content.ActivityNotFoundException
 import android.content.DialogInterface
 import android.content.Intent
 import android.graphics.Typeface
+import android.os.Build
 import android.os.Bundle
+import android.provider.Settings
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.CompoundButton
 import android.widget.Toast
 import androidx.activity.result.ActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult
 import androidx.annotation.StringRes
+import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
@@ -24,6 +29,7 @@ import com.lobstr.stellar.vault.presentation.base.fragment.BaseFragment
 import com.lobstr.stellar.vault.presentation.container.activity.ContainerActivity
 import com.lobstr.stellar.vault.presentation.dialog.alert.base.AlertDialogFragment
 import com.lobstr.stellar.vault.presentation.dialog.alert.base.AlertDialogFragment.DialogFragmentIdentifier.BIOMETRIC_INFO_DIALOG
+import com.lobstr.stellar.vault.presentation.dialog.alert.base.AlertDialogFragment.DialogFragmentIdentifier.POST_NOTIFICATIONS_INFO_DIALOG
 import com.lobstr.stellar.vault.presentation.fcm.NotificationsManager
 import com.lobstr.stellar.vault.presentation.home.account_name.manage.ManageAccountsNamesFragment
 import com.lobstr.stellar.vault.presentation.home.settings.license.LicenseFragment
@@ -97,13 +103,18 @@ class SettingsFragment : BaseFragment(), SettingsView, CompoundButton.OnCheckedC
             }
         }
 
+    private val mCheckPostNotificationsPermission = registerForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) {
+        mPresenter.postNotificationsPermissionChanged(it)
+    }
+
     // ===========================================================
     // Getter & Setter
     // ===========================================================
 
     override fun setMenuVisibility(menuVisible: Boolean) {
         super.setMenuVisibility(menuVisible)
-
         mPresenter.userVisibleHintCalled(menuVisible)
     }
 
@@ -155,7 +166,10 @@ class SettingsFragment : BaseFragment(), SettingsView, CompoundButton.OnCheckedC
     override fun onCheckedChanged(buttonView: CompoundButton?, isChecked: Boolean) {
         when (buttonView?.id) {
             R.id.swSettingsBiometric -> mPresenter.biometricSwitched(isChecked)
-            R.id.swSettingsNotifications -> mPresenter.notificationsSwitched(isChecked)
+            R.id.swSettingsNotifications -> mPresenter.notificationsSwitched(
+                isChecked,
+                NotificationManagerCompat.from(requireContext()).areNotificationsEnabled()
+            )
         }
     }
 
@@ -210,6 +224,23 @@ class SettingsFragment : BaseFragment(), SettingsView, CompoundButton.OnCheckedC
         })
     }
 
+    override fun showNotificationSettingsScreen() {
+        startActivity(Intent().apply {
+            flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
+            when {
+                Build.VERSION.SDK_INT >= Build.VERSION_CODES.O -> {
+                    action = Settings.ACTION_APP_NOTIFICATION_SETTINGS
+                    putExtra(Settings.EXTRA_APP_PACKAGE, context?.packageName)
+                }
+                else -> {
+                    action = "android.settings.APP_NOTIFICATION_SETTINGS"
+                    putExtra("app_package", context?.packageName)
+                    putExtra("app_uid", context?.applicationInfo?.uid)
+                }
+            }
+        })
+    }
+
     override fun showPublicKeyDialog(publicKey: String) {
         ShowPublicKeyDialogFragment().apply {
             arguments = bundleOf(
@@ -253,8 +284,8 @@ class SettingsFragment : BaseFragment(), SettingsView, CompoundButton.OnCheckedC
         })
     }
 
-    override fun showHelpScreen(userId: String?) {
-        SupportManager.showZendeskHelpCenter(requireContext(), userId = userId)
+    override fun showHelpScreen() {
+        SupportManager.showFreshdeskHelpCenter(requireContext())
     }
 
     override fun setBiometricChecked(checked: Boolean) {
@@ -273,8 +304,33 @@ class SettingsFragment : BaseFragment(), SettingsView, CompoundButton.OnCheckedC
         binding.swSettingsNotifications.setOnCheckedChangeListener(this)
     }
 
+    override fun checkSystemNotificationsState() {
+        mPresenter.areSystemNotificationsEnabled(NotificationManagerCompat.from(requireContext()).areNotificationsEnabled())
+    }
+
+    override fun checkPostNotificationsPermission() {
+        if (!NotificationManagerCompat.from(requireContext()).areNotificationsEnabled()) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                mCheckPostNotificationsPermission.launch(Manifest.permission.POST_NOTIFICATIONS)
+            } else {
+                mPresenter.postNotificationsPermissionChanged(false)
+            }
+        }
+    }
+
     override fun setTrConfirmation(config: String?) {
         binding.tvTrConfirmationConfig.text = config
+    }
+
+    override fun showPostNotificationsExplanationDialog(titleRes: Int, messageRes: Int) {
+        AlertDialogFragment.Builder(true)
+            .setCancelable(true)
+            .setTitle(titleRes)
+            .setMessage(messageRes)
+            .setNegativeBtnText(R.string.text_btn_cancel)
+            .setPositiveBtnText(R.string.text_btn_settings)
+            .create()
+            .show(childFragmentManager, POST_NOTIFICATIONS_INFO_DIALOG)
     }
 
     override fun showBiometricInfoDialog(titleRes: Int, messageRes: Int) {

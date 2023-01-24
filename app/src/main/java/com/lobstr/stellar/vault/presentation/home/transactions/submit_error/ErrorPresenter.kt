@@ -3,6 +3,7 @@ package com.lobstr.stellar.vault.presentation.home.transactions.submit_error
 import com.lobstr.stellar.vault.domain.transaction_error.TransactionErrorInteractor
 import com.lobstr.stellar.vault.presentation.entities.error.Error
 import com.lobstr.stellar.vault.presentation.util.AppUtil
+import com.lobstr.stellar.vault.presentation.util.VibratorUtil.VibrateType.TYPE_THREE
 import moxy.MvpPresenter
 import javax.inject.Inject
 
@@ -13,7 +14,7 @@ class ErrorPresenter @Inject constructor(private val interactor: TransactionErro
 
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
-        viewState.vibrate(longArrayOf(2000, 50, 50, 50))
+        viewState.vibrate(TYPE_THREE)
         viewState.setupXdr(error.xdr)
         viewState.setupErrorInfo(
             error.shortDescription ?: error.description,
@@ -22,7 +23,7 @@ class ErrorPresenter @Inject constructor(private val interactor: TransactionErro
     }
 
     fun infoClicked() {
-        viewState.showHelpScreen(interactor.getUserPublicKey())
+        viewState.showHelpScreen()
     }
 
     fun viewErrorDetailsClicked() {

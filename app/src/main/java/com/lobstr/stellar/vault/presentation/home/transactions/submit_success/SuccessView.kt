@@ -1,5 +1,6 @@
 package com.lobstr.stellar.vault.presentation.home.transactions.submit_success
 
+import com.lobstr.stellar.vault.presentation.util.VibratorUtil.VibrateType
 import moxy.MvpView
 import moxy.viewstate.strategy.alias.AddToEndSingle
 import moxy.viewstate.strategy.alias.Skip
@@ -7,7 +8,7 @@ import moxy.viewstate.strategy.alias.Skip
 interface SuccessView : MvpView {
 
     @Skip
-    fun vibrate(pattern: LongArray)
+    fun vibrate(type: VibrateType)
 
     @AddToEndSingle
     fun setupXdr(xdr: String)
@@ -22,7 +23,7 @@ interface SuccessView : MvpView {
     fun showXdrContainer(show: Boolean)
 
     @Skip
-    fun showHelpScreen(userId: String?)
+    fun showHelpScreen()
 
     @Skip
     fun showWebPage(url: String)

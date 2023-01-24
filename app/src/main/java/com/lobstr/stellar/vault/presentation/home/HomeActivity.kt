@@ -1,10 +1,14 @@
 package com.lobstr.stellar.vault.presentation.home
 
+import android.Manifest
+import android.os.Build
 import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
 import androidx.activity.addCallback
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.IdRes
+import androidx.core.app.NotificationManagerCompat
 import androidx.fragment.app.FragmentManager.POP_BACK_STACK_INCLUSIVE
 import com.google.android.material.navigation.NavigationBarView
 import com.lobstr.stellar.vault.R
@@ -47,6 +51,11 @@ class HomeActivity : BaseActivity(), HomeActivityView,
 
     private val mHomePresenter by moxyPresenter { homePresenterProvider.get() }
 
+     val mCheckPostNotificationsPermission = registerForActivityResult(
+        ActivityResultContracts.RequestPermission()) {
+         mHomePresenter.postNotificationsPermissionChanged(it)
+    }
+
     // ===========================================================
     // Getter & Setter
     // ===========================================================
@@ -63,7 +72,9 @@ class HomeActivity : BaseActivity(), HomeActivityView,
             try {
                 checkBackPress((binding.vpHome.adapter as? HomeViewPagerAdapter)?.getFragment(binding.vpHome.currentItem))
             } catch (exc: IndexOutOfBoundsException) {
-                super.onBackPressed()
+                isEnabled = false
+                onBackPressedDispatcher.onBackPressed()
+                isEnabled = true
             }
         }
     }
@@ -104,6 +115,16 @@ class HomeActivity : BaseActivity(), HomeActivityView,
                 }
             }
             adapter = HomeViewPagerAdapter(supportFragmentManager, lifecycle)
+        }
+    }
+
+    override fun checkPostNotificationsPermission() {
+        if (!NotificationManagerCompat.from(this).areNotificationsEnabled()) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                mCheckPostNotificationsPermission.launch(Manifest.permission.POST_NOTIFICATIONS)
+            } else {
+                mHomePresenter.postNotificationsPermissionChanged(false)
+            }
         }
     }
 

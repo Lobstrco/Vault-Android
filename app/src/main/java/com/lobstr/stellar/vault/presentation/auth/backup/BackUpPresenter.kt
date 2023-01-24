@@ -1,6 +1,6 @@
 package com.lobstr.stellar.vault.presentation.auth.backup
 
-import com.lobstr.stellar.vault.presentation.util.Constant
+import com.lobstr.stellar.vault.presentation.util.manager.SupportManager.ArticleID.RECOVERY_PHRASE
 import moxy.MvpPresenter
 
 class BackUpPresenter : MvpPresenter<BackUpView>() {
@@ -10,6 +10,6 @@ class BackUpPresenter : MvpPresenter<BackUpView>() {
     }
 
     fun infoClicked() {
-        viewState.showHelpScreen(Constant.Support.RECOVERY_PHRASE)
+        viewState.showHelpScreen(RECOVERY_PHRASE)
     }
 }

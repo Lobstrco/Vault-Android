@@ -223,12 +223,6 @@
 -keep class com.andrognito.** { *; }
 -dontwarn com.andrognito.**
 
-# Zendesk Sdk
--keep public interface com.zendesk.** { *; }
--keep public class com.zendesk.** { *; }
--keep class zendesk.suppor.** { *; }
--keep class zendesk.core.** { *; }
-
 # AppInitializer
 -keep class androidx.startup.AppInitializer
 -keep class * extends androidx.startup.Initializer

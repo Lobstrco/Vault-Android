@@ -22,6 +22,9 @@ import com.lobstr.stellar.vault.presentation.dialog.alert.base.AlertDialogFragme
 import com.lobstr.stellar.vault.presentation.entities.tangem.TangemInfo
 import com.lobstr.stellar.vault.presentation.util.AppUtil
 import com.lobstr.stellar.vault.presentation.util.Constant
+import com.lobstr.stellar.vault.presentation.util.VibratorUtil
+import com.lobstr.stellar.vault.presentation.util.VibratorUtil.VibrateType
+import com.lobstr.stellar.vault.presentation.util.parcelable
 import com.lobstr.stellar.vault.presentation.util.setSafeOnClickListener
 import com.lobstr.stellar.vault.presentation.util.tangem.CustomCardManagerDelegate
 import com.lobstr.stellar.vault.presentation.util.tangem.customInit
@@ -62,7 +65,7 @@ class TangemDialogFragment : BaseBottomSheetDialog(), TangemDialogView,
     // ===========================================================
 
     private val mPresenter by moxyPresenter { presenterProvider.get().apply {
-        tangemInfo = arguments?.getParcelable(Constant.Extra.EXTRA_TANGEM_INFO)
+        tangemInfo = arguments?.parcelable(Constant.Extra.EXTRA_TANGEM_INFO)
     } }
 
     // ===========================================================
@@ -197,19 +200,19 @@ class TangemDialogFragment : BaseBottomSheetDialog(), TangemDialogView,
         binding.btnTryAgainFr.setSafeOnClickListener { mPresenter.tryAgainClicked() }
         binding.btnCancel.setSafeOnClickListener { mPresenter.cancelClicked() }
         binding.ivScanStatus.addAnimatorListener(object : Animator.AnimatorListener {
-            override fun onAnimationRepeat(animation: Animator?) {
+            override fun onAnimationRepeat(animation: Animator) {
 
             }
 
-            override fun onAnimationEnd(animation: Animator?) {
+            override fun onAnimationEnd(animation: Animator) {
                 mPresenter.successAnimationFinished()
             }
 
-            override fun onAnimationCancel(animation: Animator?) {
+            override fun onAnimationCancel(animation: Animator) {
 
             }
 
-            override fun onAnimationStart(animation: Animator?) {
+            override fun onAnimationStart(animation: Animator) {
                 mPresenter.successAnimationStarted()
             }
         })
@@ -293,8 +296,8 @@ class TangemDialogFragment : BaseBottomSheetDialog(), TangemDialogView,
         super.onCancel(dialog)
     }
 
-    override fun vibrate(pattern: LongArray) {
-        AppUtil.vibrate(requireContext(), pattern)
+    override fun vibrate(type: VibrateType) {
+        VibratorUtil.vibrate(requireContext(), type)
     }
 
     // ===========================================================

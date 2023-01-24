@@ -158,11 +158,11 @@ class MnemonicsFragment : BaseFragment(),
     }
 
     override fun copyToClipBoard(text: String) {
-        AppUtil.copyToClipboard(context, text)
+        AppUtil.copyToClipboard(context, text, isConfidential = true)
     }
 
-    override fun showHelpScreen(articleId: Long, userId: String?) {
-        SupportManager.showZendeskArticle(requireContext(), articleId, userId)
+    override fun showHelpScreen(articleId: Long) {
+        SupportManager.showFreshdeskArticle(requireContext(), articleId)
     }
 
     override fun showDenyAccountCreationDialog() {

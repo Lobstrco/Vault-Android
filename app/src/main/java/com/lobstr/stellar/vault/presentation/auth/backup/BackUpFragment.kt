@@ -103,7 +103,7 @@ class BackUpFragment : BaseFragment(), BackUpView {
     }
 
     override fun showHelpScreen(articleId: Long) {
-        SupportManager.showZendeskArticle(requireContext(), articleId)
+        SupportManager.showFreshdeskArticle(requireContext(), articleId)
     }
 
     // ===========================================================

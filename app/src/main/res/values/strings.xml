@@ -38,6 +38,7 @@
     <string name="text_btn_add_account">Add Account</string>
     <string name="text_btn_remove_all">Remove All</string>
     <string name="text_btn_remove_invalid">Remove Invalid</string>
+    <string name="text_btn_settings">Settings</string>
 
     <!-- Start screen -->
     <string name="text_tv_start_screen_title">Multiply your security</string>
@@ -201,10 +202,16 @@
     <string name="title_biometric_not_set_up_dialog">Biometric Login not set up</string>
     <string name="msg_biometric_not_set_up_dialog">Please set up your biometric login in the device settings first.</string>
 
+    <!-- Post Notifications permission explanation dialog -->
+    <string name="title_notifications_permission_not_set_up_dialog">Notifications Permission Required</string>
+    <string name="msg_notifications_permission_not_set_up_dialog">Please grant Notifications Permission in the device settings first.</string>
+
     <!-- Transaction action dialog -->
     <string name="title_transaction_action_dialog">Are you sure?</string>
     <string name="msg_deny_transaction_dialog">Want to deny the transaction?</string>
     <string name="msg_confirm_transaction_dialog">Want to confirm the transaction?</string>
+    <string name="msg_confirm_transaction_no_other_signatures_required_dialog">Want to confirm this transaction? Your transaction will be signed and submitted to the network.</string>
+    <string name="msg_confirm_transaction_other_signatures_required_dialog">Want to confirm this transaction? Your transaction will be signed, and you will need confirmations from other signers to submit it to the network.</string>
 
     <!-- Sequence Number Warning dialog -->
     <string name="title_sequence_number_warning_dialog">Confirm this transaction?</string>
@@ -331,13 +338,6 @@ OS version: %7$s
 
 Describe an issue or provide your feedback below:
 "</string>
-    <!-- Zendesk -->
-    <string name="zd_info" translatable="false">
-        LOBSTR VAULT, OS:Android, OS_version:%1$s, App_Version:%2$s_%3$d, Device:%4$s, Model:%5$s, Brand:%6$s
-    </string>
-    <string name="zd_user_id" translatable="false">User_id:%1$s</string>
-    <string name="zendesk_request_subject" translatable="false">Android ticket</string>
-
     <!-- Tangem dialog -->
     <string name="text_tv_tangem_dialog_tittle__scan">Ready to Scan</string>
     <string name="text_tv_tangem_dialog_description_scan">Hold the Signer Card near the back of your device for a few seconds.</string>

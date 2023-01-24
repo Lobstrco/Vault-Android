@@ -40,8 +40,7 @@ import com.lobstr.stellar.vault.presentation.home.transactions.operation.operati
 import com.lobstr.stellar.vault.presentation.home.transactions.submit_error.ErrorFragment
 import com.lobstr.stellar.vault.presentation.home.transactions.submit_success.SuccessFragment
 import com.lobstr.stellar.vault.presentation.tangem.dialog.TangemDialogFragment
-import com.lobstr.stellar.vault.presentation.util.AppUtil
-import com.lobstr.stellar.vault.presentation.util.Constant
+import com.lobstr.stellar.vault.presentation.util.*
 import com.lobstr.stellar.vault.presentation.util.Constant.Bundle.BUNDLE_OPERATION
 import com.lobstr.stellar.vault.presentation.util.Constant.Bundle.BUNDLE_OPERATIONS_LIST
 import com.lobstr.stellar.vault.presentation.util.Constant.Bundle.BUNDLE_OPERATION_TITLE
@@ -50,10 +49,8 @@ import com.lobstr.stellar.vault.presentation.util.Constant.Bundle.BUNDLE_TRANSAC
 import com.lobstr.stellar.vault.presentation.util.Constant.Bundle.BUNDLE_TRANSACTION_TITLE
 import com.lobstr.stellar.vault.presentation.util.Constant.Extra.EXTRA_TRANSACTION_ITEM
 import com.lobstr.stellar.vault.presentation.util.Constant.Extra.EXTRA_TRANSACTION_STATUS
-import com.lobstr.stellar.vault.presentation.util.CustomDividerItemDecoration
 import com.lobstr.stellar.vault.presentation.util.manager.FragmentTransactionManager
 import com.lobstr.stellar.vault.presentation.util.manager.ProgressManager
-import com.lobstr.stellar.vault.presentation.util.setSafeOnClickListener
 import dagger.hilt.android.AndroidEntryPoint
 import moxy.ktx.moxyPresenter
 import javax.inject.Inject
@@ -89,7 +86,7 @@ class TransactionDetailsFragment : BaseFragment(), TransactionDetailsView,
 
     private val mPresenter by moxyPresenter {
         presenterProvider.get().apply {
-            transactionItem = arguments?.getParcelable(BUNDLE_TRANSACTION_ITEM)!!
+            transactionItem = arguments?.parcelable(BUNDLE_TRANSACTION_ITEM)!!
         }
     }
 
@@ -346,7 +343,7 @@ class TransactionDetailsFragment : BaseFragment(), TransactionDetailsView,
         })
 
         // Close screen.
-        (activity as? ContainerActivity)?.finish() ?: activity?.onBackPressed()
+        (activity as? ContainerActivity)?.finish() ?: activity?.onBackPressedDispatcher?.onBackPressed()
     }
 
     override fun successConfirmTransaction(
@@ -412,12 +409,12 @@ class TransactionDetailsFragment : BaseFragment(), TransactionDetailsView,
         )
     }
 
-    override fun showConfirmTransactionDialog(show: Boolean) {
+    override fun showConfirmTransactionDialog(show: Boolean, message: String?) {
         if (show) {
             AlertDialogFragment.Builder(true)
                 .setCancelable(true)
                 .setTitle(R.string.title_transaction_action_dialog)
-                .setMessage(R.string.msg_confirm_transaction_dialog)
+                .setMessage(message)
                 .setNegativeBtnText(R.string.text_btn_cancel)
                 .setPositiveBtnText(R.string.text_btn_yes)
                 .create()

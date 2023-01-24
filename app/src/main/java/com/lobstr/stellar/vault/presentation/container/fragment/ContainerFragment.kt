@@ -26,6 +26,7 @@ import com.lobstr.stellar.vault.presentation.util.Constant.Bundle.BUNDLE_NAVIGAT
 import com.lobstr.stellar.vault.presentation.util.Constant.TransactionConfirmationSuccessStatus.SUCCESS
 import com.lobstr.stellar.vault.presentation.util.Constant.Util.UNDEFINED_VALUE
 import com.lobstr.stellar.vault.presentation.util.manager.FragmentTransactionManager
+import com.lobstr.stellar.vault.presentation.util.parcelable
 import com.lobstr.stellar.vault.presentation.vault_auth.auth.VaultAuthFragment
 import com.lobstr.stellar.vault.presentation.vault_auth.signer_info.SignerInfoFragment
 import moxy.ktx.moxyPresenter
@@ -60,7 +61,7 @@ class ContainerFragment : BaseContainerFragment(),
     private val mPresenter by moxyPresenter {
         ContainerPresenter(
             arguments?.getInt(BUNDLE_NAVIGATION_FR)!!,
-            arguments?.getParcelable(Constant.Bundle.BUNDLE_TRANSACTION_ITEM),
+            arguments?.parcelable(Constant.Bundle.BUNDLE_TRANSACTION_ITEM),
             arguments?.getString(Constant.Bundle.BUNDLE_ENVELOPE_XDR),
             arguments?.getByte(
                 Constant.Bundle.BUNDLE_TRANSACTION_CONFIRMATION_SUCCESS_STATUS,

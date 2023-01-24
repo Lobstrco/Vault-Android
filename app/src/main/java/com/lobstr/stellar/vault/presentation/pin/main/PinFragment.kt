@@ -30,6 +30,8 @@ import com.lobstr.stellar.vault.presentation.home.HomeActivity
 import com.lobstr.stellar.vault.presentation.pin.PinActivity
 import com.lobstr.stellar.vault.presentation.util.AppUtil
 import com.lobstr.stellar.vault.presentation.util.Constant
+import com.lobstr.stellar.vault.presentation.util.VibratorUtil
+import com.lobstr.stellar.vault.presentation.util.VibratorUtil.VibrateType.TYPE_ONE
 import com.lobstr.stellar.vault.presentation.util.biometric.BiometricListener
 import com.lobstr.stellar.vault.presentation.util.biometric.BiometricManager
 import com.lobstr.stellar.vault.presentation.util.manager.FragmentTransactionManager
@@ -282,18 +284,18 @@ class PinFragment : BaseFragment(), PinFrView, PinLockListener, BiometricListene
     // Pin Lock listeners callbacks.
 
     override fun onComplete(pin: String) {
-        AppUtil.vibrate(requireContext(), longArrayOf(0, 8, 0, 0))
+        VibratorUtil.vibrate(requireContext(), TYPE_ONE)
         Log.i(PinActivity.LOG_TAG, "Pin complete: $pin")
         mPresenter.onPinComplete(pin)
     }
 
     override fun onEmpty() {
-        AppUtil.vibrate(requireContext(), longArrayOf(0, 8, 0, 0))
+        VibratorUtil.vibrate(requireContext(), TYPE_ONE)
         Log.i(PinActivity.LOG_TAG, "Pin empty")
     }
 
     override fun onPinChange(pinLength: Int, intermediatePin: String) {
-        AppUtil.vibrate(requireContext(), longArrayOf(0, 8, 0, 0))
+        VibratorUtil.vibrate(requireContext(), TYPE_ONE)
         Log.i(
             PinActivity.LOG_TAG,
             "Pin changed, new length $pinLength with intermediate pin $intermediatePin"

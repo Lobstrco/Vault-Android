@@ -14,6 +14,7 @@ import com.lobstr.stellar.vault.presentation.home.transactions.details.Transacti
 import com.lobstr.stellar.vault.presentation.home.transactions.operation.asset_info.AssetInfoDialogFragment
 import com.lobstr.stellar.vault.presentation.home.transactions.operation.operation_list.adapter.OperationDetailsAdapter
 import com.lobstr.stellar.vault.presentation.util.Constant
+import com.lobstr.stellar.vault.presentation.util.parcelable
 import dagger.hilt.android.AndroidEntryPoint
 import moxy.ktx.moxyPresenter
 import javax.inject.Inject
@@ -47,7 +48,7 @@ class OperationDetailsFragment : BaseFragment(),
 
     private val mPresenter by moxyPresenter { presenterProvider.get().apply {
         title = requireArguments().getInt(Constant.Bundle.BUNDLE_OPERATION_TITLE, Constant.Util.UNDEFINED_VALUE)
-        operation = requireArguments().getParcelable(Constant.Bundle.BUNDLE_OPERATION)!!
+        operation = requireArguments().parcelable(Constant.Bundle.BUNDLE_OPERATION)!!
         transactionSourceAccount = requireArguments().getString(Constant.Bundle.BUNDLE_TRANSACTION_SOURCE_ACCOUNT)!!
     } }
 

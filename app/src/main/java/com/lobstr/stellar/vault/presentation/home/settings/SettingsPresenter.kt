@@ -10,6 +10,7 @@ import com.lobstr.stellar.vault.domain.util.EventProviderModule
 import com.lobstr.stellar.vault.domain.util.event.Auth
 import com.lobstr.stellar.vault.domain.util.event.Network
 import com.lobstr.stellar.vault.domain.util.event.Notification
+import com.lobstr.stellar.vault.domain.util.event.Update
 import com.lobstr.stellar.vault.presentation.BasePresenter
 import com.lobstr.stellar.vault.presentation.dialog.alert.base.AlertDialogFragment
 import com.lobstr.stellar.vault.presentation.util.AppUtil
@@ -53,7 +54,6 @@ class SettingsPresenter @Inject constructor(
         )
         getAccountConfig()
         viewState.setSpamProtection(AppUtil.getConfigText(AppUtil.getConfigType(!interactor.isSpamProtectionEnabled())))
-        viewState.setNotificationsChecked(interactor.isNotificationsEnabled())
         viewState.setTrConfirmation(AppUtil.getConfigText(AppUtil.getConfigType(interactor.isTrConfirmationEnabled())))
         viewState.setupPolicyYear(R.string.text_all_rights_reserved)
     }
@@ -101,12 +101,41 @@ class SettingsPresenter @Inject constructor(
                     it.printStackTrace()
                 })
         )
+
+        unsubscribeOnDestroy(
+            eventProviderModule.updateEventSubject
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({
+                    when (it.type) {
+                        Update.Type.POST_NOTIFICATIONS_GRANTED -> {
+                            viewState.setNotificationsChecked(true)
+                        }
+                        Update.Type.POST_NOTIFICATIONS_DENIED -> {
+                            viewState.setNotificationsChecked(false)
+                        }
+                    }
+                }, {
+                    it.printStackTrace()
+                })
+        )
     }
 
     override fun attachView(view: SettingsView?) {
         super.attachView(view)
+        viewState.checkSystemNotificationsState()
         // Always check signers count.
         viewState.setupSignersCount(interactor.getSignersCount())
+    }
+
+    fun areSystemNotificationsEnabled(enabled: Boolean) {
+        // Logic for enable/disable local notifications.
+        if (enabled) {
+            viewState.setNotificationsChecked(interactor.isNotificationsEnabled())
+        } else {
+            // Disable local notifications.
+            interactor.setNotificationsEnabled(false)
+            viewState.setNotificationsChecked(false)
+        }
     }
 
     fun handleChangePinResult() {
@@ -162,7 +191,7 @@ class SettingsPresenter @Inject constructor(
     }
 
     fun helpClicked() {
-        viewState.showHelpScreen(interactor.getUserPublicKey())
+        viewState.showHelpScreen()
     }
 
     fun biometricSwitched(checked: Boolean) {
@@ -188,9 +217,24 @@ class SettingsPresenter @Inject constructor(
         }
     }
 
-    fun notificationsSwitched(checked: Boolean) {
-        interactor.setNotificationsEnabled(checked)
-        viewState.setNotificationsChecked(checked)
+    fun postNotificationsPermissionChanged(granted: Boolean) {
+        if (granted) {
+            interactor.setNotificationsEnabled(true)
+            viewState.setNotificationsChecked(true)
+        } else {
+            viewState.showPostNotificationsExplanationDialog(
+                R.string.title_notifications_permission_not_set_up_dialog,
+                R.string.msg_notifications_permission_not_set_up_dialog
+            )
+        }
+    }
+
+    fun notificationsSwitched(checked: Boolean, postNotificationsPermissionGranted: Boolean) {
+        interactor.setNotificationsEnabled(postNotificationsPermissionGranted && checked)
+        viewState.setNotificationsChecked(postNotificationsPermissionGranted && checked)
+        if (!postNotificationsPermissionGranted && checked) {
+            viewState.checkPostNotificationsPermission()
+        }
     }
 
     fun publicKeyClicked() {
@@ -231,6 +275,9 @@ class SettingsPresenter @Inject constructor(
             AlertDialogFragment.DialogFragmentIdentifier.LOG_OUT -> {
                 interactor.clearUserData()
                 viewState.showAuthScreen()
+            }
+            AlertDialogFragment.DialogFragmentIdentifier.POST_NOTIFICATIONS_INFO_DIALOG -> {
+                viewState.showNotificationSettingsScreen()
             }
         }
     }

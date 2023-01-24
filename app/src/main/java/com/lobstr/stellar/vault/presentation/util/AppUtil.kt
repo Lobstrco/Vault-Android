@@ -6,10 +6,7 @@ import android.content.pm.PackageManager
 import android.graphics.Point
 import android.net.Uri
 import android.nfc.NfcAdapter
-import android.os.Build
-import android.os.VibrationEffect
-import android.os.Vibrator
-import android.os.VibratorManager
+import android.os.*
 import android.util.DisplayMetrics
 import android.util.Log
 import android.view.View
@@ -107,13 +104,25 @@ object AppUtil {
         return NULL
     }
 
-    fun copyToClipboard(context: Context?, extractedString: String) {
+    fun copyToClipboard(context: Context?, extractedString: String, isConfidential: Boolean = false) {
         try {
             val clipboard =
                 context?.getSystemService(Context.CLIPBOARD_SERVICE) as? ClipboardManager
-            val clip = ClipData.newPlainText("Copied Text", extractedString)
+            val clip = ClipData.newPlainText("Copied Text", extractedString).apply {
+                if (isConfidential) {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                        description.extras = PersistableBundle().apply {
+                            putBoolean(ClipDescription.EXTRA_IS_SENSITIVE, true)
+                        }
+                    } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                        description.extras = PersistableBundle().apply {
+                            putBoolean("android.content.extra.IS_SENSITIVE", true)
+                        }
+                    }
+                }
+            }
             clipboard?.setPrimaryClip(clip)
-            Toast.makeText(context, R.string.msg_successfully_copied, Toast.LENGTH_SHORT).show()
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) Toast.makeText(context, R.string.msg_successfully_copied, Toast.LENGTH_SHORT).show()
         } catch (exc: SecurityException) {
             // Handle security exception in some cases (Android Q): https://developer.android.com/about/versions/10/privacy/changes#clipboard-data
             Toast.makeText(context, R.string.msg_unknown_error, Toast.LENGTH_SHORT).show()
@@ -122,7 +131,11 @@ object AppUtil {
 
     fun getAppVersionCode(context: Context?): Long {
         return try {
-            val packageInfo = context?.packageManager?.getPackageInfo(context.packageName, 0)
+            val packageInfo = if (Build.VERSION.SDK_INT >= 33) {
+                context?.packageManager?.getPackageInfo(context.packageName, PackageManager.PackageInfoFlags.of(0))
+            } else {
+                context?.packageManager?.getPackageInfo(context.packageName, 0)
+            }
             if (packageInfo != null) PackageInfoCompat.getLongVersionCode(packageInfo) else -1
         } catch (e: PackageManager.NameNotFoundException) {
             Log.e("NameNotFoundException", "Could not get package name:$e")
@@ -197,31 +210,6 @@ object AppUtil {
             val size = Point()
             display.getSize(size)
             size.x
-        }
-    }
-
-    fun vibrate(context: Context, pattern: LongArray) {
-        val vibrator  = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            val vibratorManager =  context.getSystemService(Context.VIBRATOR_MANAGER_SERVICE) as? VibratorManager
-            vibratorManager?.defaultVibrator
-        } else {
-            (context.getSystemService(Context.VIBRATOR_SERVICE) as? Vibrator)
-        }
-
-        if (vibrator == null || !vibrator.hasVibrator()) {
-            return
-        }
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            vibrator.vibrate(
-                VibrationEffect.createWaveform(
-                    pattern,
-                    VibrationEffect.DEFAULT_AMPLITUDE
-                )
-            )
-        } else {
-            @Suppress("DEPRECATION")
-            vibrator.vibrate(pattern, -1)
         }
     }
 

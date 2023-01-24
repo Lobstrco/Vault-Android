@@ -9,7 +9,8 @@ import android.util.SparseArray
 import android.view.LayoutInflater
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.isVisible
-import androidx.lifecycle.*
+import androidx.lifecycle.DefaultLifecycleObserver
+import androidx.lifecycle.LifecycleOwner
 import com.lobstr.stellar.vault.R
 import com.lobstr.stellar.vault.databinding.LayoutCopyClipboardBinding
 import com.lobstr.stellar.vault.domain.stellar.StellarRepository
@@ -167,7 +168,7 @@ class ClipboardView(context: Context, attrs: AttributeSet?) : ConstraintLayout(c
             data = state.getString(BUNDLE_DATA)
             inUseData = state.getString(BUNDLE_IN_USE_DATA)
             isFirstLoad = state.getBoolean(BUNDLE_IS_FIRST_LOAD, false)
-            newState = state.getParcelable(BUNDLE_STATE)
+            newState = state.parcelable(BUNDLE_STATE)
         }
         super.onRestoreInstanceState(newState)
     }

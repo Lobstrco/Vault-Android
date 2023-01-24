@@ -167,7 +167,7 @@ class RecoverKeyFragment : BaseFragment(), RecoverKeyFrView {
     }
 
     override fun showHelpScreen(articleId: Long) {
-        SupportManager.showZendeskArticle(requireContext(), articleId)
+        SupportManager.showFreshdeskArticle(requireContext(), articleId)
     }
 
     // ===========================================================

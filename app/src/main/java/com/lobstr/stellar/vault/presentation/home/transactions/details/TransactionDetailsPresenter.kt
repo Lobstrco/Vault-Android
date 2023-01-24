@@ -6,6 +6,7 @@ import com.lobstr.stellar.tsmapper.presentation.entities.transaction.result.TxRe
 import com.lobstr.stellar.tsmapper.presentation.entities.transaction.result.TxResultCode.Code.TX_FAILED
 import com.lobstr.stellar.tsmapper.presentation.entities.transaction.result.TxResultCode.Code.TX_FEE_BUMP_INNER_SUCCESS
 import com.lobstr.stellar.tsmapper.presentation.entities.transaction.result.TxResultCode.Code.TX_SUCCESS
+import com.lobstr.stellar.tsmapper.presentation.entities.transaction.result.operation.OpResultCode.Code.OP_BAD_AUTH
 import com.lobstr.stellar.tsmapper.presentation.entities.transaction.result.operation.OpResultCode.Code.OP_INNER
 import com.lobstr.stellar.tsmapper.presentation.entities.transaction.result.operation.OpResultCode.Code.OP_SUCCESS
 import com.lobstr.stellar.tsmapper.presentation.util.Constant.TransactionType.AUTH_CHALLENGE
@@ -63,6 +64,9 @@ class TransactionDetailsPresenter @Inject constructor(
 
     private val stellarAccounts: MutableList<Account> = mutableListOf()
     private val cachedStellarAccounts: MutableList<Account> = mutableListOf()
+
+    // (Count To Confirm, Signed Count, is Vault Account Pending).
+    private var signersCountInfo: Triple<Int, Int, Boolean>? = null
 
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
@@ -175,7 +179,7 @@ class TransactionDetailsPresenter @Inject constructor(
                 }
                 .subscribe({
                     viewState.showSignersContainer(stellarAccounts.isNotEmpty())
-                    calculateSignersCount(it)
+                    signersCountInfo = calculateSignersCount(it)
                     viewState.notifySignersAdapter(stellarAccounts)
                     // Try receive federations for accounts.
                     getStellarAccounts(stellarAccounts)
@@ -198,7 +202,11 @@ class TransactionDetailsPresenter @Inject constructor(
         )
     }
 
-    private fun calculateSignersCount(accountResult: AccountResult) {
+    /**
+     * @return Triple - Signers count info container (Count To Confirm, Signed Count, is Vault Account Pending) or null.
+     */
+    private fun calculateSignersCount(accountResult: AccountResult): Triple<Int, Int, Boolean>? {
+        var signersCountInfo: Triple<Int, Int, Boolean>? = null
         var countSummaryStr: String? = null
         var countToSubmitStr: String? = null
 
@@ -220,12 +228,11 @@ class TransactionDetailsPresenter @Inject constructor(
                     val countToConfirm =
                         kotlin.math.ceil((highThreshold.toFloat() / accountResult.signers.first().weight!!.toFloat()))
                             .toInt()
+                    val signedCount = accountResult.signers.filter { it.signed == true }.size
+                    val isVaultAccountPending = accountResult.signers.any { it.isVaultAccount == true && it.signed == false }
+                    signersCountInfo = Triple(countToConfirm, signedCount, isVaultAccountPending)
 
-                    countSummaryStr = "${accountResult.signers.filter { it.signed == true }.size} ${
-                        AppUtil.getString(
-                            R.string.text_tv_of
-                        )
-                    } $countToConfirm"
+                    countSummaryStr = "$signedCount ${AppUtil.getString(R.string.text_tv_of)} $countToConfirm"
 
                     // Show signatures count to submit additional info only for non AUTH_CHALLENGE transactions.
                     if (transactionItem.transaction.transactionType != AUTH_CHALLENGE) {
@@ -240,6 +247,8 @@ class TransactionDetailsPresenter @Inject constructor(
         }
 
         viewState.showSignersCount(countSummaryStr, countToSubmitStr)
+
+        return signersCountInfo
     }
 
     /**
@@ -476,7 +485,7 @@ class TransactionDetailsPresenter @Inject constructor(
                 when {
                     !isSequenceWarningState && interactor.isTrConfirmationEnabled() -> {
                         viewState.showProgressDialog(false)
-                        viewState.showConfirmTransactionDialog(true)
+                        viewState.showConfirmTransactionDialog(true, getConfirmationText())
                     }
                     else -> confirmTransaction()
                 }
@@ -488,6 +497,25 @@ class TransactionDetailsPresenter @Inject constructor(
             }
         }
     }
+
+    private fun getConfirmationText(): String = AppUtil.getString(signersCountInfo?.let { info ->
+        val isNotAuthChallenge = transactionItem.transaction.transactionType != AUTH_CHALLENGE
+        val isVaultAccountPending = info.third
+        when {
+            isNotAuthChallenge && isVaultAccountPending -> {
+                val countToConfirm = info.first
+                val signedCount = info.second
+                val leftToSign = countToConfirm - signedCount
+
+                when {
+                    leftToSign == 1 -> R.string.msg_confirm_transaction_no_other_signatures_required_dialog
+                    leftToSign > 1 -> R.string.msg_confirm_transaction_other_signatures_required_dialog
+                    else -> R.string.msg_confirm_transaction_dialog
+                }
+            }
+            else -> R.string.msg_confirm_transaction_dialog
+        }
+    } ?: R.string.msg_confirm_transaction_dialog)
 
     private fun getTransactionInfo() {
         if (confirmationInProcess) {
@@ -658,16 +686,30 @@ class TransactionDetailsPresenter @Inject constructor(
                                         }
                                         TX_BAD_AUTH -> needAdditionalSignatures = true
                                         TX_FAILED -> {
-                                            // One of the operations failed (none were applied). Try to take the first readable error.
+                                            // One of the operations failed (none were applied).
+                                            // Check op_bad_auth or try to take the first readable error.
                                             val opResultCodes = submitTransactionResponse.tsResult.opResultCodes
-                                            val firstOpResultCode = opResultCodes.firstOrNull { resCode ->
+
+                                            val opErrors = opResultCodes.filter { resCode ->
                                                 (resCode.code != OP_SUCCESS && resCode.code != OP_INNER)
                                             }
-                                            throw HorizonException(
-                                                details = firstOpResultCode?.message ?: submitTransactionResponse.tsResult.txResultCode.message,
-                                                shortDetails = firstOpResultCode?.let { code -> AppUtil.createOpResultShortDescription(code, opResultCodes.indexOf(code) + 1, opResultCodes.size) },
-                                                xdr = transaction.toEnvelopeXdrBase64()
-                                            )
+
+                                            val isOpBadAuth = opErrors.isNotEmpty() && opErrors.all { resCode ->
+                                                resCode.code == OP_BAD_AUTH
+                                            }
+
+                                            if (isOpBadAuth) {
+                                                needAdditionalSignatures = true
+                                            } else {
+                                                val firstOpResultCode = opErrors.firstOrNull { resCode ->
+                                                    resCode.code != OP_BAD_AUTH
+                                                }
+                                                throw HorizonException(
+                                                    details = firstOpResultCode?.message ?: submitTransactionResponse.tsResult.txResultCode.message,
+                                                    shortDetails = firstOpResultCode?.let { code -> AppUtil.createOpResultShortDescription(code, opResultCodes.indexOf(code) + 1, opResultCodes.size) },
+                                                    xdr = transaction.toEnvelopeXdrBase64()
+                                                )
+                                            }
                                         }
                                         else -> {
                                             // Error.

@@ -91,7 +91,7 @@ You should attach a valid signature to this transaction and resubmit the transac
 
 Have any questions or encountered an issue? 
 
-Visit the [LOBSTR Vault Help Center](https://lobstr.zendesk.com/hc/en-us/categories/360001534333-LOBSTR-Vault) for a list of frequently asked questions or [Contact Support](https://lobstr.zendesk.com/hc/en-us/requests/new/) if the issue persists.
+Visit the [LOBSTR Vault Help Center](https://lobstrvault.freshdesk.com/support/solutions) for a list of frequently asked questions or [Contact Support](https://lobstr.freshdesk.com/support/tickets/new) if the issue persists.
 
 ## Links
 

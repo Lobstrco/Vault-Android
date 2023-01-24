@@ -109,7 +109,7 @@ class AuthFragment : BaseFragment(), AuthFrView {
     }
 
     override fun showHelpScreen() {
-        SupportManager.showZendeskHelpCenter(requireContext())
+        SupportManager.showFreshdeskHelpCenter(requireContext())
     }
 
     override fun showMessage(message: String?) {

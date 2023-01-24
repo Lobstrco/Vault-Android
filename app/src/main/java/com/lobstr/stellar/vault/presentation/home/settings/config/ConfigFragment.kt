@@ -147,11 +147,11 @@ class ConfigFragment : BaseFragment(), ConfigView {
         Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
     }
 
-    override fun showHelpScreen(articleId: Long, userId: String?) {
+    override fun showHelpScreen(articleId: Long) {
         if (articleId != -1L) {
-            SupportManager.showZendeskArticle(requireContext(), articleId, userId)
+            SupportManager.showFreshdeskArticle(requireContext(), articleId)
         } else {
-            SupportManager.showZendeskHelpCenter(requireContext())
+            SupportManager.showFreshdeskHelpCenter(requireContext())
         }
     }
 

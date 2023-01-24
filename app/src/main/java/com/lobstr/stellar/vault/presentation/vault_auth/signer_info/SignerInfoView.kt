@@ -17,7 +17,7 @@ interface SignerInfoView : MvpView {
     fun copyToClipBoard(text: String)
 
     @Skip
-    fun showHelpScreen(userId: String?)
+    fun showHelpScreen()
 
     @Skip
     fun showPublicKeyDialog(publicKey: String)

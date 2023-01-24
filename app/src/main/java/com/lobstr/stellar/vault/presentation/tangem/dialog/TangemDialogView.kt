@@ -1,6 +1,7 @@
 package com.lobstr.stellar.vault.presentation.tangem.dialog
 
 import com.lobstr.stellar.vault.presentation.entities.tangem.TangemInfo
+import com.lobstr.stellar.vault.presentation.util.VibratorUtil.VibrateType
 import moxy.MvpView
 import moxy.viewstate.strategy.alias.AddToEndSingle
 import moxy.viewstate.strategy.alias.Skip
@@ -56,5 +57,5 @@ interface TangemDialogView : MvpView {
     fun showSuccessAnimation()
 
     @Skip
-    fun vibrate(pattern: LongArray)
+    fun vibrate(type: VibrateType)
 }

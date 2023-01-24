@@ -228,13 +228,6 @@ object Constant {
         const val ENTER: Byte = 3
     }
 
-    object Support {
-        const val RECOVERY_PHRASE = 360013259599L
-        const val RECOVER_ACCOUNT = 360013243520L
-        const val SIGNING_WITH_VAULT_SIGNER_CARD = 360013838099L
-        const val TRANSACTION_CONFIRMATIONS = 360013304739L
-    }
-
     object RateUsSessionState {
         const val UNDEFINED: Byte = 0
         const val CHECK: Byte = 1

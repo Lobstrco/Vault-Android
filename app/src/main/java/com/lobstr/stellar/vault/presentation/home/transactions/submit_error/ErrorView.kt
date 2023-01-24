@@ -1,5 +1,6 @@
 package com.lobstr.stellar.vault.presentation.home.transactions.submit_error
 
+import com.lobstr.stellar.vault.presentation.util.VibratorUtil.VibrateType
 import moxy.MvpView
 import moxy.viewstate.strategy.alias.AddToEndSingle
 import moxy.viewstate.strategy.alias.Skip
@@ -8,7 +9,7 @@ import moxy.viewstate.strategy.alias.Skip
 interface ErrorView : MvpView {
 
     @Skip
-    fun vibrate(pattern: LongArray)
+    fun vibrate(type: VibrateType)
 
     @AddToEndSingle
     fun setupXdr(xdr: String)
@@ -20,7 +21,7 @@ interface ErrorView : MvpView {
     fun finishScreen()
 
     @Skip
-    fun showHelpScreen(userId: String?)
+    fun showHelpScreen()
 
     @Skip
     fun showWebPage(url: String)

@@ -11,6 +11,8 @@ import com.lobstr.stellar.vault.presentation.base.fragment.BaseFragment
 import com.lobstr.stellar.vault.presentation.dialog.alert.base.AlertDialogFragment
 import com.lobstr.stellar.vault.presentation.util.AppUtil
 import com.lobstr.stellar.vault.presentation.util.Constant
+import com.lobstr.stellar.vault.presentation.util.VibratorUtil
+import com.lobstr.stellar.vault.presentation.util.VibratorUtil.VibrateType
 import com.lobstr.stellar.vault.presentation.util.manager.SupportManager
 import com.lobstr.stellar.vault.presentation.util.setSafeOnClickListener
 import dagger.hilt.android.AndroidEntryPoint
@@ -106,8 +108,8 @@ class ErrorFragment : BaseFragment(), ErrorView {
     // Listeners, methods for/from Interfaces
     // ===========================================================
 
-    override fun vibrate(pattern: LongArray) {
-        AppUtil.vibrate(requireContext(), pattern)
+    override fun vibrate(type: VibrateType) {
+        VibratorUtil.vibrate(requireContext(), type)
     }
 
     override fun setupXdr(xdr: String) {
@@ -122,11 +124,11 @@ class ErrorFragment : BaseFragment(), ErrorView {
     }
 
     override fun finishScreen() {
-        activity?.onBackPressed()
+        activity?.onBackPressedDispatcher?.onBackPressed()
     }
 
-    override fun showHelpScreen(userId: String?) {
-        SupportManager.showZendeskHelpCenter(requireContext(), userId = userId)
+    override fun showHelpScreen() {
+        SupportManager.showFreshdeskHelpCenter(requireContext())
     }
 
     override fun showWebPage(url: String) {

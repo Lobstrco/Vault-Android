@@ -159,7 +159,7 @@ abstract class BaseActivity : BaseMvpAppCompatActivity(),
         // Remove actionbar title.
         supportActionBar?.setDisplayShowTitleEnabled(false)
         // Handle HomeAsUpIndicator click.
-        mToolbar?.setNavigationOnClickListener { onBackPressed() }
+        mToolbar?.setNavigationOnClickListener { onBackPressedDispatcher.onBackPressed() }
     }
 
     // ===========================================================

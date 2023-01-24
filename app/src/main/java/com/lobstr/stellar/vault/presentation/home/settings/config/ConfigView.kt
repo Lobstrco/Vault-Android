@@ -33,5 +33,5 @@ interface ConfigView : MvpView {
     fun showErrorMessage(message: String)
 
     @Skip
-    fun showHelpScreen(articleId: Long, userId: String?)
+    fun showHelpScreen(articleId: Long)
 }

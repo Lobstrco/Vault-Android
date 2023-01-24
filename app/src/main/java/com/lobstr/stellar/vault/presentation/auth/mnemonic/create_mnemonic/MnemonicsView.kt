@@ -25,7 +25,7 @@ interface MnemonicsView : MvpView {
     fun copyToClipBoard(text: String)
 
     @Skip
-    fun showHelpScreen(articleId: Long, userId: String?)
+    fun showHelpScreen(articleId: Long)
 
     @Skip
     fun showDenyAccountCreationDialog()

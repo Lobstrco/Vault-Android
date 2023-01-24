@@ -17,6 +17,7 @@ import com.lobstr.stellar.vault.presentation.pin.PinActivity
 import com.lobstr.stellar.vault.presentation.util.Constant
 import com.lobstr.stellar.vault.presentation.util.manager.ProgressManager
 import com.lobstr.stellar.vault.presentation.util.manager.SupportManager
+import com.lobstr.stellar.vault.presentation.util.parcelableArrayList
 import com.lobstr.stellar.vault.presentation.util.setSafeOnClickListener
 import dagger.hilt.android.AndroidEntryPoint
 import moxy.ktx.moxyPresenter
@@ -50,7 +51,7 @@ class ConfirmMnemonicsFragment : BaseFragment(), ConfirmMnemonicsView,
     // ===========================================================
 
     private val mPresenter by moxyPresenter { presenterProvider.get().apply {
-        mnemonicsInitialList = arguments?.getParcelableArrayList(Constant.Bundle.BUNDLE_MNEMONICS_ARRAY)!!
+        mnemonicsInitialList = arguments?.parcelableArrayList(Constant.Bundle.BUNDLE_MNEMONICS_ARRAY)!!
     } }
 
     // ===========================================================
@@ -158,7 +159,7 @@ class ConfirmMnemonicsFragment : BaseFragment(), ConfirmMnemonicsView,
     }
 
     override fun showHelpScreen(articleId: Long) {
-        SupportManager.showZendeskArticle(requireContext(), articleId)
+        SupportManager.showFreshdeskArticle(requireContext(), articleId)
     }
 
     override fun setActionButtonEnabled(enabled: Boolean) {

@@ -4,5 +4,9 @@ interface HomeInteractor {
 
     fun checkFcmRegistration()
 
+    fun isNotificationsEnabled(): Boolean
+
+    fun setNotificationsEnabled(enabled: Boolean)
+
     fun getRateUsState(): Int
 }

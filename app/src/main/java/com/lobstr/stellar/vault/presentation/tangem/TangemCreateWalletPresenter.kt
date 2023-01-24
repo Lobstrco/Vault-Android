@@ -4,7 +4,7 @@ import com.lobstr.stellar.vault.R
 import com.lobstr.stellar.vault.presentation.dialog.alert.base.AlertDialogFragment
 import com.lobstr.stellar.vault.presentation.entities.tangem.TangemInfo
 import com.lobstr.stellar.vault.presentation.util.AppUtil
-import com.lobstr.stellar.vault.presentation.util.Constant.Support.SIGNING_WITH_VAULT_SIGNER_CARD
+import com.lobstr.stellar.vault.presentation.util.manager.SupportManager.ArticleID.SIGNING_WITH_VAULT_SIGNER_CARD
 import moxy.MvpPresenter
 
 class TangemCreateWalletPresenter(private var tangemInfo: TangemInfo?) :

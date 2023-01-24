@@ -21,6 +21,9 @@ interface HomeActivityView : MvpView {
     fun setupViewPager()
 
     @Skip
+    fun checkPostNotificationsPermission()
+
+    @Skip
     fun resetBackStack()
 
     @Skip

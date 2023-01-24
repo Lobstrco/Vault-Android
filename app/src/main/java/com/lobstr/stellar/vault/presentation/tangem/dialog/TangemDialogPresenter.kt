@@ -9,6 +9,7 @@ import com.lobstr.stellar.vault.presentation.dialog.alert.base.AlertDialogFragme
 import com.lobstr.stellar.vault.presentation.entities.tangem.TangemInfo
 import com.lobstr.stellar.vault.presentation.util.AppUtil
 import com.lobstr.stellar.vault.presentation.util.Constant
+import com.lobstr.stellar.vault.presentation.util.VibratorUtil.VibrateType.TYPE_TWO
 import com.tangem.TangemSdkError
 import com.tangem.commands.Card
 import com.tangem.commands.CreateWalletResponse
@@ -254,6 +255,6 @@ class TangemDialogPresenter @Inject constructor(private val interactor: TangemIn
     }
 
     fun successAnimationStarted() {
-        viewState.vibrate(longArrayOf(1500, 175, 0, 0))
+        viewState.vibrate(TYPE_TWO)
     }
 }

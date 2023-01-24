@@ -13,16 +13,12 @@ import com.google.android.gms.security.ProviderInstaller
 import com.google.firebase.analytics.ktx.analytics
 import com.google.firebase.ktx.Firebase
 import com.lobstr.stellar.vault.BuildConfig
-import com.lobstr.stellar.vault.R
 import com.lobstr.stellar.vault.presentation.util.Constant
 import com.lobstr.stellar.vault.presentation.util.Constant.BuildType.DEBUG
-import com.zendesk.logger.Logger
 import dagger.hilt.android.HiltAndroidApp
 import io.reactivex.rxjava3.exceptions.UndeliverableException
 import io.reactivex.rxjava3.plugins.RxJavaPlugins
 import org.bouncycastle.jce.provider.BouncyCastleProvider
-import zendesk.core.Zendesk
-import zendesk.support.Support
 import java.security.Provider
 import java.security.Security
 import javax.inject.Inject
@@ -82,7 +78,6 @@ class LVApplication : Application(), Configuration.Provider {
         enableStrictMode()
         Firebase.analytics.setAnalyticsCollectionEnabled(BuildConfig.BUILD_TYPE != DEBUG)
         setupLifecycleListener()
-        configureZendesk()
         setupRxJavaErrorHandler()
     }
 
@@ -156,17 +151,6 @@ class LVApplication : Application(), Configuration.Provider {
 
     private fun setupLifecycleListener() {
         ProcessLifecycleOwner.get().lifecycle.addObserver(lifecycleListener)
-    }
-
-    private fun configureZendesk() {
-        Zendesk.INSTANCE.init(
-            this,
-            resources.getString(R.string.zd_url),
-            resources.getString(R.string.zd_appid),
-            resources.getString(R.string.zd_oauth)
-        )
-        Support.INSTANCE.init(Zendesk.INSTANCE)
-        Logger.setLoggable(BuildConfig.BUILD_TYPE == DEBUG)
     }
 
     /**

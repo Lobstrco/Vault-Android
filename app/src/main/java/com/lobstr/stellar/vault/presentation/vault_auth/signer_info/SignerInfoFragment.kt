@@ -6,6 +6,7 @@ import android.content.Intent
 import android.content.pm.ApplicationInfo
 import android.content.pm.PackageManager
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.view.*
 import android.widget.Toast
@@ -116,7 +117,11 @@ class SignerInfoFragment : BaseFragment(), SignerInfoView {
         val packageManager = requireActivity().packageManager
         var applicationInfo: ApplicationInfo? = null
         try {
-            applicationInfo = packageManager.getApplicationInfo(PACKAGE_NAME, 0)
+            applicationInfo = if (Build.VERSION.SDK_INT >= 33) {
+                packageManager.getApplicationInfo(PACKAGE_NAME, PackageManager.ApplicationInfoFlags.of(0))
+            } else {
+                packageManager.getApplicationInfo(PACKAGE_NAME, 0)
+            }
         } catch (e: PackageManager.NameNotFoundException) {
             e.printStackTrace()
         }
@@ -138,8 +143,8 @@ class SignerInfoFragment : BaseFragment(), SignerInfoView {
         AppUtil.copyToClipboard(context, text)
     }
 
-    override fun showHelpScreen(userId: String?) {
-        SupportManager.showZendeskHelpCenter(requireContext(), userId = userId)
+    override fun showHelpScreen() {
+        SupportManager.showFreshdeskHelpCenter(requireContext())
     }
 
     override fun showPublicKeyDialog(publicKey: String) {

@@ -33,6 +33,9 @@ interface SettingsView : MvpView {
     fun showAuthScreen()
 
     @Skip
+    fun showNotificationSettingsScreen()
+
+    @Skip
     fun showPublicKeyDialog(publicKey: String)
 
     @Skip
@@ -48,7 +51,7 @@ interface SettingsView : MvpView {
     fun showChangePinScreen()
 
     @Skip
-    fun showHelpScreen(userId: String?)
+    fun showHelpScreen()
 
     @AddToEndSingle
     fun setBiometricChecked(checked: Boolean)
@@ -59,8 +62,17 @@ interface SettingsView : MvpView {
     @AddToEndSingle
     fun setNotificationsChecked(checked: Boolean)
 
+    @Skip
+    fun checkSystemNotificationsState()
+
+    @Skip
+    fun checkPostNotificationsPermission()
+
     @AddToEndSingle
     fun setTrConfirmation(config: String?)
+
+    @Skip
+    fun showPostNotificationsExplanationDialog(@StringRes titleRes: Int, @StringRes messageRes: Int)
 
     @Skip
     fun showBiometricInfoDialog(@StringRes titleRes: Int, @StringRes messageRes: Int)

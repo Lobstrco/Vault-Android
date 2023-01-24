@@ -84,7 +84,7 @@ interface TransactionDetailsView : MvpView {
     fun setupTransactionInfo(fields: List<OperationField>)
 
     @AddToEndSingle
-    fun showConfirmTransactionDialog(show: Boolean)
+    fun showConfirmTransactionDialog(show: Boolean, message: String? = null)
 
     @Skip
     fun showDenyTransactionDialog()

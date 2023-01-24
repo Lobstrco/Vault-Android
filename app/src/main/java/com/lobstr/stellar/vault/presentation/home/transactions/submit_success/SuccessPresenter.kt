@@ -4,6 +4,7 @@ import com.lobstr.stellar.vault.domain.transaction_success.TransactionSuccessInt
 import com.lobstr.stellar.vault.presentation.util.AppUtil
 import com.lobstr.stellar.vault.presentation.util.Constant.TransactionConfirmationSuccessStatus.SUCCESS
 import com.lobstr.stellar.vault.presentation.util.Constant.TransactionConfirmationSuccessStatus.SUCCESS_NEED_ADDITIONAL_SIGNATURES
+import com.lobstr.stellar.vault.presentation.util.VibratorUtil.VibrateType.TYPE_TWO
 import moxy.MvpPresenter
 import javax.inject.Inject
 
@@ -16,7 +17,7 @@ class SuccessPresenter @Inject constructor(
 
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
-        viewState.vibrate(longArrayOf(1500, 175, 0, 0))
+        viewState.vibrate(TYPE_TWO)
         viewState.setupXdr(envelopeXdr)
         viewState.setAdditionalSignaturesInfoEnabled(
             status == SUCCESS_NEED_ADDITIONAL_SIGNATURES
@@ -25,7 +26,7 @@ class SuccessPresenter @Inject constructor(
     }
 
     fun infoClicked() {
-        viewState.showHelpScreen(interactor.getUserPublicKey())
+        viewState.showHelpScreen()
     }
 
     fun copySignedXdrClicked() {

@@ -19,6 +19,7 @@ import com.lobstr.stellar.vault.presentation.entities.tangem.TangemInfo
 import com.lobstr.stellar.vault.presentation.tangem.dialog.TangemDialogFragment
 import com.lobstr.stellar.vault.presentation.util.Constant
 import com.lobstr.stellar.vault.presentation.util.manager.SupportManager
+import com.lobstr.stellar.vault.presentation.util.parcelable
 import com.lobstr.stellar.vault.presentation.util.setSafeOnClickListener
 import moxy.ktx.moxyPresenter
 
@@ -43,7 +44,7 @@ class TangemCreateWalletActivity : BaseActivity(), TangemCreateWalletView,
     // Constructors
     // ===========================================================
 
-    private val mCreateWalletPresenter by moxyPresenter { TangemCreateWalletPresenter(intent?.getParcelableExtra(Constant.Extra.EXTRA_TANGEM_INFO)) }
+    private val mCreateWalletPresenter by moxyPresenter { TangemCreateWalletPresenter(intent?.parcelable(Constant.Extra.EXTRA_TANGEM_INFO)) }
 
     // ===========================================================
     // Getter & Setter
@@ -155,7 +156,7 @@ class TangemCreateWalletActivity : BaseActivity(), TangemCreateWalletView,
     }
 
     override fun showHelpScreen(articleId: Long) {
-        SupportManager.showZendeskArticle(this, articleId)
+        SupportManager.showFreshdeskArticle(this, articleId)
     }
 
     // ===========================================================

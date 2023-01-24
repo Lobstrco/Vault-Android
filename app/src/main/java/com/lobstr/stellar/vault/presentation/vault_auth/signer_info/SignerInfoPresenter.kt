@@ -94,6 +94,6 @@ class SignerInfoPresenter @Inject constructor(
     }
 
     fun infoClicked() {
-        viewState.showHelpScreen(interactor.getUserPublicKey())
+        viewState.showHelpScreen()
     }
 }
