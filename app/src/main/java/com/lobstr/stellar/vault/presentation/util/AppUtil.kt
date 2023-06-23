@@ -8,7 +8,6 @@ import android.net.Uri
 import android.nfc.NfcAdapter
 import android.os.*
 import android.util.DisplayMetrics
-import android.util.Log
 import android.view.View
 import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
@@ -37,6 +36,7 @@ import com.lobstr.stellar.vault.presentation.util.Constant.Symbol.NULL
 import org.stellar.sdk.AccountConverter
 import org.stellar.sdk.xdr.CryptoKeyType
 import org.stellar.sdk.xdr.MuxedAccount
+import timber.log.Timber
 import java.io.IOException
 import java.net.URLEncoder
 import java.text.SimpleDateFormat
@@ -51,12 +51,12 @@ object AppUtil {
 
         if (resultCode != ConnectionResult.SUCCESS) {
             if (apiAvailability.isUserResolvableError(resultCode)) {
-                Log.e("GooglePlayServices", "No valid Google Play Services APK found. ")
+                Timber.tag("GooglePlayServices").e("No valid Google Play Services APK found. ")
                 if (context is Activity && showExplanation) {
                     apiAvailability.getErrorDialog(context, resultCode, 9000)?.show()
                 }
             } else {
-                Log.e("GooglePlayServices", "This device is not supported. ")
+                Timber.tag("GooglePlayServices").e("This device is not supported. ")
                 if (showExplanation) {
                     Toast.makeText(
                         context,
@@ -88,7 +88,9 @@ object AppUtil {
                     launchUrl(context, Uri.parse(url))
                 }
         } catch (exc: ActivityNotFoundException) {
-            Toast.makeText(context, R.string.msg_no_app_found, Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, R.string.msg_browser_not_found, Toast.LENGTH_SHORT).show()
+        } catch (exc: SecurityException) {
+            Toast.makeText(context, R.string.msg_browser_obsolete, Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -131,14 +133,14 @@ object AppUtil {
 
     fun getAppVersionCode(context: Context?): Long {
         return try {
-            val packageInfo = if (Build.VERSION.SDK_INT >= 33) {
+            val packageInfo = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                 context?.packageManager?.getPackageInfo(context.packageName, PackageManager.PackageInfoFlags.of(0))
             } else {
                 context?.packageManager?.getPackageInfo(context.packageName, 0)
             }
             if (packageInfo != null) PackageInfoCompat.getLongVersionCode(packageInfo) else -1
         } catch (e: PackageManager.NameNotFoundException) {
-            Log.e("NameNotFoundException", "Could not get package name:$e")
+            Timber.tag("NameNotFoundException").e("Could not get package name:$e")
             -1
         }
     }
@@ -242,8 +244,8 @@ object AppUtil {
     }
 
     fun getConfigText(type: Byte): String? = when (type) {
-        Constant.ConfigType.YES -> getString(R.string.text_config_yes)
-        Constant.ConfigType.NO -> getString(R.string.text_config_no)
+        Constant.ConfigType.YES -> getString(R.string.yes_action)
+        Constant.ConfigType.NO -> getString(R.string.no_action)
         else -> null
     }
 
@@ -346,12 +348,12 @@ object AppUtil {
         opSize: Int,
     ): String {
         return TsUtil.getTransactionOperationName(opResultCode).run {
-            getString(if (this == UNDEFINED_VALUE) R.string.text_operation_name_unknown else this)
+            getString(if (this == UNDEFINED_VALUE) com.lobstr.stellar.tsmapper.R.string.operation_name_unknown else this)
         }.run {
             if (opSize > 1) {
-                getString(R.string.text_tv_error_short_description_with_number, this, opOrder)
+                getString(R.string.transaction_confirmation_error_short_with_number_description, this, opOrder)
             } else {
-                getString(R.string.text_tv_error_short_description, this)
+                getString(R.string.transaction_confirmation_error_short_description, this)
             }
         }
     }

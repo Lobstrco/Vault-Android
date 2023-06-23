@@ -3,7 +3,6 @@ package com.lobstr.stellar.vault.presentation.dialog.alert.base
 import android.app.Dialog
 import android.content.DialogInterface
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -26,7 +25,7 @@ import com.lobstr.stellar.vault.presentation.home.rate_us.common.RateUsDialogFra
 import com.lobstr.stellar.vault.presentation.home.rate_us.feedback.ProvideFeedbackDialogFragment
 import com.lobstr.stellar.vault.presentation.home.rate_us.suggest.SuggestRateUsDialogFragment
 import com.lobstr.stellar.vault.presentation.util.AppUtil
-
+import timber.log.Timber
 
 open class AlertDialogFragment : BaseMvpAppCompatDialogFragment() {
 
@@ -97,8 +96,6 @@ open class AlertDialogFragment : BaseMvpAppCompatDialogFragment() {
         // Constants
         // ===========================================================
 
-        private val LOG_TAG = AlertDialogFragment::class.java.simpleName
-
         const val ARGUMENT_DIALOG_IS_CALLED_IN_FRAGMENT = "ARGUMENT_DIALOG_IS_CALLED_IN_FRAGMENT"
         const val ARGUMENT_DIALOG_IS_CANCELABLE = "ARGUMENT_DIALOG_IS_CANCELABLE"
         const val ARGUMENT_DIALOG_TITLE = "ARGUMENT_DIALOG_TITLE"
@@ -124,39 +121,39 @@ open class AlertDialogFragment : BaseMvpAppCompatDialogFragment() {
 
                 PROGRESS -> {
                     alertDialogFragment = ProgressDialog()
-                    Log.i(LOG_TAG, " fabric: ProgressDialog")
+                    Timber.i(" fabric: ProgressDialog")
                 }
 
                 SUGGEST_RATE_US -> {
                     alertDialogFragment =
                         SuggestRateUsDialogFragment()
-                    Log.i(LOG_TAG, " fabric: SuggestRateUsDialogFragment")
+                    Timber.i(" fabric: SuggestRateUsDialogFragment")
                 }
 
                 RATE_US -> {
                     alertDialogFragment =
                         RateUsDialogFragment()
-                    Log.i(LOG_TAG, " fabric: RateUsDialogFragment")
+                    Timber.i(" fabric: RateUsDialogFragment")
                 }
 
                 PROVIDE_FEEDBACK -> {
                     alertDialogFragment = ProvideFeedbackDialogFragment()
-                    Log.i(LOG_TAG, " fabric: ProvideFeedbackDialogFragment")
+                    Timber.i(" fabric: ProvideFeedbackDialogFragment")
                 }
 
                 APP_UPDATE -> {
                     alertDialogFragment = AppUpdateDialogFragment()
-                    Log.i(LOG_TAG, " fabric: AppUpdateDialogFragment")
+                    Timber.i(" fabric: AppUpdateDialogFragment")
                 }
 
                 ACCOUNT_NAME -> {
                     alertDialogFragment = AccountNameDialogFragment()
-                    Log.i(LOG_TAG, " fabric: AccountNameDialogFragment")
+                    Timber.i(" fabric: AccountNameDialogFragment")
                 }
 
                 else -> {
                     alertDialogFragment = AlertDialogFragment()
-                    Log.i(LOG_TAG, " fabric: default AlertDialogFragment")
+                    Timber.i(" fabric: default AlertDialogFragment")
                 }
             }
 

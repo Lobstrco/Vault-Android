@@ -1,6 +1,7 @@
 package com.lobstr.stellar.vault.presentation.home.transactions.submit_success
 
-import com.lobstr.stellar.vault.presentation.util.VibratorUtil.VibrateType
+import androidx.annotation.ColorRes
+import com.lobstr.stellar.vault.presentation.util.VibrateType
 import moxy.MvpView
 import moxy.viewstate.strategy.alias.AddToEndSingle
 import moxy.viewstate.strategy.alias.Skip
@@ -17,10 +18,13 @@ interface SuccessView : MvpView {
     fun finishScreen()
 
     @AddToEndSingle
-    fun setAdditionalSignaturesInfoEnabled(enabled: Boolean)
+    fun setDescription(description: String, @ColorRes color: Int)
 
     @AddToEndSingle
     fun showXdrContainer(show: Boolean)
+
+    @AddToEndSingle
+    fun showViewExplorer(show: Boolean)
 
     @Skip
     fun showHelpScreen()

@@ -17,10 +17,6 @@ class AssetInfoDialogFragment : BaseBottomSheetDialog(), AssetInfoView {
     // Constants
     // ===========================================================
 
-    companion object {
-        val LOG_TAG = AssetInfoDialogFragment::class.simpleName
-    }
-
     // ===========================================================
     // Fields
     // ===========================================================

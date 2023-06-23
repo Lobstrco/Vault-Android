@@ -1,7 +1,8 @@
 package com.lobstr.stellar.vault.presentation.tangem.dialog
 
 import com.lobstr.stellar.vault.presentation.entities.tangem.TangemInfo
-import com.lobstr.stellar.vault.presentation.util.VibratorUtil.VibrateType
+import com.lobstr.stellar.vault.presentation.util.VibrateType
+import com.tangem.common.card.EllipticCurve
 import moxy.MvpView
 import moxy.viewstate.strategy.alias.AddToEndSingle
 import moxy.viewstate.strategy.alias.Skip
@@ -35,11 +36,14 @@ interface TangemDialogView : MvpView {
     @AddToEndSingle
     fun setDescriptionMessage(message: String?)
 
-    @Skip
-    fun startSignPendingTransaction(arrayHashes: Array<ByteArray>, cardId: String)
+    @AddToEndSingle
+    fun setTimerDescription(message: String?)
 
     @Skip
-    fun startCreateWallet(cardId: String)
+    fun startSignPendingTransaction(arrayHashes: Array<ByteArray>, walletPublicKey: ByteArray, cardId: String)
+
+    @Skip
+    fun startCreateWallet(curve: EllipticCurve, cardId: String)
 
     @AddToEndSingle
     fun setGravity(gravity: Int)

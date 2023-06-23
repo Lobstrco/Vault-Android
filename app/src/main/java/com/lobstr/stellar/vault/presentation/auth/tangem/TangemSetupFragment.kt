@@ -19,7 +19,7 @@ import com.lobstr.stellar.vault.presentation.tangem.dialog.TangemDialogFragment
 import com.lobstr.stellar.vault.presentation.util.AppUtil
 import com.lobstr.stellar.vault.presentation.util.Constant
 import com.lobstr.stellar.vault.presentation.util.manager.SupportManager
-import com.lobstr.stellar.vault.presentation.util.parcelable
+import com.lobstr.stellar.vault.presentation.util.parcelableExtra
 import com.lobstr.stellar.vault.presentation.util.setSafeOnClickListener
 import com.lobstr.stellar.vault.presentation.vault_auth.VaultAuthActivity
 import dagger.hilt.android.AndroidEntryPoint
@@ -33,10 +33,6 @@ class TangemSetupFragment : BaseFragment(), TangemView, TangemDialogFragment.OnT
     // ===========================================================
     // Constants
     // ===========================================================
-
-    companion object {
-        val LOG_TAG = TangemSetupFragment::class.simpleName
-    }
 
     // ===========================================================
     // Fields
@@ -59,7 +55,7 @@ class TangemSetupFragment : BaseFragment(), TangemView, TangemDialogFragment.OnT
             if (result.resultCode == Activity.RESULT_OK) {
                 // Handle create wallet result.
                 mvpDelegate.onAttach()
-                mPresenter.handleTangemInfo(result.data?.parcelable(Constant.Extra.EXTRA_TANGEM_INFO))
+                mPresenter.handleTangemInfo(result.data?.parcelableExtra(Constant.Extra.EXTRA_TANGEM_INFO))
             }
         }
 
@@ -158,9 +154,9 @@ class TangemSetupFragment : BaseFragment(), TangemView, TangemDialogFragment.OnT
     override fun showNfcNotAvailable() {
         AlertDialogFragment.Builder(true)
             .setCancelable(true)
-            .setTitle(R.string.title_nfc_not_available_dialog)
-            .setMessage(R.string.msg_nfc_not_available_dialog)
-            .setPositiveBtnText(R.string.text_btn_ok)
+            .setTitle(R.string.nfc_not_available_title)
+            .setMessage(R.string.nfc_not_available_description)
+            .setPositiveBtnText(R.string.ok_action)
             .create()
             .show(
                 childFragmentManager,

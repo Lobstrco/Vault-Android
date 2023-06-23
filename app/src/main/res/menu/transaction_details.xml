@@ -9,14 +9,14 @@
         <menu>
             <item
                     android:id="@+id/action_copy_xdr"
-                    android:title="@string/text_menu_copy_xdr" />
+                    android:title="@string/menu_action_copy_xdr_title" />
             <item
                     android:id="@+id/action_copy_signed_xdr"
-                    android:title="@string/text_menu_copy_signed_xdr" />
+                    android:title="@string/menu_action_copy_signed_xdr_title" />
 
             <item
                     android:id="@+id/action_view_transaction_details"
-                    android:title="@string/text_menu_view_transaction_details" />
+                    android:title="@string/menu_action_view_transaction_details_title" />
         </menu>
     </item>
 </menu>

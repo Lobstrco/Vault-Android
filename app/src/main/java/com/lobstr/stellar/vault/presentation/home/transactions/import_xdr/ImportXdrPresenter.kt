@@ -15,7 +15,7 @@ class ImportXdrPresenter @Inject constructor(private val interactor: ImportXdrIn
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
 
-        viewState.setupToolbarTitle(R.string.title_toolbar_import_xdr)
+        viewState.setupToolbarTitle(R.string.toolbar_import_xdr_title)
     }
 
     fun nextClicked(xdr: String?) {
@@ -48,7 +48,7 @@ class ImportXdrPresenter @Inject constructor(private val interactor: ImportXdrIn
                 }, {
                     viewState.showFormError(
                         true,
-                        AppUtil.getString(R.string.msg_bad_xdr)
+                        AppUtil.getString(R.string.import_xdr_invalid_label)
                     )
                 })
         )

@@ -50,6 +50,7 @@ class TangemSetupPresenter @Inject constructor(private val interactor: TangemSet
             if (tangemInfo.cardStatusCode == Constant.TangemCardStatus.EMPTY) {
                 viewState.showTangemCreateWalletScreen(TangemInfo().apply {
                     cardId = tangemInfo.cardId
+                    curve = tangemInfo.curve
                 })
             } else {
                 interactor.savePublicKey(tangemInfo.accountId!!)

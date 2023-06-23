@@ -29,37 +29,37 @@ object TsUtil {
      */
     fun getTransactionOperationName(operation: Operation): Int {
         return when (operation) {
-            is PaymentOperation -> R.string.text_operation_name_payment
-            is CreateAccountOperation -> R.string.text_operation_name_create_account
-            is PathPaymentStrictSendOperation -> R.string.text_operation_name_path_payment_strict_send
-            is PathPaymentStrictReceiveOperation -> R.string.text_operation_name_path_payment_strict_receive
-            is SellOfferOperation -> R.string.text_operation_name_sell_offer
-            is CancelSellOfferOperation -> R.string.text_operation_name_cancel_offer
-            is BuyOfferOperation -> R.string.text_operation_name_buy_offer
-            is CancelBuyOfferOperation -> R.string.text_operation_name_cancel_offer
-            is CreatePassiveSellOfferOperation -> R.string.text_operation_name_create_passive_sell_offer
-            is SetOptionsOperation -> R.string.text_operation_name_set_options
-            is ChangeTrustOperation -> R.string.text_operation_name_change_trust
-            is AllowTrustOperation -> R.string.text_operation_name_allow_trust
-            is SetTrustlineFlagsOperation -> R.string.text_operation_name_set_trustline_flags
-            is AccountMergeOperation -> R.string.text_operation_name_account_merge
-            is InflationOperation -> R.string.text_operation_name_inflation
-            is ManageDataOperation -> R.string.text_operation_name_manage_data
-            is BumpSequenceOperation -> R.string.text_operation_name_bump_sequence
-            is BeginSponsoringFutureReservesOperation -> R.string.text_operation_name_begin_sponsoring_future_reserves
-            is EndSponsoringFutureReservesOperation -> R.string.text_operation_name_end_sponsoring_future_reserves
-            is RevokeAccountSponsorshipOperation -> R.string.text_operation_name_revoke_account_sponsorship
-            is RevokeClaimableBalanceSponsorshipOperation -> R.string.text_operation_name_revoke_claimable_balance_sponsorship
-            is RevokeDataSponsorshipOperation -> R.string.text_operation_name_revoke_data_sponsorship
-            is RevokeOfferSponsorshipOperation -> R.string.text_operation_name_revoke_offer_sponsorship
-            is RevokeSignerSponsorshipOperation -> R.string.text_operation_name_revoke_signer_sponsorship
-            is RevokeTrustlineSponsorshipOperation -> R.string.text_operation_name_revoke_trustline_sponsorship
-            is CreateClaimableBalanceOperation -> R.string.text_operation_name_create_claimable_balance
-            is ClaimClaimableBalanceOperation -> R.string.text_operation_name_claim_claimable_balance
-            is ClawbackClaimableBalanceOperation -> R.string.text_operation_name_clawback_claimable_balance
-            is ClawbackOperation -> R.string.text_operation_name_clawback
-            is LiquidityPoolDepositOperation -> R.string.text_operation_name_liquidity_pool_deposit
-            is LiquidityPoolWithdrawOperation -> R.string.text_operation_name_liquidity_pool_withdraw
+            is PaymentOperation -> R.string.operation_name_payment
+            is CreateAccountOperation -> R.string.operation_name_create_account
+            is PathPaymentStrictSendOperation -> R.string.operation_name_path_payment_strict_send
+            is PathPaymentStrictReceiveOperation -> R.string.operation_name_path_payment_strict_receive
+            is SellOfferOperation -> R.string.operation_name_sell_offer
+            is CancelSellOfferOperation -> R.string.operation_name_cancel_offer
+            is BuyOfferOperation -> R.string.operation_name_buy_offer
+            is CancelBuyOfferOperation -> R.string.operation_name_cancel_offer
+            is CreatePassiveSellOfferOperation -> R.string.operation_name_create_passive_sell_offer
+            is SetOptionsOperation -> R.string.operation_name_set_options
+            is ChangeTrustOperation -> R.string.operation_name_change_trust
+            is AllowTrustOperation -> R.string.operation_name_allow_trust
+            is SetTrustlineFlagsOperation -> R.string.operation_name_set_trustline_flags
+            is AccountMergeOperation -> R.string.operation_name_account_merge
+            is InflationOperation -> R.string.operation_name_inflation
+            is ManageDataOperation -> R.string.operation_name_manage_data
+            is BumpSequenceOperation -> R.string.operation_name_bump_sequence
+            is BeginSponsoringFutureReservesOperation -> R.string.operation_name_begin_sponsoring_future_reserves
+            is EndSponsoringFutureReservesOperation -> R.string.operation_name_end_sponsoring_future_reserves
+            is RevokeAccountSponsorshipOperation -> R.string.operation_name_revoke_account_sponsorship
+            is RevokeClaimableBalanceSponsorshipOperation -> R.string.operation_name_revoke_claimable_balance_sponsorship
+            is RevokeDataSponsorshipOperation -> R.string.operation_name_revoke_data_sponsorship
+            is RevokeOfferSponsorshipOperation -> R.string.operation_name_revoke_offer_sponsorship
+            is RevokeSignerSponsorshipOperation -> R.string.operation_name_revoke_signer_sponsorship
+            is RevokeTrustlineSponsorshipOperation -> R.string.operation_name_revoke_trustline_sponsorship
+            is CreateClaimableBalanceOperation -> R.string.operation_name_create_claimable_balance
+            is ClaimClaimableBalanceOperation -> R.string.operation_name_claim_claimable_balance
+            is ClawbackClaimableBalanceOperation -> R.string.operation_name_clawback_claimable_balance
+            is ClawbackOperation -> R.string.operation_name_clawback
+            is LiquidityPoolDepositOperation -> R.string.operation_name_liquidity_pool_deposit
+            is LiquidityPoolWithdrawOperation -> R.string.operation_name_liquidity_pool_withdraw
             else -> UNDEFINED_VALUE
         }
     }
@@ -71,30 +71,30 @@ object TsUtil {
          */
         fun getTransactionOperationName(opResultCode: OpResultCode): Int {
             return when (opResultCode) {
-                is OpResultCode.TsPaymentResultCode -> R.string.text_operation_name_payment
-                is OpResultCode.TsCreateAccountResultCode -> R.string.text_operation_name_create_account
-                is OpResultCode.TsPathPaymentStrictSendResultCode -> R.string.text_operation_name_path_payment_strict_send
-                is OpResultCode.TsPathPaymentStrictReceiveResultCode -> R.string.text_operation_name_path_payment_strict_receive
-                is OpResultCode.TsCreatePassiveSellOfferResultCode -> R.string.text_operation_name_create_passive_sell_offer
-                is OpResultCode.TsManageSellOfferResultCode -> R.string.text_operation_name_manage_sell_offer
-                is OpResultCode.TsManageBuyOfferResultCode -> R.string.text_operation_name_manage_buy_offer
-                is OpResultCode.TsSetOptionsResultCode -> R.string.text_operation_name_set_options
-                is OpResultCode.TsChangeTrustResultCode -> R.string.text_operation_name_change_trust
-                is OpResultCode.TsAllowTrustResultCode -> R.string.text_operation_name_allow_trust
-                is OpResultCode.TsSetTrustLineFlagsResultCode -> R.string.text_operation_name_set_trustline_flags
-                is OpResultCode.TsAccountMergeResultCode -> R.string.text_operation_name_account_merge
-                is OpResultCode.TsInflationResultCode -> R.string.text_operation_name_inflation
-                is OpResultCode.TsManageDataResultCode -> R.string.text_operation_name_manage_data
-                is OpResultCode.TsBumpSequenceResultCode -> R.string.text_operation_name_bump_sequence
-                is OpResultCode.TsBeginSponsoringFutureReservesResultCode -> R.string.text_operation_name_begin_sponsoring_future_reserves
-                is OpResultCode.TsEndSponsoringFutureReservesResultCode -> R.string.text_operation_name_end_sponsoring_future_reserves
-                is OpResultCode.TsRevokeSponsorshipResultCode -> R.string.text_operation_name_revoke_sponsorship
-                is OpResultCode.TsCreateClaimableBalanceResultCode -> R.string.text_operation_name_create_claimable_balance
-                is OpResultCode.TsClaimClaimableBalanceResultCode -> R.string.text_operation_name_claim_claimable_balance
-                is OpResultCode.TsClawbackClaimableBalanceResultCode -> R.string.text_operation_name_clawback_claimable_balance
-                is OpResultCode.TsClawbackResultCode -> R.string.text_operation_name_clawback
-                is OpResultCode.TsLiquidityPoolDepositResultCode -> R.string.text_operation_name_liquidity_pool_deposit
-                is OpResultCode.TsLiquidityPoolWithdrawResultCode -> R.string.text_operation_name_liquidity_pool_withdraw
+                is OpResultCode.TsPaymentResultCode -> R.string.operation_name_payment
+                is OpResultCode.TsCreateAccountResultCode -> R.string.operation_name_create_account
+                is OpResultCode.TsPathPaymentStrictSendResultCode -> R.string.operation_name_path_payment_strict_send
+                is OpResultCode.TsPathPaymentStrictReceiveResultCode -> R.string.operation_name_path_payment_strict_receive
+                is OpResultCode.TsCreatePassiveSellOfferResultCode -> R.string.operation_name_create_passive_sell_offer
+                is OpResultCode.TsManageSellOfferResultCode -> R.string.operation_name_manage_sell_offer
+                is OpResultCode.TsManageBuyOfferResultCode -> R.string.operation_name_manage_buy_offer
+                is OpResultCode.TsSetOptionsResultCode -> R.string.operation_name_set_options
+                is OpResultCode.TsChangeTrustResultCode -> R.string.operation_name_change_trust
+                is OpResultCode.TsAllowTrustResultCode -> R.string.operation_name_allow_trust
+                is OpResultCode.TsSetTrustLineFlagsResultCode -> R.string.operation_name_set_trustline_flags
+                is OpResultCode.TsAccountMergeResultCode -> R.string.operation_name_account_merge
+                is OpResultCode.TsInflationResultCode -> R.string.operation_name_inflation
+                is OpResultCode.TsManageDataResultCode -> R.string.operation_name_manage_data
+                is OpResultCode.TsBumpSequenceResultCode -> R.string.operation_name_bump_sequence
+                is OpResultCode.TsBeginSponsoringFutureReservesResultCode -> R.string.operation_name_begin_sponsoring_future_reserves
+                is OpResultCode.TsEndSponsoringFutureReservesResultCode -> R.string.operation_name_end_sponsoring_future_reserves
+                is OpResultCode.TsRevokeSponsorshipResultCode -> R.string.operation_name_revoke_sponsorship
+                is OpResultCode.TsCreateClaimableBalanceResultCode -> R.string.operation_name_create_claimable_balance
+                is OpResultCode.TsClaimClaimableBalanceResultCode -> R.string.operation_name_claim_claimable_balance
+                is OpResultCode.TsClawbackClaimableBalanceResultCode -> R.string.operation_name_clawback_claimable_balance
+                is OpResultCode.TsClawbackResultCode -> R.string.operation_name_clawback
+                is OpResultCode.TsLiquidityPoolDepositResultCode -> R.string.operation_name_liquidity_pool_deposit
+                is OpResultCode.TsLiquidityPoolWithdrawResultCode -> R.string.operation_name_liquidity_pool_withdraw
                 else -> UNDEFINED_VALUE
             }
         }
@@ -105,10 +105,10 @@ object TsUtil {
      */
     fun getMemoTypeStr(context: Context, memo: TsMemo): String {
         return when (memo) {
-            TsMemo.MEMO_TEXT -> context.getString(R.string.text_tv_transaction_memo_text)
-            TsMemo.MEMO_ID -> context.getString(R.string.text_tv_transaction_memo_id)
-            TsMemo.MEMO_HASH -> context.getString(R.string.text_tv_transaction_memo_hash)
-            TsMemo.MEMO_RETURN -> context.getString(R.string.text_tv_transaction_memo_return)
+            TsMemo.MEMO_TEXT -> context.getString(R.string.transaction_memo_text)
+            TsMemo.MEMO_ID -> context.getString(R.string.transaction_memo_id)
+            TsMemo.MEMO_HASH -> context.getString(R.string.transaction_memo_hash)
+            TsMemo.MEMO_RETURN -> context.getString(R.string.transaction_memo_return)
             TsMemo.MEMO_NONE -> ""
         }
     }

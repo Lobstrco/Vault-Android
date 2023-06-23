@@ -35,10 +35,6 @@ class SignedAccountsFragment : BaseFragment(), SignedAccountsView, EditAccountDi
     // Constants
     // ===========================================================
 
-    companion object {
-        val LOG_TAG = SignedAccountsFragment::class.simpleName
-    }
-
     // ===========================================================
     // Fields
     // ===========================================================

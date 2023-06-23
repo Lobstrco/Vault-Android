@@ -35,7 +35,7 @@ class SettingsPresenter @Inject constructor(
 
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
-        viewState.setupToolbarTitle(R.string.title_toolbar_settings)
+        viewState.setupToolbarTitle(R.string.settings_title)
         registerEventProvider()
         viewState.setupSettingsData(
             "${BuildConfig.VERSION_NAME} (${
@@ -55,7 +55,7 @@ class SettingsPresenter @Inject constructor(
         getAccountConfig()
         viewState.setSpamProtection(AppUtil.getConfigText(AppUtil.getConfigType(!interactor.isSpamProtectionEnabled())))
         viewState.setTrConfirmation(AppUtil.getConfigText(AppUtil.getConfigType(interactor.isTrConfirmationEnabled())))
-        viewState.setupPolicyYear(R.string.text_all_rights_reserved)
+        viewState.setupPolicyYear(R.string.settings_copyright_label)
     }
 
     private fun registerEventProvider() {
@@ -139,7 +139,7 @@ class SettingsPresenter @Inject constructor(
     }
 
     fun handleChangePinResult() {
-        viewState.showMessage(AppUtil.getString(R.string.text_success_change_pin))
+        viewState.showMessage(AppUtil.getString(R.string.pin_msg_success_change))
     }
 
     fun handleConfirmPinResult() {
@@ -162,14 +162,14 @@ class SettingsPresenter @Inject constructor(
     fun logOutClicked() {
         viewState.showLogOutDialog(
             if (interactor.hasMnemonics()) {
-                AppUtil.getString(R.string.title_log_out_mnemonics_dialog)
+                AppUtil.getString(R.string.log_out_mnemonics_title)
             } else {
                 null
             },
             if (interactor.hasMnemonics()) {
-                AppUtil.getString(R.string.msg_log_out_mnemonics_dialog)
+                AppUtil.getString(R.string.log_out_mnemonics_description)
             } else {
-                AppUtil.getString(R.string.msg_log_out_dialog)
+                AppUtil.getString(R.string.log_out_description)
             }
         )
     }
@@ -205,8 +205,8 @@ class SettingsPresenter @Inject constructor(
                     interactor.setBiometricEnabled(false)
                     viewState.setBiometricChecked(false)
                     viewState.showBiometricInfoDialog(
-                        R.string.title_biometric_not_set_up_dialog,
-                        R.string.msg_biometric_not_set_up_dialog
+                        R.string.biometric_info_not_set_up_title,
+                        R.string.biometric_info_not_set_up_description
                     )
                 }
             }
@@ -223,8 +223,8 @@ class SettingsPresenter @Inject constructor(
             viewState.setNotificationsChecked(true)
         } else {
             viewState.showPostNotificationsExplanationDialog(
-                R.string.title_notifications_permission_not_set_up_dialog,
-                R.string.msg_notifications_permission_not_set_up_dialog
+                R.string.notifications_permission_not_set_up_title,
+                R.string.notifications_permission_not_set_up_description
             )
         }
     }

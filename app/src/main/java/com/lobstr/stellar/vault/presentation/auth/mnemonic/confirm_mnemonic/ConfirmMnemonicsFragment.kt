@@ -32,10 +32,6 @@ class ConfirmMnemonicsFragment : BaseFragment(), ConfirmMnemonicsView,
     // Constants
     // ===========================================================
 
-    companion object {
-        val LOG_TAG = ConfirmMnemonicsFragment::class.simpleName
-    }
-
     // ===========================================================
     // Fields
     // ===========================================================

@@ -27,7 +27,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="8dp"
                     android:gravity="start"
-                    android:text="@string/text_tv_mnemonics_title"
+                    android:text="@string/mnemonics_title"
                     android:textColor="@android:color/black"
                     android:textSize="20sp"
                     android:textStyle="bold" />
@@ -38,7 +38,7 @@
                     android:layout_marginBottom="25dp"
                     android:alpha="0.6"
                     android:gravity="start"
-                    android:text="@string/text_tv_mnemonics_description"
+                    android:text="@string/mnemonics_description"
                     android:textColor="@color/color_071c33"
                     android:textSize="14sp" />
 
@@ -66,7 +66,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="@string/text_tv_mnemonics_instruction"
+                            android:text="@string/mnemonics_instruction"
                             android:textColor="@color/color_4a4a4a"
                             android:alpha="0.6"
                             android:textSize="12sp" />
@@ -77,7 +77,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:fontFamily="sans-serif"
-                            android:text="@string/text_btn_clip_to_board"
+                            android:text="@string/clip_to_board_action"
                             android:textAllCaps="false"
                             android:textColor="@color/color_primary"
                             android:textSize="14sp"
@@ -100,7 +100,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginBottom="16dp"
-                android:text="@string/text_tv_mnemonics_confirmation"
+                android:text="@string/mnemonics_confirmation_label"
                 android:textAppearance="?android:textAppearanceSmall"
                 android:textColor="@color/color_4a4a4a"
                 android:alpha="0.6"
@@ -111,7 +111,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/selector_default_button_with_round"
-                android:text="@string/text_btn_next"
+                android:text="@string/next_action"
                 android:textAllCaps="false"
                 android:textColor="@android:color/white"
                 android:textSize="14sp" />

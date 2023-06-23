@@ -7,8 +7,10 @@ import com.lobstr.stellar.vault.databinding.AdapterItemTransactionBinding
 import com.lobstr.stellar.vault.databinding.LayoutListPreloaderBinding
 import com.lobstr.stellar.vault.presentation.entities.transaction.TransactionItem
 
-class TransactionAdapter(private val itemClickListener: (transactionItem: TransactionItem) -> Unit) :
-    RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class TransactionAdapter(
+    private val itemClickListener: (transactionItem: TransactionItem) -> Unit,
+    private val itemLongClickListener: (transactionItem: TransactionItem) -> Unit
+) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     companion object {
         private const val CONTENT_VIEW_TYPE = 0
@@ -33,7 +35,8 @@ class TransactionAdapter(private val itemClickListener: (transactionItem: Transa
             CONTENT_VIEW_TYPE -> {
                 TransactionViewHolder(
                     AdapterItemTransactionBinding.inflate(LayoutInflater.from(viewGroup.context), viewGroup, false),
-                    itemClickListener
+                    itemClickListener,
+                    itemLongClickListener
                 )
             }
             else -> {

@@ -3,6 +3,7 @@ package com.lobstr.stellar.vault.domain.transaction
 import com.lobstr.stellar.vault.domain.account.AccountRepository
 import com.lobstr.stellar.vault.domain.local_data.LocalDataRepository
 import com.lobstr.stellar.vault.presentation.entities.account.Account
+import com.lobstr.stellar.vault.presentation.entities.transaction.TransactionItem
 import com.lobstr.stellar.vault.presentation.entities.transaction.TransactionResult
 import com.lobstr.stellar.vault.presentation.util.AppUtil
 import com.lobstr.stellar.vault.presentation.util.Constant
@@ -43,6 +44,13 @@ class TransactionInteractorImpl(
 
     override fun cancelTransactions(): Completable {
         return transactionRepository.cancelTransactions(AppUtil.getJwtToken(prefUtil.authToken))
+    }
+
+    override fun cancelTransaction(hash: String): Single<TransactionItem> {
+        return transactionRepository.markTransactionAsCancelled(
+            AppUtil.getJwtToken(prefUtil.authToken),
+            hash
+        )
     }
 
     override fun cancelOutdatedTransactions(): Completable {

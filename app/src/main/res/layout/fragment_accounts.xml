@@ -26,7 +26,7 @@
                 android:layout_marginTop="27dp"
                 android:gravity="center"
                 android:letterSpacing="0.05"
-                android:text="@string/text_tv_choose_active_account"
+                android:text="@string/accounts_choose_active_title"
                 android:textColor="@android:color/black"
                 android:textSize="20sp"
                 android:textStyle="bold" />
@@ -52,7 +52,7 @@
                 android:letterSpacing="0.05"
                 android:paddingHorizontal="16dp"
                 android:paddingVertical="14dp"
-                android:text="@string/text_btn_add_new_account"
+                android:text="@string/accounts_add_new_action"
                 android:textColor="@android:color/black"
                 android:textSize="15sp"
                 android:textStyle="bold"

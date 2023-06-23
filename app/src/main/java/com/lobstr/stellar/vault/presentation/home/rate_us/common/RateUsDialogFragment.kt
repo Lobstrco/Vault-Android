@@ -16,10 +16,6 @@ class RateUsDialogFragment : AlertDialogFragment(),
     // Constants
     // ===========================================================
 
-    companion object {
-        val LOG_TAG = RateUsDialogFragment::class.simpleName
-    }
-
     // ===========================================================
     // Fields
     // ===========================================================

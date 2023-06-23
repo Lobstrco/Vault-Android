@@ -72,6 +72,7 @@ interface TransactionDetailsView : MvpView {
 
     @AddToEndSingle
     fun successConfirmTransaction(
+        hash: String,
         envelopeXdr: String,
         transactionSuccessStatus: Byte,
         transactionItem: TransactionItem

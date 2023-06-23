@@ -24,10 +24,6 @@ class SplashActivity : BaseMvpAppCompatActivity(), SplashView,
     // Constants
     // ===========================================================
 
-    companion object {
-        val LOG_TAG = SplashActivity::class.simpleName
-    }
-
     // ===========================================================
     // Fields
     // ===========================================================
@@ -81,8 +77,8 @@ class SplashActivity : BaseMvpAppCompatActivity(), SplashView,
     override fun showFlavorDialog(flavor: String) {
         AlertDialogFragment.Builder(false)
             .setCancelable(false)
-            .setMessage(getString(R.string.msg_flavor_dialog, flavor))
-            .setPositiveBtnText(R.string.text_btn_ok)
+            .setMessage(getString(R.string.flavor_description, flavor))
+            .setPositiveBtnText(R.string.ok_action)
             .create()
             .show(
                 supportFragmentManager,

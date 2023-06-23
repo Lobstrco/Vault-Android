@@ -20,7 +20,7 @@
             android:gravity="start"
             android:drawablePadding="30dp"
             android:textAllCaps="false"
-            android:text="@string/text_btn_open_explorer"
+            android:text="@string/edit_account_open_explorer_action"
             app:drawableStartCompat="@drawable/ic_open_in_new_purple"/>
 
     <Button
@@ -37,7 +37,7 @@
             android:gravity="start"
             android:drawablePadding="32dp"
             android:textAllCaps="false"
-            android:text="@string/text_btn_copy_public_key"
+            android:text="@string/edit_account_copy_public_key_action"
             app:drawableStartCompat="@drawable/ic_content_copy_purple"/>
 
     <Button
@@ -54,7 +54,7 @@
             android:gravity="start"
             android:drawablePadding="24dp"
             android:textAllCaps="false"
-            android:text="@string/text_tv_set_account_name"
+            android:text="@string/account_name_set_title"
             android:visibility="gone"
             app:drawableStartCompat="@drawable/ic_edit_note_purple"/>
 
@@ -72,7 +72,7 @@
             android:gravity="start"
             android:drawablePadding="26dp"
             android:textAllCaps="false"
-            android:text="@string/text_btn_clear_nick_name"
+            android:text="@string/edit_account_clear_nickname_action"
             android:visibility="gone"
             app:drawableStartCompat="@drawable/ic_delete_red"/>
 </LinearLayout>

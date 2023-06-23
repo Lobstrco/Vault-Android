@@ -45,8 +45,8 @@ class EditAccountPresenter @Inject constructor(
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe({
                         viewState.setAccountActionButton(
-                            if (it.isNullOrEmpty()) AppUtil.getString(R.string.text_tv_set_account_name) else AppUtil.getString(
-                                R.string.text_tv_change_account_name
+                            if (it.isNullOrEmpty()) AppUtil.getString(R.string.account_name_set_title) else AppUtil.getString(
+                                R.string.account_name_change_title
                             )
                         )
                         viewState.showClearAccountButton(!it.isNullOrEmpty())

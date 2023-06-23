@@ -47,10 +47,6 @@ abstract class BaseActivity : BaseMvpAppCompatActivity(),
     // Constants
     // ===========================================================
 
-    companion object {
-        val LOG_TAG = BaseActivity::class.simpleName
-    }
-
     // ===========================================================
     // Fields
     // ===========================================================

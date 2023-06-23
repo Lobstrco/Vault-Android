@@ -15,10 +15,6 @@ class LicenseFragment : BaseFragment(), LicenseView {
     // Constants
     // ===========================================================
 
-    companion object {
-        val LOG_TAG = LicenseFragment::class.simpleName
-    }
-
     // ===========================================================
     // Fields
     // ===========================================================

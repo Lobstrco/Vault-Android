@@ -37,8 +37,8 @@ class BiometricSetUpPresenter @Inject constructor(private val interactor: Biomet
             viewState.showBiometricDialog()
         } else {
             viewState.showBiometricInfoDialog(
-                R.string.title_biometric_not_set_up_dialog,
-                R.string.msg_biometric_not_set_up_dialog
+                R.string.biometric_info_not_set_up_title,
+                R.string.biometric_info_not_set_up_description
             )
         }
     }

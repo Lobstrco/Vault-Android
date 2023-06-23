@@ -38,10 +38,6 @@ class DashboardFragment : BaseFragment(), DashboardView,
     // Constants
     // ===========================================================
 
-    companion object {
-        val LOG_TAG = DashboardFragment::class.simpleName
-    }
-
     // ===========================================================
     // Fields
     // ===========================================================
@@ -204,7 +200,7 @@ class DashboardFragment : BaseFragment(), DashboardView,
 
     override fun showSignersCount(count: Int) {
         binding.tvDashboardSignersCount.text =
-            AppUtil.getQuantityString(R.plurals.text_settings_signers, count, count).run {
+            AppUtil.getQuantityString(R.plurals.settings_item_signers_title, count, count).run {
                 val startPosition = indexOf(count.toString())
                 val endPosition = startPosition + count.toString().length
                 if (startPosition != Constant.Util.UNDEFINED_VALUE) {

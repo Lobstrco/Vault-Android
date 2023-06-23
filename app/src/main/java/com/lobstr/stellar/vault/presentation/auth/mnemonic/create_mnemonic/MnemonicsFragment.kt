@@ -38,10 +38,6 @@ class MnemonicsFragment : BaseFragment(),
     // Constants
     // ===========================================================
 
-    companion object {
-        val LOG_TAG = MnemonicsFragment::class.simpleName
-    }
-
     // ===========================================================
     // Fields
     // ===========================================================
@@ -137,7 +133,7 @@ class MnemonicsFragment : BaseFragment(),
 
     override fun setupMnemonics(mnemonicItems: List<MnemonicItem>) {
         binding.apply {
-            tvMnemonicsInstruction.text = getString(R.string.text_tv_mnemonics_instruction, mnemonicItems.size)
+            tvMnemonicsInstruction.text = getString(R.string.mnemonics_instruction, mnemonicItems.size)
             mnemonicContainerView.mMnemonicList = mnemonicItems
             mnemonicContainerView.setupMnemonics()
         }
@@ -168,10 +164,10 @@ class MnemonicsFragment : BaseFragment(),
     override fun showDenyAccountCreationDialog() {
         AlertDialogFragment.Builder(true)
             .setCancelable(true)
-            .setTitle(R.string.title_deny_account_creation_dialog)
-            .setMessage(R.string.msg_deny_account_creation_dialog)
-            .setNegativeBtnText(R.string.text_btn_cancel)
-            .setPositiveBtnText(R.string.text_btn_ok)
+            .setTitle(R.string.confirmation_title)
+            .setMessage(R.string.deny_account_creation_description)
+            .setNegativeBtnText(R.string.cancel_action)
+            .setPositiveBtnText(R.string.ok_action)
             .create()
             .show(childFragmentManager, AlertDialogFragment.DialogFragmentIdentifier.DENY_ACCOUNT_CREATION)
     }

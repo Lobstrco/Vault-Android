@@ -14,7 +14,7 @@ import com.lobstr.stellar.vault.presentation.util.Constant.Navigation.DASHBOARD
 import com.lobstr.stellar.vault.presentation.util.Constant.TransactionConfirmationSuccessStatus.SUCCESS
 import com.lobstr.stellar.vault.presentation.util.Constant.Util.UNDEFINED_VALUE
 import com.lobstr.stellar.vault.presentation.util.manager.FragmentTransactionManager
-import com.lobstr.stellar.vault.presentation.util.parcelable
+import com.lobstr.stellar.vault.presentation.util.parcelableExtra
 import moxy.ktx.moxyPresenter
 
 /**
@@ -27,10 +27,6 @@ class ContainerActivity : BaseActivity(), ContainerView {
     // ===========================================================
     // Constants
     // ===========================================================
-
-    companion object {
-        val LOG_TAG = ContainerActivity::class.simpleName
-    }
 
     // ===========================================================
     // Fields
@@ -52,13 +48,13 @@ class ContainerActivity : BaseActivity(), ContainerView {
     private val mContainerPresenter by moxyPresenter {
         ContainerPresenter(
             intent?.getIntExtra(EXTRA_NAVIGATION_FR, DASHBOARD)!!,
-            intent?.parcelable(Constant.Extra.EXTRA_TRANSACTION_ITEM),
+            intent?.parcelableExtra(Constant.Extra.EXTRA_TRANSACTION_ITEM),
             intent?.getStringExtra(Constant.Extra.EXTRA_ENVELOPE_XDR),
             intent?.getByteExtra(
                 Constant.Extra.EXTRA_TRANSACTION_CONFIRMATION_SUCCESS_STATUS,
                 SUCCESS
             ),
-            intent?.getParcelableExtra(Constant.Extra.EXTRA_ERROR),
+            intent?.parcelableExtra(Constant.Extra.EXTRA_ERROR),
             intent?.getIntExtra(Constant.Extra.EXTRA_CONFIG, UNDEFINED_VALUE) ?: UNDEFINED_VALUE
         )
     }

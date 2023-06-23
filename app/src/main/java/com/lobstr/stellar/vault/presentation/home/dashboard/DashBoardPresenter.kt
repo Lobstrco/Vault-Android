@@ -54,7 +54,7 @@ class DashboardPresenter @Inject constructor(
 
     private fun getAccountName(
         publicKey: String,
-        defaultTitle: String = AppUtil.getString(R.string.text_title_dashboard_public_key)
+        defaultTitle: String = AppUtil.getString(R.string.public_key_title)
     ): String = interactor.getAccountNames().let {
         when {
             !it[publicKey].isNullOrEmpty() -> it[publicKey]!!

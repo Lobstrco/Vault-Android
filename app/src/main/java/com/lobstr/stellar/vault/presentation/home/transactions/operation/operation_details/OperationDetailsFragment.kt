@@ -28,10 +28,6 @@ class OperationDetailsFragment : BaseFragment(),
     // Constants
     // ===========================================================
 
-    companion object {
-        val LOG_TAG = OperationDetailsFragment::class.simpleName
-    }
-
     // ===========================================================
     // Fields
     // ===========================================================

@@ -16,7 +16,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:alpha="0.6"
-                android:text="@string/text_tv_signed_xdr"
+                android:text="@string/copy_xdr_signed_title"
                 android:textColor="@color/color_4a4a4a"
                 android:textSize="12sp" />
 
@@ -28,7 +28,7 @@
                 android:layout_gravity="center"
                 android:drawablePadding="8dp"
                 android:fontFamily="sans-serif"
-                android:text="@string/text_btn_copy_xdr"
+                android:text="@string/copy_xdr_action"
                 android:textAllCaps="false"
                 android:textColor="@color/color_primary"
                 android:textSize="12sp"

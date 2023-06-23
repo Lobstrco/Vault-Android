@@ -29,7 +29,7 @@
                     android:layout_marginTop="30dp"
                     android:gravity="center"
                     android:paddingBottom="5dp"
-                    android:text="@string/text_title_create_pin"
+                    android:text="@string/pin_create_title"
                     android:textAppearance="?android:textAppearanceLarge"
                     android:textColor="@android:color/black"
                     android:textStyle="bold" />
@@ -86,7 +86,7 @@
                     android:layout_marginBottom="16dp"
                     android:layout_weight="0"
                     android:gravity="center"
-                    android:text="@string/text_settings_log_out"
+                    android:text="@string/log_out_title"
                     android:textAppearance="?android:textAppearanceMedium"
                     android:textColor="@color/selector_text_white"
                     android:textStyle="bold" />

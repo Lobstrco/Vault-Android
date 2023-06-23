@@ -19,7 +19,7 @@ class ManageAccountsNamesPresenter @Inject constructor(
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
 
-        viewState.setupToolbarTitle(R.string.title_toolbar_manage_accounts_names)
+        viewState.setupToolbarTitle(R.string.manage_nicknames_title)
         registerEventProvider()
         viewState.initRecycledView()
         getAccountsNames()

@@ -19,7 +19,7 @@ import com.lobstr.stellar.vault.presentation.entities.tangem.TangemInfo
 import com.lobstr.stellar.vault.presentation.tangem.dialog.TangemDialogFragment
 import com.lobstr.stellar.vault.presentation.util.Constant
 import com.lobstr.stellar.vault.presentation.util.manager.SupportManager
-import com.lobstr.stellar.vault.presentation.util.parcelable
+import com.lobstr.stellar.vault.presentation.util.parcelableExtra
 import com.lobstr.stellar.vault.presentation.util.setSafeOnClickListener
 import moxy.ktx.moxyPresenter
 
@@ -29,10 +29,6 @@ class TangemCreateWalletActivity : BaseActivity(), TangemCreateWalletView,
     // ===========================================================
     // Constants
     // ===========================================================
-
-    companion object {
-        val LOG_TAG = TangemCreateWalletActivity::class.simpleName
-    }
 
     // ===========================================================
     // Fields
@@ -44,7 +40,7 @@ class TangemCreateWalletActivity : BaseActivity(), TangemCreateWalletView,
     // Constructors
     // ===========================================================
 
-    private val mCreateWalletPresenter by moxyPresenter { TangemCreateWalletPresenter(intent?.parcelable(Constant.Extra.EXTRA_TANGEM_INFO)) }
+    private val mCreateWalletPresenter by moxyPresenter { TangemCreateWalletPresenter(intent?.parcelableExtra(Constant.Extra.EXTRA_TANGEM_INFO)) }
 
     // ===========================================================
     // Getter & Setter
@@ -92,10 +88,10 @@ class TangemCreateWalletActivity : BaseActivity(), TangemCreateWalletView,
     override fun showNfcCheckDialog() {
         AlertDialogFragment.Builder(false)
             .setCancelable(true)
-            .setTitle(R.string.title_nfc_dialog)
-            .setMessage(getString(R.string.msg_nfc_dialog))
-            .setNegativeBtnText(R.string.text_btn_cancel)
-            .setPositiveBtnText(R.string.text_btn_ok)
+            .setTitle(R.string.nfc_enable_title)
+            .setMessage(getString(R.string.nfc_enable_description))
+            .setNegativeBtnText(R.string.cancel_action)
+            .setPositiveBtnText(R.string.ok_action)
             .create()
             .show(
                 supportFragmentManager,

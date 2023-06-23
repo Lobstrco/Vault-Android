@@ -34,10 +34,6 @@ class RecoverKeyFragment : BaseFragment(), RecoverKeyFrView {
     // Constants
     // ===========================================================
 
-    companion object {
-        val LOG_TAG = RecoverKeyFragment::class.simpleName
-    }
-
     // ===========================================================
     // Fields
     // ===========================================================

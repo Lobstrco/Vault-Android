@@ -4,7 +4,7 @@
 
     <item
             android:id="@+id/action_need_help"
-            android:title="@string/text_pin_menu_need_help"
+            android:title="@string/pin_help_action"
             app:actionLayout="@layout/layout_menu_pin"
             app:showAsAction="always" />
 

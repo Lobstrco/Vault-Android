@@ -50,12 +50,12 @@ class ConfirmMnemonicsPresenter @Inject constructor(private val interactor: Conf
     fun btnNextClicked() {
         if (BuildConfig.BUILD_TYPE == Constant.BuildType.RELEASE) {
             if (mnemonicsToConfirmList.size < mnemonicsInitialList.size) {
-                viewState.showMessage(R.string.msg_not_all_words_entered)
+                viewState.showMessage(R.string.confirm_mnemonics_msg_not_all_words_entered)
                 return
             }
 
             if (mnemonicsInitialStr != mnemonicsToConfirmList.joinToString(" ") { it.value }) {
-                viewState.showMessage(R.string.msg_phrase_dont_fit)
+                viewState.showMessage(R.string.confirm_mnemonics_msg_wrong_order)
                 return
             }
         }
@@ -74,7 +74,7 @@ class ConfirmMnemonicsPresenter @Inject constructor(private val interactor: Conf
                     viewState.showPinScreen()
                 }, { throwable ->
                     if (throwable is MnemonicException) {
-                        viewState.showMessage(R.string.text_error_incorrect_mnemonic)
+                        viewState.showMessage(R.string.msg_incorrect_mnemonic_phrases)
                     }
                 })
         )

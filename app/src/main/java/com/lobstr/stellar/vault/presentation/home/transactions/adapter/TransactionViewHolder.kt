@@ -20,8 +20,10 @@ import com.lobstr.stellar.vault.presentation.util.Constant.Util.PK_TRUNCATE_COUN
 import com.lobstr.stellar.vault.presentation.util.setSafeOnClickListener
 import java.time.ZonedDateTime
 
-class TransactionViewHolder(private val binding: AdapterItemTransactionBinding, private val itemClickListener: (transactionItem: TransactionItem) -> Unit) :
-    RecyclerView.ViewHolder(binding.root) {
+class TransactionViewHolder(
+    private val binding: AdapterItemTransactionBinding,
+    private val itemClickListener: (transactionItem: TransactionItem) -> Unit,
+    private val itemLongClickListener: (transactionItem: TransactionItem) -> Unit) : RecyclerView.ViewHolder(binding.root) {
 
     fun bind(item: TransactionItem) {
         val context: Context = itemView.context
@@ -72,20 +74,29 @@ class TransactionViewHolder(private val binding: AdapterItemTransactionBinding, 
 
             itemClickListener(item)
         }
+        itemView.setOnLongClickListener {
+            val position = this@TransactionViewHolder.bindingAdapterPosition
+            if (position == RecyclerView.NO_POSITION) {
+                return@setOnLongClickListener false
+            }
+
+            itemLongClickListener(item)
+            true
+        }
     }
 
     private fun getTransactionName(context: Context, transaction: Transaction, type: String?): String {
         return if (transaction.operations.isNotEmpty()) {
             when(type) {
-                AUTH_CHALLENGE -> context.getString(R.string.text_transaction_challenge)
+                AUTH_CHALLENGE -> context.getString(R.string.transaction_details_challenge_title)
                 else -> if (transaction.operations.size == 1) {
                     context.getString(TsUtil.getTransactionOperationName(transaction.operations[0]))
                 } else {
-                    context.getString(R.string.text_operation_name_several_operation, transaction.operations.size)
+                    context.getString(com.lobstr.stellar.tsmapper.R.string.operation_name_several_operation, transaction.operations.size)
                 }
             }
         } else {
-            context.getString(R.string.text_operation_name_unknown)
+            context.getString(com.lobstr.stellar.tsmapper.R.string.operation_name_unknown)
         }
     }
 }

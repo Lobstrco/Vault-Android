@@ -4,7 +4,7 @@ import com.lobstr.stellar.vault.presentation.entities.account.Account
 import com.lobstr.stellar.vault.presentation.entities.account.AccountResult
 import com.lobstr.stellar.vault.presentation.entities.mnemonic.MnemonicItem
 import com.lobstr.stellar.vault.presentation.entities.stellar.SubmitTransactionResult
-import com.tangem.commands.SignResponse
+import com.tangem.operations.sign.SignResponse
 import io.reactivex.rxjava3.core.Single
 import org.stellar.sdk.AbstractTransaction
 import org.stellar.sdk.KeyPair
@@ -35,9 +35,16 @@ interface StellarRepository {
 
     fun getPublicKeyFromKeyPair(walletPublicKey: ByteArray?): String?
 
+    fun getPublicKeyFromKeyPair(walletPublicKey: String?): ByteArray?
+
     fun getTransactionFromXDR(xdr: String): AbstractTransaction
 
-    fun readChallengeTransaction(challengeXdr: String, serverAccountId: String, domainName: String, webAuthDomain: String?): Sep10Challenge.ChallengeTransaction?
+    fun readChallengeTransaction(
+        challengeXdr: String,
+        serverAccountId: String,
+        domainName: String,
+        webAuthDomain: String?
+    ): Sep10Challenge.ChallengeTransaction?
 
     fun signTransactionWithTangemCardData(
         transaction: AbstractTransaction,

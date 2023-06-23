@@ -24,10 +24,6 @@ class AuthFragment : BaseFragment(), AuthFrView {
     // Constants
     // ===========================================================
 
-    companion object {
-        val LOG_TAG = AuthFragment::class.simpleName
-    }
-
     // ===========================================================
     // Fields
     // ===========================================================

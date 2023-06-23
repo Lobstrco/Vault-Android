@@ -35,7 +35,7 @@ class AccountsPresenter @Inject constructor(
         interactor.getAccountNames().let {
             when {
                 it[publicKey].isNullOrEmpty() -> AppUtil.getString(
-                    R.string.text_tv_account_name,
+                    R.string.accounts_item_name_title,
                     index
                 )
                 else -> it[publicKey]!!

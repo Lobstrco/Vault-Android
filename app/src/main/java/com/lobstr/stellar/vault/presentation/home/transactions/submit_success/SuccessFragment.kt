@@ -3,6 +3,7 @@ package com.lobstr.stellar.vault.presentation.home.transactions.submit_success
 
 import android.os.Bundle
 import android.view.*
+import androidx.core.content.ContextCompat
 import androidx.core.view.MenuProvider
 import androidx.core.view.isVisible
 import com.lobstr.stellar.vault.R
@@ -12,7 +13,7 @@ import com.lobstr.stellar.vault.presentation.util.AppUtil
 import com.lobstr.stellar.vault.presentation.util.Constant
 import com.lobstr.stellar.vault.presentation.util.Constant.TransactionConfirmationSuccessStatus.SUCCESS
 import com.lobstr.stellar.vault.presentation.util.VibratorUtil
-import com.lobstr.stellar.vault.presentation.util.VibratorUtil.VibrateType
+import com.lobstr.stellar.vault.presentation.util.VibrateType
 import com.lobstr.stellar.vault.presentation.util.manager.SupportManager
 import com.lobstr.stellar.vault.presentation.util.setSafeOnClickListener
 import dagger.hilt.android.AndroidEntryPoint
@@ -26,10 +27,6 @@ class SuccessFragment : BaseFragment(), SuccessView {
     // ===========================================================
     // Constants
     // ===========================================================
-
-    companion object {
-        val LOG_TAG = SuccessFragment::class.simpleName
-    }
 
     // ===========================================================
     // Fields
@@ -46,6 +43,7 @@ class SuccessFragment : BaseFragment(), SuccessView {
     // ===========================================================
 
     private val mPresenter by moxyPresenter { presenterProvider.get().apply {
+        hash = requireArguments().getString(Constant.Bundle.BUNDLE_TRANSACTION_HASH)!!
         envelopeXdr = requireArguments().getString(Constant.Bundle.BUNDLE_ENVELOPE_XDR)!!
         status = requireArguments().getByte(Constant.Bundle.BUNDLE_TRANSACTION_CONFIRMATION_SUCCESS_STATUS, SUCCESS)
     } }
@@ -93,6 +91,7 @@ class SuccessFragment : BaseFragment(), SuccessView {
     private fun setListeners() {
         binding.apply {
             copyXdr.btnCopyXdr.setSafeOnClickListener { mPresenter.copyXdrClicked() }
+            btnViewExplorer.setSafeOnClickListener { mPresenter.viewExplorerClicked() }
             btnDone.setSafeOnClickListener { mPresenter.doneClicked() }
         }
     }
@@ -111,22 +110,32 @@ class SuccessFragment : BaseFragment(), SuccessView {
     }
 
     override fun setupXdr(xdr: String) {
-        binding.copyXdr.tvXdr.text = xdr
+        binding.copyXdr.apply {
+            tvXdr.text = xdr
+        }
     }
 
     override fun finishScreen() {
         activity?.onBackPressedDispatcher?.onBackPressed()
     }
 
-    override fun setAdditionalSignaturesInfoEnabled(enabled: Boolean) {
+    override fun setDescription(description: String, color: Int) {
         binding.apply {
-            tvAdditionalSignaturesDescription.isVisible = enabled
-            copyXdr.root.isVisible = enabled
+            tvDescription.isVisible = description.isNotEmpty().apply {
+                if (this) {
+                    tvDescription.setTextColor(ContextCompat.getColor(requireContext(), color))
+                    tvDescription.text = description
+                }
+            }
         }
     }
 
     override fun showXdrContainer(show: Boolean) {
         binding.copyXdr.root.isVisible = show
+    }
+
+    override fun showViewExplorer(show: Boolean) {
+        binding.btnViewExplorer.isVisible = show
     }
 
     override fun showHelpScreen() {

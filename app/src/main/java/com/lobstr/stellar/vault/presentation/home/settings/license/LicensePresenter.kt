@@ -12,7 +12,7 @@ class LicensePresenter : MvpPresenter<LicenseView>() {
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
 
-        viewState.setupToolbarTitle(R.string.title_toolbar_license)
+        viewState.setupToolbarTitle(R.string.license_title)
         viewState.setupPagePath(LICENSE_PATH)
     }
 }

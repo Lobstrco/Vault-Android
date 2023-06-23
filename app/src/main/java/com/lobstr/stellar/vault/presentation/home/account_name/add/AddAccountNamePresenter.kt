@@ -19,7 +19,7 @@ class AddAccountNamePresenter @Inject constructor(
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
 
-        viewState.setupToolbarTitle(R.string.title_toolbar_add_account_name)
+        viewState.setupToolbarTitle(R.string.toolbar_add_account_name_title)
     }
 
     fun saveClicked(address: String, name: String) {

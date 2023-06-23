@@ -1,278 +1,271 @@
 <resources>
+    <!-- Toolbar titles -->
+    <string name="toolbar_signed_accounts_title">Protected Accounts</string>
+    <string name="toolbar_transaction_details_title">Transaction Details</string>
+    <string name="toolbar_dashboard_title">Home</string>
+    <string name="toolbar_transactions_title">Transactions</string>
+    <string name="toolbar_import_xdr_title">Add Transaction XDR</string>
+    <string name="toolbar_spam_protection_title">Unsigned Transactions</string>
+    <string name="toolbar_add_account_name_title">Set Nickname for Account</string>
 
-    <!-- Toolbar titles-->
-    <string name="title_toolbar_signed_accounts">Protected Accounts</string>
-    <string name="title_toolbar_transaction_details">Transaction Details</string>
-    <string name="title_toolbar_dashboard">Home</string>
-    <string name="title_toolbar_transactions">Transactions</string>
-    <string name="title_toolbar_operation_details">Operation Details</string>
-    <string name="title_toolbar_settings">Settings</string>
-    <string name="title_toolbar_license">Licenses</string>
-    <string name="title_toolbar_import_xdr">Add Transaction XDR</string>
-    <string name="title_toolbar_spam_protection">Unsigned Transactions</string>
-    <string name="title_toolbar_manage_accounts_names">Manage Account Nicknames</string>
-    <string name="title_toolbar_add_account_name">Set Nickname for Account</string>
+    <!-- Common Buttons/Actions -->
+    <string name="cancel_action">Cancel</string>
+    <string name="close_action">Close</string>
+    <string name="ok_action">OK</string>
+    <string name="confirm_action">Confirm</string>
+    <string name="yes_action">Yes</string>
+    <string name="no_action">No</string>
+    <string name="deny_action">Deny</string>
+    <string name="next_action">Next</string>
+    <string name="clip_to_board_action">Copy</string>
+    <string name="paste_clipboard_action">Paste From Clipboard</string>
+    <string name="skip_action">Skip</string>
+    <string name="done_action">Done</string>
+    <string name="copy_key_action">Copy Key</string>
+    <string name="continue_action">Continue</string>
+    <string name="clear_action">Clear</string>
+    <string name="show_action">Show</string>
+    <string name="save_action">Save</string>
+    <string name="update_action">Update</string>
+    <string name="learn_more_action">Learn More</string>
+    <string name="buy_now_action">Buy Now</string>
 
-    <!-- Buttons -->
-    <string name="text_btn_cancel">Cancel</string>
-    <string name="text_btn_close">Close</string>
-    <string name="text_btn_ok">OK</string>
-    <string name="text_btn_confirm">Confirm</string>
-    <string name="text_btn_yes">Yes</string>
-    <string name="text_btn_deny">Deny</string>
-    <string name="text_btn_log_out">Log Out</string>
-    <string name="text_btn_next">Next</string>
-    <string name="text_btn_clip_to_board">Copy</string>
-    <string name="text_btn_paste_clipboard">Paste From Clipboard</string>
-    <string name="text_btn_skip">Skip</string>
-    <string name="text_btn_done">Done</string>
-    <string name="text_btn_copy_key">Copy Key</string>
-    <string name="text_btn_import_xdr_next">Next</string>
-    <string name="text_btn_suggest_rate_us">Love it</string>
-    <string name="text_btn_cancel_suggestion_rate_us">Not for me</string>
-    <string name="text_btn_rate_us">Rate Us 5 stars</string>
-    <string name="text_btn_rate_later">Remind later</string>
-    <string name="text_btn_rate_never">Don\'t ask again</string>
-    <string name="text_btn_continue">Continue</string>
-    <string name="text_btn_change_pin">Change PIN</string>
-    <string name="text_btn_add_account">Add Account</string>
-    <string name="text_btn_remove_all">Remove All</string>
-    <string name="text_btn_remove_invalid">Remove Invalid</string>
-    <string name="text_btn_settings">Settings</string>
+    <!-- Common Labels/Titles -->
+    <string name="or_label">or</string>
+    <string name="of_label">of</string>
+    <string name="operation_details_title">Operation Details</string>
+    <string name="license_title">Licenses</string>
+    <string name="manage_nicknames_title">Manage Account Nicknames</string>
+    <string name="public_key_title">Vault Signer Key</string>
+    <string name="help_title">Help</string>
+    <string name="log_out_title">Log Out</string>
+    <string name="confirmation_title">Are you sure?</string>
 
-    <!-- Start screen -->
-    <string name="text_tv_start_screen_title">Multiply your security</string>
-    <string name="text_btn_start_screen_create_account">Create Account</string>
-    <string name="text_btn_start_screen_restore_account">Recover Account</string>
-    <string name="text_btn_start_screen_signer_card">Use Signer Card</string>
-    <string name="text_tc_start_screen_or">or</string>
-    <string name="text_tv_start_screen_help">First time user? See our <a href="https://lobstr.co/vault/">Help section</a></string>
-    <string name="text_tv_start_screen_terms_and_privacy">By registering you agree to our <a href="https://lobstr.co/terms/">Terms of Service</a> and <a href="https://lobstr.co/privacy/">Privacy Policy</a></string>
+    <!-- Other -->
+    <string name="app_name_vault" translatable="false">Vault</string>
+    <string name="flavor_description" translatable="false">%s build</string>
 
-    <!-- Recovery Account -->
-    <string name="text_tv_recovery_phrase_title">Recover Account</string>
-    <string name="text_tv_recovery_phrase_description">Enter the 12 or 24 word recovery phrase you were given when you
+    <!-- Start Authorization screen -->
+    <string name="auth_title">Multiply your security</string>
+    <string name="auth_create_action">Create Account</string>
+    <string name="auth_use_signer_card_action">Use Signer Card</string>
+    <string name="auth_help_label">First time user? See our <a href="https://lobstr.co/vault/">Help section</a></string>
+    <string name="auth_terms_and_privacy_label">By registering you agree to our <a href="https://lobstr.co/terms/">Terms of Service</a> and <a href="https://lobstr.co/privacy/">Privacy Policy</a></string>
+
+    <!-- Recover Account -->
+    <string name="recover_account_title">Recover Account</string>
+    <string name="recover_account_description">Enter the 12 or 24 word recovery phrase you were given when you
         created your Vault account.
     </string>
 
     <!-- Backup screen -->
-    <string name="text_tv_backup_title">Backup Your Account</string>
-    <string name="text_tv_backup_description">You will be shown a 12 word recovery phrase. It will allow you to recover access to your account in case your phone is lost or stolen.\n\n
+    <string name="backup_title">Backup Your Account</string>
+    <string name="backup_description">You will be shown a 12 word recovery phrase. It will allow you to recover access to your account in case your phone is lost or stolen.\n\n
         If you lose your Recovery Phrase, you may lose the control over your protected Stellar account and funds.
     </string>
-    <string name="text_btn_backup_understand">I Understand</string>
+    <string name="backup_confirm_action">I Understand</string>
 
-    <!-- Mnemonic Code screen -->
-    <string name="text_tv_mnemonics_title">Recovery Phrase</string>
-    <string name="text_tv_mnemonics_description">Recovery phrase can help you to recover access to your account and associated signer keys in case your phone is lost or stolen.</string>
-    <string name="text_tv_mnemonics_instruction">Write down these %d words and keep them secure. Don\'t email them or
+    <!-- Mnemonics screen -->
+    <string name="mnemonics_title">Recovery Phrase</string>
+    <string name="mnemonics_description">Recovery phrase can help you to recover access to your account and associated signer keys in case your phone is lost or stolen.</string>
+    <string name="mnemonics_instruction">Write down these %d words and keep them secure. Don\'t email them or
         screenshot them.
     </string>
-    <string name="text_tv_mnemonics_confirmation">You will need to confirm recovery phrase on the next screen</string>
+    <string name="mnemonics_confirmation_label">You will need to confirm recovery phrase on the next screen</string>
 
-    <!-- Confirm mnemonics title -->
-    <string name="text_tv_confirm_mnemonics_title">Verify Recovery Phrase</string>
-    <string name="text_tv_confirm_mnemonics_description">Tap the words in correct order.</string>
-    <string name="text_btn_clear">Clear</string>
+    <!-- Confirm Mnemonics title -->
+    <string name="confirm_mnemonics_title">Verify Recovery Phrase</string>
+    <string name="confirm_mnemonics_description">Tap the words in correct order.</string>
+    <string name="confirm_mnemonics_msg_not_all_words_entered">Not all the words entered</string>
+    <string name="confirm_mnemonics_msg_wrong_order">Wrong order. Please try again.</string>
 
-    <!-- Biometric set up screen -->
-    <string name="text_tv_biometric_set_up_title">Protect your account</string>
-    <string name="text_tv_biometric_set_up_description">Use biometric login instead of your PIN to access your
+    <!-- Biometric Set Up screen -->
+    <string name="biometric_set_up_title">Protect your account</string>
+    <string name="biometric_set_up_description">Use biometric login instead of your PIN to access your
         account.
     </string>
-    <string name="text_tv_biometric_set_up_later">You can do it later in Settings</string>
-    <string name="text_btn_biometric_enable">Enable Biometric Login</string>
+    <string name="biometric_set_up_later_label">You can do it later in Settings</string>
+    <string name="biometric_set_up_enable_action">Enable Biometric Login</string>
 
     <!-- Public Key (Signer Info) screen -->
-    <string name="text_tv_signer_info_install_lobstr_app_title">Install LOBSTR wallet</string>
-    <string name="text_tv_signer_info_install_lobstr_app_description">Vault signer app works best with LOBSTR wallet. Install LOBSTR to enable multisig and use advanced features.</string>
-    <string name="text_btn_signer_info_download_lobstr_app">Download LOBSTR</string>
-    <string name="text_tv_signer_info_use_lobstr_app_title">Use Vault with LOBSTR on this device</string>
-    <string name="text_tv_signer_info_use_lobstr_app_description">Open LOBSTR to add this device as a signer for your Stellar account and use advanced multisignature capabilities.</string>
-    <string name="text_btn_signer_info_open_lobstr_app">Open LOBSTR Wallet</string>
-    <string name="text_tv_signer_info_use_other_service_title">Use Vault with a different service or LOBSTR on another device</string>
-    <string name="text_tv_signer_info_use_other_service_description">Copy the public key or scan the QR code to add Vault signer and enable multisig on another device.</string>
-    <string name="text_btn_show_qr">Show QR</string>
+    <string name="signer_info_install_lobstr_app_title">Install LOBSTR wallet</string>
+    <string name="signer_info_install_lobstr_app_description">Vault signer app works best with LOBSTR wallet. Install LOBSTR to enable multisig and use advanced features.</string>
+    <string name="signer_info_download_lobstr_app_action">Download LOBSTR</string>
+    <string name="signer_info_use_lobstr_app_title">Use Vault with LOBSTR on this device</string>
+    <string name="signer_info_use_lobstr_app_description">Open LOBSTR to add this device as a signer for your Stellar account and use advanced multisignature capabilities.</string>
+    <string name="signer_info_open_lobstr_app_action">Open LOBSTR Wallet</string>
+    <string name="signer_info_use_other_service_title">Use Vault with a different service or LOBSTR on another device</string>
+    <string name="signer_info_use_other_service_description">Copy the public key or scan the QR code to add Vault signer and enable multisig on another device.</string>
+    <string name="signer_info_show_qr_action">Show QR</string>
 
-    <!-- Vault auth -->
-    <string name="text_tv_vault_auth_signer_card_title">Your Signer Card is ready</string>
-    <string name="text_tv_vault_auth_signer_mnemonics_description">Your signer account is configured and ready for use. Sign In to use this signer account.</string>
-    <string name="text_tv_vault_auth_signer_card_description">Your Signer Card is configured and ready for use. Scan the card to sign in to your account.</string>
-    <string name="text_btn_vault_auth_signer_card">Sign In with Signer Card</string>
-    <string name="text_btn_vault_auth_mnemonics">Sign In</string>
+    <!-- Vault Auth -->
+    <string name="vault_auth_signer_card_title">Your Signer Card is ready</string>
+    <string name="vault_auth_signer_mnemonics_description">Your signer account is configured and ready for use. Sign In to use this signer account.</string>
+    <string name="vault_auth_signer_card_description">Your Signer Card is configured and ready for use. Scan the card to sign in to your account</string>
+    <string name="vault_auth_sign_in_signer_card_action">Sign In with Signer Card</string>
+    <string name="vault_auth_sign_in_mnemonics_action">Sign In</string>
 
     <!-- Pin screen -->
-    <string name="text_title_create_pin">Create PIN</string>
-    <string name="text_title_confirm_pin">Confirm PIN</string>
-    <string name="text_title_create_new_pin">Create New PIN</string>
-    <string name="text_title_confirm_new_pin">Confirm New PIN</string>
-    <string name="text_title_enter_old_pin">Enter Old PIN</string>
-    <string name="text_success_change_pin">PIN changed</string>
-    <string name="text_pin_menu_need_help">Need Help?</string>
+    <string name="pin_change_title">Change PIN</string>
+    <string name="pin_create_title">Create PIN</string>
+    <string name="pin_confirm_title">Confirm PIN</string>
+    <string name="pin_create_new_title">Create New PIN</string>
+    <string name="pin_confirm_new_title">Confirm New PIN</string>
+    <string name="pin_enter_old_title">Enter Old PIN</string>
+    <string name="pin_help_action">Need Help?</string>
+    <string name="pin_msg_success_change">PIN changed</string>
+    <string name="pin_msg_incorrect">Incorrect PIN</string>
+    <string name="pin_msg_do_not_match">PINs do not match</string>
+    <string name="pin_msg_old">You can not use old PIN</string>
 
     <!-- Dashboard screen -->
-    <string name="text_dashboard_transactions">Transactions to Sign</string>
-    <string name="text_dashboard_show_list">View Transactions List</string>
-    <string name="text_title_dashboard_public_key">Vault Signer Key</string>
-    <string name="text_tv_dashboard_signers_empty_state_title">No Protected Accounts</string>
-    <string name="text_tv_dashboard_signers_empty_state_description">Add the Stellar account you want to protect</string>
+    <string name="dashboard_add_account_action">Add Account</string>
+    <string name="dashboard_transactions_title">Transactions to Sign</string>
+    <string name="dashboard_show_transactions_action">View Transactions List</string>
+    <string name="dashboard_signers_empty_state_title">No Protected Accounts</string>
+    <string name="dashboard_signers_empty_state_description">Add the Stellar account you want to protect</string>
 
     <!-- Transactions screen -->
-    <string name="text_empty_state_transactions_list">No transactions to sign</string>
-    <string name="text_tv_sequence_number_invalid">Invalid</string>
-    <string name="text_tv_transactions_clear">Clear</string>
+    <string name="transactions_empty_state_title">No transactions to sign</string>
+    <string name="transactions_item_sequence_number_invalid_label">Invalid</string>
 
     <!-- Settings -->
-    <string name="title_settings_wallet">Account</string>
-    <string name="title_settings_security">Security</string>
-    <string name="title_settings_help">Help</string>
-    <string name="title_settings_other">Other</string>
-    <string name="text_settings_public_key">Vault Signer Key</string>
-    <plurals name="text_settings_signers">
+    <string name="settings_title">Settings</string>
+    <string name="settings_section_wallet_title">Account</string>
+    <string name="settings_section_security_title">Security</string>
+    <string name="settings_section_other_title">Other</string>
+    <plurals name="settings_item_signers_title">
         <item quantity="one">Protects %d Account</item>
         <item quantity="other">Protects %d Accounts</item>
-    </plurals>
-    <string name="text_settings_manage_nicknames">Manage Account Nicknames</string>
-    <string name="text_settings_mnemonic_code">Recovery Phrase</string>
-    <string name="text_settings_change_pin">Change PIN</string>
-    <string name="text_settings_biometric_login">Biometric Login</string>
-    <string name="text_settings_spam_protection">Allow Unsigned Transactions</string>
-    <string name="text_settings_notifications">Enable Push Notifications</string>
-    <string name="text_settings_signer_card_info">Learn about the Signer Card</string>
-    <string name="text_settings_version">Version</string>
-    <string name="text_settings_help">Help Center</string>
-    <string name="text_settings_license">Licenses</string>
-    <string name="text_settings_rate_us">Rate Us</string>
-    <string name="text_settings_contact_support">Contact Support</string>
-    <string name="text_settings_log_out">Log Out</string>
-    <string name="text_settings_show">Show</string>
-    <string name="text_all_rights_reserved">©%s. All rights reserved</string>
-    <string name="text_settings_transaction_confirmation">Transaction Confirmations</string>
+    </plurals> <!-- text_settings_signers  -->
+    <string name="settings_item_spam_protection_title">Allow Unsigned Transactions</string>
+    <string name="settings_item_notifications_title">Enable Push Notifications</string>
+    <string name="settings_item_signer_card_info_title">Learn about the Signer Card</string>
+    <string name="settings_item_version_title">Version</string>
+    <string name="settings_item_help_title">Help Center</string>
+    <string name="settings_item_contact_support_title">Contact Support</string>
+    <string name="settings_item_transaction_confirmation">Transaction Confirmations</string>
+    <string name="settings_copyright_label">©%s. All rights reserved</string>
 
-    <!-- Settings config screen -->
-    <string name="text_config_no">No</string>
-    <string name="text_config_yes">Yes</string>
-    <string name="text_config_confirm_transactions_title">Confirm Transactions</string>
-    <string name="text_config_confirm_transactions_description">Show additional confirmation alert before signing transaction requests to avoid mistakes.</string>
-    <string name="text_config_spam_protection_description">Select whether you want to receive transaction requests that don\'t contain any valid signatures from protected accounts or other signers. Choose ‘No’ to protect your signer account from spam transactions.</string>
+    <!-- Settings Config screen -->
+    <string name="config_confirm_transactions_title">Confirm Transactions</string>
+    <string name="config_confirm_transactions_description">Show additional confirmation alert before signing transaction requests to avoid mistakes.</string>
+    <string name="config_spam_protection_description">Select whether you want to receive transaction requests that don\'t contain any valid signatures from protected accounts or other signers. Choose ‘No’ to protect your signer account from spam transactions.</string>
 
     <!-- Signed Accounts screen -->
-    <string name="text_signed_account_empty_state">No protected accounts</string>
+    <string name="signed_accounts_empty_state_title">No protected accounts</string>
 
-    <!-- Edit Account Dialog -->
-    <string name="text_btn_clear_nick_name">Clear Account Nickname</string>
-    <string name="text_btn_copy_public_key">Copy Public Key</string>
-    <string name="text_btn_open_explorer">Open Network Explorer</string>
+    <!-- Edit Account dialog -->
+    <string name="edit_account_clear_nickname_action">Clear Account Nickname</string>
+    <string name="edit_account_copy_public_key_action">Copy Public Key</string>
+    <string name="edit_account_open_explorer_action">Open Network Explorer</string>
 
-    <!-- Account Name Dialog-->
-    <string name="text_tv_set_account_name">Set Account Nickname</string>
-    <string name="text_tv_change_account_name">Change Account Nickname</string>
-    <string name="text_tv_account_name_subtitle">Choose a short name for this account</string>
-    <string name="hint_account_nickname">Enter account nickname</string>
-    <string name="text_tv_change_account_name_restriction">Limited to 20 symbols</string>
-    <string name="text_btn_save">Save</string>
+    <!-- Account Name dialog -->
+    <string name="account_name_set_title">Set Account Nickname</string>
+    <string name="account_name_change_title">Change Account Nickname</string>
+    <string name="account_name_subtitle">Choose a short name for this account</string>
+    <string name="account_name_hint">Enter account nickname</string>
+    <string name="account_name_restriction_label">Limited to 20 symbols</string>
 
-    <!-- Transaction details -->
-    <string name="text_transaction_challenge">Challenge</string>
-    <string name="text_tv_sequence_number_invalid_description">Transaction can not be confirmed, its sequence number is
+    <!-- Transaction Details -->
+    <string name="transaction_details_challenge_title">Challenge</string>
+    <string name="transaction_details_invalid_sequence_number_description">Transaction can not be confirmed, its sequence number is
         invalid.
     </string>
-    <string name="text_tv_signers">Signers</string>
-    <string name="text_tv_vault_account_marker">Your Signer Account</string>
-    <string name="text_tv_of">of</string>
-    <string name="text_tv_status_signed">Signed</string>
-    <string name="text_tv_status_pending">Pending</string>
-    <string name="text_tv_added_at">Created</string>
-    <plurals name="text_tv_signatures_count_to_submit">
+    <string name="transaction_details_added_at_label">Created</string>
+    <plurals name="transaction_details_signatures_count_to_submit_label">
         <item quantity="one">%d signature required to submit this transaction to the network</item>
         <item quantity="other">%d signatures required to submit this transaction to the network</item>
     </plurals>
+    <string name="transaction_details_signers_title">Signers</string>
+    <string name="transaction_details_msg_denied">Transaction denied</string>
+    <string name="transaction_details_msg_already_signed_or_denied">The transaction has already been confirmed or denied</string>
+
+    <!-- Transaction Details Signer Item -->
+    <string name="transaction_details_signer_item_vault_marker_label">Your Signer Account</string>
+    <string name="transaction_details_signer_item_status_signed_label">Signed</string>
+    <string name="transaction_details_signer_item_status_pending_label">Pending</string>
 
     <!-- Operations' list -->
-    <string name="text_tv_operations_list_title">Operations</string>
+    <string name="operations_list_title">Operations</string>
 
-    <!-- Operation details -->
-    <string name="text_tv_operation_details_title">Operation Details</string>
+    <!-- Import XDR screen -->
+    <string name="import_xdr_subtitle">To submit transaction enter its XDR below</string>
+    <string name="import_xdr_hint">Enter transaction XDR</string>
+    <string name="import_xdr_invalid_label">Invalid XDR</string>
 
-    <!-- Add XDR screen -->
-    <string name="text_tv_import_xdr_subtitle">To submit transaction enter its XDR below</string>
-    <string name="hint_et_import_xdr">Enter transaction XDR</string>
-
-    <!-- Biometric not set up dialog -->
-    <string name="title_biometric_not_set_up_dialog">Biometric Login not set up</string>
-    <string name="msg_biometric_not_set_up_dialog">Please set up your biometric login in the device settings first.</string>
+    <!-- Biometric Info dialog -->
+    <string name="biometric_info_not_set_up_title">Biometric Login not set up</string>
+    <string name="biometric_info_not_set_up_description">Please set up your biometric login in the device settings first.</string>
 
     <!-- Post Notifications permission explanation dialog -->
-    <string name="title_notifications_permission_not_set_up_dialog">Notifications Permission Required</string>
-    <string name="msg_notifications_permission_not_set_up_dialog">Please grant Notifications Permission in the device settings first.</string>
+    <string name="notifications_permission_not_set_up_title">Notifications Permission Required</string>
+    <string name="notifications_permission_not_set_up_description">Please grant Notifications Permission in the device settings first.</string>
 
-    <!-- Transaction action dialog -->
-    <string name="title_transaction_action_dialog">Are you sure?</string>
-    <string name="msg_deny_transaction_dialog">Want to deny the transaction?</string>
-    <string name="msg_confirm_transaction_dialog">Want to confirm the transaction?</string>
-    <string name="msg_confirm_transaction_no_other_signatures_required_dialog">Want to confirm this transaction? Your transaction will be signed and submitted to the network.</string>
-    <string name="msg_confirm_transaction_other_signatures_required_dialog">Want to confirm this transaction? Your transaction will be signed, and you will need confirmations from other signers to submit it to the network.</string>
+    <!-- Transaction Confirmation action dialog -->
+    <string name="transaction_confirmation_deny_description">Want to deny the transaction?</string>
+    <string name="transaction_confirmation_confirm_description">Want to confirm the transaction?</string>
+    <string name="transaction_confirmation_no_other_signatures_required_description">Want to confirm this transaction? Your transaction will be signed and submitted to the network.</string>
+    <string name="transaction_confirmation_other_signatures_required_description">Want to confirm this transaction? Your transaction will be signed, and you will need confirmations from other signers to submit it to the network.</string>
 
     <!-- Sequence Number Warning dialog -->
-    <string name="title_sequence_number_warning_dialog">Confirm this transaction?</string>
-    <string name="msg_sequence_number_warning_dialog">Other pending transactions with the same sequence number may become invalid if you confirm this one.</string>
+    <string name="sequence_number_warning_title">Confirm this transaction?</string>
+    <string name="sequence_number_warning_description">Other pending transactions with the same sequence number may become invalid if you confirm this one.</string>
 
-    <!-- Deny account creation dialog -->
-    <string name="title_deny_account_creation_dialog">Are you sure?</string>
-    <string name="msg_deny_account_creation_dialog">This action will cancel account creation. Shown recovery phrase will
+    <!-- Deny Account Creation dialog -->
+    <string name="deny_account_creation_description">This action will cancel account creation. Shown recovery phrase will
         be deleted.
     </string>
 
-    <!-- Log out dialog -->
-    <string name="title_log_out_mnemonics_dialog">Have you secured your recovery phrase?</string>
-    <string name="msg_log_out_mnemonics_dialog">You will not be able to recover your account or sign in without it.</string>
-    <string name="msg_log_out_dialog">Do you want to log out from this account?</string>
+    <!-- Log Out dialog -->
+    <string name="log_out_mnemonics_title">Have you secured your recovery phrase?</string>
+    <string name="log_out_mnemonics_description">You will not be able to recover your account or sign in without it.</string>
+    <string name="log_out_description">Do you want to log out from this account?</string>
 
-    <!-- Clear Invalid transactions dialog -->
-    <string name="title_clear_transactions_dialog">Remove transactions</string>
-    <string name="msg_clear_transactions_dialog">What type of transactions do you want to remove?</string>
+    <!-- Remove Transactions dialog -->
+    <string name="remove_transactions_title">Remove transactions</string>
+    <string name="remove_transactions_description">What type of transactions do you want to remove?</string>
+    <string name="remove_transactions_all_action">Remove All</string>
+    <string name="remove_transactions_invalid_action">Remove Invalid</string>
 
     <!-- Common PIN pattern dialog -->
-    <string name="title_common_pin_pattern_dialog">Warning</string>
-    <string name="msg_common_pin_pattern_dialog">You are trying to set a very common PIN which can be easily guessed by someone. We recommend to set a new PIN.</string>
+    <string name="common_pin_pattern_title">Warning</string>
+    <string name="common_pin_pattern_description">You are trying to set a very common PIN which can be easily guessed by someone. We recommend to set a new PIN.</string>
 
-    <!-- Rate us suggestion dialog -->
-    <string name="msg_suggest_rate_us">Love Using LOBSTR Vault?</string>
+    <!-- Rate Us suggestion dialog -->
+    <string name="suggest_rate_us_description">Love Using LOBSTR Vault?</string>
+    <string name="suggest_rate_us_rate_action">Love it</string>
+    <string name="suggest_rate_us_cancel_action">Not for me</string>
 
-    <!-- Rate us dialog -->
-    <string name="title_rate_us_dialog">Rate Us</string>
-    <string name="msg_rate_us_dialog">Thank you for your support! Please rate us on Google Play.</string>
+    <!-- Rate Us dialog -->
+    <string name="rate_us_title">Rate Us</string>
+    <string name="rate_us_description">Thank you for your support! Please rate us on Google Play.</string>
+    <string name="rate_us_rate_action">Rate Us 5 stars</string>
+    <string name="rate_us_rate_later_action">Remind later</string>
+    <string name="rate_us_rate_never_action">Don\'t ask again</string>
 
     <!-- Provide Feedback dialog -->
-    <string name="title_provide_feedback">Provide feedback</string>
-    <string name="msg_provide_feedback">We are always looking to improve LOBSTR Vault and would like to hear your feedback.</string>
-    <string name="text_btn_provide_feedback">Contact Us</string>
-
-    <!-- Public key dialog -->
-    <string name="text_tv_show_public_key_title">Vault Signer Key</string>
+    <string name="provide_feedback_title">Provide feedback</string>
+    <string name="provide_feedback_description">We are always looking to improve LOBSTR Vault and would like to hear your feedback.</string>
+    <string name="provide_feedback_action">Contact Us</string>
 
     <!-- Biometric prompt -->
     <string name="biometric_error_permission_not_granted">Permission is not granted by user</string>
     <string name="biometric_title">Biometric Login</string>
     <string name="biometric_subtitle">Confirm Biometric credential to continue.</string>
 
-    <!-- Errors and other UI messages -->
-    <string name="text_error_invalid_token">Invalid token.</string>
-    <string name="msg_successfully_copied">"Successfully copied"</string>
-    <string name="msg_not_all_words_entered">Not all the words entered</string>
-    <string name="msg_phrase_dont_fit">Wrong order. Please try again.</string>
-    <string name="msg_bad_xdr">Invalid XDR</string>
-    <string name="text_error_incorrect_mnemonic">Incorrect mnemonic phrases.</string>
-    <string name="text_error_incorrect_pin">Incorrect PIN</string>
-    <string name="text_error_pin_do_not_match">PINs do not match</string>
-    <string name="text_error_use_old_pin">You can not use old PIN</string>
-    <string name="msg_transaction_denied">Transaction denied</string>
+    <!-- Errors and other messages -->
+    <!-- Common Messages -->
+    <string name="msg_successfully_copied">Successfully copied</string>
     <string name="msg_no_app_found">No application found</string>
+    <string name="msg_incorrect_mnemonic_phrases">Incorrect mnemonic phrases.</string>
+    <string name="msg_browser_not_found">You need to install a browser.</string>
+    <string name="msg_browser_obsolete">Can\'t open the link with your selected browser. Update the browser and try again.</string>
     <string name="msg_google_play_services_not_supported">The device is not supported for required Google Play Services</string>
     <string name="msg_unknown_error">Unknown error received</string>
-    <string name="msg_transaction_already_signed_or_denied">The transaction has already been confirmed or denied</string>
 
-    <!-- Api errors -->
+    <!-- Api Errors -->
+    <string name="api_error_invalid_token">Invalid token.</string>
     <string name="api_error_not_found">Not Found</string>
     <string name="api_error_connection_timeout">Timeout</string>
     <string name="api_error_connection_error">No Internet connection</string>
@@ -282,51 +275,49 @@
     <string name="api_error_user_not_authorized">User Not Authorized</string>
 
     <!-- Success screen -->
-    <string name="text_tv_success">Success</string>
-    <string name="text_tv_need_additional_signatures">You have successfully signed this transaction. More signatures required to submit this transaction to the network.</string>
-    <string name="text_tv_signed_xdr">Signed XDR</string>
-    <string name="text_btn_copy_xdr">Copy XDR</string>
+    <string name="transaction_confirmation_success_title">Success</string>
+    <string name="transaction_confirmation_success_description">Transaction confirmed and submitted to the network</string>
+    <string name="transaction_confirmation_success_signatures_required_description">You have successfully signed this transaction. More signatures required to submit this transaction to the network.</string>
+    <string name="transaction_confirmation_success_view_explorer_action">View on Network Explorer</string>
+
+    <!-- Copy XDR Header -->
+    <string name="copy_xdr_signed_title">Signed XDR</string>
+    <string name="copy_xdr_action">Copy XDR</string>
 
     <!-- Error screen -->
-    <string name="text_tv_error">Transaction Failed</string>
-    <string name="text_tv_error_short_description">%s operation failed</string>
-    <string name="text_tv_error_short_description_with_number">%s (operation %d) failed</string>
-    <string name="text_btn_error_view_details">View Details</string>
-    <string name="title_error_operation_details">Operation Error</string>
+    <string name="transaction_confirmation_error_title">Transaction Failed</string>
+    <string name="transaction_confirmation_error_short_description">%s operation failed</string>
+    <string name="transaction_confirmation_error_short_with_number_description">%s (operation %d) failed</string>
+    <string name="transaction_confirmation_error_view_details_action">View Details</string>
+    <string name="operation_error_details_title">Operation Error</string>
 
     <!-- Notifications channels -->
     <string name="channel_signer_status">Signer status</string>
     <string name="channel_incoming_transactions">Incoming transactions</string>
     <string name="channel_new_signatures">New signatures</string>
     <string name="channel_authorized_transactions">Authorized transactions</string>
-    <string name="channel_other">Other</string>
+    <string name="channel_other" translatable="false">Other</string>
 
     <!-- Menu action titles -->
-    <string name="text_action_info">help</string>
-    <string name="text_action_log_out">log out</string>
-    <string name="text_action_refresh">update</string>
-    <string name="text_action_open_help_center">Open Help Center</string>
-    <string name="text_menu_copy_xdr">Copy Transaction XDR</string>
-    <string name="text_menu_copy_signed_xdr">Copy Signed XDR</string>
-    <string name="text_menu_view_transaction_details">View Transaction Details</string>
+    <string name="menu_action_open_help_center_title">Open Help Center</string>
+    <string name="menu_action_copy_xdr_title">Copy Transaction XDR</string>
+    <string name="menu_action_copy_signed_xdr_title">Copy Signed XDR</string>
+    <string name="menu_action_view_transaction_details_title">View Transaction Details</string>
+
     <!-- NFC dialog -->
-    <string name="title_nfc_dialog">Enable NFC?</string>
-    <string name="msg_nfc_dialog">Scan is useless when NFC is disabled. Reader mode depends on it. Hit OK to go to Settings, where you can enable NFC.</string>
-    <string name="title_nfc_not_available_dialog">NFC not supported</string>
-    <string name="msg_nfc_not_available_dialog">Signer Card can\'t be scanned. This device does not support NFC functionality.</string>
+    <string name="nfc_enable_title">Enable NFC?</string>
+    <string name="nfc_enable_description">Scan is useless when NFC is disabled. Reader mode depends on it. Hit OK to go to Settings, where you can enable NFC.</string>
+    <string name="nfc_not_available_title">NFC not supported</string>
+    <string name="nfc_not_available_description">Signer Card can\'t be scanned. This device does not support NFC functionality.</string>
 
-    <!-- Tangem setup screen -->
-    <string name="text_tv_tangem_setup_description">Vault Signer Card maximizes the security of digital assets. To proceed, choose the ‘Scan’ option and hold the Signer Card near the back of your device for a few seconds.</string>
-    <string name="text_btn_scan">Scan Signer Card</string>
-    <string name="text_btn_buy_now">Buy Now</string>
-    <string name="text_btn_learn_more">Learn More</string>
+    <!-- Tangem Setup screen -->
+    <string name="tangem_setup_description">Vault Signer Card maximizes the security of digital assets. To proceed, choose the ‘Scan’ option and hold the Signer Card near the back of your device for a few seconds.</string>
+    <string name="tangem_setup_scan_action">Scan Signer Card</string>
 
-    <!-- Other -->
-    <string name="msg_mail_client_not_found">There are no email clients installed</string>
-    <string name="text_mail_support_subject" translatable="false">LOBSTR Vault feedback, %1$s (%2$d)</string>
-    <string name="text_app_name_vault" translatable="false">Vault</string>
-    <string name="msg_flavor_dialog" translatable="false">%s build</string>
-    <string name="text_mail_support_body" translatable="false">
+    <!-- Mail -->
+    <string name="mail_msg_client_not_found">There are no email clients installed</string>
+    <string name="mail_support_subject" translatable="false">LOBSTR Vault feedback, %1$s (%2$d)</string>
+    <string name="mail_support_body" translatable="false">
 "Information for the support team.
 LOBSTR Vault. App version: %1$s (%2$d)
 Vault public key: %3$s
@@ -338,48 +329,57 @@ OS version: %7$s
 
 Describe an issue or provide your feedback below:
 "</string>
+
     <!-- Tangem dialog -->
-    <string name="text_tv_tangem_dialog_tittle__scan">Ready to Scan</string>
-    <string name="text_tv_tangem_dialog_description_scan">Hold the Signer Card near the back of your device for a few seconds.</string>
-    <string name="text_btn_tangem_dialog_try_again">Try Again</string>
-    <string name="text_btn_tangem_dialog_cancel">Cancel</string>
+    <string name="tangem_view_scan_title">Ready to scan</string>
+    <string name="tangem_view_scan_description">Hold the Signer Card near the back of your device for a few seconds</string>
+    <string name="try_again_action">Try Again</string>
+    <string name="tangem_view_successfully_signed_title">Signed successful</string>
+    <string name="tangem_view_successfully_signed_description">The transaction was signed successfully</string>
+    <string name="tangem_view_successfully_signed_for_login_description">The card was scanned successfully. Signing in to your account</string>
+    <string name="tangem_view_successfully_scanning_title">Scan successful</string>
+    <string name="tangem_view_successfully_scanning_description">The card was scanned and configured successfully</string>
+    <string name="tangem_view_tag_connected_title">Hold the card</string>
+    <string name="tangem_view_tag_connected_description">Hold the card near the back of your device until the scan is complete</string>
+    <string name="tangem_view_tag_connected_for_sign_tr_description">In order to sign the transaction, hold the card near the back of your device until the scan is complete</string>
+    <string name="tangem_view_tag_lost_title">Scan interrupted</string>
+    <string name="tangem_view_tag_lost_description">Hold the card near the back of your device and do not remove it until the scan is complete</string>
+    <string name="tangem_view_security_delay_title">Please hold the card</string>
+    <string name="tangem_view_security_delay_description">For security reasons, please hold the card until the transaction is completed</string>
 
-    <!-- Tangem error -->
-    <string name="text_tv_tangem_default_error_header">Scanning error</string>
-    <string name="text_tv_tangem_default_error_description">An error occurred while scanning the Signer Card. Please try again.</string>
-    <string name="text_tv_tangem_wrong_card_error_header">Wrong Card</string>
-    <string name="text_tv_tangem_wrong_card_error_description">The action could not be completed due to the wrong card being used. Try again using the correct Signer Card.</string>
-    <string name="text_tv_tangem_tag_lost_error_header">Connection Lost</string>
-    <string name="text_tv_tangem_tag_lost_error_description">The card could not be scanned due to a connection failure. Make sure to hold the Signer Card near the back of your device for a few seconds until the scan is complete.</string>
+    <!-- Tangem Error -->
+    <string name="tangem_error_default_title">Scanning error</string>
+    <string name="tangem_error_default_description">An error occurred while scanning the Signer Card. Please try again.</string>
+    <string name="tangem_error_wrong_card_text">The wrong card being used. Try again.</string>
+    <string name="tangem_error_wrong_card_title">Wrong Card</string>
+    <string name="tangem_error_wrong_card_description">The action could not be completed due to the wrong card being used. Try again using the correct Signer Card.</string>
+    <string name="tangem_error_tag_lost_title">Connection Lost</string>
+    <string name="tangem_error_tag_lost_description">The card could not be scanned due to a connection failure. Make sure to hold the Signer Card near the back of your device for a few seconds until the scan is complete.</string>
 
-    <!-- Base activity -->
-    <string name="text_tv_tangem_dialog_tittle_session_expired">Signer Card verification</string>
-    <string name="text_tv_tangem_dialog_description_session_expired">Verify your possession of the Signer Card and the signer account. Hold the Signer Card near the back of your device for a few seconds to continue using the app.</string>
+    <!-- Tangem Base activity -->
+    <string name="tangem_view_session_expired_title">Signer Card verification</string>
+    <string name="tangem_view_session_expired_description">Verify your possession of the Signer Card and the signer account. Hold the Signer Card near the back of your device for a few seconds to continue using the app.</string>
 
-    <!-- Tangem create wallet -->
-    <string name="text_tv_tangem_create_wallet_tittle">Create Signer Account</string>
-    <string name="text_btn_tangem_create_wallet">Create Signer Account</string>
-    <string name="text_tv_tangem_create_wallet_description">Your Vault Signer Card is not configured yet. \nIn order to use the Signer Card, you will need to authorize the creation of a signer Stellar account by scanning the Signer Card. This operation can only be performed once for a single card.</string>
+    <!-- Tangem Create Wallet -->
+    <string name="tangem_create_wallet_title">Create Signer Account</string>
+    <string name="tangem_create_wallet_description">Your Vault Signer Card is not configured yet. \nIn order to use the Signer Card, you will need to authorize the creation of a signer Stellar account by scanning the Signer Card. This operation can only be performed once for a single card.</string>
 
-    <!-- App Update Dialog -->
-    <string name="text_app_update_title_weak">Update is available</string>
-    <string name="text_app_update_title_required">Update the app</string>
-    <string name="text_app_update_message_weak">Update LOBSTR Vault app to get the latest exciting features.</string>
-    <string name="text_app_update_message_required">Your app is outdated and is no longer supported. Update the app to continue using LOBSTR Vault.</string>
-    <string name="btn_text_app_update">Update</string>
-    <string name="btn_text_app_update_skip">Skip</string>
+    <!-- App Update dialog -->
+    <string name="app_update_weak_title">Update is available</string>
+    <string name="app_update_required_title">Update the app</string>
+    <string name="app_update_weak_description">Update LOBSTR Vault app to get the latest exciting features.</string>
+    <string name="app_update_required_description">Your app is outdated and is no longer supported. Update the app to continue using LOBSTR Vault.</string>
 
-    <!-- Accounts Dialog -->
-    <string name="text_tv_choose_active_account">Choose Signer Account</string>
-    <string name="text_btn_add_new_account">New Signer Key</string>
-    <string name="text_tv_account_name">Vault Signer Key %s</string>
+    <!-- Accounts dialog -->
+    <string name="accounts_choose_active_title">Choose Signer Account</string>
+    <string name="accounts_add_new_action">New Signer Key</string>
+    <string name="accounts_item_name_title">Vault Signer Key %s</string>
 
     <!-- Manage Accounts' Names -->
-    <string name="text_empty_state_accounts_names_list">No account nicknames</string>
+    <string name="manage_accounts_names_empty_state_title">No account nicknames</string>
 
     <!-- Add Account Name -->
-    <string name="text_tv_add_account_name_subtitle">Enter a public key and choose a short nickname</string>
-    <string name="hint_add_account_name_public_key">Enter public key</string>
-    <string name="text_tv_add_account_name_public_key_restriction">A sequence of 56 characters starting with the letter “G”</string>
-
+    <string name="add_account_name_subtitle">Enter a public key and choose a short nickname</string>
+    <string name="add_account_name_hint">Enter public key</string>
+    <string name="add_account_name_restriction_label">A sequence of 56 characters starting with the letter “G”</string>
 </resources>

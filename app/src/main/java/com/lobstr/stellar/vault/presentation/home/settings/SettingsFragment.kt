@@ -54,10 +54,6 @@ class SettingsFragment : BaseFragment(), SettingsView, CompoundButton.OnCheckedC
     // Constants
     // ===========================================================
 
-    companion object {
-        val LOG_TAG = SettingsFragment::class.simpleName
-    }
-
     // ===========================================================
     // Fields
     // ===========================================================
@@ -195,7 +191,7 @@ class SettingsFragment : BaseFragment(), SettingsView, CompoundButton.OnCheckedC
     }
 
     override fun setupSignersCount(signersCount: Int) {
-        binding.tvSettingsSigners.text = AppUtil.getQuantityString(R.plurals.text_settings_signers, signersCount, signersCount).run {
+        binding.tvSettingsSigners.text = AppUtil.getQuantityString(R.plurals.settings_item_signers_title, signersCount, signersCount).run {
             val startPosition = indexOf(signersCount.toString())
             val endPosition = startPosition + signersCount.toString().length
             if (startPosition != Constant.Util.UNDEFINED_VALUE) {
@@ -327,8 +323,8 @@ class SettingsFragment : BaseFragment(), SettingsView, CompoundButton.OnCheckedC
             .setCancelable(true)
             .setTitle(titleRes)
             .setMessage(messageRes)
-            .setNegativeBtnText(R.string.text_btn_cancel)
-            .setPositiveBtnText(R.string.text_btn_settings)
+            .setNegativeBtnText(R.string.cancel_action)
+            .setPositiveBtnText(R.string.settings_title)
             .create()
             .show(childFragmentManager, POST_NOTIFICATIONS_INFO_DIALOG)
     }
@@ -338,7 +334,7 @@ class SettingsFragment : BaseFragment(), SettingsView, CompoundButton.OnCheckedC
             .setCancelable(true)
             .setTitle(titleRes)
             .setMessage(messageRes)
-            .setPositiveBtnText(R.string.text_btn_ok)
+            .setPositiveBtnText(R.string.ok_action)
             .create()
             .show(childFragmentManager, BIOMETRIC_INFO_DIALOG)
     }
@@ -362,7 +358,7 @@ class SettingsFragment : BaseFragment(), SettingsView, CompoundButton.OnCheckedC
         try {
             AppUtil.sendEmail(requireContext(), arrayOf(mail), subject, body)
         } catch (exc: ActivityNotFoundException) {
-            showMessage(getString(R.string.msg_mail_client_not_found))
+            showMessage(getString(R.string.mail_msg_client_not_found))
         }
     }
 
@@ -411,8 +407,8 @@ class SettingsFragment : BaseFragment(), SettingsView, CompoundButton.OnCheckedC
             .setCancelable(true)
             .setTitle(title)
             .setMessage(message)
-            .setNegativeBtnText(R.string.text_btn_cancel)
-            .setPositiveBtnText(R.string.text_btn_log_out)
+            .setNegativeBtnText(R.string.cancel_action)
+            .setPositiveBtnText(R.string.log_out_title)
             .create()
             .show(childFragmentManager, AlertDialogFragment.DialogFragmentIdentifier.LOG_OUT)
     }

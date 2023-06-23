@@ -1,7 +1,6 @@
 package com.lobstr.stellar.vault.presentation.fcm
 
 import android.content.Context
-import android.util.Log
 import com.google.firebase.messaging.FirebaseMessaging
 import com.lobstr.stellar.vault.data.error.exeption.DefaultException
 import com.lobstr.stellar.vault.data.error.exeption.UserNotAuthorizedException
@@ -14,11 +13,11 @@ import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.disposables.Disposable
 import io.reactivex.rxjava3.schedulers.Schedulers
+import timber.log.Timber
 
 class FcmHelper(private val context: Context, private val fcmInteractor: FcmInteractor) {
 
     companion object {
-        private val LOG_TAG = FcmHelper::class.simpleName
         private const val OS_TYPE = "android"
         private const val FCM_REGISTERED_ERROR = "error"
         private const val FCM_REGISTERED_SUCCESS = "success"
@@ -51,12 +50,12 @@ class FcmHelper(private val context: Context, private val fcmInteractor: FcmInte
             if (fcmToken.isNullOrEmpty() || !fcmInteractor.isFcmRegistered()) {
                 FcmRegStatus.TRYING_REGISTER_FCM
             } else {
-                Log.i(LOG_TAG, "Device already registered with id - $fcmToken")
+                Timber.i("Device already registered with id - " + fcmToken)
                 FcmRegStatus.DEVICE_ALREADY_REGISTERED
             }
         } else {
             // If no - open app anyway.
-            Log.e(LOG_TAG, "No valid Google Play Services APK found. ")
+            Timber.e("No valid Google Play Services APK found. ")
             FcmRegStatus.NO_VALID_GOOGLE_PLAY
         }
     }
@@ -78,7 +77,7 @@ class FcmHelper(private val context: Context, private val fcmInteractor: FcmInte
                 fcmInteractor.setFcmNotRegistered()
                 fcmInteractor.saveFcmToken(fcmToken)
             }
-            Log.i(LOG_TAG, "Device registered: REG_ID = $fcmToken")
+            Timber.i("Device registered: REG_ID = $fcmToken")
             registerDevice(fcmToken, fcmInteractor.getAuthTokenList())
         }
     }
@@ -110,11 +109,11 @@ class FcmHelper(private val context: Context, private val fcmInteractor: FcmInte
                                 }
                             }
                             is DefaultException -> {
-                                Log.e(LOG_TAG, it.details)
+                                Timber.e(it.details)
                                 Pair(authTokenInfo.first, FCM_REGISTERED_ERROR)
                             }
                             else -> {
-                                Log.e(LOG_TAG, it.message ?: "")
+                                Timber.e(it.message ?: "")
                                 Pair(authTokenInfo.first, FCM_REGISTERED_ERROR)
                             }
                         }

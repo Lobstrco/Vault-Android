@@ -49,6 +49,7 @@
 
 # Top-level functions that can only be used by Kotlin.
 -dontwarn retrofit2.KotlinExtensions
+-dontwarn retrofit2.KotlinExtensions$*
 
 -keepattributes *Annotation*
 
@@ -253,3 +254,34 @@
 -dontwarn org.threeten.bp.zone.TzdbZoneRulesProvider
 -dontwarn sun.security.x509.X509Key
 -dontwarn org.threeten.bp.zone.ZoneRulesProvider
+
+-keep class com.google.gson.reflect.TypeToken { *; }
+-keep class * extends com.google.gson.reflect.TypeToken
+-keep class shadow.com.google.gson.reflect.TypeToken { *; }
+-keep class * extends shadow.com.google.gson.reflect.TypeToken
+
+# Keep annotation default values (e.g., retrofit2.http.Field.encoded).
+-keepattributes AnnotationDefault
+
+# Ignore annotation used for build tooling.
+-dontwarn org.codehaus.mojo.animal_sniffer.IgnoreJRERequirement
+
+# Keep generic signature of Call, Response (R8 full mode strips signatures from non-kept items).
+-keep,allowobfuscation,allowshrinking interface retrofit2.Call
+-keep,allowobfuscation,allowshrinking class retrofit2.Response
+
+# With R8 full mode generic signatures are stripped for classes that are not
+# kept. Suspend functions are wrapped in continuations where the type argument
+# is used.
+-keep,allowobfuscation,allowshrinking class kotlin.coroutines.Continuation
+# Keep generic signature of RxJava3 (R8 full mode strips signatures from non-kept items).
+-keep,allowobfuscation,allowshrinking class io.reactivex.rxjava3.core.Flowable
+-keep,allowobfuscation,allowshrinking class io.reactivex.rxjava3.core.Maybe
+-keep,allowobfuscation,allowshrinking class io.reactivex.rxjava3.core.Observable
+-keep,allowobfuscation,allowshrinking class io.reactivex.rxjava3.core.Single
+
+-if class *
+-keepclasseswithmembers class <1> {
+  <init>(...);
+  @com.google.gson.annotations.SerializedName <fields>;
+}

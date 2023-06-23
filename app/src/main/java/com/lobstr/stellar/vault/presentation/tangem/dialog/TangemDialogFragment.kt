@@ -20,16 +20,14 @@ import com.lobstr.stellar.vault.databinding.FragmentTangemDialogBinding
 import com.lobstr.stellar.vault.presentation.BaseBottomSheetDialog
 import com.lobstr.stellar.vault.presentation.dialog.alert.base.AlertDialogFragment
 import com.lobstr.stellar.vault.presentation.entities.tangem.TangemInfo
-import com.lobstr.stellar.vault.presentation.util.AppUtil
-import com.lobstr.stellar.vault.presentation.util.Constant
-import com.lobstr.stellar.vault.presentation.util.VibratorUtil
-import com.lobstr.stellar.vault.presentation.util.VibratorUtil.VibrateType
-import com.lobstr.stellar.vault.presentation.util.parcelable
-import com.lobstr.stellar.vault.presentation.util.setSafeOnClickListener
+import com.lobstr.stellar.vault.presentation.tangem.dialog.TangemDialogPresenter.TangemOperation.NO_ACTION
+import com.lobstr.stellar.vault.presentation.util.*
+import com.lobstr.stellar.vault.presentation.util.VibrateType
 import com.lobstr.stellar.vault.presentation.util.tangem.CustomCardManagerDelegate
 import com.lobstr.stellar.vault.presentation.util.tangem.customInit
 import com.tangem.TangemSdk
 import com.tangem.common.CompletionResult
+import com.tangem.common.card.EllipticCurve
 import dagger.hilt.android.AndroidEntryPoint
 import moxy.ktx.moxyPresenter
 import javax.inject.Inject
@@ -43,10 +41,6 @@ class TangemDialogFragment : BaseBottomSheetDialog(), TangemDialogView,
     // ===========================================================
     // Constants
     // ===========================================================
-
-    companion object {
-        val LOG_TAG = TangemDialogFragment::class.simpleName
-    }
 
     // ===========================================================
     // Fields
@@ -64,9 +58,13 @@ class TangemDialogFragment : BaseBottomSheetDialog(), TangemDialogView,
     // Constructors
     // ===========================================================
 
-    private val mPresenter by moxyPresenter { presenterProvider.get().apply {
-        tangemInfo = arguments?.parcelable(Constant.Extra.EXTRA_TANGEM_INFO)
-    } }
+    private val mPresenter by moxyPresenter {
+        presenterProvider.get().apply {
+            tangemInfo = arguments?.parcelable(Constant.Extra.EXTRA_TANGEM_INFO)
+            tangemOperationType = arguments?.getInt(Constant.Extra.EXTRA_TANGEM_OPERATION_TYPE)
+                ?: NO_ACTION
+        }
+    }
 
     // ===========================================================
     // Getter & Setter
@@ -95,19 +93,19 @@ class TangemDialogFragment : BaseBottomSheetDialog(), TangemDialogView,
         // Set Wrap Content behavior for BottomSheetDialog
         dialog.setOnShowListener {
             val bottomSheetDialog = it as BottomSheetDialog
-            val bottomSheet = bottomSheetDialog.findViewById<View>(R.id.design_bottom_sheet)
+            val bottomSheet = bottomSheetDialog.findViewById<View>(com.google.android.material.R.id.design_bottom_sheet)
             bottomSheet?.let { sheet ->
                 BottomSheetBehavior.from(sheet).peekHeight = sheet.height
                 sheet.parent.parent.requestLayout()
             }
         }
-        
+
         return dialog
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        tangemSdk = TangemSdk.customInit(lifecycle, requireActivity(), this)
+        tangemSdk = TangemSdk.customInit(requireActivity(), this)
         setListeners()
     }
 
@@ -131,27 +129,34 @@ class TangemDialogFragment : BaseBottomSheetDialog(), TangemDialogView,
         }
     }
 
-    override fun startSignPendingTransaction(arrayHashes: Array<ByteArray>, cardId: String) {
-        tangemSdk.sign(hashes = arrayHashes, cardId = cardId) { result ->
+    override fun startSignPendingTransaction(
+        arrayHashes: Array<ByteArray>,
+        walletPublicKey: ByteArray,
+        cardId: String
+    ) {
+        tangemSdk.sign(
+            hashes = arrayHashes,
+            walletPublicKey = walletPublicKey,
+            cardId = cardId
+        ) { result ->
             when (result) {
+                is CompletionResult.Success -> {
+                    this.activity?.runOnUiThread {
+                        mPresenter.processSignedData(result.data)
+                    }
+                }
                 is CompletionResult.Failure -> {
                     this.activity?.runOnUiThread {
                         mPresenter.processErrorCompletion(result.error)
-                    }
-                    // Handle other errors
-                }
-                is CompletionResult.Success -> {
-                    //val signResponse = result.data
-                    this.activity?.runOnUiThread {
-                        mPresenter.processSignedData(result.data)
                     }
                 }
             }
         }
     }
 
-    override fun startCreateWallet(cardId: String) {
+    override fun startCreateWallet(curve: EllipticCurve, cardId: String) {
         tangemSdk.createWallet(
+            curve,
             cardId
         ) { result ->
             when (result) {
@@ -218,9 +223,43 @@ class TangemDialogFragment : BaseBottomSheetDialog(), TangemDialogView,
         })
     }
 
+    override fun onSessionStarted() {
+
+    }
+
+    override fun onSessionStopped() {
+        this.activity?.runOnUiThread {
+            mPresenter.onTagSessionStoppedTangem()
+        }
+    }
+
+    override fun onTagConnected() {
+        this.activity?.runOnUiThread {
+            mPresenter.onTagConnectedTangem()
+        }
+    }
+
+    override fun onTagLost() {
+        this.activity?.runOnUiThread {
+            mPresenter.onTagLostsTangem()
+        }
+    }
+
     override fun onLostCard() {
         requireActivity().runOnUiThread {
             mPresenter.interruptionOfSignatureOperation()
+        }
+    }
+
+    override fun onWrongCard() {
+        this.activity?.runOnUiThread {
+            mPresenter.onWrongCard()
+        }
+    }
+
+    override fun onSecurityDelay(ms: Int, totalDurationSeconds: Int) {
+        this.activity?.runOnUiThread {
+            mPresenter.onSecurityDelayTangem(ms, totalDurationSeconds)
         }
     }
 
@@ -232,6 +271,10 @@ class TangemDialogFragment : BaseBottomSheetDialog(), TangemDialogView,
         binding.tvMessageTitleFr.text = message
     }
 
+    override fun setTimerDescription(message: String?) {
+        binding.tvTimerDescription.text = message
+    }
+
     // ===========================================================
     // Listeners, methods for/from Interfaces
     // ===========================================================
@@ -239,10 +282,10 @@ class TangemDialogFragment : BaseBottomSheetDialog(), TangemDialogView,
     override fun showNfcCheckDialog() {
         AlertDialogFragment.Builder(true)
             .setCancelable(true)
-            .setTitle(R.string.title_nfc_dialog)
-            .setMessage(getString(R.string.msg_nfc_dialog))
-            .setNegativeBtnText(R.string.text_btn_cancel)
-            .setPositiveBtnText(R.string.text_btn_ok)
+            .setTitle(R.string.nfc_enable_title)
+            .setMessage(getString(R.string.nfc_enable_description))
+            .setNegativeBtnText(R.string.cancel_action)
+            .setPositiveBtnText(R.string.ok_action)
             .create()
             .show(
                 childFragmentManager,

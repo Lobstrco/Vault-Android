@@ -10,7 +10,7 @@ import java.io.Serializable
 // TODO Use Compat version in future (https://issuetracker.google.com/issues/242048899).
 //  Don't use the new getXXX(key, class) on Android 13 - crashes. Fixed in future versions (https://issuetracker.google.com/issues/240585930).
 
-inline fun <reified T : Parcelable> Intent.parcelable(key: String): T? = when {
+inline fun <reified T : Parcelable> Intent.parcelableExtra(key: String): T? = when {
     SDK_INT > Build.VERSION_CODES.TIRAMISU -> getParcelableExtra(key, T::class.java)
     else -> @Suppress("DEPRECATION") getParcelableExtra(key) as? T
 }
@@ -25,7 +25,7 @@ inline fun <reified T : Parcelable> Bundle.parcelableArrayList(key: String): Arr
     else -> @Suppress("DEPRECATION") getParcelableArrayList(key)
 }
 
-inline fun <reified T : Parcelable> Intent.parcelableArrayList(key: String): ArrayList<T>? = when {
+inline fun <reified T : Parcelable> Intent.parcelableArrayListExtra(key: String): ArrayList<T>? = when {
     SDK_INT > Build.VERSION_CODES.TIRAMISU -> getParcelableArrayListExtra(key, T::class.java)
     else -> @Suppress("DEPRECATION") getParcelableArrayListExtra(key)
 }
@@ -35,7 +35,7 @@ inline fun <reified T : Serializable> Bundle.serializable(key: String): T? = whe
     else -> @Suppress("DEPRECATION") getSerializable(key) as? T
 }
 
-inline fun <reified T : Serializable> Intent.serializable(key: String): T? = when {
+inline fun <reified T : Serializable> Intent.serializableExtra(key: String): T? = when {
     SDK_INT > Build.VERSION_CODES.TIRAMISU -> getSerializableExtra(key, T::class.java)
     else -> @Suppress("DEPRECATION") getSerializableExtra(key) as? T
 }

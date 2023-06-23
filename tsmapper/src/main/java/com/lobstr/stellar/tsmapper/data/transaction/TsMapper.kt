@@ -186,8 +186,9 @@ class TsMapper(
         }
 
         return Transaction(
-            targetTx.fee,
+            targetTx.hashHex(),
             targetTx.toEnvelopeXdrBase64(),
+            targetTx.fee,
             targetTx.sourceAccount,
             mapMemo(targetTx.memo),
             operations,

@@ -21,6 +21,7 @@ import com.lobstr.stellar.vault.presentation.entities.tangem.TangemInfo
 import com.lobstr.stellar.vault.presentation.fcm.NotificationsManager
 import com.lobstr.stellar.vault.presentation.home.HomeActivity
 import com.lobstr.stellar.vault.presentation.tangem.dialog.TangemDialogFragment
+import com.lobstr.stellar.vault.presentation.tangem.dialog.TangemDialogPresenter.TangemOperation.SIGN_FOR_SIGN_IN
 import com.lobstr.stellar.vault.presentation.util.AppUtil
 import com.lobstr.stellar.vault.presentation.util.Constant
 import com.lobstr.stellar.vault.presentation.util.manager.ProgressManager
@@ -38,10 +39,6 @@ class VaultAuthFragment : BaseFragment(), VaultAuthFrView,
     // ===========================================================
     // Constants
     // ===========================================================
-
-    companion object {
-        val LOG_TAG = VaultAuthFragment::class.simpleName
-    }
 
     // ===========================================================
     // Fields
@@ -150,7 +147,10 @@ class VaultAuthFragment : BaseFragment(), VaultAuthFrView,
 
     override fun showTangemScreen(tangemInfo: TangemInfo) {
         TangemDialogFragment().apply {
-            arguments = bundleOf(Constant.Extra.EXTRA_TANGEM_INFO to tangemInfo)
+            arguments = bundleOf(
+                Constant.Extra.EXTRA_TANGEM_INFO to tangemInfo,
+                Constant.Extra.EXTRA_TANGEM_OPERATION_TYPE to SIGN_FOR_SIGN_IN
+            )
         }.show(childFragmentManager, AlertDialogFragment.DialogFragmentIdentifier.TANGEM)
     }
 
@@ -204,8 +204,8 @@ class VaultAuthFragment : BaseFragment(), VaultAuthFrView,
             .setCancelable(true)
             .setTitle(title)
             .setMessage(message)
-            .setNegativeBtnText(R.string.text_btn_cancel)
-            .setPositiveBtnText(R.string.text_btn_log_out)
+            .setNegativeBtnText(R.string.cancel_action)
+            .setPositiveBtnText(R.string.log_out_title)
             .create()
             .show(childFragmentManager, AlertDialogFragment.DialogFragmentIdentifier.LOG_OUT)
     }

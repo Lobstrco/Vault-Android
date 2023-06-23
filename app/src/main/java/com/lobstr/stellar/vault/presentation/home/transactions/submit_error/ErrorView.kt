@@ -1,6 +1,6 @@
 package com.lobstr.stellar.vault.presentation.home.transactions.submit_error
 
-import com.lobstr.stellar.vault.presentation.util.VibratorUtil.VibrateType
+import com.lobstr.stellar.vault.presentation.util.VibrateType
 import moxy.MvpView
 import moxy.viewstate.strategy.alias.AddToEndSingle
 import moxy.viewstate.strategy.alias.Skip

@@ -11,7 +11,7 @@ import com.lobstr.stellar.vault.presentation.entities.mnemonic.MnemonicItem
 import com.lobstr.stellar.vault.presentation.entities.stellar.SubmitTransactionResult
 import com.lobstr.stellar.vault.presentation.util.AppUtil
 import com.soneso.stellarmnemonics.Wallet
-import com.tangem.commands.SignResponse
+import com.tangem.operations.sign.SignResponse
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.core.Single.fromCallable
 import org.stellar.sdk.*
@@ -47,7 +47,11 @@ class StellarRepositoryImpl(
 
     override fun createTransaction(envelopXdr: String): Single<AbstractTransaction> {
         return fromCallable {
-            return@fromCallable AbstractTransaction.fromEnvelopeXdr(accountConverter, envelopXdr, network)
+            return@fromCallable AbstractTransaction.fromEnvelopeXdr(
+                accountConverter,
+                envelopXdr,
+                network
+            )
         }
     }
 
@@ -56,9 +60,12 @@ class StellarRepositoryImpl(
         skipMemoRequiredCheck: Boolean
     ): Single<SubmitTransactionResult> {
         return fromCallable(Callable {
-            return@Callable when(transaction) {
-                is Transaction-> server.submitTransaction(transaction, skipMemoRequiredCheck)
-                is FeeBumpTransaction -> server.submitTransaction(transaction, skipMemoRequiredCheck)
+            return@Callable when (transaction) {
+                is Transaction -> server.submitTransaction(transaction, skipMemoRequiredCheck)
+                is FeeBumpTransaction -> server.submitTransaction(
+                    transaction,
+                    skipMemoRequiredCheck
+                )
                 else -> throw Exception("Unknown transaction type.")
             }
         }).onErrorResumeNext {
@@ -70,7 +77,8 @@ class StellarRepositoryImpl(
 
     override fun signTransaction(signer: KeyPair, envelopXdr: String): Single<AbstractTransaction> {
         return fromCallable(Callable {
-            val transaction = AbstractTransaction.fromEnvelopeXdr(accountConverter, envelopXdr, network)
+            val transaction =
+                AbstractTransaction.fromEnvelopeXdr(accountConverter, envelopXdr, network)
 
             // Sign the transaction to prove you are actually the person sending it.
             transaction.sign(signer)
@@ -149,6 +157,16 @@ class StellarRepositoryImpl(
         }
     }
 
+    override fun getPublicKeyFromKeyPair(walletPublicKey: String?): ByteArray? {
+        return try {
+            val keyPair = KeyPair.fromAccountId(walletPublicKey)
+            return keyPair.publicKey
+        } catch (exc: RuntimeException) {
+            // Handle invalid public key exception.
+            null
+        }
+    }
+
     override fun getTransactionFromXDR(xdr: String): AbstractTransaction {
         return AbstractTransaction.fromEnvelopeXdr(accountConverter, xdr, network)
     }
@@ -159,7 +177,13 @@ class StellarRepositoryImpl(
         domainName: String,
         webAuthDomain: String?
     ): Sep10Challenge.ChallengeTransaction? = try {
-        Sep10Challenge.readChallengeTransaction(challengeXdr, serverAccountId, network, domainName, webAuthDomain)
+        Sep10Challenge.readChallengeTransaction(
+            challengeXdr,
+            serverAccountId,
+            network,
+            domainName,
+            webAuthDomain
+        )
     } catch (exc: InvalidSep10ChallengeException) {
         null
     }
@@ -170,7 +194,7 @@ class StellarRepositoryImpl(
         accountId: String
     ): String? {
         val signature = Signature()
-        signature.signature = signResponse.signature
+        signature.signature = signResponse.signatures[0]
 
         val decoratedSignature = DecoratedSignature()
 
@@ -196,7 +220,12 @@ class StellarRepositoryImpl(
         }
     }
 
-    override fun getAccountsForSigner(signer: String, cursor: String?, order: RequestBuilder.Order, limit: Int?): Single<List<Account>> {
+    override fun getAccountsForSigner(
+        signer: String,
+        cursor: String?,
+        order: RequestBuilder.Order,
+        limit: Int?
+    ): Single<List<Account>> {
         return fromCallable {
             createAccountsBuilder(cursor, order, limit).forSigner(signer).execute()
         }
@@ -209,9 +238,11 @@ class StellarRepositoryImpl(
             }
     }
 
-    private fun createAccountsBuilder(cursor: String? = null,
-                                   order: RequestBuilder.Order = RequestBuilder.Order.ASC,
-                                   limit: Int? = 1): AccountsRequestBuilder  {
+    private fun createAccountsBuilder(
+        cursor: String? = null,
+        order: RequestBuilder.Order = RequestBuilder.Order.ASC,
+        limit: Int? = 1
+    ): AccountsRequestBuilder {
         return server.accounts().apply {
             cursor?.let { cursor(cursor) }
             order(order)

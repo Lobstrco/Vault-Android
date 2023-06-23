@@ -23,7 +23,7 @@ class OperationDetailsViewHolder(
 
             tvFieldName.text = name
             tvFieldValue.ellipsize = when (name) {
-                AppUtil.getString(R.string.op_field_destination_federation) -> TextUtils.TruncateAt.END
+                AppUtil.getString(com.lobstr.stellar.tsmapper.R.string.op_field_destination_federation) -> TextUtils.TruncateAt.END
                 else -> {
                     when {
                         // Case for the Account Name.

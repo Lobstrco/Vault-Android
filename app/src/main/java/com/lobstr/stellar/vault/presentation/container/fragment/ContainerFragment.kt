@@ -42,10 +42,6 @@ class ContainerFragment : BaseContainerFragment(),
     // Constants
     // ===========================================================
 
-    companion object {
-        val LOG_TAG = ContainerFragment::class.simpleName
-    }
-
     // ===========================================================
     // Fields
     // ===========================================================
@@ -67,7 +63,7 @@ class ContainerFragment : BaseContainerFragment(),
                 Constant.Bundle.BUNDLE_TRANSACTION_CONFIRMATION_SUCCESS_STATUS,
                 SUCCESS
             ),
-            arguments?.getParcelable(Constant.Bundle.BUNDLE_ERROR),
+            arguments?.parcelable(Constant.Bundle.BUNDLE_ERROR),
             arguments?.getInt(Constant.Bundle.BUNDLE_CONFIG, UNDEFINED_VALUE) ?: UNDEFINED_VALUE
         )
     }

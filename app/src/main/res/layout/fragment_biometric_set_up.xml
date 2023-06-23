@@ -29,7 +29,7 @@
                 android:layout_marginBottom="10dp"
                 android:textStyle="bold"
                 android:textColor="@android:color/black"
-                android:text="@string/text_tv_biometric_set_up_title"/>
+                android:text="@string/biometric_set_up_title"/>
 
         <TextView
                 android:layout_width="match_parent"
@@ -38,7 +38,7 @@
                 android:textSize="14sp"
                 android:alpha="0.6"
                 android:textColor="@color/color_071c33"
-                android:text="@string/text_tv_biometric_set_up_description"/>
+                android:text="@string/biometric_set_up_description"/>
 
     </LinearLayout>
 
@@ -49,11 +49,11 @@
             android:textSize="12sp"
             android:textColor="@color/color_4a4a4a"
             android:alpha="0.6"
-            android:text="@string/text_tv_biometric_set_up_later"
+            android:text="@string/biometric_set_up_later_label"
             android:layout_marginBottom="16dp"/>
 
     <Button
-            android:text="@string/text_btn_biometric_enable"
+            android:text="@string/biometric_set_up_enable_action"
             android:layout_height="wrap_content"
             android:id="@+id/btnTurOn"
             android:layout_width="match_parent"
@@ -64,7 +64,7 @@
             android:layout_gravity="center"/>
 
     <Button
-            android:text="@string/text_btn_skip"
+            android:text="@string/skip_action"
             android:layout_height="wrap_content"
             android:id="@+id/btnSkip"
             android:layout_width="match_parent"

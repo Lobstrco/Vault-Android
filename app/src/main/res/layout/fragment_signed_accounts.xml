@@ -15,7 +15,7 @@
             android:drawablePadding="28dp"
             android:gravity="center"
             android:padding="16dp"
-            android:text="@string/text_signed_account_empty_state"
+            android:text="@string/signed_accounts_empty_state_title"
             android:textColor="@android:color/black"
             android:textSize="18sp"
             android:textStyle="bold"

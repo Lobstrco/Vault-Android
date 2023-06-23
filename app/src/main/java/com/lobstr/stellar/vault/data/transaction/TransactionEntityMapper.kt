@@ -48,12 +48,14 @@ class TransactionEntityMapper(private val tsMapper: TsMapper) {
     }
 
     fun transformTransactionXdr(xdr: String): TransactionItem {
-        return TransactionItem(
-            "",
-            "",
-            IMPORT_XDR,
-            null,
-            tsMapper.getTransaction(xdr)
-        )
+        return tsMapper.getTransaction(xdr).let {
+            TransactionItem(
+                "",
+                it.hash,
+                IMPORT_XDR,
+                null,
+                it
+            )
+        }
     }
 }

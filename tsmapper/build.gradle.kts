@@ -9,7 +9,6 @@ android {
 
     defaultConfig {
         minSdk = 16
-        targetSdk = 33
     }
     buildTypes {
         getByName("debug") {
@@ -23,8 +22,13 @@ android {
         }
     }
 
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
+    }
+
     kotlinOptions {
-        jvmTarget = "11"
+        jvmTarget = "17"
     }
     namespace = "com.lobstr.stellar.tsmapper"
 }
@@ -33,5 +37,4 @@ dependencies {
     implementation(fileTree(mapOf("dir" to "libs", "include" to listOf("*.jar"))))
     implementation("com.github.stellar:java-stellar-sdk:0.34.2")
     implementation ("com.google.code.gson:gson:2.10.1")
-    implementation("androidx.annotation:annotation:1.5.0")
 }

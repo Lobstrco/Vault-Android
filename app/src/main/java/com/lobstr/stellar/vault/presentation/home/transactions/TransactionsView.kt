@@ -44,4 +44,7 @@ interface TransactionsView : MvpView {
 
     @Skip
     fun showClearTransactionsDialog()
+
+    @Skip
+    fun showDenyTransactionDialog()
 }

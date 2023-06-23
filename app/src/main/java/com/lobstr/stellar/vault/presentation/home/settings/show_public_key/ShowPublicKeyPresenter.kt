@@ -28,7 +28,7 @@ class ShowPublicKeyPresenter @Inject constructor(
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
-                    val defaultTitle = AppUtil.getString(R.string.text_tv_show_public_key_title)
+                    val defaultTitle = AppUtil.getString(R.string.public_key_title)
                     viewState.setupTitle(
                         when {
                             !it[publicKey].isNullOrEmpty() -> it[publicKey]!!

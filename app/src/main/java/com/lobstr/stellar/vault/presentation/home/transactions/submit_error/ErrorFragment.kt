@@ -9,12 +9,8 @@ import com.lobstr.stellar.vault.R
 import com.lobstr.stellar.vault.databinding.FragmentErrorBinding
 import com.lobstr.stellar.vault.presentation.base.fragment.BaseFragment
 import com.lobstr.stellar.vault.presentation.dialog.alert.base.AlertDialogFragment
-import com.lobstr.stellar.vault.presentation.util.AppUtil
-import com.lobstr.stellar.vault.presentation.util.Constant
-import com.lobstr.stellar.vault.presentation.util.VibratorUtil
-import com.lobstr.stellar.vault.presentation.util.VibratorUtil.VibrateType
+import com.lobstr.stellar.vault.presentation.util.*
 import com.lobstr.stellar.vault.presentation.util.manager.SupportManager
-import com.lobstr.stellar.vault.presentation.util.setSafeOnClickListener
 import dagger.hilt.android.AndroidEntryPoint
 import moxy.ktx.moxyPresenter
 import javax.inject.Inject
@@ -26,10 +22,6 @@ class ErrorFragment : BaseFragment(), ErrorView {
     // ===========================================================
     // Constants
     // ===========================================================
-
-    companion object {
-        val LOG_TAG = ErrorFragment::class.simpleName
-    }
 
     // ===========================================================
     // Fields
@@ -47,7 +39,7 @@ class ErrorFragment : BaseFragment(), ErrorView {
 
     private val mPresenter by moxyPresenter {
         presenterProvider.get().apply {
-            error = requireArguments().getParcelable(Constant.Bundle.BUNDLE_ERROR)!!
+            error = requireArguments().parcelable(Constant.Bundle.BUNDLE_ERROR)!!
         }
     }
 
@@ -142,9 +134,9 @@ class ErrorFragment : BaseFragment(), ErrorView {
     override fun showErrorDetails(details: String) {
         AlertDialogFragment.Builder(true)
             .setCancelable(false)
-            .setTitle(R.string.title_error_operation_details)
+            .setTitle(R.string.operation_error_details_title)
             .setMessage(details)
-            .setNegativeBtnText(R.string.text_btn_close)
+            .setNegativeBtnText(R.string.close_action)
             .create()
             .show(
                 childFragmentManager,

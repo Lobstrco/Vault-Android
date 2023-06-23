@@ -9,7 +9,7 @@
         android:layout_height="wrap_content"
         android:fontFamily="sans-serif-medium"
         android:padding="16dp"
-        android:text="@string/text_tv_operations_list_title"
+        android:text="@string/operations_list_title"
         android:background="@android:color/white"
         android:textColor="@color/color_primary"
         android:textSize="14sp" />

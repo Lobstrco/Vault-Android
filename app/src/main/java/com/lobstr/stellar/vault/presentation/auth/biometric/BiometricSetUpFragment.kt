@@ -36,10 +36,6 @@ class BiometricSetUpFragment : BaseFragment(), BiometricSetUpView, BiometricList
     // Constants
     // ===========================================================
 
-    companion object {
-        val LOG_TAG = BiometricSetUpFragment::class.simpleName
-    }
-
     // ===========================================================
     // Fields
     // ===========================================================
@@ -165,7 +161,7 @@ class BiometricSetUpFragment : BaseFragment(), BiometricSetUpView, BiometricList
             .setCancelable(true)
             .setTitle(titleRes)
             .setMessage(messageRes)
-            .setPositiveBtnText(R.string.text_btn_ok)
+            .setPositiveBtnText(R.string.ok_action)
             .create()
             .show(
                 childFragmentManager,
@@ -179,7 +175,7 @@ class BiometricSetUpFragment : BaseFragment(), BiometricSetUpView, BiometricList
             mBiometricManager = BiometricManager.BiometricBuilder(requireContext(), this)
                 .setTitle(getString(R.string.biometric_title))
                 .setSubtitle(getString(R.string.biometric_subtitle))
-                .setNegativeButtonText(getString(R.string.text_btn_cancel).uppercase())
+                .setNegativeButtonText(getString(R.string.cancel_action).uppercase())
                 .build()
         }
         mBiometricManager?.authenticate(this)

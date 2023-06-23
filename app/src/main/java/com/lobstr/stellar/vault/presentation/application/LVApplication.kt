@@ -5,7 +5,6 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.StrictMode
-import android.util.Log
 import androidx.hilt.work.HiltWorkerFactory
 import androidx.lifecycle.ProcessLifecycleOwner
 import androidx.work.Configuration
@@ -19,6 +18,7 @@ import dagger.hilt.android.HiltAndroidApp
 import io.reactivex.rxjava3.exceptions.UndeliverableException
 import io.reactivex.rxjava3.plugins.RxJavaPlugins
 import org.bouncycastle.jce.provider.BouncyCastleProvider
+import timber.log.Timber
 import java.security.Provider
 import java.security.Security
 import javax.inject.Inject
@@ -35,7 +35,6 @@ class LVApplication : Application(), Configuration.Provider {
     // ===========================================================
 
     companion object {
-        val LOG_TAG = LVApplication::class.simpleName
         lateinit var appContext: Context
 
         // App Pin appearance flag handled in AppLifecycleListener.
@@ -74,6 +73,7 @@ class LVApplication : Application(), Configuration.Provider {
         super.onCreate()
         appContext = applicationContext
 
+        if (BuildConfig.BUILD_TYPE == DEBUG) Timber.plant(Timber.DebugTree())
         upgradeSecurityProvider()
         enableStrictMode()
         Firebase.analytics.setAnalyticsCollectionEnabled(BuildConfig.BUILD_TYPE != DEBUG)
@@ -107,15 +107,15 @@ class LVApplication : Application(), Configuration.Provider {
                             errorCode: Int,
                             recoveryIntent: Intent?
                         ) {
-                            Log.e(LOG_TAG, "New security provider install failed.")
+                            Timber.e("New security provider install failed.")
                         }
 
                         override fun onProviderInstalled() {
-                            Log.e(LOG_TAG, "New security provider installed.")
+                            Timber.e("New security provider installed.")
                         }
                     })
             } catch (ex: Exception) {
-                Log.e(LOG_TAG, "Unknown issue trying to install a new security provider", ex)
+                Timber.e(ex, "Unknown issue trying to install a new security provider")
             }
         }
     }

@@ -22,10 +22,6 @@ class EditAccountDialogFragment : BaseBottomSheetDialog(), EditAccountView {
     // Constants
     // ===========================================================
 
-    companion object {
-        val LOG_TAG = EditAccountDialogFragment::class.simpleName
-    }
-
     // ===========================================================
     // Fields
     // ===========================================================

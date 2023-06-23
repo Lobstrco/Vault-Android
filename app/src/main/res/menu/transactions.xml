@@ -4,7 +4,7 @@
 
     <item
             android:id="@+id/action_clear"
-            android:title="@string/text_tv_transactions_clear"
+            android:title="@string/clear_action"
             app:actionLayout="@layout/layout_menu_transactions"
             app:showAsAction="always"/>
 

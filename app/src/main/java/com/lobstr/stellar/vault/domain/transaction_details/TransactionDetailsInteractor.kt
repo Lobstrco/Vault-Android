@@ -27,7 +27,7 @@ interface TransactionDetailsInteractor {
     fun confirmTransactionOnServer(
         needAdditionalSignatures: Boolean,
         transactionStatus: Int?,
-        hash: String?,
+        hash: String,
         transaction: String
     ): Single<String>
 

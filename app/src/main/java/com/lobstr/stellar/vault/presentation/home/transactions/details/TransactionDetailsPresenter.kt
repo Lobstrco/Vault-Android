@@ -74,8 +74,8 @@ class TransactionDetailsPresenter @Inject constructor(
         registerEventProvider()
         viewState.setupToolbarTitle(
             when (transactionItem.transaction.transactionType) {
-                AUTH_CHALLENGE -> R.string.text_transaction_challenge
-                else -> R.string.title_toolbar_transaction_details
+                AUTH_CHALLENGE -> R.string.transaction_details_challenge_title
+                else -> R.string.toolbar_transaction_details_title
             }
         )
         viewState.initSignersRecycledView()
@@ -232,12 +232,12 @@ class TransactionDetailsPresenter @Inject constructor(
                     val isVaultAccountPending = accountResult.signers.any { it.isVaultAccount == true && it.signed == false }
                     signersCountInfo = Triple(countToConfirm, signedCount, isVaultAccountPending)
 
-                    countSummaryStr = "$signedCount ${AppUtil.getString(R.string.text_tv_of)} $countToConfirm"
+                    countSummaryStr = "$signedCount ${AppUtil.getString(R.string.of_label)} $countToConfirm"
 
                     // Show signatures count to submit additional info only for non AUTH_CHALLENGE transactions.
                     if (transactionItem.transaction.transactionType != AUTH_CHALLENGE) {
                         countToSubmitStr = AppUtil.getQuantityString(
-                            R.plurals.text_tv_signatures_count_to_submit,
+                            R.plurals.transaction_details_signatures_count_to_submit_label,
                             countToConfirm,
                             countToConfirm
                         )
@@ -324,8 +324,8 @@ class TransactionDetailsPresenter @Inject constructor(
         if (transactionItem.transaction.operations.size > 1) {
             viewState.initOperationList(
                 when (transactionItem.transaction.transactionType) {
-                    AUTH_CHALLENGE -> R.string.text_transaction_challenge
-                    else -> R.string.title_toolbar_transaction_details
+                    AUTH_CHALLENGE -> R.string.transaction_details_challenge_title
+                    else -> R.string.toolbar_transaction_details_title
                 },
                 mutableListOf<Int>().apply {
                     // Prepare operations list for show it.
@@ -358,7 +358,7 @@ class TransactionDetailsPresenter @Inject constructor(
         transactionItem.transaction.operations.getOrNull(opPosition)?.let { operation ->
             val title = when {
                 transactionItem.transaction.operations.size == 1 && transactionItem.transaction.transactionType == AUTH_CHALLENGE -> {
-                    R.string.text_transaction_challenge // Specific case for the 'Single Operation' Challenge Transaction.
+                    R.string.transaction_details_challenge_title // Specific case for the 'Single Operation' Challenge Transaction.
                 }
                 else -> Constant.Util.UNDEFINED_VALUE
             }
@@ -389,19 +389,20 @@ class TransactionDetailsPresenter @Inject constructor(
 
                 if (!memo.value.isNullOrEmpty()) {
                     val memoTitle = TsUtil.getMemoTypeStr(AppUtil.getAppContext(), memo).run {
-                        if (isEmpty()) AppUtil.getString(R.string.text_tv_transaction_memo) else "${AppUtil.getString(R.string.text_tv_transaction_memo)} ($this)"
+                        if (isEmpty()) AppUtil.getString(com.lobstr.stellar.tsmapper.R.string.transaction_memo) else "${AppUtil.getString(
+                            com.lobstr.stellar.tsmapper.R.string.transaction_memo)} ($this)"
                     }
 
                     fields.add(OperationField(memoTitle, memo.value))
                 }
 
                 if (sourceAccount.isNotEmpty()) {
-                    fields.add(OperationField(AppUtil.getString(R.string.text_tv_transaction_source_account),
+                    fields.add(OperationField(AppUtil.getString(com.lobstr.stellar.tsmapper.R.string.transaction_source_account),
                         interactor.getAccountNames()[sourceAccount]?.plus(" (${AppUtil.ellipsizeStrInMiddle(sourceAccount, PK_TRUNCATE_COUNT_SHORT)})") ?: sourceAccount, sourceAccount))
                 }
 
                 if (!addedAt.isNullOrEmpty()) {
-                    fields.add(OperationField(AppUtil.getString(R.string.text_tv_added_at), AppUtil.formatDate(
+                    fields.add(OperationField(AppUtil.getString(R.string.transaction_details_added_at_label), AppUtil.formatDate(
                         ZonedDateTime.parse(addedAt).toInstant().toEpochMilli(),
                         if (DateFormat.is24HourFormat(AppUtil.getAppContext())) "MMM dd yyyy HH:mm" else "MMM dd yyyy h:mm a"
                     )))
@@ -508,14 +509,14 @@ class TransactionDetailsPresenter @Inject constructor(
                 val leftToSign = countToConfirm - signedCount
 
                 when {
-                    leftToSign == 1 -> R.string.msg_confirm_transaction_no_other_signatures_required_dialog
-                    leftToSign > 1 -> R.string.msg_confirm_transaction_other_signatures_required_dialog
-                    else -> R.string.msg_confirm_transaction_dialog
+                    leftToSign == 1 -> R.string.transaction_confirmation_no_other_signatures_required_description
+                    leftToSign > 1 -> R.string.transaction_confirmation_other_signatures_required_description
+                    else -> R.string.transaction_confirmation_confirm_description
                 }
             }
-            else -> R.string.msg_confirm_transaction_dialog
+            else -> R.string.transaction_confirmation_confirm_description
         }
-    } ?: R.string.msg_confirm_transaction_dialog)
+    } ?: R.string.transaction_confirmation_confirm_description)
 
     private fun getTransactionInfo() {
         if (confirmationInProcess) {
@@ -528,7 +529,7 @@ class TransactionDetailsPresenter @Inject constructor(
                 .doOnSuccess {
                     transactionItem = it
                     when (transactionItem.status) {
-                        CANCELLED, SIGNED -> throw DefaultException(AppUtil.getString(R.string.msg_transaction_already_signed_or_denied))
+                        CANCELLED, SIGNED -> throw DefaultException(AppUtil.getString(R.string.transaction_details_msg_already_signed_or_denied))
                     }
                 }
                 .observeOn(AndroidSchedulers.mainThread())
@@ -647,8 +648,6 @@ class TransactionDetailsPresenter @Inject constructor(
         // Nullable state - undefined state for handle transaction type AUTH_CHALLENGE behavior.
         var needAdditionalSignatures: Boolean? = null
 
-        var hash: String? = transactionItem.hash
-
         unsubscribeOnDestroy(
             interactor.retrieveActualTransaction(
                 transactionItem,
@@ -659,7 +658,7 @@ class TransactionDetailsPresenter @Inject constructor(
                     transactionItem = it
 
                     when (transactionItem.status) {
-                        CANCELLED, SIGNED -> throw DefaultException(AppUtil.getString(R.string.msg_transaction_already_signed_or_denied))
+                        CANCELLED, SIGNED -> throw DefaultException(AppUtil.getString(R.string.transaction_details_msg_already_signed_or_denied))
                     }
 
                     if (signedTransaction.isNullOrEmpty()) {
@@ -720,7 +719,6 @@ class TransactionDetailsPresenter @Inject constructor(
                                         }
                                     }
 
-                                    hash = submitTransactionResponse.hash
                                     Single.fromCallable { transaction.toEnvelopeXdrBase64() }
                                 }
                         }
@@ -730,7 +728,7 @@ class TransactionDetailsPresenter @Inject constructor(
                     interactor.confirmTransactionOnServer(
                         needAdditionalSignatures ?: true,
                         transactionItem.status,
-                        hash,
+                        transactionItem.hash,
                         signedXdr
                     )
                 }
@@ -747,6 +745,7 @@ class TransactionDetailsPresenter @Inject constructor(
                     // Update transaction status.
                     transactionItem.status = SIGNED
                     viewState.successConfirmTransaction(
+                        transactionItem.hash,
                         it,
                         when (needAdditionalSignatures) {
                             true -> SUCCESS_NEED_ADDITIONAL_SIGNATURES
@@ -848,7 +847,7 @@ class TransactionDetailsPresenter @Inject constructor(
                                     )
                                 )
                                 is HttpNotFoundException -> {
-                                    viewState.showMessage(AppUtil.getString(R.string.msg_transaction_already_signed_or_denied))
+                                    viewState.showMessage(AppUtil.getString(R.string.transaction_details_msg_already_signed_or_denied))
                                 }
                                 is DefaultException -> viewState.showMessage(it.details)
                                 else -> {

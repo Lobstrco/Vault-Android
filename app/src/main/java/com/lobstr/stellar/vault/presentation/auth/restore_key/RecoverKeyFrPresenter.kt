@@ -202,7 +202,7 @@ class RecoverKeyFrPresenter @Inject constructor(private val interactor: RecoverK
                 }, { throwable ->
                     viewState.showProgressDialog(false)
                     if (throwable is MnemonicException) {
-                        viewState.showErrorMessage(R.string.text_error_incorrect_mnemonic)
+                        viewState.showErrorMessage(R.string.msg_incorrect_mnemonic_phrases)
                     }
                 })
         )

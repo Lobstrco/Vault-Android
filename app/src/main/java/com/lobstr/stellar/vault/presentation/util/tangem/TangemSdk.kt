@@ -1,27 +1,35 @@
 package com.lobstr.stellar.vault.presentation.util.tangem
 
 import androidx.fragment.app.FragmentActivity
-import androidx.lifecycle.Lifecycle
 import com.tangem.TangemSdk
-import com.tangem.tangem_sdk_new.NfcLifecycleObserver
-import com.tangem.tangem_sdk_new.TerminalKeysStorage
-import com.tangem.tangem_sdk_new.nfc.NfcManager
+import com.tangem.common.card.FirmwareVersion
+import com.tangem.common.core.Config
+import com.tangem.common.services.secure.SecureStorage
+import com.tangem.tangem_sdk_new.extensions.initNfcManager
+import com.tangem.tangem_sdk_new.storage.create
 
 fun TangemSdk.Companion.customInit(
-    lifecycle: Lifecycle,
     activity: FragmentActivity,
     listener: CustomCardManagerDelegate.CustomCardManagerDelegateListener
 ): TangemSdk {
-    val nfcManager = NfcManager().apply {
-        this.setCurrentActivity(activity)
-        lifecycle.addObserver(NfcLifecycleObserver(this))
+
+    val config = Config().apply {
+        linkedTerminal = false
+        allowUntrustedCards = true
+        filter.allowedCardTypes = FirmwareVersion.FirmwareType.values().toList()
     }
 
-    val viewDelegate = CustomCardManagerDelegate(nfcManager.reader).apply {
+    val nfcManager = TangemSdk.initNfcManager(activity)
+
+    val viewDelegate = CustomCardManagerDelegate(activity).apply {
         this.listener = listener
+        this.sdkConfig = config
     }
 
-    return TangemSdk(nfcManager.reader, viewDelegate).apply {
-        this.setTerminalKeysService(TerminalKeysStorage(activity.application))
-    }
+    return TangemSdk(
+        reader = nfcManager.reader,
+        viewDelegate = viewDelegate,
+        secureStorage = SecureStorage.create(activity),
+        config = config
+    )
 }

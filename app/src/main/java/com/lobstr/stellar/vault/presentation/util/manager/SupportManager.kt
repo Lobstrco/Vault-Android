@@ -36,13 +36,13 @@ object SupportManager {
     }
 
     fun createSupportMailSubject(context: Context = AppUtil.getAppContext()) = AppUtil.getString(
-        R.string.text_mail_support_subject, BuildConfig.VERSION_NAME, AppUtil.getAppVersionCode(context)
+        R.string.mail_support_subject, BuildConfig.VERSION_NAME, AppUtil.getAppVersionCode(context)
     )
 
     fun createSupportMailBody(
         context: Context = AppUtil.getAppContext(),
         userId: String? = "not provided"
-    ) = AppUtil.getString(R.string.text_mail_support_body,
+    ) = AppUtil.getString(R.string.mail_support_body,
         BuildConfig.VERSION_NAME, AppUtil.getAppVersionCode(context),
         userId ?: "not provided",
         Build.BRAND,

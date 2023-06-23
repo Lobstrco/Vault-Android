@@ -12,7 +12,7 @@
         android:gravity="start"
         android:drawablePadding="30dp"
         android:textAllCaps="false"
-        android:text="@string/text_btn_open_explorer"
+        android:text="@string/edit_account_open_explorer_action"
         app:drawableStartCompat="@drawable/ic_open_in_new_purple"
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto" />

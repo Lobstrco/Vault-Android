@@ -14,7 +14,7 @@
         android:drawablePadding="31dp"
         android:gravity="center"
         android:padding="16dp"
-        android:text="@string/text_empty_state_accounts_names_list"
+        android:text="@string/manage_accounts_names_empty_state_title"
         android:textColor="@android:color/black"
         android:textSize="18sp"
         android:textStyle="bold"
@@ -42,7 +42,7 @@
         android:layout_marginTop="16dp"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="16dp"
-        android:contentDescription="@string/title_toolbar_add_account_name"
+        android:contentDescription="@string/toolbar_add_account_name_title"
         android:src="@drawable/ic_add"
         app:layout_behavior="@string/hide_bottom_view_on_scroll_behavior" />
 

@@ -103,7 +103,7 @@ open class AppVersionLoader(
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
                 // Notify UI about success.
-                appVersion?.let { eventProviderModule.appVersionUpdateSubject.onNext(appVersion) }
+                appVersion?.let { version -> eventProviderModule.appVersionUpdateSubject.onNext(version) }
             }, {
                 when (it) {
                     is NoInternetConnectionException -> handleNoInternetConnection()

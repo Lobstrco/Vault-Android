@@ -13,7 +13,7 @@
         android:maxLines="1"
         android:paddingLeft="14dp"
         android:paddingRight="14dp"
-        android:text="@string/text_pin_menu_need_help"
+        android:text="@string/pin_help_action"
         android:textStyle="normal"
         android:textSize="15sp"
         android:textColor="@android:color/white"/>

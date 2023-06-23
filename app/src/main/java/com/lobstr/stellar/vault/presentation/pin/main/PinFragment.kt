@@ -5,8 +5,12 @@ import android.content.DialogInterface
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
-import android.view.*
+import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
+import android.view.View
+import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.addCallback
@@ -30,8 +34,8 @@ import com.lobstr.stellar.vault.presentation.home.HomeActivity
 import com.lobstr.stellar.vault.presentation.pin.PinActivity
 import com.lobstr.stellar.vault.presentation.util.AppUtil
 import com.lobstr.stellar.vault.presentation.util.Constant
+import com.lobstr.stellar.vault.presentation.util.VibrateType.TYPE_ONE
 import com.lobstr.stellar.vault.presentation.util.VibratorUtil
-import com.lobstr.stellar.vault.presentation.util.VibratorUtil.VibrateType.TYPE_ONE
 import com.lobstr.stellar.vault.presentation.util.biometric.BiometricListener
 import com.lobstr.stellar.vault.presentation.util.biometric.BiometricManager
 import com.lobstr.stellar.vault.presentation.util.manager.FragmentTransactionManager
@@ -40,6 +44,7 @@ import com.lobstr.stellar.vault.presentation.util.setSafeOnClickListener
 import com.lobstr.stellar.vault.presentation.vault_auth.VaultAuthActivity
 import dagger.hilt.android.AndroidEntryPoint
 import moxy.ktx.moxyPresenter
+import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Provider
 
@@ -52,7 +57,6 @@ class PinFragment : BaseFragment(), PinFrView, PinLockListener, BiometricListene
     // ===========================================================
 
     companion object {
-        val LOG_TAG = PinFragment::class.simpleName
         const val STYLE_ENTER_PIN = 0
         const val STYLE_CREATE_PIN = 1
     }
@@ -285,21 +289,18 @@ class PinFragment : BaseFragment(), PinFrView, PinLockListener, BiometricListene
 
     override fun onComplete(pin: String) {
         VibratorUtil.vibrate(requireContext(), TYPE_ONE)
-        Log.i(PinActivity.LOG_TAG, "Pin complete: $pin")
+        Timber.i("Pin complete: $pin")
         mPresenter.onPinComplete(pin)
     }
 
     override fun onEmpty() {
         VibratorUtil.vibrate(requireContext(), TYPE_ONE)
-        Log.i(PinActivity.LOG_TAG, "Pin empty")
+        Timber.i("Pin empty")
     }
 
     override fun onPinChange(pinLength: Int, intermediatePin: String) {
         VibratorUtil.vibrate(requireContext(), TYPE_ONE)
-        Log.i(
-            PinActivity.LOG_TAG,
-            "Pin changed, new length $pinLength with intermediate pin $intermediatePin"
-        )
+        Timber.i("Pin changed, new length $pinLength with intermediate pin $intermediatePin")
     }
 
     // Dialogs.
@@ -323,10 +324,10 @@ class PinFragment : BaseFragment(), PinFrView, PinLockListener, BiometricListene
     override fun showLogOutDialog() {
         AlertDialogFragment.Builder(true)
             .setCancelable(true)
-            .setTitle(R.string.title_log_out_mnemonics_dialog)
-            .setMessage(R.string.msg_log_out_mnemonics_dialog)
-            .setNegativeBtnText(R.string.text_btn_cancel)
-            .setPositiveBtnText(R.string.text_btn_log_out)
+            .setTitle(R.string.log_out_mnemonics_title)
+            .setMessage(R.string.log_out_mnemonics_description)
+            .setNegativeBtnText(R.string.cancel_action)
+            .setPositiveBtnText(R.string.log_out_title)
             .create()
             .show(childFragmentManager, AlertDialogFragment.DialogFragmentIdentifier.LOG_OUT)
     }
@@ -334,10 +335,10 @@ class PinFragment : BaseFragment(), PinFrView, PinLockListener, BiometricListene
     override fun showCommonPinPatternDialog() {
         AlertDialogFragment.Builder(true)
             .setCancelable(false)
-            .setTitle(R.string.title_common_pin_pattern_dialog)
-            .setMessage(R.string.msg_common_pin_pattern_dialog)
-            .setNegativeBtnText(R.string.text_btn_continue)
-            .setPositiveBtnText(R.string.text_btn_change_pin)
+            .setTitle(R.string.common_pin_pattern_title)
+            .setMessage(R.string.common_pin_pattern_description)
+            .setNegativeBtnText(R.string.continue_action)
+            .setPositiveBtnText(R.string.pin_change_title)
             .create()
             .show(
                 childFragmentManager,
@@ -351,7 +352,7 @@ class PinFragment : BaseFragment(), PinFrView, PinLockListener, BiometricListene
         } catch (exc: ActivityNotFoundException) {
             Toast.makeText(
                 requireContext(),
-                getString(R.string.msg_mail_client_not_found),
+                getString(R.string.mail_msg_client_not_found),
                 Toast.LENGTH_SHORT
             ).show()
         }
@@ -364,7 +365,7 @@ class PinFragment : BaseFragment(), PinFrView, PinLockListener, BiometricListene
             mBiometricManager = BiometricManager.BiometricBuilder(requireContext(), this)
                 .setTitle(getString(R.string.biometric_title))
                 .setSubtitle(getString(R.string.biometric_subtitle))
-                .setNegativeButtonText(getString(R.string.text_btn_cancel).uppercase())
+                .setNegativeButtonText(getString(R.string.cancel_action).uppercase())
                 .build()
         }
         mBiometricManager?.authenticate(this)

@@ -65,10 +65,6 @@ class TransactionDetailsFragment : BaseFragment(), TransactionDetailsView,
     // Constants
     // ===========================================================
 
-    companion object {
-        val LOG_TAG = TransactionDetailsFragment::class.simpleName
-    }
-
     // ===========================================================
     // Fields
     // ===========================================================
@@ -142,8 +138,10 @@ class TransactionDetailsFragment : BaseFragment(), TransactionDetailsView,
             }
         }
 
-        binding.btnConfirm.setSafeOnClickListener { mPresenter.btnConfirmClicked() }
-        binding.btnDeny.setSafeOnClickListener { mPresenter.btnDenyClicked() }
+        binding.apply {
+            btnConfirm.setSafeOnClickListener { mPresenter.btnConfirmClicked() }
+            btnDeny.setSafeOnClickListener { mPresenter.btnDenyClicked() }
+        }
 
         childFragmentManager.addOnBackStackChangedListener {
             mPresenter.backStackChanged(childFragmentManager.backStackEntryCount)
@@ -165,19 +163,21 @@ class TransactionDetailsFragment : BaseFragment(), TransactionDetailsView,
     }
 
     override fun initSignersRecycledView() {
-        binding.rvSigners.layoutManager = LinearLayoutManager(activity)
-        binding.rvSigners.itemAnimator = null
-        binding.rvSigners.isNestedScrollingEnabled = false
-        binding.rvSigners.addItemDecoration(
-            CustomDividerItemDecoration(
-                ContextCompat.getDrawable(requireContext(), R.drawable.divider_left_offset)!!.apply {
-                    alpha = 51 // Alpha 0.2.
-                })
-        )
-        binding.rvSigners.adapter = AccountAdapter(
-            AccountAdapter.ACCOUNT_WITH_STATUS,
-            { mPresenter.signedAccountItemClicked(it) },
-            { mPresenter.signedAccountItemLongClicked(it) })
+        binding.rvSigners.apply {
+            layoutManager = LinearLayoutManager(activity)
+            itemAnimator = null
+            isNestedScrollingEnabled = false
+            addItemDecoration(
+                CustomDividerItemDecoration(
+                    ContextCompat.getDrawable(requireContext(), R.drawable.divider_left_offset)!!.apply {
+                        alpha = 51 // Alpha 0.2.
+                    })
+            )
+            adapter = AccountAdapter(
+                AccountAdapter.ACCOUNT_WITH_STATUS,
+                { mPresenter.signedAccountItemClicked(it) },
+                { mPresenter.signedAccountItemLongClicked(it) })
+        }
     }
 
     override fun notifySignersAdapter(accounts: List<Account>) {
@@ -193,9 +193,11 @@ class TransactionDetailsFragment : BaseFragment(), TransactionDetailsView,
     }
 
     override fun showSignersCount(countSummary: String?, countToSubmit: String?) {
-        binding.tvSignersCount.text = countSummary
-        binding.tvSignaturesCountToSubmit.text = countToSubmit
-        binding.tvSignaturesCountToSubmit.isVisible = !countToSubmit.isNullOrEmpty()
+        binding.apply {
+            tvSignersCount.text = countSummary
+            tvSignaturesCountToSubmit.text = countToSubmit
+            tvSignaturesCountToSubmit.isVisible = !countToSubmit.isNullOrEmpty()
+        }
     }
 
     override fun initOperationList(title: Int, operations: List<Int>) {
@@ -279,7 +281,7 @@ class TransactionDetailsFragment : BaseFragment(), TransactionDetailsView,
 
             fieldValue.isSingleLine = value?.contains("\n") != true
             fieldValue.ellipsize = when (key) {
-                AppUtil.getString(R.string.text_tv_transaction_memo) -> TextUtils.TruncateAt.END
+                AppUtil.getString(com.lobstr.stellar.tsmapper.R.string.transaction_memo) -> TextUtils.TruncateAt.END
                 else -> {
                     when {
                         // Case for the Account Name.
@@ -308,8 +310,10 @@ class TransactionDetailsFragment : BaseFragment(), TransactionDetailsView,
     }
 
     override fun setActionBtnVisibility(isConfirmVisible: Boolean, isDenyVisible: Boolean) {
-        binding.btnConfirm.isVisible = isConfirmVisible
-        binding.btnDeny.isVisible = isDenyVisible
+        binding.apply {
+            btnConfirm.isVisible = isConfirmVisible
+            btnDeny.isVisible = isDenyVisible
+        }
     }
 
     override fun showActionContainer(show: Boolean) {
@@ -317,8 +321,10 @@ class TransactionDetailsFragment : BaseFragment(), TransactionDetailsView,
     }
 
     override fun setTransactionValid(valid: Boolean) {
-        binding.btnConfirm.isEnabled = valid
-        binding.tvErrorDescription.isVisible = !valid
+        binding.apply {
+            btnConfirm.isEnabled = valid
+            tvErrorDescription.isVisible = !valid
+        }
     }
 
     override fun showMessage(message: String?) {
@@ -330,36 +336,37 @@ class TransactionDetailsFragment : BaseFragment(), TransactionDetailsView,
     }
 
     override fun successDenyTransaction(transactionItem: TransactionItem) {
-        showMessage(getString(R.string.msg_transaction_denied))
+        showMessage(getString(R.string.transaction_details_msg_denied))
 
         // Notify target about changes.
-        val intent = Intent()
-        intent.putExtra(EXTRA_TRANSACTION_ITEM, transactionItem)
-        intent.putExtra(EXTRA_TRANSACTION_STATUS, Constant.Transaction.CANCELLED)
-        activity?.setResult(Activity.RESULT_OK, intent)
-        setFragmentResult(Constant.RequestKey.TRANSACTION_DETAILS_FRAGMENT, Bundle().apply {
-            putParcelable(EXTRA_TRANSACTION_ITEM, transactionItem)
-            putInt(EXTRA_TRANSACTION_STATUS, Constant.Transaction.CANCELLED)
+        activity?.setResult(Activity.RESULT_OK, Intent().apply {
+            putExtra(EXTRA_TRANSACTION_ITEM, transactionItem)
+            putExtra(EXTRA_TRANSACTION_STATUS, Constant.Transaction.CANCELLED)
         })
+        setFragmentResult(Constant.RequestKey.TRANSACTION_DETAILS_FRAGMENT, bundleOf(
+            EXTRA_TRANSACTION_ITEM to transactionItem,
+            EXTRA_TRANSACTION_STATUS to Constant.Transaction.CANCELLED
+        ))
 
         // Close screen.
         (activity as? ContainerActivity)?.finish() ?: activity?.onBackPressedDispatcher?.onBackPressed()
     }
 
     override fun successConfirmTransaction(
+        hash: String,
         envelopeXdr: String,
         transactionSuccessStatus: Byte,
         transactionItem: TransactionItem
     ) {
         // Notify target about changes.
-        val intent = Intent()
-        intent.putExtra(EXTRA_TRANSACTION_ITEM, transactionItem)
-        intent.putExtra(EXTRA_TRANSACTION_STATUS, Constant.Transaction.SIGNED)
-        activity?.setResult(Activity.RESULT_OK, intent)
-        setFragmentResult(Constant.RequestKey.TRANSACTION_DETAILS_FRAGMENT, Bundle().apply {
-            putParcelable(EXTRA_TRANSACTION_ITEM, transactionItem)
-            putInt(EXTRA_TRANSACTION_STATUS, Constant.Transaction.SIGNED)
+        activity?.setResult(Activity.RESULT_OK, Intent().apply {
+            putExtra(EXTRA_TRANSACTION_ITEM, transactionItem)
+            putExtra(EXTRA_TRANSACTION_STATUS, Constant.Transaction.SIGNED)
         })
+        setFragmentResult(Constant.RequestKey.TRANSACTION_DETAILS_FRAGMENT, bundleOf(
+            EXTRA_TRANSACTION_ITEM to transactionItem,
+            EXTRA_TRANSACTION_STATUS to Constant.Transaction.SIGNED
+        ))
 
         // Mark Check Rate Us state.
         LVApplication.checkRateUsDialogState = Constant.RateUsSessionState.CHECK
@@ -368,21 +375,18 @@ class TransactionDetailsFragment : BaseFragment(), TransactionDetailsView,
         parentFragment?.childFragmentManager?.popBackStack()
 
         // Show success screen.
-        val bundle = Bundle()
-        bundle.putString(Constant.Bundle.BUNDLE_ENVELOPE_XDR, envelopeXdr)
-        bundle.putByte(
-            Constant.Bundle.BUNDLE_TRANSACTION_CONFIRMATION_SUCCESS_STATUS,
-            transactionSuccessStatus
-        )
-        val fragment = requireParentFragment().childFragmentManager.fragmentFactory.instantiate(
-            requireContext().classLoader,
-            SuccessFragment::class.qualifiedName!!
-        )
-        fragment.arguments = bundle
-
         FragmentTransactionManager.displayFragment(
             requireParentFragment().childFragmentManager,
-            fragment,
+            requireParentFragment().childFragmentManager.fragmentFactory.instantiate(
+                requireContext().classLoader,
+                SuccessFragment::class.qualifiedName!!
+            ).apply {
+                arguments = bundleOf(
+                    Constant.Bundle.BUNDLE_TRANSACTION_HASH to hash,
+                    Constant.Bundle.BUNDLE_ENVELOPE_XDR to envelopeXdr,
+                    Constant.Bundle.BUNDLE_TRANSACTION_CONFIRMATION_SUCCESS_STATUS to transactionSuccessStatus
+                )
+            },
             R.id.flContainer,
             false
         )
@@ -413,10 +417,10 @@ class TransactionDetailsFragment : BaseFragment(), TransactionDetailsView,
         if (show) {
             AlertDialogFragment.Builder(true)
                 .setCancelable(true)
-                .setTitle(R.string.title_transaction_action_dialog)
+                .setTitle(R.string.confirmation_title)
                 .setMessage(message)
-                .setNegativeBtnText(R.string.text_btn_cancel)
-                .setPositiveBtnText(R.string.text_btn_yes)
+                .setNegativeBtnText(R.string.cancel_action)
+                .setPositiveBtnText(R.string.yes_action)
                 .create()
                 .showInstant(childFragmentManager, CONFIRM_TRANSACTION)
         } else {
@@ -427,10 +431,10 @@ class TransactionDetailsFragment : BaseFragment(), TransactionDetailsView,
     override fun showDenyTransactionDialog() {
         AlertDialogFragment.Builder(true)
             .setCancelable(true)
-            .setTitle(R.string.title_transaction_action_dialog)
-            .setMessage(R.string.msg_deny_transaction_dialog)
-            .setNegativeBtnText(R.string.text_btn_cancel)
-            .setPositiveBtnText(R.string.text_btn_yes)
+            .setTitle(R.string.confirmation_title)
+            .setMessage(R.string.transaction_confirmation_deny_description)
+            .setNegativeBtnText(R.string.cancel_action)
+            .setPositiveBtnText(R.string.yes_action)
             .create()
             .show(childFragmentManager, DENY_TRANSACTION)
     }
@@ -439,10 +443,10 @@ class TransactionDetailsFragment : BaseFragment(), TransactionDetailsView,
         if (show) {
             AlertDialogFragment.Builder(true)
                 .setCancelable(true)
-                .setTitle(R.string.title_sequence_number_warning_dialog)
-                .setMessage(R.string.msg_sequence_number_warning_dialog)
-                .setNegativeBtnText(R.string.text_btn_cancel)
-                .setPositiveBtnText(R.string.text_btn_confirm)
+                .setTitle(R.string.sequence_number_warning_title)
+                .setMessage(R.string.sequence_number_warning_description)
+                .setNegativeBtnText(R.string.cancel_action)
+                .setPositiveBtnText(R.string.confirm_action)
                 .create()
                 .showInstant(childFragmentManager, SEQUENCE_NUMBER_WARNING)
         } else {
@@ -486,9 +490,9 @@ class TransactionDetailsFragment : BaseFragment(), TransactionDetailsView,
 
     override fun onSetAccountNickNameClicked(publicKey: String) {
         AlertDialogFragment.Builder(true)
-            .setSpecificDialog(AlertDialogFragment.DialogIdentifier.ACCOUNT_NAME, Bundle().apply {
-                putString(Constant.Bundle.BUNDLE_PUBLIC_KEY, publicKey)
-            })
+            .setSpecificDialog(AlertDialogFragment.DialogIdentifier.ACCOUNT_NAME, bundleOf(
+                Constant.Bundle.BUNDLE_PUBLIC_KEY to publicKey
+            ))
             .create()
             .show(
                 childFragmentManager,
@@ -498,8 +502,9 @@ class TransactionDetailsFragment : BaseFragment(), TransactionDetailsView,
 
     override fun showTangemScreen(tangemInfo: TangemInfo) {
         TangemDialogFragment().apply {
-            this.arguments =
-                Bundle().apply { putParcelable(Constant.Extra.EXTRA_TANGEM_INFO, tangemInfo) }
+            this.arguments = bundleOf(
+                Constant.Extra.EXTRA_TANGEM_INFO to tangemInfo
+            )
         }.show(childFragmentManager, AlertDialogFragment.DialogFragmentIdentifier.TANGEM)
     }
 

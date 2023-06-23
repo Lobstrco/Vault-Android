@@ -1,6 +1,7 @@
 package com.lobstr.stellar.vault.presentation.entities.tangem
 
 import android.os.Parcelable
+import com.tangem.common.card.EllipticCurve
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
@@ -11,8 +12,8 @@ class TangemInfo(
     var signedTransaction: String? = null,
     var message: String? = null,
     var description: String? = null,
-    var cardStatus: String? = null,
-    var cardStatusCode:Int? = -1
+    var cardStatusCode: Int? = -1,
+    var curve: EllipticCurve? = null
 ) : Parcelable {
     fun clearData() {
         cardId = null
@@ -21,8 +22,8 @@ class TangemInfo(
         signedTransaction = null
         message = null
         description = null
-        cardStatus = null
         cardStatusCode = -1
+        curve = null
     }
 }
 

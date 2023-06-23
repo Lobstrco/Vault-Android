@@ -54,7 +54,7 @@ class ProvideFeedbackDialogFragment : AlertDialogFragment(), ProvideFeedbackView
         } catch (exc: ActivityNotFoundException) {
             Toast.makeText(
                 requireContext(),
-                getString(R.string.msg_mail_client_not_found),
+                getString(R.string.mail_msg_client_not_found),
                 Toast.LENGTH_SHORT
             ).show()
         }

@@ -32,10 +32,6 @@ class HomeActivity : BaseActivity(), HomeActivityView,
     // Constants
     // ===========================================================
 
-    companion object {
-        val LOG_TAG = HomeActivity::class.simpleName
-    }
-
     // ===========================================================
     // Fields
     // ===========================================================
@@ -177,9 +173,9 @@ class HomeActivity : BaseActivity(), HomeActivityView,
         AlertDialogFragment.Builder(false)
             .setSpecificDialog(AlertDialogFragment.DialogIdentifier.SUGGEST_RATE_US)
             .setCancelable(true)
-            .setMessage(R.string.msg_suggest_rate_us)
-            .setNegativeBtnText(R.string.text_btn_cancel_suggestion_rate_us)
-            .setPositiveBtnText(R.string.text_btn_suggest_rate_us)
+            .setMessage(R.string.suggest_rate_us_description)
+            .setNegativeBtnText(R.string.suggest_rate_us_cancel_action)
+            .setPositiveBtnText(R.string.suggest_rate_us_rate_action)
             .create()
             .show(supportFragmentManager, AlertDialogFragment.DialogFragmentIdentifier.SUGGEST_RATE_US)
     }

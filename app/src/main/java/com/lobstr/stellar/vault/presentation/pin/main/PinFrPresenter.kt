@@ -63,15 +63,15 @@ class PinFrPresenter @Inject constructor(private val interactor: PinInteractor) 
 
         when (pinMode) {
             CREATE -> {
-                viewState.showTitle(R.string.text_title_create_pin)
+                viewState.showTitle(R.string.pin_create_title)
                 viewState.setScreenStyle(STYLE_CREATE_PIN)
             }
             CHANGE -> {
-                viewState.showTitle(R.string.text_title_enter_old_pin)
+                viewState.showTitle(R.string.pin_enter_old_title)
                 viewState.setScreenStyle(STYLE_CREATE_PIN)
             }
             CONFIRM -> {
-                viewState.showTitle(R.string.text_title_confirm_pin)
+                viewState.showTitle(R.string.pin_confirm_title)
                 viewState.setScreenStyle(STYLE_CREATE_PIN)
             }
             ENTER -> {
@@ -103,7 +103,7 @@ class PinFrPresenter @Inject constructor(private val interactor: PinInteractor) 
                 ENTER -> confirmPin(pin, false)
             }
         } else {
-            viewState.showErrorMessage(R.string.text_error_incorrect_pin)
+            viewState.showErrorMessage(R.string.pin_msg_incorrect)
             viewState.resetPin()
         }
     }
@@ -142,8 +142,8 @@ class PinFrPresenter @Inject constructor(private val interactor: PinInteractor) 
             }
             else -> {
                 when (pinMode) {
-                    CHANGE -> viewState.showErrorMessage(R.string.text_error_pin_do_not_match)
-                    else -> viewState.showErrorMessage(R.string.text_error_incorrect_pin)
+                    CHANGE -> viewState.showErrorMessage(R.string.pin_msg_do_not_match)
+                    else -> viewState.showErrorMessage(R.string.pin_msg_incorrect)
                 }
                 viewState.resetPin()
             }
@@ -168,7 +168,7 @@ class PinFrPresenter @Inject constructor(private val interactor: PinInteractor) 
                 .doOnSuccess { success ->
                     if (needCheckOldPint) {
                         if (success) {
-                            viewState.showErrorMessage(R.string.text_error_use_old_pin)
+                            viewState.showErrorMessage(R.string.pin_msg_old)
                             viewState.resetPin()
                         } else {
                             if (isCommonPin(pin)) {
@@ -182,9 +182,9 @@ class PinFrPresenter @Inject constructor(private val interactor: PinInteractor) 
 
                                 newPin = pin
                                 if (isCreationAfterChangePinMode) {
-                                    viewState.showTitle(R.string.text_title_confirm_new_pin)
+                                    viewState.showTitle(R.string.pin_confirm_new_title)
                                 } else {
-                                    viewState.showTitle(R.string.text_title_confirm_pin)
+                                    viewState.showTitle(R.string.pin_confirm_title)
                                 }
                                 viewState.resetPin()
                             }
@@ -210,7 +210,7 @@ class PinFrPresenter @Inject constructor(private val interactor: PinInteractor) 
                                 }
                             }
                         } else {
-                            viewState.showErrorMessage(R.string.text_error_incorrect_pin)
+                            viewState.showErrorMessage(R.string.pin_msg_incorrect)
                             viewState.resetPin()
                         }
                     }
@@ -223,7 +223,7 @@ class PinFrPresenter @Inject constructor(private val interactor: PinInteractor) 
         pinMode = CREATE
         isCreationAfterChangePinMode = true
         viewState.resetPin()
-        viewState.showTitle(R.string.text_title_create_new_pin)
+        viewState.showTitle(R.string.pin_create_new_title)
     }
 
     fun biometricAuthenticationSuccessful() {
@@ -273,9 +273,9 @@ class PinFrPresenter @Inject constructor(private val interactor: PinInteractor) 
                 newPin = tempCommonPin
                 tempCommonPin = null
                 if (isCreationAfterChangePinMode) {
-                    viewState.showTitle(R.string.text_title_confirm_new_pin)
+                    viewState.showTitle(R.string.pin_confirm_new_title)
                 } else {
-                    viewState.showTitle(R.string.text_title_confirm_pin)
+                    viewState.showTitle(R.string.pin_confirm_title)
                 }
                 viewState.resetPin()
 
@@ -318,7 +318,7 @@ class PinFrPresenter @Inject constructor(private val interactor: PinInteractor) 
             newPin = null
             tempCommonPin = null
             viewState.resetPin()
-            viewState.showTitle(if(isCreationAfterChangePinMode) R.string.text_title_create_new_pin else R.string.text_title_create_pin)
+            viewState.showTitle(if(isCreationAfterChangePinMode) R.string.pin_create_new_title else R.string.pin_create_title)
             viewState.showHomeAsUp(isHomeAsUpVisibleOnStart)
             isCreatePinState = false
         } else {

@@ -60,7 +60,7 @@ class ExceptionMapper(private val context: Context) {
     private fun getHttpForbiddenError(error: Error?, throwable: Throwable): DefaultException {
         return when {
             error == null -> DefaultException(throwable.message!!)
-            !error.detail.isNullOrEmpty() && error.detail.contains(context.getString(R.string.text_error_invalid_token)) ->
+            !error.detail.isNullOrEmpty() && error.detail.contains(context.getString(R.string.api_error_invalid_token)) ->
                 UserNotAuthorizedException(context.getString(R.string.api_error_user_not_authorized))
             !error.message.isNullOrEmpty() -> ForbiddenException(error.message)
             !error.detail.isNullOrEmpty() -> ForbiddenException(error.detail)

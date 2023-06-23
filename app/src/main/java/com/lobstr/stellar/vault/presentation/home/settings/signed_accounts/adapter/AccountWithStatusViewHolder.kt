@@ -48,7 +48,7 @@ class AccountWithStatusViewHolder(
             tvAccountNameTop.text =
                 if (account.federation.isNullOrEmpty() && account.name.isNullOrEmpty()) {
                     if(account.isVaultAccount == true) {
-                        itemView.context.getString(R.string.text_tv_vault_account_marker)
+                        itemView.context.getString(R.string.transaction_details_signer_item_vault_marker_label)
                     } else {
                         AppUtil.ellipsizeStrInMiddle(account.address, PK_TRUNCATE_COUNT)
                     }
@@ -62,9 +62,9 @@ class AccountWithStatusViewHolder(
 
             tvStatus.text =
                 if (account.signed == true) {
-                    itemView.context.getString(R.string.text_tv_status_signed)
+                    itemView.context.getString(R.string.transaction_details_signer_item_status_signed_label)
                 } else {
-                    itemView.context.getString(R.string.text_tv_status_pending)
+                    itemView.context.getString(R.string.transaction_details_signer_item_status_pending_label)
                 }
 
             tvStatus.setTextColor(

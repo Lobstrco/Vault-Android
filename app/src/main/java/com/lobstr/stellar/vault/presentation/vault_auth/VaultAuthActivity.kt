@@ -18,10 +18,6 @@ class VaultAuthActivity : BaseActivity(), VaultAuthView {
     // Constants
     // ===========================================================
 
-    companion object {
-        val LOG_TAG = VaultAuthActivity::class.simpleName
-    }
-
     // ===========================================================
     // Fields
     // ===========================================================

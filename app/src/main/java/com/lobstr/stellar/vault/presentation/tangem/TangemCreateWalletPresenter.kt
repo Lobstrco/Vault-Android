@@ -10,10 +10,6 @@ import moxy.MvpPresenter
 class TangemCreateWalletPresenter(private var tangemInfo: TangemInfo?) :
     MvpPresenter<TangemCreateWalletView>() {
 
-    companion object {
-        val LOG_TAG = TangemCreateWalletPresenter::class.simpleName
-    }
-
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
 
@@ -41,6 +37,7 @@ class TangemCreateWalletPresenter(private var tangemInfo: TangemInfo?) :
                 viewState.showTangemScreen(
                     TangemInfo().apply {
                         cardId = tangemInfo?.cardId
+                        curve = tangemInfo?.curve
                     }
                 )
             } else {

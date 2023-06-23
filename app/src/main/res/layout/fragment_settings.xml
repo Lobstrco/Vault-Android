@@ -30,7 +30,7 @@
                     android:layout_height="wrap_content"
                     android:fontFamily="sans-serif-medium"
                     android:padding="16dp"
-                    android:text="@string/title_settings_wallet"
+                    android:text="@string/settings_section_wallet_title"
                     android:textColor="@color/color_primary"
                     android:textSize="14sp" />
 
@@ -47,7 +47,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="@string/text_settings_public_key"
+                        android:text="@string/public_key_title"
                         android:textColor="@android:color/black"
                         android:textSize="16sp" />
 
@@ -58,7 +58,7 @@
                         android:ellipsize="end"
                         android:maxWidth="150dp"
                         android:maxLines="1"
-                        android:text="@string/text_settings_show"
+                        android:text="@string/show_action"
                         android:textColor="@color/color_primary"
                         android:textSize="14sp" />
                 </LinearLayout>
@@ -108,7 +108,7 @@
                             android:layout_weight="1"
                             android:ellipsize="end"
                             android:maxLines="1"
-                            android:text="@string/text_settings_transaction_confirmation"
+                            android:text="@string/settings_item_transaction_confirmation"
                             android:textColor="@android:color/black"
                             android:textSize="16sp" />
 
@@ -149,7 +149,7 @@
                     android:paddingEnd="16dp"
                     android:paddingBottom="18dp"
                     android:saveEnabled="false"
-                    android:text="@string/text_settings_notifications"
+                    android:text="@string/settings_item_notifications_title"
                     android:textColor="@android:color/black"
                     android:textSize="16sp" />
 
@@ -165,7 +165,7 @@
                     android:layout_height="wrap_content"
                     android:background="?android:attr/selectableItemBackground"
                     android:padding="16dp"
-                    android:text="@string/text_settings_manage_nicknames"
+                    android:text="@string/manage_nicknames_title"
                     android:textColor="@android:color/black"
                     android:textSize="16sp"
                     app:drawableEndCompat="@drawable/ic_arrow_right" />
@@ -185,7 +185,7 @@
                     android:layout_height="wrap_content"
                     android:fontFamily="sans-serif-medium"
                     android:padding="16dp"
-                    android:text="@string/title_settings_security"
+                    android:text="@string/settings_section_security_title"
                     android:textColor="@color/color_primary"
                     android:textSize="14sp" />
 
@@ -201,7 +201,7 @@
                         android:layout_height="wrap_content"
                         android:background="?android:attr/selectableItemBackground"
                         android:padding="16dp"
-                        android:text="@string/text_settings_mnemonic_code"
+                        android:text="@string/mnemonics_title"
                         android:textColor="@android:color/black"
                         android:textSize="16sp"
                         app:drawableEndCompat="@drawable/ic_arrow_right" />
@@ -225,7 +225,7 @@
                         android:layout_height="wrap_content"
                         android:background="?android:attr/selectableItemBackground"
                         android:padding="16dp"
-                        android:text="@string/text_settings_change_pin"
+                        android:text="@string/pin_change_title"
                         android:textColor="@android:color/black"
                         android:textSize="16sp"
                         app:drawableEndCompat="@drawable/ic_arrow_right" />
@@ -252,7 +252,7 @@
                         android:paddingEnd="16dp"
                         android:paddingBottom="18dp"
                         android:saveEnabled="false"
-                        android:text="@string/text_settings_biometric_login"
+                        android:text="@string/biometric_title"
                         android:textColor="@android:color/black"
                         android:textSize="16sp" />
 
@@ -279,7 +279,7 @@
                         android:layout_weight="1"
                         android:ellipsize="end"
                         android:maxLines="1"
-                        android:text="@string/text_settings_spam_protection"
+                        android:text="@string/settings_item_spam_protection_title"
                         android:textColor="@android:color/black"
                         android:textSize="16sp" />
 
@@ -319,7 +319,7 @@
                     android:layout_height="wrap_content"
                     android:fontFamily="sans-serif-medium"
                     android:padding="16dp"
-                    android:text="@string/title_settings_help"
+                    android:text="@string/help_title"
                     android:textColor="@color/color_primary"
                     android:textSize="14sp" />
 
@@ -329,7 +329,7 @@
                     android:layout_height="wrap_content"
                     android:background="?android:attr/selectableItemBackground"
                     android:padding="16dp"
-                    android:text="@string/text_settings_help"
+                    android:text="@string/settings_item_help_title"
                     android:textColor="@android:color/black"
                     android:textSize="16sp"
                     app:drawableEndCompat="@drawable/ic_arrow_right" />
@@ -346,7 +346,7 @@
                     android:layout_height="wrap_content"
                     android:background="?android:attr/selectableItemBackground"
                     android:padding="16dp"
-                    android:text="@string/text_settings_contact_support"
+                    android:text="@string/settings_item_contact_support_title"
                     android:textColor="@android:color/black"
                     android:textSize="16sp"
                     app:drawableEndCompat="@drawable/ic_arrow_right" />
@@ -365,7 +365,7 @@
                     android:layout_height="wrap_content"
                     android:fontFamily="sans-serif-medium"
                     android:padding="16dp"
-                    android:text="@string/title_settings_other"
+                    android:text="@string/settings_section_other_title"
                     android:textColor="@color/color_primary"
                     android:textSize="14sp" />
 
@@ -380,7 +380,7 @@
                         android:layout_height="wrap_content"
                         android:background="?android:attr/selectableItemBackground"
                         android:padding="16dp"
-                        android:text="@string/text_settings_signer_card_info"
+                        android:text="@string/settings_item_signer_card_info_title"
                         android:textColor="@android:color/black"
                         android:textSize="16sp"
                         app:drawableEndCompat="@drawable/ic_arrow_right" />
@@ -398,7 +398,7 @@
                     android:layout_height="wrap_content"
                     android:background="?android:attr/selectableItemBackground"
                     android:padding="16dp"
-                    android:text="@string/text_settings_rate_us"
+                    android:text="@string/rate_us_title"
                     android:textColor="@android:color/black"
                     android:textSize="16sp"
                     app:drawableEndCompat="@drawable/ic_arrow_right" />
@@ -415,7 +415,7 @@
                     android:layout_height="wrap_content"
                     android:background="?android:attr/selectableItemBackground"
                     android:padding="16dp"
-                    android:text="@string/text_settings_license"
+                    android:text="@string/license_title"
                     android:textColor="@android:color/black"
                     android:textSize="16sp"
                     app:drawableEndCompat="@drawable/ic_arrow_right" />
@@ -440,7 +440,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="@string/text_settings_version"
+                        android:text="@string/settings_item_version_title"
                         android:textColor="@android:color/black"
                         android:textSize="16sp" />
 
@@ -467,7 +467,7 @@
                     android:gravity="center_vertical"
                     android:paddingStart="16dp"
                     android:paddingEnd="16dp"
-                    android:text="@string/text_settings_log_out"
+                    android:text="@string/log_out_title"
                     android:textColor="@color/color_d9534f"
                     android:textSize="16sp" />
             </LinearLayout>
@@ -481,7 +481,7 @@
                 android:drawablePadding="8dp"
                 android:gravity="center"
                 android:padding="16dp"
-                android:text="@string/text_all_rights_reserved"
+                android:text="@string/settings_copyright_label"
                 android:textColor="@color/color_9b9b9b"
                 android:textSize="10sp"
                 app:drawableTopCompat="@drawable/ic_ultra_stellar_logo" />

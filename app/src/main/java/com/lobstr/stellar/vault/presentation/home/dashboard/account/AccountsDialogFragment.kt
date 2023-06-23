@@ -58,7 +58,7 @@ class AccountsDialogFragment : BaseBottomSheetDialog(), AccountsView {
         val dialog = super.onCreateDialog(savedInstanceState)
         dialog.setOnShowListener {
             val bottomSheetDialog = it as BottomSheetDialog
-            val bottomSheet = bottomSheetDialog.findViewById<View>(R.id.design_bottom_sheet)
+            val bottomSheet = bottomSheetDialog.findViewById<View>(com.google.android.material.R.id.design_bottom_sheet)
             bottomSheet?.let { sheet ->
                 BottomSheetBehavior.from(sheet).apply {
                     skipCollapsed = true

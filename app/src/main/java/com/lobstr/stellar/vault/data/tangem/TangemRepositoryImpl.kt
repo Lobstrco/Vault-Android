@@ -5,41 +5,50 @@ import com.lobstr.stellar.vault.domain.tangem.TangemRepository
 import com.lobstr.stellar.vault.presentation.entities.tangem.TangemError
 import com.lobstr.stellar.vault.presentation.util.AppUtil
 import com.lobstr.stellar.vault.presentation.util.Constant.TangemErrorMod.ERROR_MOD_REPEAT_ACTION
-import com.tangem.TangemSdkError
+import com.lobstr.stellar.vault.presentation.util.Constant.TangemErrorMod.ERROR_MOD_USER_CANCELLED
+import com.tangem.common.core.TangemSdkError
 
 class TangemRepositoryImpl() : TangemRepository {
-    override fun handleError(error: TangemSdkError): TangemError? {
+    override fun handleError(error: com.tangem.common.core.TangemError): TangemError? {
         return when (error) {
+            is TangemSdkError.UserCancelled -> {
+                TangemError(
+                    error.code,
+                    ERROR_MOD_USER_CANCELLED,
+                    "",
+                    ""
+                )
+            }
             is TangemSdkError.WrongCardNumber -> {
                 TangemError(
                     error.code,
                     ERROR_MOD_REPEAT_ACTION,
-                    AppUtil.getString(R.string.text_tv_tangem_wrong_card_error_header),
-                    AppUtil.getString(R.string.text_tv_tangem_wrong_card_error_description)
+                    AppUtil.getString(R.string.tangem_error_wrong_card_title),
+                    AppUtil.getString(R.string.tangem_error_wrong_card_description)
                 )
             }
             is TangemSdkError.TagLost -> {
                 TangemError(
                     error.code,
                     ERROR_MOD_REPEAT_ACTION,
-                    AppUtil.getString(R.string.text_tv_tangem_tag_lost_error_header),
-                    AppUtil.getString(R.string.text_tv_tangem_tag_lost_error_description)
+                    AppUtil.getString(R.string.tangem_error_tag_lost_title),
+                    AppUtil.getString(R.string.tangem_error_tag_lost_description)
                 )
             }
             is TangemSdkError.UserCancelled -> {
                 TangemError(
                     error.code,
                     ERROR_MOD_REPEAT_ACTION,
-                    AppUtil.getString(R.string.text_tv_tangem_tag_lost_error_header),
-                    AppUtil.getString(R.string.text_tv_tangem_tag_lost_error_description)
+                    AppUtil.getString(R.string.tangem_error_tag_lost_title),
+                    AppUtil.getString(R.string.tangem_error_tag_lost_description)
                 )
             }
             else -> {
                 TangemError(
                     error.code,
                     ERROR_MOD_REPEAT_ACTION,
-                    AppUtil.getString(R.string.text_tv_tangem_default_error_header),
-                    AppUtil.getString(R.string.text_tv_tangem_default_error_description)
+                    AppUtil.getString(R.string.tangem_error_default_title),
+                    AppUtil.getString(R.string.tangem_error_default_description)
                 )
             }
         }

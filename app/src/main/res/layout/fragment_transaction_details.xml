@@ -54,7 +54,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="start|center"
                                 android:fontFamily="sans-serif-medium"
-                                android:text="@string/text_tv_signers"
+                                android:text="@string/transaction_details_signers_title"
                                 android:textColor="@color/color_primary"
                                 android:textSize="14sp" />
 
@@ -114,7 +114,7 @@
                 android:layout_gravity="center"
                 android:gravity="center"
                 android:paddingBottom="16dp"
-                android:text="@string/text_tv_sequence_number_invalid_description"
+                android:text="@string/transaction_details_invalid_sequence_number_description"
                 android:textAppearance="?android:textAppearanceMedium"
                 android:textColor="@color/color_d9534f"
                 android:textSize="14sp"
@@ -134,7 +134,7 @@
                     android:layout_marginEnd="8dp"
                     android:layout_weight="1"
                     android:background="@drawable/selector_default_button_with_round_stroked_red"
-                    android:text="@string/text_btn_deny"
+                    android:text="@string/deny_action"
                     android:textAllCaps="false"
                     android:textColor="@color/color_d9534f"
                     android:textSize="14sp" />
@@ -147,7 +147,7 @@
                     android:layout_marginStart="8dp"
                     android:layout_weight="1"
                     android:background="@drawable/selector_default_button_with_round"
-                    android:text="@string/text_btn_confirm"
+                    android:text="@string/confirm_action"
                     android:textAllCaps="false"
                     android:textColor="@android:color/white"
                     android:textSize="14sp" />

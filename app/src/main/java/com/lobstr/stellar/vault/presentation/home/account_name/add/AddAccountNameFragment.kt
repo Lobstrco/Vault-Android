@@ -22,10 +22,6 @@ class AddAccountNameFragment : BaseFragment(), AddAccountNameView {
     // Constants
     // ===========================================================
 
-    companion object {
-        val LOG_TAG = AddAccountNameFragment::class.simpleName
-    }
-
     // ===========================================================
     // Fields
     // ===========================================================

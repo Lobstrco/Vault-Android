@@ -1,13 +1,16 @@
 package com.lobstr.stellar.vault.presentation.fcm
 
+import android.Manifest
 import android.app.NotificationChannel
 import android.app.NotificationChannelGroup
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.media.RingtoneManager
 import android.os.Build
+import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.app.TaskStackBuilder
@@ -88,42 +91,22 @@ class NotificationsManager(private val context: Context) {
         importance: Int = NotificationManagerCompat.IMPORTANCE_HIGH,
         priority: Int = NotificationCompat.PRIORITY_DEFAULT
     ) {
-        val notificationManager = NotificationManagerCompat.from(context)
-
-        val notificationBuilder =
-            NotificationCompat.Builder(
+        if (ActivityCompat.checkSelfPermission(
                 context,
-                createNotificationChannel(channelId, channelGroupId, notificationManager, importance)
-            )
-                .setSmallIcon(R.drawable.ic_stat_notif)
-                .setColor(
-                    ContextCompat.getColor(
-                        context,
-                        if (BuildConfig.FLAVOR.equals(Constant.Flavor.VAULT)) R.color.color_primary else R.color.color_757575
-                    )
-                )
-                .setLights(
-                    ContextCompat.getColor(
-                        context,
-                        if (BuildConfig.FLAVOR.equals(Constant.Flavor.VAULT)) R.color.color_primary else R.color.color_757575
-                    ), 500, 500
-                )
-                .setContentTitle(notificationTitle)
-                .setStyle(NotificationCompat.BigTextStyle().bigText(notificationMessage))
-                .setContentText(notificationMessage)
-                .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
-                .setAutoCancel(true)
-                .setPriority(priority)
-        notificationBuilder.setContentIntent(getPendingIntent(notificationIntentClass))
+                Manifest.permission.POST_NOTIFICATIONS
+            ) == PackageManager.PERMISSION_GRANTED
+        ) {
+            val notificationManager = NotificationManagerCompat.from(context)
 
-        // Notifications group with NotificationCompat.InboxStyle() starting Android N.
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            notificationBuilder.setGroup(groupName)
-
-            val groupBuilder =
+            val notificationBuilder =
                 NotificationCompat.Builder(
                     context,
-                    createNotificationChannel(channelId, channelGroupId, notificationManager, importance)
+                    createNotificationChannel(
+                        channelId,
+                        channelGroupId,
+                        notificationManager,
+                        importance
+                    )
                 )
                     .setSmallIcon(R.drawable.ic_stat_notif)
                     .setColor(
@@ -139,20 +122,56 @@ class NotificationsManager(private val context: Context) {
                         ), 500, 500
                     )
                     .setContentTitle(notificationTitle)
-                    .setStyle(NotificationCompat.InboxStyle())
+                    .setStyle(NotificationCompat.BigTextStyle().bigText(notificationMessage))
                     .setContentText(notificationMessage)
                     .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
-                    .setGroupSummary(true)
-                    .setGroup(groupName)
-                    .setGroupAlertBehavior(NotificationCompat.GROUP_ALERT_CHILDREN)
                     .setAutoCancel(true)
                     .setPriority(priority)
-                    .setContentIntent(getPendingIntent(groupIntentClass))
+            notificationBuilder.setContentIntent(getPendingIntent(notificationIntentClass))
 
-            notificationManager.notify(groupId, groupBuilder.build())
+            // Notifications group with NotificationCompat.InboxStyle() starting Android N.
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                notificationBuilder.setGroup(groupName)
+
+                val groupBuilder =
+                    NotificationCompat.Builder(
+                        context,
+                        createNotificationChannel(
+                            channelId,
+                            channelGroupId,
+                            notificationManager,
+                            importance
+                        )
+                    )
+                        .setSmallIcon(R.drawable.ic_stat_notif)
+                        .setColor(
+                            ContextCompat.getColor(
+                                context,
+                                if (BuildConfig.FLAVOR.equals(Constant.Flavor.VAULT)) R.color.color_primary else R.color.color_757575
+                            )
+                        )
+                        .setLights(
+                            ContextCompat.getColor(
+                                context,
+                                if (BuildConfig.FLAVOR.equals(Constant.Flavor.VAULT)) R.color.color_primary else R.color.color_757575
+                            ), 500, 500
+                        )
+                        .setContentTitle(notificationTitle)
+                        .setStyle(NotificationCompat.InboxStyle())
+                        .setContentText(notificationMessage)
+                        .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
+                        .setGroupSummary(true)
+                        .setGroup(groupName)
+                        .setGroupAlertBehavior(NotificationCompat.GROUP_ALERT_CHILDREN)
+                        .setAutoCancel(true)
+                        .setPriority(priority)
+                        .setContentIntent(getPendingIntent(groupIntentClass))
+
+                notificationManager.notify(groupId, groupBuilder.build())
+            }
+
+            notificationManager.notify(notificationId, notificationBuilder.build())
         }
-
-        notificationManager.notify(notificationId, notificationBuilder.build())
     }
 
     /**
@@ -173,76 +192,92 @@ class NotificationsManager(private val context: Context) {
         importance: Int = NotificationManagerCompat.IMPORTANCE_HIGH,
         priority: Int = NotificationCompat.PRIORITY_DEFAULT
     ) {
-        val notificationManager = NotificationManagerCompat.from(context)
+        if (ActivityCompat.checkSelfPermission(
+                context,
+                Manifest.permission.POST_NOTIFICATIONS
+            ) == PackageManager.PERMISSION_GRANTED
+        ) {
+            val notificationManager = NotificationManagerCompat.from(context)
 
-        val notificationBuilder = NotificationCompat.Builder(
-            context,
-            createNotificationChannel(channelId, channelGroupId, notificationManager, importance)
-        )
-            .setSmallIcon(R.drawable.ic_stat_notif)
-            .setColor(
-                ContextCompat.getColor(
-                    context,
-                    if (BuildConfig.FLAVOR.equals(Constant.Flavor.VAULT)) R.color.color_primary else R.color.color_757575
+            val notificationBuilder = NotificationCompat.Builder(
+                context,
+                createNotificationChannel(
+                    channelId,
+                    channelGroupId,
+                    notificationManager,
+                    importance
                 )
             )
-            .setLights(
-                ContextCompat.getColor(
-                    context,
-                    if (BuildConfig.FLAVOR.equals(Constant.Flavor.VAULT)) R.color.color_primary else R.color.color_757575
-                ), 500, 500
-            )
-            .setContentTitle(notificationTitle)
-            .setStyle(NotificationCompat.BigTextStyle().bigText(notificationMessage))
-            .setContentText(notificationMessage)
-            .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
-            .setAutoCancel(true)
-            .setPriority(priority)
-
-        // Data (image url or something else) - some data that we must pass to activity from fcm
-        // and refresh this data when we will open activity.
-        // In KitKat and Lollipop PendingIntent.FLAG_UPDATE_CURRENT not working correct
-        // (after first time) and this trick helps to solve the problem.
-        getPendingIntentWithStack(intent)?.cancel()
-        notificationBuilder.setContentIntent(getPendingIntentWithStack(intent))
-
-        // Notifications group with NotificationCompat.InboxStyle() starting Android N.
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            notificationBuilder.setGroup(groupName)
-
-            val groupBuilder =
-                NotificationCompat.Builder(
-                    context,
-                    createNotificationChannel(channelId, channelGroupId, notificationManager, importance)
+                .setSmallIcon(R.drawable.ic_stat_notif)
+                .setColor(
+                    ContextCompat.getColor(
+                        context,
+                        if (BuildConfig.FLAVOR.equals(Constant.Flavor.VAULT)) R.color.color_primary else R.color.color_757575
+                    )
                 )
-                    .setSmallIcon(R.drawable.ic_stat_notif)
-                    .setColor(
-                        ContextCompat.getColor(
-                            context,
-                            if (BuildConfig.FLAVOR.equals(Constant.Flavor.VAULT)) R.color.color_primary else R.color.color_757575
+                .setLights(
+                    ContextCompat.getColor(
+                        context,
+                        if (BuildConfig.FLAVOR.equals(Constant.Flavor.VAULT)) R.color.color_primary else R.color.color_757575
+                    ), 500, 500
+                )
+                .setContentTitle(notificationTitle)
+                .setStyle(NotificationCompat.BigTextStyle().bigText(notificationMessage))
+                .setContentText(notificationMessage)
+                .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
+                .setAutoCancel(true)
+                .setPriority(priority)
+
+            // Data (image url or something else) - some data that we must pass to activity from fcm
+            // and refresh this data when we will open activity.
+            // In KitKat and Lollipop PendingIntent.FLAG_UPDATE_CURRENT not working correct
+            // (after first time) and this trick helps to solve the problem.
+            getPendingIntentWithStack(intent)?.cancel()
+            notificationBuilder.setContentIntent(getPendingIntentWithStack(intent))
+
+            // Notifications group with NotificationCompat.InboxStyle() starting Android N.
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                notificationBuilder.setGroup(groupName)
+
+                val groupBuilder =
+                    NotificationCompat.Builder(
+                        context,
+                        createNotificationChannel(
+                            channelId,
+                            channelGroupId,
+                            notificationManager,
+                            importance
                         )
                     )
-                    .setLights(
-                        ContextCompat.getColor(
-                            context,
-                            if (BuildConfig.FLAVOR.equals(Constant.Flavor.VAULT)) R.color.color_primary else R.color.color_757575
-                        ), 500, 500
-                    )
-                    .setContentTitle(notificationTitle)
-                    .setStyle(NotificationCompat.InboxStyle())
-                    .setContentText(notificationMessage)
-                    .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
-                    .setGroupSummary(true)
-                    .setGroup(groupName)
-                    .setGroupAlertBehavior(NotificationCompat.GROUP_ALERT_CHILDREN)
-                    .setAutoCancel(true)
-                    .setPriority(priority)
-                    .setContentIntent(getPendingIntent(groupIntent))
+                        .setSmallIcon(R.drawable.ic_stat_notif)
+                        .setColor(
+                            ContextCompat.getColor(
+                                context,
+                                if (BuildConfig.FLAVOR.equals(Constant.Flavor.VAULT)) R.color.color_primary else R.color.color_757575
+                            )
+                        )
+                        .setLights(
+                            ContextCompat.getColor(
+                                context,
+                                if (BuildConfig.FLAVOR.equals(Constant.Flavor.VAULT)) R.color.color_primary else R.color.color_757575
+                            ), 500, 500
+                        )
+                        .setContentTitle(notificationTitle)
+                        .setStyle(NotificationCompat.InboxStyle())
+                        .setContentText(notificationMessage)
+                        .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
+                        .setGroupSummary(true)
+                        .setGroup(groupName)
+                        .setGroupAlertBehavior(NotificationCompat.GROUP_ALERT_CHILDREN)
+                        .setAutoCancel(true)
+                        .setPriority(priority)
+                        .setContentIntent(getPendingIntent(groupIntent))
 
-            notificationManager.notify(groupId, groupBuilder.build())
+                notificationManager.notify(groupId, groupBuilder.build())
+            }
+
+            notificationManager.notify(notificationId, notificationBuilder.build())
         }
-
-        notificationManager.notify(notificationId, notificationBuilder.build())
     }
 
     private fun getPendingIntent(intent: Intent): PendingIntent {

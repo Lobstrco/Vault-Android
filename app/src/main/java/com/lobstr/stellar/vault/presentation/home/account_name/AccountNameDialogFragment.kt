@@ -24,10 +24,6 @@ class AccountNameDialogFragment : AlertDialogFragment(), AccountNameView,
     // Constants
     // ===========================================================
 
-    companion object {
-        val LOG_TAG = AccountNameDialogFragment::class.simpleName
-    }
-
     // ===========================================================
     // Fields
     // ===========================================================

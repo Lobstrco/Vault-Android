@@ -43,7 +43,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_marginBottom="8dp"
-                    android:text="@string/text_tv_error"
+                    android:text="@string/transaction_confirmation_error_title"
                     android:textColor="@android:color/black"
                     android:textSize="20sp"
                     android:textStyle="bold" />
@@ -66,7 +66,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:fontFamily="sans-serif"
-                    android:text="@string/text_btn_error_view_details"
+                    android:text="@string/transaction_confirmation_error_view_details_action"
                     android:textAllCaps="false"
                     android:textColor="@color/color_primary"
                     android:textSize="12sp"
@@ -89,7 +89,7 @@
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="16dp"
         android:background="@drawable/selector_default_button_with_round"
-        android:text="@string/text_btn_done"
+        android:text="@string/done_action"
         android:textAllCaps="false"
         android:textColor="@android:color/white"
         android:textSize="14sp" />

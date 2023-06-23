@@ -1,12 +1,13 @@
 package com.lobstr.stellar.vault.domain.tangem
 
 import com.lobstr.stellar.vault.presentation.entities.tangem.TangemError
-import com.tangem.TangemSdkError
-import com.tangem.commands.SignResponse
+import com.tangem.operations.sign.SignResponse
 import org.stellar.sdk.AbstractTransaction
 
 interface TangemInteractor {
     fun getPublicKeyFromKeyPair(walletPublicKey: ByteArray?): String?
+
+    fun getPublicKeyFromKeyPair(walletPublicKey: String?): ByteArray?
 
     fun getTransactionFromXDR(xdr: String): AbstractTransaction
 
@@ -16,5 +17,5 @@ interface TangemInteractor {
         accountId: String
     ): String?
 
-    fun handleTangemError(error: TangemSdkError): TangemError?
+    fun handleTangemError(error: com.tangem.common.core.TangemError): TangemError?
 }

@@ -1,9 +1,7 @@
 package com.lobstr.stellar.vault.presentation.home.transactions
 
 import com.lobstr.stellar.vault.R
-import com.lobstr.stellar.vault.data.error.exeption.DefaultException
-import com.lobstr.stellar.vault.data.error.exeption.NoInternetConnectionException
-import com.lobstr.stellar.vault.data.error.exeption.UserNotAuthorizedException
+import com.lobstr.stellar.vault.data.error.exeption.*
 import com.lobstr.stellar.vault.domain.transaction.TransactionInteractor
 import com.lobstr.stellar.vault.domain.util.EventProviderModule
 import com.lobstr.stellar.vault.domain.util.event.Auth
@@ -14,6 +12,7 @@ import com.lobstr.stellar.vault.presentation.BasePresenter
 import com.lobstr.stellar.vault.presentation.dialog.alert.base.AlertDialogFragment
 import com.lobstr.stellar.vault.presentation.entities.account.Account
 import com.lobstr.stellar.vault.presentation.entities.transaction.TransactionItem
+import com.lobstr.stellar.vault.presentation.util.AppUtil
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Single
@@ -34,17 +33,20 @@ class TransactionsPresenter @Inject constructor(
     private var nextPageUrl: String? = null
     private var newLoadTransactions = true
     private var isLoading = false
+    private var cancellationInProcess = false
     private val transactions: MutableList<TransactionItem> = mutableListOf()
 
     private var stellarAccountsDisposable: Disposable? = null
     private val cachedStellarAccounts: MutableList<Account> = mutableListOf()
+
+    private var transactionHashToDelete: String? = null
 
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
 
         registerEventProvider()
         viewState.showOptionsMenu(false)
-        viewState.setupToolbarTitle(R.string.title_toolbar_transactions)
+        viewState.setupToolbarTitle(R.string.toolbar_transactions_title)
         viewState.initRecycledView()
         loadTransactions()
     }
@@ -261,6 +263,11 @@ class TransactionsPresenter @Inject constructor(
         viewState.showTransactionDetails(transactionItem)
     }
 
+    fun transactionItemLongClicked(transactionItem: TransactionItem) {
+        transactionHashToDelete = transactionItem.hash
+        viewState.showDenyTransactionDialog()
+    }
+
     fun addTransactionClicked() {
         viewState.showImportXdrScreen()
     }
@@ -274,6 +281,7 @@ class TransactionsPresenter @Inject constructor(
             AlertDialogFragment.DialogFragmentIdentifier.CLEAR_TRANSACTIONS -> {
                 clearInvalidTransactions()
             }
+            AlertDialogFragment.DialogFragmentIdentifier.DENY_TRANSACTION -> denyTransaction(transactionHashToDelete)
         }
     }
 
@@ -351,6 +359,51 @@ class TransactionsPresenter @Inject constructor(
                         is DefaultException -> {
                             viewState.showErrorMessage(it.details)
                         }
+                        else -> {
+                            viewState.showErrorMessage(it.message ?: "")
+                        }
+                    }
+                })
+        )
+    }
+
+    private fun denyTransaction(hash: String?) {
+        if (hash.isNullOrEmpty() || cancellationInProcess) {
+            return
+        }
+        unsubscribeOnDestroy(
+            interactor.cancelTransaction(hash)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnSubscribe {
+                    cancellationInProcess = true
+                    viewState.showProgressDialog(true)
+                }
+                .doOnEvent { _, _ ->
+                    viewState.showProgressDialog(false)
+                    cancellationInProcess = false
+                }
+                .subscribe({
+                    refreshCalled()
+                }, {
+                    when (it) {
+                        is UserNotAuthorizedException -> {
+                            when (it.action) {
+                                UserNotAuthorizedException.Action.AUTH_REQUIRED -> eventProviderModule.authEventSubject.onNext(
+                                    Auth()
+                                )
+                                else -> denyTransaction(hash)
+                            }
+                        }
+                        is InternalException -> viewState.showErrorMessage(
+                            AppUtil.getString(
+                                R.string.api_error_internal_submit_transaction
+                            )
+                        )
+                        is HttpNotFoundException -> {
+                            viewState.showErrorMessage(AppUtil.getString(R.string.transaction_details_msg_already_signed_or_denied))
+                        }
+                        is DefaultException -> viewState.showErrorMessage(it.details)
                         else -> {
                             viewState.showErrorMessage(it.message ?: "")
                         }

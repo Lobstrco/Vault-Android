@@ -35,7 +35,7 @@ class VaultAuthFrPresenter @Inject constructor(
                     Constant.Util.PK_TRUNCATE_COUNT
                 )
             } else {
-                AppUtil.getString(R.string.text_tv_vault_auth_signer_card_title)
+                AppUtil.getString(R.string.vault_auth_signer_card_title)
             },
             if (interactor.hasMnemonics()) {
                 null
@@ -46,14 +46,14 @@ class VaultAuthFrPresenter @Inject constructor(
                 )
             },
             if (interactor.hasMnemonics()) {
-                AppUtil.getString(R.string.text_tv_vault_auth_signer_mnemonics_description)
+                AppUtil.getString(R.string.vault_auth_signer_mnemonics_description)
             } else {
-                AppUtil.getString(R.string.text_tv_vault_auth_signer_card_description)
+                AppUtil.getString(R.string.vault_auth_signer_card_description)
             },
             if (interactor.hasMnemonics()) {
-                AppUtil.getString(R.string.text_btn_vault_auth_mnemonics)
+                AppUtil.getString(R.string.vault_auth_sign_in_mnemonics_action)
             } else {
-                AppUtil.getString(R.string.text_btn_vault_auth_signer_card)
+                AppUtil.getString(R.string.vault_auth_sign_in_signer_card_action)
             }
         )
         registerEventProvider()
@@ -89,7 +89,7 @@ class VaultAuthFrPresenter @Inject constructor(
                 .subscribe({
                     viewState.showTangemScreen(
                         TangemInfo().apply {
-                            accountId = interactor.getUserPublicKey()
+                            accountId = interactor.getUserPublicKey() //todo + publicKey in byte array
                             cardId = interactor.getTangemCardId()
                             pendingTransaction = it
                         }
@@ -211,14 +211,14 @@ class VaultAuthFrPresenter @Inject constructor(
     fun logOutClicked() {
         viewState.showLogOutDialog(
             if (interactor.hasMnemonics()) {
-                AppUtil.getString(R.string.title_log_out_mnemonics_dialog)
+                AppUtil.getString(R.string.log_out_mnemonics_title)
             } else {
                 null
             },
             if (interactor.hasMnemonics()) {
-                AppUtil.getString(R.string.msg_log_out_mnemonics_dialog)
+                AppUtil.getString(R.string.log_out_mnemonics_description)
             } else {
-                AppUtil.getString(R.string.msg_log_out_dialog)
+                AppUtil.getString(R.string.log_out_description)
             }
         )
     }

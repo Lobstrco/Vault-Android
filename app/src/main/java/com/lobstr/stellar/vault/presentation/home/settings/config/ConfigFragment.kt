@@ -29,10 +29,6 @@ class ConfigFragment : BaseFragment(), ConfigView {
     // Constants
     // ===========================================================
 
-    companion object {
-        val LOG_TAG = ConfigFragment::class.simpleName
-    }
-
     // ===========================================================
     // Fields
     // ===========================================================

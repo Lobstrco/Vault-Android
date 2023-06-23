@@ -21,7 +21,7 @@
                 android:layout_gravity="start"
                 android:layout_marginBottom="24dp"
                 android:alpha="0.6"
-                android:text="@string/text_tv_add_account_name_subtitle"
+                android:text="@string/add_account_name_subtitle"
                 android:textColor="@color/color_071c33"
                 android:textSize="15sp" />
 
@@ -33,7 +33,7 @@
                 android:background="@drawable/shape_input_edit_text"
                 android:drawablePadding="10dp"
                 android:gravity="top"
-                android:hint="@string/hint_add_account_name_public_key"
+                android:hint="@string/add_account_name_hint"
                 android:imeOptions="actionDone"
                 android:inputType="textCapWords|textCapSentences"
                 android:maxLength="56"
@@ -50,7 +50,7 @@
                 android:layout_marginBottom="24dp"
                 android:alpha="0.6"
                 android:gravity="start"
-                android:text="@string/text_tv_add_account_name_public_key_restriction"
+                android:text="@string/add_account_name_restriction_label"
                 android:textColor="@color/color_4a4a4a"
                 android:textSize="13sp" />
 
@@ -62,7 +62,7 @@
                 android:background="@drawable/shape_input_edit_text"
                 android:drawablePadding="10dp"
                 android:gravity="top"
-                android:hint="@string/hint_account_nickname"
+                android:hint="@string/account_name_hint"
                 android:imeOptions="actionDone"
                 android:inputType="textCapWords|textCapSentences"
                 android:maxLength="20"
@@ -78,7 +78,7 @@
                 android:layout_height="wrap_content"
                 android:alpha="0.6"
                 android:gravity="start"
-                android:text="@string/text_tv_change_account_name_restriction"
+                android:text="@string/account_name_restriction_label"
                 android:textColor="@color/color_4a4a4a"
                 android:textSize="13sp" />
 
@@ -89,7 +89,7 @@
                 android:layout_marginTop="30dp"
                 android:background="@drawable/selector_default_button_with_round"
                 android:enabled="false"
-                android:text="@string/text_btn_save"
+                android:text="@string/save_action"
                 android:textAllCaps="false"
                 android:textColor="@android:color/white"
                 android:textSize="15sp" />

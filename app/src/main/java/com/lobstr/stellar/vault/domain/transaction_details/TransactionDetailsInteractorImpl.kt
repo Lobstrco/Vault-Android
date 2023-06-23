@@ -86,7 +86,7 @@ class TransactionDetailsInteractorImpl(
     override fun confirmTransactionOnServer(
         needAdditionalSignatures: Boolean,
         transactionStatus: Int?,
-        hash: String?,
+        hash: String,
         transaction: String
     ): Single<String> {
         return when (needAdditionalSignatures) {
@@ -96,7 +96,7 @@ class TransactionDetailsInteractorImpl(
             )
             else -> transactionRepository.markTransactionAsSubmitted(
                 AppUtil.getJwtToken(prefsUtil.authToken),
-                hash!!,
+                hash,
                 transaction
             )
         }.onErrorResumeNext {

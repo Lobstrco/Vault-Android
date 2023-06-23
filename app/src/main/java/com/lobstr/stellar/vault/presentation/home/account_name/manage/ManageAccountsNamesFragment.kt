@@ -34,10 +34,6 @@ class ManageAccountsNamesFragment : BaseFragment(), ManageAccountsNamesView,
     // Constants
     // ===========================================================
 
-    companion object {
-        val LOG_TAG = ManageAccountsNamesFragment::class.simpleName
-    }
-
     // ===========================================================
     // Fields
     // ===========================================================

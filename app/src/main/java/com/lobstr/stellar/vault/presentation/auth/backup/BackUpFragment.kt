@@ -21,10 +21,6 @@ class BackUpFragment : BaseFragment(), BackUpView {
     // Constants
     // ===========================================================
 
-    companion object {
-        val LOG_TAG = BackUpFragment::class.simpleName
-    }
-
     // ===========================================================
     // Fields
     // ===========================================================

@@ -2,7 +2,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
             android:id="@+id/action_refresh"
-            android:title="@string/text_action_refresh"
+            android:title="@string/update_action"
             app:showAsAction="always"
             app:actionLayout="@layout/layout_menu_dashboard"
             android:icon="@drawable/ic_refresh_white"/>

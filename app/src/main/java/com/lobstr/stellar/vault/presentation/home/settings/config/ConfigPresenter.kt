@@ -36,24 +36,24 @@ class ConfigPresenter @Inject constructor(
             else -> {
                 viewState.setupToolbarTitle(
                     when (config) {
-                        SPAM_PROTECTION -> AppUtil.getString(R.string.title_toolbar_spam_protection)
-                        TRANSACTION_CONFIRMATIONS -> AppUtil.getString(R.string.text_settings_transaction_confirmation)
+                        SPAM_PROTECTION -> AppUtil.getString(R.string.toolbar_spam_protection_title)
+                        TRANSACTION_CONFIRMATIONS -> AppUtil.getString(R.string.settings_item_transaction_confirmation)
                         else -> null
                     }
                 )
 
                 viewState.setupConfigTitle(
                     when (config) {
-                        SPAM_PROTECTION -> AppUtil.getString(R.string.text_settings_spam_protection)
-                        TRANSACTION_CONFIRMATIONS -> AppUtil.getString(R.string.text_config_confirm_transactions_title)
+                        SPAM_PROTECTION -> AppUtil.getString(R.string.settings_item_spam_protection_title)
+                        TRANSACTION_CONFIRMATIONS -> AppUtil.getString(R.string.config_confirm_transactions_title)
                         else -> null
                     }
                 )
 
                 viewState.setupConfigDescription(
                     when (config) {
-                        SPAM_PROTECTION -> AppUtil.getString(R.string.text_config_spam_protection_description)
-                        TRANSACTION_CONFIRMATIONS -> AppUtil.getString(R.string.text_config_confirm_transactions_description)
+                        SPAM_PROTECTION -> AppUtil.getString(R.string.config_spam_protection_description)
+                        TRANSACTION_CONFIRMATIONS -> AppUtil.getString(R.string.config_confirm_transactions_description)
                         else -> null
                     }
                 )

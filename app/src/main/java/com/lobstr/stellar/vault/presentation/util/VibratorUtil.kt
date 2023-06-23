@@ -6,14 +6,14 @@ import android.os.VibrationEffect
 import android.os.Vibrator
 import android.os.VibratorManager
 
+enum class VibrateType(val pattern: LongArray) {
+    TYPE_ONE(longArrayOf(0, 8, 0, 0)),
+    TYPE_TWO(longArrayOf(1500, 175, 0, 0)),
+    TYPE_THREE(longArrayOf(2000, 50, 50, 50)),
+    TYPE_FOUR(longArrayOf(0, 20, 0, 0))
+}
 
 object VibratorUtil {
-
-    enum class VibrateType(val pattern: LongArray) {
-        TYPE_ONE(longArrayOf(0, 8, 0, 0)),
-        TYPE_TWO(longArrayOf(1500, 175, 0, 0)),
-        TYPE_THREE(longArrayOf(2000, 50, 50, 50))
-    }
 
     fun vibrate(context: Context, type: VibrateType) {
         vibrate(context, type.pattern)

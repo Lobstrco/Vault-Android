@@ -18,10 +18,6 @@ class AuthActivity : BaseActivity(), AuthView {
     // Constants
     // ===========================================================
 
-    companion object {
-        val LOG_TAG = AuthActivity::class.simpleName
-    }
-
     // ===========================================================
     // Fields
     // ===========================================================

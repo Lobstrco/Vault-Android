@@ -37,10 +37,6 @@ class SignerInfoFragment : BaseFragment(), SignerInfoView {
     // Constants
     // ===========================================================
 
-    companion object {
-        val LOG_TAG = SignerInfoFragment::class.simpleName
-    }
-
     // ===========================================================
     // Fields
     // ===========================================================
@@ -117,7 +113,7 @@ class SignerInfoFragment : BaseFragment(), SignerInfoView {
         val packageManager = requireActivity().packageManager
         var applicationInfo: ApplicationInfo? = null
         try {
-            applicationInfo = if (Build.VERSION.SDK_INT >= 33) {
+            applicationInfo = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                 packageManager.getApplicationInfo(PACKAGE_NAME, PackageManager.ApplicationInfoFlags.of(0))
             } else {
                 packageManager.getApplicationInfo(PACKAGE_NAME, 0)
@@ -154,12 +150,7 @@ class SignerInfoFragment : BaseFragment(), SignerInfoView {
     }
 
     override fun downloadLobstrApp() {
-        startActivity(
-            Intent(
-                Intent.ACTION_VIEW,
-                Uri.parse(STORE_URL.plus(PACKAGE_NAME))
-            )
-        )
+        AppUtil.openWebPage(requireContext(), STORE_URL.plus(PACKAGE_NAME))
     }
 
     override fun openLobstrMultisigSetupScreen() {

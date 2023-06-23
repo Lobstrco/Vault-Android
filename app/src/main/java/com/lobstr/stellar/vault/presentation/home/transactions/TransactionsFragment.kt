@@ -38,10 +38,6 @@ class TransactionsFragment : BaseFragment(), TransactionsView, SwipeRefreshLayou
     // Constants
     // ===========================================================
 
-    companion object {
-        val LOG_TAG = TransactionsFragment::class.simpleName
-    }
-
     // ===========================================================
     // Fields
     // ===========================================================
@@ -115,9 +111,11 @@ class TransactionsFragment : BaseFragment(), TransactionsView, SwipeRefreshLayou
     override fun initRecycledView() {
         binding.rvTransactions.layoutManager = LinearLayoutManager(context)
         binding.rvTransactions.itemAnimator = null
-        binding.rvTransactions.adapter = TransactionAdapter {
+        binding.rvTransactions.adapter = TransactionAdapter({
             mPresenter.transactionItemClicked(it)
-        }
+        },{
+            mPresenter.transactionItemLongClicked(it)
+        })
         binding.rvTransactions.addOnScrollListener(RecyclerTransactionsScrollingListener())
     }
 
@@ -184,15 +182,28 @@ class TransactionsFragment : BaseFragment(), TransactionsView, SwipeRefreshLayou
     override fun showClearTransactionsDialog() {
         AlertDialogFragment.Builder(true)
             .setCancelable(true)
-            .setTitle(R.string.title_clear_transactions_dialog)
-            .setMessage(R.string.msg_clear_transactions_dialog)
-            .setPositiveBtnText(R.string.text_btn_remove_invalid)
-            .setNeutralBtnText(R.string.text_btn_cancel)
-            .setNegativeBtnText(R.string.text_btn_remove_all)
+            .setTitle(R.string.remove_transactions_title)
+            .setMessage(R.string.remove_transactions_description)
+            .setPositiveBtnText(R.string.remove_transactions_invalid_action)
+            .setNeutralBtnText(R.string.cancel_action)
+            .setNegativeBtnText(R.string.remove_transactions_all_action)
             .create()
             .show(
                 childFragmentManager,
                 AlertDialogFragment.DialogFragmentIdentifier.CLEAR_TRANSACTIONS
+            )
+    }
+
+    override fun showDenyTransactionDialog() {
+        AlertDialogFragment.Builder(true)
+            .setCancelable(true)
+            .setTitle(R.string.confirmation_title)
+            .setMessage(R.string.transaction_confirmation_deny_description)
+            .setNegativeBtnText(R.string.cancel_action)
+            .setPositiveBtnText(R.string.yes_action)
+            .create()
+            .show(childFragmentManager,
+                AlertDialogFragment.DialogFragmentIdentifier.DENY_TRANSACTION
             )
     }
 

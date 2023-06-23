@@ -22,10 +22,6 @@ class OperationListFragment : BaseFragment(), OperationListView {
     // Constants
     // ===========================================================
 
-    companion object {
-        val LOG_TAG = OperationListFragment::class.simpleName
-    }
-
     // ===========================================================
     // Fields
     // ===========================================================
@@ -39,7 +35,7 @@ class OperationListFragment : BaseFragment(), OperationListView {
 
     private val mPresenter by moxyPresenter {
         OperationListPresenter(
-            requireArguments().getInt(Constant.Bundle.BUNDLE_TRANSACTION_TITLE, R.string.title_toolbar_transaction_details),
+            requireArguments().getInt(Constant.Bundle.BUNDLE_TRANSACTION_TITLE, R.string.toolbar_transaction_details_title),
             requireArguments().getIntegerArrayList(Constant.Bundle.BUNDLE_OPERATIONS_LIST)!!
         )
     }

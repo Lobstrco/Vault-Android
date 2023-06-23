@@ -32,7 +32,7 @@ class SignedAccountsPresenter @Inject constructor(
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
 
-        viewState.setupToolbarTitle(R.string.title_toolbar_signed_accounts)
+        viewState.setupToolbarTitle(R.string.toolbar_signed_accounts_title)
         viewState.initRecycledView()
         registerEventProvider()
         loadSignedAccountsList()

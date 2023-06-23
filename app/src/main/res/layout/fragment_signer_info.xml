@@ -40,7 +40,7 @@
                         android:layout_marginTop="8dp"
                         android:layout_marginBottom="12dp"
                         android:gravity="center"
-                        android:text="@string/text_tv_signer_info_install_lobstr_app_title"
+                        android:text="@string/signer_info_install_lobstr_app_title"
                         android:textColor="@android:color/black"
                         android:textSize="16sp"
                         android:textStyle="bold" />
@@ -53,7 +53,7 @@
                         android:alpha="0.6"
                         android:gravity="center"
                         android:lineSpacingExtra="2sp"
-                        android:text="@string/text_tv_signer_info_install_lobstr_app_description"
+                        android:text="@string/signer_info_install_lobstr_app_description"
                         android:textColor="@color/color_071c33"
                         android:textSize="14sp"
                         android:textStyle="normal" />
@@ -65,7 +65,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:fontFamily="sans-serif"
-                        android:text="@string/text_btn_signer_info_download_lobstr_app"
+                        android:text="@string/signer_info_download_lobstr_app_action"
                         android:textAllCaps="false"
                         android:textColor="@color/color_primary"
                         android:textSize="14sp" />
@@ -98,7 +98,7 @@
                         android:layout_marginTop="8dp"
                         android:layout_marginBottom="12dp"
                         android:gravity="center"
-                        android:text="@string/text_tv_signer_info_use_lobstr_app_title"
+                        android:text="@string/signer_info_use_lobstr_app_title"
                         android:textColor="@android:color/black"
                         android:textSize="16sp"
                         android:textStyle="bold" />
@@ -111,7 +111,7 @@
                         android:alpha="0.6"
                         android:gravity="center"
                         android:lineSpacingExtra="2sp"
-                        android:text="@string/text_tv_signer_info_use_lobstr_app_description"
+                        android:text="@string/signer_info_use_lobstr_app_description"
                         android:textColor="@color/color_071c33"
                         android:textSize="14sp"
                         android:textStyle="normal" />
@@ -123,7 +123,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:fontFamily="sans-serif"
-                        android:text="@string/text_btn_signer_info_open_lobstr_app"
+                        android:text="@string/signer_info_open_lobstr_app_action"
                         android:textAllCaps="false"
                         android:textColor="@color/color_primary"
                         android:textSize="14sp" />
@@ -155,7 +155,7 @@
                         android:layout_marginTop="8dp"
                         android:layout_marginBottom="12dp"
                         android:gravity="center"
-                        android:text="@string/text_tv_signer_info_use_other_service_title"
+                        android:text="@string/signer_info_use_other_service_title"
                         android:textColor="@android:color/black"
                         android:textSize="16sp"
                         android:textStyle="bold" />
@@ -168,7 +168,7 @@
                         android:alpha="0.6"
                         android:gravity="center"
                         android:lineSpacingExtra="2sp"
-                        android:text="@string/text_tv_signer_info_use_other_service_description"
+                        android:text="@string/signer_info_use_other_service_description"
                         android:textColor="@color/color_071c33"
                         android:textSize="14sp"
                         android:textStyle="normal" />
@@ -200,7 +200,7 @@
                             android:layout_gravity="start"
                             android:drawablePadding="8dp"
                             android:fontFamily="sans-serif"
-                            android:text="@string/text_btn_copy_key"
+                            android:text="@string/copy_key_action"
                             android:textAllCaps="false"
                             android:textColor="@color/color_primary"
                             android:textSize="14sp"
@@ -214,7 +214,7 @@
                             android:layout_gravity="end"
                             android:drawablePadding="6dp"
                             android:fontFamily="sans-serif"
-                            android:text="@string/text_btn_show_qr"
+                            android:text="@string/signer_info_show_qr_action"
                             android:textAllCaps="false"
                             android:textColor="@color/color_primary"
                             android:textSize="14sp"

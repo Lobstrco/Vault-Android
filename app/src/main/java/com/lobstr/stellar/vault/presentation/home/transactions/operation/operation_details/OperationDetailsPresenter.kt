@@ -137,7 +137,7 @@ class OperationDetailsPresenter @Inject constructor(
         }
 
         // Get federations only for destination field key.
-        val destinations = operationFields.filter { it.key == AppUtil.getString(R.string.op_field_destination) }
+        val destinations = operationFields.filter { it.key == AppUtil.getString(com.lobstr.stellar.tsmapper.R.string.op_field_destination) }
         if (destinations.isNullOrEmpty()) {
             return
         }
@@ -165,7 +165,7 @@ class OperationDetailsPresenter @Inject constructor(
                     account.federation?.let {
                         val position = operationFields.indexOf(field)
                         if (position != -1) {
-                            operationFields.add(position + 1, OperationField(AppUtil.getString(R.string.op_field_destination_federation), it))
+                            operationFields.add(position + 1, OperationField(AppUtil.getString(com.lobstr.stellar.tsmapper.R.string.op_field_destination_federation), it))
                         }
                     }
                 }

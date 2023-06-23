@@ -16,6 +16,7 @@ object Constant {
         const val EXTRA_ERROR = "EXTRA_ERROR"
         const val EXTRA_CONFIG = "EXTRA_CONFIG"
         const val EXTRA_TANGEM_INFO = "EXTRA_TANGEM_INFO"
+        const val EXTRA_TANGEM_OPERATION_TYPE = "EXTRA_TANGEM_OPERATION_TYPE"
         const val EXTRA_PUBLIC_KEY = "EXTRA_PUBLIC_KEY"
     }
 
@@ -25,6 +26,7 @@ object Constant {
         const val BUNDLE_PUBLIC_KEY = "BUNDLE_PUBLIC_KEY"
         const val BUNDLE_NAVIGATION_FR = "BUNDLE_NAVIGATION_FR"
         const val BUNDLE_TRANSACTION_ITEM = "BUNDLE_TRANSACTION_ITEM"
+        const val BUNDLE_TRANSACTION_HASH = "BUNDLE_TRANSACTION_HASH"
         const val BUNDLE_OPERATION = "BUNDLE_OPERATION"
         const val BUNDLE_OPERATION_TITLE = "BUNDLE_OPERATION_TITLE"
         const val BUNDLE_OPERATIONS_LIST = "BUNDLE_OPERATIONS_LIST"
@@ -205,6 +207,7 @@ object Constant {
         const val ERROR_MOD_ONLY_TEXT = 0
         const val ERROR_MOD_FINISH_SCREEN = 1
         const val ERROR_MOD_REPEAT_ACTION = 2
+        const val ERROR_MOD_USER_CANCELLED = 3
     }
 
     object TangemAction {
@@ -217,7 +220,7 @@ object Constant {
     object TangemCardStatus {
         const val NOT_PERSONALIZED = 0
         const val EMPTY = 1
-        const val LOADED = 2
+        const val WALLET_CREATED = 2
         const val PURGED = 3
     }
 

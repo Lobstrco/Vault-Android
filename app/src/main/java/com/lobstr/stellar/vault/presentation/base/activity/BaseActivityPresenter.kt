@@ -115,9 +115,9 @@ class BaseActivityPresenter @Inject constructor(
                             cardId = interactor.getTangemCardId()
                             pendingTransaction = it
                             message =
-                                AppUtil.getString(R.string.text_tv_tangem_dialog_tittle_session_expired)
+                                AppUtil.getString(R.string.tangem_view_session_expired_title)
                             description =
-                                AppUtil.getString(R.string.text_tv_tangem_dialog_description_session_expired)
+                                AppUtil.getString(R.string.tangem_view_session_expired_description)
                         }
                     )
                 }, {
@@ -198,10 +198,10 @@ class BaseActivityPresenter @Inject constructor(
                         if (it || appVersionLoader.isShowDialogState) {
                             viewState.showAppUpdateDialog(
                                 true,
-                                AppUtil.getString(if (appVersionLoader.appUpdateState == REQUIRED) R.string.text_app_update_title_required else R.string.text_app_update_title_weak),
-                                AppUtil.getString(if (appVersionLoader.appUpdateState == REQUIRED) R.string.text_app_update_message_required else R.string.text_app_update_message_weak),
-                                AppUtil.getString(R.string.btn_text_app_update),
-                                if (appVersionLoader.appUpdateState != REQUIRED) AppUtil.getString(R.string.btn_text_app_update_skip) else null
+                                AppUtil.getString(if (appVersionLoader.appUpdateState == REQUIRED) R.string.app_update_required_title else R.string.app_update_weak_title),
+                                AppUtil.getString(if (appVersionLoader.appUpdateState == REQUIRED) R.string.app_update_required_description else R.string.app_update_weak_description),
+                                AppUtil.getString(R.string.update_action),
+                                if (appVersionLoader.appUpdateState != REQUIRED) AppUtil.getString(R.string.skip_action) else null
                             )
                         }
                     }, {
@@ -213,10 +213,10 @@ class BaseActivityPresenter @Inject constructor(
             if (appVersionLoader.isShowDialogState) {
                 viewState.showAppUpdateDialog(
                     true,
-                    AppUtil.getString(if (appVersionLoader.appUpdateState == REQUIRED) R.string.text_app_update_title_required else R.string.text_app_update_title_weak),
-                    AppUtil.getString(if (appVersionLoader.appUpdateState == REQUIRED) R.string.text_app_update_message_required else R.string.text_app_update_message_weak),
-                    AppUtil.getString(R.string.btn_text_app_update),
-                    if (appVersionLoader.appUpdateState != REQUIRED) AppUtil.getString(R.string.btn_text_app_update_skip) else null
+                    AppUtil.getString(if (appVersionLoader.appUpdateState == REQUIRED) R.string.app_update_required_title else R.string.app_update_weak_title),
+                    AppUtil.getString(if (appVersionLoader.appUpdateState == REQUIRED) R.string.app_update_required_description else R.string.app_update_weak_description),
+                    AppUtil.getString(R.string.update_action),
+                    if (appVersionLoader.appUpdateState != REQUIRED) AppUtil.getString(R.string.skip_action) else null
                 )
             } else {
                 viewState.showAppUpdateDialog(false)

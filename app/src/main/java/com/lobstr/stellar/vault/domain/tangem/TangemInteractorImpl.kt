@@ -1,9 +1,7 @@
 package com.lobstr.stellar.vault.domain.tangem
 
 import com.lobstr.stellar.vault.domain.stellar.StellarRepository
-import com.lobstr.stellar.vault.presentation.entities.tangem.TangemError
-import com.tangem.TangemSdkError
-import com.tangem.commands.SignResponse
+import com.tangem.operations.sign.SignResponse
 import org.stellar.sdk.AbstractTransaction
 
 class TangemInteractorImpl(
@@ -12,6 +10,10 @@ class TangemInteractorImpl(
 ) : TangemInteractor {
 
     override fun getPublicKeyFromKeyPair(walletPublicKey: ByteArray?): String? {
+        return stellarRepository.getPublicKeyFromKeyPair(walletPublicKey)
+    }
+
+    override fun getPublicKeyFromKeyPair(walletPublicKey: String?): ByteArray? {
         return stellarRepository.getPublicKeyFromKeyPair(walletPublicKey)
     }
 
@@ -31,7 +33,7 @@ class TangemInteractorImpl(
         )
     }
 
-    override fun handleTangemError(error: TangemSdkError): TangemError? {
+    override fun handleTangemError(error: com.tangem.common.core.TangemError): com.lobstr.stellar.vault.presentation.entities.tangem.TangemError? {
         return tangemRepository.handleError(error)
     }
 }

@@ -32,7 +32,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:letterSpacing="0.05"
-                android:text="@string/text_app_name_vault"
+                android:text="@string/app_name_vault"
                 android:textAllCaps="true"
                 android:textColor="@android:color/black"
                 android:textSize="24sp" />
@@ -44,7 +44,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:alpha="0.6"
-            android:text="@string/text_tv_start_screen_title"
+            android:text="@string/auth_title"
             android:textAppearance="?android:textAppearanceMedium"
             android:textColor="@color/color_071c33"
             android:textSize="16sp" />
@@ -62,7 +62,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/selector_default_button_with_round"
-                android:text="@string/text_btn_start_screen_create_account"
+                android:text="@string/auth_create_action"
                 android:textAllCaps="false"
                 android:textColor="@android:color/white"
                 android:textSize="14sp" />
@@ -74,7 +74,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:background="@drawable/selector_default_button_with_round_stroked"
-                android:text="@string/text_btn_start_screen_restore_account"
+                android:text="@string/recover_account_title"
                 android:textAllCaps="false"
                 android:textColor="@color/color_primary"
                 android:textSize="14sp" />
@@ -83,7 +83,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:padding="8dp"
-                android:text="@string/text_tc_start_screen_or"
+                android:text="@string/or_label"
                 android:textColor="@android:color/black"
                 android:alpha="0.6"
                 android:textSize="14sp" />
@@ -94,7 +94,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/selector_default_button_with_round_stroked"
-                android:text="@string/text_btn_start_screen_signer_card"
+                android:text="@string/auth_use_signer_card_action"
                 android:textAllCaps="false"
                 android:textColor="@color/color_primary"
                 android:textSize="14sp" />
@@ -107,7 +107,7 @@
                 android:linksClickable="false"
                 android:paddingTop="8dp"
                 android:paddingBottom="8dp"
-                android:text="@string/text_tv_start_screen_help"
+                android:text="@string/auth_help_label"
                 android:textColor="@android:color/black"
                 android:alpha="0.6"
                 android:textColorLink="@color/color_primary"
@@ -120,7 +120,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:text="@string/text_tv_start_screen_terms_and_privacy"
+            android:text="@string/auth_terms_and_privacy_label"
             android:textColor="@android:color/black"
             android:alpha="0.6"
             android:textColorLink="@color/color_primary"

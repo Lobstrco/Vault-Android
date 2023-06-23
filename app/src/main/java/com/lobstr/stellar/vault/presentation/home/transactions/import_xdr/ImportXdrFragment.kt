@@ -28,10 +28,6 @@ class ImportXdrFragment : BaseFragment(), ImportXdrView {
     // Constants
     // ===========================================================
 
-    companion object {
-        val LOG_TAG = ImportXdrFragment::class.simpleName
-    }
-
     // ===========================================================
     // Fields
     // ===========================================================

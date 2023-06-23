@@ -51,7 +51,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="15dp"
                             android:gravity="center"
-                            android:text="@string/text_dashboard_transactions"
+                            android:text="@string/dashboard_transactions_title"
                             android:textColor="@android:color/white"
                             android:textSize="17sp"
                             android:textStyle="bold" />
@@ -67,7 +67,7 @@
                             android:paddingTop="6dp"
                             android:paddingRight="16dp"
                             android:paddingBottom="6dp"
-                            android:text="@string/text_dashboard_show_list"
+                            android:text="@string/dashboard_show_transactions_action"
                             android:textColor="@android:color/white"
                             android:textSize="13sp" />
                 </LinearLayout>
@@ -134,7 +134,7 @@
                                 android:paddingHorizontal="20dp"
                                 android:paddingTop="34dp"
                                 android:paddingBottom="7dp"
-                                android:text="@string/text_title_dashboard_public_key"
+                                android:text="@string/public_key_title"
                                 android:textColor="@android:color/black"
                                 android:textSize="17sp"
                                 android:textStyle="bold" />
@@ -163,7 +163,7 @@
                                     android:gravity="center"
                                     android:paddingLeft="20dp"
                                     android:paddingRight="20dp"
-                                    android:text="@string/text_btn_copy_key"
+                                    android:text="@string/copy_key_action"
                                     android:textColor="@android:color/white"
                                     android:textSize="13sp"
                                     android:textStyle="bold" />
@@ -233,7 +233,7 @@
                                         android:gravity="center"
                                         android:paddingLeft="20dp"
                                         android:paddingRight="20dp"
-                                        android:text="@string/text_btn_add_account"
+                                        android:text="@string/dashboard_add_account_action"
                                         android:textColor="@color/color_primary"
                                         android:textSize="14sp"
                                         android:textStyle="bold"
@@ -275,7 +275,7 @@
                                     android:layout_marginBottom="8dp"
                                     android:drawablePadding="24dp"
                                     android:gravity="center"
-                                    android:text="@string/text_tv_dashboard_signers_empty_state_title"
+                                    android:text="@string/dashboard_signers_empty_state_title"
                                     android:textColor="@android:color/black"
                                     android:textSize="16sp"
                                     android:textStyle="bold"
@@ -286,7 +286,7 @@
                                     android:layout_height="wrap_content"
                                     android:alpha="0.6"
                                     android:gravity="center"
-                                    android:text="@string/text_tv_dashboard_signers_empty_state_description"
+                                    android:text="@string/dashboard_signers_empty_state_description"
                                     android:textColor="@color/color_071c33"
                                     android:textSize="14sp" />
 
@@ -300,7 +300,7 @@
                                     android:gravity="center"
                                     android:paddingLeft="20dp"
                                     android:paddingRight="20dp"
-                                    android:text="@string/text_btn_add_account"
+                                    android:text="@string/dashboard_add_account_action"
                                     android:textColor="@color/color_primary"
                                     android:textSize="14sp"
                                     android:textStyle="bold" />
