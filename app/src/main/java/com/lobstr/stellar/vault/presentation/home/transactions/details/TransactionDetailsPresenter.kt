@@ -11,6 +11,8 @@ import com.lobstr.stellar.tsmapper.presentation.entities.transaction.result.oper
 import com.lobstr.stellar.tsmapper.presentation.entities.transaction.result.operation.OpResultCode.Code.OP_SUCCESS
 import com.lobstr.stellar.tsmapper.presentation.util.Constant.TransactionType.AUTH_CHALLENGE
 import com.lobstr.stellar.tsmapper.presentation.util.Constant.Util.UNDEFINED_VALUE
+import com.lobstr.stellar.tsmapper.presentation.util.Constant.XLM
+import com.lobstr.stellar.tsmapper.presentation.util.Constant.XLM.STROOP
 import com.lobstr.stellar.tsmapper.presentation.util.TsUtil
 import com.lobstr.stellar.vault.R
 import com.lobstr.stellar.vault.data.error.exeption.*
@@ -44,6 +46,7 @@ import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.disposables.Disposable
 import io.reactivex.rxjava3.schedulers.Schedulers
+import java.math.BigDecimal
 import java.time.ZonedDateTime
 import javax.inject.Inject
 
@@ -385,6 +388,7 @@ class TransactionDetailsPresenter @Inject constructor(
 
                 val memo = transactionItem.transaction.memo
                 val sourceAccount = transactionItem.transaction.sourceAccount
+                val fee = transactionItem.transaction.fee
                 val addedAt = transactionItem.addedAt
 
                 if (!memo.value.isNullOrEmpty()) {
@@ -399,6 +403,14 @@ class TransactionDetailsPresenter @Inject constructor(
                 if (sourceAccount.isNotEmpty()) {
                     fields.add(OperationField(AppUtil.getString(com.lobstr.stellar.tsmapper.R.string.transaction_source_account),
                         interactor.getAccountNames()[sourceAccount]?.plus(" (${AppUtil.ellipsizeStrInMiddle(sourceAccount, PK_TRUNCATE_COUNT_SHORT)})") ?: sourceAccount, sourceAccount))
+                }
+
+                if (fee != 0L) {
+                    fields.add(OperationField(AppUtil.getString(com.lobstr.stellar.tsmapper.R.string.transaction_fee), fee.let {
+                        "${TsUtil.getAmountRepresentationFromStr(
+                            BigDecimal(it).multiply(BigDecimal(STROOP)).stripTrailingZeros().toPlainString()
+                        )} ${XLM.code}"
+                    }))
                 }
 
                 if (!addedAt.isNullOrEmpty()) {

@@ -8,6 +8,7 @@
     <string name="transaction_memo_hash">hash</string>
     <string name="transaction_memo_return">return</string>
     <string name="transaction_source_account">Transaction Source</string>
+    <string name="transaction_fee">Max Network Fee</string>
 
     <!-- Stellar Operations -->
     <string name="operation_name_payment">Payment</string>
