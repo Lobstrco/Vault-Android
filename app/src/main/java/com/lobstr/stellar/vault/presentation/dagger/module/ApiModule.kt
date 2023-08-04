@@ -32,7 +32,7 @@ object ApiModule {
     private const val BASE_PRODUCTION_URL = "https://vault.lobstr.co/api/"
 
     // Horizon server.
-    private const val HOST_HORIZON_PRODUCTION = "https://horizon.stellar.lobstr.co/"
+    private const val HOST_HORIZON_PRODUCTION = "https://lobstr.co/horizon/"
 
     @Provides
     @Singleton

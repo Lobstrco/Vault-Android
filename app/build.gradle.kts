@@ -18,8 +18,8 @@ android {
         applicationId = "com.lobstr.stellar.vault"
         minSdk = 22
         targetSdk = 33
-        versionCode = 41
-        versionName = "3.2.2"
+        versionCode = 42
+        versionName = "3.2.3"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
         // Used for setup Bundle name.
