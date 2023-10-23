@@ -35,6 +35,7 @@ class TangemRepositoryImpl() : TangemRepository {
                     AppUtil.getString(R.string.tangem_error_tag_lost_description)
                 )
             }
+            // TODO Check duplication.
             is TangemSdkError.UserCancelled -> {
                 TangemError(
                     error.code,

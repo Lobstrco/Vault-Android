@@ -122,14 +122,14 @@ class SettingsPresenter @Inject constructor(
 
     override fun attachView(view: SettingsView?) {
         super.attachView(view)
-        viewState.checkSystemNotificationsState()
+        viewState.checkPostNotificationsPermissionState()
         // Always check signers count.
         viewState.setupSignersCount(interactor.getSignersCount())
     }
 
-    fun areSystemNotificationsEnabled(enabled: Boolean) {
+    fun isPostNotificationsPermissionGranted(granted: Boolean) {
         // Logic for enable/disable local notifications.
-        if (enabled) {
+        if (granted) {
             viewState.setNotificationsChecked(interactor.isNotificationsEnabled())
         } else {
             // Disable local notifications.

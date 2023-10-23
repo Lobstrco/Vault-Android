@@ -5,6 +5,7 @@ import android.app.Activity
 import android.content.ActivityNotFoundException
 import android.content.DialogInterface
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.graphics.Typeface
 import android.os.Build
 import android.os.Bundle
@@ -18,7 +19,6 @@ import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult
 import androidx.annotation.StringRes
-import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
@@ -164,7 +164,10 @@ class SettingsFragment : BaseFragment(), SettingsView, CompoundButton.OnCheckedC
             R.id.swSettingsBiometric -> mPresenter.biometricSwitched(isChecked)
             R.id.swSettingsNotifications -> mPresenter.notificationsSwitched(
                 isChecked,
-                NotificationManagerCompat.from(requireContext()).areNotificationsEnabled()
+                ContextCompat.checkSelfPermission(
+                    requireContext(),
+                    Manifest.permission.POST_NOTIFICATIONS
+                ) == PackageManager.PERMISSION_GRANTED
             )
         }
     }
@@ -300,12 +303,19 @@ class SettingsFragment : BaseFragment(), SettingsView, CompoundButton.OnCheckedC
         binding.swSettingsNotifications.setOnCheckedChangeListener(this)
     }
 
-    override fun checkSystemNotificationsState() {
-        mPresenter.areSystemNotificationsEnabled(NotificationManagerCompat.from(requireContext()).areNotificationsEnabled())
+    override fun checkPostNotificationsPermissionState() {
+        mPresenter.isPostNotificationsPermissionGranted(ContextCompat.checkSelfPermission(
+            requireContext(),
+            Manifest.permission.POST_NOTIFICATIONS
+        ) == PackageManager.PERMISSION_GRANTED)
     }
 
     override fun checkPostNotificationsPermission() {
-        if (!NotificationManagerCompat.from(requireContext()).areNotificationsEnabled()) {
+        if (ContextCompat.checkSelfPermission(
+                requireContext(),
+                Manifest.permission.POST_NOTIFICATIONS
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                 mCheckPostNotificationsPermission.launch(Manifest.permission.POST_NOTIFICATIONS)
             } else {

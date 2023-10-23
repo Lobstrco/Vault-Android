@@ -85,7 +85,7 @@ class TangemDialogPresenter @Inject constructor(private val interactor: TangemIn
         val codename = Build.DEVICE
         var locationHeight = 50
 
-        for (nfcLocation in NfcLocation.values()) {
+        for (nfcLocation in NfcLocation.entries) {
             if (codename.startsWith(nfcLocation.codename)) {
                 locationHeight = nfcLocation.y.toInt()
             }

@@ -24,7 +24,7 @@ class RxErrorUtilsImpl(
     private val prefsUtil: PrefsUtil
 ) : RxErrorUtils {
 
-    override fun <T> handleObservableRequestHttpError(
+    override fun <T : Any> handleObservableRequestHttpError(
         throwable: Throwable,
         tag: Int,
         publicKey: String?
@@ -46,7 +46,7 @@ class RxErrorUtilsImpl(
         }
     }
 
-    private fun <T> refreshObservableAuthentication(publicKey: String?): Observable<T> {
+    private fun <T : Any> refreshObservableAuthentication(publicKey: String?): Observable<T> {
         // Throw UserNotAuthorizedException with AUTH_REQUIRED action for non mnemonics case.
         if (prefsUtil.encryptedPhrases.isNullOrEmpty()) {
             return Observable.error(
@@ -89,7 +89,7 @@ class RxErrorUtilsImpl(
             .map { throw DefaultException("") }
     }
 
-    override fun <T> handleSingleRequestHttpError(
+    override fun <T : Any> handleSingleRequestHttpError(
         throwable: Throwable,
         tag: Int,
         publicKey: String?
@@ -111,7 +111,7 @@ class RxErrorUtilsImpl(
         }
     }
 
-    private fun <T> refreshSingleAuthentication(publicKey: String?): Single<T> {
+    private fun <T : Any> refreshSingleAuthentication(publicKey: String?): Single<T> {
         // Throw UserNotAuthorizedException with AUTH_REQUIRED action for non mnemonics case.
         if (prefsUtil.encryptedPhrases.isNullOrEmpty()) {
             return Single.error(UserNotAuthorizedException("User Not Authorized", AUTH_REQUIRED))
@@ -153,7 +153,7 @@ class RxErrorUtilsImpl(
             return@fromCallable keyStoreRepository.decryptData(
                 PrefsUtil.PREF_ENCRYPTED_PHRASES,
                 PrefsUtil.PREF_PHRASES_IV
-            )
+            )!!
         }
     }
 

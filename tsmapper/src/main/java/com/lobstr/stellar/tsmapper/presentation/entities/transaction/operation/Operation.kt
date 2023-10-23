@@ -6,6 +6,7 @@ import com.lobstr.stellar.tsmapper.R
 import com.lobstr.stellar.tsmapper.presentation.entities.transaction.asset.Asset
 import com.lobstr.stellar.tsmapper.presentation.entities.transaction.asset.LiquidityPoolShareChangeTrustAsset
 import com.lobstr.stellar.tsmapper.presentation.entities.transaction.asset.LiquidityPoolShareTrustLineAsset
+import com.lobstr.stellar.tsmapper.presentation.entities.transaction.asset.PoolShareAsset
 import com.lobstr.stellar.tsmapper.presentation.util.TsUtil.getAmountRepresentationFromStr
 import kotlinx.parcelize.Parcelize
 
@@ -34,6 +35,9 @@ open class Operation(open val sourceAccount: String?) : Parcelable {
             }
             is LiquidityPoolShareTrustLineAsset -> {
                 fields.add(OperationField(context.getString(R.string.op_field_liquidity_pool_id), asset.liquidityPoolID))
+            }
+            is PoolShareAsset -> {
+                fields.add(OperationField(context.getString(R.string.op_field_liquidity_pool_id), asset.poolID))
             }
             else -> {
                 fields.add(OperationField(context.getString(R.string.op_field_asset), asset.assetCode, asset))

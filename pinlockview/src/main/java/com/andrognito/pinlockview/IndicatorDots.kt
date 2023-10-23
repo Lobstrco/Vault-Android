@@ -73,7 +73,7 @@ class IndicatorDots @JvmOverloads constructor(context: Context,
     private fun initView(context: Context) {
         ViewCompat.setLayoutDirection(this, ViewCompat.LAYOUT_DIRECTION_LTR)
         if (mIndicatorType == 0) {
-            for (i in 0 until mPinLength) {
+            for (i in 0 ..< mPinLength) {
                 val dot = View(context)
                 emptyDot(dot)
 
@@ -110,7 +110,7 @@ class IndicatorDots @JvmOverloads constructor(context: Context,
                 mPreviousLength = length
             } else {
                 // When {@code mPinLength} is 0, we need to reset all the views back to empty
-                for (i in 0 until childCount) {
+                for (i in 0 ..< childCount) {
                     val v = getChildAt(i)
                     emptyDot(v)
                 }
@@ -140,14 +140,14 @@ class IndicatorDots @JvmOverloads constructor(context: Context,
     }
 
     fun setErrorDots() {
-        for (i in 0 until childCount) {
+        for (i in 0 ..< childCount) {
             val v = getChildAt(i)
             errorDot(v)
         }
     }
 
     fun setSuccessDots() {
-        for (i in 0 until childCount) {
+        for (i in 0 ..< childCount) {
             val v = getChildAt(i)
             successDot(v)
         }

@@ -4,4 +4,5 @@ import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
-data class LiquidityPoolShareTrustLineAsset(val liquidityPoolID: String) : PoolShareAsset(liquidityPoolID), Parcelable
+open class PoolShareAsset(val poolID: String?) : Asset("", "pool_share", null),
+    Parcelable

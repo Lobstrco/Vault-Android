@@ -105,11 +105,11 @@ object TsUtil {
      */
     fun getMemoTypeStr(context: Context, memo: TsMemo): String {
         return when (memo) {
-            TsMemo.MEMO_TEXT -> context.getString(R.string.transaction_memo_text)
-            TsMemo.MEMO_ID -> context.getString(R.string.transaction_memo_id)
-            TsMemo.MEMO_HASH -> context.getString(R.string.transaction_memo_hash)
-            TsMemo.MEMO_RETURN -> context.getString(R.string.transaction_memo_return)
-            TsMemo.MEMO_NONE -> ""
+            is TsMemo.MEMO_TEXT -> context.getString(R.string.transaction_memo_text)
+            is TsMemo.MEMO_ID -> context.getString(R.string.transaction_memo_id)
+            is TsMemo.MEMO_HASH -> context.getString(R.string.transaction_memo_hash)
+            is TsMemo.MEMO_RETURN -> context.getString(R.string.transaction_memo_return)
+            is TsMemo.MEMO_NONE -> ""
         }
     }
 

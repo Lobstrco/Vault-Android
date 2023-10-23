@@ -17,11 +17,17 @@ import com.lobstr.stellar.vault.presentation.util.Constant.PinMode.ENTER
 import com.lobstr.stellar.vault.presentation.util.biometric.BiometricUtils
 import com.lobstr.stellar.vault.presentation.util.manager.SupportManager
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.schedulers.Schedulers
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 
 class PinFrPresenter @Inject constructor(private val interactor: PinInteractor) : BasePresenter<PinFrView>() {
+
+    companion object {
+        private const val PIN_RESET_DELAY = 100L
+    }
 
     var pinMode: Byte = ENTER
 
@@ -104,7 +110,7 @@ class PinFrPresenter @Inject constructor(private val interactor: PinInteractor) 
             }
         } else {
             viewState.showErrorMessage(R.string.pin_msg_incorrect)
-            viewState.resetPin()
+            resetPin()
         }
     }
 
@@ -145,7 +151,7 @@ class PinFrPresenter @Inject constructor(private val interactor: PinInteractor) 
                     CHANGE -> viewState.showErrorMessage(R.string.pin_msg_do_not_match)
                     else -> viewState.showErrorMessage(R.string.pin_msg_incorrect)
                 }
-                viewState.resetPin()
+                resetPin()
             }
         }
     }
@@ -162,14 +168,14 @@ class PinFrPresenter @Inject constructor(private val interactor: PinInteractor) 
                 .doOnSubscribe {
                     needBlockPinView = true
                 }
-                .doOnEvent { _: Boolean, _: Throwable? ->
+                .doOnEvent { _: Boolean?, _: Throwable? ->
                     needBlockPinView = false
                 }
                 .doOnSuccess { success ->
                     if (needCheckOldPint) {
                         if (success) {
                             viewState.showErrorMessage(R.string.pin_msg_old)
-                            viewState.resetPin()
+                            resetPin()
                         } else {
                             if (isCommonPin(pin)) {
                                 tempCommonPin = pin
@@ -186,7 +192,7 @@ class PinFrPresenter @Inject constructor(private val interactor: PinInteractor) 
                                 } else {
                                     viewState.showTitle(R.string.pin_confirm_title)
                                 }
-                                viewState.resetPin()
+                                resetPin()
                             }
                         }
                     } else {
@@ -211,7 +217,7 @@ class PinFrPresenter @Inject constructor(private val interactor: PinInteractor) 
                             }
                         } else {
                             viewState.showErrorMessage(R.string.pin_msg_incorrect)
-                            viewState.resetPin()
+                            resetPin()
                         }
                     }
                 }
@@ -222,7 +228,7 @@ class PinFrPresenter @Inject constructor(private val interactor: PinInteractor) 
     private fun showCreateAfterChangePinState() {
         pinMode = CREATE
         isCreationAfterChangePinMode = true
-        viewState.resetPin()
+        resetPin()
         viewState.showTitle(R.string.pin_create_new_title)
     }
 
@@ -262,7 +268,7 @@ class PinFrPresenter @Inject constructor(private val interactor: PinInteractor) 
             AlertDialogFragment.DialogFragmentIdentifier.COMMON_PIN_PATTERN -> {
                 newPin = null
                 tempCommonPin = null
-                viewState.resetPin()
+                resetPin()
             }
         }
     }
@@ -277,7 +283,7 @@ class PinFrPresenter @Inject constructor(private val interactor: PinInteractor) 
                 } else {
                     viewState.showTitle(R.string.pin_confirm_title)
                 }
-                viewState.resetPin()
+                resetPin()
 
                 // Save Pin flow state for handle 'Back Press' action.
                 isCreatePinState = true
@@ -317,7 +323,7 @@ class PinFrPresenter @Inject constructor(private val interactor: PinInteractor) 
             // Reset Pin data.
             newPin = null
             tempCommonPin = null
-            viewState.resetPin()
+            resetPin()
             viewState.showTitle(if(isCreationAfterChangePinMode) R.string.pin_create_new_title else R.string.pin_create_title)
             viewState.showHomeAsUp(isHomeAsUpVisibleOnStart)
             isCreatePinState = false
@@ -328,5 +334,17 @@ class PinFrPresenter @Inject constructor(private val interactor: PinInteractor) 
                 else -> viewState.finishScreen()
             }
         }
+    }
+
+    private fun resetPin() {
+        // Reset PIN with delay for avoiding last dot visual overlapping.
+        unsubscribeOnDestroy(Completable.complete()
+            .delay(PIN_RESET_DELAY, TimeUnit.MILLISECONDS)
+            .observeOn(AndroidSchedulers.mainThread())
+            .doOnComplete {
+                viewState.resetPin()
+            }
+            .subscribe()
+        )
     }
 }

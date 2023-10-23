@@ -9,4 +9,4 @@ data class LiquidityPoolShareChangeTrustAsset(
     val fee: Int,
     val assetA: Asset,
     val assetB: Asset,
-) : Asset("", "pool_share", null), Parcelable
+) : PoolShareAsset(liquidityPoolID), Parcelable

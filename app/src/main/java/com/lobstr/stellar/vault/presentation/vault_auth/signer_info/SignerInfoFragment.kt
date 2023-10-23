@@ -164,11 +164,9 @@ class SignerInfoFragment : BaseFragment(), SignerInfoView {
     }
 
     override fun openLobstrApp() {
-        try {
-            startActivity(requireActivity().packageManager.getLaunchIntentForPackage(PACKAGE_NAME))
-        } catch (exc: Exception) {
-            Toast.makeText(context, R.string.msg_no_app_found, Toast.LENGTH_SHORT).show()
-        }
+        requireActivity().packageManager.getLaunchIntentForPackage(PACKAGE_NAME)?.let {
+            startActivity(it)
+        } ?: Toast.makeText(context, R.string.msg_no_app_found, Toast.LENGTH_SHORT).show()
     }
 
     override fun showMessage(message: String?) {

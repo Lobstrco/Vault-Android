@@ -16,7 +16,7 @@ fun TangemSdk.Companion.customInit(
     val config = Config().apply {
         linkedTerminal = false
         allowUntrustedCards = true
-        filter.allowedCardTypes = FirmwareVersion.FirmwareType.values().toList()
+        filter.allowedCardTypes = FirmwareVersion.FirmwareType.entries
     }
 
     val nfcManager = TangemSdk.initNfcManager(activity)

@@ -53,7 +53,7 @@ class AccountsInteractorImpl(
         keyStoreRepository.decryptData(
             PrefsUtil.PREF_ENCRYPTED_PHRASES,
             PrefsUtil.PREF_PHRASES_IV
-        )
+        )!!
     }
 
     override fun getAccountNames(): Map<String, String?> = localDataRepository.getAccountNames()

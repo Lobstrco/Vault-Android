@@ -334,7 +334,7 @@ Describe an issue or provide your feedback below:
     <string name="tangem_view_scan_title">Ready to scan</string>
     <string name="tangem_view_scan_description">Hold the Signer Card near the back of your device for a few seconds</string>
     <string name="try_again_action">Try Again</string>
-    <string name="tangem_view_successfully_signed_title">Signed successful</string>
+    <string name="tangem_view_successfully_signed_title">Signed successfully</string>
     <string name="tangem_view_successfully_signed_description">The transaction was signed successfully</string>
     <string name="tangem_view_successfully_signed_for_login_description">The card was scanned successfully. Signing in to your account</string>
     <string name="tangem_view_successfully_scanning_title">Scan successful</string>

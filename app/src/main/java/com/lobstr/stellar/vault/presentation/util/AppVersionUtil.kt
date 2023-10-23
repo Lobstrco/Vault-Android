@@ -45,7 +45,7 @@ object AppVersionUtil {
         val oldVersionArray = deviceVersion.split("\\.".toRegex()).toTypedArray()
         val newVersionArray = sideVersion.split("\\.".toRegex()).toTypedArray()
         val capacityDifference = min(oldVersionArray.size, newVersionArray.size)
-        for (i in 0 until capacityDifference) {
+        for (i in 0 ..< capacityDifference) {
             if (parseStringToInt(oldVersionArray[i]) != parseStringToInt(newVersionArray[i])) {
                 return false
             }

@@ -63,7 +63,7 @@ interface SettingsView : MvpView {
     fun setNotificationsChecked(checked: Boolean)
 
     @Skip
-    fun checkSystemNotificationsState()
+    fun checkPostNotificationsPermissionState()
 
     @Skip
     fun checkPostNotificationsPermission()

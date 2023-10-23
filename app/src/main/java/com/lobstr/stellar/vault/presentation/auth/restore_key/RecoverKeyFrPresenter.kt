@@ -210,7 +210,7 @@ class RecoverKeyFrPresenter @Inject constructor(private val interactor: RecoverK
 
     private fun createAdditionalPublicKeys() {
         unsubscribeOnDestroy(
-            Observable.fromIterable(1 until PUBLIC_KEY_LIMIT)
+            Observable.fromIterable(1 ..< PUBLIC_KEY_LIMIT)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .flatMapSingle { index ->

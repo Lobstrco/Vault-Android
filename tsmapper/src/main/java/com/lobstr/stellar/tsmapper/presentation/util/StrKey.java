@@ -34,16 +34,21 @@ public class StrKey {
     public static final int ACCOUNT_ID_ADDRESS_LENGTH = 56;
 
     public enum VersionByte {
-        ACCOUNT_ID((byte)(6 << 3)), // G
-        MUXED((byte)(12 << 3)), // M
-        SEED((byte)(18 << 3)), // S
-        PRE_AUTH_TX((byte)(19 << 3)), // T
-        SHA256_HASH((byte)(23 << 3)), // X
-        SIGNED_PAYLOAD((byte)(15 << 3)); // P
+        ACCOUNT_ID((byte) (6 << 3)), // G
+        MUXED((byte) (12 << 3)), // M
+        SEED((byte) (18 << 3)), // S
+        PRE_AUTH_TX((byte) (19 << 3)), // T
+        SHA256_HASH((byte) (23 << 3)), // X
+        SIGNED_PAYLOAD((byte) (15 << 3)), // P
+
+        CONTRACT((byte) (2 << 3)); // C
+
         private final byte value;
+
         VersionByte(byte value) {
             this.value = value;
         }
+
         public int getValue() {
             return value;
         }
@@ -60,21 +65,29 @@ public class StrKey {
 
     private static BaseEncoding base32Encoding = BaseEncoding.base32().upperCase().omitPadding();
 
+    public static String encodeContractId(byte[] data) {
+        char[] encoded = encodeCheck(VersionByte.CONTRACT, data);
+        return String.valueOf(encoded);
+    }
+
     public static String encodeStellarAccountId(byte[] data) {
         char[] encoded = encodeCheck(VersionByte.ACCOUNT_ID, data);
         return String.valueOf(encoded);
     }
 
     public static String encodeStellarAccountId(AccountID accountID) {
-        char[] encoded = encodeCheck(VersionByte.ACCOUNT_ID, accountID.getAccountID().getEd25519().getUint256());
+        char[] encoded =
+                encodeCheck(VersionByte.ACCOUNT_ID, accountID.getAccountID().getEd25519().getUint256());
         return String.valueOf(encoded);
     }
 
     public static String encodeSignedPayload(SignedPayloadSigner signedPayloadSigner) {
         try {
-            SignerKey.SignerKeyEd25519SignedPayload xdrPayloadSigner = new SignerKey.SignerKeyEd25519SignedPayload();
+            SignerKey.SignerKeyEd25519SignedPayload xdrPayloadSigner =
+                    new SignerKey.SignerKeyEd25519SignedPayload();
             xdrPayloadSigner.setPayload(signedPayloadSigner.getPayload());
-            xdrPayloadSigner.setEd25519(signedPayloadSigner.getSignerAccountId().getAccountID().getEd25519());
+            xdrPayloadSigner.setEd25519(
+                    signedPayloadSigner.getSignerAccountId().getAccountID().getEd25519());
 
             ByteArrayOutputStream record = new ByteArrayOutputStream();
             xdrPayloadSigner.encode(new XdrDataOutputStream(record));
@@ -89,12 +102,15 @@ public class StrKey {
     public static String encodeStellarMuxedAccount(MuxedAccount muxedAccount) {
         switch (muxedAccount.getDiscriminant()) {
             case KEY_TYPE_MUXED_ED25519:
-                return String.valueOf(encodeCheck(VersionByte.MUXED, Bytes.concat(
-                        muxedAccount.getMed25519().getEd25519().getUint256(),
-                        Longs.toByteArray(muxedAccount.getMed25519().getId().getUint64())
-                )));
+                return String.valueOf(
+                        encodeCheck(
+                                VersionByte.MUXED,
+                                Bytes.concat(
+                                        muxedAccount.getMed25519().getEd25519().getUint256(),
+                                        Longs.toByteArray(muxedAccount.getMed25519().getId().getUint64()))));
             case KEY_TYPE_ED25519:
-                return String.valueOf(encodeCheck(VersionByte.ACCOUNT_ID, muxedAccount.getEd25519().getUint256()));
+                return String.valueOf(
+                        encodeCheck(VersionByte.ACCOUNT_ID, muxedAccount.getEd25519().getUint256()));
             default:
                 throw new IllegalArgumentException("invalid discriminant");
         }
@@ -110,24 +126,24 @@ public class StrKey {
         } else if (account.getDiscriminant().equals(CryptoKeyType.KEY_TYPE_MUXED_ED25519)) {
             key.setEd25519(account.getMed25519().getEd25519());
         } else {
-            throw new IllegalArgumentException("invalid muxed account type: "+account.getDiscriminant());
+            throw new IllegalArgumentException(
+                    "invalid muxed account type: " + account.getDiscriminant());
         }
 
         aid.setAccountID(key);
         return aid;
     }
 
-
     public static AccountID encodeToXDRAccountId(String data) {
         AccountID accountID = new AccountID();
         PublicKey publicKey = new PublicKey();
         publicKey.setDiscriminant(PublicKeyType.PUBLIC_KEY_TYPE_ED25519);
         try {
-            publicKey.setEd25519(Uint256.decode(
-                    new XdrDataInputStream(new ByteArrayInputStream(decodeStellarAccountId(data)))
-            ));
+            publicKey.setEd25519(
+                    Uint256.decode(
+                            new XdrDataInputStream(new ByteArrayInputStream(decodeStellarAccountId(data)))));
         } catch (IOException e) {
-            throw new IllegalArgumentException("invalid address: "+data, e);
+            throw new IllegalArgumentException("invalid address: " + data, e);
         }
         accountID.setAccountID(publicKey);
         return accountID;
@@ -143,22 +159,24 @@ public class StrKey {
             case ACCOUNT_ID:
                 muxed.setDiscriminant(CryptoKeyType.KEY_TYPE_ED25519);
                 try {
-                    muxed.setEd25519(Uint256.decode(
-                            new XdrDataInputStream(new ByteArrayInputStream(decodeStellarAccountId(data)))
-                    ));
+                    muxed.setEd25519(
+                            Uint256.decode(
+                                    new XdrDataInputStream(new ByteArrayInputStream(decodeStellarAccountId(data)))));
                 } catch (IOException e) {
-                    throw new IllegalArgumentException("invalid address: "+data, e);
+                    throw new IllegalArgumentException("invalid address: " + data, e);
                 }
                 break;
             case MUXED:
-                XdrDataInputStream input = new XdrDataInputStream(new ByteArrayInputStream(decodeCheck(VersionByte.MUXED, data.toCharArray())));
+                XdrDataInputStream input =
+                        new XdrDataInputStream(
+                                new ByteArrayInputStream(decodeCheck(VersionByte.MUXED, data.toCharArray())));
                 muxed.setDiscriminant(CryptoKeyType.KEY_TYPE_MUXED_ED25519);
                 MuxedAccount.MuxedAccountMed25519 med = new MuxedAccount.MuxedAccountMed25519();
                 try {
                     med.setEd25519(Uint256.decode(input));
                     med.setId(Uint64.decode(input));
                 } catch (IOException e) {
-                    throw new IllegalArgumentException("invalid address: "+data, e);
+                    throw new IllegalArgumentException("invalid address: " + data, e);
                 }
                 muxed.setMed25519(med);
                 break;
@@ -167,7 +185,6 @@ public class StrKey {
         }
         return muxed;
     }
-
 
     public static VersionByte decodeVersionByte(String data) {
         byte[] decoded = base32Encoding.decode(java.nio.CharBuffer.wrap(data.toCharArray()));
@@ -183,6 +200,10 @@ public class StrKey {
         return decodeCheck(VersionByte.ACCOUNT_ID, data.toCharArray());
     }
 
+    public static byte[] decodeContractId(String data) {
+        return decodeCheck(VersionByte.CONTRACT, data.toCharArray());
+    }
+
     public static char[] encodeStellarSecretSeed(byte[] data) {
         return encodeCheck(VersionByte.SEED, data);
     }
@@ -195,11 +216,12 @@ public class StrKey {
         try {
             byte[] signedPayloadRaw = decodeCheck(VersionByte.SIGNED_PAYLOAD, data);
 
-            SignerKey.SignerKeyEd25519SignedPayload xdrPayloadSigner = SignerKey.SignerKeyEd25519SignedPayload.decode(
-                    new XdrDataInputStream(new ByteArrayInputStream(signedPayloadRaw))
-            );
+            SignerKey.SignerKeyEd25519SignedPayload xdrPayloadSigner =
+                    SignerKey.SignerKeyEd25519SignedPayload.decode(
+                            new XdrDataInputStream(new ByteArrayInputStream(signedPayloadRaw)));
 
-            return new SignedPayloadSigner( xdrPayloadSigner.getEd25519().getUint256(), xdrPayloadSigner.getPayload());
+            return new SignedPayloadSigner(
+                    xdrPayloadSigner.getEd25519().getUint256(), xdrPayloadSigner.getPayload());
         } catch (Exception ex) {
             throw new FormatException(ex.getMessage());
         }
@@ -238,7 +260,8 @@ public class StrKey {
             }
 
             // Why not use base32Encoding.encode here?
-            // We don't want secret seed to be stored as String in memory because of security reasons. It's impossible
+            // We don't want secret seed to be stored as String in memory because of security reasons.
+            // It's impossible
             // to erase it from memory when we want it to be erased (ASAP).
             CharArrayWriter charArrayWriter = new CharArrayWriter(unencoded.length);
             OutputStream charOutputStream = base32Encoding.encodingStream(charArrayWriter);
@@ -282,12 +305,10 @@ public class StrKey {
         }
 
         if (leftoverBits > 0) {
-            byte lastChar = bytes[bytes.length-1];
+            byte lastChar = bytes[bytes.length - 1];
             byte decodedLastChar = b32Table[lastChar];
 
-
-
-            byte leftoverBitsMask = (byte)(0x0f >> (4 - leftoverBits));
+            byte leftoverBitsMask = (byte) (0x0f >> (4 - leftoverBits));
             if ((decodedLastChar & leftoverBitsMask) != 0) {
                 throw new IllegalArgumentException("Unused bits should be set to 0.");
             }
@@ -295,9 +316,9 @@ public class StrKey {
 
         byte[] decoded = base32Encoding.decode(java.nio.CharBuffer.wrap(encoded));
         byte decodedVersionByte = decoded[0];
-        byte[] payload  = Arrays.copyOfRange(decoded, 0, decoded.length-2);
-        byte[] data     = Arrays.copyOfRange(payload, 1, payload.length);
-        byte[] checksum = Arrays.copyOfRange(decoded, decoded.length-2, decoded.length);
+        byte[] payload = Arrays.copyOfRange(decoded, 0, decoded.length - 2);
+        byte[] data = Arrays.copyOfRange(payload, 1, payload.length);
+        byte[] checksum = Arrays.copyOfRange(decoded, decoded.length - 2, decoded.length);
 
         if (decodedVersionByte != versionByte.getValue()) {
             throw new FormatException("Version byte is invalid");
@@ -340,20 +361,19 @@ public class StrKey {
         }
 
         // little-endian
-        return new byte[] {
-                (byte)crc,
-                (byte)(crc >>> 8)};
+        return new byte[] {(byte) crc, (byte) (crc >>> 8)};
     }
 
     private static final byte[] b32Table = decodingTable();
+
     private static byte[] decodingTable() {
         byte[] table = new byte[256];
-        for (int i=0; i <256; i++) {
-            table[i] = (byte)0xff;
+        for (int i = 0; i < 256; i++) {
+            table[i] = (byte) 0xff;
         }
         String alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567";
-        for(int i=0; i < alphabet.length(); i++) {
-            table[(int)alphabet.charAt(i)] = (byte)i;
+        for (int i = 0; i < alphabet.length(); i++) {
+            table[(int) alphabet.charAt(i)] = (byte) i;
         }
         return table;
     }

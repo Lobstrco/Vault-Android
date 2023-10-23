@@ -1,5 +1,7 @@
 package com.lobstr.stellar.vault.data.transaction
 
+import com.google.firebase.crashlytics.ktx.crashlytics
+import com.google.firebase.ktx.Firebase
 import com.lobstr.stellar.tsmapper.data.transaction.TsMapper
 import com.lobstr.stellar.vault.data.net.entities.transaction.ApiTransactionItem
 import com.lobstr.stellar.vault.data.net.entities.transaction.ApiTransactionResult
@@ -22,7 +24,12 @@ class TransactionEntityMapper(private val tsMapper: TsMapper) {
         val transactions = mutableListOf<TransactionItem>()
         for (apiTransactionItem in apiTransactionResult.results!!) {
             if (apiTransactionItem != null) {
-                transactions.add(transformTransactionItem(apiTransactionItem))
+                try {
+                    transactions.add(transformTransactionItem(apiTransactionItem))
+                } catch (exc: Exception) {
+                    // Skip Unmappable transactions.
+                    Firebase.crashlytics.recordException(exc)
+                }
             }
         }
 

@@ -1,6 +1,7 @@
 package com.lobstr.stellar.vault.presentation.home
 
 import android.Manifest
+import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
 import android.view.MenuItem
@@ -8,7 +9,7 @@ import android.view.View
 import androidx.activity.addCallback
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.IdRes
-import androidx.core.app.NotificationManagerCompat
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentManager.POP_BACK_STACK_INCLUSIVE
 import com.google.android.material.navigation.NavigationBarView
 import com.lobstr.stellar.vault.R
@@ -115,7 +116,11 @@ class HomeActivity : BaseActivity(), HomeActivityView,
     }
 
     override fun checkPostNotificationsPermission() {
-        if (!NotificationManagerCompat.from(this).areNotificationsEnabled()) {
+        if (ContextCompat.checkSelfPermission(
+                this,
+                Manifest.permission.POST_NOTIFICATIONS
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                 mCheckPostNotificationsPermission.launch(Manifest.permission.POST_NOTIFICATIONS)
             } else {

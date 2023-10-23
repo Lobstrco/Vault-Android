@@ -86,7 +86,7 @@ class VaultAuthInteractorImpl(
             return@fromCallable keyStoreRepository.decryptData(
                 PrefsUtil.PREF_ENCRYPTED_PHRASES,
                 PrefsUtil.PREF_PHRASES_IV
-            )
+            )!!
         }
     }
 

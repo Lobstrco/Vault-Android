@@ -63,7 +63,7 @@ class PrefsUtil(private val sharedPreferences: SharedPreferences) {
 
     fun getNewPublicKeyIndex(): Int {
         val createdIndexes = getPublicKeyDataList().map { it.second }
-        (0 until Constant.Util.PUBLIC_KEY_LIMIT).forEach { newIndex ->
+        (0 ..< Constant.Util.PUBLIC_KEY_LIMIT).forEach { newIndex ->
             if (createdIndexes.none { newIndex == it }) {
                 return newIndex
             }
