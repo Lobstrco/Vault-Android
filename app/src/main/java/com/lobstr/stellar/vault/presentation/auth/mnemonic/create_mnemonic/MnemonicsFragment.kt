@@ -1,7 +1,9 @@
 package com.lobstr.stellar.vault.presentation.auth.mnemonic.create_mnemonic
 
 
+import android.app.Activity
 import android.content.DialogInterface
+import android.os.Build
 import android.os.Bundle
 import android.view.*
 import androidx.activity.OnBackPressedCallback
@@ -45,6 +47,11 @@ class MnemonicsFragment : BaseFragment(),
     private var _binding: FragmentMnemonicsBinding? = null
     private val binding get() = _binding!!
     private var backPressedCallback: OnBackPressedCallback? = null
+    private val screenCaptureCallback by lazy {
+        Activity.ScreenCaptureCallback {
+            mPresenter.screenCaptured()
+        }
+    }
 
     @Inject
     lateinit var presenterProvider: Provider<MnemonicsPresenter>
@@ -110,6 +117,24 @@ class MnemonicsFragment : BaseFragment(),
         binding.apply {
             btnNext.setSafeOnClickListener { mPresenter.nextClicked() }
             btnClipToBoard.setSafeOnClickListener { mPresenter.clipToBordClicked() }
+        }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        requireActivity().apply {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+                registerScreenCaptureCallback(mainExecutor, screenCaptureCallback)
+            }
+        }
+    }
+
+    override fun onStop() {
+        super.onStop()
+        requireActivity().apply {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+                unregisterScreenCaptureCallback(screenCaptureCallback)
+            }
         }
     }
 
@@ -196,6 +221,19 @@ class MnemonicsFragment : BaseFragment(),
                 FragmentManager.POP_BACK_STACK_INCLUSIVE
             )
         }
+    }
+
+    override fun showScreenCaptureWarning() {
+        AlertDialogFragment.Builder(true)
+            .setCancelable(true)
+            .setTitle(R.string.screenshot_capture_warning_title)
+            .setMessage(R.string.screenshot_capture_warning_description)
+            .setPositiveBtnText(R.string.ok_action)
+            .create()
+            .show(
+                childFragmentManager,
+                AlertDialogFragment.DialogFragmentIdentifier.INFO
+            )
     }
 
     // ===========================================================

@@ -382,4 +382,8 @@ Describe an issue or provide your feedback below:
     <string name="add_account_name_subtitle">Enter a public key and choose a short nickname</string>
     <string name="add_account_name_hint">Enter public key</string>
     <string name="add_account_name_restriction_label">A sequence of 56 characters starting with the letter “G”</string>
+
+    <!-- Screenshot capture warning -->
+    <string name="screenshot_capture_warning_title">Screenshot warning</string>
+    <string name="screenshot_capture_warning_description">Taking screenshot of your recovery phrases increases security risks of your wallet.</string>
 </resources>

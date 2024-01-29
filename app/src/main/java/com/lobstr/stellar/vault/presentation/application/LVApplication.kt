@@ -9,8 +9,8 @@ import androidx.hilt.work.HiltWorkerFactory
 import androidx.lifecycle.ProcessLifecycleOwner
 import androidx.work.Configuration
 import com.google.android.gms.security.ProviderInstaller
-import com.google.firebase.analytics.ktx.analytics
-import com.google.firebase.ktx.Firebase
+import com.google.firebase.analytics.analytics
+import com.google.firebase.Firebase
 import com.lobstr.stellar.vault.BuildConfig
 import com.lobstr.stellar.vault.presentation.util.Constant
 import com.lobstr.stellar.vault.presentation.util.Constant.BuildType.DEBUG
@@ -84,8 +84,9 @@ class LVApplication : Application(), Configuration.Provider {
     // NOTE Used for Inject data in Worker.
     @Inject
     lateinit var workerFactory: HiltWorkerFactory
-    override fun getWorkManagerConfiguration(): Configuration =
-        Configuration.Builder()
+
+    override val workManagerConfiguration: Configuration
+        get() = Configuration.Builder()
             .setWorkerFactory(workerFactory)
             .build()
 

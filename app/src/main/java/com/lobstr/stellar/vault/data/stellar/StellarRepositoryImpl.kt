@@ -1,6 +1,5 @@
 package com.lobstr.stellar.vault.data.stellar
 
-import com.lobstr.stellar.tsmapper.presentation.util.StrKey
 import com.lobstr.stellar.vault.data.mnemonic.MnemonicsMapper
 import com.lobstr.stellar.vault.domain.error.RxErrorUtils
 import com.lobstr.stellar.vault.domain.stellar.StellarRepository
@@ -214,7 +213,7 @@ class StellarRepositoryImpl(
      */
     override fun encodeStellarAccountId(data: ByteArray?): String? {
         return try {
-            StrKey.encodeStellarAccountId(data)
+            StrKey.encodeEd25519PublicKey(data)
         } catch (exc: Exception) {
             null
         }

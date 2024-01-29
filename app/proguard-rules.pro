@@ -10,7 +10,6 @@
 -keepattributes SourceFile,LineNumberTable
 -allowaccessmodification
 
--dontwarn android.support.**
 -dontwarn com.futurice.project.models.pojo.**
 -dontwarn sun.misc.Unsafe
 -dontwarn com.google.gson.**
@@ -98,12 +97,6 @@
   public *;
 }
 
--keep class android.support.** { *; }
--keep class android.support.v4.** { *; }
--keep class android.support.v7.** { *; }
--keep interface android.support.v7.** { *; }
--keep interface android.support.v4.** { *; }
-
 -keep public class * extends android.app.Activity
 -keep public class * extends android.app.Application
 -keep public class * extends android.app.Service
@@ -111,11 +104,6 @@
 -keep public class * extends android.content.ContentProvider
 -keep public class * extends android.app.backup.BackupAgent
 -keep public class * extends android.preference.Preference
--keep public class * extends android.support.v4.app.Fragment
--keep public class * extends android.support.v4.app.DialogFragment
--keep public class * extends com.actionbarsherlock.app.SherlockListFragment
--keep public class * extends com.actionbarsherlock.app.SherlockFragment
--keep public class * extends com.actionbarsherlock.app.SherlockFragmentActivity
 -keep public class * extends android.app.Fragment
 -keep public class com.android.vending.licensing.ILicensingService
 

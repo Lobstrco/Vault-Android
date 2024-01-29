@@ -1,7 +1,7 @@
 package com.lobstr.stellar.tsmapper.data.transaction
 
-import com.google.firebase.crashlytics.ktx.crashlytics
-import com.google.firebase.ktx.Firebase
+import com.google.firebase.crashlytics.crashlytics
+import com.google.firebase.Firebase
 import com.lobstr.stellar.tsmapper.data.claim.ClaimantMapper
 import com.lobstr.stellar.tsmapper.presentation.entities.transaction.Transaction
 import com.lobstr.stellar.tsmapper.presentation.entities.transaction.TsMemo
@@ -47,10 +47,8 @@ import com.lobstr.stellar.tsmapper.presentation.entities.transaction.operation.s
 import com.lobstr.stellar.tsmapper.presentation.util.Constant
 import com.lobstr.stellar.tsmapper.presentation.util.Constant.TransactionType.AUTH_CHALLENGE
 import com.lobstr.stellar.tsmapper.presentation.util.Constant.TransactionType.TRANSACTION
-import com.lobstr.stellar.tsmapper.presentation.util.StrKey
 import org.stellar.sdk.*
 import org.stellar.sdk.xdr.TrustLineFlags
-import java.math.BigDecimal
 
 class TsMapper(
     private val network: Network = Network.PUBLIC,
@@ -283,7 +281,7 @@ class TsMapper(
                 mapAsset(operation.selling),
                 mapAsset(operation.buying),
                 operation.amount,
-                BigDecimal(operation.price).stripTrailingZeros().toPlainString(),
+                operation.price.toString(),
                 operation.offerId
             )
         } else {
@@ -292,7 +290,7 @@ class TsMapper(
                 mapAsset(operation.selling),
                 mapAsset(operation.buying),
                 operation.amount,
-                BigDecimal(operation.price).stripTrailingZeros().toPlainString(),
+                operation.price.toString(),
                 operation.offerId
             )
         }
@@ -306,7 +304,7 @@ class TsMapper(
                 mapAsset(operation.selling),
                 mapAsset(operation.buying),
                 operation.amount,
-                BigDecimal(operation.price).stripTrailingZeros().toPlainString(),
+                operation.price.toString(),
                 operation.offerId
             )
         } else {
@@ -315,7 +313,7 @@ class TsMapper(
                 mapAsset(operation.selling),
                 mapAsset(operation.buying),
                 operation.amount,
-                BigDecimal(operation.price).stripTrailingZeros().toPlainString(),
+                operation.price.toString(),
                 operation.offerId
             )
         }
@@ -327,7 +325,7 @@ class TsMapper(
             mapAsset(operation.selling),
             mapAsset(operation.buying),
             operation.amount,
-            BigDecimal(operation.price).stripTrailingZeros().toPlainString()
+            operation.price.toString()
         )
     }
 
@@ -344,7 +342,7 @@ class TsMapper(
             operation.homeDomain,
             operation.signerWeight,
             try {
-                StrKey.encodeStellarAccountId(operation.signer.ed25519.uint256)
+                StrKey.encodeEd25519PublicKey(operation.signer.ed25519.uint256)
             } catch (e: Exception) {
                 null
             }
@@ -373,8 +371,8 @@ class TsMapper(
             (operation as org.stellar.sdk.Operation).sourceAccount,
             operation.trustor,
             mapAsset(operation.asset),
-            if (!operation.clearFlags.isNullOrEmpty()) operation.clearFlags.map { mapTrustlineFlag(it) } else null,
-            if (!operation.setFlags.isNullOrEmpty()) operation.setFlags.map { mapTrustlineFlag(it) } else null
+            if (!operation.clearFlags.isEmpty()) operation.clearFlags.map { mapTrustlineFlag(it) } else null,
+            if (!operation.setFlags.isEmpty()) operation.setFlags.map { mapTrustlineFlag(it) } else null
         )
     }
 

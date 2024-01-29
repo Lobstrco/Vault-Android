@@ -32,4 +32,7 @@ interface MnemonicsView : MvpView {
 
     @AddToEndSingle
     fun showAuthFr()
+
+    @Skip
+    fun showScreenCaptureWarning()
 }

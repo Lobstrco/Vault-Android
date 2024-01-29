@@ -1,7 +1,7 @@
 package com.lobstr.stellar.vault.data.transaction
 
-import com.google.firebase.crashlytics.ktx.crashlytics
-import com.google.firebase.ktx.Firebase
+import com.google.firebase.crashlytics.crashlytics
+import com.google.firebase.Firebase
 import com.lobstr.stellar.tsmapper.data.transaction.TsMapper
 import com.lobstr.stellar.vault.data.net.entities.transaction.ApiTransactionItem
 import com.lobstr.stellar.vault.data.net.entities.transaction.ApiTransactionResult

@@ -1,22 +1,17 @@
 package com.lobstr.stellar.vault.presentation.container.activity
 
+import android.content.Intent
 import com.lobstr.stellar.vault.R
-import com.lobstr.stellar.vault.presentation.entities.error.Error
-import com.lobstr.stellar.vault.presentation.entities.transaction.TransactionItem
 import com.lobstr.stellar.vault.presentation.util.Constant
 import com.lobstr.stellar.vault.presentation.util.Constant.Navigation.CONFIG
 import com.lobstr.stellar.vault.presentation.util.Constant.Navigation.ERROR
 import com.lobstr.stellar.vault.presentation.util.Constant.Navigation.SUCCESS
 import com.lobstr.stellar.vault.presentation.util.Constant.Navigation.TRANSACTION_DETAILS
+import com.lobstr.stellar.vault.presentation.util.parcelableExtra
 import moxy.MvpPresenter
 
 class ContainerPresenter(
-    private val targetFr: Int,
-    private val transactionItem: TransactionItem?,
-    private val envelopeXdr: String?,
-    private val transactionConfirmationSuccessStatus: Byte?,
-    private val error: Error?,
-    private val config: Int
+    private val intent: Intent
 ) : MvpPresenter<ContainerView>() {
 
     override fun onFirstViewAttach() {
@@ -29,7 +24,14 @@ class ContainerPresenter(
             android.R.color.black
         )
 
-        viewState.showContainerFr(*createArgs(targetFr))
+        viewState.showContainerFr(
+            *createArgs(
+                intent.getIntExtra(
+                    Constant.Extra.EXTRA_NAVIGATION_FR,
+                    Constant.Navigation.DASHBOARD
+                )
+            )
+        )
     }
 
     private fun createArgs(targetFr: Int): Array<Pair<String, Any?>> {
@@ -40,20 +42,25 @@ class ContainerPresenter(
                 TRANSACTION_DETAILS -> add(
                     Pair(
                         Constant.Bundle.BUNDLE_TRANSACTION_ITEM,
-                        transactionItem
+                        intent.parcelableExtra(Constant.Extra.EXTRA_TRANSACTION_ITEM)
                     )
                 )
                 SUCCESS -> {
-                    add(Pair(Constant.Bundle.BUNDLE_ENVELOPE_XDR, envelopeXdr))
+                    add(Pair(Constant.Bundle.BUNDLE_ENVELOPE_XDR, intent.getStringExtra(Constant.Extra.EXTRA_ENVELOPE_XDR)))
                     add(
                         Pair(
                             Constant.Bundle.BUNDLE_TRANSACTION_CONFIRMATION_SUCCESS_STATUS,
-                            transactionConfirmationSuccessStatus
+                            intent.getByteExtra(
+                                Constant.Extra.EXTRA_TRANSACTION_CONFIRMATION_SUCCESS_STATUS,
+                                Constant.TransactionConfirmationSuccessStatus.SUCCESS
+                            )
                         )
                     )
                 }
-                ERROR -> add(Pair(Constant.Bundle.BUNDLE_ERROR, error))
-                CONFIG -> add(Pair(Constant.Bundle.BUNDLE_CONFIG, config))
+                ERROR -> add(Pair(Constant.Bundle.BUNDLE_ERROR, intent.parcelableExtra(Constant.Extra.EXTRA_ERROR)))
+                CONFIG -> add(Pair(Constant.Bundle.BUNDLE_CONFIG, intent.getIntExtra(Constant.Extra.EXTRA_CONFIG,
+                    Constant.Util.UNDEFINED_VALUE
+                )))
             }
         }.toTypedArray()
     }

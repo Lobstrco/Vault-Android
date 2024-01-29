@@ -67,6 +67,10 @@ class MnemonicsPresenter @Inject constructor(val interactor: MnemonicsInteractor
         viewState.showDenyAccountCreationDialog()
     }
 
+    fun screenCaptured() {
+        viewState.showScreenCaptureWarning()
+    }
+
     fun onAlertDialogPositiveButtonClicked(tag: String?) {
         when (tag) {
             AlertDialogFragment.DialogFragmentIdentifier.DENY_ACCOUNT_CREATION -> viewState.showAuthFr()
