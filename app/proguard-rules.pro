@@ -273,3 +273,5 @@
   <init>(...);
   @com.google.gson.annotations.SerializedName <fields>;
 }
+
+-dontwarn lombok.Generated

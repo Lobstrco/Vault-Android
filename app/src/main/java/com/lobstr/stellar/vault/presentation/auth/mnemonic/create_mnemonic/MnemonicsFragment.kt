@@ -1,13 +1,16 @@
 package com.lobstr.stellar.vault.presentation.auth.mnemonic.create_mnemonic
 
 
+import android.Manifest
 import android.app.Activity
 import android.content.DialogInterface
+import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
 import android.view.*
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.addCallback
+import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
 import androidx.core.view.MenuProvider
 import androidx.core.view.isVisible
@@ -124,7 +127,11 @@ class MnemonicsFragment : BaseFragment(),
         super.onStart()
         requireActivity().apply {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
-                registerScreenCaptureCallback(mainExecutor, screenCaptureCallback)
+                if (ContextCompat.checkSelfPermission(
+                        requireContext(),
+                        Manifest.permission.DETECT_SCREEN_CAPTURE
+                    ) == PackageManager.PERMISSION_GRANTED
+                ) registerScreenCaptureCallback(mainExecutor, screenCaptureCallback)
             }
         }
     }
@@ -133,7 +140,11 @@ class MnemonicsFragment : BaseFragment(),
         super.onStop()
         requireActivity().apply {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
-                unregisterScreenCaptureCallback(screenCaptureCallback)
+                if (ContextCompat.checkSelfPermission(
+                        requireContext(),
+                        Manifest.permission.DETECT_SCREEN_CAPTURE
+                    ) == PackageManager.PERMISSION_GRANTED
+                ) unregisterScreenCaptureCallback(screenCaptureCallback)
             }
         }
     }

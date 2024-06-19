@@ -7,5 +7,5 @@ import kotlinx.parcelize.Parcelize
 open class Asset(
     val assetCode: String,
     val assetType: String,
-    val assetIssuer: String?
+    val assetIssuer: String? = null
 ) : Parcelable

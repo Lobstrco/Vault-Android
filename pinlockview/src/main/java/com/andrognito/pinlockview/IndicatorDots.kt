@@ -6,7 +6,6 @@ import android.util.AttributeSet
 import android.view.View
 import android.widget.LinearLayout
 import androidx.annotation.IntDef
-import androidx.core.view.ViewCompat
 
 /**
  * It represents a set of indicator dots which when attached with [PinLockView]
@@ -71,7 +70,7 @@ class IndicatorDots @JvmOverloads constructor(context: Context,
     }
 
     private fun initView(context: Context) {
-        ViewCompat.setLayoutDirection(this, ViewCompat.LAYOUT_DIRECTION_LTR)
+        layoutDirection = View.LAYOUT_DIRECTION_LTR
         if (mIndicatorType == 0) {
             for (i in 0 ..< mPinLength) {
                 val dot = View(context)

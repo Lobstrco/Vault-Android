@@ -1,3 +1,4 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import java.io.FileInputStream
 import java.text.SimpleDateFormat
 import java.util.*
@@ -5,6 +6,7 @@ import java.util.*
 plugins {
     id("com.android.application")
     kotlin("android")
+    id("com.google.devtools.ksp")
     kotlin("kapt")
     id("kotlin-parcelize")
     id("dagger.hilt.android.plugin")
@@ -18,12 +20,12 @@ android {
         applicationId = "com.lobstr.stellar.vault"
         minSdk = 22
         targetSdk = 34
-        versionCode = 44
-        versionName = "3.3.0"
+        versionCode = 45
+        versionName = "3.3.1"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
         // Used for setup Bundle name.
-        setProperty("archivesBaseName", "${applicationId}_${versionName}(${versionCode})_${SimpleDateFormat("dd.MM.yyyy").format(Date())})")
+        setProperty("archivesBaseName", "${applicationId}_${versionName}_${versionCode}_${SimpleDateFormat("dd.MM.yyyy").format(Date())}")
     }
 
     packaging {
@@ -53,8 +55,10 @@ android {
         targetCompatibility = JavaVersion.VERSION_17
     }
 
-    kotlinOptions {
-        jvmTarget = "17"
+    kotlin {
+        compilerOptions {
+            jvmTarget.set(JvmTarget.JVM_17)
+        }
     }
 
     signingConfigs {
@@ -133,7 +137,7 @@ android {
                     val date = SimpleDateFormat("dd.MM.yyyy").format(Date())
 
                     output.outputFileName =
-                        "${apkName}_${versionName}(${versionCode})_${date}.${output.outputFile.extension}"
+                        "${apkName}_${versionName}_${versionCode}_${date}.${output.outputFile.extension}"
                 }
             }
         }
@@ -156,18 +160,18 @@ val desugar_jdk_libs by extra("2.0.4")
 val dagger by extra("2.28.1")
 val rx_java by extra("3.1.8")
 val rx_android by extra("3.0.2")
-val retrofit by extra("2.9.0")
+val retrofit by extra("2.11.0")
 val okhttp_bom by extra("4.12.0")
 val moxy by extra("2.2.2")
 val glide by extra("4.16.0")
-val material by extra("1.11.0")
-val browser by extra("1.7.0")
-val firebase_bom by extra("32.7.1")
+val material by extra("1.12.0")
+val browser by extra("1.8.0")
+val firebase_bom by extra("33.1.0")
 val javax_annotation by extra("10.0-b28")
-val play_service_base by extra("18.3.0")
-val androidx_core by extra("1.12.0")
-val androidx_appcompat by extra("1.6.1")
-val fragment by extra("1.6.2")
+val play_service_base by extra("18.5.0")
+val androidx_core by extra("1.13.1")
+val androidx_appcompat by extra("1.7.0")
+val fragment by extra("1.8.0")
 val recyclerview by extra("1.3.2")
 val androidx_preference by extra("1.2.1")
 val androidx_constraintlayout by extra("2.1.4")
@@ -175,16 +179,16 @@ val androidx_legacy_support_v4 by extra("1.0.0")
 val junit by extra("4.13.2")
 val runner by extra("1.1.5")
 val espresso_core by extra("3.5.1")
-val stellar_sdk by extra("0.43.0")
+val stellar_sdk by extra("0.44.0")
 val work_manager by extra("2.9.0")
 val biometric by extra("1.1.0")
-val lottieVersion by extra("6.3.0")
+val lottieVersion by extra("6.4.1")
 val qr_gen by extra("2.6.0")
-val viewpager2 by extra("1.0.0")
+val viewpager2 by extra("1.1.0")
 val tangem by extra("3.7.2")
-val hilt by extra("2.50")
-val androidx_hilt by extra("1.1.0")
-val lifecycle by extra("2.7.0")
+val hilt by extra("2.51.1")
+val androidx_hilt by extra("1.2.0")
+val lifecycle by extra("2.8.2")
 val timber by extra("5.0.1")
 
 dependencies {
@@ -197,8 +201,8 @@ dependencies {
     androidTestImplementation("androidx.test.espresso:espresso-core:$espresso_core")
     coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:$desugar_jdk_libs")
 
-    implementation("com.github.stellar:java-stellar-sdk:$stellar_sdk")
-    implementation("com.github.stellar:java-stellar-sdk-android-spi:$stellar_sdk")
+    implementation("network.lightsail:stellar-sdk:$stellar_sdk")
+    implementation("network.lightsail:stellar-sdk-android-spi:$stellar_sdk")
 
     // Android.
     implementation("com.google.android.gms:play-services-base:$play_service_base")
@@ -241,7 +245,7 @@ dependencies {
     // Glide.
     implementation("com.github.bumptech.glide:glide:$glide")
     implementation("com.github.bumptech.glide:okhttp3-integration:$glide")
-    kapt("com.github.bumptech.glide:compiler:$glide")
+    ksp("com.github.bumptech.glide:ksp:$glide")
 
     // Firebase.
     // Import the BoM for the Firebase platform.

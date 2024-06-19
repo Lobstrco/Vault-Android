@@ -49,6 +49,7 @@ import com.lobstr.stellar.tsmapper.presentation.util.Constant.TransactionType.AU
 import com.lobstr.stellar.tsmapper.presentation.util.Constant.TransactionType.TRANSACTION
 import org.stellar.sdk.*
 import org.stellar.sdk.xdr.TrustLineFlags
+import java.math.BigDecimal
 
 class TsMapper(
     private val network: Network = Network.PUBLIC,
@@ -281,7 +282,7 @@ class TsMapper(
                 mapAsset(operation.selling),
                 mapAsset(operation.buying),
                 operation.amount,
-                operation.price.toString(),
+                BigDecimal(operation.price.toString()).stripTrailingZeros().toPlainString(),
                 operation.offerId
             )
         } else {
@@ -290,7 +291,7 @@ class TsMapper(
                 mapAsset(operation.selling),
                 mapAsset(operation.buying),
                 operation.amount,
-                operation.price.toString(),
+                BigDecimal(operation.price.toString()).stripTrailingZeros().toPlainString(),
                 operation.offerId
             )
         }
@@ -304,7 +305,7 @@ class TsMapper(
                 mapAsset(operation.selling),
                 mapAsset(operation.buying),
                 operation.amount,
-                operation.price.toString(),
+                BigDecimal(operation.price.toString()).stripTrailingZeros().toPlainString(),
                 operation.offerId
             )
         } else {
@@ -313,7 +314,7 @@ class TsMapper(
                 mapAsset(operation.selling),
                 mapAsset(operation.buying),
                 operation.amount,
-                operation.price.toString(),
+                BigDecimal(operation.price.toString()).stripTrailingZeros().toPlainString(),
                 operation.offerId
             )
         }
@@ -325,7 +326,7 @@ class TsMapper(
             mapAsset(operation.selling),
             mapAsset(operation.buying),
             operation.amount,
-            operation.price.toString()
+            BigDecimal(operation.price.toString()).stripTrailingZeros().toPlainString()
         )
     }
 
@@ -514,8 +515,8 @@ class TsMapper(
             operation.liquidityPoolID.toString(),
             operation.maxAmountA,
             operation.maxAmountB,
-            try { operation.minPrice.toString() } catch (exc: Exception) { null },
-            try { operation.maxPrice.toString() } catch (exc: Exception) { null },
+            try { BigDecimal(operation.minPrice.toString()).stripTrailingZeros().toPlainString() } catch (exc: Exception) { null },
+            try { BigDecimal(operation.maxPrice.toString()).stripTrailingZeros().toPlainString() } catch (exc: Exception) { null },
         )
     }
 
