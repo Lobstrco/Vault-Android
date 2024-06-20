@@ -13,7 +13,7 @@ LOBSTR Vault uses multisignature technology of the Stellar Network and allows yo
 - Recover existing account. Mnemonic (BIP39) support for account backups
 - Fully integrated with LOBSTR wallet, StellarTerm.com and Stellarport.io
 - LOBSTR Vault signer account can sign transactions of one or more Stellar accounts
-- Install LOBSTR Vault on multiple devices to protect one Stellar account with N of N multisig setup
+- Install LOBSTR Vault on multiple devices to protect one Stellar account with M of N multisig setup
 - View and sign transactions on the Stellar Network
 - Import transaction XDRs for signatures
 - Receive signature requests with PUSH notifications
