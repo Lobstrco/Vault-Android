@@ -9,11 +9,14 @@ import com.lobstr.stellar.vault.presentation.entities.account.Thresholds
 import com.lobstr.stellar.vault.presentation.entities.mnemonic.MnemonicItem
 import com.lobstr.stellar.vault.presentation.entities.stellar.SubmitTransactionResult
 import com.lobstr.stellar.vault.presentation.util.AppUtil
+import com.lobstr.stellar.vault.presentation.util.Constant
 import com.soneso.stellarmnemonics.Wallet
 import com.tangem.operations.sign.SignResponse
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.core.Single.fromCallable
 import org.stellar.sdk.*
+import org.stellar.sdk.exception.BadRequestException
+import org.stellar.sdk.exception.InvalidSep10ChallengeException
 import org.stellar.sdk.requests.AccountsRequestBuilder
 import org.stellar.sdk.requests.RequestBuilder
 import org.stellar.sdk.responses.AccountResponse
@@ -22,7 +25,6 @@ import org.stellar.sdk.xdr.Signature
 import java.util.concurrent.Callable
 
 class StellarRepositoryImpl(
-    private val accountConverter: AccountConverter,
     private val network: Network,
     private val server: Server,
     private val mnemonicsMapper: MnemonicsMapper,
@@ -47,7 +49,6 @@ class StellarRepositoryImpl(
     override fun createTransaction(envelopXdr: String): Single<AbstractTransaction> {
         return fromCallable {
             return@fromCallable AbstractTransaction.fromEnvelopeXdr(
-                accountConverter,
                 envelopXdr,
                 network
             )
@@ -65,19 +66,26 @@ class StellarRepositoryImpl(
                     transaction,
                     skipMemoRequiredCheck
                 )
+
                 else -> throw Exception("Unknown transaction type.")
             }
-        }).onErrorResumeNext {
-            rxErrorUtils.handleSingleRequestHttpError(it)
-        }.map {
-            submitMapper.transformSubmitResponse(it)
+            // If the transaction is not executed successfully,
+            // then the Stellar SDK will throw an exception.
+        }).map { response ->
+            submitMapper.transformSubmitResponse(response)
+        }.onErrorResumeNext { throwable ->
+            if (throwable is BadRequestException) {
+                Single.just(submitMapper.transformBadRequestException(throwable, transaction.toEnvelopeXdrBase64(), transaction.hashHex()))
+            } else {
+                rxErrorUtils.handleSingleRequestHttpError(throwable)
+            }
         }
     }
 
     override fun signTransaction(signer: KeyPair, envelopXdr: String): Single<AbstractTransaction> {
         return fromCallable(Callable {
             val transaction =
-                AbstractTransaction.fromEnvelopeXdr(accountConverter, envelopXdr, network)
+                AbstractTransaction.fromEnvelopeXdr(envelopXdr, network)
 
             // Sign the transaction to prove you are actually the person sending it.
             transaction.sign(signer)
@@ -101,7 +109,7 @@ class StellarRepositoryImpl(
             }
         }
             .map { accountResponse ->
-                val transaction = Transaction.fromEnvelopeXdr(accountConverter, envelopXdr, network)
+                val transaction = Transaction.fromEnvelopeXdr(envelopXdr, network)
 
                 val accountsList: MutableList<Account> = mutableListOf()
 
@@ -167,7 +175,7 @@ class StellarRepositoryImpl(
     }
 
     override fun getTransactionFromXDR(xdr: String): AbstractTransaction {
-        return AbstractTransaction.fromEnvelopeXdr(accountConverter, xdr, network)
+        return AbstractTransaction.fromEnvelopeXdr(xdr, network)
     }
 
     override fun readChallengeTransaction(
