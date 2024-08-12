@@ -61,10 +61,10 @@ class ClaimantMapper {
                 intervalsList.add(parsePredicateRelBefore(predicate))
             }
             is Predicate.And -> {
-                intervalsList.add(parsePredicateAnd(predicate.inner))
+                intervalsList.add(parsePredicateAnd(predicate.left, predicate.right))
             }
             is Predicate.Or -> {
-                intervalsList.addAll(parsePredicateOr(predicate.inner))
+                intervalsList.addAll(parsePredicateOr(predicate.left, predicate.right))
             }
             is Predicate.Not -> {
                 intervalsList.add(parsePredicateNot(predicate.inner))
@@ -105,7 +105,7 @@ class ClaimantMapper {
                 type = NORMAL
             }
             is Predicate.And -> { // NOT.3_00001
-                val timeInterval = parsePredicateAnd(predicate.inner)
+                val timeInterval = parsePredicateAnd(predicate.left, predicate.right)
                 when (timeInterval.type) {
                     UNCONDITIONAL -> {
                         timeStart = null
@@ -120,7 +120,7 @@ class ClaimantMapper {
                 }
             }
             is Predicate.Or -> { // NOT.4_00002
-                val timeInterval = parsePredicateOr(predicate.inner)[0]
+                val timeInterval = parsePredicateOr(predicate.left, predicate.right)[0]
                 when (timeInterval.type) {
                     UNCONDITIONAL -> {
                         timeStart = null
@@ -154,21 +154,12 @@ class ClaimantMapper {
         return TimeInterval(timeStart = timeStart, timeEnd = timeEnd, type = type)
     }
 
-    private fun parsePredicateAnd(inner: List<Predicate>): TimeInterval {
+    private fun parsePredicateAnd(left: Predicate, right: Predicate): TimeInterval {
         val timeInterval = TimeInterval()
 
-        if (inner.size < 2) {
-            val listIntervalWithUnconditionalPredicate = parsePredicate(inner[0])
-            return if (listIntervalWithUnconditionalPredicate.isNotEmpty()) {
-                listIntervalWithUnconditionalPredicate[0]
-            } else {
-                TimeInterval(timeStart = null, timeEnd = null)
-            }
-        }
-
         /** Due to the peculiarities of the structure of predicates. This method can't receive a list of more than two intervals. */
-        val listIntervals1 = parsePredicate(inner[0])
-        val listIntervals2 = parsePredicate(inner[1])
+        val listIntervals1 = parsePredicate(left)
+        val listIntervals2 = parsePredicate(right)
 
         val timeInterval1 = listIntervals1[0]
         val timeInterval2 = listIntervals2[0]
@@ -251,22 +242,12 @@ class ClaimantMapper {
         return timeInterval
     }
 
-    private fun parsePredicateOr(inner: List<Predicate>): List<TimeInterval> {
+    private fun parsePredicateOr(left: Predicate, right: Predicate): List<TimeInterval> {
         val listIntervals: MutableList<TimeInterval> = mutableListOf()
 
-        if (inner.size < 2) {
-            val listIntervalWithUnconditionalPredicate = parsePredicate(inner[0])
-            if (listIntervalWithUnconditionalPredicate.isNotEmpty()) {
-                listIntervals.add(listIntervalWithUnconditionalPredicate[0])
-            } else {
-                listIntervals.add(TimeInterval(timeStart = null, timeEnd = null))
-            }
-            return listIntervals
-        }
-
         /** Due to the peculiarities of the structure of predicates. This method cannot receive a list of more than two intervals. */
-        val listIntervals1 = parsePredicate(inner[0])
-        val listIntervals2 = parsePredicate(inner[1])
+        val listIntervals1 = parsePredicate(left)
+        val listIntervals2 = parsePredicate(right)
 
         val timeInterval = TimeInterval()
         val timeInterval1 = listIntervals1[0]

@@ -6,7 +6,7 @@ import com.lobstr.stellar.vault.data.error.entity.Error
 import com.lobstr.stellar.vault.data.error.exeption.*
 import com.lobstr.stellar.vault.data.error.util.ApiErrorUtil
 import com.lobstr.stellar.vault.data.error.util.HttpStatusCodes
-import org.stellar.sdk.requests.ErrorResponse
+import org.stellar.sdk.exception.NetworkException
 import retrofit2.HttpException
 import java.io.IOException
 import java.net.ConnectException
@@ -34,6 +34,7 @@ class ExceptionMapper(private val context: Context) {
                         R.string.api_error_user_not_authorized
                     )
                 )
+
                 throwable.code() == HttpStatusCodes.HTTP_FORBIDDEN -> return getHttpForbiddenError(error, throwable)
                 throwable.code() == HttpStatusCodes.HTTP_BAD_REQUEST -> return getHttpBadRequestError(error, throwable)
                 throwable.code() >= HttpStatusCodes.HTTP_INTERNAL_ERROR -> return InternalException(context.getString(R.string.api_error_internal_default))
@@ -50,7 +51,7 @@ class ExceptionMapper(private val context: Context) {
             }
         }
 
-        if(throwable is ErrorResponse) {
+        if (throwable is NetworkException) {
             return handleStellarSdkErrorResponse(throwable)
         }
 
@@ -62,6 +63,7 @@ class ExceptionMapper(private val context: Context) {
             error == null -> DefaultException(throwable.message!!)
             !error.detail.isNullOrEmpty() && error.detail.contains(context.getString(R.string.api_error_invalid_token)) ->
                 UserNotAuthorizedException(context.getString(R.string.api_error_user_not_authorized))
+
             !error.message.isNullOrEmpty() -> ForbiddenException(error.message)
             !error.detail.isNullOrEmpty() -> ForbiddenException(error.detail)
             !error.error.isNullOrEmpty() -> ForbiddenException(error.error)
@@ -78,12 +80,13 @@ class ExceptionMapper(private val context: Context) {
             !error.error.isNullOrEmpty() -> BadRequestException(error.error)
             !error.nonFieldErrors.isNullOrEmpty() && error.nonFieldErrors[0].equals("Signature has expired.") ->
                 ExpiredSignatureException(error.nonFieldErrors[0])
+
             !error.nonFieldErrors.isNullOrEmpty() -> BadRequestException(error.nonFieldErrors[0])
             else -> DefaultException(throwable.message!!)
         }
     }
 
-    private fun handleStellarSdkErrorResponse(throwable: ErrorResponse) : DefaultException {
+    private fun handleStellarSdkErrorResponse(throwable: NetworkException): DefaultException {
         val error = ApiErrorUtil.convertJsonToPojo(
             Error::class.java,
             throwable.body

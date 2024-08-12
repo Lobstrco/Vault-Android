@@ -179,7 +179,7 @@ val androidx_legacy_support_v4 by extra("1.0.0")
 val junit by extra("4.13.2")
 val runner by extra("1.1.5")
 val espresso_core by extra("3.5.1")
-val stellar_sdk by extra("0.44.0")
+val stellar_sdk by extra("1.0.0-alpha0")
 val work_manager by extra("2.9.0")
 val biometric by extra("1.1.0")
 val lottieVersion by extra("6.4.1")
@@ -262,6 +262,9 @@ dependencies {
     implementation("com.airbnb.android:lottie:$lottieVersion")
     implementation("com.github.kenglxn.QRGen:android:$qr_gen")
     implementation("com.jakewharton.timber:timber:$timber")
+
+    // Bouncy Castle open-source cryptographic APIs
+    implementation("org.bouncycastle:bcprov-jdk18on:1.78.1")
 
     // Lifecycles.
     // Lifecycles only (without ViewModel or LiveData)

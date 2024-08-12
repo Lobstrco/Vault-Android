@@ -33,7 +33,6 @@ import com.lobstr.stellar.vault.BuildConfig
 import com.lobstr.stellar.vault.R
 import com.lobstr.stellar.vault.presentation.application.LVApplication
 import com.lobstr.stellar.vault.presentation.util.Constant.Symbol.NULL
-import org.stellar.sdk.AccountConverter
 import org.stellar.sdk.xdr.CryptoKeyType
 import org.stellar.sdk.xdr.MuxedAccount
 import timber.log.Timber
@@ -78,11 +77,11 @@ object AppUtil {
         try {
             CustomTabsIntent.Builder()
                 .setDefaultColorSchemeParams(
-                CustomTabColorSchemeParams.Builder()
-                    .setToolbarColor(ContextCompat.getColor(context!!, R.color.color_primary))
-                    .build()
-            )
-            .build()
+                    CustomTabColorSchemeParams.Builder()
+                        .setToolbarColor(ContextCompat.getColor(context!!, R.color.color_primary))
+                        .build()
+                )
+                .build()
                 .apply {
                     intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
                     launchUrl(context, Uri.parse(url))
@@ -200,8 +199,10 @@ object AppUtil {
             val metrics = (context.getSystemService(Context.WINDOW_SERVICE) as WindowManager).currentWindowMetrics
             // Gets all excluding insets.
             val windowInsets = WindowInsetsCompat.toWindowInsetsCompat(metrics.windowInsets)
-            val insets = windowInsets.getInsetsIgnoringVisibility(WindowInsetsCompat.Type.navigationBars()
-                    or WindowInsetsCompat.Type.displayCutout())
+            val insets = windowInsets.getInsetsIgnoringVisibility(
+                WindowInsetsCompat.Type.navigationBars()
+                        or WindowInsetsCompat.Type.displayCutout()
+            )
             val insetsWidth = insets.right + insets.left
             // Legacy size that Display#getSize reports.
             val bounds = metrics.bounds
@@ -287,13 +288,12 @@ object AppUtil {
      * Encode Account to MuxedAccount.
      * @return null when invalid account. Otherwise - MuxedAccount.
      */
-    fun encodeMuxedAccount(account: String?, enableMuxed: Boolean = true): MuxedAccount? {
+    fun encodeMuxedAccount(account: String?): MuxedAccount? {
         return try {
             if (account.isNullOrEmpty()) {
                 null
             } else {
-                val converter = if(enableMuxed) AccountConverter.enableMuxed() else AccountConverter.disableMuxed()
-                converter.encode(account)
+                org.stellar.sdk.MuxedAccount(account).toXdr()
             }
         } catch (exc: Exception) {
             null
@@ -304,7 +304,7 @@ object AppUtil {
      * Retrieve Account ID for any account.
      */
     fun decodeAccount(account: MuxedAccount): String {
-        return AccountConverter.disableMuxed().decode(account)
+        return org.stellar.sdk.MuxedAccount.fromXdr(account).accountId
     }
 
     /**
@@ -318,8 +318,8 @@ object AppUtil {
      * Make Account Validation (ED25519 or MUXED_ED25519).
      * @return true - ED25519 or MUXED_ED25519. Otherwise - false.
      */
-    fun isValidAccount(account: String?, enableMuxed: Boolean = true): Boolean {
-        return encodeMuxedAccount(account, enableMuxed) != null
+    fun isValidAccount(account: String?): Boolean {
+        return encodeMuxedAccount(account) != null
     }
 
     fun createUserIconLink(key: String?): String {
