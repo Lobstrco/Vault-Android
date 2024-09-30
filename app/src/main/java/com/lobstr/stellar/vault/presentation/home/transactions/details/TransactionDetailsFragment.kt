@@ -15,7 +15,9 @@ import androidx.activity.addCallback
 import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
 import androidx.core.view.MenuProvider
+import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.isVisible
+import androidx.core.view.updatePadding
 import androidx.fragment.app.setFragmentResult
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.lobstr.stellar.tsmapper.presentation.entities.transaction.operation.Operation
@@ -106,6 +108,21 @@ class TransactionDetailsFragment : BaseFragment(), TransactionDetailsView,
         super.onViewCreated(view, savedInstanceState)
         addMenuProvider()
         setListeners()
+    }
+
+    override fun handleInsets() {
+        // Skip ime insets for details.
+        view?.doOnApplyWindowInsets { view, insets, padding, _ ->
+            val innerPadding = insets.getInsets(
+                WindowInsetsCompat.Type.systemBars()
+                        or WindowInsetsCompat.Type.displayCutout()
+            )
+            view.updatePadding(
+                left = padding.left + innerPadding.left,
+                right = padding.right + innerPadding.right,
+                bottom = padding.bottom + innerPadding.bottom
+            )
+        }
     }
 
     private fun addMenuProvider() {

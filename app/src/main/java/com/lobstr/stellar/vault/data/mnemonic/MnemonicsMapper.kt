@@ -18,16 +18,4 @@ class MnemonicsMapper {
 
         return mnemonicItems
     }
-
-    fun transformMnemonicsArray(mnemonicsArray: CharArray): ArrayList<MnemonicItem> {
-        val mnemonicItems = arrayListOf<MnemonicItem>()
-
-        val mnemonicsStrList = String(mnemonicsArray).split(" ".toRegex()).dropLastWhile { it.isEmpty() }
-
-        for (mnemonic in mnemonicsStrList) {
-            mnemonicItems.add(MnemonicItem(mnemonic))
-        }
-
-        return mnemonicItems
-    }
 }

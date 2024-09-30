@@ -9,12 +9,12 @@ import com.lobstr.stellar.vault.presentation.util.Constant.Util.COUNT_MNEMONIC_W
 import com.lobstr.stellar.vault.presentation.util.Constant.Util.COUNT_MNEMONIC_WORDS_24
 import com.lobstr.stellar.vault.presentation.util.Constant.Util.PUBLIC_KEY_LIMIT
 import com.lobstr.stellar.vault.presentation.util.manager.SupportManager.ArticleID.RECOVER_ACCOUNT
-import com.soneso.stellarmnemonics.mnemonic.MnemonicException
-import com.soneso.stellarmnemonics.mnemonic.WordList
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.schedulers.Schedulers
+import network.lightsail.Language
+import network.lightsail.Mnemonic
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
@@ -26,6 +26,13 @@ class RecoverKeyFrPresenter @Inject constructor(private val interactor: RecoverK
     }
 
     private lateinit var phrases: String
+
+    private val wordlist: List<String> by lazy {
+        val resourceName = "wordlist/${Language.ENGLISH.code}.txt"
+        val inputStream = Mnemonic::class.java.classLoader?.getResourceAsStream(resourceName)
+        checkNotNull(inputStream) { "Word list file not found for language: $Language.ENGLISH" }
+        inputStream.bufferedReader().useLines { it.toList() }
+    }
 
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
@@ -90,7 +97,7 @@ class RecoverKeyFrPresenter @Inject constructor(private val interactor: RecoverK
      */
     private fun checkWords(phraseArray: List<String>, phrases: String): List<RecoveryPhraseInfo> {
         val wordsInfoList: MutableList<RecoveryPhraseInfo> = mutableListOf()
-        val availableWords = WordList.ENGLISH.words.toString()
+        val availableWords = wordlist.toString()
         var firstWordIndexPosition: Int = if (phrases.isEmpty()) 0 else phrases.indexOf(phrases[0])
 
         for (phrase in phraseArray) {
@@ -189,7 +196,7 @@ class RecoverKeyFrPresenter @Inject constructor(private val interactor: RecoverK
         }
 
         unsubscribeOnDestroy(
-            interactor.createAndSaveSecretKey(phrases.toCharArray())
+            interactor.createAndSaveSecretKey(phrases)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe {
@@ -201,9 +208,7 @@ class RecoverKeyFrPresenter @Inject constructor(private val interactor: RecoverK
                     createAdditionalPublicKeys()
                 }, { throwable ->
                     viewState.showProgressDialog(false)
-                    if (throwable is MnemonicException) {
-                        viewState.showErrorMessage(R.string.msg_incorrect_mnemonic_phrases)
-                    }
+                    viewState.showErrorMessage(R.string.msg_incorrect_mnemonic_phrases)
                 })
         )
     }
@@ -214,7 +219,7 @@ class RecoverKeyFrPresenter @Inject constructor(private val interactor: RecoverK
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .flatMapSingle { index ->
-                    interactor.createAdditionalPublicKey(phrases.toCharArray(), index)
+                    interactor.createAdditionalPublicKey(phrases, index)
                         .map { Pair(index, it) }
                         .onErrorReturnItem(Pair(index, ""))
                 }

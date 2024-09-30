@@ -42,7 +42,7 @@ class VaultAuthInteractorImpl(
             .flatMap { transaction ->
                 getPhrases().flatMap {
                     stellarRepository.createKeyPair(
-                        it.toCharArray(),
+                        it,
                         prefsUtil.getCurrentPublicKeyIndex()
                     )
                 }

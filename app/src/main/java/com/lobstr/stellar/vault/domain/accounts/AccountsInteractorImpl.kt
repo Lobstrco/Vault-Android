@@ -31,7 +31,7 @@ class AccountsInteractorImpl(
         return getPhrases()
             .flatMap {
                 stellarRepository.createKeyPair(
-                    it.toCharArray(),
+                    it,
                     newKeyIndex
                 )
             }

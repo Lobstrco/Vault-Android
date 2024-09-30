@@ -38,7 +38,6 @@ import org.stellar.sdk.xdr.CryptoKeyType
 import org.stellar.sdk.xdr.MuxedAccount
 import timber.log.Timber
 import java.io.IOException
-import java.net.URLEncoder
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -274,14 +273,6 @@ object AppUtil {
 
     fun getAppBehavior() =
         if (BuildConfig.BUILD_TYPE == Constant.BuildType.RELEASE) Constant.Behavior.PRODUCTION else Constant.Behavior.STAGING
-
-    fun composeLaboratoryUrl(
-        input: String,
-        type: String = Constant.Laboratory.Type.TRANSACTION_ENVELOPE,
-        network: String = Constant.Laboratory.NETWORK.PUBLIC
-    ) = String.format(
-        Constant.Laboratory.URL, URLEncoder.encode(input, "utf-8"), type, network
-    )
 
     /**
      * Encode Account to MuxedAccount.

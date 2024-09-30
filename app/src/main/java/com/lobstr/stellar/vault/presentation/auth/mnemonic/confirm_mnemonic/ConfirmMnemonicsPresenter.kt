@@ -8,7 +8,6 @@ import com.lobstr.stellar.vault.presentation.entities.mnemonic.MnemonicItem
 import com.lobstr.stellar.vault.presentation.util.Constant
 import com.lobstr.stellar.vault.presentation.util.Constant.Util.COUNT_MNEMONIC_WORDS_12
 import com.lobstr.stellar.vault.presentation.util.manager.SupportManager.ArticleID.RECOVERY_PHRASE
-import com.soneso.stellarmnemonics.mnemonic.MnemonicException
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.schedulers.Schedulers
 import javax.inject.Inject
@@ -61,7 +60,7 @@ class ConfirmMnemonicsPresenter @Inject constructor(private val interactor: Conf
         }
 
         unsubscribeOnDestroy(
-            interactor.createAndSaveSecretKey(mnemonicsInitialStr.toCharArray())
+            interactor.createAndSaveSecretKey(mnemonicsInitialStr)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe {
@@ -72,10 +71,8 @@ class ConfirmMnemonicsPresenter @Inject constructor(private val interactor: Conf
                 }
                 .subscribe({
                     viewState.showPinScreen()
-                }, { throwable ->
-                    if (throwable is MnemonicException) {
-                        viewState.showMessage(R.string.msg_incorrect_mnemonic_phrases)
-                    }
+                }, {
+                    viewState.showMessage(R.string.msg_incorrect_mnemonic_phrases)
                 })
         )
     }

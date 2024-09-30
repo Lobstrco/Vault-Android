@@ -13,7 +13,7 @@ import org.stellar.sdk.requests.RequestBuilder
 
 interface StellarRepository {
 
-    fun createKeyPair(mnemonics: CharArray, index: Int): Single<KeyPair>
+    fun createKeyPair(mnemonics: String, index: Int): Single<KeyPair>
 
     fun createTransaction(envelopXdr: String): Single<AbstractTransaction>
 

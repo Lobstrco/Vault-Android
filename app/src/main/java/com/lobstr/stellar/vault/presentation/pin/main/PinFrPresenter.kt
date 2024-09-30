@@ -54,7 +54,6 @@ class PinFrPresenter @Inject constructor(private val interactor: PinInteractor) 
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
         viewState.setupNavigationBar(
-            if (pinMode != ENTER) android.R.color.transparent else R.color.color_primary,
             pinMode != ENTER
         )
         viewState.setupToolbar(

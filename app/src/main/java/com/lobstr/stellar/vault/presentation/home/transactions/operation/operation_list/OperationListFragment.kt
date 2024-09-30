@@ -61,6 +61,10 @@ class OperationListFragment : BaseFragment(), OperationListView {
         _binding = null
     }
 
+    override fun handleInsets() {
+        // Ignore insets (Inner Fragment).
+    }
+
     // ===========================================================
     // Listeners, methods for/from Interfaces
     // ===========================================================

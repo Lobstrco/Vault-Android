@@ -13,11 +13,11 @@ class RecoverKeyInteractorImpl(
     private val prefUtil: PrefsUtil
 ) : RecoverKeyInteractor {
 
-    override fun createAndSaveSecretKey(mnemonics: CharArray): Single<String> =
+    override fun createAndSaveSecretKey(mnemonics: String): Single<String> =
         stellarRepository.createKeyPair(mnemonics, 0)
             .map { keyPair: KeyPair ->
                 keyStoreRepository.encryptData(
-                    String(mnemonics),
+                    mnemonics,
                     PrefsUtil.PREF_ENCRYPTED_PHRASES,
                     PrefsUtil.PREF_PHRASES_IV
                 )
@@ -26,7 +26,7 @@ class RecoverKeyInteractorImpl(
                 return@map String(keyPair.secretSeed)
             }
 
-    override fun createAdditionalPublicKey(mnemonics: CharArray, position: Int): Single<String> =
+    override fun createAdditionalPublicKey(mnemonics: String, position: Int): Single<String> =
         stellarRepository.createKeyPair(mnemonics, position).map { it.accountId }
 
     override fun checkAccount(publicKey: String): Single<List<Account>> =

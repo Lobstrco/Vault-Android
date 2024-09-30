@@ -12,12 +12,12 @@ class ConfirmMnemonicsInteractorImpl(
     private val prefUtil: PrefsUtil
 ) : ConfirmMnemonicsInteractor {
 
-    override fun createAndSaveSecretKey(mnemonics: CharArray): Single<String> {
+    override fun createAndSaveSecretKey(mnemonics: String): Single<String> {
         val newKeyIndex: Int = prefUtil.getNewPublicKeyIndex()
         return stellarRepository.createKeyPair(mnemonics, newKeyIndex)
             .map { keyPair: KeyPair ->
                 keyStoreRepository.encryptData(
-                    String(mnemonics),
+                    mnemonics,
                     PrefsUtil.PREF_ENCRYPTED_PHRASES,
                     PrefsUtil.PREF_PHRASES_IV
                 )

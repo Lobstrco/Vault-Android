@@ -7,6 +7,7 @@ import com.lobstr.stellar.vault.presentation.util.Constant
 import com.lobstr.stellar.vault.presentation.util.Constant.TransactionConfirmationSuccessStatus.SUCCESS
 import com.lobstr.stellar.vault.presentation.util.Constant.TransactionConfirmationSuccessStatus.SUCCESS_NEED_ADDITIONAL_SIGNATURES
 import com.lobstr.stellar.vault.presentation.util.VibrateType.TYPE_TWO
+import com.lobstr.stellar.vault.presentation.util.manager.composeViewXdrUrl
 import moxy.MvpPresenter
 import javax.inject.Inject
 
@@ -46,7 +47,7 @@ class SuccessPresenter @Inject constructor(
     }
 
     fun viewTransactionDetailsClicked() {
-        viewState.showWebPage(AppUtil.composeLaboratoryUrl(envelopeXdr))
+        viewState.showWebPage(composeViewXdrUrl(envelopeXdr))
     }
 
     fun viewExplorerClicked() {

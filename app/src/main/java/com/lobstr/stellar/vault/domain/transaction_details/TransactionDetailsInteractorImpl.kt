@@ -162,7 +162,7 @@ class TransactionDetailsInteractorImpl(
     }
 
     override fun signTransaction(transaction: String): Single<AbstractTransaction> {
-        return getPhrases().flatMap { stellarRepository.createKeyPair(it.toCharArray(), prefsUtil.getCurrentPublicKeyIndex()) }
+        return getPhrases().flatMap { stellarRepository.createKeyPair(it, prefsUtil.getCurrentPublicKeyIndex()) }
             .flatMap { stellarRepository.signTransaction(it, transaction) }
     }
 

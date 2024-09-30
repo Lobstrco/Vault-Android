@@ -9,10 +9,10 @@ import com.lobstr.stellar.vault.presentation.entities.account.Thresholds
 import com.lobstr.stellar.vault.presentation.entities.mnemonic.MnemonicItem
 import com.lobstr.stellar.vault.presentation.entities.stellar.SubmitTransactionResult
 import com.lobstr.stellar.vault.presentation.util.AppUtil
-import com.soneso.stellarmnemonics.Wallet
 import com.tangem.operations.sign.SignResponse
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.core.Single.fromCallable
+import network.lightsail.Mnemonic
 import org.stellar.sdk.*
 import org.stellar.sdk.requests.AccountsRequestBuilder
 import org.stellar.sdk.requests.RequestBuilder
@@ -31,16 +31,19 @@ class StellarRepositoryImpl(
 ) : StellarRepository {
 
     override fun generate12WordMnemonic(): ArrayList<MnemonicItem> {
-        return mnemonicsMapper.transformMnemonicsArray(Wallet.generate12WordMnemonic()!!)
+        return mnemonicsMapper.transformMnemonicsStr(Mnemonic().generate(128))
     }
 
     override fun generate24WordMnemonic(): ArrayList<MnemonicItem> {
-        return mnemonicsMapper.transformMnemonicsArray(Wallet.generate24WordMnemonic()!!)
+        return mnemonicsMapper.transformMnemonicsStr(Mnemonic().generate(256))
     }
 
-    override fun createKeyPair(mnemonics: CharArray, index: Int): Single<KeyPair> {
+    override fun createKeyPair(mnemonics: String, index: Int): Single<KeyPair> {
         return fromCallable(Callable {
-            return@Callable Wallet.createKeyPair(mnemonics, null, index)
+            return@Callable KeyPair.fromBip39Seed(
+                Mnemonic.toSeed(mnemonics),
+                index
+            )
         })
     }
 

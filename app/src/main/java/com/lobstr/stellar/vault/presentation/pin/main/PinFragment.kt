@@ -104,10 +104,9 @@ class PinFragment : BaseFragment(), PinFrView, PinLockListener, BiometricListene
      * Set navigation buttons color.
      * @param light when true - gray, else - white.
      */
-    override fun setupNavigationBar(@ColorRes color: Int, light: Boolean) {
+    override fun setupNavigationBar(light: Boolean) {
         if (Build.VERSION.SDK_INT > Build.VERSION_CODES.O) {
             requireActivity().window?.let {
-                it.navigationBarColor = ContextCompat.getColor(requireContext(), color)
                 WindowCompat.getInsetsController(it, it.decorView).isAppearanceLightNavigationBars = light
             }
         }

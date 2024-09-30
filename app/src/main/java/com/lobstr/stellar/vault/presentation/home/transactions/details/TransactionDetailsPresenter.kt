@@ -41,6 +41,7 @@ import com.lobstr.stellar.vault.presentation.util.Constant.TransactionConfirmati
 import com.lobstr.stellar.vault.presentation.util.Constant.TransactionConfirmationSuccessStatus.SUCCESS_CHALLENGE
 import com.lobstr.stellar.vault.presentation.util.Constant.TransactionConfirmationSuccessStatus.SUCCESS_NEED_ADDITIONAL_SIGNATURES
 import com.lobstr.stellar.vault.presentation.util.Constant.Util.PK_TRUNCATE_COUNT_SHORT
+import com.lobstr.stellar.vault.presentation.util.manager.composeViewXdrUrl
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Single
@@ -481,7 +482,7 @@ class TransactionDetailsPresenter @Inject constructor(
     }
 
     fun viewTransactionDetailsClicked() {
-        viewState.showWebPage(AppUtil.composeLaboratoryUrl(transactionItem.transaction.envelopXdr))
+        viewState.showWebPage(composeViewXdrUrl(transactionItem.transaction.envelopXdr))
     }
 
     fun btnConfirmClicked() {

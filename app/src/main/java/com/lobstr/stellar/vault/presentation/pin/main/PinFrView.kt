@@ -12,7 +12,7 @@ import moxy.viewstate.strategy.alias.Skip
 interface PinFrView : MvpView {
 
     @AddToEndSingle
-    fun setupNavigationBar(@ColorRes color: Int, light: Boolean)
+    fun setupNavigationBar(light: Boolean)
 
     @AddToEndSingle
     fun setupToolbar(

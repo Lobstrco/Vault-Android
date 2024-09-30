@@ -11,6 +11,8 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
 import androidx.core.view.MenuProvider
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.updatePadding
 import com.lobstr.stellar.vault.R
 import com.lobstr.stellar.vault.databinding.ActivityTangemCreateWalletBinding
 import com.lobstr.stellar.vault.presentation.base.activity.BaseActivity
@@ -18,6 +20,7 @@ import com.lobstr.stellar.vault.presentation.dialog.alert.base.AlertDialogFragme
 import com.lobstr.stellar.vault.presentation.entities.tangem.TangemInfo
 import com.lobstr.stellar.vault.presentation.tangem.dialog.TangemDialogFragment
 import com.lobstr.stellar.vault.presentation.util.Constant
+import com.lobstr.stellar.vault.presentation.util.doOnApplyWindowInsets
 import com.lobstr.stellar.vault.presentation.util.manager.SupportManager
 import com.lobstr.stellar.vault.presentation.util.parcelableExtra
 import com.lobstr.stellar.vault.presentation.util.setSafeOnClickListener
@@ -54,6 +57,20 @@ class TangemCreateWalletActivity : BaseActivity(), TangemCreateWalletView,
         super.onCreate(savedInstanceState)
         addMenuProvider()
         setListeners()
+    }
+
+    override fun handleInsets() {
+        binding.content.doOnApplyWindowInsets { view, insets, padding, _ ->
+            val innerPadding = insets.getInsets(
+                WindowInsetsCompat.Type.systemBars()
+                        or WindowInsetsCompat.Type.displayCutout()
+            )
+            view.updatePadding(
+                left = padding.left + innerPadding.left,
+                right = padding.right + innerPadding.right,
+                bottom = padding.bottom + innerPadding.bottom
+            )
+        }
     }
 
     private fun addMenuProvider() {

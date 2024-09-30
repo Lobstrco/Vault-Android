@@ -178,13 +178,20 @@ object Constant {
     }
 
     object Laboratory {
-        const val URL = "https://laboratory.stellar.org/#xdr-viewer?input=%s&type=%s&network=%s"
+        const val URL = "https://lab.stellar.org/"
+        const val XDR_VIEW = "xdr/view"
+        const val HORIZON_QUERY = "?\$=network\$id=%s&label=%s&horizonUrl=%s&rpcUrl=%s&passphrase=%s;&transaction\$build\$operations@\$operation_type=&params@;;;;;"
+        const val XDR_QUERY = "&xdr\$blob=%s&type=%s;;"
+
+        object NETWORK {
+            const val MAINNET = "mainnet"
+            const val TESTNET = "testnet"
+            const val FUTURENET = "futurenet"
+            const val CUSTOM = "custom"
+        }
+
         object Type {
             const val TRANSACTION_ENVELOPE = "TransactionEnvelope"
-        }
-        object NETWORK {
-            const val PUBLIC = "public"
-            const val TEST = "test"
         }
     }
 

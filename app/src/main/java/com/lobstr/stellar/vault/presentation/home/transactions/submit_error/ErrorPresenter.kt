@@ -2,8 +2,8 @@ package com.lobstr.stellar.vault.presentation.home.transactions.submit_error
 
 import com.lobstr.stellar.vault.domain.transaction_error.TransactionErrorInteractor
 import com.lobstr.stellar.vault.presentation.entities.error.Error
-import com.lobstr.stellar.vault.presentation.util.AppUtil
 import com.lobstr.stellar.vault.presentation.util.VibrateType.TYPE_THREE
+import com.lobstr.stellar.vault.presentation.util.manager.composeViewXdrUrl
 import moxy.MvpPresenter
 import javax.inject.Inject
 
@@ -35,7 +35,7 @@ class ErrorPresenter @Inject constructor(private val interactor: TransactionErro
     }
 
     fun viewTransactionDetailsClicked() {
-        viewState.showWebPage(AppUtil.composeLaboratoryUrl(error.xdr))
+        viewState.showWebPage(composeViewXdrUrl(error.xdr))
     }
 
     fun doneClicked() {

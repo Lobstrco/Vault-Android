@@ -2,6 +2,11 @@ package com.lobstr.stellar.vault.presentation.splash
 
 import android.content.DialogInterface
 import android.content.Intent
+import android.graphics.Color
+import android.os.Build
+import android.os.Bundle
+import androidx.activity.SystemBarStyle
+import androidx.activity.enableEdgeToEdge
 import com.lobstr.stellar.vault.R
 import com.lobstr.stellar.vault.presentation.BaseMvpAppCompatActivity
 import com.lobstr.stellar.vault.presentation.auth.AuthActivity
@@ -44,6 +49,21 @@ class SplashActivity : BaseMvpAppCompatActivity(), SplashView,
     // ===========================================================
     // Methods for/from SuperClass
     // ===========================================================
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.O) {
+            enableEdgeToEdge(
+                statusBarStyle = SystemBarStyle.dark(
+                    Color.TRANSPARENT
+                ),
+                navigationBarStyle = SystemBarStyle.light(
+                    Color.TRANSPARENT,
+                    Color.TRANSPARENT
+                )
+            )
+        }
+        super.onCreate(savedInstanceState)
+    }
 
     // ===========================================================
     // Listeners, methods for/from Interfaces

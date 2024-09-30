@@ -62,7 +62,7 @@ class RxErrorUtilsImpl(
             .flatMap { apiGetChallenge ->
                 getPhrases().flatMap {
                     rxErrorRepository.createKeyPair(
-                        it.toCharArray(),
+                        it,
                         prefsUtil.getPublicKeyIndex(key)
                     )
                 }
@@ -122,7 +122,7 @@ class RxErrorUtilsImpl(
             .flatMap { apiGetChallenge ->
                 getPhrases().flatMap {
                     rxErrorRepository.createKeyPair(
-                        it.toCharArray(),
+                        it,
                         prefsUtil.getPublicKeyIndex(key)
                     )
                 }
@@ -195,7 +195,7 @@ class RxErrorUtilsImpl(
             .flatMap { apiGetChallenge ->
                 getPhrases().flatMap {
                     rxErrorRepository.createKeyPair(
-                        it.toCharArray(),
+                        it,
                         prefsUtil.getPublicKeyIndex(key)
                     )
                 }

@@ -10,34 +10,33 @@ import android.text.style.StyleSpan
 import android.text.style.TypefaceSpan
 import android.view.View
 import androidx.annotation.ColorInt
+import androidx.core.graphics.Insets
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.marginBottom
+import androidx.core.view.marginLeft
+import androidx.core.view.marginRight
+import androidx.core.view.marginTop
 
+fun View.doOnApplyWindowInsets(
+    consumed: Boolean = false,
+    f: (View, WindowInsetsCompat, Insets, Insets) -> Unit
+) {
+    // Create a snapshot of the view's padding and margins state.
+    val initialPadding = Insets.of(paddingLeft, paddingTop, paddingRight, paddingBottom)
+    val initialMargins = Insets.of(marginLeft, marginTop, marginRight, marginBottom)
 
-fun View.doOnApplyWindowInsets(f: (View, WindowInsetsCompat, InitialPadding) -> Unit) {
-    // Create a snapshot of the view's padding state.
-    val initialPadding = recordInitialPaddingForView(this)
     // Set an actual OnApplyWindowInsetsListener which proxies to the given
     // lambda, also passing in the original padding state.
 
     ViewCompat.setOnApplyWindowInsetsListener(this) { v, insets ->
-        f(v, insets, initialPadding)
-        // Always return the insets, so that children can also use them.
-        insets
+        f(v, insets, initialPadding, initialMargins)
+        if (consumed) WindowInsetsCompat.CONSUMED else insets
     }
 
     // Request some insets.
     requestApplyInsetsWhenAttached()
 }
-
-data class InitialPadding(
-    val left: Int, val top: Int,
-    val right: Int, val bottom: Int
-)
-
-private fun recordInitialPaddingForView(view: View) = InitialPadding(
-    view.paddingLeft, view.paddingTop, view.paddingRight, view.paddingBottom
-)
 
 fun View.requestApplyInsetsWhenAttached() {
     if (isAttachedToWindow) {

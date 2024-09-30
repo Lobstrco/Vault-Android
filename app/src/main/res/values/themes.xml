@@ -14,6 +14,14 @@
         <item name="bottomSheetDialogTheme">@style/BottomSheetDialogTheme</item>
         <item name="bottomNavigationStyle">@style/BottomNavigationStyle</item>
         <item name="snackbarStyle">@style/Widget.MaterialComponents.Snackbar</item>
+        <item name="appBarLayoutStyle">@style/DefaultAppBarLayout</item>
+        <!-- Common status bar foreground for avoiding edge to edge overlay -->
+        <item name="statusBarForeground">@color/color_primary</item>
+    </style>
+
+    <style name="DefaultAppBarLayout" parent="Widget.Design.AppBarLayout">
+        <!-- Used for status bar color in case edge to edge -->
+        <item name="android:background">@color/color_primary</item>
     </style>
 
     <style name="AppTheme" parent="LightAppTheme" />
@@ -58,6 +66,7 @@
 
     <!-- Set the rounded drawable as background to your bottom sheet -->
     <style name="BottomSheet" parent="@style/Widget.Design.BottomSheet.Modal">
+        <!--<item name="paddingBottomSystemWindowInsets">true</item>-->
         <item name="android:background">@drawable/bg_bottom_sheet</item>
     </style>
 

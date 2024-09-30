@@ -18,7 +18,7 @@ class BiometricSetUpPresenter @Inject constructor(private val interactor: Biomet
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
         viewState.setWindowBackground()
-        viewState.setupNavigationBar(android.R.color.transparent, true)
+        viewState.setupNavigationBar(true)
         viewState.setupToolbar(
             false,
             android.R.color.white,

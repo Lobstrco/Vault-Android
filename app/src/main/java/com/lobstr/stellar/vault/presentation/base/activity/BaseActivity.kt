@@ -2,14 +2,18 @@ package com.lobstr.stellar.vault.presentation.base.activity
 
 import android.app.PendingIntent
 import android.content.Intent
+import android.graphics.Color
 import android.graphics.drawable.Drawable
 import android.nfc.NfcAdapter
+import android.os.Build
 import android.os.Bundle
 import android.text.TextUtils
 import android.view.View
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.SystemBarStyle
 import androidx.activity.addCallback
+import androidx.activity.enableEdgeToEdge
 import androidx.annotation.ColorRes
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
@@ -84,10 +88,24 @@ abstract class BaseActivity : BaseMvpAppCompatActivity(),
     // ===========================================================
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.O) {
+            enableEdgeToEdge(
+                statusBarStyle = SystemBarStyle.dark(
+                    Color.TRANSPARENT
+                ),
+                navigationBarStyle = SystemBarStyle.light(
+                    Color.TRANSPARENT,
+                    Color.TRANSPARENT
+                )
+            )
+        }
+
         super.onCreate(savedInstanceState)
         setContentView(getContentView())
         findViews()
         setupToolbar()
+
+        handleInsets()
 
         nfcAdapter = NfcAdapter.getDefaultAdapter(this)
         PendingIntent.FLAG_CANCEL_CURRENT
@@ -101,6 +119,10 @@ abstract class BaseActivity : BaseMvpAppCompatActivity(),
         onBackPressedDispatcher.addCallback(this) {
             checkBackPress(supportFragmentManager.findFragmentById(R.id.flContainer))
         }
+    }
+
+    open fun handleInsets() {
+        // Override to apply Activity insets (or apply common logic).
     }
 
     override fun onNewIntent(intent: Intent?) {

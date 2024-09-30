@@ -1,9 +1,9 @@
 package com.lobstr.stellar.vault.data.error
 
 import com.lobstr.stellar.vault.domain.error.RxErrorRepository
-import com.soneso.stellarmnemonics.Wallet
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.core.Single.fromCallable
+import network.lightsail.Mnemonic
 import org.stellar.sdk.AbstractTransaction
 import org.stellar.sdk.AccountConverter
 import org.stellar.sdk.KeyPair
@@ -16,9 +16,12 @@ class RxErrorRepositoryImpl(
     private val network: Network
 ) : RxErrorRepository {
 
-    override fun createKeyPair(mnemonics: CharArray, index: Int): Single<KeyPair> {
+    override fun createKeyPair(mnemonics: String, index: Int): Single<KeyPair> {
         return fromCallable(Callable {
-            return@Callable Wallet.createKeyPair(mnemonics, null, index)
+            return@Callable KeyPair.fromBip39Seed(
+                Mnemonic.toSeed(mnemonics),
+                index
+            )
         })
     }
 

@@ -5,9 +5,9 @@ import io.reactivex.rxjava3.core.Single
 
 interface RecoverKeyInteractor {
 
-    fun createAndSaveSecretKey(mnemonics: CharArray): Single<String>
+    fun createAndSaveSecretKey(mnemonics: String): Single<String>
 
-    fun createAdditionalPublicKey(mnemonics: CharArray, position: Int): Single<String>
+    fun createAdditionalPublicKey(mnemonics: String, position: Int): Single<String>
 
     fun checkAccount(publicKey: String): Single<List<Account>>
 

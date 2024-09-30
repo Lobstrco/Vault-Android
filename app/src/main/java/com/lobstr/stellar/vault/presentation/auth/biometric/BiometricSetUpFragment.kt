@@ -10,7 +10,6 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.addCallback
-import androidx.annotation.ColorRes
 import androidx.core.content.ContextCompat
 import androidx.core.view.WindowCompat
 import com.lobstr.stellar.vault.R
@@ -117,10 +116,9 @@ class BiometricSetUpFragment : BaseFragment(), BiometricSetUpView, BiometricList
      * Set navigation buttons color.
      * @param light when true - gray, else - white.
      */
-    override fun setupNavigationBar(@ColorRes color: Int, light: Boolean) {
+    override fun setupNavigationBar(light: Boolean) {
         if (Build.VERSION.SDK_INT > Build.VERSION_CODES.O) {
             requireActivity().window?.let {
-                it.navigationBarColor = ContextCompat.getColor(requireContext(), color)
                 WindowCompat.getInsetsController(it, it.decorView).isAppearanceLightNavigationBars = light
             }
         }

@@ -20,8 +20,8 @@ android {
         applicationId = "com.lobstr.stellar.vault"
         minSdk = 22
         targetSdk = 34
-        versionCode = 45
-        versionName = "3.3.1"
+        versionCode = 46
+        versionName = "3.3.2"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
         // Used for setup Bundle name.
@@ -156,9 +156,9 @@ android {
     namespace = "com.lobstr.stellar.vault"
 }
 
-val desugar_jdk_libs by extra("2.0.4")
+val desugar_jdk_libs by extra("2.1.2")
 val dagger by extra("2.28.1")
-val rx_java by extra("3.1.8")
+val rx_java by extra("3.1.9")
 val rx_android by extra("3.0.2")
 val retrofit by extra("2.11.0")
 val okhttp_bom by extra("4.12.0")
@@ -166,29 +166,30 @@ val moxy by extra("2.2.2")
 val glide by extra("4.16.0")
 val material by extra("1.12.0")
 val browser by extra("1.8.0")
-val firebase_bom by extra("33.1.0")
+val firebase_bom by extra("33.3.0")
 val javax_annotation by extra("10.0-b28")
 val play_service_base by extra("18.5.0")
 val androidx_core by extra("1.13.1")
 val androidx_appcompat by extra("1.7.0")
-val fragment by extra("1.8.0")
+val fragment by extra("1.8.3")
 val recyclerview by extra("1.3.2")
 val androidx_preference by extra("1.2.1")
 val androidx_constraintlayout by extra("2.1.4")
 val androidx_legacy_support_v4 by extra("1.0.0")
 val junit by extra("4.13.2")
-val runner by extra("1.1.5")
-val espresso_core by extra("3.5.1")
+val runner by extra("1.2.1")
+val espresso_core by extra("3.6.1")
 val stellar_sdk by extra("0.44.0")
-val work_manager by extra("2.9.0")
+val mnemonic by extra("0.1.1")
+val work_manager by extra("2.9.1")
 val biometric by extra("1.1.0")
-val lottieVersion by extra("6.4.1")
+val lottieVersion by extra("6.5.2")
 val qr_gen by extra("2.6.0")
 val viewpager2 by extra("1.1.0")
 val tangem by extra("3.7.2")
-val hilt by extra("2.51.1")
+val hilt by extra("2.52")
 val androidx_hilt by extra("1.2.0")
-val lifecycle by extra("2.8.2")
+val lifecycle by extra("2.8.6")
 val timber by extra("5.0.1")
 
 dependencies {
@@ -203,6 +204,7 @@ dependencies {
 
     implementation("network.lightsail:stellar-sdk:$stellar_sdk")
     implementation("network.lightsail:stellar-sdk-android-spi:$stellar_sdk")
+    implementation("network.lightsail:mnemonic4j:$mnemonic")
 
     // Android.
     implementation("com.google.android.gms:play-services-base:$play_service_base")
@@ -270,8 +272,4 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-process:$lifecycle")
     // Annotation processor (if using Java8, use the following instead of lifecycle-compiler).
     implementation("androidx.lifecycle:lifecycle-common:$lifecycle")
-}
-// NOTE Used for Dagger Hilt.
-kapt {
-    correctErrorTypes = true
 }

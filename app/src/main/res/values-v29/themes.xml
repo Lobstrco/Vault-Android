@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="AppTheme" parent="LightAppTheme">
+        <item name="android:navigationBarColor">@android:color/transparent</item>
+        <item name="android:enforceNavigationBarContrast">false</item>
+    </style>
+
+    <style name="SplashTheme" parent="BaseSplashTheme">
+        <item name="android:enforceNavigationBarContrast">false</item>
+    </style>
+
+</resources>

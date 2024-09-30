@@ -7,7 +7,7 @@ import org.stellar.sdk.KeyPair
 
 interface RxErrorRepository {
 
-    fun createKeyPair(mnemonics: CharArray, index: Int): Single<KeyPair>
+    fun createKeyPair(mnemonics: String, index: Int): Single<KeyPair>
 
     fun signTransaction(signer: KeyPair, envelopXdr: String): Single<AbstractTransaction>
 }

@@ -4,5 +4,5 @@ import io.reactivex.rxjava3.core.Single
 
 
 interface ConfirmMnemonicsInteractor {
-    fun createAndSaveSecretKey(mnemonics: CharArray) : Single<String>
+    fun createAndSaveSecretKey(mnemonics: String) : Single<String>
 }
