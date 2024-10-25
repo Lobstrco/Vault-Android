@@ -3,7 +3,12 @@ package com.lobstr.stellar.vault.presentation.dagger.module
 import android.content.Context
 import android.content.SharedPreferences
 import androidx.preference.PreferenceManager
+import com.lobstr.stellar.tsmapper.data.asset.AssetMapper
 import com.lobstr.stellar.tsmapper.data.claim.ClaimantMapper
+import com.lobstr.stellar.tsmapper.data.soroban.host_function.InvokeHostFunctionMapper
+import com.lobstr.stellar.tsmapper.data.ledger.LedgerMapper
+import com.lobstr.stellar.tsmapper.data.soroban.contract.ScMapper
+import com.lobstr.stellar.tsmapper.data.soroban.data.SorobanDataMapper
 import com.lobstr.stellar.tsmapper.data.transaction.TsMapper
 import com.lobstr.stellar.tsmapper.data.transaction.result.TsResultMapper
 import com.lobstr.stellar.vault.data.error.ExceptionMapper
@@ -45,7 +50,16 @@ object AppModule{
     @Provides
     @Singleton
     fun provideTsMapper(network: Network, accountConverter: AccountConverter): TsMapper {
-        return TsMapper(network, accountConverter, ClaimantMapper())
+        val assetMapper = AssetMapper()
+        val scMapper = ScMapper()
+        return TsMapper(
+            network,
+            accountConverter,
+            ClaimantMapper(),
+            assetMapper,
+            InvokeHostFunctionMapper(assetMapper, scMapper),
+            SorobanDataMapper(LedgerMapper(assetMapper, scMapper))
+        )
     }
 
     @Provides

@@ -12,6 +12,9 @@ interface OperationDetailsView : MvpView {
     fun setupToolbarTitle(@StringRes titleRes: Int)
 
     @AddToEndSingle
+    fun showContent(show: Boolean)
+
+    @AddToEndSingle
     fun initRecycledView(fields: MutableList<OperationField>)
 
     @AddToEndSingle

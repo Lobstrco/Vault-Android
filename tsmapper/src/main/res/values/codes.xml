@@ -23,6 +23,7 @@
     <string name="tx_bad_sponsorship">Sponsorship not confirmed.</string>
     <string name="tx_bad_min_sec_age_or_gap">minSeqAge or minSeqLedgerGap conditions not met.</string>
     <string name="tx_malformed">Precondition is invalid.</string>
+    <string name="tx_soroban_invalid">Soroban-specific preconditions were not met.</string>
 
     <!-- Operations -->
 
@@ -203,5 +204,22 @@
     <string name="liquidity_pool_withdraw_underfunded">Insufficient balance for the pool shares.</string>
     <string name="liquidity_pool_withdraw_line_full">The withdrawal would exceed the trustline limit for one of the assets.</string>
     <string name="liquidity_pool_withdraw_under_minimum">Unable to withdraw enough to satisfy the minimum price.</string>
+
+    <!-- Extend Footprint TTL -->
+    <string name="extend_footprint_ttl_malformed">One or more of the inputs to the operation was malformed.</string>
+    <string name="extend_footprint_ttl_resource_limit_exceeded">The TTL extension could not be completed within the currently configured resource constraints of the network.</string>
+    <string name="extend_footprint_ttl_insufficient_refundable_fee">The refundable Soroban fee provided was not sufficient to pay for TTL extension of the specified ledger entries.</string>
+
+    <!-- Restore Footprint -->
+    <string name="restore_footprint_malformed">One or more of the inputs to the operation was malformed.</string>
+    <string name="restore_footprint_resource_limit_exceeded">The archive restoration could not be completed within the currently configured resource constraints of the network.</string>
+    <string name="restore_footprint_insufficient_refundable_fee">The refundable Soroban fee provided was not sufficient to pay for archive restoration of the specified ledger entries.</string>
+
+    <!-- Invoke Host Function -->
+    <string name="invoke_host_function_malformed">One or more of the inputs to the operation was malformed.</string>
+    <string name="invoke_host_function_trapped">The function invocation trapped in the Soroban runtime.</string>
+    <string name="invoke_host_function_resource_limit_exceeded">The function invocation could not complete within the currently configured resource constraints of the network.</string>
+    <string name="invoke_host_function_entry_archived">A ledger entry required for this function\'s footprint is in an archived state, and must be restored.</string>
+    <string name="invoke_host_function_insufficient_refundable_fee">The refundable Soroban fee provided was not sufficient to pay for the compute resources required by this function invocation.</string>
 
 </resources>

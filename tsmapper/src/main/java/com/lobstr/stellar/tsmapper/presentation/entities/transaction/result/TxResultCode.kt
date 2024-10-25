@@ -28,6 +28,7 @@ data class TxResultCode(val code: String, var message: String) : Parcelable {
         const val TX_BAD_MIN_SEQ_AGE_OR_GAP = "tx_bad_min_seq_age_or_gap"
         const val TX_MALFORMED = "tx_malformed"
         const val TX_UNDEFINED = "tx_undefined"
+        const val TX_SOROBAN_INVALID = "tx_soroban_invalid"
     }
 
     companion object {
@@ -105,6 +106,10 @@ data class TxResultCode(val code: String, var message: String) : Parcelable {
                     Code.TX_MALFORMED,
                     c.getString(R.string.tx_malformed)
                 )
+                TransactionResultCode.txSOROBAN_INVALID -> TxResultCode(
+                    Code.TX_SOROBAN_INVALID,
+                    c.getString(R.string.tx_soroban_invalid)
+                )
                 else -> TxResultCode(Code.TX_UNDEFINED, c.getString(R.string.tx_undefined))
             }
 
@@ -180,6 +185,10 @@ data class TxResultCode(val code: String, var message: String) : Parcelable {
             Code.TX_MALFORMED -> TxResultCode(
                 code,
                 c.getString(R.string.tx_malformed)
+            )
+            Code.TX_SOROBAN_INVALID -> TxResultCode(
+                code,
+                c.getString(R.string.tx_soroban_invalid)
             )
             else -> TxResultCode(Code.TX_UNDEFINED, c.getString(R.string.tx_undefined))
         }

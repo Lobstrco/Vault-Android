@@ -2,6 +2,7 @@ package com.lobstr.stellar.vault.domain.transaction_details
 
 import com.lobstr.stellar.vault.presentation.entities.account.Account
 import com.lobstr.stellar.vault.presentation.entities.account.AccountResult
+import com.lobstr.stellar.vault.presentation.entities.stellar.SorobanBalanceData
 import com.lobstr.stellar.vault.presentation.entities.stellar.SubmitTransactionResult
 import com.lobstr.stellar.vault.presentation.entities.transaction.TransactionItem
 import io.reactivex.rxjava3.core.Single
@@ -53,4 +54,9 @@ interface TransactionDetailsInteractor {
     fun createTransaction(transaction: String): Single<AbstractTransaction>
 
     fun getCountSequenceNumber(sourceAccount: String, sequenceNumber: Long): Single<Long>
+
+    fun getSorobanBalanceChanges(
+        sourceAccount: String,
+        envelopXdr: String
+    ): Single<List<SorobanBalanceData>>
 }

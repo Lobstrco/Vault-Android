@@ -28,7 +28,6 @@
     <string name="save_action">Save</string>
     <string name="update_action">Update</string>
     <string name="learn_more_action">Learn More</string>
-    <string name="buy_now_action">Buy Now</string>
 
     <!-- Common Labels/Titles -->
     <string name="or_label">or</string>

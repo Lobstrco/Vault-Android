@@ -5,7 +5,6 @@ import com.lobstr.stellar.tsmapper.presentation.entities.transaction.operation.C
 import com.lobstr.stellar.tsmapper.presentation.entities.transaction.operation.Operation
 import com.lobstr.stellar.tsmapper.presentation.entities.transaction.operation.OperationField
 import com.lobstr.stellar.tsmapper.presentation.util.TsUtil
-import com.lobstr.stellar.vault.R
 import com.lobstr.stellar.vault.data.error.exeption.HttpNotFoundException
 import com.lobstr.stellar.vault.data.error.exeption.NoInternetConnectionException
 import com.lobstr.stellar.vault.domain.operation_details.OperationDetailsInteractor
@@ -52,6 +51,11 @@ class OperationDetailsPresenter @Inject constructor(
         // Apply Operation Source Account in cases when Transaction Source Account doesn't equal it.
         if (transactionSourceAccount != operation.sourceAccount) {
             operation.applyOperationSourceAccountTo(AppUtil.getAppContext(),operationFields)
+        }
+
+        if (operationFields.isEmpty()) {
+            viewState.showContent(false)
+            return
         }
 
         viewState.initRecycledView(operationFields)
@@ -189,7 +193,7 @@ class OperationDetailsPresenter @Inject constructor(
      */
     fun operationItemClicked(key: String, value: String?, tag: Any?) {
         when {
-            AppUtil.isValidAccount(tag as? String) -> tag?.let {viewState.showEditAccountDialog(tag as String) }
+            AppUtil.isValidAccount(tag as? String) -> tag?.also { viewState.showEditAccountDialog(it as String) }
             tag is Asset -> viewState.showAssetInfoDialog(tag.assetCode, tag.assetIssuer)
         }
     }

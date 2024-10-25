@@ -1,6 +1,8 @@
 package com.lobstr.stellar.vault.presentation.home.transactions.details
 
 import android.text.format.DateFormat
+import com.lobstr.stellar.tsmapper.presentation.entities.transaction.asset.Asset
+import com.lobstr.stellar.tsmapper.presentation.entities.transaction.operation.Operation
 import com.lobstr.stellar.tsmapper.presentation.entities.transaction.operation.OperationField
 import com.lobstr.stellar.tsmapper.presentation.entities.transaction.result.TxResultCode.Code.TX_BAD_AUTH
 import com.lobstr.stellar.tsmapper.presentation.entities.transaction.result.TxResultCode.Code.TX_FAILED
@@ -12,6 +14,7 @@ import com.lobstr.stellar.tsmapper.presentation.entities.transaction.result.oper
 import com.lobstr.stellar.tsmapper.presentation.util.Constant.TransactionType.AUTH_CHALLENGE
 import com.lobstr.stellar.tsmapper.presentation.util.Constant.Util.UNDEFINED_VALUE
 import com.lobstr.stellar.tsmapper.presentation.util.Constant.XLM
+import com.lobstr.stellar.tsmapper.presentation.util.Constant.XLM.BASE_FEE
 import com.lobstr.stellar.tsmapper.presentation.util.Constant.XLM.STROOP
 import com.lobstr.stellar.tsmapper.presentation.util.TsUtil
 import com.lobstr.stellar.vault.R
@@ -29,6 +32,7 @@ import com.lobstr.stellar.vault.presentation.dialog.alert.base.AlertDialogFragme
 import com.lobstr.stellar.vault.presentation.entities.account.Account
 import com.lobstr.stellar.vault.presentation.entities.account.AccountResult
 import com.lobstr.stellar.vault.presentation.entities.error.Error
+import com.lobstr.stellar.vault.presentation.entities.stellar.SorobanBalanceData
 import com.lobstr.stellar.vault.presentation.entities.tangem.TangemInfo
 import com.lobstr.stellar.vault.presentation.entities.transaction.TransactionItem
 import com.lobstr.stellar.vault.presentation.util.AppUtil
@@ -72,6 +76,8 @@ class TransactionDetailsPresenter @Inject constructor(
     // (Count To Confirm, Signed Count, is Vault Account Pending).
     private var signersCountInfo: Triple<Int, Int, Boolean>? = null
 
+    var sorobanBalanceChanges: List<SorobanBalanceData>? = null
+
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
 
@@ -85,6 +91,7 @@ class TransactionDetailsPresenter @Inject constructor(
         viewState.initSignersRecycledView()
         prepareUiAndOperationsList()
         getTransactionSigners()
+        getSorobanBalanceChanges()
     }
 
     private fun registerEventProvider() {
@@ -96,6 +103,7 @@ class TransactionDetailsPresenter @Inject constructor(
                         Network.Type.CONNECTED -> {
                             if (needCheckConnectionState) {
                                 getTransactionSigners()
+                                getSorobanBalanceChanges()
                             }
                             cancelNetworkWorker(false)
                         }
@@ -204,6 +212,30 @@ class TransactionDetailsPresenter @Inject constructor(
                     }
                 })
         )
+    }
+
+    fun getSorobanBalanceChanges() {
+        if (sorobanBalanceChanges == null && transactionItem.transaction.isSorobanTransaction()) {
+            unsubscribeOnDestroy(
+                interactor.getSorobanBalanceChanges(
+                    transactionItem.transaction.sourceAccount,
+                    transactionItem.transaction.envelopXdr
+                )
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe({
+                        sorobanBalanceChanges = it
+                        checkTransactionInfo()
+                    },{
+                        when (it) {
+                            is NoInternetConnectionException -> {
+                                viewState.showMessage(it.details)
+                                handleNoInternetConnection()
+                            }
+                        }
+                    })
+            )
+        }
     }
 
     /**
@@ -389,6 +421,20 @@ class TransactionDetailsPresenter @Inject constructor(
 
                 val memo = transactionItem.transaction.memo
                 val sourceAccount = transactionItem.transaction.sourceAccount
+                val minFee = transactionItem.transaction.let {
+                    val min = BigDecimal(BASE_FEE).multiply(BigDecimal(it.operations.size))
+                    val resourceFee = if (it.isSorobanTransaction()) {
+                        try {
+                            BigDecimal(it.sorobanData?.resourceFee ?: "0").multiply(BigDecimal(STROOP))
+                        } catch (exc: NumberFormatException) {
+                            BigDecimal.ZERO
+                        }
+                    } else {
+                        BigDecimal.ZERO
+                    }
+
+                    min.plus(resourceFee)
+                }
                 val fee = transactionItem.transaction.fee
                 val addedAt = transactionItem.addedAt
 
@@ -406,11 +452,17 @@ class TransactionDetailsPresenter @Inject constructor(
                         interactor.getAccountNames()[sourceAccount]?.plus(" (${AppUtil.ellipsizeStrInMiddle(sourceAccount, PK_TRUNCATE_COUNT_SHORT)})") ?: sourceAccount, sourceAccount))
                 }
 
+                if (minFee.compareTo(BigDecimal.ZERO) != 0) {
+                    fields.add(OperationField(AppUtil.getString(com.lobstr.stellar.tsmapper.R.string.transaction_min_fee),
+                        "${TsUtil.getAmountRepresentationFromStr(minFee.stripTrailingZeros().toPlainString())} ${XLM.CODE}"
+                    ))
+                }
+
                 if (fee != 0L) {
                     fields.add(OperationField(AppUtil.getString(com.lobstr.stellar.tsmapper.R.string.transaction_fee), fee.let {
                         "${TsUtil.getAmountRepresentationFromStr(
                             BigDecimal(it).multiply(BigDecimal(STROOP)).stripTrailingZeros().toPlainString()
-                        )} ${XLM.code}"
+                        )} ${XLM.CODE}"
                     }))
                 }
 
@@ -421,6 +473,8 @@ class TransactionDetailsPresenter @Inject constructor(
                     )))
                 }
 
+                createSorobanBalanceFields(fields)
+
                 return@fromCallable fields
             }
                 .subscribeOn(Schedulers.io())
@@ -430,6 +484,34 @@ class TransactionDetailsPresenter @Inject constructor(
                     Throwable::printStackTrace
                 )
         )
+    }
+
+    private fun createSorobanBalanceFields(fields: MutableList<OperationField>): MutableList<OperationField> {
+        sorobanBalanceChanges?.forEach {
+            Operation.mapAssetFields(
+                AppUtil.getAppContext(),
+                fields,
+                it.asset
+            )
+
+            val amount = it.afterAmount.toBigDecimal().subtract(it.beforeAmount.toBigDecimal())
+            val amountSrt = TsUtil.getAmountRepresentationFromStr(amount.stripTrailingZeros().toPlainString())
+
+            fields.add(
+                OperationField(
+                    AppUtil.getString(com.lobstr.stellar.tsmapper.R.string.op_field_balance_change),
+                    "${if (amount.compareTo(BigDecimal.ZERO) >= 0) "+" else ""}$amountSrt${
+                        if (it.asset.assetCode.isNotEmpty()) " ${
+                            AppUtil.ellipsizeEndStr(
+                                it.asset.assetCode,
+                                6
+                            )
+                        }" else ""
+                    }"
+                )
+            )
+        }
+        return fields
     }
 
     fun handleTangemInfo(tangemInfo: TangemInfo?) {
@@ -923,6 +1005,11 @@ class TransactionDetailsPresenter @Inject constructor(
      * @param tag Additional info for field (e.g. Asset for asset code)
      */
     fun additionalInfoValueClicked(key: String, value: String?, tag: Any?) {
-        tag?.let { if (AppUtil.isValidAccount(tag as? String)) viewState.showEditAccountDialog(tag as String) }
+        tag?.also {
+            when {
+                AppUtil.isValidAccount(it as? String) -> viewState.showEditAccountDialog(it as String)
+                it is Asset -> viewState.showAssetInfoDialog(it.assetCode, it.assetIssuer)
+            }
+        }
     }
 }

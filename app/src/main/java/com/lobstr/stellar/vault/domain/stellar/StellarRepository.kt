@@ -3,6 +3,7 @@ package com.lobstr.stellar.vault.domain.stellar
 import com.lobstr.stellar.vault.presentation.entities.account.Account
 import com.lobstr.stellar.vault.presentation.entities.account.AccountResult
 import com.lobstr.stellar.vault.presentation.entities.mnemonic.MnemonicItem
+import com.lobstr.stellar.vault.presentation.entities.stellar.SorobanBalanceData
 import com.lobstr.stellar.vault.presentation.entities.stellar.SubmitTransactionResult
 import com.tangem.operations.sign.SignResponse
 import io.reactivex.rxjava3.core.Single
@@ -64,4 +65,9 @@ interface StellarRepository {
         order: RequestBuilder.Order = RequestBuilder.Order.ASC,
         limit: Int? = 1
     ): Single<List<Account>>
+
+    fun getSorobanBalanceChanges(
+        sourceAccount: String,
+        envelopXdr: String
+    ): Single<List<SorobanBalanceData>>
 }

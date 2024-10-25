@@ -6,6 +6,7 @@ import com.lobstr.stellar.vault.data.error.entity.Error
 import com.lobstr.stellar.vault.data.error.exeption.*
 import com.lobstr.stellar.vault.data.error.util.ApiErrorUtil
 import com.lobstr.stellar.vault.data.error.util.HttpStatusCodes
+import com.lobstr.stellar.vault.presentation.util.NetworkUtil
 import org.stellar.sdk.requests.ErrorResponse
 import retrofit2.HttpException
 import java.io.IOException
@@ -44,8 +45,12 @@ class ExceptionMapper(private val context: Context) {
             // A network or conversion error happened.
             return when (throwable) {
                 is SocketTimeoutException -> HttpTimeOutException(context.getString(R.string.api_error_connection_timeout))
-                is UnknownHostException -> NoInternetConnectionException(context.getString(R.string.api_error_connection_error))
-                is ConnectException -> NoInternetConnectionException(context.getString(R.string.api_error_connection_error))
+                is UnknownHostException, is ConnectException -> {
+                    if (NetworkUtil.isConnected(context = context)) DefaultException(
+                        throwable.message ?: ""
+                    )
+                    else NoInternetConnectionException(context.getString(R.string.api_error_connection_error))
+                }
                 else -> DefaultException(throwable.message!!)
             }
         }

@@ -101,7 +101,6 @@ class TangemSetupFragment : BaseFragment(), TangemView, TangemDialogFragment.OnT
         binding.apply {
             btnScan.setSafeOnClickListener { mPresenter.scanClicked() }
             btnLearnMore.setSafeOnClickListener { mPresenter.learnMoreClicked() }
-            btnBuyNow.setSafeOnClickListener { mPresenter.buyNowClicked() }
         }
     }
 

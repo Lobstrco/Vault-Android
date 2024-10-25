@@ -206,7 +206,6 @@ object Constant {
         const val USER_ICON_LINK = "https://id.lobstr.co/"
         const val SUPPORT_MAIL = "support@lobstr.co"
         const val SIGNER_CARD_INFO = "https://vault.lobstr.co/card"
-        const val SIGNER_CARD_BUY = "https://lobstr.tangem.com"
     }
 
     object TangemErrorMod {

@@ -5,7 +5,6 @@ import com.lobstr.stellar.vault.domain.tangem.setup.TangemSetupInteractor
 import com.lobstr.stellar.vault.presentation.entities.tangem.TangemInfo
 import com.lobstr.stellar.vault.presentation.util.AppUtil
 import com.lobstr.stellar.vault.presentation.util.Constant
-import com.lobstr.stellar.vault.presentation.util.Constant.Social.SIGNER_CARD_BUY
 import com.lobstr.stellar.vault.presentation.util.Constant.Social.SIGNER_CARD_INFO
 import com.lobstr.stellar.vault.presentation.util.manager.SupportManager.ArticleID.SIGNING_WITH_VAULT_SIGNER_CARD
 import moxy.MvpPresenter
@@ -35,10 +34,6 @@ class TangemSetupPresenter @Inject constructor(private val interactor: TangemSet
 
     fun learnMoreClicked() {
         viewState.showWebPage(SIGNER_CARD_INFO)
-    }
-
-    fun buyNowClicked() {
-        viewState.showWebPage(SIGNER_CARD_BUY)
     }
 
     fun infoClicked() {

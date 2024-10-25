@@ -34,6 +34,7 @@ import com.lobstr.stellar.vault.R
 import com.lobstr.stellar.vault.presentation.application.LVApplication
 import com.lobstr.stellar.vault.presentation.util.Constant.Symbol.NULL
 import org.stellar.sdk.AccountConverter
+import org.stellar.sdk.StrKey
 import org.stellar.sdk.xdr.CryptoKeyType
 import org.stellar.sdk.xdr.MuxedAccount
 import timber.log.Timber
@@ -231,6 +232,12 @@ object AppUtil {
         } else str.substring(0, count) + "…" + str.substring(str.length - count)
     }
 
+    fun ellipsizeEndStr(str: String?, count: Int): String? {
+        return if (str.isNullOrEmpty() || count >= str.length) {
+            str
+        } else str.substring(0, count).plus("…")
+    }
+
     fun getConfigType(value: Boolean): Byte = if (value) {
         Constant.ConfigType.YES
     } else {
@@ -311,6 +318,13 @@ object AppUtil {
      */
     fun isValidAccount(account: String?, enableMuxed: Boolean = true): Boolean {
         return encodeMuxedAccount(account, enableMuxed) != null
+    }
+
+    fun isValidContractID(contractID: String?): Boolean = try {
+        StrKey.decodeContract(contractID)
+        true
+    } catch (exc: Exception) {
+        false
     }
 
     fun createUserIconLink(key: String?): String {

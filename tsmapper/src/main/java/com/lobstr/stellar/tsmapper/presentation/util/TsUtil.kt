@@ -11,6 +11,9 @@ import com.lobstr.stellar.tsmapper.presentation.entities.transaction.operation.c
 import com.lobstr.stellar.tsmapper.presentation.entities.transaction.operation.liquidity_pool.LiquidityPoolDepositOperation
 import com.lobstr.stellar.tsmapper.presentation.entities.transaction.operation.liquidity_pool.LiquidityPoolWithdrawOperation
 import com.lobstr.stellar.tsmapper.presentation.entities.transaction.operation.offer.*
+import com.lobstr.stellar.tsmapper.presentation.entities.transaction.operation.soroban.ExtendFootprintTTLOperation
+import com.lobstr.stellar.tsmapper.presentation.entities.transaction.operation.soroban.InvokeHostFunctionOperation
+import com.lobstr.stellar.tsmapper.presentation.entities.transaction.operation.soroban.RestoreFootprintOperation
 import com.lobstr.stellar.tsmapper.presentation.entities.transaction.operation.sponsoring.*
 import com.lobstr.stellar.tsmapper.presentation.entities.transaction.result.operation.OpResultCode
 import com.lobstr.stellar.tsmapper.presentation.util.Constant.Util.UNDEFINED_VALUE
@@ -60,6 +63,10 @@ object TsUtil {
             is ClawbackOperation -> R.string.operation_name_clawback
             is LiquidityPoolDepositOperation -> R.string.operation_name_liquidity_pool_deposit
             is LiquidityPoolWithdrawOperation -> R.string.operation_name_liquidity_pool_withdraw
+            is ExtendFootprintTTLOperation -> R.string.operation_name_extend_footprint_ttl
+            is RestoreFootprintOperation -> R.string.operation_name_restore_footprint
+            is InvokeHostFunctionOperation -> R.string.operation_name_invoke_host_function
+
             else -> UNDEFINED_VALUE
         }
     }
@@ -95,6 +102,10 @@ object TsUtil {
                 is OpResultCode.TsClawbackResultCode -> R.string.operation_name_clawback
                 is OpResultCode.TsLiquidityPoolDepositResultCode -> R.string.operation_name_liquidity_pool_deposit
                 is OpResultCode.TsLiquidityPoolWithdrawResultCode -> R.string.operation_name_liquidity_pool_withdraw
+                is OpResultCode.TsExtendFootprintTTLResultCode -> R.string.operation_name_extend_footprint_ttl
+                is OpResultCode.TsRestoreFootprintResultCode -> R.string.operation_name_restore_footprint
+                is OpResultCode.TsInvokeHostFunctionResultCode -> R.string.operation_name_invoke_host_function
+
                 else -> UNDEFINED_VALUE
             }
         }

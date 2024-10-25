@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.lobstr.stellar.tsmapper.presentation.entities.transaction.operation.OperationField
 import com.lobstr.stellar.vault.databinding.FragmentOperationDetailsBinding
@@ -81,11 +82,17 @@ class OperationDetailsFragment : BaseFragment(),
         saveActionBarTitle(titleRes)
     }
 
+    override fun showContent(show: Boolean) {
+        binding.root.isVisible = show
+    }
+
     override fun initRecycledView(fields: MutableList<OperationField>) {
-        binding.rvOperationDetails.layoutManager = LinearLayoutManager(activity)
-        binding.rvOperationDetails.itemAnimator = null
-        binding.rvOperationDetails.isNestedScrollingEnabled = false
-        binding.rvOperationDetails.adapter = OperationDetailsAdapter(fields, mPresenter::operationItemClicked)
+        binding.rvOperationDetails.apply {
+            layoutManager = LinearLayoutManager(activity)
+            itemAnimator = null
+            isNestedScrollingEnabled = false
+            adapter = OperationDetailsAdapter(fields, mPresenter::operationItemClicked)
+        }
     }
 
     override fun notifyAdapter() {

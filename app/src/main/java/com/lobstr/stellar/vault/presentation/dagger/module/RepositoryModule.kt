@@ -1,6 +1,7 @@
 package com.lobstr.stellar.vault.presentation.dagger.module
 
 import android.content.Context
+import com.lobstr.stellar.tsmapper.data.asset.AssetMapper
 import com.lobstr.stellar.tsmapper.data.transaction.TsMapper
 import com.lobstr.stellar.tsmapper.data.transaction.result.TsResultMapper
 import com.lobstr.stellar.vault.data.account.AccountEntityMapper
@@ -64,6 +65,7 @@ object RepositoryModule {
             server,
             MnemonicsMapper(),
             SubmitTransactionMapper(tsResultMapper),
+            AssetMapper(),
             rxErrorUtils
         )
     }

@@ -23,28 +23,94 @@ open class Operation(open val sourceAccount: String?) : Parcelable {
         return fields
     }
 
-    fun mapAssetFields(context: Context, fields: MutableList<OperationField>, asset: Asset, amountFormatter: (value: String) -> String): MutableList<OperationField>  {
-        when (asset) {
-            is LiquidityPoolShareChangeTrustAsset -> {
-                if (asset.liquidityPoolID != null) fields.add(OperationField(context.getString(R.string.op_field_liquidity_pool_id), asset.liquidityPoolID))
-                fields.add(OperationField(context.getString(R.string.op_field_asset_a), asset.assetA.assetCode, asset))
-                if (asset.assetA.assetIssuer != null) fields.add(OperationField(context.getString(R.string.op_field_asset_a_issuer), asset.assetA.assetIssuer, asset.assetA.assetIssuer))
-                fields.add(OperationField(context.getString(R.string.op_field_asset_b), asset.assetB.assetCode, asset))
-                if (asset.assetB.assetIssuer != null) fields.add(OperationField(context.getString(R.string.op_field_asset_b_issuer), asset.assetB.assetIssuer, asset.assetB.assetIssuer))
-                fields.add(OperationField(context.getString(R.string.op_field_fee), amountFormatter(asset.fee.toString())))
-            }
-            is LiquidityPoolShareTrustLineAsset -> {
-                fields.add(OperationField(context.getString(R.string.op_field_liquidity_pool_id), asset.liquidityPoolID))
-            }
-            is PoolShareAsset -> {
-                fields.add(OperationField(context.getString(R.string.op_field_liquidity_pool_id), asset.poolID))
-            }
-            else -> {
-                fields.add(OperationField(context.getString(R.string.op_field_asset), asset.assetCode, asset))
-                if (asset.assetIssuer != null) fields.add(OperationField(context.getString(R.string.op_field_asset_issuer), asset.assetIssuer, asset.assetIssuer))
-            }
-        }
+    companion object {
+        fun mapAssetFields(
+            context: Context,
+            fields: MutableList<OperationField>,
+            asset: Asset,
+            amountFormatter: (value: String) -> String = ::getAmountRepresentationFromStr
+        ): MutableList<OperationField> {
+            when (asset) {
+                is LiquidityPoolShareChangeTrustAsset -> {
+                    if (asset.liquidityPoolID != null) fields.add(
+                        OperationField(
+                            context.getString(R.string.op_field_liquidity_pool_id),
+                            asset.liquidityPoolID
+                        )
+                    )
+                    fields.add(
+                        OperationField(
+                            context.getString(R.string.op_field_asset_a),
+                            asset.assetA.assetCode,
+                            asset
+                        )
+                    )
+                    if (asset.assetA.assetIssuer != null) fields.add(
+                        OperationField(
+                            context.getString(
+                                R.string.op_field_asset_a_issuer
+                            ), asset.assetA.assetIssuer, asset.assetA.assetIssuer
+                        )
+                    )
+                    fields.add(
+                        OperationField(
+                            context.getString(R.string.op_field_asset_b),
+                            asset.assetB.assetCode,
+                            asset
+                        )
+                    )
+                    if (asset.assetB.assetIssuer != null) fields.add(
+                        OperationField(
+                            context.getString(
+                                R.string.op_field_asset_b_issuer
+                            ), asset.assetB.assetIssuer, asset.assetB.assetIssuer
+                        )
+                    )
+                    fields.add(
+                        OperationField(
+                            context.getString(R.string.op_field_fee),
+                            amountFormatter(asset.fee.toString())
+                        )
+                    )
+                }
 
-        return fields
+                is LiquidityPoolShareTrustLineAsset -> {
+                    fields.add(
+                        OperationField(
+                            context.getString(R.string.op_field_liquidity_pool_id),
+                            asset.liquidityPoolID
+                        )
+                    )
+                }
+
+                is PoolShareAsset -> {
+                    fields.add(
+                        OperationField(
+                            context.getString(R.string.op_field_liquidity_pool_id),
+                            asset.poolID
+                        )
+                    )
+                }
+
+                else -> {
+                    fields.add(
+                        OperationField(
+                            context.getString(R.string.op_field_asset),
+                            asset.assetCode,
+                            asset
+                        )
+                    )
+                    if (asset.assetIssuer != null) fields.add(
+                        OperationField(
+                            context.getString(R.string.op_field_asset_issuer),
+                            asset.assetIssuer,
+                            asset.assetIssuer
+                        )
+                    )
+                }
+            }
+
+            return fields
+        }
     }
 }

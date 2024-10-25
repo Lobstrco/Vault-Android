@@ -127,6 +127,15 @@ sealed class OpResultCode(open var code: String, open var message: String) : Par
 
         // Liquidity Pool Withdraw
         const val OP_UNDER_MINIMUM = "op_under_minimum"
+
+        // Extend Footprint TTL
+        const val OP_RESOURCE_LIMIT_EXCEEDED = "op_resource_limit_exceeded"
+
+        const val OP_INSUFFICIENT_REFUNDABLE_FEE = "op_insufficient_refundable_fee"
+
+        // Invoke Host Function
+        const val OP_FUNCTION_TRAPPED = "op_function_trapped"
+        const val OP_ENTRY_ARCHIVED = "op_entry_archived"
     }
 
     @Parcelize
@@ -1192,6 +1201,104 @@ sealed class OpResultCode(open var code: String, open var message: String) : Par
                         c.getString(R.string.liquidity_pool_withdraw_under_minimum)
                     )
                     else -> TsLiquidityPoolWithdrawResultCode(
+                        Code.OP_UNDEFINED,
+                        c.getString(R.string.op_undefined)
+                    )
+                }
+        }
+    }
+
+    @Parcelize
+    data class TsExtendFootprintTTLResultCode(override var code: String, override var message: String) :
+        OpResultCode(code, message), Parcelable {
+        companion object {
+            fun create(c: Context, code: ExtendFootprintTTLResultCode?): TsExtendFootprintTTLResultCode =
+                when (code) {
+                    ExtendFootprintTTLResultCode.EXTEND_FOOTPRINT_TTL_SUCCESS-> TsExtendFootprintTTLResultCode(
+                        Code.OP_SUCCESS,
+                        c.getString(R.string.op_success)
+                    )
+                    ExtendFootprintTTLResultCode.EXTEND_FOOTPRINT_TTL_MALFORMED -> TsExtendFootprintTTLResultCode(
+                        Code.OP_MALFORMED,
+                        c.getString(R.string.extend_footprint_ttl_malformed)
+                    )
+                    ExtendFootprintTTLResultCode.EXTEND_FOOTPRINT_TTL_RESOURCE_LIMIT_EXCEEDED -> TsExtendFootprintTTLResultCode(
+                        Code.OP_RESOURCE_LIMIT_EXCEEDED,
+                        c.getString(R.string.extend_footprint_ttl_resource_limit_exceeded)
+                    )
+                    ExtendFootprintTTLResultCode.EXTEND_FOOTPRINT_TTL_INSUFFICIENT_REFUNDABLE_FEE -> TsExtendFootprintTTLResultCode(
+                        Code.OP_INSUFFICIENT_REFUNDABLE_FEE,
+                        c.getString(R.string.extend_footprint_ttl_insufficient_refundable_fee)
+                    )
+                    else -> TsExtendFootprintTTLResultCode(
+                        Code.OP_UNDEFINED,
+                        c.getString(R.string.op_undefined)
+                    )
+                }
+        }
+    }
+
+    @Parcelize
+    data class TsRestoreFootprintResultCode(override var code: String, override var message: String) :
+        OpResultCode(code, message), Parcelable {
+        companion object {
+            fun create(c: Context, code: RestoreFootprintResultCode?): TsRestoreFootprintResultCode =
+                when (code) {
+                    RestoreFootprintResultCode.RESTORE_FOOTPRINT_SUCCESS -> TsRestoreFootprintResultCode(
+                        Code.OP_SUCCESS,
+                        c.getString(R.string.op_success)
+                    )
+                    RestoreFootprintResultCode.RESTORE_FOOTPRINT_MALFORMED -> TsRestoreFootprintResultCode(
+                        Code.OP_MALFORMED,
+                        c.getString(R.string.restore_footprint_malformed)
+                    )
+                    RestoreFootprintResultCode.RESTORE_FOOTPRINT_RESOURCE_LIMIT_EXCEEDED -> TsRestoreFootprintResultCode(
+                        Code.OP_RESOURCE_LIMIT_EXCEEDED,
+                        c.getString(R.string.restore_footprint_resource_limit_exceeded)
+                    )
+                    RestoreFootprintResultCode.RESTORE_FOOTPRINT_INSUFFICIENT_REFUNDABLE_FEE -> TsRestoreFootprintResultCode(
+                        Code.OP_INSUFFICIENT_REFUNDABLE_FEE,
+                        c.getString(R.string.restore_footprint_insufficient_refundable_fee)
+                    )
+                    else -> TsRestoreFootprintResultCode(
+                        Code.OP_UNDEFINED,
+                        c.getString(R.string.op_undefined)
+                    )
+                }
+        }
+    }
+
+    @Parcelize
+    data class TsInvokeHostFunctionResultCode(override var code: String, override var message: String) :
+        OpResultCode(code, message), Parcelable {
+        companion object {
+            fun create(c: Context, code: InvokeHostFunctionResultCode?): TsInvokeHostFunctionResultCode =
+                when (code) {
+                    InvokeHostFunctionResultCode.INVOKE_HOST_FUNCTION_SUCCESS -> TsInvokeHostFunctionResultCode(
+                        Code.OP_SUCCESS,
+                        c.getString(R.string.op_success)
+                    )
+                    InvokeHostFunctionResultCode.INVOKE_HOST_FUNCTION_MALFORMED -> TsInvokeHostFunctionResultCode(
+                        Code.OP_MALFORMED,
+                        c.getString(R.string.invoke_host_function_malformed)
+                    )
+                    InvokeHostFunctionResultCode.INVOKE_HOST_FUNCTION_TRAPPED -> TsInvokeHostFunctionResultCode(
+                        Code.OP_FUNCTION_TRAPPED,
+                        c.getString(R.string.invoke_host_function_trapped)
+                    )
+                    InvokeHostFunctionResultCode.INVOKE_HOST_FUNCTION_RESOURCE_LIMIT_EXCEEDED -> TsInvokeHostFunctionResultCode(
+                        Code.OP_RESOURCE_LIMIT_EXCEEDED,
+                        c.getString(R.string.invoke_host_function_resource_limit_exceeded)
+                    )
+                    InvokeHostFunctionResultCode.INVOKE_HOST_FUNCTION_ENTRY_ARCHIVED -> TsInvokeHostFunctionResultCode(
+                        Code.OP_ENTRY_ARCHIVED,
+                        c.getString(R.string.invoke_host_function_entry_archived)
+                    )
+                    InvokeHostFunctionResultCode.INVOKE_HOST_FUNCTION_INSUFFICIENT_REFUNDABLE_FEE -> TsInvokeHostFunctionResultCode(
+                        Code.OP_INSUFFICIENT_REFUNDABLE_FEE,
+                        c.getString(R.string.invoke_host_function_insufficient_refundable_fee)
+                    )
+                    else -> TsInvokeHostFunctionResultCode(
                         Code.OP_UNDEFINED,
                         c.getString(R.string.op_undefined)
                     )

@@ -103,5 +103,8 @@ interface TransactionDetailsView : MvpView {
     fun showEditAccountDialog(address: String)
 
     @Skip
+    fun showAssetInfoDialog(code: String, issuer: String?)
+
+    @Skip
     fun showTangemScreen(tangemInfo: TangemInfo)
 }

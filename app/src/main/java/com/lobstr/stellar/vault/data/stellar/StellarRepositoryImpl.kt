@@ -1,5 +1,7 @@
 package com.lobstr.stellar.vault.data.stellar
 
+import com.lobstr.stellar.tsmapper.data.asset.AssetMapper
+import com.lobstr.stellar.tsmapper.presentation.entities.transaction.asset.Asset
 import com.lobstr.stellar.vault.data.mnemonic.MnemonicsMapper
 import com.lobstr.stellar.vault.domain.error.RxErrorUtils
 import com.lobstr.stellar.vault.domain.stellar.StellarRepository
@@ -7,6 +9,7 @@ import com.lobstr.stellar.vault.presentation.entities.account.Account
 import com.lobstr.stellar.vault.presentation.entities.account.AccountResult
 import com.lobstr.stellar.vault.presentation.entities.account.Thresholds
 import com.lobstr.stellar.vault.presentation.entities.mnemonic.MnemonicItem
+import com.lobstr.stellar.vault.presentation.entities.stellar.SorobanBalanceData
 import com.lobstr.stellar.vault.presentation.entities.stellar.SubmitTransactionResult
 import com.lobstr.stellar.vault.presentation.util.AppUtil
 import com.tangem.operations.sign.SignResponse
@@ -18,7 +21,10 @@ import org.stellar.sdk.requests.AccountsRequestBuilder
 import org.stellar.sdk.requests.RequestBuilder
 import org.stellar.sdk.responses.AccountResponse
 import org.stellar.sdk.xdr.DecoratedSignature
+import org.stellar.sdk.xdr.LedgerEntry
+import org.stellar.sdk.xdr.LedgerKey
 import org.stellar.sdk.xdr.Signature
+import java.math.MathContext
 import java.util.concurrent.Callable
 
 class StellarRepositoryImpl(
@@ -27,6 +33,7 @@ class StellarRepositoryImpl(
     private val server: Server,
     private val mnemonicsMapper: MnemonicsMapper,
     private val submitMapper: SubmitTransactionMapper,
+    private val assetMapper: AssetMapper,
     private val rxErrorUtils: RxErrorUtils
 ) : StellarRepository {
 
@@ -251,4 +258,90 @@ class StellarRepositoryImpl(
             limit?.let { limit(limit) }
         }
     }
+
+    override fun getSorobanBalanceChanges(
+        sourceAccount: String,
+        envelopXdr: String
+    ): Single<List<SorobanBalanceData>> =
+        fromCallable(Callable {
+            val transaction = when (val tx =
+                AbstractTransaction.fromEnvelopeXdr(accountConverter, envelopXdr, network)) {
+                is FeeBumpTransaction -> tx.innerTransaction
+                is Transaction -> tx
+                else -> throw Exception("Unknown transaction type.")
+            }
+
+            if (!transaction.isSorobanTransaction) return@Callable emptyList()
+
+            val sim = SorobanServer("https://soroban-rpc.ultrastellar.com").simulateTransaction(transaction)
+            val changes = sim.stateChanges
+            if (changes.isNullOrEmpty()) return@Callable emptyList()
+
+            val assetChanges: MutableList<SorobanBalanceData> = mutableListOf()
+            val oneXLM = "10000000".toBigDecimal()
+
+            for (entryDiff in changes) {
+                val ledgerKey = LedgerKey.fromXdrBase64(entryDiff.key)
+
+                when {
+                    ledgerKey?.account != null -> {
+                        val beforeAccount =
+                            LedgerEntry.fromXdrBase64(entryDiff.before)?.data?.account
+                        val afterAccount = LedgerEntry.fromXdrBase64(entryDiff.after)?.data?.account
+
+                        if (StrKey.encodeEd25519PublicKey(ledgerKey.account.accountID.accountID.ed25519.uint256) != sourceAccount)
+                            continue
+
+                        if ((beforeAccount?.balance?.int64 ?: 0L) == (afterAccount?.balance?.int64
+                                ?: 0L)
+                        ) continue
+
+                        val beforeAmount = ((beforeAccount?.balance?.int64 ?: 0L).toBigDecimal()
+                            .divide(oneXLM, MathContext.DECIMAL128)).stripTrailingZeros().toPlainString()
+                        val afterAmount = ((afterAccount?.balance?.int64 ?: 0L).toBigDecimal()
+                            .divide(oneXLM, MathContext.DECIMAL128)).stripTrailingZeros().toPlainString()
+
+                        assetChanges.add(
+                            SorobanBalanceData(
+                                Asset("XLM", "native"),
+                                beforeAmount,
+                                afterAmount
+                            )
+                        )
+                    }
+
+                    ledgerKey?.trustLine != null -> {
+                        val beforeAccount =
+                            LedgerEntry.fromXdrBase64(entryDiff.before)?.data?.trustLine
+                        val afterAccount =
+                            LedgerEntry.fromXdrBase64(entryDiff.after)?.data?.trustLine
+
+                        if (StrKey.encodeEd25519PublicKey(ledgerKey.trustLine.accountID.accountID.ed25519.uint256) != sourceAccount)
+                            continue
+
+                        if ((beforeAccount?.balance?.int64 ?: 0L) == (afterAccount?.balance?.int64
+                                ?: 0L)
+                        ) continue
+
+                        val asset = ledgerKey.trustLine?.asset
+
+                        if (asset == null) continue
+
+                        val beforeAmount = ((beforeAccount?.balance?.int64 ?: 0L).toBigDecimal()
+                            .divide(oneXLM, MathContext.DECIMAL128)).stripTrailingZeros().toPlainString()
+                        val afterAmount = ((afterAccount?.balance?.int64 ?: 0L).toBigDecimal()
+                            .divide(oneXLM, MathContext.DECIMAL128)).stripTrailingZeros().toPlainString()
+                        assetChanges.add(
+                            SorobanBalanceData(
+                                assetMapper.mapTrustLineAsset(asset),
+                                beforeAmount,
+                                afterAmount
+                            )
+                        )
+                    }
+                }
+            }
+
+            return@Callable assetChanges
+        })
 }

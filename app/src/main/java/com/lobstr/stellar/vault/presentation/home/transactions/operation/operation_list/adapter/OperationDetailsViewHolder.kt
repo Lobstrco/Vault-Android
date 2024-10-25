@@ -5,7 +5,6 @@ import android.util.TypedValue
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.lobstr.stellar.tsmapper.presentation.entities.transaction.asset.Asset
-import com.lobstr.stellar.vault.R
 import com.lobstr.stellar.vault.databinding.AdapterItemOperationDetailsBinding
 import com.lobstr.stellar.vault.presentation.util.AppUtil
 import com.lobstr.stellar.vault.presentation.util.Constant
@@ -18,8 +17,12 @@ class OperationDetailsViewHolder(
 
     fun bind(name: String, value: String?, tag: Any?) {
         binding.apply {
-            val isPublicKeyField = AppUtil.isValidAccount(tag as? String)
-            val isAssetTag = tag is Asset
+            val isPublicKeyTag by lazy { AppUtil.isValidAccount(tag as? String) }
+            val isPublicKeyValue by lazy { AppUtil.isValidAccount(value) }
+            val isAssetTag by lazy {  tag is Asset }
+            val isContractIdValue by lazy { AppUtil.isValidContractID(value) }
+
+            val isSelectableField = isPublicKeyTag || isAssetTag
 
             tvFieldName.text = name
             tvFieldValue.ellipsize = when (name) {
@@ -27,7 +30,7 @@ class OperationDetailsViewHolder(
                 else -> {
                     when {
                         // Case for the Account Name.
-                        isPublicKeyField && !AppUtil.isValidAccount(value) -> TextUtils.TruncateAt.END
+                        isPublicKeyTag && !isPublicKeyValue -> TextUtils.TruncateAt.END
                         else -> TextUtils.TruncateAt.MIDDLE
                     }
                 }
@@ -35,14 +38,13 @@ class OperationDetailsViewHolder(
             tvFieldValue.isSingleLine = value?.contains("\n") != true
 
             tvFieldValue.text =
-                if (AppUtil.isValidAccount(value)) {
+                if (isPublicKeyValue || isContractIdValue) {
                     AppUtil.ellipsizeStrInMiddle(value, Constant.Util.PK_TRUNCATE_COUNT)
                 } else {
                     value
                 }
 
-            // Set selectable foreground for public key values and asset code (fields with Asset tag).
-            root.foreground = if(isPublicKeyField || isAssetTag) {
+            root.foreground = if (isSelectableField) {
                 val outValue = TypedValue()
                 if (itemView.context.theme.resolveAttribute(android.R.attr.selectableItemBackground, outValue, true)) {
                     ContextCompat.getDrawable(itemView.context, outValue.resourceId)
@@ -53,8 +55,7 @@ class OperationDetailsViewHolder(
                 null
             }
 
-            // Set Click Listener only for public key values and asset code (fields with Asset tag).
-            if(isPublicKeyField || isAssetTag) {
+            if (isSelectableField) {
                 itemView.setSafeOnClickListener {
                     val position = this@OperationDetailsViewHolder.bindingAdapterPosition
                     if (position == RecyclerView.NO_POSITION) {

@@ -8,6 +8,7 @@
     <string name="transaction_memo_hash">hash</string>
     <string name="transaction_memo_return">return</string>
     <string name="transaction_source_account">Transaction Source</string>
+    <string name="transaction_min_fee">Min Network Fee</string>
     <string name="transaction_fee">Max Network Fee</string>
 
     <!-- Stellar Operations -->
@@ -45,6 +46,11 @@
     <string name="operation_name_set_trustline_flags">Set Trustline Flags</string>
     <string name="operation_name_liquidity_pool_deposit">Liquidity Pool Deposit</string>
     <string name="operation_name_liquidity_pool_withdraw">Liquidity Pool Withdraw</string>
+
+    <string name="operation_name_extend_footprint_ttl">Extend Footprint TTL</string>
+    <string name="operation_name_restore_footprint">Restore Footprint</string>
+    <string name="operation_name_invoke_host_function">Invoke Host Function</string>
+
     <string name="operation_name_unknown">Unknown</string>
 
     <!-- Operation fields -->
@@ -106,6 +112,59 @@
     <string name="op_field_asset_b">Asset B</string>
     <string name="op_field_asset_b_issuer">Asset B Issuer</string>
     <string name="op_field_fee">Fee</string>
+    <string name="op_field_balance_change">Balance Change</string>
+
+    <string name="op_field_extend_to">Extend time to live by</string>
+    <plurals name="op_value_ledger">
+        <item quantity="one">ledger</item>
+        <item quantity="other">ledgers</item>
+    </plurals>
+    <string name="op_field_function">Function</string>
+    <string name="op_field_salt">Salt</string>
+    <string name="op_field_wasm">Wasm</string>
+    <string name="op_field_wasm_hash">Wasm Hash</string>
+    <string name="op_field_contract_id">Contract ID</string>
+    <string name="op_value_invoke_contract">Invoke Contract</string>
+    <string name="op_value_create_contract">Create Contract</string>
+    <string name="op_value_upload_contract_wasm">Upload Contract Wasm</string>
+
+    <string name="op_field_function_name">Function Name</string>
+    <string name="op_field_contract_id_preimage">Contract ID Preimage</string>
+    <string name="op_value_from_address">From Address</string>
+    <string name="op_value_from_asset">From Asset</string>
+
+    <string name="op_field_bool">Bool</string>
+    <string name="op_field_time_point">TimePoint</string>
+    <string name="op_field_duration">Duration</string>
+    <string name="op_field_symbol">Symbol</string>
+    <string name="op_field_string">String</string>
+    <string name="op_field_bytes">Bytes</string>
+    <string name="op_field_i128">I128</string>
+    <string name="op_field_u32">U32</string>
+    <string name="op_field_i32">I32</string>
+    <string name="op_field_u64">U64</string>
+    <string name="op_field_i64">I64</string>
+    <string name="op_field_u128">U128</string>
+    <string name="op_field_u256">U256</string>
+    <string name="op_field_i256">I256</string>
+    <string name="op_field_nonce_key">Nonce Key</string>
+    <string name="op_field_error">Error</string>
+
+    <string name="op_field_contract_executable">Contract Executable</string>
+    <string name="op_value_wasm">Wasm</string>
+    <string name="op_value_stellar_asset">Stellar Asset</string>
+
+    <string name="op_field_credentials">Credentials</string>
+    <string name="op_value_source_account">Source Account</string>
+    <string name="op_value_address">Address</string>
+    <string name="op_field_nonce">Nonce</string>
+    <string name="op_field_signature_expiration_ledger">Signature Expiration Ledger</string>
+    <string name="op_field_sub_invocations_size">Sub Invocations Size</string>
+
+    <string name="op_field_authorized_function">Authorized Function</string>
+    <string name="op_value_contract">Contract</string>
+    <string name="op_value_create_contract_host">Create Contract Host</string>
+
 
     <!-- Claimant Intervals fields -->
     <string name="op_field_claim_conditions">Claim conditions</string>
@@ -114,4 +173,8 @@
     <string name="op_field_claim_between">Claim between</string>
     <string name="op_field_claim_not_set">Claim now</string>
     <string name="op_field_claim_non_claimable">Can\'t be claimed</string>
+
+    <!-- Util -->
+    <string name="key_arg_postfix" translatable="false">(arg %d)</string>
+    <string name="key_array_arg_postfix" translatable="false">(array, arg %d)</string>
 </resources>

@@ -8,10 +8,10 @@ import com.lobstr.stellar.vault.domain.stellar.StellarRepository
 import com.lobstr.stellar.vault.domain.transaction.TransactionRepository
 import com.lobstr.stellar.vault.presentation.entities.account.Account
 import com.lobstr.stellar.vault.presentation.entities.account.AccountResult
+import com.lobstr.stellar.vault.presentation.entities.stellar.SorobanBalanceData
 import com.lobstr.stellar.vault.presentation.entities.stellar.SubmitTransactionResult
 import com.lobstr.stellar.vault.presentation.entities.transaction.TransactionItem
 import com.lobstr.stellar.vault.presentation.util.AppUtil
-import com.lobstr.stellar.vault.presentation.util.Constant
 import com.lobstr.stellar.vault.presentation.util.Constant.Transaction.IMPORT_XDR
 import com.lobstr.stellar.vault.presentation.util.PrefsUtil
 import io.reactivex.rxjava3.core.Single
@@ -177,4 +177,11 @@ class TransactionDetailsInteractorImpl(
             sequenceNumber
         )
     }
+
+    override fun getSorobanBalanceChanges(
+        sourceAccount: String,
+        envelopXdr: String
+    ): Single<List<SorobanBalanceData>> = stellarRepository.getSorobanBalanceChanges(
+        sourceAccount, envelopXdr
+    )
 }

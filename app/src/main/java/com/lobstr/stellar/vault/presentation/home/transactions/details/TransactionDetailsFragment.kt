@@ -20,6 +20,7 @@ import androidx.core.view.isVisible
 import androidx.core.view.updatePadding
 import androidx.fragment.app.setFragmentResult
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.lobstr.stellar.tsmapper.presentation.entities.transaction.asset.Asset
 import com.lobstr.stellar.tsmapper.presentation.entities.transaction.operation.Operation
 import com.lobstr.stellar.tsmapper.presentation.entities.transaction.operation.OperationField
 import com.lobstr.stellar.vault.R
@@ -37,6 +38,7 @@ import com.lobstr.stellar.vault.presentation.entities.tangem.TangemInfo
 import com.lobstr.stellar.vault.presentation.entities.transaction.TransactionItem
 import com.lobstr.stellar.vault.presentation.home.settings.signed_accounts.adapter.AccountAdapter
 import com.lobstr.stellar.vault.presentation.home.settings.signed_accounts.edit_account.EditAccountDialogFragment
+import com.lobstr.stellar.vault.presentation.home.transactions.operation.asset_info.AssetInfoDialogFragment
 import com.lobstr.stellar.vault.presentation.home.transactions.operation.operation_details.OperationDetailsFragment
 import com.lobstr.stellar.vault.presentation.home.transactions.operation.operation_list.OperationListFragment
 import com.lobstr.stellar.vault.presentation.home.transactions.submit_error.ErrorFragment
@@ -282,10 +284,13 @@ class TransactionDetailsFragment : BaseFragment(), TransactionDetailsView,
             val fieldName = root.findViewById<TextView>(R.id.tvFieldName)
             val fieldValue = root.findViewById<TextView>(R.id.tvFieldValue)
 
-            val isPublicKeyField = AppUtil.isValidAccount(tag as? String)
+            val isPublicKeyTag by lazy { AppUtil.isValidAccount(tag as? String) }
+            val isPublicKeyValue by lazy { AppUtil.isValidAccount(value) }
+            val isAssetTag by lazy {  tag is Asset }
 
-            // Set selectable foreground for public key fields.
-            (root.findViewById<FrameLayout>(R.id.flContent))?.foreground = if(isPublicKeyField) {
+            val isSelectableField = isPublicKeyTag || isAssetTag
+
+            (root.findViewById<FrameLayout>(R.id.flContent))?.foreground = if (isSelectableField) {
                 val outValue = TypedValue()
                 if (requireContext().theme.resolveAttribute(android.R.attr.selectableItemBackground, outValue, true)) {
                     ContextCompat.getDrawable(requireContext(), outValue.resourceId)
@@ -302,21 +307,20 @@ class TransactionDetailsFragment : BaseFragment(), TransactionDetailsView,
                 else -> {
                     when {
                         // Case for the Account Name.
-                        isPublicKeyField && !AppUtil.isValidAccount(value) -> TextUtils.TruncateAt.END
+                        isPublicKeyTag && !isPublicKeyValue -> TextUtils.TruncateAt.END
                         else -> TextUtils.TruncateAt.MIDDLE
                     }
                 }
             }
 
             fieldName.text = key
-            fieldValue.text = if (AppUtil.isValidAccount(value)) {
+            fieldValue.text = if (isPublicKeyValue) {
                 AppUtil.ellipsizeStrInMiddle(value, Constant.Util.PK_TRUNCATE_COUNT)
             } else {
                 value
             }
 
-            // Set Click Listener only for public key values.
-            if(isPublicKeyField) {
+            if (isSelectableField) {
                 root.setSafeOnClickListener {
                     mPresenter.additionalInfoValueClicked(key, value, tag)
                 }
@@ -503,6 +507,15 @@ class TransactionDetailsFragment : BaseFragment(), TransactionDetailsView,
                 Constant.Bundle.BUNDLE_MANAGE_ACCOUNT_NAME to true
             )
         }.show(childFragmentManager, AlertDialogFragment.DialogFragmentIdentifier.EDIT_ACCOUNT)
+    }
+
+    override fun showAssetInfoDialog(code: String, issuer: String?) {
+        AssetInfoDialogFragment().apply {
+            arguments = Bundle().apply {
+                putString(Constant.Bundle.BUNDLE_ASSET_CODE, code)
+                putString(Constant.Bundle.BUNDLE_ASSET_ISSUER, issuer)
+            }
+        }.show(childFragmentManager, AlertDialogFragment.DialogFragmentIdentifier.ASSET_INFO)
     }
 
     override fun onSetAccountNickNameClicked(publicKey: String) {
