@@ -12,7 +12,7 @@ sealed class LedgerKey : Parcelable {
 
     data class Account(val accountId: String) : LedgerKey()
 
-    data class Trustline(val accountId: String, val asset: Asset) : LedgerKey()
+    data class Trustline(val accountId: String, val asset: Asset.TrustLineAsset) : LedgerKey()
 
     data class Offer(val sellerID: String, val offerID: String) : LedgerKey()
 

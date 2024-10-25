@@ -9,7 +9,7 @@ import kotlinx.parcelize.Parcelize
 data class PaymentOperation(
     override val sourceAccount: String?,
     val destination: String,
-    val asset: Asset,
+    val asset: Asset.CanonicalAsset,
     val amount: String
 ) : Operation(sourceAccount) {
 

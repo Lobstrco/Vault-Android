@@ -20,7 +20,6 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
-import org.stellar.sdk.AccountConverter
 import org.stellar.sdk.Network
 import javax.inject.Singleton
 
@@ -49,12 +48,11 @@ object AppModule{
 
     @Provides
     @Singleton
-    fun provideTsMapper(network: Network, accountConverter: AccountConverter): TsMapper {
+    fun provideTsMapper(network: Network): TsMapper {
         val assetMapper = AssetMapper()
         val scMapper = ScMapper()
         return TsMapper(
             network,
-            accountConverter,
             ClaimantMapper(),
             assetMapper,
             InvokeHostFunctionMapper(assetMapper, scMapper),

@@ -13,7 +13,7 @@ import org.stellar.sdk.xdr.TransactionResult
 
 class TsResultMapper(private val c: Context) {
 
-    fun mapTransactionResult(result: TransactionResult?, txResultCode: String?, opResultCodes: ArrayList<String>?): TsResult {
+    fun mapTransactionResult(result: TransactionResult?, txResultCode: String?, opResultCodes: List<String>?): TsResult {
         val txResCode = createTxResultCode(result, txResultCode)
         val opResCodes = if (txResCode.code == TX_FAILED) createOpResultCodes(result, opResultCodes) else listOf()
 
@@ -27,11 +27,11 @@ class TsResultMapper(private val c: Context) {
         return if (result != null) TxResultCode.create(c, result.result?.discriminant) else TxResultCode.create(c, txResultCode)
     }
 
-    fun createOpResultCodes(result: TransactionResult?, opResultCodes: ArrayList<String>?): List<OpResultCode> {
+    fun createOpResultCodes(result: TransactionResult?, opResultCodes: List<String>?): List<OpResultCode> {
         return if (result != null) mapOperationResults(result.result?.results) else mapOpResultCodes(opResultCodes)
     }
 
-    fun mapOpResultCodes(codes: ArrayList<String>?): List<OpResultCode> {
+    fun mapOpResultCodes(codes: List<String>?): List<OpResultCode> {
         return mutableListOf<OpResultCode>().apply {
             codes?.forEach {
                 add(OpResultCode.TsDefaultResultCode.create(c, it))

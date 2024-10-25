@@ -10,7 +10,7 @@ import kotlinx.parcelize.Parcelize
 data class CreateAccountOperation(
     override val sourceAccount: String?,
     val destination: String,
-    val asset: Asset,
+    val asset: Asset.CanonicalAsset,
     val startingBalance: String
 ) : Operation(sourceAccount), Parcelable {
 

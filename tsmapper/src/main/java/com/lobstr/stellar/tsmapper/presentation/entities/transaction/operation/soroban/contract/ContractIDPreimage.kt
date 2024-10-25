@@ -9,5 +9,5 @@ import kotlinx.parcelize.Parcelize
 sealed class ContractIDPreimage : Parcelable {
     data class FromAddress(val address: SCAddress, val salt: String) : ContractIDPreimage()
 
-    data class FromAsset(val asset: Asset) : ContractIDPreimage()
+    data class FromAsset(val asset: Asset.CanonicalAsset) : ContractIDPreimage()
 }

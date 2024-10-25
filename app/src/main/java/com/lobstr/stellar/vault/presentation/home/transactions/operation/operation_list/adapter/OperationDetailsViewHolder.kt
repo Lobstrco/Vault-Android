@@ -19,7 +19,7 @@ class OperationDetailsViewHolder(
         binding.apply {
             val isPublicKeyTag by lazy { AppUtil.isValidAccount(tag as? String) }
             val isPublicKeyValue by lazy { AppUtil.isValidAccount(value) }
-            val isAssetTag by lazy {  tag is Asset }
+            val isAssetTag by lazy {  tag is Asset.CanonicalAsset }
             val isContractIdValue by lazy { AppUtil.isValidContractID(value) }
 
             val isSelectableField = isPublicKeyTag || isAssetTag

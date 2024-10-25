@@ -1,31 +1,36 @@
 package com.lobstr.stellar.vault.data.stellar
 
 import com.lobstr.stellar.tsmapper.data.transaction.result.TsResultMapper
-import com.lobstr.stellar.tsmapper.presentation.util.createXdrDataInputStream
 import com.lobstr.stellar.vault.presentation.entities.stellar.SubmitTransactionResult
-import org.stellar.sdk.responses.SubmitTransactionResponse
-import org.stellar.sdk.xdr.TransactionResult
-import java.io.IOException
-import kotlin.jvm.optionals.getOrNull
+import org.stellar.sdk.exception.UnexpectedException
+import org.stellar.sdk.responses.Problem.Extras
+import org.stellar.sdk.responses.TransactionResponse
 
 class SubmitTransactionMapper(private val tsResultMapper: TsResultMapper) {
-    @OptIn(ExperimentalStdlibApi::class)
-    fun transformSubmitResponse(response: SubmitTransactionResponse): SubmitTransactionResult {
+    fun transformSubmitResponse(response: TransactionResponse): SubmitTransactionResult {
         return SubmitTransactionResult(
-            response.envelopeXdr.getOrNull(),
+            response.envelopeXdr,
             response.hash,
             tsResultMapper.mapTransactionResult(
-                response.decodedTransactionResult.getOrNull() ?: response.resultXdr.getOrNull()?.run {
-                    createXdrDataInputStream()?.run {
-                        try {
-                            TransactionResult.decode(this)
-                        } catch (exc: IOException) {
-                            null
-                        }
-                    }
+                try {
+                    response.parseResultXdr()
+                } catch (exc: UnexpectedException) {
+                    null
                 },
-                response.extras?.resultCodes?.transactionResultCode,
-                response.extras?.resultCodes?.operationsResultCodes
+                null,
+                null
+            )
+        )
+    }
+
+    fun transformSubmitResponse(extras: Extras): SubmitTransactionResult {
+        return SubmitTransactionResult(
+            extras.envelopeXdr,
+            extras.hash,
+            tsResultMapper.mapTransactionResult(
+                null,
+                extras.resultCodes.transactionResultCode,
+                extras.resultCodes.operationsResultCodes
             )
         )
     }

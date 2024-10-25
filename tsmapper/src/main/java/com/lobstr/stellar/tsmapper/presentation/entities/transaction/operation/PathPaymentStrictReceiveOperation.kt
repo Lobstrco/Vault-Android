@@ -9,12 +9,12 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 data class PathPaymentStrictReceiveOperation(
     override val sourceAccount: String?,
-    val sendAsset: Asset,
+    val sendAsset: Asset.CanonicalAsset,
     val sendMax: String,
     val destination: String,
-    val destAsset: Asset,
+    val destAsset: Asset.CanonicalAsset,
     val destAmount: String,
-    val path: List<Asset>?
+    val path: List<Asset.CanonicalAsset>?
 ) : Operation(sourceAccount), Parcelable {
 
     override fun getFields(context: Context, amountFormatter: (value: String) -> String): MutableList<OperationField> {

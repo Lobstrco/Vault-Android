@@ -194,7 +194,7 @@ class OperationDetailsPresenter @Inject constructor(
     fun operationItemClicked(key: String, value: String?, tag: Any?) {
         when {
             AppUtil.isValidAccount(tag as? String) -> tag?.also { viewState.showEditAccountDialog(it as String) }
-            tag is Asset -> viewState.showAssetInfoDialog(tag.assetCode, tag.assetIssuer)
+            tag is Asset.CanonicalAsset -> viewState.showAssetInfoDialog(tag.assetCode, tag.assetIssuer)
         }
     }
 }

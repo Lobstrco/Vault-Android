@@ -7,7 +7,9 @@ import com.lobstr.stellar.vault.data.error.exeption.*
 import com.lobstr.stellar.vault.data.error.util.ApiErrorUtil
 import com.lobstr.stellar.vault.data.error.util.HttpStatusCodes
 import com.lobstr.stellar.vault.presentation.util.NetworkUtil
-import org.stellar.sdk.requests.ErrorResponse
+import org.stellar.sdk.exception.BadResponseException
+import org.stellar.sdk.exception.ConnectionErrorException
+import org.stellar.sdk.exception.SdkException
 import retrofit2.HttpException
 import java.io.IOException
 import java.net.ConnectException
@@ -16,7 +18,7 @@ import java.net.UnknownHostException
 
 class ExceptionMapper(private val context: Context) {
 
-    fun transformHttpToDomain(throwable: Throwable): DefaultException {
+    fun transformHttpToDomain(throwable: Throwable): Exception {
         // For case when called several transformHttpToDomain() in Observable/Single/Completable.
         if (throwable is DefaultException) {
             return throwable
@@ -55,8 +57,8 @@ class ExceptionMapper(private val context: Context) {
             }
         }
 
-        if(throwable is ErrorResponse) {
-            return handleStellarSdkErrorResponse(throwable)
+        if (throwable is SdkException) {
+            return handleStellarSdkException(throwable)
         }
 
         return DefaultException(throwable.message!!)
@@ -88,19 +90,23 @@ class ExceptionMapper(private val context: Context) {
         }
     }
 
-    private fun handleStellarSdkErrorResponse(throwable: ErrorResponse) : DefaultException {
-        val error = ApiErrorUtil.convertJsonToPojo(
-            Error::class.java,
-            throwable.body
-        )
-
-        when {
-            throwable.code == HttpStatusCodes.HTTP_NOT_FOUND -> return HttpNotFoundException(context.getString(R.string.api_error_not_found))
-            throwable.code == HttpStatusCodes.HTTP_FORBIDDEN -> return getHttpForbiddenError(error, throwable)
-            throwable.code == HttpStatusCodes.HTTP_BAD_REQUEST -> return getHttpBadRequestError(error, throwable)
-            throwable.code >= HttpStatusCodes.HTTP_INTERNAL_ERROR -> return InternalException(context.getString(R.string.api_error_internal_default))
+    private fun handleStellarSdkException(throwable: SdkException): Exception = when (throwable) {
+        is ConnectionErrorException -> {
+            if (NetworkUtil.isConnected(context = context)) DefaultException(
+                throwable.message ?: ""
+            )
+            else NoInternetConnectionException(context.getString(R.string.api_error_connection_error))
+        }
+        is BadResponseException -> InternalException(context.getString(R.string.api_error_internal_default)) // 5xx
+        is org.stellar.sdk.exception.BadRequestException -> {
+            when (throwable.code) {
+                HttpStatusCodes.HTTP_NOT_FOUND -> HttpNotFoundException(
+                    throwable.problem?.detail ?: context.getString(R.string.api_error_not_found)
+                )
+                else -> BadRequestException(throwable.problem?.detail ?: throwable.message ?: "")
+            }
         }
 
-        return DefaultException(throwable.message!!)
+        else -> throwable
     }
 }

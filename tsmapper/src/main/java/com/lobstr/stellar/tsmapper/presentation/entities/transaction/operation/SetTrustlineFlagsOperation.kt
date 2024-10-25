@@ -10,7 +10,7 @@ import kotlinx.parcelize.Parcelize
 data class SetTrustlineFlagsOperation(
     override val sourceAccount: String?,
     val trustor: String,
-    val asset: Asset,
+    val asset: Asset.CanonicalAsset,
     val clearFlags: List<Int>?,
     val setFlags: List<Int>?
 ) : Operation(sourceAccount), Parcelable {
