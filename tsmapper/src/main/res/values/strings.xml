@@ -97,6 +97,7 @@
     <string name="op_field_seller">Seller</string>
     <string name="op_field_claimant">Claimant</string>
     <string name="op_field_from">From</string>
+    <string name="op_value_unauthorized_flag">Unauthorized</string>
     <string name="op_value_authorized_flag">Authorized</string>
     <string name="op_value_authorized_to_maintain_liabilities_flag">Authorized To Maintain Liabilities</string>
     <string name="op_value_trustline_clawback_enabled_flag">Trustline Clawback Enabled</string>

@@ -497,13 +497,19 @@ class TransactionDetailsPresenter @Inject constructor(
             val amount = it.afterAmount.toBigDecimal().subtract(it.beforeAmount.toBigDecimal())
             val amountSrt = TsUtil.getAmountRepresentationFromStr(amount.stripTrailingZeros().toPlainString())
 
+            val assetCode = when (it.asset) {
+                is Asset.CanonicalAsset -> it.asset.assetCode
+                is Asset.TrustLineAsset -> it.asset.asset?.assetCode
+                is Asset.ChangeTrustAsset -> it.asset.asset?.assetCode
+            }
+
             fields.add(
                 OperationField(
                     AppUtil.getString(com.lobstr.stellar.tsmapper.R.string.op_field_balance_change),
                     "${if (amount.compareTo(BigDecimal.ZERO) >= 0) "+" else ""}$amountSrt${
-                        if (it.asset.assetCode.isNotEmpty()) " ${
+                        if (!assetCode.isNullOrEmpty()) " ${
                             AppUtil.ellipsizeEndStr(
-                                it.asset.assetCode,
+                                assetCode,
                                 6
                             )
                         }" else ""
@@ -1008,7 +1014,7 @@ class TransactionDetailsPresenter @Inject constructor(
         tag?.also {
             when {
                 AppUtil.isValidAccount(it as? String) -> viewState.showEditAccountDialog(it as String)
-                it is Asset -> viewState.showAssetInfoDialog(it.assetCode, it.assetIssuer)
+                it is Asset.CanonicalAsset -> viewState.showAssetInfoDialog(it.assetCode, it.assetIssuer)
             }
         }
     }

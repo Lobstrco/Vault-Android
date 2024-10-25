@@ -11,16 +11,17 @@ import com.lobstr.stellar.tsmapper.presentation.entities.transaction.operation.s
 import com.lobstr.stellar.tsmapper.presentation.entities.transaction.operation.soroban.contract.ContractExecutable
 import com.lobstr.stellar.tsmapper.presentation.entities.transaction.operation.soroban.contract.ContractIDPreimage
 import com.lobstr.stellar.tsmapper.presentation.entities.transaction.operation.soroban.contract.CreateContractArgs
+import com.lobstr.stellar.tsmapper.presentation.entities.transaction.operation.soroban.contract.CreateContractArgsV2
 import com.lobstr.stellar.tsmapper.presentation.entities.transaction.operation.soroban.contract.InvokeContractArgs
 import com.lobstr.stellar.tsmapper.presentation.entities.transaction.operation.soroban.other.SCVal
 import org.stellar.sdk.Address
-import org.stellar.sdk.Operation
+import org.stellar.sdk.operations.Operation
 import org.stellar.sdk.Util
 import org.stellar.sdk.xdr.HostFunctionType
 
 class InvokeHostFunctionMapper(val assetMapper: AssetMapper = AssetMapper(), val scMapper: ScMapper = ScMapper()) {
 
-    fun mapInvokeHostFunctionOperation(operation: org.stellar.sdk.InvokeHostFunctionOperation): InvokeHostFunctionOperation =
+    fun mapInvokeHostFunctionOperation(operation: org.stellar.sdk.operations.InvokeHostFunctionOperation): InvokeHostFunctionOperation =
         InvokeHostFunctionOperation(
             (operation as Operation).sourceAccount,
             mapHostFunction(operation.hostFunction),
@@ -37,6 +38,10 @@ class InvokeHostFunctionMapper(val assetMapper: AssetMapper = AssetMapper(), val
 
             HostFunctionType.HOST_FUNCTION_TYPE_CREATE_CONTRACT -> HostFunction.CreateContract(
                 mapCreateContractArgs(function.createContract)
+            )
+
+            HostFunctionType.HOST_FUNCTION_TYPE_CREATE_CONTRACT_V2 -> HostFunction.CreateContractV2(
+                mapCreateContractArgsV2(function.createContractV2)
             )
 
             HostFunctionType.HOST_FUNCTION_TYPE_UPLOAD_CONTRACT_WASM -> HostFunction.UploadContractWasm(
@@ -59,6 +64,17 @@ class InvokeHostFunctionMapper(val assetMapper: AssetMapper = AssetMapper(), val
         CreateContractArgs(
             mapContractIDPreimage(args.contractIDPreimage),
             mapContractExecutable(args.executable)
+        )
+
+    private fun mapCreateContractArgsV2(args: org.stellar.sdk.xdr.CreateContractArgsV2): CreateContractArgsV2 =
+        CreateContractArgsV2(
+            mapContractIDPreimage(args.contractIDPreimage),
+            mapContractExecutable(args.executable),
+            mutableListOf<SCVal>().apply {
+                args.constructorArgs.forEach {
+                    add(scMapper.mapScVal(it))
+                }
+            }
         )
 
     private fun mapContractIDPreimage(contractIDPreimage: org.stellar.sdk.xdr.ContractIDPreimage): ContractIDPreimage =
@@ -110,6 +126,10 @@ class InvokeHostFunctionMapper(val assetMapper: AssetMapper = AssetMapper(), val
 
             org.stellar.sdk.xdr.SorobanAuthorizedFunctionType.SOROBAN_AUTHORIZED_FUNCTION_TYPE_CREATE_CONTRACT_HOST_FN -> SorobanAuthorizedFunction.CreateContractHost(
                 mapCreateContractArgs(function.createContractHostFn)
+            )
+
+            org.stellar.sdk.xdr.SorobanAuthorizedFunctionType.SOROBAN_AUTHORIZED_FUNCTION_TYPE_CREATE_CONTRACT_V2_HOST_FN -> SorobanAuthorizedFunction.CreateContractV2Host(
+                mapCreateContractArgsV2(function.createContractV2HostFn)
             )
         }
 }

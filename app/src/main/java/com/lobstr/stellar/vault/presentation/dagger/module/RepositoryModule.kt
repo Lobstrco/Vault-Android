@@ -41,7 +41,6 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
-import org.stellar.sdk.AccountConverter
 import org.stellar.sdk.Network
 import org.stellar.sdk.Server
 import javax.inject.Singleton
@@ -53,14 +52,12 @@ object RepositoryModule {
     @Singleton
     @Provides
     fun provideStellarRepository(
-        accountConverter: AccountConverter,
         network: Network,
         server: Server,
         tsResultMapper: TsResultMapper,
         rxErrorUtils: RxErrorUtils
     ): StellarRepository {
         return StellarRepositoryImpl(
-            accountConverter,
             network,
             server,
             MnemonicsMapper(),
@@ -108,10 +105,9 @@ object RepositoryModule {
     @Singleton
     @Provides
     fun provideRxErrorRepository(
-        accountConverter: AccountConverter,
         network: Network
     ): RxErrorRepository {
-        return RxErrorRepositoryImpl(accountConverter, network)
+        return RxErrorRepositoryImpl(network)
     }
 
     @Singleton

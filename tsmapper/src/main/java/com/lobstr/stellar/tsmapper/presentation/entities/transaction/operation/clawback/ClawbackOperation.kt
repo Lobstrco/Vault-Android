@@ -12,7 +12,7 @@ import kotlinx.parcelize.Parcelize
 data class ClawbackOperation(
     override val sourceAccount: String?,
     val from: String,
-    val asset: Asset,
+    val asset: Asset.CanonicalAsset,
     val amount: String
     ) : Operation(sourceAccount), Parcelable {
 

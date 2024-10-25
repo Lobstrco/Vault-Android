@@ -12,7 +12,7 @@ import kotlinx.parcelize.Parcelize
 data class RevokeTrustlineSponsorshipOperation(
     override val sourceAccount: String?,
     val accountId: String,
-    val asset: Asset
+    val asset: Asset.TrustLineAsset
 ) : Operation(sourceAccount), Parcelable {
 
     override fun getFields(context: Context, amountFormatter: (value: String) -> String): MutableList<OperationField> {

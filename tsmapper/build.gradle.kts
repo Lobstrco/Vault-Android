@@ -37,7 +37,7 @@ android {
     namespace = "com.lobstr.stellar.tsmapper"
 }
 
-val stellar_sdk by extra("0.44.0")
+val stellar_sdk by extra("1.0.0-beta0")
 val gson by extra("2.11.0")
 val firebase_bom by extra("33.5.1")
 

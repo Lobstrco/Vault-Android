@@ -21,7 +21,7 @@ import java.util.*
 data class CreateClaimableBalanceOperation(
     override val sourceAccount: String?,
     val amount: String,
-    val asset: Asset,
+    val asset: Asset.CanonicalAsset,
     val claimants: List<Claimant>
 ) : Operation(sourceAccount), Parcelable {
 

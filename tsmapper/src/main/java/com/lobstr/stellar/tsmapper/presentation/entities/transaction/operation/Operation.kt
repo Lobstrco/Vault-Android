@@ -4,9 +4,8 @@ import android.content.Context
 import android.os.Parcelable
 import com.lobstr.stellar.tsmapper.R
 import com.lobstr.stellar.tsmapper.presentation.entities.transaction.asset.Asset
-import com.lobstr.stellar.tsmapper.presentation.entities.transaction.asset.LiquidityPoolShareChangeTrustAsset
-import com.lobstr.stellar.tsmapper.presentation.entities.transaction.asset.LiquidityPoolShareTrustLineAsset
-import com.lobstr.stellar.tsmapper.presentation.entities.transaction.asset.PoolShareAsset
+import com.lobstr.stellar.tsmapper.presentation.entities.transaction.asset.Asset.ChangeTrustAsset
+import com.lobstr.stellar.tsmapper.presentation.entities.transaction.asset.Asset.TrustLineAsset
 import com.lobstr.stellar.tsmapper.presentation.util.TsUtil.getAmountRepresentationFromStr
 import kotlinx.parcelize.Parcelize
 
@@ -31,68 +30,7 @@ open class Operation(open val sourceAccount: String?) : Parcelable {
             amountFormatter: (value: String) -> String = ::getAmountRepresentationFromStr
         ): MutableList<OperationField> {
             when (asset) {
-                is LiquidityPoolShareChangeTrustAsset -> {
-                    if (asset.liquidityPoolID != null) fields.add(
-                        OperationField(
-                            context.getString(R.string.op_field_liquidity_pool_id),
-                            asset.liquidityPoolID
-                        )
-                    )
-                    fields.add(
-                        OperationField(
-                            context.getString(R.string.op_field_asset_a),
-                            asset.assetA.assetCode,
-                            asset
-                        )
-                    )
-                    if (asset.assetA.assetIssuer != null) fields.add(
-                        OperationField(
-                            context.getString(
-                                R.string.op_field_asset_a_issuer
-                            ), asset.assetA.assetIssuer, asset.assetA.assetIssuer
-                        )
-                    )
-                    fields.add(
-                        OperationField(
-                            context.getString(R.string.op_field_asset_b),
-                            asset.assetB.assetCode,
-                            asset
-                        )
-                    )
-                    if (asset.assetB.assetIssuer != null) fields.add(
-                        OperationField(
-                            context.getString(
-                                R.string.op_field_asset_b_issuer
-                            ), asset.assetB.assetIssuer, asset.assetB.assetIssuer
-                        )
-                    )
-                    fields.add(
-                        OperationField(
-                            context.getString(R.string.op_field_fee),
-                            amountFormatter(asset.fee.toString())
-                        )
-                    )
-                }
-
-                is LiquidityPoolShareTrustLineAsset -> {
-                    fields.add(
-                        OperationField(
-                            context.getString(R.string.op_field_liquidity_pool_id),
-                            asset.liquidityPoolID
-                        )
-                    )
-                }
-
-                is PoolShareAsset -> {
-                    fields.add(
-                        OperationField(
-                            context.getString(R.string.op_field_liquidity_pool_id),
-                            asset.poolID
-                        )
-                    )
-                }
-
-                else -> {
+                is Asset.CanonicalAsset -> {
                     fields.add(
                         OperationField(
                             context.getString(R.string.op_field_asset),
@@ -100,13 +38,118 @@ open class Operation(open val sourceAccount: String?) : Parcelable {
                             asset
                         )
                     )
-                    if (asset.assetIssuer != null) fields.add(
-                        OperationField(
-                            context.getString(R.string.op_field_asset_issuer),
-                            asset.assetIssuer,
-                            asset.assetIssuer
+                    asset.assetIssuer?.let {
+                        fields.add(
+                            OperationField(
+                                context.getString(R.string.op_field_asset_issuer),
+                                it,
+                                it
+                            )
                         )
-                    )
+                    }
+                }
+
+                is ChangeTrustAsset -> {
+                    asset.liquidityPool?.let {
+                        it.liquidityPoolID?.let { id ->
+                            fields.add(
+                                OperationField(
+                                    context.getString(R.string.op_field_liquidity_pool_id),
+                                    id
+                                )
+                            )
+                        }
+                        it.assetA.apply {
+                            fields.add(
+                                OperationField(
+                                    context.getString(R.string.op_field_asset_a),
+                                    assetCode,
+                                    this
+                                )
+                            )
+                            assetIssuer?.let { issuer ->
+                                fields.add(
+                                    OperationField(
+                                        context.getString(R.string.op_field_asset_a_issuer),
+                                        issuer,
+                                        issuer
+                                    )
+                                )
+                            }
+                        }
+                        it.assetB.apply {
+                            fields.add(
+                                OperationField(
+                                    context.getString(R.string.op_field_asset_b),
+                                    assetCode,
+                                    this
+                                )
+                            )
+                            assetIssuer?.let { issuer ->
+                                fields.add(
+                                    OperationField(
+                                        context.getString(R.string.op_field_asset_b_issuer),
+                                        issuer,
+                                        issuer
+                                    )
+                                )
+                            }
+                        }
+
+                        fields.add(
+                            OperationField(
+                                context.getString(R.string.op_field_fee),
+                                amountFormatter(it.fee.toString())
+                            )
+                        )
+                    }
+                    asset.asset?.let {
+                        fields.add(
+                            OperationField(
+                                context.getString(R.string.op_field_asset),
+                                it.assetCode,
+                                it
+                            )
+                        )
+                        it.assetIssuer?.let { issuer ->
+                            fields.add(
+                                OperationField(
+                                    context.getString(R.string.op_field_asset_issuer),
+                                    issuer,
+                                    issuer
+                                )
+                            )
+                        }
+                    }
+                }
+
+                is TrustLineAsset -> {
+                    asset.liquidityPoolId?.let {
+                        fields.add(
+                            OperationField(
+                                context.getString(R.string.op_field_liquidity_pool_id),
+                                it
+                            )
+                        )
+                    }
+                    asset.asset?.let {
+                        fields.add(
+                            OperationField(
+                                context.getString(R.string.op_field_asset),
+                                it.assetCode,
+                                it
+                            )
+                        )
+                        it.assetIssuer?.let { issuer ->
+                            fields.add(
+                                OperationField(
+                                    context.getString(R.string.op_field_asset_issuer),
+                                    issuer,
+                                    issuer
+                                )
+                            )
+                        }
+                    }
                 }
             }
 
