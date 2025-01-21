@@ -1,7 +1,8 @@
 package com.lobstr.stellar.vault.data.stellar
 
 import com.lobstr.stellar.tsmapper.data.asset.AssetMapper
-import com.lobstr.stellar.tsmapper.presentation.entities.transaction.asset.Asset
+import com.lobstr.stellar.tsmapper.presentation.entities.transaction.asset.Asset.CanonicalAsset
+import com.lobstr.stellar.tsmapper.presentation.entities.transaction.asset.AssetType
 import com.lobstr.stellar.vault.data.mnemonic.MnemonicsMapper
 import com.lobstr.stellar.vault.domain.error.RxErrorUtils
 import com.lobstr.stellar.vault.domain.stellar.StellarRepository
@@ -17,6 +18,7 @@ import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.core.Single.fromCallable
 import network.lightsail.Mnemonic
 import org.stellar.sdk.*
+import org.stellar.sdk.exception.InvalidSep10ChallengeException
 import org.stellar.sdk.requests.AccountsRequestBuilder
 import org.stellar.sdk.requests.RequestBuilder
 import org.stellar.sdk.responses.AccountResponse
@@ -28,7 +30,6 @@ import java.math.MathContext
 import java.util.concurrent.Callable
 
 class StellarRepositoryImpl(
-    private val accountConverter: AccountConverter,
     private val network: Network,
     private val server: Server,
     private val mnemonicsMapper: MnemonicsMapper,
@@ -57,7 +58,6 @@ class StellarRepositoryImpl(
     override fun createTransaction(envelopXdr: String): Single<AbstractTransaction> {
         return fromCallable {
             return@fromCallable AbstractTransaction.fromEnvelopeXdr(
-                accountConverter,
                 envelopXdr,
                 network
             )
@@ -77,17 +77,30 @@ class StellarRepositoryImpl(
                 )
                 else -> throw Exception("Unknown transaction type.")
             }
-        }).onErrorResumeNext {
-            rxErrorUtils.handleSingleRequestHttpError(it)
-        }.map {
+        }).map {
             submitMapper.transformSubmitResponse(it)
+        }.onErrorResumeNext {
+            when (it) {
+                is org.stellar.sdk.exception.BadRequestException -> {
+                    it.problem?.extras?.let { extras ->
+                        extras.resultCodes?.let { resultCodes ->
+                            if (!resultCodes.transactionResultCode.isNullOrEmpty()) {
+                                fromCallable { submitMapper.transformSubmitResponse(extras) }
+                            } else {
+                                rxErrorUtils.handleSingleRequestHttpError(it)
+                            }
+                        }
+                    } ?: rxErrorUtils.handleSingleRequestHttpError(it)
+                }
+                else -> rxErrorUtils.handleSingleRequestHttpError(it)
+            }
         }
     }
 
     override fun signTransaction(signer: KeyPair, envelopXdr: String): Single<AbstractTransaction> {
         return fromCallable(Callable {
             val transaction =
-                AbstractTransaction.fromEnvelopeXdr(accountConverter, envelopXdr, network)
+                AbstractTransaction.fromEnvelopeXdr(envelopXdr, network)
 
             // Sign the transaction to prove you are actually the person sending it.
             transaction.sign(signer)
@@ -111,7 +124,7 @@ class StellarRepositoryImpl(
             }
         }
             .map { accountResponse ->
-                val transaction = Transaction.fromEnvelopeXdr(accountConverter, envelopXdr, network)
+                val transaction = Transaction.fromEnvelopeXdr(envelopXdr, network)
 
                 val accountsList: MutableList<Account> = mutableListOf()
 
@@ -177,7 +190,7 @@ class StellarRepositoryImpl(
     }
 
     override fun getTransactionFromXDR(xdr: String): AbstractTransaction {
-        return AbstractTransaction.fromEnvelopeXdr(accountConverter, xdr, network)
+        return AbstractTransaction.fromEnvelopeXdr(xdr, network)
     }
 
     override fun readChallengeTransaction(
@@ -265,7 +278,7 @@ class StellarRepositoryImpl(
     ): Single<List<SorobanBalanceData>> =
         fromCallable(Callable {
             val transaction = when (val tx =
-                AbstractTransaction.fromEnvelopeXdr(accountConverter, envelopXdr, network)) {
+                AbstractTransaction.fromEnvelopeXdr(envelopXdr, network)) {
                 is FeeBumpTransaction -> tx.innerTransaction
                 is Transaction -> tx
                 else -> throw Exception("Unknown transaction type.")
@@ -303,7 +316,7 @@ class StellarRepositoryImpl(
 
                         assetChanges.add(
                             SorobanBalanceData(
-                                Asset("XLM", "native"),
+                                CanonicalAsset(AssetType.ASSET_TYPE_NATIVE, "XLM"),
                                 beforeAmount,
                                 afterAmount
                             )

@@ -18,6 +18,12 @@ class HomeActivityPresenter @Inject constructor(
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
 
+        // Unusual case. Finish screen and task for the incorrect state.
+        if (!interactor.hasPublicKey()) {
+            viewState.finishScreenAndRemoveTask()
+            return
+        }
+
         viewState.setupToolbar(R.drawable.ic_arrow_back, android.R.color.white)
         initData()
     }

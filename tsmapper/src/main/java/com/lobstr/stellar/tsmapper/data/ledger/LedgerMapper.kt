@@ -7,7 +7,6 @@ import com.lobstr.stellar.tsmapper.presentation.entities.transaction.soroban.con
 import com.lobstr.stellar.tsmapper.presentation.entities.transaction.ledger.LedgerFootprint
 import com.lobstr.stellar.tsmapper.presentation.entities.transaction.ledger.LedgerKey
 import org.stellar.sdk.Address
-import org.stellar.sdk.LiquidityPoolID
 import org.stellar.sdk.StrKey
 import org.stellar.sdk.Util
 import org.stellar.sdk.xdr.ClaimableBalanceIDType
@@ -70,7 +69,7 @@ class LedgerMapper(val assetMapper: AssetMapper = AssetMapper(), val scMapper: S
 
             LedgerEntryType.LIQUIDITY_POOL -> {
                 LedgerKey.LiquidityPool(
-                    LiquidityPoolID.fromXdr(key.liquidityPool.liquidityPoolID).toString()
+                    Util.bytesToHex(key.liquidityPool.liquidityPoolID.poolID.hash).lowercase()
                 )
             }
 

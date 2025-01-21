@@ -12,6 +12,7 @@ import com.lobstr.stellar.tsmapper.presentation.entities.transaction.operation.s
 import com.lobstr.stellar.tsmapper.presentation.entities.transaction.operation.soroban.contract.ContractExecutable
 import com.lobstr.stellar.tsmapper.presentation.entities.transaction.operation.soroban.contract.ContractIDPreimage
 import com.lobstr.stellar.tsmapper.presentation.entities.transaction.operation.soroban.contract.CreateContractArgs
+import com.lobstr.stellar.tsmapper.presentation.entities.transaction.operation.soroban.contract.CreateContractArgsV2
 import com.lobstr.stellar.tsmapper.presentation.entities.transaction.operation.soroban.contract.InvokeContractArgs
 import com.lobstr.stellar.tsmapper.presentation.entities.transaction.operation.soroban.error.SCError
 import com.lobstr.stellar.tsmapper.presentation.entities.transaction.operation.soroban.other.SCAddress
@@ -62,6 +63,16 @@ data class InvokeHostFunctionOperation(
                 getCreateContractArgsFields(context, fields, hostFunction.args, amountFormatter)
             }
 
+            is HostFunction.CreateContractV2 -> {
+                fields.add(
+                    OperationField(
+                        context.getString(R.string.op_field_function),
+                        context.getString(R.string.op_value_create_contract)
+                    )
+                )
+                getCreateContractArgsV2Fields(context, fields, hostFunction.args, amountFormatter)
+            }
+
             is HostFunction.UploadContractWasm -> {
                 fields.add(
                     OperationField(
@@ -92,6 +103,29 @@ data class InvokeHostFunctionOperation(
     ): MutableList<OperationField> {
         getContractIdPreimageFields(context, fields, args.contractIDPreimage, amountFormatter)
         getContractExecutableFields(context, fields, args.executable)
+
+        return fields
+    }
+
+    private fun getCreateContractArgsV2Fields(
+        context: Context,
+        fields: MutableList<OperationField>,
+        args: CreateContractArgsV2,
+        amountFormatter: (value: String) -> String
+    ): MutableList<OperationField> {
+        getContractIdPreimageFields(context, fields, args.contractIDPreimage, amountFormatter)
+        getContractExecutableFields(context, fields, args.executable)
+
+//        args.constructorArgs.forEachIndexed { index, scVal ->
+//            getScValFields(
+//                context,
+//                fields,
+//                scVal,
+//                amountFormatter,
+//                index + 1,
+//                keyPostfix = " ${String.format(argPostfixFormat, index + 1)}"
+//            )
+//        }
 
         return fields
     }
@@ -433,6 +467,7 @@ data class InvokeHostFunctionOperation(
 
                 getInvokeContractArgsFields(context, fields, function.args, amountFormatter)
             }
+
             is SorobanAuthorizedFunction.CreateContractHost -> {
                 fields.add(
                     OperationField(
@@ -442,6 +477,17 @@ data class InvokeHostFunctionOperation(
                 )
 
                 getCreateContractArgsFields(context, fields, function.args, amountFormatter)
+            }
+
+            is SorobanAuthorizedFunction.CreateContractV2Host -> {
+                fields.add(
+                    OperationField(
+                        context.getString(R.string.op_field_authorized_function),
+                        context.getString(R.string.op_value_create_contract_host)
+                    )
+                )
+
+                getCreateContractArgsV2Fields(context, fields, function.args, amountFormatter)
             }
         }
 

@@ -185,6 +185,10 @@ class HomeActivity : BaseActivity(), HomeActivityView,
             .show(supportFragmentManager, AlertDialogFragment.DialogFragmentIdentifier.SUGGEST_RATE_US)
     }
 
+    override fun finishScreenAndRemoveTask() {
+        finishAndRemoveTask()
+    }
+
     // ===========================================================
     // Methods
     // ===========================================================

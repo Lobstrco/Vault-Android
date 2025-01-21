@@ -332,6 +332,7 @@ class TransactionDetailsFragment : BaseFragment(), TransactionDetailsView,
 
     override fun setActionBtnVisibility(isConfirmVisible: Boolean, isDenyVisible: Boolean) {
         binding.apply {
+            llActionBtnContainer.isVisible = isConfirmVisible && isDenyVisible
             btnConfirm.isVisible = isConfirmVisible
             btnDeny.isVisible = isDenyVisible
         }

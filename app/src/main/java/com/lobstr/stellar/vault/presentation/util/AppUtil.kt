@@ -33,7 +33,6 @@ import com.lobstr.stellar.vault.BuildConfig
 import com.lobstr.stellar.vault.R
 import com.lobstr.stellar.vault.presentation.application.LVApplication
 import com.lobstr.stellar.vault.presentation.util.Constant.Symbol.NULL
-import org.stellar.sdk.AccountConverter
 import org.stellar.sdk.StrKey
 import org.stellar.sdk.xdr.CryptoKeyType
 import org.stellar.sdk.xdr.MuxedAccount
@@ -282,16 +281,15 @@ object AppUtil {
         if (BuildConfig.BUILD_TYPE == Constant.BuildType.RELEASE) Constant.Behavior.PRODUCTION else Constant.Behavior.STAGING
 
     /**
-     * Encode Account to MuxedAccount.
+     * Decode Account to MuxedAccount.
      * @return null when invalid account. Otherwise - MuxedAccount.
      */
-    fun encodeMuxedAccount(account: String?, enableMuxed: Boolean = true): MuxedAccount? {
+    fun decodeMuxedAccount(account: String?): MuxedAccount? {
         return try {
             if (account.isNullOrEmpty()) {
                 null
             } else {
-                val converter = if(enableMuxed) AccountConverter.enableMuxed() else AccountConverter.disableMuxed()
-                converter.encode(account)
+                org.stellar.sdk.MuxedAccount(account).toXdr()
             }
         } catch (exc: Exception) {
             null
@@ -302,22 +300,22 @@ object AppUtil {
      * Retrieve Account ID for any account.
      */
     fun decodeAccount(account: MuxedAccount): String {
-        return AccountConverter.disableMuxed().decode(account)
+        return org.stellar.sdk.MuxedAccount.fromXdr(account).accountId
     }
 
     /**
      * Get ED25519.
      */
     fun decodeAccountStr(account: String): String {
-        return encodeMuxedAccount(account)?.let { decodeAccount(it) } ?: ""
+        return decodeMuxedAccount(account)?.let { decodeAccount(it) } ?: ""
     }
 
     /**
      * Make Account Validation (ED25519 or MUXED_ED25519).
      * @return true - ED25519 or MUXED_ED25519. Otherwise - false.
      */
-    fun isValidAccount(account: String?, enableMuxed: Boolean = true): Boolean {
-        return encodeMuxedAccount(account, enableMuxed) != null
+    fun isValidAccount(account: String?): Boolean {
+        return decodeMuxedAccount(account) != null
     }
 
     fun isValidContractID(contractID: String?): Boolean = try {
@@ -335,7 +333,7 @@ object AppUtil {
      * Check Key is ED25519.
      */
     fun isPublicKey(account: String?): Boolean {
-        return when (encodeMuxedAccount(account)?.discriminant) {
+        return when (decodeMuxedAccount(account)?.discriminant) {
             CryptoKeyType.KEY_TYPE_ED25519 -> true
             else -> false
         }

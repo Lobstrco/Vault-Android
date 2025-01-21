@@ -1,6 +1,7 @@
 package com.lobstr.stellar.vault.presentation.auth.biometric
 
 
+import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
@@ -146,10 +147,14 @@ class BiometricSetUpFragment : BaseFragment(), BiometricSetUpView, BiometricList
     }
 
     override fun finishApp() {
-        startActivity(Intent(Intent.ACTION_MAIN).apply {
-            addCategory(Intent.CATEGORY_HOME)
-            flags = Intent.FLAG_ACTIVITY_NEW_TASK
-        })
+        try {
+            startActivity(Intent(Intent.ACTION_MAIN).apply {
+                addCategory(Intent.CATEGORY_HOME)
+                flags = Intent.FLAG_ACTIVITY_NEW_TASK
+            })
+        } catch (exc: ActivityNotFoundException) {
+            exc.printStackTrace()
+        }
     }
 
     // Biometric.

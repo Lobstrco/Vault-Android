@@ -267,10 +267,14 @@ class PinFragment : BaseFragment(), PinFrView, PinLockListener, BiometricListene
     }
 
     override fun finishApp() {
-        startActivity(Intent(Intent.ACTION_MAIN).apply {
-            addCategory(Intent.CATEGORY_HOME)
-            flags = Intent.FLAG_ACTIVITY_NEW_TASK
-        })
+        try {
+            startActivity(Intent(Intent.ACTION_MAIN).apply {
+                addCategory(Intent.CATEGORY_HOME)
+                flags = Intent.FLAG_ACTIVITY_NEW_TASK
+            })
+        } catch (exc: ActivityNotFoundException) {
+            exc.printStackTrace()
+        }
     }
 
     override fun showProgressDialog(show: Boolean) {

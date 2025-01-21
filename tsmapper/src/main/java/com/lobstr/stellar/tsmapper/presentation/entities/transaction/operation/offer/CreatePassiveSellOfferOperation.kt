@@ -12,8 +12,8 @@ import java.math.BigDecimal
 @Parcelize
 data class CreatePassiveSellOfferOperation(
     override val sourceAccount: String?,
-    val selling: Asset,
-    val buying: Asset,
+    val selling: Asset.CanonicalAsset,
+    val buying: Asset.CanonicalAsset,
     val amount: String,
     val price: String
 ) : Operation(sourceAccount), Parcelable {

@@ -9,7 +9,7 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 data class ChangeTrustOperation(
     override val sourceAccount: String?,
-    val asset: Asset,
+    val asset: Asset.ChangeTrustAsset,
     val limit: String
 ) : Operation(sourceAccount), Parcelable {
 

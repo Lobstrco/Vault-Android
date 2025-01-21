@@ -34,4 +34,7 @@ interface HomeActivityView : MvpView {
 
     @Skip
     fun suggestRateUsDialog()
+
+    @AddToEndSingle
+    fun finishScreenAndRemoveTask()
 }

@@ -10,6 +10,10 @@ class HomeInteractorImpl(
     private val fcmHelper: FcmHelper,
 ) : HomeInteractor {
 
+    override fun hasPublicKey(): Boolean {
+        return !prefsUtil.publicKey.isNullOrEmpty()
+    }
+
     override fun checkFcmRegistration() {
         fcmHelper.checkFcmRegistration()
     }

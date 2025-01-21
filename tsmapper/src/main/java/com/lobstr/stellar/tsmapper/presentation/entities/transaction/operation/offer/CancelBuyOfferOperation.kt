@@ -11,8 +11,8 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 data class CancelBuyOfferOperation(
     override val sourceAccount: String?,
-    private val selling: Asset,
-    private val buying: Asset,
+    private val selling: Asset.CanonicalAsset,
+    private val buying: Asset.CanonicalAsset,
     private val amount: String,
     private val price: String,
     private val offerId: Long

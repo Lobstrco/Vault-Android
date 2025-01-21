@@ -37,9 +37,9 @@ android {
     namespace = "com.lobstr.stellar.tsmapper"
 }
 
-val stellar_sdk by extra("0.44.0")
+val stellar_sdk by extra("1.0.0")
 val gson by extra("2.11.0")
-val firebase_bom by extra("33.5.1")
+val firebase_bom by extra("33.8.0")
 
 dependencies {
     implementation(fileTree(mapOf("dir" to "libs", "include" to listOf("*.jar"))))
