@@ -176,7 +176,7 @@ class LVFirebaseMessagingService : FirebaseMessagingService() {
         messageBody: String?,
         notificationsManager: NotificationsManager
     ) {
-        val transaction = mFcmHelper.addedNewTransaction(jsonStr)
+        val transaction = mFcmHelper.getTransactionData(jsonStr)
         if (!userAccount.isNullOrEmpty() && mFcmHelper.getCurrentPublicKey() == userAccount) {
             mEventProviderModule.notificationEventSubject.onNext(
                 Notification(Notification.Type.ADDED_NEW_TRANSACTION, transaction)
@@ -218,26 +218,45 @@ class LVFirebaseMessagingService : FirebaseMessagingService() {
         messageBody: String?,
         notificationsManager: NotificationsManager
     ) {
-        val transaction = mFcmHelper.addedNewSignature(jsonStr)
+        val transaction = mFcmHelper.getTransactionData(jsonStr)
         if (!userAccount.isNullOrEmpty() && mFcmHelper.getCurrentPublicKey() == userAccount) {
             mEventProviderModule.notificationEventSubject.onNext(
                 Notification(Notification.Type.ADDED_NEW_SIGNATURE, transaction)
             )
         }
 
-        sendDefaultMessage(
-            NotificationsManager.NotificationId.LV_MAIN,
+        if (userAccount.isNullOrEmpty() || !mFcmHelper.isNotificationsEnabled(userAccount)) {
+            return
+        }
+
+        notificationsManager.sendNotification(
             NotificationsManager.ChannelId.NEW_SIGNATURES,
             null,
-            userAccount,
-            messageTitle,
+            NotificationsManager.NotificationId.LV_MAIN,
+            messageTitle ?: getString(R.string.app_name),
             messageBody,
             NotificationsManager.GroupId.LV_MAIN,
             NotificationsManager.GroupName.LV_MAIN,
-            notificationsManager
+            // Show transaction details screen after click on notification.
+            Intent(this, ContainerActivity::class.java).apply {
+                putExtra(Constant.Extra.EXTRA_USER_ACCOUNT, userAccount)
+                putExtra(
+                    Constant.Extra.EXTRA_NAVIGATION_FR,
+                    Constant.Navigation.TRANSACTION_DETAILS
+                )
+                putExtra(Constant.Extra.EXTRA_TRANSACTION_ITEM, transaction)
+            },
+            Intent(this, HomeActivity::class.java).apply {
+                putExtra(Constant.Extra.EXTRA_USER_ACCOUNT, userAccount)
+                addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_CLEAR_TOP)
+            }
         )
     }
 
+    /**
+     * Hide action buttons on Transaction's Details screen.
+     * Handled by submitted_at field.
+     */
     private fun wrapTransactionSubmittedMessage(
         jsonStr: String?,
         userAccount: String?,
@@ -245,23 +264,38 @@ class LVFirebaseMessagingService : FirebaseMessagingService() {
         messageBody: String?,
         notificationsManager: NotificationsManager
     ) {
-        val transaction = mFcmHelper.transactionSubmitted(jsonStr)
+        val transaction = mFcmHelper.getTransactionData(jsonStr)
         if (!userAccount.isNullOrEmpty() && mFcmHelper.getCurrentPublicKey() == userAccount) {
             mEventProviderModule.notificationEventSubject.onNext(
                 Notification(Notification.Type.TRANSACTION_SUBMITTED, transaction)
             )
         }
 
-        sendDefaultMessage(
-            NotificationsManager.NotificationId.LV_MAIN,
+        if (userAccount.isNullOrEmpty() || !mFcmHelper.isNotificationsEnabled(userAccount)) {
+            return
+        }
+
+        notificationsManager.sendNotification(
             NotificationsManager.ChannelId.AUTHORIZED_TRANSACTIONS,
             null,
-            userAccount,
-            messageTitle,
+            NotificationsManager.NotificationId.LV_MAIN,
+            messageTitle ?: getString(R.string.app_name),
             messageBody,
             NotificationsManager.GroupId.LV_MAIN,
             NotificationsManager.GroupName.LV_MAIN,
-            notificationsManager
+            // Show transaction details screen after click on notification.
+            Intent(this, ContainerActivity::class.java).apply {
+                putExtra(Constant.Extra.EXTRA_USER_ACCOUNT, userAccount)
+                putExtra(
+                    Constant.Extra.EXTRA_NAVIGATION_FR,
+                    Constant.Navigation.TRANSACTION_DETAILS
+                )
+                putExtra(Constant.Extra.EXTRA_TRANSACTION_ITEM, transaction)
+            },
+            Intent(this, HomeActivity::class.java).apply {
+                putExtra(Constant.Extra.EXTRA_USER_ACCOUNT, userAccount)
+                addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_CLEAR_TOP)
+            }
         )
     }
 

@@ -9,6 +9,7 @@ import android.os.Build
 import android.os.Bundle
 import android.text.TextUtils
 import android.view.View
+import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.SystemBarStyle
@@ -20,8 +21,13 @@ import androidx.annotation.StringRes
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.DrawableCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.updateLayoutParams
+import androidx.core.view.updateMargins
+import androidx.core.view.updatePadding
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
+import com.google.android.material.appbar.AppBarLayout
 import com.lobstr.stellar.vault.R
 import com.lobstr.stellar.vault.presentation.BaseMvpAppCompatActivity
 import com.lobstr.stellar.vault.presentation.application.LVApplication
@@ -35,6 +41,7 @@ import com.lobstr.stellar.vault.presentation.pin.PinActivity
 import com.lobstr.stellar.vault.presentation.tangem.dialog.TangemDialogFragment
 import com.lobstr.stellar.vault.presentation.util.AppUtil
 import com.lobstr.stellar.vault.presentation.util.Constant
+import com.lobstr.stellar.vault.presentation.util.doOnApplyWindowInsets
 import com.lobstr.stellar.vault.presentation.util.manager.ProgressManager
 import com.lobstr.stellar.vault.presentation.vault_auth.VaultAuthActivity
 import dagger.hilt.android.AndroidEntryPoint
@@ -122,7 +129,25 @@ abstract class BaseActivity : BaseMvpAppCompatActivity(),
     }
 
     open fun handleInsets() {
-        // Override to apply Activity insets (or apply common logic).
+        // Apply common insets for AppbarLayout(left/right) through Toolbar. Top inset appeared from default behaviour.
+        handleAppBarInsets()
+    }
+
+    private fun handleAppBarInsets() {
+        mToolbar?.doOnApplyWindowInsets { view, insets, padding, margins ->
+            val innerPadding = insets.getInsets(
+                WindowInsetsCompat.Type.systemBars()
+                        or WindowInsetsCompat.Type.displayCutout()
+            )
+            (view.parent as? AppBarLayout)?.also {
+                it.updateLayoutParams<ViewGroup.MarginLayoutParams> {
+                    updateMargins(
+                        left = innerPadding.left,
+                        right = innerPadding.right,
+                    )
+                }
+            }
+        }
     }
 
     override fun onNewIntent(intent: Intent?) {

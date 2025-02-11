@@ -47,6 +47,7 @@ class TransactionEntityMapper(private val tsMapper: TsMapper) {
             apiTransactionItem.hash!!,
             apiTransactionItem.status,
             apiTransactionItem.sequenceOutdatedAt,
+            apiTransactionItem.submittedAt,
             tsMapper.getTransaction(
                 apiTransactionItem.xdr!!,
                 apiTransactionItem.transactionType
@@ -60,6 +61,7 @@ class TransactionEntityMapper(private val tsMapper: TsMapper) {
                 "",
                 it.hash,
                 IMPORT_XDR,
+                null,
                 null,
                 it
             )

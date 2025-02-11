@@ -151,12 +151,6 @@ class FcmHelper(private val context: Context, private val fcmInteractor: FcmInte
 
     fun getCurrentPublicKey(): String? = fcmInteractor.getCurrentPublicKey()
 
-    fun addedNewTransaction(jsonStr: String?): TransactionItem? =
-        fcmInteractor.transformTransactionResponse(jsonStr)
-
-    fun addedNewSignature(jsonStr: String?): TransactionItem? =
-        fcmInteractor.transformTransactionResponse(jsonStr)
-
-    fun transactionSubmitted(jsonStr: String?): TransactionItem? =
+    fun getTransactionData(jsonStr: String?): TransactionItem? =
         fcmInteractor.transformTransactionResponse(jsonStr)
 }

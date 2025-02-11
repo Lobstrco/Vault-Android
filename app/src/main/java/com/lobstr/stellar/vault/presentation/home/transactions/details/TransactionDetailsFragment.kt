@@ -17,7 +17,6 @@ import androidx.core.os.bundleOf
 import androidx.core.view.MenuProvider
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.isVisible
-import androidx.core.view.updatePadding
 import androidx.fragment.app.setFragmentResult
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.lobstr.stellar.tsmapper.presentation.entities.transaction.asset.Asset
@@ -112,19 +111,20 @@ class TransactionDetailsFragment : BaseFragment(), TransactionDetailsView,
         setListeners()
     }
 
-    override fun handleInsets() {
+    override fun handleInsets(
+        view: View?,
+        typeMask: Int,
+        insetsPadding: InsetsPadding?,
+        insetsMargin: InsetsMargin?
+    ) {
         // Skip ime insets for details.
-        view?.doOnApplyWindowInsets { view, insets, padding, _ ->
-            val innerPadding = insets.getInsets(
-                WindowInsetsCompat.Type.systemBars()
-                        or WindowInsetsCompat.Type.displayCutout()
-            )
-            view.updatePadding(
-                left = padding.left + innerPadding.left,
-                right = padding.right + innerPadding.right,
-                bottom = padding.bottom + innerPadding.bottom
-            )
-        }
+        super.handleInsets(
+            view = view,
+            typeMask = WindowInsetsCompat.Type.systemBars()
+                    or WindowInsetsCompat.Type.displayCutout(),
+            insetsPadding = insetsPadding,
+            insetsMargin = null
+        )
     }
 
     private fun addMenuProvider() {
@@ -273,7 +273,17 @@ class TransactionDetailsFragment : BaseFragment(), TransactionDetailsView,
     }
 
     override fun operationDetailsClicked(position: Int) {
-        mPresenter.operationDetailsClicked(position)
+        binding.svContent.apply {
+            mPresenter.operationDetailsClicked(position, scrollX, scrollY)
+        }
+    }
+
+    override fun scrollTo(x: Int, y: Int) {
+        binding.svContent.apply {
+            post {
+                scrollTo(x, y)
+            }
+        }
     }
 
     override fun setupTransactionInfo(fields: List<OperationField>) {

@@ -53,6 +53,9 @@ interface TransactionDetailsView : MvpView {
     fun operationDetailsClicked(position: Int)
 
     @Skip
+    fun scrollTo(x: Int, y: Int)
+
+    @Skip
     fun showMessage(message: String?)
 
     @AddToEndSingle

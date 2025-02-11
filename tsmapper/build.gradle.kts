@@ -38,8 +38,8 @@ android {
 }
 
 val stellar_sdk by extra("1.0.0")
-val gson by extra("2.11.0")
-val firebase_bom by extra("33.8.0")
+val gson by extra("2.12.1")
+val firebase_bom by extra("33.9.0")
 
 dependencies {
     implementation(fileTree(mapOf("dir" to "libs", "include" to listOf("*.jar"))))

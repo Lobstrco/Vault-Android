@@ -78,6 +78,10 @@ class TransactionDetailsPresenter @Inject constructor(
 
     var sorobanBalanceChanges: List<SorobanBalanceData>? = null
 
+    // Pre-saved scroll state for the main content.
+    private var initialScrollX = 0
+    private var initialScrollY = 0
+
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
 
@@ -344,15 +348,24 @@ class TransactionDetailsPresenter @Inject constructor(
     }
 
     private fun prepareUiAndOperationsList() {
-        // Handle transaction validation status.
-        viewState.setTransactionValid(transactionItem.sequenceOutdatedAt.isNullOrEmpty())
-
-        // Handle transaction status.
+        // Handle transaction's status.
         when (transactionItem.status) {
-            PENDING -> viewState.setActionBtnVisibility(true, true)
-            CANCELLED -> viewState.setActionBtnVisibility(false, false)
-            SIGNED -> viewState.setActionBtnVisibility(false, false)
-            IMPORT_XDR -> viewState.setActionBtnVisibility(true, true)
+            PENDING -> {
+                // Check transaction's submitted state.
+                if (transactionItem.submittedAt.isNullOrEmpty()) {
+                    viewState.setTransactionValid(transactionItem.sequenceOutdatedAt.isNullOrEmpty())
+                    viewState.setActionBtnVisibility(true, true)
+                } else {
+                    viewState.setActionBtnVisibility(false, false)
+                }
+            }
+
+            IMPORT_XDR -> {
+                viewState.setTransactionValid(transactionItem.sequenceOutdatedAt.isNullOrEmpty())
+                viewState.setActionBtnVisibility(true, true)
+            }
+
+            CANCELLED, SIGNED -> viewState.setActionBtnVisibility(false, false)
         }
 
         // Prepare operations list or show single operation:
@@ -381,8 +394,13 @@ class TransactionDetailsPresenter @Inject constructor(
         checkTransactionInfo()
     }
 
-    fun operationDetailsClicked(opPosition: Int) {
+    fun operationDetailsClicked(opPosition: Int,scrollX: Int, scrollY: Int) {
         prepareOperationDetails(opPosition, isInitState = false)
+
+        // Save scroll X, Y positions and scroll details to the top.
+        initialScrollX = scrollX
+        initialScrollY = scrollY
+        viewState.scrollTo(0, 0)
     }
 
     /**
@@ -1003,6 +1021,15 @@ class TransactionDetailsPresenter @Inject constructor(
      */
     fun backStackChanged(backStackEntryCount: Int) {
         viewState.showActionContainer(backStackEntryCount == 1)
+
+        // Scroll operation's list to the saved position.
+        if (backStackEntryCount == 1) {
+            // Restore scroll fot the initial state
+            viewState.scrollTo(initialScrollX, initialScrollY)
+            // Reset initial scroll state.
+            initialScrollX = 0
+            initialScrollY = 0
+        }
     }
 
     /**

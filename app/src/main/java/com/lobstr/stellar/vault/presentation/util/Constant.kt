@@ -42,6 +42,7 @@ object Constant {
         const val BUNDLE_ASSET_CODE = "BUNDLE_ASSET_CODE"
         const val BUNDLE_ASSET_ISSUER = "BUNDLE_ASSET_ISSUER"
         const val BUNDLE_ERROR = "BUNDLE_ERROR"
+        const val BUNDLE_CONTRACT_ID = "BUNDLE_CONTRACT_ID"
     }
 
     object Navigation {
@@ -175,6 +176,9 @@ object Constant {
         const val ACCOUNT = URL.plus("/account/")
         const val ASSET = URL.plus("/asset/")
         const val TRANSACTION = URL.plus("/tx/")
+        const val CONTRACT = URL.plus("/contract/")
+        const val QUERY_FILTER = "filter=%s"
+        const val VALUE_INTERFACE ="interface"
     }
 
     object Laboratory {

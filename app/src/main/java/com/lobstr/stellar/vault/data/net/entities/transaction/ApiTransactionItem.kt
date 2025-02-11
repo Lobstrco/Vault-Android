@@ -16,6 +16,9 @@ data class ApiTransactionItem(
     @SerializedName("signed_at")
     val signedAt: String?,
 
+    @SerializedName("submitted_at")
+    val submittedAt: String?,
+
     @SerializedName("hash")
     val hash: String?,
 

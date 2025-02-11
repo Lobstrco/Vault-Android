@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:scrollbars="vertical">
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
@@ -9,7 +14,7 @@
         android:paddingEnd="16dp"
         android:paddingBottom="16dp">
 
-    <TextView
+        <TextView
             android:id="@+id/tvTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -19,7 +24,7 @@
             android:textSize="17sp"
             android:textStyle="bold" />
 
-    <TextView
+        <TextView
             android:id="@+id/tvSubtitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -31,7 +36,7 @@
             android:textColor="@color/color_071c33"
             android:textSize="13sp" />
 
-    <com.lobstr.stellar.vault.presentation.util.SearchEditText
+        <com.lobstr.stellar.vault.presentation.util.SearchEditText
             android:id="@+id/edtAccountName"
             android:layout_width="match_parent"
             android:layout_height="50dp"
@@ -49,7 +54,7 @@
             android:textSize="15sp"
             app:cleanSearchImgColor="@color/color_757575" />
 
-    <TextView
+        <TextView
             android:id="@+id/tvRestriction"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -61,7 +66,7 @@
             android:textColor="@color/color_4a4a4a"
             android:textSize="13sp" />
 
-    <Button
+        <Button
             android:id="@+id/btnSave"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -72,7 +77,7 @@
             android:textColor="@android:color/white"
             android:textSize="14sp" />
 
-    <Button
+        <Button
             android:id="@+id/btnCancel"
             style="@style/Base.Widget.AppCompat.Button.Borderless.Colored"
             android:layout_width="match_parent"
@@ -84,4 +89,5 @@
             android:textColor="@color/color_d9534f"
             android:textSize="14sp" />
 
-</LinearLayout>
+    </LinearLayout>
+</androidx.core.widget.NestedScrollView>

@@ -1,59 +1,68 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:paddingStart="16dp"
-        android:paddingEnd="16dp"
-        android:paddingBottom="16dp"
-        android:orientation="vertical">
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:overScrollMode="never"
+        android:paddingHorizontal="16dp"
+        android:scrollbars="vertical">
 
-    <TextView
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textStyle="bold"
-            android:textSize="20sp"
-            android:layout_marginBottom="8dp"
-            android:textColor="@android:color/black"
-            android:text="@string/recover_account_title"/>
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
-    <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textSize="14sp"
-            android:layout_marginBottom="25dp"
-            android:alpha="0.6"
-            android:textColor="@color/color_071c33"
-            android:text="@string/recover_account_description"/>
-
-    <EditText
-            android:id="@+id/etRecoveryPhrase"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="top"
-            android:padding="10dp"
-            android:minLines="5"
-            android:maxLines="5"
-            android:textColor="@android:color/black"
-            android:inputType="textMultiLine"
-            android:importantForAutofill="no"
-            android:background="@drawable/bg_mnemonics"/>
-
-    <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-        <Button
-                android:id="@+id/btnRecoverKey"
+            <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="@android:color/white"
-                android:layout_gravity="bottom"
-                android:enabled="false"
-                android:layout_marginTop="24dp"
-                android:textSize="14sp"
-                android:textAllCaps="false"
-                android:background="@drawable/selector_default_button_with_round"
-                android:text="@string/next_action"/>
-    </FrameLayout>
+                android:layout_marginBottom="8dp"
+                android:text="@string/recover_account_title"
+                android:textColor="@android:color/black"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="25dp"
+                android:alpha="0.6"
+                android:text="@string/recover_account_description"
+                android:textColor="@color/color_071c33"
+                android:textSize="14sp" />
+
+            <EditText
+                android:id="@+id/etRecoveryPhrase"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_mnemonics"
+                android:gravity="top"
+                android:importantForAutofill="no"
+                android:inputType="textMultiLine"
+                android:maxLines="5"
+                android:minLines="5"
+                android:padding="10dp"
+                android:textColor="@android:color/black" />
+        </LinearLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
+    <Button
+        android:id="@+id/btnRecoverKey"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginBottom="16dp"
+        android:background="@drawable/selector_default_button_with_round"
+        android:enabled="false"
+        android:text="@string/next_action"
+        android:textAllCaps="false"
+        android:textColor="@android:color/white"
+        android:textSize="14sp" />
 </LinearLayout>

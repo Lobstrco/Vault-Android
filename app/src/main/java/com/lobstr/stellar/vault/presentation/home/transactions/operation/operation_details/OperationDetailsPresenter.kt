@@ -188,13 +188,14 @@ class OperationDetailsPresenter @Inject constructor(
 
     /**
      * @param key Reserved for future implementations.
-     * @param value Reserved for future implementations.
+     * @param value Value from operation field.
      * @param tag Additional info for field (e.g. Asset for asset code)
      */
     fun operationItemClicked(key: String, value: String?, tag: Any?) {
         when {
             AppUtil.isValidAccount(tag as? String) -> tag?.also { viewState.showEditAccountDialog(it as String) }
             tag is Asset.CanonicalAsset -> viewState.showAssetInfoDialog(tag.assetCode, tag.assetIssuer)
+            AppUtil.isValidContractID(value) -> value?.also { viewState.showContractInfoDialog(it) }
         }
     }
 }

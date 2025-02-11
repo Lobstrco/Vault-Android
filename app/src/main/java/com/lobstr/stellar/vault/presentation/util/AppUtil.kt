@@ -319,8 +319,12 @@ object AppUtil {
     }
 
     fun isValidContractID(contractID: String?): Boolean = try {
-        StrKey.decodeContract(contractID)
-        true
+        if (contractID.isNullOrEmpty()) {
+            false
+        } else {
+            StrKey.decodeContract(contractID)
+            true
+        }
     } catch (exc: Exception) {
         false
     }

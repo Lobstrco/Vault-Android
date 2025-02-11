@@ -1,62 +1,68 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:padding="16dp">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
 
     <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginBottom="12dp"
-            android:gravity="center_vertical"
-            android:orientation="horizontal">
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginBottom="12dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
 
         <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_logo_purple"
-                tools:ignore="ContentDescription" />
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_logo_purple"
+            tools:ignore="ContentDescription" />
 
         <View
-                android:layout_width="1dp"
-                android:layout_height="48dp"
-                android:layout_marginStart="22dp"
-                android:layout_marginEnd="22dp"
-                android:alpha="0.3"
-                android:background="@android:color/black" />
+            android:layout_width="1dp"
+            android:layout_height="48dp"
+            android:layout_marginStart="22dp"
+            android:layout_marginEnd="22dp"
+            android:alpha="0.3"
+            android:background="@android:color/black" />
 
         <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:letterSpacing="0.05"
-                android:text="@string/app_name_vault"
-                android:textAllCaps="true"
-                android:textColor="@android:color/black"
-                android:textSize="24sp" />
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:letterSpacing="0.05"
+            android:text="@string/app_name_vault"
+            android:textAllCaps="true"
+            android:textColor="@android:color/black"
+            android:textSize="24sp" />
 
     </LinearLayout>
 
     <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:alpha="0.6"
-            android:text="@string/auth_title"
-            android:textAppearance="?android:textAppearanceMedium"
-            android:textColor="@color/color_071c33"
-            android:textSize="16sp" />
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:alpha="0.6"
+        android:text="@string/auth_title"
+        android:textAppearance="?android:textAppearanceMedium"
+        android:textColor="@color/color_071c33"
+        android:textSize="16sp" />
 
-    <LinearLayout
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:scrollbars="vertical"
+        android:fillViewport="true">
+
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
+            android:layout_height="match_parent"
             android:gravity="center"
             android:orientation="vertical">
 
-        <Button
+            <Button
                 android:id="@+id/btnAuthNew"
                 style="@style/Base.Widget.AppCompat.Button.Borderless.Colored"
                 android:layout_width="match_parent"
@@ -67,7 +73,7 @@
                 android:textColor="@android:color/white"
                 android:textSize="14sp" />
 
-        <Button
+            <Button
                 android:id="@+id/btnAuthRestore"
                 style="@style/Base.Widget.AppCompat.Button.Borderless.Colored"
                 android:layout_width="match_parent"
@@ -79,16 +85,16 @@
                 android:textColor="@color/color_primary"
                 android:textSize="14sp" />
 
-        <TextView
+            <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:alpha="0.6"
                 android:padding="8dp"
                 android:text="@string/or_label"
                 android:textColor="@android:color/black"
-                android:alpha="0.6"
                 android:textSize="14sp" />
 
-        <Button
+            <Button
                 android:id="@+id/btnTangemSignIn"
                 style="@style/Base.Widget.AppCompat.Button.Borderless.Colored"
                 android:layout_width="match_parent"
@@ -99,30 +105,31 @@
                 android:textColor="@color/color_primary"
                 android:textSize="14sp" />
 
-        <TextView
+            <TextView
                 android:id="@+id/tvHelp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:alpha="0.6"
                 android:gravity="center"
                 android:linksClickable="false"
                 android:paddingTop="8dp"
                 android:paddingBottom="8dp"
                 android:text="@string/auth_help_label"
                 android:textColor="@android:color/black"
-                android:alpha="0.6"
                 android:textColorLink="@color/color_primary"
                 android:textSize="12sp" />
 
-    </LinearLayout>
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
 
     <TextView
-            android:id="@+id/tvTermsAndPrivacyPolicy"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:text="@string/auth_terms_and_privacy_label"
-            android:textColor="@android:color/black"
-            android:alpha="0.6"
-            android:textColorLink="@color/color_primary"
-            android:textSize="12sp" />
+        android:id="@+id/tvTermsAndPrivacyPolicy"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:alpha="0.6"
+        android:gravity="center"
+        android:text="@string/auth_terms_and_privacy_label"
+        android:textColor="@android:color/black"
+        android:textColorLink="@color/color_primary"
+        android:textSize="12sp" />
 </LinearLayout>

@@ -13,8 +13,11 @@ import com.lobstr.stellar.vault.presentation.base.fragment.BaseFragment
 import com.lobstr.stellar.vault.presentation.dialog.alert.base.AlertDialogFragment
 import com.lobstr.stellar.vault.presentation.home.transactions.details.TransactionDetailsFragment
 import com.lobstr.stellar.vault.presentation.home.transactions.operation.asset_info.AssetInfoDialogFragment
+import com.lobstr.stellar.vault.presentation.home.transactions.operation.contract_info.ContractInfoDialogFragment
 import com.lobstr.stellar.vault.presentation.home.transactions.operation.operation_list.adapter.OperationDetailsAdapter
 import com.lobstr.stellar.vault.presentation.util.Constant
+import com.lobstr.stellar.vault.presentation.util.InsetsMargin
+import com.lobstr.stellar.vault.presentation.util.InsetsPadding
 import com.lobstr.stellar.vault.presentation.util.parcelable
 import dagger.hilt.android.AndroidEntryPoint
 import moxy.ktx.moxyPresenter
@@ -70,7 +73,12 @@ class OperationDetailsFragment : BaseFragment(),
         _binding = null
     }
 
-    override fun handleInsets() {
+    override fun handleInsets(
+        view: View?,
+        typeMask: Int,
+        insetsPadding: InsetsPadding?,
+        insetsMargin: InsetsMargin?
+    ) {
         // Ignore insets (Inner Fragment).
     }
 
@@ -110,6 +118,14 @@ class OperationDetailsFragment : BaseFragment(),
                 putString(Constant.Bundle.BUNDLE_ASSET_ISSUER, issuer)
             }
         }.show(childFragmentManager, AlertDialogFragment.DialogFragmentIdentifier.ASSET_INFO)
+    }
+
+    override fun showContractInfoDialog(contractId: String) {
+        ContractInfoDialogFragment().apply {
+            arguments = Bundle().apply {
+                putString(Constant.Bundle.BUNDLE_CONTRACT_ID, contractId)
+            }
+        }.show(childFragmentManager, AlertDialogFragment.DialogFragmentIdentifier.CONTRACT_INFO)
     }
 
     // ===========================================================

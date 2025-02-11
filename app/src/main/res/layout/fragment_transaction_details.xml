@@ -8,6 +8,7 @@
         tools:context=".presentation.home.transactions.details.TransactionDetailsFragment">
 
     <androidx.core.widget.NestedScrollView
+            android:id="@+id/svContent"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"

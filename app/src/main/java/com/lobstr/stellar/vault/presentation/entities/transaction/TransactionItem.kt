@@ -10,6 +10,7 @@ data class TransactionItem(
     val hash: String,
     var status: Int?,
     val sequenceOutdatedAt: String?,
+    val submittedAt: String?,
     val transaction: Transaction,
     var federation: String? = null,
     var name: String? = null

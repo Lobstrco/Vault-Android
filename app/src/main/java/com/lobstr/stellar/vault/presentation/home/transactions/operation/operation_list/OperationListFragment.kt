@@ -14,6 +14,8 @@ import com.lobstr.stellar.vault.presentation.home.transactions.details.Transacti
 import com.lobstr.stellar.vault.presentation.home.transactions.details.adapter.TransactionOperationAdapter
 import com.lobstr.stellar.vault.presentation.util.Constant
 import com.lobstr.stellar.vault.presentation.util.CustomDividerItemDecoration
+import com.lobstr.stellar.vault.presentation.util.InsetsMargin
+import com.lobstr.stellar.vault.presentation.util.InsetsPadding
 import moxy.ktx.moxyPresenter
 
 class OperationListFragment : BaseFragment(), OperationListView {
@@ -61,7 +63,12 @@ class OperationListFragment : BaseFragment(), OperationListView {
         _binding = null
     }
 
-    override fun handleInsets() {
+    override fun handleInsets(
+        view: View?,
+        typeMask: Int,
+        insetsPadding: InsetsPadding?,
+        insetsMargin: InsetsMargin?
+    ) {
         // Ignore insets (Inner Fragment).
     }
 

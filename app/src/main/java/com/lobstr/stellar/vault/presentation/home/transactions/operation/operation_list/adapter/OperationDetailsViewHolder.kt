@@ -22,7 +22,7 @@ class OperationDetailsViewHolder(
             val isAssetTag by lazy {  tag is Asset.CanonicalAsset }
             val isContractIdValue by lazy { AppUtil.isValidContractID(value) }
 
-            val isSelectableField = isPublicKeyTag || isAssetTag
+            val isSelectableField = isPublicKeyTag || isAssetTag || isContractIdValue
 
             tvFieldName.text = name
             tvFieldValue.ellipsize = when (name) {

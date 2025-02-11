@@ -25,4 +25,7 @@ interface OperationDetailsView : MvpView {
 
     @Skip
     fun showAssetInfoDialog(code: String, issuer: String?)
+
+    @Skip
+    fun showContractInfoDialog(contractId: String)
 }

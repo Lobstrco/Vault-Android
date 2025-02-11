@@ -60,7 +60,8 @@ class TangemCreateWalletActivity : BaseActivity(), TangemCreateWalletView,
     }
 
     override fun handleInsets() {
-        binding.content.doOnApplyWindowInsets { view, insets, padding, _ ->
+        super.handleInsets()
+        binding.flContainer.doOnApplyWindowInsets { view, insets, padding, _ ->
             val innerPadding = insets.getInsets(
                 WindowInsetsCompat.Type.systemBars()
                         or WindowInsetsCompat.Type.displayCutout()

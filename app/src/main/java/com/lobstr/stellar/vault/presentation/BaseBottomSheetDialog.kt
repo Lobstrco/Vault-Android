@@ -11,6 +11,8 @@ import androidx.core.view.updatePadding
 import androidx.fragment.app.FragmentManager
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.lobstr.stellar.vault.presentation.util.InsetsMargin
+import com.lobstr.stellar.vault.presentation.util.InsetsPadding
 import com.lobstr.stellar.vault.presentation.util.doOnApplyWindowInsets
 
 open class BaseBottomSheetDialog : BaseMvpAppCompatDialogFragment() {
@@ -22,7 +24,7 @@ open class BaseBottomSheetDialog : BaseMvpAppCompatDialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         handleTopInsets()
-        handleInsets()
+        handleInsets(view)
     }
 
     private fun handleTopInsets() {
@@ -45,18 +47,37 @@ open class BaseBottomSheetDialog : BaseMvpAppCompatDialogFragment() {
     /**
      * Handled by  <item name="paddingBottomSystemWindowInsets">true</item>
      */
-    open fun handleInsets() {
-        view?.doOnApplyWindowInsets { view, insets, padding, _ ->
-            val innerPadding = insets.getInsets(
-                WindowInsetsCompat.Type.systemBars()
-                        or WindowInsetsCompat.Type.displayCutout()
-                        or WindowInsetsCompat.Type.ime()
-            )
-            view.updatePadding(
-                left = padding.left + innerPadding.left,
-                right = padding.right + innerPadding.right,
-                bottom = padding.bottom + innerPadding.bottom
-            )
+    open fun handleInsets(
+        view: View?,
+        typeMask: Int = WindowInsetsCompat.Type.systemBars()
+                or WindowInsetsCompat.Type.displayCutout()
+                or WindowInsetsCompat.Type.ime(),
+        insetsPadding: InsetsPadding? = InsetsPadding(
+            left = true, right = true, bottom = true
+        ),
+        insetsMargin: InsetsMargin? = null
+    ) {
+        // According common logic apply left/right and bottom insets.
+        view?.doOnApplyWindowInsets { view, insets, padding, margins ->
+            val innerPadding = insets.getInsets(typeMask)
+            insetsPadding?.apply {
+                view.updatePadding(
+                    left = padding.left + if (left) innerPadding.left else 0,
+                    top = padding.top + if (top) innerPadding.top else 0,
+                    right = padding.right + if (right) innerPadding.right else 0,
+                    bottom = padding.bottom + if (bottom) innerPadding.bottom else 0
+                )
+            }
+            insetsMargin?.apply {
+                view.updateLayoutParams<ViewGroup.MarginLayoutParams> {
+                    updateMargins(
+                        left = margins.left + if (left) innerPadding.left else 0,
+                        top = margins.top + if (top) innerPadding.top else 0,
+                        right = margins.right + if (right) innerPadding.right else 0,
+                        bottom = margins.bottom + if (bottom) innerPadding.bottom else 0
+                    )
+                }
+            }
         }
     }
 

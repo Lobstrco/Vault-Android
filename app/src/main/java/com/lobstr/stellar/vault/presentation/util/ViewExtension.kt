@@ -1,6 +1,7 @@
 package com.lobstr.stellar.vault.presentation.util
 
 import android.graphics.Typeface
+import android.os.Build
 import android.text.Spannable
 import android.text.SpannableString
 import android.text.TextPaint
@@ -18,24 +19,40 @@ import androidx.core.view.marginLeft
 import androidx.core.view.marginRight
 import androidx.core.view.marginTop
 
+data class InsetsPadding(
+    val left: Boolean = false,
+    val top: Boolean = false,
+    val right: Boolean = false,
+    val bottom: Boolean = false
+)
+
+data class InsetsMargin(
+    val left: Boolean = false,
+    val top: Boolean = false,
+    val right: Boolean = false,
+    val bottom: Boolean = false
+)
+
 fun View.doOnApplyWindowInsets(
     consumed: Boolean = false,
     f: (View, WindowInsetsCompat, Insets, Insets) -> Unit
 ) {
-    // Create a snapshot of the view's padding and margins state.
-    val initialPadding = Insets.of(paddingLeft, paddingTop, paddingRight, paddingBottom)
-    val initialMargins = Insets.of(marginLeft, marginTop, marginRight, marginBottom)
+    if (Build.VERSION.SDK_INT > Build.VERSION_CODES.O) {
+        // Create a snapshot of the view's padding and margins state.
+        val initialPadding = Insets.of(paddingLeft, paddingTop, paddingRight, paddingBottom)
+        val initialMargins = Insets.of(marginLeft, marginTop, marginRight, marginBottom)
 
-    // Set an actual OnApplyWindowInsetsListener which proxies to the given
-    // lambda, also passing in the original padding state.
+        // Set an actual OnApplyWindowInsetsListener which proxies to the given
+        // lambda, also passing in the original padding state.
 
-    ViewCompat.setOnApplyWindowInsetsListener(this) { v, insets ->
-        f(v, insets, initialPadding, initialMargins)
-        if (consumed) WindowInsetsCompat.CONSUMED else insets
+        ViewCompat.setOnApplyWindowInsetsListener(this) { v, insets ->
+            f(v, insets, initialPadding, initialMargins)
+            if (consumed) WindowInsetsCompat.CONSUMED else insets
+        }
+
+        // Request some insets.
+        requestApplyInsetsWhenAttached()
     }
-
-    // Request some insets.
-    requestApplyInsetsWhenAttached()
 }
 
 fun View.requestApplyInsetsWhenAttached() {
