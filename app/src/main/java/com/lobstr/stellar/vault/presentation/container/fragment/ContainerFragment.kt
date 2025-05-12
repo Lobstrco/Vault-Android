@@ -16,7 +16,7 @@ import com.lobstr.stellar.vault.presentation.home.dashboard.DashboardFragment
 import com.lobstr.stellar.vault.presentation.home.settings.SettingsFragment
 import com.lobstr.stellar.vault.presentation.home.settings.config.ConfigFragment
 import com.lobstr.stellar.vault.presentation.home.settings.signed_accounts.SignedAccountsFragment
-import com.lobstr.stellar.vault.presentation.home.transactions.TransactionsFragment
+import com.lobstr.stellar.vault.presentation.home.transactions.TransactionsContainerFragment
 import com.lobstr.stellar.vault.presentation.home.transactions.details.TransactionDetailsFragment
 import com.lobstr.stellar.vault.presentation.home.transactions.import_xdr.ImportXdrFragment
 import com.lobstr.stellar.vault.presentation.home.transactions.submit_error.ErrorFragment
@@ -106,9 +106,9 @@ class ContainerFragment : BaseContainerFragment(),
     }
 
     // Base unique home tabs fragment.
-    override fun showTransactionsFr() {
+    override fun showTransactionsContainerFr() {
         displayFragment(
-            fragmentName = TransactionsFragment::class.qualifiedName!!,
+            fragmentName = TransactionsContainerFragment::class.qualifiedName!!,
             checkIsUnique = true
         )
     }

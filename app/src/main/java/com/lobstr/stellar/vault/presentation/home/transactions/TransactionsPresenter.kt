@@ -1,5 +1,6 @@
 package com.lobstr.stellar.vault.presentation.home.transactions
 
+import com.lobstr.stellar.tsmapper.presentation.util.Constant
 import com.lobstr.stellar.vault.R
 import com.lobstr.stellar.vault.data.error.exeption.*
 import com.lobstr.stellar.vault.domain.transaction.TransactionInteractor
@@ -13,6 +14,7 @@ import com.lobstr.stellar.vault.presentation.dialog.alert.base.AlertDialogFragme
 import com.lobstr.stellar.vault.presentation.entities.account.Account
 import com.lobstr.stellar.vault.presentation.entities.transaction.TransactionItem
 import com.lobstr.stellar.vault.presentation.util.AppUtil
+import com.lobstr.stellar.vault.presentation.util.Constant.Transaction.Status
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Single
@@ -26,8 +28,10 @@ class TransactionsPresenter @Inject constructor(
 ) : BasePresenter<TransactionsView>() {
 
     companion object {
-        const val LIMIT_PAGE_SIZE = 10
+        const val LIMIT_PAGE_SIZE = 20
     }
+
+    lateinit var status: String
 
     private var transactionsLoadingDisposable: Disposable? = null
     private var nextPageUrl: String? = null
@@ -46,7 +50,18 @@ class TransactionsPresenter @Inject constructor(
 
         registerEventProvider()
         viewState.showOptionsMenu(false)
-        viewState.setupToolbarTitle(R.string.toolbar_transactions_title)
+        when (status) {
+            Status.PENDING -> {
+                viewState.setEmptyState(AppUtil.getString(R.string.transactions_status_pending_empty_state_title))
+                viewState.showFab(true)
+            }
+
+            Status.SIGNED -> {
+                viewState.setEmptyState(AppUtil.getString(R.string.transactions_status_signed_empty_state_title))
+                viewState.showFab(true)
+            }
+            else -> viewState.showFab(false)
+        }
         viewState.initRecycledView()
         loadTransactions()
     }
@@ -73,7 +88,11 @@ class TransactionsPresenter @Inject constructor(
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
                     when (it.type) {
-                        Notification.Type.ADDED_NEW_TRANSACTION,
+                        Notification.Type.ADDED_NEW_TRANSACTION -> {
+                            when (status) {
+                                Status.PENDING -> refreshCalled()
+                            }
+                        }
                         Notification.Type.ADDED_NEW_SIGNATURE,
                         Notification.Type.TRANSACTION_SUBMITTED,
                         Notification.Type.SIGNED_NEW_ACCOUNT, Notification.Type.REMOVED_SIGNER -> {
@@ -114,7 +133,25 @@ class TransactionsPresenter @Inject constructor(
         // Cancel previous loading.
         transactionsLoadingDisposable?.dispose()
 
-        transactionsLoadingDisposable = interactor.getPendingTransactionList(nextPageUrl)
+        transactionsLoadingDisposable =
+            interactor.getFilteredTransactionsList(
+                status,
+                notEnoughSignersWeight = when (status) {
+                    Status.SIGNED -> false
+                    else -> null
+                },
+                submittedAtIsNull = true,
+                excludeOld = when (status) {
+                    Status.SIGNED -> true
+                    else -> null
+                },
+                type = when (status) {
+                    Status.SIGNED -> Constant.TransactionType.TRANSACTION
+                    else -> null
+                },
+                nextPageUrl,
+                LIMIT_PAGE_SIZE
+            )
             .doOnSuccess {
                 if (newLoadTransactions) {
                     transactions.clear()
@@ -265,7 +302,7 @@ class TransactionsPresenter @Inject constructor(
 
     fun transactionItemLongClicked(transactionItem: TransactionItem) {
         transactionHashToDelete = transactionItem.hash
-        viewState.showDenyTransactionDialog()
+        viewState.showDeclineTransactionDialog()
     }
 
     fun addTransactionClicked() {
@@ -273,29 +310,88 @@ class TransactionsPresenter @Inject constructor(
     }
 
     fun clearClicked() {
-        viewState.showClearTransactionsDialog()
+        val dialogTag: String
+        val message: String
+        val positiveBtnText = AppUtil.getString(R.string.remove_transactions_invalid_action)
+        val neutralBtnText: String?
+        val negativeBtnText: String
+
+        when (status) {
+            Status.SIGNED -> {
+                dialogTag = AlertDialogFragment.DialogFragmentIdentifier.CLEAR_SIGNED_TRANSACTIONS
+                message = AppUtil.getString(R.string.remove_transactions_signed_description)
+                neutralBtnText = null
+                negativeBtnText = AppUtil.getString(R.string.cancel_action)
+            }
+
+            else -> {
+                dialogTag = AlertDialogFragment.DialogFragmentIdentifier.CLEAR_PENDING_TRANSACTIONS
+                message = AppUtil.getString(R.string.remove_transactions_pending_description)
+                neutralBtnText = AppUtil.getString(R.string.cancel_action)
+                negativeBtnText = AppUtil.getString(R.string.remove_transactions_all_action)
+            }
+        }
+
+        viewState.showClearTransactionsDialog(
+            dialogTag,
+            message,
+            positiveBtnText,
+            neutralBtnText,
+            negativeBtnText
+        )
     }
 
     fun onAlertDialogPositiveButtonClicked(tag: String?) {
         when (tag) {
-            AlertDialogFragment.DialogFragmentIdentifier.CLEAR_TRANSACTIONS -> {
-                clearInvalidTransactions()
+            AlertDialogFragment.DialogFragmentIdentifier.CLEAR_PENDING_TRANSACTIONS -> {
+                // Pending: Decline Invalid
+                clearTransactions(
+                    status,
+                    notEnoughSignersWeight = null,
+                    submittedAtIsNull = true,
+                    sequenceOutdatedAtIsNull = false
+                )
             }
-            AlertDialogFragment.DialogFragmentIdentifier.DENY_TRANSACTION -> denyTransaction(transactionHashToDelete)
+            AlertDialogFragment.DialogFragmentIdentifier.CLEAR_SIGNED_TRANSACTIONS -> {
+                // Signed: Decline Invalid
+                clearTransactions(
+                    status,
+                    notEnoughSignersWeight = false,
+                    submittedAtIsNull = true,
+                    sequenceOutdatedAtIsNull = false
+                )
+            }
+            AlertDialogFragment.DialogFragmentIdentifier.DECLINE_TRANSACTION -> declineTransaction(transactionHashToDelete)
         }
     }
 
     fun onAlertDialogNegativeButtonClicked(tag: String?) {
         when (tag) {
-            AlertDialogFragment.DialogFragmentIdentifier.CLEAR_TRANSACTIONS -> {
-                clearTransactions()
+            AlertDialogFragment.DialogFragmentIdentifier.CLEAR_PENDING_TRANSACTIONS -> {
+                // Pending: Remove All
+                clearTransactions(
+                    status,
+                    notEnoughSignersWeight = null,
+                    submittedAtIsNull = true,
+                    sequenceOutdatedAtIsNull = null
+                )
             }
         }
     }
 
-    private fun clearTransactions() {
+    private fun clearTransactions(
+        status: String,
+        notEnoughSignersWeight: Boolean?,
+        submittedAtIsNull: Boolean?,
+        sequenceOutdatedAtIsNull: Boolean?
+    ) {
         unsubscribeOnDestroy(
-            interactor.cancelTransactions()
+            interactor.cancelTransactions(
+                status,
+                notEnoughSignersWeight,
+                submittedAtIsNull,
+                sequenceOutdatedAtIsNull
+            )
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe {
@@ -316,44 +412,12 @@ class TransactionsPresenter @Inject constructor(
                                 UserNotAuthorizedException.Action.AUTH_REQUIRED -> eventProviderModule.authEventSubject.onNext(
                                     Auth()
                                 )
-                                else -> clearTransactions()
-                            }
-                        }
-                        is DefaultException -> {
-                            viewState.showErrorMessage(it.details)
-                        }
-                        else -> {
-                            viewState.showErrorMessage(it.message ?: "")
-                        }
-                    }
-                })
-        )
-    }
-
-    private fun clearInvalidTransactions() {
-        unsubscribeOnDestroy(
-            interactor.cancelOutdatedTransactions()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .doOnSubscribe {
-                    viewState.showProgressDialog(true)
-                }
-                .doOnEvent {
-                    viewState.showProgressDialog(false)
-                }
-                .subscribe({
-                    refreshCalled()
-                }, {
-                    when (it) {
-                        is NoInternetConnectionException -> {
-                            viewState.showErrorMessage(it.details)
-                        }
-                        is UserNotAuthorizedException -> {
-                            when (it.action) {
-                                UserNotAuthorizedException.Action.AUTH_REQUIRED -> eventProviderModule.authEventSubject.onNext(
-                                    Auth()
+                                else -> clearTransactions(
+                                    status,
+                                    notEnoughSignersWeight,
+                                    submittedAtIsNull,
+                                    sequenceOutdatedAtIsNull
                                 )
-                                else -> clearInvalidTransactions()
                             }
                         }
                         is DefaultException -> {
@@ -367,7 +431,7 @@ class TransactionsPresenter @Inject constructor(
         )
     }
 
-    private fun denyTransaction(hash: String?) {
+    private fun declineTransaction(hash: String?) {
         if (hash.isNullOrEmpty() || cancellationInProcess) {
             return
         }
@@ -392,7 +456,7 @@ class TransactionsPresenter @Inject constructor(
                                 UserNotAuthorizedException.Action.AUTH_REQUIRED -> eventProviderModule.authEventSubject.onNext(
                                     Auth()
                                 )
-                                else -> denyTransaction(hash)
+                                else -> declineTransaction(hash)
                             }
                         }
                         is InternalException -> viewState.showErrorMessage(
@@ -401,7 +465,7 @@ class TransactionsPresenter @Inject constructor(
                             )
                         )
                         is HttpNotFoundException -> {
-                            viewState.showErrorMessage(AppUtil.getString(R.string.transaction_details_msg_already_signed_or_denied))
+                            viewState.showErrorMessage(AppUtil.getString(R.string.transaction_details_msg_already_signed_or_declined))
                         }
                         is DefaultException -> viewState.showErrorMessage(it.details)
                         else -> {

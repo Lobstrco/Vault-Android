@@ -5,6 +5,7 @@ import com.lobstr.stellar.vault.domain.local_data.LocalDataRepository
 import com.lobstr.stellar.vault.domain.transaction.TransactionRepository
 import com.lobstr.stellar.vault.presentation.entities.account.Account
 import com.lobstr.stellar.vault.presentation.entities.transaction.TransactionResult
+import com.lobstr.stellar.vault.presentation.home.transactions.TransactionsPresenter.Companion.LIMIT_PAGE_SIZE
 import com.lobstr.stellar.vault.presentation.util.AppUtil
 import com.lobstr.stellar.vault.presentation.util.Constant
 import com.lobstr.stellar.vault.presentation.util.PrefsUtil
@@ -17,11 +18,12 @@ class DashboardInteractorImpl(
     private val prefsUtil: PrefsUtil
 ) : DashboardInteractor {
 
-    override fun getPendingTransactionList(nextPageUrl: String?): Single<TransactionResult> {
-        return transactionRepository.getTransactionList(
+    override fun getPendingTransactionsList(): Single<TransactionResult> {
+        return transactionRepository.getFilteredTransactionsList(
             AppUtil.getJwtToken(prefsUtil.authToken),
-            Constant.TransactionType.PENDING,
-            nextPageUrl
+            Constant.Transaction.Status.PENDING,
+            submittedAtIsNull = true,
+            pageSize = LIMIT_PAGE_SIZE
         )
     }
 

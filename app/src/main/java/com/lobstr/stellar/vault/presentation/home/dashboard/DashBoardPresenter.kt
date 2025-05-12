@@ -141,7 +141,7 @@ class DashboardPresenter @Inject constructor(
         }
 
         unsubscribeOnDestroy(
-            interactor.getPendingTransactionList(null)
+            interactor.getPendingTransactionsList()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe { loadTransactionsInProcess = true }

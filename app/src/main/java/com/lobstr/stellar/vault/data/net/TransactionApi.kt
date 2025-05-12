@@ -1,5 +1,6 @@
 package com.lobstr.stellar.vault.data.net
 
+import com.lobstr.stellar.vault.data.net.entities.transaction.ApiCancelTransactionsRequest
 import com.lobstr.stellar.vault.data.net.entities.transaction.ApiCountSequenceNumber
 import com.lobstr.stellar.vault.data.net.entities.transaction.ApiSubmitTransaction
 import com.lobstr.stellar.vault.data.net.entities.transaction.ApiTransactionItem
@@ -12,30 +13,36 @@ import retrofit2.http.*
 interface TransactionApi {
 
     @GET("transactions/")
-    fun getTransactionList(
-        @Header("Authorization") token: String
+    fun getFilteredTransactionsList(
+        @Header("Authorization") token: String,
+        @Query("status") status: String?,
+        @Query("not_enough_signers_weight") notEnoughSignersWeight: Boolean?,
+        @Query("submitted_at__isnull") submittedAtIsNull: Boolean?,
+        @Query("exclude_old") excludeOld: Boolean?,
+        @Query("transaction_type") type: String?,
+        @Query("page_size") pageSize: Int?
     ): Single<ApiTransactionResult>
 
     @GET
-    fun getTransactionListByUrl(
+    fun getTransactionsListByUrl(
         @Url url: String,
         @Header("Authorization") token: String
     ): Single<ApiTransactionResult>
 
     @GET("transactions/{hash}/")
     fun getTransaction(
+        @Header("Authorization") token: String,
         @Path("hash") hash: String,
-        @Header("Authorization") token: String
     ): Single<ApiTransactionItem>
 
     /**
-     * Add some transaction type
-     * @see com.lobstr.stellar.vault.presentation.util.Constant.TransactionType
+     * @param type Transaction type. [com.lobstr.stellar.vault.presentation.util.Constant.TransactionType].
      */
     @GET("transactions/{type}")
-    fun getTransactionList(
+    fun getTypedTransactionsList(
+        @Header("Authorization") token: String,
         @Path("type") type: String,
-        @Header("Authorization") token: String
+        @Query("page_size") pageSize: Int?
     ): Single<ApiTransactionResult>
 
     /**
@@ -62,13 +69,14 @@ interface TransactionApi {
 
     @POST("transactions/{hash}/cancel/")
     fun markTransactionAsCancelled(
+        @Header("Authorization") token: String,
         @Path("hash") hash: String,
-        @Header("Authorization") token: String
     ): Single<ApiTransactionItem>
 
     @POST("transactions/hide-all/")
     fun cancelTransactions(
-        @Header("Authorization") token: String
+        @Header("Authorization") token: String,
+        @Body body: ApiCancelTransactionsRequest
     ): Completable
 
     @POST("transactions/hide-outdated/")

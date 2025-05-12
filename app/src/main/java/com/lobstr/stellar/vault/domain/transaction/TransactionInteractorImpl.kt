@@ -6,7 +6,6 @@ import com.lobstr.stellar.vault.presentation.entities.account.Account
 import com.lobstr.stellar.vault.presentation.entities.transaction.TransactionItem
 import com.lobstr.stellar.vault.presentation.entities.transaction.TransactionResult
 import com.lobstr.stellar.vault.presentation.util.AppUtil
-import com.lobstr.stellar.vault.presentation.util.Constant
 import com.lobstr.stellar.vault.presentation.util.PrefsUtil
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Single
@@ -18,32 +17,40 @@ class TransactionInteractorImpl(
     private val prefUtil: PrefsUtil
 ) : TransactionInteractor {
 
-    override fun getTransactionList(nextPageUrl: String?): Single<TransactionResult> {
-        return transactionRepository.getTransactionList(
+    override fun getFilteredTransactionsList(
+        status: String,
+        notEnoughSignersWeight: Boolean?,
+        submittedAtIsNull: Boolean?,
+        excludeOld: Boolean?,
+        type: String?,
+        nextPageUrl: String?,
+        pageSize: Int?
+    ): Single<TransactionResult> {
+        return transactionRepository.getFilteredTransactionsList(
             AppUtil.getJwtToken(prefUtil.authToken),
-            null,
-            nextPageUrl
+            status,
+            notEnoughSignersWeight,
+            submittedAtIsNull,
+            excludeOld,
+            type,
+            nextPageUrl,
+            pageSize
         )
     }
 
-    override fun getPendingTransactionList(nextPageUrl: String?): Single<TransactionResult> {
-        return transactionRepository.getTransactionList(
+    override fun cancelTransactions(
+        status: String,
+        notEnoughSignersWeight: Boolean?,
+        submittedAtIsNull: Boolean?,
+        sequenceOutdatedAtIsNull: Boolean?
+    ): Completable {
+        return transactionRepository.cancelTransactions(
             AppUtil.getJwtToken(prefUtil.authToken),
-            Constant.TransactionType.PENDING,
-            nextPageUrl
+            status,
+            notEnoughSignersWeight,
+            submittedAtIsNull,
+            sequenceOutdatedAtIsNull
         )
-    }
-
-    override fun getInactiveTransactionList(nextPageUrl: String?): Single<TransactionResult> {
-        return transactionRepository.getTransactionList(
-            AppUtil.getJwtToken(prefUtil.authToken),
-            Constant.TransactionType.INACTIVE,
-            nextPageUrl
-        )
-    }
-
-    override fun cancelTransactions(): Completable {
-        return transactionRepository.cancelTransactions(AppUtil.getJwtToken(prefUtil.authToken))
     }
 
     override fun cancelTransaction(hash: String): Single<TransactionItem> {
@@ -51,10 +58,6 @@ class TransactionInteractorImpl(
             AppUtil.getJwtToken(prefUtil.authToken),
             hash
         )
-    }
-
-    override fun cancelOutdatedTransactions(): Completable {
-        return transactionRepository.cancelOutdatedTransactions(AppUtil.getJwtToken(prefUtil.authToken))
     }
 
     override fun getStellarAccount(stellarAddress: String): Single<Account> {

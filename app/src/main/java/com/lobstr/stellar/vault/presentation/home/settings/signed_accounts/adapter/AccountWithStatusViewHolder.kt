@@ -62,9 +62,9 @@ class AccountWithStatusViewHolder(
 
             tvStatus.text =
                 if (account.signed == true) {
-                    itemView.context.getString(R.string.transaction_details_signer_item_status_signed_label)
+                    itemView.context.getString(R.string.status_signed_title)
                 } else {
-                    itemView.context.getString(R.string.transaction_details_signer_item_status_pending_label)
+                    itemView.context.getString(R.string.status_pending_title)
                 }
 
             tvStatus.setTextColor(

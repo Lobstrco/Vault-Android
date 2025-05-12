@@ -91,4 +91,24 @@
     <style name="BottomNavigationStyle.Active" parent="@style/TextAppearance.MaterialComponents.Caption">
         <item name="android:textSize">14sp</item>
     </style>
+
+    <style name="TabTextAppearance" parent="TextAppearance.Design.Tab">
+        <item name="textAllCaps">false</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+
+    <style name="TransactionsTabStyle" parent="Widget.Design.TabLayout">
+        <item name="android:background">@drawable/bg_tabs</item>
+        <item name="android:paddingBottom">1dp</item>
+        <item name="tabTextAppearance">@style/TabTextAppearance</item>
+        <item name="tabGravity">fill</item>
+        <item name="tabMaxWidth">0dp</item>
+        <item name="tabIndicatorFullWidth">false</item>
+        <item name="tabIndicator">@drawable/tab_indicator</item>
+        <item name="tabMode">fixed</item>
+        <item name="tabIndicatorColor">@android:color/white</item>
+        <item name="tabRippleColor">@null</item>
+        <item name="tabTextColor">@color/color_9f90b6</item>
+        <item name="tabSelectedTextColor">@android:color/white</item>
+    </style>
 </resources>

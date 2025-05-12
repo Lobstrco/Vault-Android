@@ -43,6 +43,8 @@ object Constant {
         const val BUNDLE_ASSET_ISSUER = "BUNDLE_ASSET_ISSUER"
         const val BUNDLE_ERROR = "BUNDLE_ERROR"
         const val BUNDLE_CONTRACT_ID = "BUNDLE_CONTRACT_ID"
+        const val BUNDLE_TRANSACTIONS_STATUS = "BUNDLE_TRANSACTIONS_STATUS"
+        const val BUNDLE_SHOW_COMMON_TOOLBAR = "BUNDLE_SHOW_COMMON_TOOLBAR"
     }
 
     object Navigation {
@@ -64,10 +66,15 @@ object Constant {
     }
 
     object Transaction {
+        object Status {
+            const val PENDING = "pending"
+            const val CANCELLED = "cancelled"
+            const val SIGNED = "signed"
+        }
+
         const val PENDING = 1
         const val CANCELLED = 2
         const val SIGNED = 3
-
         // When transaction created from entered XDR.
         const val IMPORT_XDR = 4
     }

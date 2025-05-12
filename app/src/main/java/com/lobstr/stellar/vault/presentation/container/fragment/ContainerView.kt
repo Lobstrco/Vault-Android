@@ -18,7 +18,7 @@ interface ContainerView : MvpView {
 
     fun showSettingsFr()
 
-    fun showTransactionsFr()
+    fun showTransactionsContainerFr()
 
     fun showTransactionDetails(transactionItem: TransactionItem)
 

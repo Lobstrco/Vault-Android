@@ -1,6 +1,7 @@
 package com.lobstr.stellar.vault.domain.transaction_details
 
 import com.lobstr.stellar.vault.data.error.exeption.ForbiddenException
+import com.lobstr.stellar.vault.data.error.exeption.HttpNotFoundException
 import com.lobstr.stellar.vault.domain.account.AccountRepository
 import com.lobstr.stellar.vault.domain.key_store.KeyStoreRepository
 import com.lobstr.stellar.vault.domain.local_data.LocalDataRepository
@@ -46,7 +47,7 @@ class TransactionDetailsInteractorImpl(
      * Used for retrieve actual transaction XDR for send it to Horizon.
      * In some cases (when used >1 vault accounts) need retrieve actual XDR.
      *
-     * For case when transaction status = IMPORT_XDR - check token and return existing transactionItem after success.
+     * For case when transaction status = IMPORT_XDR - check token and return existing transactionItem after success/HttpNotFoundException.
      * @see Constant.Transaction.IMPORT_XDR
      * @param skip Skip action for some cases like for signed transaction via Tangem.
      */
@@ -54,23 +55,31 @@ class TransactionDetailsInteractorImpl(
         transactionItem: TransactionItem,
         skip: Boolean
     ): Single<TransactionItem> {
-        return when (transactionItem.status) {
-            IMPORT_XDR -> transactionRepository.getTransactionList(
-                AppUtil.getJwtToken(prefsUtil.authToken), // Check token.
-                null,
-                null
-            ).flatMap { Single.fromCallable { transactionItem } }
-            else ->
-                when {
-                    skip -> Single.fromCallable { transactionItem }
-                    else -> {
-                        transactionRepository.retrieveTransaction(
-                            AppUtil.getJwtToken(prefsUtil.authToken),
-                            transactionItem.hash
-                        )
+        return if (skip) {
+            Single.fromCallable { transactionItem }
+        } else {
+            transactionRepository.retrieveTransaction(
+                AppUtil.getJwtToken(prefsUtil.authToken),
+                transactionItem.hash
+            ).flatMap {
+                Single.fromCallable {
+                    when (transactionItem.status) {
+                        IMPORT_XDR -> transactionItem
+                        else -> it
                     }
                 }
+            }.onErrorResumeNext {
+                when (it) {
+                    is HttpNotFoundException -> {
+                        when (transactionItem.status) {
+                            IMPORT_XDR -> Single.fromCallable { transactionItem }
+                            else -> Single.error(it)
+                        }
+                    }
 
+                    else -> Single.error(it)
+                }
+            }
         }
     }
 

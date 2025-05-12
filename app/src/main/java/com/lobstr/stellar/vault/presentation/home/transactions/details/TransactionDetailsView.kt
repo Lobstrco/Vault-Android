@@ -1,5 +1,6 @@
 package com.lobstr.stellar.vault.presentation.home.transactions.details
 
+import androidx.annotation.ColorRes
 import androidx.annotation.StringRes
 import com.lobstr.stellar.tsmapper.presentation.entities.transaction.operation.Operation
 import com.lobstr.stellar.tsmapper.presentation.entities.transaction.operation.OperationField
@@ -16,6 +17,9 @@ interface TransactionDetailsView : MvpView {
 
     @AddToEndSingle
     fun setupToolbarTitle(@StringRes titleRes: Int)
+
+    @AddToEndSingle
+    fun updateMenuItemsVisibility(hiddenItemIds: Set<Int>)
 
     @AddToEndSingle
     fun initSignersRecycledView()
@@ -62,16 +66,21 @@ interface TransactionDetailsView : MvpView {
     fun showProgressDialog(show: Boolean)
 
     @AddToEndSingle
-    fun setActionBtnVisibility(isConfirmVisible: Boolean, isDenyVisible: Boolean)
+    fun setActionBtnState(
+        isConfirmVisible: Boolean,
+        isDeclineVisible: Boolean,
+        isConfirmEnabled: Boolean = true,
+        isDeclineEnabled: Boolean = true
+    )
 
     @AddToEndSingle
     fun showActionContainer(show: Boolean)
 
     @AddToEndSingle
-    fun setTransactionValid(valid: Boolean)
+    fun showWarningLabel(text: String, @ColorRes color: Int)
 
     @AddToEndSingle
-    fun successDenyTransaction(transactionItem: TransactionItem)
+    fun successDeclineTransaction(transactionItem: TransactionItem)
 
     @AddToEndSingle
     fun successConfirmTransaction(
@@ -91,7 +100,7 @@ interface TransactionDetailsView : MvpView {
     fun showConfirmTransactionDialog(show: Boolean, message: String? = null)
 
     @Skip
-    fun showDenyTransactionDialog()
+    fun showDeclineTransactionDialog()
 
     @AddToEndSingle
     fun showSequenceNumberWarningDialog(show: Boolean)

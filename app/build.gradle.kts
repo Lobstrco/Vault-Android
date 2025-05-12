@@ -20,8 +20,8 @@ android {
         applicationId = "com.lobstr.stellar.vault"
         minSdk = 22
         targetSdk = 34
-        versionCode = 49
-        versionName = "3.4.2"
+        versionCode = 50
+        versionName = "3.5.0"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
         // Used for setup Bundle name.
@@ -157,7 +157,7 @@ android {
     namespace = "com.lobstr.stellar.vault"
 }
 
-val desugar_jdk_libs by extra("2.1.4")
+val desugar_jdk_libs by extra("2.1.5")
 val rx_java by extra("3.1.10")
 val rx_android by extra("3.0.2")
 val retrofit by extra("2.11.0")
@@ -166,31 +166,31 @@ val moxy by extra("2.2.2")
 val glide by extra("4.16.0")
 val material by extra("1.12.0")
 val browser by extra("1.8.0")
-val firebase_bom by extra("33.9.0")
-val play_service_base by extra("18.5.0")
+val firebase_bom by extra("33.13.0")
+val play_service_base by extra("18.7.0")
 val androidx_core by extra("1.13.1")
 val androidx_appcompat by extra("1.7.0")
-val fragment by extra("1.8.5")
+val fragment by extra("1.8.6")
 val recyclerview by extra("1.3.2")
 val androidx_preference by extra("1.2.1")
-val androidx_constraintlayout by extra("2.2.0")
+val androidx_constraintlayout by extra("2.2.1")
 val androidx_legacy_support_v4 by extra("1.0.0")
 val junit by extra("4.13.2")
 val runner by extra("1.2.1")
 val espresso_core by extra("3.6.1")
-val stellar_sdk by extra("1.0.0")
+val stellar_sdk by extra("1.3.1")
 val mnemonic by extra("0.1.1")
 val work_manager by extra("2.9.1")
 val biometric by extra("1.1.0")
-val lottieVersion by extra("6.6.2")
+val lottieVersion by extra("6.6.6")
 val qr_gen by extra("2.6.0")
 val viewpager2 by extra("1.1.0")
 val tangem by extra("3.7.2")
-val hilt by extra("2.55")
+val hilt by extra("2.56.2")
 val androidx_hilt by extra("1.2.0")
 val lifecycle by extra("2.8.7")
 val timber by extra("5.0.1")
-val bcprov by extra("1.79")
+val bcprov by extra("1.80")
 
 dependencies {
     implementation(fileTree(mapOf("dir" to "libs", "include" to listOf("*.jar"))))
@@ -223,10 +223,10 @@ dependencies {
 
     // Dagger Hilt dependencies.
     implementation("com.google.dagger:hilt-android:$hilt")
-    kapt("com.google.dagger:hilt-compiler:$hilt")
+    ksp("com.google.dagger:hilt-compiler:$hilt")
 
     implementation("androidx.hilt:hilt-work:$androidx_hilt")
-    kapt("androidx.hilt:hilt-compiler:$androidx_hilt")
+    ksp("androidx.hilt:hilt-compiler:$androidx_hilt")
 
     // Rx dependencies.
     implementation("io.reactivex.rxjava3:rxjava:$rx_java")

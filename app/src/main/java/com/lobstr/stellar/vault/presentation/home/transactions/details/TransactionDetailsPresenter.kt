@@ -27,7 +27,7 @@ import com.lobstr.stellar.vault.domain.util.event.Notification
 import com.lobstr.stellar.vault.domain.util.event.Update
 import com.lobstr.stellar.vault.presentation.BasePresenter
 import com.lobstr.stellar.vault.presentation.dialog.alert.base.AlertDialogFragment.DialogFragmentIdentifier.CONFIRM_TRANSACTION
-import com.lobstr.stellar.vault.presentation.dialog.alert.base.AlertDialogFragment.DialogFragmentIdentifier.DENY_TRANSACTION
+import com.lobstr.stellar.vault.presentation.dialog.alert.base.AlertDialogFragment.DialogFragmentIdentifier.DECLINE_TRANSACTION
 import com.lobstr.stellar.vault.presentation.dialog.alert.base.AlertDialogFragment.DialogFragmentIdentifier.SEQUENCE_NUMBER_WARNING
 import com.lobstr.stellar.vault.presentation.entities.account.Account
 import com.lobstr.stellar.vault.presentation.entities.account.AccountResult
@@ -349,23 +349,62 @@ class TransactionDetailsPresenter @Inject constructor(
 
     private fun prepareUiAndOperationsList() {
         // Handle transaction's status.
+        val isTrValid by lazy { transactionItem.sequenceOutdatedAt.isNullOrEmpty() }
         when (transactionItem.status) {
             PENDING -> {
                 // Check transaction's submitted state.
                 if (transactionItem.submittedAt.isNullOrEmpty()) {
-                    viewState.setTransactionValid(transactionItem.sequenceOutdatedAt.isNullOrEmpty())
-                    viewState.setActionBtnVisibility(true, true)
+                    if (!isTrValid) {
+                        viewState.showWarningLabel(
+                            AppUtil.getString(R.string.transaction_details_invalid_sequence_number_description),
+                            R.color.color_d9534f
+                        )
+                    }
+                    viewState.setActionBtnState(
+                        isConfirmVisible = true,
+                        isDeclineVisible = true,
+                        isConfirmEnabled = isTrValid
+                    )
                 } else {
-                    viewState.setActionBtnVisibility(false, false)
+                    viewState.setActionBtnState(
+                        isConfirmVisible = false,
+                        isDeclineVisible = false
+                    )
                 }
             }
 
             IMPORT_XDR -> {
-                viewState.setTransactionValid(transactionItem.sequenceOutdatedAt.isNullOrEmpty())
-                viewState.setActionBtnVisibility(true, true)
+                if (!isTrValid) {
+                    viewState.showWarningLabel(
+                        AppUtil.getString(R.string.transaction_details_invalid_sequence_number_description),
+                        R.color.color_d9534f
+                    )
+                }
+                viewState.setActionBtnState(
+                    isConfirmVisible = true,
+                    isDeclineVisible = true,
+                    isConfirmEnabled = isTrValid
+                )
             }
 
-            CANCELLED, SIGNED -> viewState.setActionBtnVisibility(false, false)
+            SIGNED -> {
+                viewState.updateMenuItemsVisibility(setOf(R.id.action_copy_signed_xdr))
+                viewState.showWarningLabel(
+                    AppUtil.getString(
+                        if (!isTrValid) R.string.transaction_details_invalid_sequence_number_description else R.string.transaction_details_decline_signed_transaction_description
+                    ),
+                    if (!isTrValid) R.color.color_d9534f else R.color.color_9b9b9b
+                )
+                viewState.setActionBtnState(
+                    isConfirmVisible = false,
+                    isDeclineVisible = true
+                )
+            }
+
+            CANCELLED -> viewState.setActionBtnState(
+                isConfirmVisible = false,
+                isDeclineVisible = false
+            )
         }
 
         // Prepare operations list or show single operation:
@@ -648,7 +687,7 @@ class TransactionDetailsPresenter @Inject constructor(
                 .doOnSuccess {
                     transactionItem = it
                     when (transactionItem.status) {
-                        CANCELLED, SIGNED -> throw DefaultException(AppUtil.getString(R.string.transaction_details_msg_already_signed_or_denied))
+                        CANCELLED, SIGNED -> throw DefaultException(AppUtil.getString(R.string.transaction_details_msg_already_signed_or_declined))
                     }
                 }
                 .observeOn(AndroidSchedulers.mainThread())
@@ -738,16 +777,16 @@ class TransactionDetailsPresenter @Inject constructor(
         )
     }
 
-    fun btnDenyClicked() {
+    fun btnDeclineClicked() {
         when {
             interactor.hasMnemonics() -> {
                 when {
-                    interactor.isTrConfirmationEnabled() -> viewState.showDenyTransactionDialog()
-                    else -> denyTransaction()
+                    interactor.isTrConfirmationEnabled() -> viewState.showDeclineTransactionDialog()
+                    else -> declineTransaction()
                 }
             }
             interactor.hasTangem() -> {
-                denyTransaction()
+                declineTransaction()
             }
         }
     }
@@ -777,7 +816,7 @@ class TransactionDetailsPresenter @Inject constructor(
                     transactionItem = it
 
                     when (transactionItem.status) {
-                        CANCELLED, SIGNED -> throw DefaultException(AppUtil.getString(R.string.transaction_details_msg_already_signed_or_denied))
+                        CANCELLED, SIGNED -> throw DefaultException(AppUtil.getString(R.string.transaction_details_msg_already_signed_or_declined))
                     }
 
                     if (signedTransaction.isNullOrEmpty()) {
@@ -912,12 +951,12 @@ class TransactionDetailsPresenter @Inject constructor(
         )
     }
 
-    private fun denyTransaction() {
+    private fun declineTransaction() {
         // Check transaction status.
         when (transactionItem.status) {
-            // IMPORT_XDR - 'success deny transaction' action without api call.
+            // IMPORT_XDR - 'success decline transaction' action without api call.
             IMPORT_XDR -> {
-                viewState.successDenyTransaction(transactionItem)
+                viewState.successDeclineTransaction(transactionItem)
 
                 // Notify about transaction changed.
                 eventProviderModule.notificationEventSubject.onNext(
@@ -942,7 +981,7 @@ class TransactionDetailsPresenter @Inject constructor(
                         }
                         .subscribe({
                             transactionItem = it
-                            viewState.successDenyTransaction(it)
+                            viewState.successDeclineTransaction(it)
                             // Notify about transaction changed.
                             eventProviderModule.notificationEventSubject.onNext(
                                 Notification(
@@ -957,7 +996,7 @@ class TransactionDetailsPresenter @Inject constructor(
                                         UserNotAuthorizedException.Action.AUTH_REQUIRED -> eventProviderModule.authEventSubject.onNext(
                                             Auth()
                                         )
-                                        else -> denyTransaction()
+                                        else -> declineTransaction()
                                     }
                                 }
                                 is InternalException -> viewState.showMessage(
@@ -966,7 +1005,7 @@ class TransactionDetailsPresenter @Inject constructor(
                                     )
                                 )
                                 is HttpNotFoundException -> {
-                                    viewState.showMessage(AppUtil.getString(R.string.transaction_details_msg_already_signed_or_denied))
+                                    viewState.showMessage(AppUtil.getString(R.string.transaction_details_msg_already_signed_or_declined))
                                 }
                                 is DefaultException -> viewState.showMessage(it.details)
                                 else -> {
@@ -981,7 +1020,7 @@ class TransactionDetailsPresenter @Inject constructor(
 
     fun onAlertDialogPositiveButtonClicked(tag: String?) {
         when (tag) {
-            DENY_TRANSACTION -> denyTransaction()
+            DECLINE_TRANSACTION -> declineTransaction()
             CONFIRM_TRANSACTION -> {
                 viewState.showConfirmTransactionDialog(false)
                 confirmTransaction()

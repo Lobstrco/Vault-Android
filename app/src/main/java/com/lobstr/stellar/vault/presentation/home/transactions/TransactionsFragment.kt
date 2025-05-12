@@ -10,7 +10,11 @@ import android.widget.Toast
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult
 import androidx.core.view.MenuProvider
+import androidx.core.view.doOnPreDraw
 import androidx.core.view.isVisible
+import androidx.core.view.marginBottom
+import androidx.core.view.marginTop
+import androidx.core.view.updatePadding
 import androidx.lifecycle.Lifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -22,7 +26,11 @@ import com.lobstr.stellar.vault.presentation.container.activity.ContainerActivit
 import com.lobstr.stellar.vault.presentation.dialog.alert.base.AlertDialogFragment
 import com.lobstr.stellar.vault.presentation.entities.transaction.TransactionItem
 import com.lobstr.stellar.vault.presentation.home.transactions.adapter.TransactionAdapter
+import com.lobstr.stellar.vault.presentation.util.AppUtil
 import com.lobstr.stellar.vault.presentation.util.Constant
+import com.lobstr.stellar.vault.presentation.util.Constant.Transaction.Status
+import com.lobstr.stellar.vault.presentation.util.InsetsMargin
+import com.lobstr.stellar.vault.presentation.util.InsetsPadding
 import com.lobstr.stellar.vault.presentation.util.manager.ProgressManager
 import com.lobstr.stellar.vault.presentation.util.setSafeOnClickListener
 import dagger.hilt.android.AndroidEntryPoint
@@ -45,6 +53,18 @@ class TransactionsFragment : BaseFragment(), TransactionsView, SwipeRefreshLayou
     private var _binding: FragmentTransactionsBinding? = null
     private val binding get() = _binding!!
 
+    private val mRegisterForTransactionResult =
+        registerForActivityResult(StartActivityForResult()) { result: ActivityResult ->
+            handleTransactionResult(result)
+        }
+
+    fun handleTransactionResult(result: ActivityResult) {
+        if (result.resultCode == Activity.RESULT_OK) {
+            mvpDelegate.onAttach()
+            mPresenter.handleTransactionResult()
+        }
+    }
+
     @Inject
     lateinit var presenterProvider: Provider<TransactionsPresenter>
 
@@ -52,15 +72,11 @@ class TransactionsFragment : BaseFragment(), TransactionsView, SwipeRefreshLayou
     // Constructors
     // ===========================================================
 
-    private val mPresenter by moxyPresenter { presenterProvider.get() }
-
-    private val mRegisterForTransactionResult =
-        registerForActivityResult(StartActivityForResult()) { result: ActivityResult ->
-            if (result.resultCode == Activity.RESULT_OK) {
-                mvpDelegate.onAttach()
-                mPresenter.handleTransactionResult()
-            }
+    private val mPresenter by moxyPresenter {
+        presenterProvider.get().apply {
+            status = arguments?.getString(Constant.Bundle.BUNDLE_TRANSACTIONS_STATUS) ?: Status.PENDING
         }
+    }
 
     // ===========================================================
     // Getter & Setter
@@ -82,6 +98,20 @@ class TransactionsFragment : BaseFragment(), TransactionsView, SwipeRefreshLayou
         super.onViewCreated(view, savedInstanceState)
 
         setListeners()
+    }
+
+    override fun handleInsets(
+        view: View?,
+        typeMask: Int,
+        insetsPadding: InsetsPadding?,
+        insetsMargin: InsetsMargin?
+    ) {
+        when (parentFragment) {
+            is TransactionsContainerFragment -> {
+                // Skip insets.
+            }
+            else -> super.handleInsets(view, typeMask, insetsPadding, insetsMargin)
+        }
     }
 
     private fun setListeners() {
@@ -108,19 +138,49 @@ class TransactionsFragment : BaseFragment(), TransactionsView, SwipeRefreshLayou
         saveActionBarTitle(titleRes)
     }
 
+    override fun setEmptyState(title: String) {
+        binding.tvTransactionEmptyState.text = title
+    }
+
+    override fun showFab(show: Boolean) {
+        binding.apply {
+            fabAddTransaction.isVisible = show
+            if (show) {
+                fabAddTransaction.doOnPreDraw {
+                    rvTransactions.updatePadding(
+                        bottom = fabAddTransaction.height
+                                + fabAddTransaction.marginTop
+                                + fabAddTransaction.marginBottom
+                                - AppUtil.convertDpToPixels(requireContext(), 8f)
+                    )
+                }
+            } else {
+                rvTransactions.updatePadding(
+                    bottom = AppUtil.convertDpToPixels(requireContext(), 4f)
+                )
+            }
+        }
+    }
+
     override fun initRecycledView() {
-        binding.rvTransactions.layoutManager = LinearLayoutManager(context)
-        binding.rvTransactions.itemAnimator = null
-        binding.rvTransactions.adapter = TransactionAdapter({
-            mPresenter.transactionItemClicked(it)
-        },{
-            mPresenter.transactionItemLongClicked(it)
-        })
-        binding.rvTransactions.addOnScrollListener(RecyclerTransactionsScrollingListener())
+        binding.rvTransactions.apply {
+            layoutManager = LinearLayoutManager(context)
+            itemAnimator = null
+            adapter = TransactionAdapter({
+                mPresenter.transactionItemClicked(it)
+            },{
+                mPresenter.transactionItemLongClicked(it)
+            })
+            addOnScrollListener(RecyclerTransactionsScrollingListener())
+        }
     }
 
     override fun showTransactionDetails(transactionItem: TransactionItem) {
-        mRegisterForTransactionResult.launch(
+        val launcher = when (val parent = parentFragment) {
+            is TransactionsContainerFragment -> parent.mCommonRegisterForTransactionResult
+            else -> mRegisterForTransactionResult
+        }
+        launcher.launch(
             Intent(
                 context,
                 ContainerActivity::class.java
@@ -172,38 +232,45 @@ class TransactionsFragment : BaseFragment(), TransactionsView, SwipeRefreshLayou
     }
 
     override fun showImportXdrScreen() {
-        mRegisterForTransactionResult.launch(Intent(context, ContainerActivity::class.java).apply {
+        val launcher = when (val parent = parentFragment) {
+            is TransactionsContainerFragment -> parent.mCommonRegisterForTransactionResult
+            else -> mRegisterForTransactionResult
+        }
+        launcher.launch(Intent(context, ContainerActivity::class.java).apply {
             addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
             addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
             putExtra(Constant.Extra.EXTRA_NAVIGATION_FR, Constant.Navigation.IMPORT_XDR)
         })
     }
 
-    override fun showClearTransactionsDialog() {
+    override fun showClearTransactionsDialog(
+        tag: String,
+        message: String,
+        positiveBtnText: String,
+        neutralBtnText: String?,
+        negativeBtnText: String
+    ) {
         AlertDialogFragment.Builder(true)
             .setCancelable(true)
             .setTitle(R.string.remove_transactions_title)
-            .setMessage(R.string.remove_transactions_description)
-            .setPositiveBtnText(R.string.remove_transactions_invalid_action)
-            .setNeutralBtnText(R.string.cancel_action)
-            .setNegativeBtnText(R.string.remove_transactions_all_action)
+            .setMessage(message)
+            .setPositiveBtnText(positiveBtnText)
+            .setNeutralBtnText(neutralBtnText)
+            .setNegativeBtnText(negativeBtnText)
             .create()
-            .show(
-                childFragmentManager,
-                AlertDialogFragment.DialogFragmentIdentifier.CLEAR_TRANSACTIONS
-            )
+            .show(childFragmentManager, tag)
     }
 
-    override fun showDenyTransactionDialog() {
+    override fun showDeclineTransactionDialog() {
         AlertDialogFragment.Builder(true)
             .setCancelable(true)
             .setTitle(R.string.confirmation_title)
-            .setMessage(R.string.transaction_confirmation_deny_description)
+            .setMessage(R.string.transaction_confirmation_decline_description)
             .setNegativeBtnText(R.string.cancel_action)
             .setPositiveBtnText(R.string.yes_action)
             .create()
             .show(childFragmentManager,
-                AlertDialogFragment.DialogFragmentIdentifier.DENY_TRANSACTION
+                AlertDialogFragment.DialogFragmentIdentifier.DECLINE_TRANSACTION
             )
     }
 
@@ -248,23 +315,25 @@ class TransactionsFragment : BaseFragment(), TransactionsView, SwipeRefreshLayou
         }
     }
 
-    private val mMenuProvider = object : MenuProvider {
-        override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
-            menuInflater.inflate(R.menu.transactions, menu)
+    private val mMenuProvider by lazy {
+        object : MenuProvider {
+            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+                menuInflater.inflate(R.menu.transactions, menu)
 
-            val itemClear = menu.findItem(R.id.action_clear)
+                val itemClear = menu.findItem(R.id.action_clear)
 
-            itemClear?.actionView?.setSafeOnClickListener {
-                onMenuItemSelected(itemClear)
+                itemClear?.actionView?.setSafeOnClickListener {
+                    onMenuItemSelected(itemClear)
+                }
             }
-        }
 
-        override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
-            when (menuItem.itemId) {
-                R.id.action_clear -> mPresenter.clearClicked()
-                else -> return false
+            override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+                when (menuItem.itemId) {
+                    R.id.action_clear -> mPresenter.clearClicked()
+                    else -> return false
+                }
+                return true
             }
-            return true
         }
     }
 }

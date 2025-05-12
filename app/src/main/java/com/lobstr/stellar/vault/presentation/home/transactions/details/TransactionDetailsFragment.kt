@@ -29,7 +29,7 @@ import com.lobstr.stellar.vault.presentation.base.fragment.BaseFragment
 import com.lobstr.stellar.vault.presentation.container.activity.ContainerActivity
 import com.lobstr.stellar.vault.presentation.dialog.alert.base.AlertDialogFragment
 import com.lobstr.stellar.vault.presentation.dialog.alert.base.AlertDialogFragment.DialogFragmentIdentifier.CONFIRM_TRANSACTION
-import com.lobstr.stellar.vault.presentation.dialog.alert.base.AlertDialogFragment.DialogFragmentIdentifier.DENY_TRANSACTION
+import com.lobstr.stellar.vault.presentation.dialog.alert.base.AlertDialogFragment.DialogFragmentIdentifier.DECLINE_TRANSACTION
 import com.lobstr.stellar.vault.presentation.dialog.alert.base.AlertDialogFragment.DialogFragmentIdentifier.SEQUENCE_NUMBER_WARNING
 import com.lobstr.stellar.vault.presentation.entities.account.Account
 import com.lobstr.stellar.vault.presentation.entities.error.Error
@@ -79,6 +79,13 @@ class TransactionDetailsFragment : BaseFragment(), TransactionDetailsView,
     @Inject
     lateinit var presenterProvider: Provider<TransactionDetailsPresenter>
 
+    // Stores the set of menu item IDs that should currently be hidden.
+    private var hiddenMenuItemIds: Set<Int> = emptySet()
+    // Add more IDs here if their visibility needs to be managed.
+    private val controllableMenuItemIds = setOf(
+        R.id.action_copy_signed_xdr
+    )
+
     // ===========================================================
     // Constructors
     // ===========================================================
@@ -107,7 +114,7 @@ class TransactionDetailsFragment : BaseFragment(), TransactionDetailsView,
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        addMenuProvider()
+        requireActivity().addMenuProvider(mMenuProvider, viewLifecycleOwner)
         setListeners()
     }
 
@@ -127,24 +134,6 @@ class TransactionDetailsFragment : BaseFragment(), TransactionDetailsView,
         )
     }
 
-    private fun addMenuProvider() {
-        requireActivity().addMenuProvider(object : MenuProvider {
-            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
-                menuInflater.inflate(R.menu.transaction_details, menu)
-            }
-
-            override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
-                when (menuItem.itemId) {
-                    R.id.action_copy_xdr -> mPresenter.copyXdrClicked()
-                    R.id.action_copy_signed_xdr -> mPresenter.copySignedXdrClicked()
-                    R.id.action_view_transaction_details -> mPresenter.viewTransactionDetailsClicked()
-                    else -> return false
-                }
-                return true
-            }
-        }, viewLifecycleOwner)
-    }
-
     private fun setListeners() {
         backPressedCallback = requireActivity().onBackPressedDispatcher.addCallback(requireActivity()) {
             // handle operations container backStack.
@@ -159,7 +148,7 @@ class TransactionDetailsFragment : BaseFragment(), TransactionDetailsView,
 
         binding.apply {
             btnConfirm.setSafeOnClickListener { mPresenter.btnConfirmClicked() }
-            btnDeny.setSafeOnClickListener { mPresenter.btnDenyClicked() }
+            btnDecline.setSafeOnClickListener { mPresenter.btnDeclineClicked() }
         }
 
         childFragmentManager.addOnBackStackChangedListener {
@@ -179,6 +168,14 @@ class TransactionDetailsFragment : BaseFragment(), TransactionDetailsView,
 
     override fun setupToolbarTitle(titleRes: Int) {
         saveActionBarTitle(titleRes)
+    }
+
+    override fun updateMenuItemsVisibility(hiddenItemIds: Set<Int>) {
+        // Check if the set of hidden items has actually changed.
+        if (this.hiddenMenuItemIds != hiddenItemIds) {
+            this.hiddenMenuItemIds = hiddenItemIds
+            requireActivity().invalidateOptionsMenu()
+        }
     }
 
     override fun initSignersRecycledView() {
@@ -340,11 +337,19 @@ class TransactionDetailsFragment : BaseFragment(), TransactionDetailsView,
         }
     }
 
-    override fun setActionBtnVisibility(isConfirmVisible: Boolean, isDenyVisible: Boolean) {
+    override fun setActionBtnState(
+        isConfirmVisible: Boolean,
+        isDeclineVisible: Boolean,
+        isConfirmEnabled: Boolean,
+        isDeclineEnabled: Boolean
+    ) {
         binding.apply {
-            llActionBtnContainer.isVisible = isConfirmVisible && isDenyVisible
+            llActionBtnContainer.isVisible = isConfirmVisible || isDeclineVisible
+            actionDivider.isVisible = isConfirmVisible && isDeclineVisible
             btnConfirm.isVisible = isConfirmVisible
-            btnDeny.isVisible = isDenyVisible
+            btnDecline.isVisible = isDeclineVisible
+            btnConfirm.isEnabled = isConfirmEnabled
+            btnDecline.isEnabled = isDeclineEnabled
         }
     }
 
@@ -352,10 +357,11 @@ class TransactionDetailsFragment : BaseFragment(), TransactionDetailsView,
         binding.llActionContainer.isVisible = show
     }
 
-    override fun setTransactionValid(valid: Boolean) {
-        binding.apply {
-            btnConfirm.isEnabled = valid
-            tvErrorDescription.isVisible = !valid
+    override fun showWarningLabel(text: String, color: Int) {
+        binding.tvErrorDescription.apply {
+            this.text = text
+            setTextColor(ContextCompat.getColor(requireContext(), color))
+            isVisible = true
         }
     }
 
@@ -367,8 +373,8 @@ class TransactionDetailsFragment : BaseFragment(), TransactionDetailsView,
         ProgressManager.show(show, childFragmentManager)
     }
 
-    override fun successDenyTransaction(transactionItem: TransactionItem) {
-        showMessage(getString(R.string.transaction_details_msg_denied))
+    override fun successDeclineTransaction(transactionItem: TransactionItem) {
+        showMessage(getString(R.string.transaction_details_msg_declined))
 
         // Notify target about changes.
         activity?.setResult(Activity.RESULT_OK, Intent().apply {
@@ -460,15 +466,15 @@ class TransactionDetailsFragment : BaseFragment(), TransactionDetailsView,
         }
     }
 
-    override fun showDenyTransactionDialog() {
+    override fun showDeclineTransactionDialog() {
         AlertDialogFragment.Builder(true)
             .setCancelable(true)
             .setTitle(R.string.confirmation_title)
-            .setMessage(R.string.transaction_confirmation_deny_description)
+            .setMessage(R.string.transaction_confirmation_decline_description)
             .setNegativeBtnText(R.string.cancel_action)
             .setPositiveBtnText(R.string.yes_action)
             .create()
-            .show(childFragmentManager, DENY_TRANSACTION)
+            .show(childFragmentManager, DECLINE_TRANSACTION)
     }
 
     override fun showSequenceNumberWarningDialog(show: Boolean) {
@@ -564,4 +570,38 @@ class TransactionDetailsFragment : BaseFragment(), TransactionDetailsView,
     // ===========================================================
     // Inner and Anonymous Classes
     // ===========================================================
+
+    private val mMenuProvider = object : MenuProvider {
+        override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+            menuInflater.inflate(R.menu.transaction_details, menu)
+            applyMenuItemsVisibility(menu, hiddenMenuItemIds)
+        }
+
+        override fun onPrepareMenu(menu: Menu) {
+            applyMenuItemsVisibility(menu, hiddenMenuItemIds)
+            super.onPrepareMenu(menu)
+        }
+
+        override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+            // Check if the item is currently hidden.
+            if (menuItem.itemId in hiddenMenuItemIds) {
+                return false
+            }
+
+            when (menuItem.itemId) {
+                R.id.action_copy_xdr -> mPresenter.copyXdrClicked()
+                R.id.action_copy_signed_xdr -> mPresenter.copySignedXdrClicked()
+                R.id.action_view_transaction_details -> mPresenter.viewTransactionDetailsClicked()
+                else -> return false
+            }
+            return true
+        }
+
+        private fun applyMenuItemsVisibility(menu: Menu, hiddenIds: Set<Int>) {
+            for (itemId in controllableMenuItemIds) {
+                val item = menu.findItem(itemId)
+                item?.isVisible = itemId !in hiddenIds
+            }
+        }
+    }
 }

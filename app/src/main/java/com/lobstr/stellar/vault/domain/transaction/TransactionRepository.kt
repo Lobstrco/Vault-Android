@@ -10,7 +10,22 @@ interface TransactionRepository {
 
     fun retrieveTransaction(token: String, hash: String): Single<TransactionItem>
 
-    fun getTransactionList(token: String, type: String?, nextPageUrl: String?): Single<TransactionResult>
+    fun getTypedTransactionsList(token: String, type: String, nextPageUrl: String?, pageSize: Int?): Single<TransactionResult>
+
+    /**
+     * @param status Transaction status. [com.lobstr.stellar.vault.presentation.util.Constant.Transaction.Status].
+     * @param type Transaction type. [com.lobstr.stellar.tsmapper.presentation.util.Constant.TransactionType].
+     */
+    fun getFilteredTransactionsList(
+        token: String,
+        status: String?,
+        notEnoughSignersWeight: Boolean? = null,
+        submittedAtIsNull: Boolean? = null,
+        excludeOld: Boolean? = null,
+        type: String? = null,
+        nextPageUrl: String? = null,
+        pageSize: Int? = null
+    ): Single<TransactionResult>
 
     fun submitSignedTransaction(
         token: String, transaction: String
@@ -22,7 +37,13 @@ interface TransactionRepository {
 
     fun markTransactionAsCancelled(token: String, hash: String): Single<TransactionItem>
 
-    fun cancelTransactions(token: String): Completable
+    fun cancelTransactions(
+        token: String,
+        status: String?,
+        notEnoughSignersWeight: Boolean?,
+        submittedAtIsNull: Boolean?,
+        sequenceOutdatedAtIsNull: Boolean?
+    ): Completable
 
     fun cancelOutdatedTransactions(token: String): Completable
 

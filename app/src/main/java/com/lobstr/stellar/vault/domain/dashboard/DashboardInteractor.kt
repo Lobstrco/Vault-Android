@@ -6,7 +6,7 @@ import io.reactivex.rxjava3.core.Single
 
 interface DashboardInteractor {
 
-    fun getPendingTransactionList(nextPageUrl: String?): Single<TransactionResult>
+    fun getPendingTransactionsList(): Single<TransactionResult>
 
     fun getUserPublicKey(): String?
 

@@ -318,16 +318,9 @@ object AppUtil {
         return decodeMuxedAccount(account) != null
     }
 
-    fun isValidContractID(contractID: String?): Boolean = try {
-        if (contractID.isNullOrEmpty()) {
-            false
-        } else {
-            StrKey.decodeContract(contractID)
-            true
-        }
-    } catch (exc: Exception) {
-        false
-    }
+    fun isValidContractID(contractID: String?): Boolean =
+        if (contractID.isNullOrEmpty()) false else StrKey.isValidContract(contractID)
+
 
     fun createUserIconLink(key: String?): String {
         return Constant.Social.USER_ICON_LINK.plus(key?.let { decodeAccountStr(it) }).plus(".png")

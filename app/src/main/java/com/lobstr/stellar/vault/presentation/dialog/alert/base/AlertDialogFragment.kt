@@ -59,7 +59,7 @@ open class AlertDialogFragment : BaseMvpAppCompatDialogFragment() {
     object DialogFragmentIdentifier {
         const val PROGRESS_DIALOG = "PROGRESS_DIALOG"
         const val BIOMETRIC_INFO_DIALOG = "BIOMETRIC_INFO_DIALOG"
-        const val DENY_TRANSACTION = "DENY_TRANSACTION"
+        const val DECLINE_TRANSACTION = "DECLINE_TRANSACTION"
         const val CONFIRM_TRANSACTION = "CONFIRM_TRANSACTION"
         const val PUBLIC_KEY = "PUBLIC_KEY"
         const val DENY_ACCOUNT_CREATION = "DENY_ACCOUNT_CREATION"
@@ -69,7 +69,8 @@ open class AlertDialogFragment : BaseMvpAppCompatDialogFragment() {
         const val SUGGEST_RATE_US = "SUGGEST_RATE_US"
         const val PROVIDE_FEEDBACK = "PROVIDE_FEEDBACK"
         const val COMMON_PIN_PATTERN = "COMMON_PIN_PATTERN"
-        const val CLEAR_TRANSACTIONS = "CLEAR_TRANSACTIONS"
+        const val CLEAR_PENDING_TRANSACTIONS = "CLEAR_PENDING_TRANSACTIONS"
+        const val CLEAR_SIGNED_TRANSACTIONS = "CLEAR_SIGNED_TRANSACTIONS"
         const val NFC_INFO_DIALOG = "NFC_INFO_DIALOG"
         const val TANGEM = "TANGEM"
         const val INFO = "INFO"

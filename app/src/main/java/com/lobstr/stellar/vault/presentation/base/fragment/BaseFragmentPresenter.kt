@@ -2,7 +2,8 @@ package com.lobstr.stellar.vault.presentation.base.fragment
 
 import moxy.MvpPresenter
 
-class BaseFragmentPresenter : MvpPresenter<BaseFragmentView>() {
+class BaseFragmentPresenter(private val showCommonToolbar: Boolean) :
+    MvpPresenter<BaseFragmentView>() {
 
     private var toolbarTitle: String? = null
 
@@ -13,11 +14,15 @@ class BaseFragmentPresenter : MvpPresenter<BaseFragmentView>() {
     }
 
     fun setToolbarTitle() {
-        viewState.setActionBarTitle(toolbarTitle)
+        if (showCommonToolbar) {
+            viewState.setActionBarTitle(toolbarTitle)
+        }
     }
 
     fun setToolbarTitle(title: String?) {
-        toolbarTitle = title
-        viewState.setActionBarTitle(title)
+        if (showCommonToolbar) {
+            toolbarTitle = title
+            viewState.setActionBarTitle(title)
+        }
     }
 }

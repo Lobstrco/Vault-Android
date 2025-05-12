@@ -1,6 +1,7 @@
 package com.lobstr.stellar.vault.data.transaction
 
 import com.lobstr.stellar.vault.data.net.TransactionApi
+import com.lobstr.stellar.vault.data.net.entities.transaction.ApiCancelTransactionsRequest
 import com.lobstr.stellar.vault.domain.error.RxErrorUtils
 import com.lobstr.stellar.vault.domain.transaction.TransactionRepository
 import com.lobstr.stellar.vault.presentation.entities.transaction.TransactionItem
@@ -16,28 +17,60 @@ class TransactionRepositoryImpl(
 ) : TransactionRepository {
 
     override fun retrieveTransaction(token: String, hash: String): Single<TransactionItem> {
-        return transactionApi.getTransaction(hash, token)
+        return transactionApi.getTransaction(token, hash)
             .onErrorResumeNext { rxErrorUtils.handleSingleRequestHttpError(it) }
             .map {
                 transactionEntityMapper.transformTransactionItem(it)
             }
     }
 
-    override fun getTransactionList(token: String, type: String?, nextPageUrl: String?): Single<TransactionResult> {
+    override fun getTypedTransactionsList(
+        token: String,
+        type: String,
+        nextPageUrl: String?,
+        pageSize: Int?
+    ): Single<TransactionResult> {
         return when {
-            type.isNullOrEmpty() && nextPageUrl.isNullOrEmpty() -> transactionApi.getTransactionList(token)
-            type.isNullOrEmpty() && !nextPageUrl.isNullOrEmpty() -> transactionApi.getTransactionListByUrl(
-                nextPageUrl,
-                token
+            nextPageUrl.isNullOrEmpty() -> transactionApi.getTypedTransactionsList(
+                token,
+                type,
+                pageSize
             )
-            !type.isNullOrEmpty() && nextPageUrl.isNullOrEmpty() -> transactionApi.getTransactionList(type, token)
-            else -> transactionApi.getTransactionListByUrl(nextPageUrl!!, token)
+
+            else -> transactionApi.getTransactionsListByUrl(nextPageUrl, token)
         }
             .onErrorResumeNext { rxErrorUtils.handleSingleRequestHttpError(it) }
             .map {
                 transactionEntityMapper.transformTransactions(it)
             }
     }
+
+    override fun getFilteredTransactionsList(
+        token: String,
+        status: String?,
+        notEnoughSignersWeight: Boolean?,
+        submittedAtIsNull: Boolean?,
+        excludeOld: Boolean?,
+        type: String?,
+        nextPageUrl: String?,
+        pageSize: Int?
+    ): Single<TransactionResult> = when {
+        nextPageUrl.isNullOrEmpty() -> transactionApi.getFilteredTransactionsList(
+            token,
+            status,
+            notEnoughSignersWeight,
+            submittedAtIsNull,
+            excludeOld,
+            type,
+            pageSize
+        )
+
+        else -> transactionApi.getTransactionsListByUrl(nextPageUrl, token)
+    }
+        .onErrorResumeNext { rxErrorUtils.handleSingleRequestHttpError(it) }
+        .map {
+            transactionEntityMapper.transformTransactions(it)
+        }
 
     override fun submitSignedTransaction(token: String, transaction: String): Single<String> {
         return transactionApi.submitSignedTransaction(token, transaction)
@@ -56,15 +89,29 @@ class TransactionRepositoryImpl(
     }
 
     override fun markTransactionAsCancelled(token: String, hash: String): Single<TransactionItem> {
-        return transactionApi.markTransactionAsCancelled(hash, token)
+        return transactionApi.markTransactionAsCancelled(token, hash)
             .onErrorResumeNext { rxErrorUtils.handleSingleRequestHttpError(it) }
             .map {
                 transactionEntityMapper.transformTransactionItem(it)
             }
     }
 
-    override fun cancelTransactions(token: String): Completable {
-        return transactionApi.cancelTransactions(token)
+    override fun cancelTransactions(
+        token: String,
+        status: String?,
+        notEnoughSignersWeight: Boolean?,
+        submittedAtIsNull: Boolean?,
+        sequenceOutdatedAtIsNull: Boolean?
+    ): Completable {
+        return transactionApi.cancelTransactions(
+            token,
+            ApiCancelTransactionsRequest(
+                status,
+                notEnoughSignersWeight,
+                submittedAtIsNull,
+                sequenceOutdatedAtIsNull
+            )
+        )
             .onErrorResumeNext { rxErrorUtils.handleCompletableRequestHttpError(it) }
     }
 

@@ -8,17 +8,24 @@ import io.reactivex.rxjava3.core.Single
 
 interface TransactionInteractor {
 
-    fun getTransactionList(nextPageUrl: String?): Single<TransactionResult>
+    fun getFilteredTransactionsList(
+        status: String,
+        notEnoughSignersWeight: Boolean?,
+        submittedAtIsNull: Boolean?,
+        excludeOld: Boolean?,
+        type: String?,
+        nextPageUrl: String?,
+        pageSize: Int?
+    ): Single<TransactionResult>
 
-    fun getPendingTransactionList(nextPageUrl: String?): Single<TransactionResult>
-
-    fun getInactiveTransactionList(nextPageUrl: String?): Single<TransactionResult>
-
-    fun cancelTransactions(): Completable
+    fun cancelTransactions(
+        status: String,
+        notEnoughSignersWeight: Boolean?,
+        submittedAtIsNull: Boolean?,
+        sequenceOutdatedAtIsNull: Boolean?
+    ): Completable
 
     fun cancelTransaction(hash: String): Single<TransactionItem>
-
-    fun cancelOutdatedTransactions(): Completable
 
     fun getStellarAccount(stellarAddress: String): Single<Account>
 

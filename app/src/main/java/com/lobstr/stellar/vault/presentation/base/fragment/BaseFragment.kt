@@ -10,6 +10,7 @@ import androidx.core.view.updatePadding
 import com.lobstr.stellar.vault.presentation.BaseMvpAppCompatFragment
 import com.lobstr.stellar.vault.presentation.base.activity.BaseActivity
 import com.lobstr.stellar.vault.presentation.home.HomeActivity
+import com.lobstr.stellar.vault.presentation.util.Constant.Bundle.BUNDLE_SHOW_COMMON_TOOLBAR
 import com.lobstr.stellar.vault.presentation.util.InsetsMargin
 import com.lobstr.stellar.vault.presentation.util.InsetsPadding
 import com.lobstr.stellar.vault.presentation.util.doOnApplyWindowInsets
@@ -17,7 +18,11 @@ import moxy.ktx.moxyPresenter
 
 abstract class BaseFragment : BaseMvpAppCompatFragment(), BaseFragmentView {
 
-    private val mBasePresenter by moxyPresenter { BaseFragmentPresenter() }
+    private val mBasePresenter by moxyPresenter {
+        BaseFragmentPresenter(
+            arguments?.getBoolean(BUNDLE_SHOW_COMMON_TOOLBAR, true) ?: true
+        )
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

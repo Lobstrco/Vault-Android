@@ -38,7 +38,7 @@ class ContainerPresenter(
 
             DASHBOARD -> viewState.showDashBoardFr()
 
-            TRANSACTIONS -> viewState.showTransactionsFr()
+            TRANSACTIONS -> viewState.showTransactionsContainerFr()
 
             SETTINGS -> viewState.showSettingsFr()
 

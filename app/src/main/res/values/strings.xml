@@ -15,7 +15,7 @@
     <string name="confirm_action">Confirm</string>
     <string name="yes_action">Yes</string>
     <string name="no_action">No</string>
-    <string name="deny_action">Deny</string>
+    <string name="decline_action">Decline</string>
     <string name="next_action">Next</string>
     <string name="clip_to_board_action">Copy</string>
     <string name="paste_clipboard_action">Paste From Clipboard</string>
@@ -125,7 +125,10 @@
     <string name="dashboard_signers_empty_state_description">Add the Stellar account you want to protect</string>
 
     <!-- Transactions screen -->
-    <string name="transactions_empty_state_title">No transactions to sign</string>
+    <string name="transactions_status_pending_empty_state_title">No transactions to sign</string>
+    <string name="transactions_status_signed_empty_state_title">No signed transactions</string>
+    <string name="status_pending_title">Pending</string>
+    <string name="status_signed_title">Signed</string>
     <string name="transactions_item_sequence_number_invalid_label">Invalid</string>
 
     <!-- Settings -->
@@ -168,22 +171,19 @@
 
     <!-- Transaction Details -->
     <string name="transaction_details_challenge_title">Challenge</string>
-    <string name="transaction_details_invalid_sequence_number_description">Transaction can not be confirmed, its sequence number is
-        invalid.
-    </string>
+    <string name="transaction_details_invalid_sequence_number_description">This transaction can not be submitted to the network. Its sequence number is invalid.</string>
+    <string name="transaction_details_decline_signed_transaction_description">Declining this transaction will revoke your signature and remove it from the list.</string>
     <string name="transaction_details_added_at_label">Created</string>
     <plurals name="transaction_details_signatures_count_to_submit_label">
         <item quantity="one">%d signature required to submit this transaction to the network</item>
         <item quantity="other">%d signatures required to submit this transaction to the network</item>
     </plurals>
     <string name="transaction_details_signers_title">Signers</string>
-    <string name="transaction_details_msg_denied">Transaction denied</string>
-    <string name="transaction_details_msg_already_signed_or_denied">The transaction has already been confirmed or denied</string>
+    <string name="transaction_details_msg_declined">Transaction Declined</string>
+    <string name="transaction_details_msg_already_signed_or_declined">The transaction has already been confirmed or declined</string>
 
     <!-- Transaction Details Signer Item -->
     <string name="transaction_details_signer_item_vault_marker_label">Your Signer Account</string>
-    <string name="transaction_details_signer_item_status_signed_label">Signed</string>
-    <string name="transaction_details_signer_item_status_pending_label">Pending</string>
 
     <!-- Operations' list -->
     <string name="operations_list_title">Operations</string>
@@ -202,7 +202,7 @@
     <string name="notifications_permission_not_set_up_description">Please grant Notifications Permission in the device settings first.</string>
 
     <!-- Transaction Confirmation action dialog -->
-    <string name="transaction_confirmation_deny_description">Want to deny the transaction?</string>
+    <string name="transaction_confirmation_decline_description">Want to decline the transaction?</string>
     <string name="transaction_confirmation_confirm_description">Want to confirm the transaction?</string>
     <string name="transaction_confirmation_no_other_signatures_required_description">Want to confirm this transaction? Your transaction will be signed and submitted to the network.</string>
     <string name="transaction_confirmation_other_signatures_required_description">Want to confirm this transaction? Your transaction will be signed, and you will need confirmations from other signers to submit it to the network.</string>
@@ -223,9 +223,10 @@
 
     <!-- Remove Transactions dialog -->
     <string name="remove_transactions_title">Remove transactions</string>
-    <string name="remove_transactions_description">What type of transactions do you want to remove?</string>
-    <string name="remove_transactions_all_action">Remove All</string>
-    <string name="remove_transactions_invalid_action">Remove Invalid</string>
+    <string name="remove_transactions_pending_description">Choose which transactions you\'d like to remove from your Pending list</string>
+    <string name="remove_transactions_signed_description">Choose which transactions you\'d like to remove from your Signed list</string>
+    <string name="remove_transactions_all_action">Decline All</string>
+    <string name="remove_transactions_invalid_action">Decline Invalid</string>
 
     <!-- Common PIN pattern dialog -->
     <string name="common_pin_pattern_title">Warning</string>

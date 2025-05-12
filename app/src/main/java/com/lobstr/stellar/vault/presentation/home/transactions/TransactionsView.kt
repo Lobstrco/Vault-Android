@@ -13,6 +13,12 @@ interface TransactionsView : MvpView {
     fun setupToolbarTitle(@StringRes titleRes: Int)
 
     @AddToEndSingle
+    fun setEmptyState(title: String)
+
+    @AddToEndSingle
+    fun showFab(show: Boolean)
+
+    @AddToEndSingle
     fun initRecycledView()
 
     @Skip
@@ -43,8 +49,14 @@ interface TransactionsView : MvpView {
     fun showImportXdrScreen()
 
     @Skip
-    fun showClearTransactionsDialog()
+    fun showClearTransactionsDialog(
+        tag: String,
+        message: String,
+        positiveBtnText: String,
+        neutralBtnText: String?,
+        negativeBtnText: String
+    )
 
     @Skip
-    fun showDenyTransactionDialog()
+    fun showDeclineTransactionDialog()
 }
