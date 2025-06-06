@@ -7,10 +7,10 @@ plugins {
 }
 
 android {
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
-        minSdk = 21
+        minSdk = 24
     }
     buildTypes {
         getByName("debug") {
@@ -37,9 +37,9 @@ android {
     namespace = "com.lobstr.stellar.tsmapper"
 }
 
-val stellar_sdk by extra("1.3.1")
+val stellar_sdk by extra("1.5.0")
 val gson by extra("2.13.1")
-val firebase_bom by extra("33.13.0")
+val firebase_bom by extra("33.14.0")
 
 dependencies {
     implementation(fileTree(mapOf("dir" to "libs", "include" to listOf("*.jar"))))

@@ -127,48 +127,45 @@ class NotificationsManager(private val context: Context) {
                     .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
                     .setAutoCancel(true)
                     .setPriority(priority)
-            notificationBuilder.setContentIntent(getPendingIntent(notificationIntentClass))
+                    .setGroup(groupName)
+                    .setContentIntent(getPendingIntent(notificationIntentClass))
 
-            // Notifications group with NotificationCompat.InboxStyle() starting Android N.
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                notificationBuilder.setGroup(groupName)
-
-                val groupBuilder =
-                    NotificationCompat.Builder(
-                        context,
-                        createNotificationChannel(
-                            channelId,
-                            channelGroupId,
-                            notificationManager,
-                            importance
+            // Notifications group with NotificationCompat.InboxStyle().
+            val groupBuilder =
+                NotificationCompat.Builder(
+                    context,
+                    createNotificationChannel(
+                        channelId,
+                        channelGroupId,
+                        notificationManager,
+                        importance
+                    )
+                )
+                    .setSmallIcon(R.drawable.ic_stat_notif)
+                    .setColor(
+                        ContextCompat.getColor(
+                            context,
+                            if (BuildConfig.FLAVOR.equals(Constant.Flavor.VAULT)) R.color.color_primary else R.color.color_757575
                         )
                     )
-                        .setSmallIcon(R.drawable.ic_stat_notif)
-                        .setColor(
-                            ContextCompat.getColor(
-                                context,
-                                if (BuildConfig.FLAVOR.equals(Constant.Flavor.VAULT)) R.color.color_primary else R.color.color_757575
-                            )
-                        )
-                        .setLights(
-                            ContextCompat.getColor(
-                                context,
-                                if (BuildConfig.FLAVOR.equals(Constant.Flavor.VAULT)) R.color.color_primary else R.color.color_757575
-                            ), 500, 500
-                        )
-                        .setContentTitle(notificationTitle)
-                        .setStyle(NotificationCompat.InboxStyle())
-                        .setContentText(notificationMessage)
-                        .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
-                        .setGroupSummary(true)
-                        .setGroup(groupName)
-                        .setGroupAlertBehavior(NotificationCompat.GROUP_ALERT_CHILDREN)
-                        .setAutoCancel(true)
-                        .setPriority(priority)
-                        .setContentIntent(getPendingIntent(groupIntentClass))
+                    .setLights(
+                        ContextCompat.getColor(
+                            context,
+                            if (BuildConfig.FLAVOR.equals(Constant.Flavor.VAULT)) R.color.color_primary else R.color.color_757575
+                        ), 500, 500
+                    )
+                    .setContentTitle(notificationTitle)
+                    .setStyle(NotificationCompat.InboxStyle())
+                    .setContentText(notificationMessage)
+                    .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
+                    .setGroupSummary(true)
+                    .setGroup(groupName)
+                    .setGroupAlertBehavior(NotificationCompat.GROUP_ALERT_CHILDREN)
+                    .setAutoCancel(true)
+                    .setPriority(priority)
+                    .setContentIntent(getPendingIntent(groupIntentClass))
 
-                notificationManager.notify(groupId, groupBuilder.build())
-            }
+            notificationManager.notify(groupId, groupBuilder.build())
 
             notificationManager.notify(notificationId, notificationBuilder.build())
         }
@@ -227,6 +224,7 @@ class NotificationsManager(private val context: Context) {
                 .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
                 .setAutoCancel(true)
                 .setPriority(priority)
+                .setGroup(groupName)
 
             // Data (image url or something else) - some data that we must pass to activity from fcm
             // and refresh this data when we will open activity.
@@ -235,46 +233,42 @@ class NotificationsManager(private val context: Context) {
             getPendingIntentWithStack(intent)?.cancel()
             notificationBuilder.setContentIntent(getPendingIntentWithStack(intent))
 
-            // Notifications group with NotificationCompat.InboxStyle() starting Android N.
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                notificationBuilder.setGroup(groupName)
-
-                val groupBuilder =
-                    NotificationCompat.Builder(
-                        context,
-                        createNotificationChannel(
-                            channelId,
-                            channelGroupId,
-                            notificationManager,
-                            importance
+            // Notifications group with NotificationCompat.InboxStyle().
+            val groupBuilder =
+                NotificationCompat.Builder(
+                    context,
+                    createNotificationChannel(
+                        channelId,
+                        channelGroupId,
+                        notificationManager,
+                        importance
+                    )
+                )
+                    .setSmallIcon(R.drawable.ic_stat_notif)
+                    .setColor(
+                        ContextCompat.getColor(
+                            context,
+                            if (BuildConfig.FLAVOR.equals(Constant.Flavor.VAULT)) R.color.color_primary else R.color.color_757575
                         )
                     )
-                        .setSmallIcon(R.drawable.ic_stat_notif)
-                        .setColor(
-                            ContextCompat.getColor(
-                                context,
-                                if (BuildConfig.FLAVOR.equals(Constant.Flavor.VAULT)) R.color.color_primary else R.color.color_757575
-                            )
-                        )
-                        .setLights(
-                            ContextCompat.getColor(
-                                context,
-                                if (BuildConfig.FLAVOR.equals(Constant.Flavor.VAULT)) R.color.color_primary else R.color.color_757575
-                            ), 500, 500
-                        )
-                        .setContentTitle(notificationTitle)
-                        .setStyle(NotificationCompat.InboxStyle())
-                        .setContentText(notificationMessage)
-                        .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
-                        .setGroupSummary(true)
-                        .setGroup(groupName)
-                        .setGroupAlertBehavior(NotificationCompat.GROUP_ALERT_CHILDREN)
-                        .setAutoCancel(true)
-                        .setPriority(priority)
-                        .setContentIntent(getPendingIntent(groupIntent))
+                    .setLights(
+                        ContextCompat.getColor(
+                            context,
+                            if (BuildConfig.FLAVOR.equals(Constant.Flavor.VAULT)) R.color.color_primary else R.color.color_757575
+                        ), 500, 500
+                    )
+                    .setContentTitle(notificationTitle)
+                    .setStyle(NotificationCompat.InboxStyle())
+                    .setContentText(notificationMessage)
+                    .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
+                    .setGroupSummary(true)
+                    .setGroup(groupName)
+                    .setGroupAlertBehavior(NotificationCompat.GROUP_ALERT_CHILDREN)
+                    .setAutoCancel(true)
+                    .setPriority(priority)
+                    .setContentIntent(getPendingIntent(groupIntent))
 
-                notificationManager.notify(groupId, groupBuilder.build())
-            }
+            notificationManager.notify(groupId, groupBuilder.build())
 
             notificationManager.notify(notificationId, notificationBuilder.build())
         }
@@ -382,7 +376,7 @@ class NotificationsManager(private val context: Context) {
     }
 
     private fun createChannelGroupName(channelGroupId: String): String? {
-        return when(channelGroupId) {
+        return when (channelGroupId) {
             // Apply Section Names for the particular channelGroupId.
             else -> null
         }

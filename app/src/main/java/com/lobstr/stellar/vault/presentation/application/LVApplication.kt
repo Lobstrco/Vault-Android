@@ -2,15 +2,12 @@ package com.lobstr.stellar.vault.presentation.application
 
 import android.app.Application
 import android.content.Context
-import android.content.Intent
-import android.os.Build
 import android.os.StrictMode
 import androidx.hilt.work.HiltWorkerFactory
 import androidx.lifecycle.ProcessLifecycleOwner
 import androidx.work.Configuration
-import com.google.android.gms.security.ProviderInstaller
-import com.google.firebase.analytics.analytics
 import com.google.firebase.Firebase
+import com.google.firebase.analytics.analytics
 import com.lobstr.stellar.vault.BuildConfig
 import com.lobstr.stellar.vault.presentation.util.Constant
 import com.lobstr.stellar.vault.presentation.util.Constant.BuildType.DEBUG
@@ -74,7 +71,6 @@ class LVApplication : Application(), Configuration.Provider {
         appContext = applicationContext
 
         if (BuildConfig.BUILD_TYPE == DEBUG) Timber.plant(Timber.DebugTree())
-        upgradeSecurityProvider()
         enableStrictMode()
         Firebase.analytics.setAnalyticsCollectionEnabled(BuildConfig.BUILD_TYPE != DEBUG)
         setupLifecycleListener()
@@ -93,33 +89,6 @@ class LVApplication : Application(), Configuration.Provider {
     // ===========================================================
     // Methods
     // ===========================================================
-
-    /**
-     * Fix for SSLException.
-     * Enable SSL compatibility in pre-lollipop and lollipop devices.
-     */
-    private fun upgradeSecurityProvider() {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
-            try {
-                ProviderInstaller.installIfNeededAsync(
-                    this,
-                    object : ProviderInstaller.ProviderInstallListener {
-                        override fun onProviderInstallFailed(
-                            errorCode: Int,
-                            recoveryIntent: Intent?
-                        ) {
-                            Timber.e("New security provider install failed.")
-                        }
-
-                        override fun onProviderInstalled() {
-                            Timber.e("New security provider installed.")
-                        }
-                    })
-            } catch (ex: Exception) {
-                Timber.e(ex, "Unknown issue trying to install a new security provider")
-            }
-        }
-    }
 
     /**
      * For create Mnemonics.

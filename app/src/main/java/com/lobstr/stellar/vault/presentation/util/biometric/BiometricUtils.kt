@@ -4,7 +4,6 @@ import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.pm.PackageManager
-import android.os.Build
 import androidx.biometric.BiometricManager
 import androidx.biometric.BiometricManager.Authenticators.BIOMETRIC_WEAK
 import androidx.core.app.ActivityCompat
@@ -12,17 +11,6 @@ import androidx.core.app.ActivityCompat
 
 @SuppressLint("MissingPermission")
 object BiometricUtils {
-
-
-    /*
-     * Condition I: Check if the android version in device is greater than
-     * Marshmallow, since biometric authentication is only supported
-     * from Android 6.0.
-     * Note: If your project's minSdkversion is 23 or higher,
-     * then you won't need to perform this check.
-     * */
-    private val isSdkVersionSupported: Boolean
-        get() = Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
 
     /*
      * Condition II: Check if the device has biometric sensors.
@@ -71,7 +59,7 @@ object BiometricUtils {
 
     fun isBiometricSupported(context: Context): Boolean {
         return try {
-            isSdkVersionSupported && isHardwareSupported(context) && isPermissionGranted(context)
+            isHardwareSupported(context) && isPermissionGranted(context)
         } catch (exc: SecurityException) {
             exc.printStackTrace()
             false

@@ -115,11 +115,10 @@ object AppUtil {
                         description.extras = PersistableBundle().apply {
                             putBoolean(ClipDescription.EXTRA_IS_SENSITIVE, true)
                         }
-                    } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                    } else
                         description.extras = PersistableBundle().apply {
                             putBoolean("android.content.extra.IS_SENSITIVE", true)
                         }
-                    }
                 }
             }
             clipboard?.setPrimaryClip(clip)
