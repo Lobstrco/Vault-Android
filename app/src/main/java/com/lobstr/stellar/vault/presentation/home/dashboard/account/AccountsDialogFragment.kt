@@ -98,11 +98,21 @@ class AccountsDialogFragment : BaseBottomSheetDialog(), AccountsView {
         binding.tvAccountsAdd.isVisible = visible
     }
 
-    override fun initList(list: List<AccountDialogItem>) {
+    override fun initList(list: List<AccountDialogItem>, scrollPosition: Int) {
         binding.rvAccounts.apply {
             isNestedScrollingEnabled = true
             layoutManager = LinearLayoutManager(requireContext())
             adapter = AccountsDialogAdapter(list) { mPresenter.onItemClicked(it) }
+
+            if (scrollPosition != -1) {
+                post {
+                    if (scrollPosition < 20) {
+                        smoothScrollToPosition(scrollPosition)
+                    } else {
+                        scrollToPosition(scrollPosition)
+                    }
+                }
+            }
         }
     }
 

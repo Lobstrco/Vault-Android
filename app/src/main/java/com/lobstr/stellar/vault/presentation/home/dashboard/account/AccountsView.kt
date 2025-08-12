@@ -11,7 +11,7 @@ interface AccountsView: MvpView {
     fun showAddAccountButton(visible: Boolean)
 
     @AddToEndSingle
-    fun initList(list: List<AccountDialogItem>)
+    fun initList(list: List<AccountDialogItem>, scrollPosition: Int)
 
     @AddToEndSingle
     fun showProgressDialog(show: Boolean)

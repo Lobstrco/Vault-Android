@@ -20,15 +20,16 @@ class AccountsPresenter @Inject constructor(
         val keys = interactor.getPublicKeyList()
 
         viewState.showAddAccountButton(keys.size != Constant.Util.PUBLIC_KEY_LIMIT)
-        viewState.initList(
-            keys.map {
-                AccountDialogItem(
-                    address = it.first,
-                    name = getAccountName(it.second + 1, it.first),
-                    isChecked = it.first == currentPublicKey
-                )
-            }
-        )
+
+        val accountItems = keys.map {
+            AccountDialogItem(
+                address = it.first,
+                name = getAccountName(it.second + 1, it.first),
+                isChecked = it.first == currentPublicKey
+            )
+        }
+
+        viewState.initList(accountItems, accountItems.indexOfFirst { it.isChecked })
     }
 
     private fun getAccountName(index: Int, publicKey: String): String =

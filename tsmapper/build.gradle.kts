@@ -7,7 +7,7 @@ plugins {
 }
 
 android {
-    compileSdk = 35
+    compileSdk = 36
 
     defaultConfig {
         minSdk = 24
@@ -39,7 +39,7 @@ android {
 
 val stellar_sdk by extra("1.5.0")
 val gson by extra("2.13.1")
-val firebase_bom by extra("33.14.0")
+val firebase_bom by extra("34.1.0")
 
 dependencies {
     implementation(fileTree(mapOf("dir" to "libs", "include" to listOf("*.jar"))))

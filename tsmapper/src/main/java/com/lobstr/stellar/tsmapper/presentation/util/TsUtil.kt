@@ -1,6 +1,7 @@
 package com.lobstr.stellar.tsmapper.presentation.util
 
 import android.content.Context
+import android.os.Build
 import com.lobstr.stellar.tsmapper.R
 import com.lobstr.stellar.tsmapper.presentation.entities.transaction.TsMemo
 import com.lobstr.stellar.tsmapper.presentation.entities.transaction.operation.*
@@ -133,7 +134,11 @@ object TsUtil {
     fun formatDate(date: Date, datePattern: String): String? {
         try {
             val format =
-                SimpleDateFormat(datePattern, Locale(Locale.getDefault().language))
+                SimpleDateFormat(datePattern, if (Build.VERSION.SDK_INT >= 36) {
+                    Locale.of(Locale.getDefault().language)
+                } else {
+                    Locale(Locale.getDefault().language)
+                })
             return format.format(date)
         } catch (e: Exception) {
             e.printStackTrace()

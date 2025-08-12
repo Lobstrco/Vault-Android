@@ -148,7 +148,7 @@ object Constant {
         const val PK_TRUNCATE_COUNT = 8
         const val PK_TRUNCATE_COUNT_SHORT = 4
         const val UNDEFINED_VALUE = -1
-        const val PUBLIC_KEY_LIMIT = 5
+        const val PUBLIC_KEY_LIMIT = 20
     }
 
     object ApiRequestTag {

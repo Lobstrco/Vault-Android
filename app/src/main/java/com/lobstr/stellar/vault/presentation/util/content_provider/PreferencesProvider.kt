@@ -7,12 +7,11 @@ import android.database.Cursor
 import android.database.MatrixCursor
 import android.net.Uri
 import androidx.preference.PreferenceManager
-import com.lobstr.stellar.vault.R
 import com.lobstr.stellar.vault.presentation.util.PrefsUtil
 
 /**
  * Used for pass Public Shared Preferences data to other apps.
- * Use URI pattern: content://public.shared.data.preference/{path}.
+ * Use URI pattern: content://${applicationId}.public.shared.data.preference/{path}.
  */
 class PreferencesProvider : ContentProvider() {
 
@@ -27,8 +26,8 @@ class PreferencesProvider : ContentProvider() {
 
     override fun onCreate(): Boolean {
         prefsUtil = PrefsUtil(PreferenceManager.getDefaultSharedPreferences(context!!))
-        // See authority in product flavor resValue.
-        uriMatcher.addURI(context?.getString(R.string.authority), PUBLIC_KEY_PATH, PUBLIC_KEY_CODE)
+        // Use a wildcard '*' to match any authority approved for this provider in the manifest.
+        uriMatcher.addURI("*", PUBLIC_KEY_PATH, PUBLIC_KEY_CODE)
         return true
     }
 

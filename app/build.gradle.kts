@@ -15,13 +15,13 @@ plugins {
 }
 
 android {
-    compileSdk = 35
+    compileSdk = 36
     defaultConfig {
         applicationId = "com.lobstr.stellar.vault"
         minSdk = 24
-        targetSdk = 35
-        versionCode = 51
-        versionName = "3.5.1"
+        targetSdk = 36
+        versionCode = 52
+        versionName = "3.6.0"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
         // Used for setup Bundle name.
@@ -86,12 +86,23 @@ android {
         create("qa") {
             applicationId = "com.lobstr.stellar.vault.qa"
             resValue("string", "app_name", "QA Vault")
-            resValue("string", "authority", "public.shared.data.preference.qa")
+
+            // Define both new (unique) and old (legacy) authorities for a smooth migration.
+            val newAuthority = "${applicationId}.public.shared.data.preference"
+            val oldAuthority = "public.shared.data.preference.qa"
+            // TODO: Remove oldAuthority after the client migration period is complete.
+            resValue("string", "authority", "$newAuthority;$oldAuthority")
         }
         create("vault") {
             applicationId = "com.lobstr.stellar.vault"
             resValue("string", "app_name", "LOBSTR Vault")
-            resValue("string", "authority", "public.shared.data.preference")
+
+            // Define both new (unique) and old (legacy) authorities for a smooth migration.
+            val newAuthority = "${applicationId}.public.shared.data.preference"
+            val oldAuthority = "public.shared.data.preference"
+
+            // TODO: Remove oldAuthority after the client migration period is complete.
+            resValue("string", "authority", "$newAuthority;$oldAuthority")
         }
     }
 
@@ -158,17 +169,17 @@ android {
 }
 
 val desugar_jdk_libs by extra("2.1.5")
-val rx_java by extra("3.1.10")
+val rx_java by extra("3.1.11")
 val rx_android by extra("3.0.2")
 val retrofit by extra("3.0.0")
 val okhttp_bom by extra("4.12.0")
 val moxy by extra("2.2.2")
 val glide by extra("4.16.0")
 val material by extra("1.12.0")
-val browser by extra("1.8.0")
-val firebase_bom by extra("33.14.0")
-val play_service_base by extra("18.7.0")
-val androidx_core by extra("1.15.0")
+val browser by extra("1.9.0")
+val firebase_bom by extra("34.1.0")
+val play_service_base by extra("18.7.2")
+val androidx_core by extra("1.16.0")
 val androidx_appcompat by extra("1.7.1")
 val fragment by extra("1.8.8")
 val recyclerview by extra("1.4.0")
@@ -176,21 +187,21 @@ val androidx_preference by extra("1.2.1")
 val androidx_constraintlayout by extra("2.2.1")
 val androidx_legacy_support_v4 by extra("1.0.0")
 val junit by extra("4.13.2")
-val runner by extra("1.2.1")
-val espresso_core by extra("3.6.1")
+val runner by extra("1.3.0")
+val espresso_core by extra("3.7.0")
 val stellar_sdk by extra("1.5.0")
 val mnemonic by extra("0.1.1")
-val work_manager by extra("2.10.1")
+val work_manager by extra("2.10.3")
 val biometric by extra("1.1.0")
-val lottieVersion by extra("6.6.6")
-val qr_gen by extra("2.6.0")
+val lottieVersion by extra("6.6.7")
+val qr_gen by extra("3.0.1")
 val viewpager2 by extra("1.1.0")
 val tangem by extra("3.7.2")
-val hilt by extra("2.56.2")
+val hilt by extra("2.57")
 val androidx_hilt by extra("1.2.0")
-val lifecycle by extra("2.9.1")
+val lifecycle by extra("2.9.2")
 val timber by extra("5.0.1")
-val bcprov by extra("1.80")
+val bcprov by extra("1.81")
 
 dependencies {
     implementation(fileTree(mapOf("dir" to "libs", "include" to listOf("*.jar"))))

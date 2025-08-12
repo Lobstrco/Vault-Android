@@ -150,10 +150,10 @@ abstract class BaseActivity : BaseMvpAppCompatActivity(),
         }
     }
 
-    override fun onNewIntent(intent: Intent?) {
+    override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
 
-        mPresenter.onNewIntentCalled(intent?.getStringExtra(Constant.Extra.EXTRA_USER_ACCOUNT))
+        mPresenter.onNewIntentCalled(intent.getStringExtra(Constant.Extra.EXTRA_USER_ACCOUNT))
     }
 
     override fun onResume() {

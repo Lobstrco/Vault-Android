@@ -159,8 +159,8 @@ class SettingsFragment : BaseFragment(), SettingsView, CompoundButton.OnCheckedC
     // Listeners, methods for/from Interfaces
     // ===========================================================
 
-    override fun onCheckedChanged(buttonView: CompoundButton?, isChecked: Boolean) {
-        when (buttonView?.id) {
+    override fun onCheckedChanged(buttonView: CompoundButton, isChecked: Boolean) {
+        when (buttonView.id) {
             R.id.swSettingsBiometric -> mPresenter.biometricSwitched(isChecked)
             R.id.swSettingsNotifications -> mPresenter.notificationsSwitched(
                 isChecked,
