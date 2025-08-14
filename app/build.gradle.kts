@@ -20,7 +20,7 @@ android {
         applicationId = "com.lobstr.stellar.vault"
         minSdk = 24
         targetSdk = 36
-        versionCode = 52
+        versionCode = 53
         versionName = "3.6.0"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
@@ -177,11 +177,11 @@ val moxy by extra("2.2.2")
 val glide by extra("4.16.0")
 val material by extra("1.12.0")
 val browser by extra("1.9.0")
-val firebase_bom by extra("34.1.0")
+val firebase_bom by extra("33.16.0") // Downgraded from 34.1.0 for Tangem compatibility
 val play_service_base by extra("18.7.2")
-val androidx_core by extra("1.16.0")
+val androidx_core by extra("1.17.0")
 val androidx_appcompat by extra("1.7.1")
-val fragment by extra("1.8.8")
+val fragment by extra("1.8.9")
 val recyclerview by extra("1.4.0")
 val androidx_preference by extra("1.2.1")
 val androidx_constraintlayout by extra("2.2.1")
