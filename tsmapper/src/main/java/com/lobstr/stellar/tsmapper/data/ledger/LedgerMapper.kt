@@ -109,9 +109,11 @@ class LedgerMapper(val assetMapper: AssetMapper = AssetMapper(), val scMapper: S
             org.stellar.sdk.xdr.ConfigSettingID.CONFIG_SETTING_CONTRACT_DATA_ENTRY_SIZE_BYTES -> ConfigSettingID.CONFIG_SETTING_CONTRACT_DATA_ENTRY_SIZE_BYTES()
             org.stellar.sdk.xdr.ConfigSettingID.CONFIG_SETTING_STATE_ARCHIVAL -> ConfigSettingID.CONFIG_SETTING_STATE_ARCHIVAL()
             org.stellar.sdk.xdr.ConfigSettingID.CONFIG_SETTING_CONTRACT_EXECUTION_LANES -> ConfigSettingID.CONFIG_SETTING_CONTRACT_EXECUTION_LANES()
-            org.stellar.sdk.xdr.ConfigSettingID.CONFIG_SETTING_BUCKETLIST_SIZE_WINDOW -> ConfigSettingID.CONFIG_SETTING_BUCKETLIST_SIZE_WINDOW()
+            org.stellar.sdk.xdr.ConfigSettingID.CONFIG_SETTING_LIVE_SOROBAN_STATE_SIZE_WINDOW -> ConfigSettingID.CONFIG_SETTING_LIVE_SOROBAN_STATE_SIZE_WINDOW()
             org.stellar.sdk.xdr.ConfigSettingID.CONFIG_SETTING_EVICTION_ITERATOR -> ConfigSettingID.CONFIG_SETTING_EVICTION_ITERATOR()
-            else -> ConfigSettingID.UNKNOWN()
+            org.stellar.sdk.xdr.ConfigSettingID.CONFIG_SETTING_CONTRACT_PARALLEL_COMPUTE_V0 -> ConfigSettingID.CONFIG_SETTING_CONTRACT_PARALLEL_COMPUTE_V0()
+            org.stellar.sdk.xdr.ConfigSettingID.CONFIG_SETTING_CONTRACT_LEDGER_COST_EXT_V0 -> ConfigSettingID.CONFIG_SETTING_CONTRACT_LEDGER_COST_EXT_V0()
+            org.stellar.sdk.xdr.ConfigSettingID.CONFIG_SETTING_SCP_TIMING -> ConfigSettingID.CONFIG_SETTING_SCP_TIMING()
         }
 
     private fun mapContractDataDurability(durability: org.stellar.sdk.xdr.ContractDataDurability): ContractDataDurability =

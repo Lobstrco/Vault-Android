@@ -18,7 +18,7 @@ class SorobanDataMapper(val ledgerMapper: LedgerMapper = LedgerMapper()) {
         return SorobanResources(
             footprint = ledgerMapper.mapLedgerFootprint(resources.footprint),
             instructions = resources.instructions.uint32.number.toString(),
-            readBytes = resources.readBytes.uint32.number.toString(),
+            readBytes = resources.diskReadBytes.uint32.number.toString(),
             writeBytes = resources.writeBytes.uint32.number.toString(),
         )
     }

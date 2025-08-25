@@ -86,14 +86,12 @@ class ScMapper {
                 SCAddress.Account(StrKey.encodeEd25519PublicKey(address.bytes))
             Address.AddressType.CONTRACT ->
                 SCAddress.Contract(StrKey.encodeContract(address.bytes))
-        }
-
-    fun mapScAddress(address: org.stellar.sdk.xdr.SCAddress): SCAddress =
-        when (address.discriminant) {
-            org.stellar.sdk.xdr.SCAddressType.SC_ADDRESS_TYPE_ACCOUNT ->
-                SCAddress.Account(StrKey.encodeEd25519PublicKey(address.accountId.accountID.ed25519.uint256))
-            org.stellar.sdk.xdr.SCAddressType.SC_ADDRESS_TYPE_CONTRACT ->
-                SCAddress.Contract(StrKey.encodeContract(address.contractId.toXdrByteArray()))
+            Address.AddressType.MUXED_ACCOUNT ->
+                SCAddress.MuxedAccount(StrKey.encodeMed25519PublicKey(address.bytes))
+            Address.AddressType.CLAIMABLE_BALANCE ->
+                SCAddress.ClaimableBalance(StrKey.encodeClaimableBalance(address.bytes))
+            Address.AddressType.LIQUIDITY_POOL ->
+                SCAddress.LiquidityPool(StrKey.encodeLiquidityPool(address.bytes))
         }
 
     private fun mapScContractInstance(instance: SCContractInstance) : SCVal.SCVContractInstance =

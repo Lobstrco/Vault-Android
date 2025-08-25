@@ -44,11 +44,15 @@ class EditAccountPresenter @Inject constructor(
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe({
-                        viewState.setAccountActionButton(
-                            if (it.isNullOrEmpty()) AppUtil.getString(R.string.account_name_set_title) else AppUtil.getString(
-                                R.string.account_name_change_title
+                        // Display the manage account name option only for ED25519 keys.
+                        if (AppUtil.isPublicKey(publicKey)) {
+                            viewState.setAccountActionButton(
+                                if (it.isNullOrEmpty()) AppUtil.getString(R.string.account_name_set_title) else AppUtil.getString(
+                                    R.string.account_name_change_title
+                                )
                             )
-                        )
+                        }
+                        // Show the clear account name option for ED25519 and MUXED_ED25519 keys to allow removal of the MUXED_ED25519 account name.
                         viewState.showClearAccountButton(!it.isNullOrEmpty())
                         viewState.showNetworkExplorerButton(showNetworkExplorer)
                     }, Throwable::printStackTrace)

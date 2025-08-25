@@ -73,9 +73,9 @@ class TsResultMapper(private val c: Context) {
             OperationType.SET_TRUST_LINE_FLAGS -> OpResultCode.TsSetTrustLineFlagsResultCode.create(c, result.tr.setTrustLineFlagsResult.discriminant)
             OperationType.LIQUIDITY_POOL_DEPOSIT -> OpResultCode.TsLiquidityPoolDepositResultCode.create(c, result.tr.liquidityPoolDepositResult.discriminant)
             OperationType.LIQUIDITY_POOL_WITHDRAW -> OpResultCode.TsLiquidityPoolWithdrawResultCode.create(c, result.tr.liquidityPoolWithdrawResult.discriminant)
+            OperationType.INVOKE_HOST_FUNCTION -> OpResultCode.TsInvokeHostFunctionResultCode.create(c, result.tr.invokeHostFunctionResult.discriminant)
             OperationType.EXTEND_FOOTPRINT_TTL-> OpResultCode.TsExtendFootprintTTLResultCode.create(c, result.tr.extendFootprintTTLResult.discriminant)
             OperationType.RESTORE_FOOTPRINT -> OpResultCode.TsRestoreFootprintResultCode.create(c, result.tr.restoreFootprintResult.discriminant)
-            OperationType.INVOKE_HOST_FUNCTION -> OpResultCode.TsInvokeHostFunctionResultCode.create(c, result.tr.invokeHostFunctionResult.discriminant)
             else -> OpResultCode.TsDefaultResultCode.create(c, result?.discriminant)
         }
 

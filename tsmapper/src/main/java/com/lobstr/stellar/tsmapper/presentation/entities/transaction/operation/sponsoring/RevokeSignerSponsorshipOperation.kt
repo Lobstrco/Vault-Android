@@ -11,14 +11,14 @@ import kotlinx.parcelize.Parcelize
 data class RevokeSignerSponsorshipOperation(
     override val sourceAccount: String?,
     val accountId: String,
-    val signerPublicKey: String?
+    val signerKey: String?
 ) : Operation(sourceAccount), Parcelable {
 
     override fun getFields(context: Context, amountFormatter: (value: String) -> String): MutableList<OperationField> {
         val fields: MutableList<OperationField> = mutableListOf()
         fields.add(OperationField(context.getString(R.string.op_field_account_id), accountId, accountId))
-        signerPublicKey?.let {
-            fields.add(OperationField(context.getString(R.string.op_field_signer_public_key), it, it))
+        signerKey?.let {
+            fields.add(OperationField(context.getString(R.string.op_field_signer_key), it, it))
         }
 
         return fields

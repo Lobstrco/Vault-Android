@@ -291,11 +291,11 @@ class TransactionDetailsFragment : BaseFragment(), TransactionDetailsView,
             val fieldName = root.findViewById<TextView>(R.id.tvFieldName)
             val fieldValue = root.findViewById<TextView>(R.id.tvFieldValue)
 
-            val isPublicKeyTag by lazy { AppUtil.isValidAccount(tag as? String) }
-            val isPublicKeyValue by lazy { AppUtil.isValidAccount(value) }
+            val isAccountTag by lazy { AppUtil.isValidAccount(tag as? String) }
+            val isAccountValue by lazy { AppUtil.isValidAccount(value) }
             val isAssetTag by lazy {  tag is Asset }
 
-            val isSelectableField = isPublicKeyTag || isAssetTag
+            val isSelectableField = isAccountTag || isAssetTag
 
             (root.findViewById<FrameLayout>(R.id.flContent))?.foreground = if (isSelectableField) {
                 val outValue = TypedValue()
@@ -314,14 +314,14 @@ class TransactionDetailsFragment : BaseFragment(), TransactionDetailsView,
                 else -> {
                     when {
                         // Case for the Account Name.
-                        isPublicKeyTag && !isPublicKeyValue -> TextUtils.TruncateAt.END
+                        isAccountTag && !isAccountValue -> TextUtils.TruncateAt.END
                         else -> TextUtils.TruncateAt.MIDDLE
                     }
                 }
             }
 
             fieldName.text = key
-            fieldValue.text = if (isPublicKeyValue) {
+            fieldValue.text = if (isAccountValue) {
                 AppUtil.ellipsizeStrInMiddle(value, Constant.Util.PK_TRUNCATE_COUNT)
             } else {
                 value

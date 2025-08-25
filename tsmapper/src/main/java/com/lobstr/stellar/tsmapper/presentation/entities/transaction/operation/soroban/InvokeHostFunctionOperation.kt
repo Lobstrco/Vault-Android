@@ -231,7 +231,13 @@ data class InvokeHostFunctionOperation(
                     keyPrefix + context.getString(R.string.op_field_bytes) + keyPostfix,
                     bytes
                 ))
-                is SCVal.SCVAddress -> getScAddressFields(context, fields, address, keyPrefix, keyPostfix)
+                is SCVal.SCVAddress -> getScAddressFields(
+                    context,
+                    fields,
+                    address,
+                    keyPrefix = keyPrefix,
+                    keyPostfix = keyPostfix
+                )
                 is SCVal.SCVI128 -> fields.add(OperationField(
                     keyPrefix + context.getString(R.string.op_field_i128) + keyPostfix, i128
                 ))
@@ -356,13 +362,14 @@ data class InvokeHostFunctionOperation(
     private fun getScAddressFields(
         context: Context,
         fields: MutableList<OperationField>, address: SCAddress,
+        key: String? = null,
         keyPrefix: String = "",
         keyPostfix: String = ""
     ): MutableList<OperationField> {
         when (address) {
             is SCAddress.Account -> fields.add(
                 OperationField(
-                    keyPrefix + context.getString(R.string.op_field_account_id) + keyPostfix,
+                    keyPrefix + (key ?: context.getString(R.string.op_field_account_id)) + keyPostfix,
                     address.accountId,
                     address.accountId
                 )
@@ -370,8 +377,30 @@ data class InvokeHostFunctionOperation(
 
             is SCAddress.Contract -> fields.add(
                 OperationField(
-                    keyPrefix + context.getString(R.string.op_field_contract_id) + keyPostfix,
+                    keyPrefix + (key ?: context.getString(R.string.op_field_contract_id)) + keyPostfix,
                     address.contractId
+                )
+            )
+
+            is SCAddress.MuxedAccount -> fields.add(
+                OperationField(
+                    keyPrefix + (key ?: context.getString(R.string.op_field_account_id)) + keyPostfix,
+                    address.muxedAccount,
+                    address.muxedAccount
+                )
+            )
+
+            is SCAddress.ClaimableBalance -> fields.add(
+                OperationField(
+                    keyPrefix + (key ?: context.getString(R.string.op_field_claimable_balance_id)) + keyPostfix,
+                    address.claimableBalanceId
+                )
+            )
+
+            is SCAddress.LiquidityPool -> fields.add(
+                OperationField(
+                    keyPrefix + (key ?: context.getString(R.string.op_field_liquidity_pool_id)) + keyPostfix,
+                    address.liquidityPoolId
                 )
             )
         }

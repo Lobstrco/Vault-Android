@@ -17,12 +17,15 @@ class OperationDetailsViewHolder(
 
     fun bind(name: String, value: String?, tag: Any?) {
         binding.apply {
-            val isPublicKeyTag by lazy { AppUtil.isValidAccount(tag as? String) }
-            val isPublicKeyValue by lazy { AppUtil.isValidAccount(value) }
+            val isAccountTag by lazy { AppUtil.isValidAccount(tag as? String) }
+            val isAccountValue by lazy { AppUtil.isValidAccount(value) }
             val isAssetTag by lazy {  tag is Asset.CanonicalAsset }
+            val isClaimableBalanceIdValue by lazy { AppUtil.isValidClaimableBalanceID(value) }
+            val isLiquidityPoolIdValue by lazy { AppUtil.isValidLiquidityPoolID(value) }
             val isContractIdValue by lazy { AppUtil.isValidContractID(value) }
 
-            val isSelectableField = isPublicKeyTag || isAssetTag || isContractIdValue
+            val isSelectableField = isAccountTag || isAssetTag || isContractIdValue
+            val truncateAddress = isAccountValue || isClaimableBalanceIdValue || isLiquidityPoolIdValue || isContractIdValue
 
             tvFieldName.text = name
             tvFieldValue.ellipsize = when (name) {
@@ -30,7 +33,7 @@ class OperationDetailsViewHolder(
                 else -> {
                     when {
                         // Case for the Account Name.
-                        isPublicKeyTag && !isPublicKeyValue -> TextUtils.TruncateAt.END
+                        isAccountTag && !isAccountValue -> TextUtils.TruncateAt.END
                         else -> TextUtils.TruncateAt.MIDDLE
                     }
                 }
@@ -38,7 +41,7 @@ class OperationDetailsViewHolder(
             tvFieldValue.isSingleLine = value?.contains("\n") != true
 
             tvFieldValue.text =
-                if (isPublicKeyValue || isContractIdValue) {
+                if (truncateAddress) {
                     AppUtil.ellipsizeStrInMiddle(value, Constant.Util.PK_TRUNCATE_COUNT)
                 } else {
                     value

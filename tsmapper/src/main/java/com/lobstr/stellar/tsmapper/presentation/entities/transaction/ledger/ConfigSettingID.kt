@@ -17,7 +17,9 @@ sealed class ConfigSettingID : Parcelable {
     class CONFIG_SETTING_CONTRACT_DATA_ENTRY_SIZE_BYTES : ConfigSettingID()
     class CONFIG_SETTING_STATE_ARCHIVAL : ConfigSettingID()
     class CONFIG_SETTING_CONTRACT_EXECUTION_LANES : ConfigSettingID()
-    class CONFIG_SETTING_BUCKETLIST_SIZE_WINDOW : ConfigSettingID()
+    class CONFIG_SETTING_LIVE_SOROBAN_STATE_SIZE_WINDOW : ConfigSettingID()
     class CONFIG_SETTING_EVICTION_ITERATOR : ConfigSettingID()
-    class UNKNOWN : ConfigSettingID()
+    class CONFIG_SETTING_CONTRACT_PARALLEL_COMPUTE_V0 : ConfigSettingID()
+    class CONFIG_SETTING_CONTRACT_LEDGER_COST_EXT_V0 : ConfigSettingID()
+    class CONFIG_SETTING_SCP_TIMING : ConfigSettingID()
 }

@@ -442,7 +442,7 @@ class TsMapper(
             operation.homeDomain,
             operation.signerWeight,
             try {
-                StrKey.encodeEd25519PublicKey(operation.signer?.ed25519?.uint256)
+                operation.signer?.encodedSignerKey
             } catch (e: Exception) {
                 null
             }
@@ -570,7 +570,7 @@ class TsMapper(
             (operation as org.stellar.sdk.operations.Operation).sourceAccount,
             operation.accountId,
             try {
-                KeyPair.fromXdrSignerKey(operation.signer).accountId
+                operation.signer.encodedSignerKey
             } catch (e: Exception) {
                 null
             }

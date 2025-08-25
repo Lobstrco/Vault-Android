@@ -88,11 +88,12 @@
     <string name="op_field_medium_threshold">Medium Threshold</string>
     <string name="op_field_high_threshold">High Threshold</string>
     <string name="op_field_signer_weight">Signer Weight</string>
-    <string name="op_field_signer_public_key">Signer Public Key</string>
+    <string name="op_field_signer_key">Signer Key</string>
     <string name="op_field_source_account">Operation Source</string>
     <string name="op_field_sponsored_id">Sponsored ID</string>
     <string name="op_field_account_id">Account ID</string>
     <string name="op_field_balance_id">Balance ID</string>
+    <string name="op_field_claimable_balance_id">Claimable Balance ID</string>
     <string name="op_field_data_name">Data Name</string>
     <string name="op_field_seller">Seller</string>
     <string name="op_field_claimant">Claimant</string>

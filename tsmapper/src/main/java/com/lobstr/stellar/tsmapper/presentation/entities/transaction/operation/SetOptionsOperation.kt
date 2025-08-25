@@ -17,7 +17,7 @@ data class SetOptionsOperation(
     val highThreshold: Int?,
     val homeDomain: String?,
     val signerWeight: Int?,
-    val signerPublicKey: String?
+    val signerKey: String?
 ) : Operation(sourceAccount), Parcelable {
 
     override fun getFields(context: Context, amountFormatter: (value: String) -> String): MutableList<OperationField> {
@@ -31,7 +31,7 @@ data class SetOptionsOperation(
         if (mediumThreshold != null) fields.add(OperationField(context.getString(R.string.op_field_medium_threshold), mediumThreshold.toString()))
         if (highThreshold != null) fields.add(OperationField(context.getString(R.string.op_field_high_threshold), highThreshold.toString()))
         if (signerWeight != null) fields.add(OperationField(context.getString(R.string.op_field_signer_weight), signerWeight.toString()))
-        if (signerPublicKey != null) fields.add(OperationField(context.getString(R.string.op_field_signer_public_key), signerPublicKey, signerPublicKey))
+        if (signerKey != null) fields.add(OperationField(context.getString(R.string.op_field_signer_key), signerKey, signerKey))
 
         return fields
     }

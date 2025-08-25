@@ -321,8 +321,24 @@ object AppUtil {
         if (contractID.isNullOrEmpty()) false else StrKey.isValidContract(contractID)
 
 
+    fun isValidClaimableBalanceID(claimableBalanceId: String?): Boolean =
+        if (claimableBalanceId.isNullOrEmpty()) false else StrKey.isValidClaimableBalance(claimableBalanceId)
+
+    fun isValidLiquidityPoolID(liquidityPoolId: String?): Boolean =
+        if (liquidityPoolId.isNullOrEmpty()) false else StrKey.isValidLiquidityPool(liquidityPoolId)
+
     fun createUserIconLink(key: String?): String {
         return Constant.Social.USER_ICON_LINK.plus(key?.let { decodeAccountStr(it) }).plus(".png")
+    }
+
+    /**
+     * Check Key is MUXED_ED25519.
+     */
+    fun isMuxedAccount(account: String?): Boolean {
+        return when (decodeMuxedAccount(account)?.discriminant) {
+            CryptoKeyType.KEY_TYPE_MUXED_ED25519 -> true
+            else -> false
+        }
     }
 
     /**
