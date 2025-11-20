@@ -20,8 +20,8 @@ android {
         applicationId = "com.lobstr.stellar.vault"
         minSdk = 24
         targetSdk = 36
-        versionCode = 54
-        versionName = "3.6.1"
+        versionCode = 55
+        versionName = "3.6.2"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
         // Used for setup Bundle name.
@@ -169,16 +169,16 @@ android {
 }
 
 val desugar_jdk_libs by extra("2.1.5")
-val rx_java by extra("3.1.11")
+val rx_java by extra("3.1.12")
 val rx_android by extra("3.0.2")
 val retrofit by extra("3.0.0")
-val okhttp_bom by extra("4.12.0")
+val okhttp_bom by extra("5.3.1")
 val moxy by extra("2.2.2")
-val glide by extra("4.16.0")
-val material by extra("1.12.0")
+val glide by extra("5.0.5")
+val material by extra("1.13.0")
 val browser by extra("1.9.0")
 val firebase_bom by extra("33.16.0") // Downgraded from 34.1.0 for Tangem compatibility
-val play_service_base by extra("18.7.2")
+val play_service_base by extra("18.9.0")
 val androidx_core by extra("1.17.0")
 val androidx_appcompat by extra("1.7.1")
 val fragment by extra("1.8.9")
@@ -189,19 +189,19 @@ val androidx_legacy_support_v4 by extra("1.0.0")
 val junit by extra("4.13.2")
 val runner by extra("1.3.0")
 val espresso_core by extra("3.7.0")
-val stellar_sdk by extra("2.0.0")
+val stellar_sdk by extra("2.1.0")
 val mnemonic by extra("0.1.1")
-val work_manager by extra("2.10.3")
+val work_manager by extra("2.10.5") // Downgraded from 2.11.0 for Tangem compatibility
 val biometric by extra("1.1.0")
-val lottieVersion by extra("6.6.7")
+val lottieVersion by extra("6.7.1")
 val qr_gen by extra("3.0.1")
 val viewpager2 by extra("1.1.0")
 val tangem by extra("3.7.2")
-val hilt by extra("2.57.1")
-val androidx_hilt by extra("1.2.0")
-val lifecycle by extra("2.9.2")
+val hilt by extra("2.57.2")
+val androidx_hilt by extra("1.3.0")
+val lifecycle by extra("2.9.4")
 val timber by extra("5.0.1")
-val bcprov by extra("1.81")
+val bcprov by extra("1.82")
 
 dependencies {
     implementation(fileTree(mapOf("dir" to "libs", "include" to listOf("*.jar"))))
@@ -267,9 +267,13 @@ dependencies {
     implementation("com.google.firebase:firebase-crashlytics")
     implementation("com.google.firebase:firebase-analytics")
 
-    // Tangem.
-    implementation ("com.github.tangem.tangem-sdk-android:android:$tangem")
-    implementation ("com.github.tangem.tangem-sdk-android:core:$tangem")
+    // Tangem (TODO excluded kotlin-android-extensions-runtime).
+    implementation("com.github.tangem.tangem-sdk-android:android:$tangem") {
+        exclude(group = "org.jetbrains.kotlin", module = "kotlin-android-extensions-runtime")
+    }
+    implementation("com.github.tangem.tangem-sdk-android:core:$tangem") {
+        exclude(group = "org.jetbrains.kotlin", module = "kotlin-android-extensions-runtime")
+    }
 
     // Other.
     implementation("com.airbnb.android:lottie:$lottieVersion")

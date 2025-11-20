@@ -22,6 +22,9 @@ interface TransactionDetailsView : MvpView {
     fun updateMenuItemsVisibility(hiddenItemIds: Set<Int>)
 
     @AddToEndSingle
+    fun showOptionsMenu(show: Boolean)
+
+    @AddToEndSingle
     fun initSignersRecycledView()
 
     @AddToEndSingle
@@ -119,4 +122,13 @@ interface TransactionDetailsView : MvpView {
 
     @Skip
     fun showTangemScreen(tangemInfo: TangemInfo)
+
+    @AddToEndSingle
+    fun showMainContent(show: Boolean)
+
+    @AddToEndSingle
+    fun showPlaceholder(show: Boolean)
+
+    @AddToEndSingle
+    fun showEmptyState(show: Boolean, error: String? = null)
 }

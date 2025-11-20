@@ -1,9 +1,6 @@
 package com.lobstr.stellar.vault.presentation.home.rate_us.feedback
 
-import android.content.ActivityNotFoundException
 import android.content.DialogInterface
-import android.widget.Toast
-import com.lobstr.stellar.vault.R
 import com.lobstr.stellar.vault.presentation.dialog.alert.base.AlertDialogFragment
 import com.lobstr.stellar.vault.presentation.util.AppUtil
 import dagger.hilt.android.AndroidEntryPoint
@@ -49,15 +46,7 @@ class ProvideFeedbackDialogFragment : AlertDialogFragment(), ProvideFeedbackView
     // ===========================================================
 
     override fun sendMail(mail: String, subject: String, body: String?) {
-        try {
-            AppUtil.sendEmail(requireContext(), arrayOf(mail), subject, body)
-        } catch (exc: ActivityNotFoundException) {
-            Toast.makeText(
-                requireContext(),
-                getString(R.string.mail_msg_client_not_found),
-                Toast.LENGTH_SHORT
-            ).show()
-        }
+        AppUtil.sendEmail(requireContext(), arrayOf(mail), subject, body)
     }
 
     // ===========================================================

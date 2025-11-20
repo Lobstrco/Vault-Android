@@ -21,6 +21,8 @@ interface TransactionDetailsInteractor {
 
     fun retrieveActualTransaction(transactionItem: TransactionItem, skip: Boolean = false): Single<TransactionItem>
 
+    fun retrieveActualTransaction(hash: String): Single<TransactionItem>
+
     fun confirmTransactionOnHorizon(
         transaction: AbstractTransaction
     ): Single<SubmitTransactionResult>

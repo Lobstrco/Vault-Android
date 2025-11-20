@@ -113,10 +113,16 @@ class ContainerFragment : BaseContainerFragment(),
         )
     }
 
-    override fun showTransactionDetails(transactionItem: TransactionItem) {
+    override fun showTransactionDetails(
+        transactionItem: TransactionItem?,
+        transactionHash: String?
+    ) {
         displayFragment(
             fragmentName = TransactionDetailsFragment::class.qualifiedName!!,
-            bundle = bundleOf(Constant.Bundle.BUNDLE_TRANSACTION_ITEM to transactionItem)
+            bundle = bundleOf(
+                Constant.Bundle.BUNDLE_TRANSACTION_ITEM to transactionItem,
+                Constant.Bundle.BUNDLE_TRANSACTION_HASH to transactionHash
+            )
         )
     }
 

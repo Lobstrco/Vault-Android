@@ -2,7 +2,6 @@ package com.lobstr.stellar.vault.presentation.home.settings
 
 import android.Manifest
 import android.app.Activity
-import android.content.ActivityNotFoundException
 import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -365,11 +364,7 @@ class SettingsFragment : BaseFragment(), SettingsView, CompoundButton.OnCheckedC
     }
 
     override fun sendMail(mail: String, subject: String, body: String?) {
-        try {
-            AppUtil.sendEmail(requireContext(), arrayOf(mail), subject, body)
-        } catch (exc: ActivityNotFoundException) {
-            showMessage(getString(R.string.mail_msg_client_not_found))
-        }
+        AppUtil.sendEmail(requireContext(), arrayOf(mail), subject, body)
     }
 
     override fun showConfigScreen(config: Int) {

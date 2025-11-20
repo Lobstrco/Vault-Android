@@ -60,6 +60,9 @@ class TransactionDetailsPresenter @Inject constructor(
     private val eventProviderModule: EventProviderModule
 ) : BasePresenter<TransactionDetailsView>() {
 
+    var transactionItemArg: TransactionItem? = null
+    var transactionHashArg: String? = null
+
     lateinit var transactionItem: TransactionItem
 
     private var confirmationInProcess = false
@@ -86,13 +89,81 @@ class TransactionDetailsPresenter @Inject constructor(
         super.onFirstViewAttach()
 
         registerEventProvider()
+        viewState.initSignersRecycledView()
+
+        getTransaction()
+    }
+
+    private fun getTransaction() {
+        when {
+            transactionItemArg != null -> {
+                transactionItem = transactionItemArg!!
+                init()
+            }
+
+            !transactionHashArg.isNullOrEmpty() -> {
+                // Try to retrieve transaction item by Hash.
+                unsubscribeOnDestroy(
+                    interactor.retrieveActualTransaction(
+                        transactionHashArg!!
+                    )
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .doOnSubscribe {
+                            viewState.showPlaceholder(true)
+                            viewState.showEmptyState(false)
+                        }
+                        .doOnEvent { _, _ ->  viewState.showPlaceholder(false) }
+                        .subscribe(
+                            {
+                                transactionItemArg = it
+                                transactionItem = it
+                                init()
+                            },
+                            {
+                                when (it) {
+                                    is NoInternetConnectionException -> {
+                                        handleNoInternetConnection()
+                                        viewState.showEmptyState(true, it.details)
+                                    }
+                                    is UserNotAuthorizedException -> {
+                                        when (it.action) {
+                                            UserNotAuthorizedException.Action.AUTH_REQUIRED -> {
+                                                viewState.showEmptyState(true, it.details)
+                                                eventProviderModule.authEventSubject.onNext(
+                                                    Auth()
+                                                )
+                                            }
+                                            else -> getTransaction()
+                                        }
+                                    }
+                                    is DefaultException -> {
+                                        viewState.showEmptyState(true, it.details)
+                                    }
+                                }
+                            }
+                        )
+                )
+            }
+            else -> {
+                viewState.showPlaceholder(false)
+                viewState.showEmptyState(true, AppUtil.getString(R.string.api_error_not_found))
+            }
+        }
+    }
+
+    private fun init() {
         viewState.setupToolbarTitle(
             when (transactionItem.transaction.transactionType) {
                 AUTH_CHALLENGE -> R.string.transaction_details_challenge_title
                 else -> R.string.toolbar_transaction_details_title
             }
         )
-        viewState.initSignersRecycledView()
+
+        viewState.showMainContent(true)
+        viewState.showOptionsMenu(true)
+        viewState.showActionContainer(true)
+
         prepareUiAndOperationsList()
         getTransactionSigners()
         getSorobanBalanceChanges()
@@ -106,8 +177,12 @@ class TransactionDetailsPresenter @Inject constructor(
                     when (it.type) {
                         Network.Type.CONNECTED -> {
                             if (needCheckConnectionState) {
-                                getTransactionSigners()
-                                getSorobanBalanceChanges()
+                                if (transactionItemArg == null) {
+                                    getTransaction()
+                                } else {
+                                    getTransactionSigners()
+                                    getSorobanBalanceChanges()
+                                }
                             }
                             cancelNetworkWorker(false)
                         }
@@ -123,10 +198,19 @@ class TransactionDetailsPresenter @Inject constructor(
                 .subscribe({
                     when (it.type) {
                         Update.Type.ACCOUNT_NAME -> {
-                            updateAccountNames()
-                            checkTransactionInfo()
+                            if (transactionItemArg != null) {
+                                updateAccountNames()
+                                checkTransactionInfo()
+                            }
                         }
-                        else -> getTransactionSigners()
+                        Update.Type.AUTH_EVENT_SUCCESS -> {
+                            if (transactionItemArg == null) {
+                                getTransaction()
+                            } else {
+                                getTransactionSigners()
+                                getSorobanBalanceChanges()
+                            }
+                        }
                     }
                 }, {
                     it.printStackTrace()
@@ -1083,5 +1167,9 @@ class TransactionDetailsPresenter @Inject constructor(
                 it is Asset.CanonicalAsset -> viewState.showAssetInfoDialog(it.assetCode, it.assetIssuer)
             }
         }
+    }
+
+    fun tryAgainClicked() {
+        getTransaction()
     }
 }

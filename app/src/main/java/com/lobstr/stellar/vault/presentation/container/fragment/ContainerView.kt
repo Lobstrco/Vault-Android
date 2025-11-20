@@ -20,7 +20,7 @@ interface ContainerView : MvpView {
 
     fun showTransactionsContainerFr()
 
-    fun showTransactionDetails(transactionItem: TransactionItem)
+    fun showTransactionDetails(transactionItem: TransactionItem?, transactionHash: String?)
 
     fun showImportXdrFr()
 

@@ -48,7 +48,7 @@ class SettingsInteractorImpl(
     override fun isSpamProtectionEnabled(): Boolean = prefsUtil.isSpamProtectionEnabled
 
     override fun isNotificationsEnabled(): Boolean =
-        localDataRepository.getNotificationInfo(prefsUtil.publicKey!!)
+        prefsUtil.publicKey?.let { localDataRepository.getNotificationInfo(it) } ?: false
 
     override fun isTrConfirmationEnabled(): Boolean =
         localDataRepository.getTransactionConfirmationData()[getUserPublicKey()] ?: true
@@ -62,7 +62,9 @@ class SettingsInteractorImpl(
     }
 
     override fun setNotificationsEnabled(enabled: Boolean) {
-        localDataRepository.saveNotificationInfo(prefsUtil.publicKey!!, enabled)
+        prefsUtil.publicKey?.let {
+            localDataRepository.saveNotificationInfo(it, enabled)
+        }
     }
 
     override fun getSignedAccounts(): Single<List<Account>> =

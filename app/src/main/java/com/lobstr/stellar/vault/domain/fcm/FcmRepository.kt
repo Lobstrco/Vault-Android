@@ -18,4 +18,6 @@ interface FcmRepository {
     fun transformApiAccountResponse(apiAccountStr: String): Account
 
     fun transformApiTransactionResponse(apiTransactionItemStr: String): TransactionItem
+
+    fun transformApiTransactionResponseToHash(apiTransactionItemStr: String): String?
 }

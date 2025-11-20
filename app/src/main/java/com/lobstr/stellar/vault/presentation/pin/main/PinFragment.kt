@@ -350,15 +350,7 @@ class PinFragment : BaseFragment(), PinFrView, PinLockListener, BiometricListene
     }
 
     override fun sendMail(mail: String, subject: String, body: String?) {
-        try {
-            AppUtil.sendEmail(requireContext(), arrayOf(mail), subject, body)
-        } catch (exc: ActivityNotFoundException) {
-            Toast.makeText(
-                requireContext(),
-                getString(R.string.mail_msg_client_not_found),
-                Toast.LENGTH_SHORT
-            ).show()
-        }
+        AppUtil.sendEmail(requireContext(), arrayOf(mail), subject, body)
     }
 
     // Biometric.

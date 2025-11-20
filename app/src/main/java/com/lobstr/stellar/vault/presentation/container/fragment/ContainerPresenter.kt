@@ -42,7 +42,12 @@ class ContainerPresenter(
 
             SETTINGS -> viewState.showSettingsFr()
 
-            TRANSACTION_DETAILS -> viewState.showTransactionDetails(arguments.parcelable(Constant.Bundle.BUNDLE_TRANSACTION_ITEM)!!)
+            TRANSACTION_DETAILS -> viewState.showTransactionDetails(
+                arguments.parcelable(Constant.Bundle.BUNDLE_TRANSACTION_ITEM),
+                arguments.getString(
+                    Constant.Bundle.BUNDLE_TRANSACTION_HASH
+                )
+            )
 
             IMPORT_XDR -> viewState.showImportXdrFr()
 

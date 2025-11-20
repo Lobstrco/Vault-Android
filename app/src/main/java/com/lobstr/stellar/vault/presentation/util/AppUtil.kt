@@ -22,6 +22,8 @@ import androidx.core.content.pm.PackageInfoCompat
 import androidx.core.view.WindowInsetsCompat
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.GoogleApiAvailability
+import com.google.firebase.Firebase
+import com.google.firebase.crashlytics.crashlytics
 import com.google.gson.Gson
 import com.google.gson.JsonIOException
 import com.google.gson.JsonSyntaxException
@@ -267,13 +269,34 @@ object AppUtil {
         subject: String?,
         body: String? = null
     ) {
-        context.startActivity(Intent(Intent.ACTION_SENDTO).apply {
-            data = Uri.parse("mailto:")
-            putExtra(Intent.EXTRA_EMAIL, mails ?: "")
-            putExtra(Intent.EXTRA_TEXT, body ?: "")
-            putExtra(Intent.EXTRA_SUBJECT, subject ?: "")
-            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-        })
+        try {
+            context.startActivity(Intent(Intent.ACTION_SENDTO).apply {
+                data = Uri.parse("mailto:")
+                putExtra(Intent.EXTRA_EMAIL, mails ?: "")
+                putExtra(Intent.EXTRA_TEXT, body ?: "")
+                putExtra(Intent.EXTRA_SUBJECT, subject ?: "")
+                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            })
+        } catch (exc: Exception) {
+            when (exc) {
+                is ActivityNotFoundException, is SecurityException -> {
+                    Toast.makeText(
+                        context,
+                        getString(R.string.mail_msg_client_not_found),
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+
+                else -> {
+                    Firebase.crashlytics.recordException(exc)
+                    Toast.makeText(
+                        context,
+                        getString(R.string.msg_unknown_error),
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            }
+        }
     }
 
     fun getAppBehavior() =

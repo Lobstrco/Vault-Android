@@ -55,6 +55,9 @@ class TransactionEntityMapper(private val tsMapper: TsMapper) {
         )
     }
 
+    fun transformTransactionToHash(apiTransactionItem: ApiTransactionItem): String? =
+        apiTransactionItem.hash
+
     fun transformTransactionXdr(xdr: String): TransactionItem {
         return tsMapper.getTransaction(xdr).let {
             TransactionItem(

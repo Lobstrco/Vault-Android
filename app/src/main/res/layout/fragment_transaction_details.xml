@@ -1,11 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".presentation.home.transactions.details.TransactionDetailsFragment">
+
+    <LinearLayout
+        android:id="@+id/llMain"
+        android:visibility="gone"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/color_f9f9ff"
-        android:orientation="vertical"
-        tools:context=".presentation.home.transactions.details.TransactionDetailsFragment">
+        android:orientation="vertical">
 
     <androidx.core.widget.NestedScrollView
             android:id="@+id/svContent"
@@ -103,6 +110,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingHorizontal="16dp"
+            android:visibility="gone"
             android:orientation="vertical">
 
         <TextView
@@ -155,4 +163,17 @@
                     android:textSize="14sp" />
         </LinearLayout>
     </LinearLayout>
-</LinearLayout>
+    </LinearLayout>
+
+    <ProgressBar
+        android:id="@+id/pbPlaceHolder"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:visibility="gone" />
+
+    <include
+        android:id="@+id/llEmptyState"
+        layout="@layout/layout_empty_state_with_action"
+        android:visibility="gone" />
+</FrameLayout>

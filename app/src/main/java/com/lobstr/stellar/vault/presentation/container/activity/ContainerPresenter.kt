@@ -39,12 +39,20 @@ class ContainerPresenter(
             add(Pair(Constant.Bundle.BUNDLE_NAVIGATION_FR, targetFr))
             // Apply specific values here.
             when (targetFr) {
-                TRANSACTION_DETAILS -> add(
-                    Pair(
-                        Constant.Bundle.BUNDLE_TRANSACTION_ITEM,
-                        intent.parcelableExtra(Constant.Extra.EXTRA_TRANSACTION_ITEM)
+                TRANSACTION_DETAILS -> {
+                    add(
+                        Pair(
+                            Constant.Bundle.BUNDLE_TRANSACTION_ITEM,
+                            intent.parcelableExtra(Constant.Extra.EXTRA_TRANSACTION_ITEM)
+                        )
                     )
-                )
+                    add(
+                        Pair(
+                            Constant.Bundle.BUNDLE_TRANSACTION_HASH,
+                            intent.getStringExtra(Constant.Extra.EXTRA_TRANSACTION_HASH)
+                        )
+                    )
+                }
                 SUCCESS -> {
                     add(Pair(Constant.Bundle.BUNDLE_ENVELOPE_XDR, intent.getStringExtra(Constant.Extra.EXTRA_ENVELOPE_XDR)))
                     add(

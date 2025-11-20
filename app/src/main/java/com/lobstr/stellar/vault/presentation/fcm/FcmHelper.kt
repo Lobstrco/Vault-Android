@@ -153,4 +153,7 @@ class FcmHelper(private val context: Context, private val fcmInteractor: FcmInte
 
     fun getTransactionData(jsonStr: String?): TransactionItem? =
         fcmInteractor.transformTransactionResponse(jsonStr)
+
+    fun getTransactionHash(jsonStr: String?): String? =
+        fcmInteractor.transformTransactionResponseToHash(jsonStr)
 }

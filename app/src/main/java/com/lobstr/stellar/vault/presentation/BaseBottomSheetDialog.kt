@@ -9,6 +9,7 @@ import androidx.core.view.updateLayoutParams
 import androidx.core.view.updateMargins
 import androidx.core.view.updatePadding
 import androidx.fragment.app.FragmentManager
+import com.google.android.material.R
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.lobstr.stellar.vault.presentation.util.InsetsMargin
@@ -23,8 +24,24 @@ open class BaseBottomSheetDialog : BaseMvpAppCompatDialogFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        configureContainerInsets()
         handleTopInsets()
         handleInsets(view)
+    }
+
+    /**
+     * Configures the dialog container by overriding the built-in EdgeToEdge listener
+     * with an empty implementation.
+     */
+    private fun configureContainerInsets() {
+        val dialog = dialog as? BottomSheetDialog ?: return
+        val container = dialog.findViewById<View>(R.id.container) ?: return
+
+        // Override EdgeToEdge listener with empty logic to prevent dynamic padding
+        container.doOnApplyWindowInsets { _, insets, _, _ ->
+            // Pass insets through without modification
+            insets
+        }
     }
 
     private fun handleTopInsets() {

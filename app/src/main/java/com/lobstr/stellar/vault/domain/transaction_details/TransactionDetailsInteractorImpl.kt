@@ -58,8 +58,7 @@ class TransactionDetailsInteractorImpl(
         return if (skip) {
             Single.fromCallable { transactionItem }
         } else {
-            transactionRepository.retrieveTransaction(
-                AppUtil.getJwtToken(prefsUtil.authToken),
+            retrieveActualTransaction(
                 transactionItem.hash
             ).flatMap {
                 Single.fromCallable {
@@ -81,6 +80,13 @@ class TransactionDetailsInteractorImpl(
                 }
             }
         }
+    }
+
+    override fun retrieveActualTransaction(hash: String): Single<TransactionItem> {
+        return transactionRepository.retrieveTransaction(
+            AppUtil.getJwtToken(prefsUtil.authToken),
+            hash
+        )
     }
 
     override fun confirmTransactionOnHorizon(transaction: AbstractTransaction): Single<SubmitTransactionResult> {

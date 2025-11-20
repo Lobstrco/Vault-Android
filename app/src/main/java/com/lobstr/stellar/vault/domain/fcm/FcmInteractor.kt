@@ -40,4 +40,6 @@ interface FcmInteractor {
     fun isNotificationsEnabled(userAccount: String): Boolean
 
     fun transformTransactionResponse(jsonStr: String?): TransactionItem?
+
+    fun transformTransactionResponseToHash(jsonStr: String?): String?
 }

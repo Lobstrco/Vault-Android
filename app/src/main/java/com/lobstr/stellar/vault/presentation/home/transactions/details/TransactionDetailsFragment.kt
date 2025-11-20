@@ -15,6 +15,7 @@ import androidx.activity.addCallback
 import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
 import androidx.core.view.MenuProvider
+import androidx.core.view.isInvisible
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.setFragmentResult
@@ -47,6 +48,7 @@ import com.lobstr.stellar.vault.presentation.util.*
 import com.lobstr.stellar.vault.presentation.util.Constant.Bundle.BUNDLE_OPERATION
 import com.lobstr.stellar.vault.presentation.util.Constant.Bundle.BUNDLE_OPERATIONS_LIST
 import com.lobstr.stellar.vault.presentation.util.Constant.Bundle.BUNDLE_OPERATION_TITLE
+import com.lobstr.stellar.vault.presentation.util.Constant.Bundle.BUNDLE_TRANSACTION_HASH
 import com.lobstr.stellar.vault.presentation.util.Constant.Bundle.BUNDLE_TRANSACTION_ITEM
 import com.lobstr.stellar.vault.presentation.util.Constant.Bundle.BUNDLE_TRANSACTION_SOURCE_ACCOUNT
 import com.lobstr.stellar.vault.presentation.util.Constant.Bundle.BUNDLE_TRANSACTION_TITLE
@@ -92,7 +94,8 @@ class TransactionDetailsFragment : BaseFragment(), TransactionDetailsView,
 
     private val mPresenter by moxyPresenter {
         presenterProvider.get().apply {
-            transactionItem = arguments?.parcelable(BUNDLE_TRANSACTION_ITEM)!!
+            transactionItemArg = arguments?.parcelable(BUNDLE_TRANSACTION_ITEM)
+            transactionHashArg = arguments?.getString(BUNDLE_TRANSACTION_HASH)
         }
     }
 
@@ -114,7 +117,6 @@ class TransactionDetailsFragment : BaseFragment(), TransactionDetailsView,
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        requireActivity().addMenuProvider(mMenuProvider, viewLifecycleOwner)
         setListeners()
     }
 
@@ -149,6 +151,7 @@ class TransactionDetailsFragment : BaseFragment(), TransactionDetailsView,
         binding.apply {
             btnConfirm.setSafeOnClickListener { mPresenter.btnConfirmClicked() }
             btnDecline.setSafeOnClickListener { mPresenter.btnDeclineClicked() }
+            llEmptyState.btnEmptyStateAction.setSafeOnClickListener { mPresenter.tryAgainClicked() }
         }
 
         childFragmentManager.addOnBackStackChangedListener {
@@ -168,6 +171,17 @@ class TransactionDetailsFragment : BaseFragment(), TransactionDetailsView,
 
     override fun setupToolbarTitle(titleRes: Int) {
         saveActionBarTitle(titleRes)
+    }
+
+    override fun showOptionsMenu(show: Boolean) {
+        requireActivity().apply {
+            if (show) {
+                removeMenuProvider(mMenuProvider)
+                addMenuProvider(mMenuProvider, viewLifecycleOwner)
+            } else {
+                removeMenuProvider(mMenuProvider)
+            }
+        }
     }
 
     override fun updateMenuItemsVisibility(hiddenItemIds: Set<Int>) {
@@ -561,6 +575,21 @@ class TransactionDetailsFragment : BaseFragment(), TransactionDetailsView,
 
     override fun cancel() {
         // Implement logic if needed.
+    }
+
+    override fun showMainContent(show: Boolean) {
+        binding.llMain.isInvisible = !show
+    }
+
+    override fun showPlaceholder(show: Boolean) {
+        binding.pbPlaceHolder.isVisible = show
+    }
+
+    override fun showEmptyState(show: Boolean, error: String?) {
+        binding.llEmptyState.apply {
+            root.isVisible = show
+            error?.let { tvEmptyState.text = it}
+        }
     }
 
     // ===========================================================

@@ -203,6 +203,7 @@
 -dontwarn org.codehaus.mojo.animal_sniffer.*
 # OkHttp platform used only on JVM and when Conscrypt dependency is available.
 -dontwarn okhttp3.internal.platform.ConscryptPlatform
+-dontwarn okhttp3.internal.sse.RealEventSource
 
 # Tangem
 -keep class com.tangem.** { *; }

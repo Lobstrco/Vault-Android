@@ -115,6 +115,14 @@ class FcmInteractorImpl(
         return fcmRepository.transformApiTransactionResponse(jsonStr)
     }
 
+    override fun transformTransactionResponseToHash(jsonStr: String?): String? {
+        if (jsonStr.isNullOrEmpty()) {
+            return null
+        }
+
+        return fcmRepository.transformApiTransactionResponseToHash(jsonStr)
+    }
+
     override fun isUserAuthorized(): Boolean = !prefsUtil.authToken.isNullOrEmpty()
 
     override fun isNotificationsEnabled(userAccount: String): Boolean =

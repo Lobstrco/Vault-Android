@@ -4,12 +4,15 @@ import android.content.Intent
 import android.text.TextUtils
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
+import com.google.firebase.Firebase
+import com.google.firebase.crashlytics.crashlytics
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import com.lobstr.stellar.vault.R
 import com.lobstr.stellar.vault.domain.util.EventProviderModule
 import com.lobstr.stellar.vault.domain.util.event.Notification
 import com.lobstr.stellar.vault.presentation.container.activity.ContainerActivity
+import com.lobstr.stellar.vault.presentation.entities.transaction.TransactionItem
 import com.lobstr.stellar.vault.presentation.fcm.LVFirebaseMessagingService.Field.ACCOUNT
 import com.lobstr.stellar.vault.presentation.fcm.LVFirebaseMessagingService.Field.EVENT_TYPE
 import com.lobstr.stellar.vault.presentation.fcm.LVFirebaseMessagingService.Field.MESSAGE_BODY
@@ -19,6 +22,7 @@ import com.lobstr.stellar.vault.presentation.fcm.LVFirebaseMessagingService.Fiel
 import com.lobstr.stellar.vault.presentation.home.HomeActivity
 import com.lobstr.stellar.vault.presentation.util.Constant
 import dagger.hilt.android.AndroidEntryPoint
+import timber.log.Timber
 import javax.inject.Inject
 import kotlin.random.Random
 
@@ -46,6 +50,11 @@ class LVFirebaseMessagingService : FirebaseMessagingService() {
         const val ADDED_NEW_TRANSACTION = "added_new_transaction"
         const val ADDED_NEW_SIGNATURE = "added_new_signature"
         const val TRANSACTION_SUBMITTED = "transaction_submitted"
+
+        // New types for notifications without XDR (payload > 4KB)
+        const val ADDED_NEW_TRANSACTION_4KB = "added_new_transaction_4kb"
+        const val ADDED_NEW_SIGNATURE_4KB = "added_new_signature_4kb"
+        const val TRANSACTION_SUBMITTED_4KB = "transaction_submitted_4kb"
     }
 
     override fun onNewToken(newToken: String) {
@@ -87,15 +96,24 @@ class LVFirebaseMessagingService : FirebaseMessagingService() {
                 )
 
                 Type.ADDED_NEW_TRANSACTION -> wrapAddedNewTransactionMessage(
-                    data[TRANSACTION], userAccount, messageTitle, messageBody, notificationsManager
+                    data[TRANSACTION], userAccount, messageTitle, messageBody, notificationsManager, isLegacyFormat = true
+                )
+                Type.ADDED_NEW_TRANSACTION_4KB -> wrapAddedNewTransactionMessage(
+                    data[TRANSACTION], userAccount, messageTitle, messageBody, notificationsManager, isLegacyFormat = false
                 )
 
                 Type.ADDED_NEW_SIGNATURE -> wrapAddedNewSignatureMessage(
-                    data[TRANSACTION], userAccount, messageTitle, messageBody, notificationsManager
+                    data[TRANSACTION], userAccount, messageTitle, messageBody, notificationsManager, isLegacyFormat = true
+                )
+                Type.ADDED_NEW_SIGNATURE_4KB -> wrapAddedNewSignatureMessage(
+                    data[TRANSACTION], userAccount, messageTitle, messageBody, notificationsManager, isLegacyFormat = false
                 )
 
                 Type.TRANSACTION_SUBMITTED -> wrapTransactionSubmittedMessage(
-                    data[TRANSACTION], userAccount, messageTitle, messageBody, notificationsManager
+                    data[TRANSACTION], userAccount, messageTitle, messageBody, notificationsManager, isLegacyFormat = true
+                )
+                Type.TRANSACTION_SUBMITTED_4KB -> wrapTransactionSubmittedMessage(
+                    data[TRANSACTION], userAccount, messageTitle, messageBody, notificationsManager, isLegacyFormat = false
                 )
 
                 else -> sendDefaultMessage(
@@ -111,7 +129,8 @@ class LVFirebaseMessagingService : FirebaseMessagingService() {
                 )
             }
         } catch (exc: Exception) {
-            exc.printStackTrace()
+            Timber.e(exc, "Failed to parse FCM message.")
+            Firebase.crashlytics.recordException(exc)
         }
     }
 
@@ -174,12 +193,19 @@ class LVFirebaseMessagingService : FirebaseMessagingService() {
         userAccount: String?,
         messageTitle: String?,
         messageBody: String?,
-        notificationsManager: NotificationsManager
+        notificationsManager: NotificationsManager,
+        isLegacyFormat: Boolean
     ) {
-        val transaction = mFcmHelper.getTransactionData(jsonStr)
+        // Get either a full TransactionItem or just a transaction hash String
+        val transactionData: Any? = if (isLegacyFormat) {
+            mFcmHelper.getTransactionData(jsonStr)
+        } else {
+            mFcmHelper.getTransactionHash(jsonStr)
+        }
+
         if (!userAccount.isNullOrEmpty() && mFcmHelper.getCurrentPublicKey() == userAccount) {
             mEventProviderModule.notificationEventSubject.onNext(
-                Notification(Notification.Type.ADDED_NEW_TRANSACTION, transaction)
+                Notification(Notification.Type.ADDED_NEW_TRANSACTION, transactionData)
             )
         }
 
@@ -202,7 +228,11 @@ class LVFirebaseMessagingService : FirebaseMessagingService() {
                     Constant.Extra.EXTRA_NAVIGATION_FR,
                     Constant.Navigation.TRANSACTION_DETAILS
                 )
-                putExtra(Constant.Extra.EXTRA_TRANSACTION_ITEM, transaction)
+                // Pass either the full object or just the hash to the activity
+                when (transactionData) {
+                    is TransactionItem -> putExtra(Constant.Extra.EXTRA_TRANSACTION_ITEM, transactionData)
+                    is String -> putExtra(Constant.Extra.EXTRA_TRANSACTION_HASH, transactionData)
+                }
             },
             Intent(this, HomeActivity::class.java).apply {
                 putExtra(Constant.Extra.EXTRA_USER_ACCOUNT, userAccount)
@@ -216,12 +246,19 @@ class LVFirebaseMessagingService : FirebaseMessagingService() {
         userAccount: String?,
         messageTitle: String?,
         messageBody: String?,
-        notificationsManager: NotificationsManager
+        notificationsManager: NotificationsManager,
+        isLegacyFormat: Boolean
     ) {
-        val transaction = mFcmHelper.getTransactionData(jsonStr)
+        // Get either a full TransactionItem or just a transaction hash String
+        val transactionData: Any? = if (isLegacyFormat) {
+            mFcmHelper.getTransactionData(jsonStr)
+        } else {
+            mFcmHelper.getTransactionHash(jsonStr)
+        }
+
         if (!userAccount.isNullOrEmpty() && mFcmHelper.getCurrentPublicKey() == userAccount) {
             mEventProviderModule.notificationEventSubject.onNext(
-                Notification(Notification.Type.ADDED_NEW_SIGNATURE, transaction)
+                Notification(Notification.Type.ADDED_NEW_SIGNATURE, transactionData)
             )
         }
 
@@ -244,7 +281,11 @@ class LVFirebaseMessagingService : FirebaseMessagingService() {
                     Constant.Extra.EXTRA_NAVIGATION_FR,
                     Constant.Navigation.TRANSACTION_DETAILS
                 )
-                putExtra(Constant.Extra.EXTRA_TRANSACTION_ITEM, transaction)
+                // Pass either the full object or just the hash to the activity
+                when (transactionData) {
+                    is TransactionItem -> putExtra(Constant.Extra.EXTRA_TRANSACTION_ITEM, transactionData)
+                    is String -> putExtra(Constant.Extra.EXTRA_TRANSACTION_HASH, transactionData)
+                }
             },
             Intent(this, HomeActivity::class.java).apply {
                 putExtra(Constant.Extra.EXTRA_USER_ACCOUNT, userAccount)
@@ -262,12 +303,19 @@ class LVFirebaseMessagingService : FirebaseMessagingService() {
         userAccount: String?,
         messageTitle: String?,
         messageBody: String?,
-        notificationsManager: NotificationsManager
+        notificationsManager: NotificationsManager,
+        isLegacyFormat: Boolean
     ) {
-        val transaction = mFcmHelper.getTransactionData(jsonStr)
+        // Get either a full TransactionItem or just a transaction hash String
+        val transactionData: Any? = if (isLegacyFormat) {
+            mFcmHelper.getTransactionData(jsonStr)
+        } else {
+            mFcmHelper.getTransactionHash(jsonStr)
+        }
+
         if (!userAccount.isNullOrEmpty() && mFcmHelper.getCurrentPublicKey() == userAccount) {
             mEventProviderModule.notificationEventSubject.onNext(
-                Notification(Notification.Type.TRANSACTION_SUBMITTED, transaction)
+                Notification(Notification.Type.TRANSACTION_SUBMITTED, transactionData)
             )
         }
 
@@ -290,7 +338,11 @@ class LVFirebaseMessagingService : FirebaseMessagingService() {
                     Constant.Extra.EXTRA_NAVIGATION_FR,
                     Constant.Navigation.TRANSACTION_DETAILS
                 )
-                putExtra(Constant.Extra.EXTRA_TRANSACTION_ITEM, transaction)
+                // Pass either the full object or just the hash to the activity
+                when (transactionData) {
+                    is TransactionItem -> putExtra(Constant.Extra.EXTRA_TRANSACTION_ITEM, transactionData)
+                    is String -> putExtra(Constant.Extra.EXTRA_TRANSACTION_HASH, transactionData)
+                }
             },
             Intent(this, HomeActivity::class.java).apply {
                 putExtra(Constant.Extra.EXTRA_USER_ACCOUNT, userAccount)

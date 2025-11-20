@@ -48,4 +48,11 @@ class FcmRepositoryImpl(
                 ApiTransactionItem::class.java
             )!!
         )
+
+    override fun transformApiTransactionResponseToHash(apiTransactionItemStr: String): String? =
+        AppUtil.convertJsonToPojo(
+            apiTransactionItemStr,
+            ApiTransactionItem::class.java
+        )?.let { transactionEntityMapper.transformTransactionToHash(it) }
+
 }
