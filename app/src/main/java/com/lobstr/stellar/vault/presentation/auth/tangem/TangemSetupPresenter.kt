@@ -42,15 +42,21 @@ class TangemSetupPresenter @Inject constructor(private val interactor: TangemSet
 
     fun handleTangemInfo(tangemInfo: TangemInfo?) {
         if (tangemInfo != null) {
-            if (tangemInfo.cardStatusCode == Constant.TangemCardStatus.EMPTY) {
-                viewState.showTangemCreateWalletScreen(TangemInfo().apply {
-                    cardId = tangemInfo.cardId
-                    curve = tangemInfo.curve
-                })
-            } else {
-                interactor.savePublicKey(tangemInfo.accountId!!)
-                interactor.saveTangemCardId(tangemInfo.cardId!!)
-                viewState.showVaultAuthScreen()
+            when (tangemInfo.cardStatusCode) {
+                Constant.TangemCardStatus.EMPTY -> {
+                    viewState.showTangemCreateWalletScreen(TangemInfo().apply {
+                        cardId = tangemInfo.cardId
+                        curve = tangemInfo.curve
+                    })
+                }
+                Constant.TangemCardStatus.WALLET_CREATED ->{
+                    interactor.savePublicKey(tangemInfo.accountId!!)
+                    interactor.saveTangemCardId(tangemInfo.cardId!!)
+                    viewState.showVaultAuthScreen()
+                }
+                else -> {
+                    viewState.showMessage(AppUtil.getString(R.string.msg_unknown_error))
+                }
             }
         }
     }

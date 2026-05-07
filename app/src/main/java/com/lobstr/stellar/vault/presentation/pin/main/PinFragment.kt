@@ -30,6 +30,7 @@ import com.lobstr.stellar.vault.presentation.auth.biometric.BiometricSetUpFragme
 import com.lobstr.stellar.vault.presentation.base.activity.BaseActivity
 import com.lobstr.stellar.vault.presentation.base.fragment.BaseFragment
 import com.lobstr.stellar.vault.presentation.dialog.alert.base.AlertDialogFragment
+import com.lobstr.stellar.vault.presentation.fcm.NotificationsManager
 import com.lobstr.stellar.vault.presentation.home.HomeActivity
 import com.lobstr.stellar.vault.presentation.pin.PinActivity
 import com.lobstr.stellar.vault.presentation.util.AppUtil
@@ -282,6 +283,7 @@ class PinFragment : BaseFragment(), PinFrView, PinLockListener, BiometricListene
     }
 
     override fun showAuthScreen() {
+        NotificationsManager.clearNotifications(requireContext())
         startActivity(Intent(requireContext(), AuthActivity::class.java).apply {
             putExtra(Constant.Extra.EXTRA_NAVIGATION_FR, Constant.Navigation.AUTH)
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK

@@ -20,12 +20,9 @@ android {
         applicationId = "com.lobstr.stellar.vault"
         minSdk = 24
         targetSdk = 36
-        versionCode = 55
-        versionName = "3.6.2"
+        versionCode = 57
+        versionName = "3.6.4"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-
-        // Used for setup Bundle name.
-        setProperty("archivesBaseName", "${applicationId}_${versionName}_${versionCode}_${SimpleDateFormat("dd.MM.yyyy").format(Date())}")
     }
 
     packaging {
@@ -109,7 +106,7 @@ android {
     buildTypes {
         getByName("debug") {
             isMinifyEnabled = false
-            proguardFiles(getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro")
+            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
             signingConfig = signingConfigs.getByName("qa")
             isDebuggable = true
             aaptOptions.cruncherEnabled = false
@@ -119,7 +116,7 @@ android {
         getByName("release") {
             isShrinkResources = true
             isMinifyEnabled = true
-            proguardFiles(getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro")
+            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
             signingConfig = signingConfigs.getByName("vault")
             isDebuggable = false
             buildConfigField("boolean", "isDEBUG", "false")
@@ -172,14 +169,14 @@ val desugar_jdk_libs by extra("2.1.5")
 val rx_java by extra("3.1.12")
 val rx_android by extra("3.0.2")
 val retrofit by extra("3.0.0")
-val okhttp_bom by extra("5.3.1")
+val okhttp_bom by extra("5.3.2")
 val moxy by extra("2.2.2")
-val glide by extra("5.0.5")
+val glide by extra("5.0.7")
 val material by extra("1.13.0")
-val browser by extra("1.9.0")
-val firebase_bom by extra("33.16.0") // Downgraded from 34.1.0 for Tangem compatibility
-val play_service_base by extra("18.9.0")
-val androidx_core by extra("1.17.0")
+val browser by extra("1.10.0")
+val firebase_bom by extra("34.12.0")
+val play_service_base by extra("18.10.0")
+val androidx_core by extra("1.18.0")
 val androidx_appcompat by extra("1.7.1")
 val fragment by extra("1.8.9")
 val recyclerview by extra("1.4.0")
@@ -189,19 +186,19 @@ val androidx_legacy_support_v4 by extra("1.0.0")
 val junit by extra("4.13.2")
 val runner by extra("1.3.0")
 val espresso_core by extra("3.7.0")
-val stellar_sdk by extra("2.1.0")
+val stellar_sdk by extra("3.0.0")
 val mnemonic by extra("0.1.1")
-val work_manager by extra("2.10.5") // Downgraded from 2.11.0 for Tangem compatibility
+val work_manager by extra("2.11.2")
 val biometric by extra("1.1.0")
 val lottieVersion by extra("6.7.1")
 val qr_gen by extra("3.0.1")
 val viewpager2 by extra("1.1.0")
-val tangem by extra("3.7.2")
-val hilt by extra("2.57.2")
+val hilt by extra("2.59.2")
 val androidx_hilt by extra("1.3.0")
-val lifecycle by extra("2.9.4")
+val lifecycle by extra("2.10.0")
 val timber by extra("5.0.1")
-val bcprov by extra("1.82")
+val bcprov by extra("1.83")
+val tangemVersion by extra("releases-5.37-610")
 
 dependencies {
     implementation(fileTree(mapOf("dir" to "libs", "include" to listOf("*.jar"))))
@@ -239,6 +236,8 @@ dependencies {
     implementation("androidx.hilt:hilt-work:$androidx_hilt")
     ksp("androidx.hilt:hilt-compiler:$androidx_hilt")
 
+    ksp("org.jetbrains.kotlin:kotlin-metadata-jvm:2.3.21")
+
     // Rx dependencies.
     implementation("io.reactivex.rxjava3:rxjava:$rx_java")
     implementation("io.reactivex.rxjava3:rxandroid:$rx_android")
@@ -267,13 +266,9 @@ dependencies {
     implementation("com.google.firebase:firebase-crashlytics")
     implementation("com.google.firebase:firebase-analytics")
 
-    // Tangem (TODO excluded kotlin-android-extensions-runtime).
-    implementation("com.github.tangem.tangem-sdk-android:android:$tangem") {
-        exclude(group = "org.jetbrains.kotlin", module = "kotlin-android-extensions-runtime")
-    }
-    implementation("com.github.tangem.tangem-sdk-android:core:$tangem") {
-        exclude(group = "org.jetbrains.kotlin", module = "kotlin-android-extensions-runtime")
-    }
+    // Tangem.
+    implementation("com.tangem.tangem-sdk-kotlin:core:${tangemVersion}")
+    implementation("com.tangem.tangem-sdk-kotlin:android:${tangemVersion}")
 
     // Other.
     implementation("com.airbnb.android:lottie:$lottieVersion")

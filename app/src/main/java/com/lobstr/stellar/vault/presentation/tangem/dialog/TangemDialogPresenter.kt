@@ -10,11 +10,13 @@ import com.lobstr.stellar.vault.presentation.entities.tangem.TangemInfo
 import com.lobstr.stellar.vault.presentation.util.AppUtil
 import com.lobstr.stellar.vault.presentation.util.Constant
 import com.lobstr.stellar.vault.presentation.util.VibrateType.*
+import com.lobstr.stellar.vault.presentation.util.tangem.UnsupportedTangemFlow
 import com.tangem.common.card.Card
 import com.tangem.common.card.EllipticCurve
+import com.tangem.common.core.TangemSdkError
 import com.tangem.operations.sign.SignResponse
 import com.tangem.operations.wallet.CreateWalletResponse
-import com.tangem.tangem_sdk_new.ui.NfcLocation
+import com.tangem.sdk.ui.NfcLocation
 import javax.inject.Inject
 
 class TangemDialogPresenter @Inject constructor(private val interactor: TangemInteractor) :
@@ -23,7 +25,17 @@ class TangemDialogPresenter @Inject constructor(private val interactor: TangemIn
     var tangemInfo: TangemInfo? = null
     var tangemOperationType: Int = NO_ACTION
 
+    private var pendingNfcAction: Int? = null
+    private var skipNextAttachAutoStart = false
+
     private var mAction = Constant.TangemAction.ACTION_DEFAULT
+
+    enum class TangemActionType {
+        SCAN,
+        CREATE,
+        SIGN,
+        UNKNOWN
+    }
 
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
@@ -36,6 +48,12 @@ class TangemDialogPresenter @Inject constructor(private val interactor: TangemIn
 
     override fun attachView(view: TangemDialogView?) {
         super.attachView(view)
+
+        if (skipNextAttachAutoStart) {
+            skipNextAttachAutoStart = false
+            return
+        }
+
         when {
             tangemInfo?.cardId.isNullOrEmpty() -> {
                 startScanTangemCard()
@@ -198,41 +216,84 @@ class TangemDialogPresenter @Inject constructor(private val interactor: TangemIn
         viewState.successfullyCompleteOperation(tangemInfo)
     }
 
-    fun processErrorCompletion(error: com.tangem.common.core.TangemError) {
-        val tangemError = interactor.handleTangemError(error)
-        when (tangemError?.errorMod) {
-            Constant.TangemErrorMod.ERROR_MOD_USER_CANCELLED -> {
-                viewState.finishScreen()//todo 50002
-            }
-            Constant.TangemErrorMod.ERROR_MOD_FINISH_SCREEN -> {
-                viewState.showMessage(
-                    tangemError.errorTitle
-                        ?: AppUtil.getString(R.string.tangem_error_default_title)
-                )
-            }
-            Constant.TangemErrorMod.ERROR_MOD_ONLY_TEXT -> {
-                viewState.showMessage(
-                    tangemError.errorTitle
-                        ?: AppUtil.getString(R.string.tangem_error_default_title)
-                )
-            }
-            Constant.TangemErrorMod.ERROR_MOD_DEFAULT -> {
-                viewState.showMessage(
-                    tangemError.errorTitle
-                        ?: AppUtil.getString(R.string.tangem_error_default_title)
-                )
-            }
-            Constant.TangemErrorMod.ERROR_MOD_REPEAT_ACTION -> {
-                showErrorWithRepeatAction(tangemError.errorTitle, tangemError.errorDescription)
-            }
-            else -> {
-                viewState.showMessage(
-                    tangemError?.errorTitle
-                        ?: AppUtil.getString(R.string.tangem_error_default_title)
-                )
-            }
+    fun getCurrentTangemAction(): TangemActionType {
+        return when (mAction) {
+            Constant.TangemAction.ACTION_SCAN -> TangemActionType.SCAN
+            Constant.TangemAction.ACTION_CREATE_WALLET -> TangemActionType.CREATE
+            Constant.TangemAction.ACTION_SIGN -> TangemActionType.SIGN
+            else -> TangemActionType.UNKNOWN
         }
     }
+
+    fun onAlreadyInitializedCardDetected() {
+        viewState.showMessage(
+            AppUtil.getString(R.string.tangem_error_wrong_card_text)
+        )
+    }
+
+    fun onUnsupportedCardFlowDetected(unsupportedFlow: UnsupportedTangemFlow) {
+        // We intentionally do not add a new PIN/code UI flow.
+        viewState.showMessage(
+            AppUtil.getString(R.string.tangem_error_wrong_card_text)
+        )
+    }
+
+    fun onTangemDelegateDismissed() {
+        viewState.finishScreen()
+    }
+
+    fun processErrorCompletion(error: com.tangem.common.core.TangemError) {
+        if (error is TangemSdkError.NfcFeatureIsUnavailable) {
+            onNfcUnavailable()
+            return
+        }
+
+        if (error.silent) {
+            return
+        }
+
+        viewState.showMessage(
+            AppUtil.getString(R.string.tangem_error_default_title)
+        )
+    }
+
+//    fun processErrorCompletion(error: com.tangem.common.core.TangemError) {
+       // val tangemError = interactor.handleTangemError(error)
+
+//        There is currently no need to handle the following errors, but this code will be needed in future updates.
+//        when (tangemError?.errorMod) {
+//            Constant.TangemErrorMod.ERROR_MOD_USER_CANCELLED -> {
+//                viewState.finishScreen()
+//            }
+//            Constant.TangemErrorMod.ERROR_MOD_FINISH_SCREEN -> {
+//                viewState.showMessage(
+//                    tangemError.errorTitle
+//                        ?: AppUtil.getString(R.string.tangem_error_default_title)
+//                )
+//            }
+//            Constant.TangemErrorMod.ERROR_MOD_ONLY_TEXT -> {
+//                viewState.showMessage(
+//                    tangemError.errorTitle
+//                        ?: AppUtil.getString(R.string.tangem_error_default_title)
+//                )
+//            }
+//            Constant.TangemErrorMod.ERROR_MOD_DEFAULT -> {
+//                viewState.showMessage(
+//                    tangemError.errorTitle
+//                        ?: AppUtil.getString(R.string.tangem_error_default_title)
+//                )
+//            }
+//            Constant.TangemErrorMod.ERROR_MOD_REPEAT_ACTION -> {
+//                showErrorWithRepeatAction(tangemError.errorTitle, tangemError.errorDescription)
+//            }
+//            else -> {
+//                viewState.showMessage(
+//                    tangemError?.errorTitle
+//                        ?: AppUtil.getString(R.string.tangem_error_default_title)
+//                )
+//            }
+//        }
+//    }
 
     private fun showErrorWithRepeatAction(errorTitle: String?, errorDescription: String?) {
         viewState.changeActionContainerVisibility(false)
@@ -410,4 +471,52 @@ class TangemDialogPresenter @Inject constructor(private val interactor: TangemIn
             AppUtil.getString(R.string.tangem_error_wrong_card_text)
         )
     }
+
+    fun onNfcUnavailable() {
+        pendingNfcAction = mAction
+        skipNextAttachAutoStart = true
+        viewState.showNfcCheckDialog()
+    }
+
+    fun onReturnedFromNfcSettings(isNfcEnabled: Boolean) {
+        if (!isNfcEnabled) {
+            pendingNfcAction = null
+            viewState.finishScreen()
+            return
+        }
+
+        when (pendingNfcAction) {
+            Constant.TangemAction.ACTION_SCAN -> {
+                pendingNfcAction = null
+                startScanTangemCard()
+            }
+            Constant.TangemAction.ACTION_CREATE_WALLET -> {
+                pendingNfcAction = null
+                if (tangemInfo?.curve != null) {
+                    startCreateWallet(tangemInfo?.curve!!)
+                }
+            }
+            Constant.TangemAction.ACTION_SIGN -> {
+                pendingNfcAction = null
+                startSignTransaction()
+            }
+            else -> {
+                pendingNfcAction = null
+            }
+        }
+    }
+
+    fun onNfcEnableDeclined() {
+        pendingNfcAction = null
+        viewState.finishScreen()
+    }
+
+    fun onAlertDialogNegativeButtonClicked(tag: String?) {
+        when (tag) {
+            AlertDialogFragment.DialogFragmentIdentifier.NFC_INFO_DIALOG -> {
+                onNfcEnableDeclined()
+            }
+        }
+    }
+    
 }

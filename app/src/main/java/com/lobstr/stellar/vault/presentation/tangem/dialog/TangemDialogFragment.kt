@@ -4,6 +4,7 @@ import android.animation.Animator
 import android.app.Dialog
 import android.content.DialogInterface
 import android.content.Intent
+import android.nfc.NfcAdapter
 import android.os.Bundle
 import android.provider.Settings
 import android.view.LayoutInflater
@@ -24,6 +25,7 @@ import com.lobstr.stellar.vault.presentation.tangem.dialog.TangemDialogPresenter
 import com.lobstr.stellar.vault.presentation.util.*
 import com.lobstr.stellar.vault.presentation.util.VibrateType
 import com.lobstr.stellar.vault.presentation.util.tangem.CustomCardManagerDelegate
+import com.lobstr.stellar.vault.presentation.util.tangem.UnsupportedTangemFlow
 import com.lobstr.stellar.vault.presentation.util.tangem.customInit
 import com.tangem.TangemSdk
 import com.tangem.common.CompletionResult
@@ -50,6 +52,7 @@ class TangemDialogFragment : BaseBottomSheetDialog(), TangemDialogView,
     private val binding get() = _binding!!
 
     private lateinit var tangemSdk: TangemSdk
+    private var openedNfcSettings = false
 
     @Inject
     lateinit var presenterProvider: Provider<TangemDialogPresenter>
@@ -109,7 +112,18 @@ class TangemDialogFragment : BaseBottomSheetDialog(), TangemDialogView,
         setListeners()
     }
 
+    override fun onResume() {
+        super.onResume()
+
+        if (openedNfcSettings) {
+            openedNfcSettings = false
+            mPresenter.onReturnedFromNfcSettings(isNfcEnabled())
+        }
+    }
+
     override fun startScanTangemCard() {
+        if (!ensureNfcEnabled()) return
+
         tangemSdk.scanCard { result ->
             when (result) {
                 is CompletionResult.Success -> {
@@ -134,6 +148,8 @@ class TangemDialogFragment : BaseBottomSheetDialog(), TangemDialogView,
         walletPublicKey: ByteArray,
         cardId: String
     ) {
+        if (!ensureNfcEnabled()) return
+
         tangemSdk.sign(
             hashes = arrayHashes,
             walletPublicKey = walletPublicKey,
@@ -155,6 +171,8 @@ class TangemDialogFragment : BaseBottomSheetDialog(), TangemDialogView,
     }
 
     override fun startCreateWallet(curve: EllipticCurve, cardId: String) {
+        if (!ensureNfcEnabled()) return
+
         tangemSdk.createWallet(
             curve,
             cardId
@@ -279,6 +297,7 @@ class TangemDialogFragment : BaseBottomSheetDialog(), TangemDialogView,
     // Listeners, methods for/from Interfaces
     // ===========================================================
 
+    /** showNfcCheckDialog */
     override fun showNfcCheckDialog() {
         AlertDialogFragment.Builder(true)
             .setCancelable(true)
@@ -293,7 +312,25 @@ class TangemDialogFragment : BaseBottomSheetDialog(), TangemDialogView,
             )
     }
 
+    /** showNfcCheckDialog Listener */
+    override fun onPositiveBtnClick(tag: String?, dialogInterface: DialogInterface) {
+        mPresenter.onAlertDialogPositiveButtonClicked(tag)
+    }
+
+    override fun onNegativeBtnClick(tag: String?, dialogInterface: DialogInterface) {
+        mPresenter.onAlertDialogNegativeButtonClicked(tag)
+    }
+
+    override fun onNeutralBtnClick(tag: String?, dialogInterface: DialogInterface) {
+        // Add logic if needed.
+    }
+
+    override fun onCancel(tag: String?, dialogInterface: DialogInterface) {
+        // Add logic if needed.
+    }
+
     override fun showNfcDeviceSettings() {
+        openedNfcSettings = true
         startActivity(Intent(Settings.ACTION_NFC_SETTINGS))
     }
 
@@ -312,22 +349,6 @@ class TangemDialogFragment : BaseBottomSheetDialog(), TangemDialogView,
         ((parentFragment ?: activity) as? OnTangemDialogListener)?.cancel()
     }
 
-    override fun onPositiveBtnClick(tag: String?, dialogInterface: DialogInterface) {
-        mPresenter.onAlertDialogPositiveButtonClicked(tag)
-    }
-
-    override fun onNegativeBtnClick(tag: String?, dialogInterface: DialogInterface) {
-        // Add logic if needed.
-    }
-
-    override fun onNeutralBtnClick(tag: String?, dialogInterface: DialogInterface) {
-        // Add logic if needed.
-    }
-
-    override fun onCancel(tag: String?, dialogInterface: DialogInterface) {
-        // Add logic if needed.
-    }
-
     override fun finishScreen() {
         cancelOperation()
         dismiss()
@@ -341,6 +362,59 @@ class TangemDialogFragment : BaseBottomSheetDialog(), TangemDialogView,
 
     override fun vibrate(type: VibrateType) {
         VibratorUtil.vibrate(requireContext(), type)
+    }
+
+    override fun onError(error: com.tangem.common.core.TangemError) {
+        this.activity?.runOnUiThread {
+            mPresenter.processErrorCompletion(error)
+        }
+    }
+
+    override fun onTangemDelegateDismiss() {
+        this.activity?.runOnUiThread {
+            mPresenter.onTangemDelegateDismissed()
+        }
+    }
+
+    override fun onWelcomeBackWarning(
+        onContinue: () -> Unit,
+        onReject: () -> Unit
+    ) {
+        this.activity?.runOnUiThread {
+            when (mPresenter.getCurrentTangemAction()) {
+                TangemDialogPresenter.TangemActionType.CREATE -> {
+                    mPresenter.onAlreadyInitializedCardDetected()
+                    onReject()
+                }
+                TangemDialogPresenter.TangemActionType.SCAN,
+                TangemDialogPresenter.TangemActionType.SIGN,
+                TangemDialogPresenter.TangemActionType.UNKNOWN -> {
+                    // For scan/sign flows we silently continue to preserve the old UX.
+                    onContinue()
+                }
+            }
+        }
+    }
+
+    override fun onUnsupportedCardFlow(
+        unsupportedFlow: UnsupportedTangemFlow,
+        onComplete: () -> Unit
+    ) {
+        this.activity?.runOnUiThread {
+            mPresenter.onUnsupportedCardFlowDetected(unsupportedFlow)
+            onComplete()
+        }
+    }
+
+    private fun isNfcEnabled(): Boolean {
+        val adapter = NfcAdapter.getDefaultAdapter(requireContext())
+        return adapter != null && adapter.isEnabled
+    }
+
+    private fun ensureNfcEnabled(): Boolean {
+        if (isNfcEnabled()) return true
+        mPresenter.onNfcUnavailable()
+        return false
     }
 
     // ===========================================================

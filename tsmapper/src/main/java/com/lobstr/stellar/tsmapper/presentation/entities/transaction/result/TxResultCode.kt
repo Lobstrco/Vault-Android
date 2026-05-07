@@ -29,6 +29,7 @@ data class TxResultCode(val code: String, var message: String) : Parcelable {
         const val TX_MALFORMED = "tx_malformed"
         const val TX_UNDEFINED = "tx_undefined"
         const val TX_SOROBAN_INVALID = "tx_soroban_invalid"
+        const val TX_FROZEN_KEY_ACCESSED = "tx_frozen_key_accessed"
     }
 
     companion object {
@@ -110,6 +111,10 @@ data class TxResultCode(val code: String, var message: String) : Parcelable {
                     Code.TX_SOROBAN_INVALID,
                     c.getString(R.string.tx_soroban_invalid)
                 )
+                TransactionResultCode.txFROZEN_KEY_ACCESSED -> TxResultCode(
+                    Code.TX_FROZEN_KEY_ACCESSED,
+                    c.getString(R.string.tx_frozen_key_accessed)
+                )
                 else -> TxResultCode(Code.TX_UNDEFINED, c.getString(R.string.tx_undefined))
             }
 
@@ -189,6 +194,10 @@ data class TxResultCode(val code: String, var message: String) : Parcelable {
             Code.TX_SOROBAN_INVALID -> TxResultCode(
                 code,
                 c.getString(R.string.tx_soroban_invalid)
+            )
+            Code.TX_FROZEN_KEY_ACCESSED -> TxResultCode(
+                code,
+                c.getString(R.string.tx_frozen_key_accessed)
             )
             else -> TxResultCode(Code.TX_UNDEFINED, c.getString(R.string.tx_undefined))
         }

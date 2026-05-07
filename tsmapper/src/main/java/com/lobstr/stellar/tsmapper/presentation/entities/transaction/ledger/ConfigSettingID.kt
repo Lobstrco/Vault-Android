@@ -22,4 +22,8 @@ sealed class ConfigSettingID : Parcelable {
     class CONFIG_SETTING_CONTRACT_PARALLEL_COMPUTE_V0 : ConfigSettingID()
     class CONFIG_SETTING_CONTRACT_LEDGER_COST_EXT_V0 : ConfigSettingID()
     class CONFIG_SETTING_SCP_TIMING : ConfigSettingID()
+    class CONFIG_SETTING_FROZEN_LEDGER_KEYS : ConfigSettingID()
+    class CONFIG_SETTING_FROZEN_LEDGER_KEYS_DELTA : ConfigSettingID()
+    class CONFIG_SETTING_FREEZE_BYPASS_TXS : ConfigSettingID()
+    class CONFIG_SETTING_FREEZE_BYPASS_TXS_DELTA : ConfigSettingID()
 }

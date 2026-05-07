@@ -114,6 +114,10 @@ class LedgerMapper(val assetMapper: AssetMapper = AssetMapper(), val scMapper: S
             org.stellar.sdk.xdr.ConfigSettingID.CONFIG_SETTING_CONTRACT_PARALLEL_COMPUTE_V0 -> ConfigSettingID.CONFIG_SETTING_CONTRACT_PARALLEL_COMPUTE_V0()
             org.stellar.sdk.xdr.ConfigSettingID.CONFIG_SETTING_CONTRACT_LEDGER_COST_EXT_V0 -> ConfigSettingID.CONFIG_SETTING_CONTRACT_LEDGER_COST_EXT_V0()
             org.stellar.sdk.xdr.ConfigSettingID.CONFIG_SETTING_SCP_TIMING -> ConfigSettingID.CONFIG_SETTING_SCP_TIMING()
+            org.stellar.sdk.xdr.ConfigSettingID.CONFIG_SETTING_FROZEN_LEDGER_KEYS -> ConfigSettingID.CONFIG_SETTING_FROZEN_LEDGER_KEYS()
+            org.stellar.sdk.xdr.ConfigSettingID.CONFIG_SETTING_FROZEN_LEDGER_KEYS_DELTA -> ConfigSettingID.CONFIG_SETTING_FROZEN_LEDGER_KEYS_DELTA()
+            org.stellar.sdk.xdr.ConfigSettingID.CONFIG_SETTING_FREEZE_BYPASS_TXS -> ConfigSettingID.CONFIG_SETTING_FREEZE_BYPASS_TXS()
+            org.stellar.sdk.xdr.ConfigSettingID.CONFIG_SETTING_FREEZE_BYPASS_TXS_DELTA -> ConfigSettingID.CONFIG_SETTING_FREEZE_BYPASS_TXS_DELTA()
         }
 
     private fun mapContractDataDurability(durability: org.stellar.sdk.xdr.ContractDataDurability): ContractDataDurability =

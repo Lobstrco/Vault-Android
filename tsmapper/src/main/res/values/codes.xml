@@ -24,6 +24,7 @@
     <string name="tx_bad_min_sec_age_or_gap">minSeqAge or minSeqLedgerGap conditions not met.</string>
     <string name="tx_malformed">Precondition is invalid.</string>
     <string name="tx_soroban_invalid">Soroban-specific preconditions were not met.</string>
+    <string name="tx_frozen_key_accessed">The transaction accessed a frozen ledger key.</string>
 
     <!-- Operations -->
 

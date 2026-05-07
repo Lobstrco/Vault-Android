@@ -5,20 +5,11 @@ import com.lobstr.stellar.vault.domain.tangem.TangemRepository
 import com.lobstr.stellar.vault.presentation.entities.tangem.TangemError
 import com.lobstr.stellar.vault.presentation.util.AppUtil
 import com.lobstr.stellar.vault.presentation.util.Constant.TangemErrorMod.ERROR_MOD_REPEAT_ACTION
-import com.lobstr.stellar.vault.presentation.util.Constant.TangemErrorMod.ERROR_MOD_USER_CANCELLED
 import com.tangem.common.core.TangemSdkError
 
 class TangemRepositoryImpl() : TangemRepository {
     override fun handleError(error: com.tangem.common.core.TangemError): TangemError? {
         return when (error) {
-            is TangemSdkError.UserCancelled -> {
-                TangemError(
-                    error.code,
-                    ERROR_MOD_USER_CANCELLED,
-                    "",
-                    ""
-                )
-            }
             is TangemSdkError.WrongCardNumber -> {
                 TangemError(
                     error.code,
@@ -35,11 +26,10 @@ class TangemRepositoryImpl() : TangemRepository {
                     AppUtil.getString(R.string.tangem_error_tag_lost_description)
                 )
             }
-            // TODO Check duplication.
             is TangemSdkError.UserCancelled -> {
                 TangemError(
                     error.code,
-                    ERROR_MOD_REPEAT_ACTION,
+                    ERROR_MOD_REPEAT_ACTION,//50002
                     AppUtil.getString(R.string.tangem_error_tag_lost_title),
                     AppUtil.getString(R.string.tangem_error_tag_lost_description)
                 )

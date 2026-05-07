@@ -276,3 +276,13 @@
 }
 
 -dontwarn lombok.Generated
+
+# --- Moxy + R8 full mode fixes (AGP 8+ uses R8 full mode by default) ---
+
+# 1) Prevent R8 class merging for Moxy ViewCommand (breaks AddToEndSingleStrategy)
+-keep,allowobfuscation,allowshrinking class * extends moxy.viewstate.ViewCommand { *; }
+
+# 2) Keep no-arg constructors for custom StateStrategy (Moxy creates via reflection)
+-keepclassmembers class * extends moxy.viewstate.strategy.StateStrategy {
+    <init>();
+}
