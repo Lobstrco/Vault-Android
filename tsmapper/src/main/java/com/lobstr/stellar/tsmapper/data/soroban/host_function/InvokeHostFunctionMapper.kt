@@ -8,6 +8,7 @@ import com.lobstr.stellar.tsmapper.presentation.entities.transaction.operation.s
 import com.lobstr.stellar.tsmapper.presentation.entities.transaction.operation.soroban.auth.SorobanAuthorizedFunction
 import com.lobstr.stellar.tsmapper.presentation.entities.transaction.operation.soroban.auth.SorobanAuthorizedInvocation
 import com.lobstr.stellar.tsmapper.presentation.entities.transaction.operation.soroban.auth.SorobanCredentials
+import com.lobstr.stellar.tsmapper.presentation.entities.transaction.operation.soroban.auth.SorobanDelegateSignature
 import com.lobstr.stellar.tsmapper.presentation.entities.transaction.operation.soroban.contract.ContractExecutable
 import com.lobstr.stellar.tsmapper.presentation.entities.transaction.operation.soroban.contract.ContractIDPreimage
 import com.lobstr.stellar.tsmapper.presentation.entities.transaction.operation.soroban.contract.CreateContractArgs
@@ -109,7 +110,32 @@ class InvokeHostFunctionMapper(val assetMapper: AssetMapper = AssetMapper(), val
                 credentials.address.signatureExpirationLedger.uint32.number.toString(),
                 scMapper.mapScVal(credentials.address.signature)
             )
+            // CAP-71 (Protocol 27): same SorobanAddressCredentials payload as ADDRESS.
+            org.stellar.sdk.xdr.SorobanCredentialsType.SOROBAN_CREDENTIALS_ADDRESS_V2 -> SorobanCredentials.AddressV2(
+                scMapper.mapScAddress(Address.fromSCAddress(credentials.addressV2.address)),
+                credentials.addressV2.nonce.int64.toString(),
+                credentials.addressV2.signatureExpirationLedger.uint32.number.toString(),
+                scMapper.mapScVal(credentials.addressV2.signature)
+            )
+            // CAP-71 (Protocol 27): base address credentials + recursive delegate-signature tree.
+            org.stellar.sdk.xdr.SorobanCredentialsType.SOROBAN_CREDENTIALS_ADDRESS_WITH_DELEGATES -> {
+                val addressCredentials = credentials.addressWithDelegates.addressCredentials
+                SorobanCredentials.AddressWithDelegates(
+                    scMapper.mapScAddress(Address.fromSCAddress(addressCredentials.address)),
+                    addressCredentials.nonce.int64.toString(),
+                    addressCredentials.signatureExpirationLedger.uint32.number.toString(),
+                    scMapper.mapScVal(addressCredentials.signature),
+                    credentials.addressWithDelegates.delegates.map { mapSorobanDelegateSignature(it) }
+                )
+            }
         }
+
+    private fun mapSorobanDelegateSignature(delegate: org.stellar.sdk.xdr.SorobanDelegateSignature): SorobanDelegateSignature =
+        SorobanDelegateSignature(
+            scMapper.mapScAddress(Address.fromSCAddress(delegate.address)),
+            scMapper.mapScVal(delegate.signature),
+            delegate.nestedDelegates.map { mapSorobanDelegateSignature(it) }
+        )
 
     private fun mapSorobanAuthorizedInvocation(invocation: org.stellar.sdk.xdr.SorobanAuthorizedInvocation) : SorobanAuthorizedInvocation =
         SorobanAuthorizedInvocation(mapSorobanAuthorizationFunction(invocation.function), mutableListOf<SorobanAuthorizedInvocation>().apply {
