@@ -20,8 +20,8 @@ android {
         applicationId = "com.lobstr.stellar.vault"
         minSdk = 24
         targetSdk = 36
-        versionCode = 57
-        versionName = "3.6.4"
+        versionCode = 58
+        versionName = "3.6.5"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -186,7 +186,7 @@ val androidx_legacy_support_v4 by extra("1.0.0")
 val junit by extra("4.13.2")
 val runner by extra("1.3.0")
 val espresso_core by extra("3.7.0")
-val stellar_sdk by extra("3.0.0")
+val stellar_sdk by extra("4.0.0")
 val mnemonic by extra("0.1.1")
 val work_manager by extra("2.11.2")
 val biometric by extra("1.1.0")

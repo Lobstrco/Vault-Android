@@ -9,6 +9,7 @@ import com.lobstr.stellar.tsmapper.presentation.entities.transaction.operation.s
 import com.lobstr.stellar.tsmapper.presentation.entities.transaction.operation.soroban.auth.SorobanAuthorizedFunction
 import com.lobstr.stellar.tsmapper.presentation.entities.transaction.operation.soroban.auth.SorobanAuthorizedInvocation
 import com.lobstr.stellar.tsmapper.presentation.entities.transaction.operation.soroban.auth.SorobanCredentials
+import com.lobstr.stellar.tsmapper.presentation.entities.transaction.operation.soroban.auth.SorobanDelegateSignature
 import com.lobstr.stellar.tsmapper.presentation.entities.transaction.operation.soroban.contract.ContractExecutable
 import com.lobstr.stellar.tsmapper.presentation.entities.transaction.operation.soroban.contract.ContractIDPreimage
 import com.lobstr.stellar.tsmapper.presentation.entities.transaction.operation.soroban.contract.CreateContractArgs
@@ -432,27 +433,70 @@ data class InvokeHostFunctionOperation(
                 )
             )
 
-            is SorobanCredentials.Address -> {
-                fields.add(OperationField(
-                    context.getString(R.string.op_field_credentials),
-                    context.getString(R.string.op_value_address)
-                ))
+            is SorobanCredentials.Address -> addAddressCredentialFields(
+                context, fields, credentials.address, credentials.nonce,
+                credentials.signatureExpirationLedger, credentials.signature, amountFormatter
+            )
 
-                getScAddressFields(context, fields, credentials.address)
+            // CAP-71 (Protocol 27): same payload as Address.
+            is SorobanCredentials.AddressV2 -> addAddressCredentialFields(
+                context, fields, credentials.address, credentials.nonce,
+                credentials.signatureExpirationLedger, credentials.signature, amountFormatter
+            )
 
-                fields.add(OperationField(
-                    context.getString(R.string.op_field_nonce),
-                    credentials.nonce
-                ))
-
-                fields.add(OperationField(
-                    context.getString(R.string.op_field_signature_expiration_ledger),
-                    credentials.signatureExpirationLedger
-                ))
-
-                getScValFields(context, fields, credentials.signature, amountFormatter)
+            // CAP-71 (Protocol 27): base address credentials + recursive delegate-signature tree.
+            is SorobanCredentials.AddressWithDelegates -> {
+                addAddressCredentialFields(
+                    context, fields, credentials.address, credentials.nonce,
+                    credentials.signatureExpirationLedger, credentials.signature, amountFormatter
+                )
+                credentials.delegates.forEach { getDelegateFields(context, fields, it, amountFormatter) }
             }
         }
+
+        return fields
+    }
+
+    private fun addAddressCredentialFields(
+        context: Context,
+        fields: MutableList<OperationField>,
+        address: SCAddress,
+        nonce: String,
+        signatureExpirationLedger: String,
+        signature: SCVal,
+        amountFormatter: (value: String) -> String
+    ): MutableList<OperationField> {
+        fields.add(OperationField(
+            context.getString(R.string.op_field_credentials),
+            context.getString(R.string.op_value_address)
+        ))
+
+        getScAddressFields(context, fields, address)
+
+        fields.add(OperationField(
+            context.getString(R.string.op_field_nonce),
+            nonce
+        ))
+
+        fields.add(OperationField(
+            context.getString(R.string.op_field_signature_expiration_ledger),
+            signatureExpirationLedger
+        ))
+
+        getScValFields(context, fields, signature, amountFormatter)
+
+        return fields
+    }
+
+    private fun getDelegateFields(
+        context: Context,
+        fields: MutableList<OperationField>,
+        delegate: SorobanDelegateSignature,
+        amountFormatter: (value: String) -> String
+    ): MutableList<OperationField> {
+        getScAddressFields(context, fields, delegate.address)
+        getScValFields(context, fields, delegate.signature, amountFormatter)
+        delegate.nestedDelegates.forEach { getDelegateFields(context, fields, it, amountFormatter) }
 
         return fields
     }
